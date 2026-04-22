@@ -1,0 +1,15 @@
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\obj\Debug\net8.0\HiCone.Application.csproj.AssemblyReference.cache
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\obj\Debug\net8.0\HiCone.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\obj\Debug\net8.0\HiCone.Application.AssemblyInfoInputs.cache
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\obj\Debug\net8.0\HiCone.Application.AssemblyInfo.cs
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\obj\Debug\net8.0\HiCone.Application.csproj.CoreCompileInputs.cache
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\bin\Debug\net8.0\HiCone.Application.deps.json
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\bin\Debug\net8.0\HiCone.Application.dll
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\bin\Debug\net8.0\HiCone.Application.pdb
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\bin\Debug\net8.0\HiCone.Domain.dll
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\bin\Debug\net8.0\HiCone.Domain.pdb
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\obj\Debug\net8.0\HiCone.Application.csproj.CopyComplete
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\obj\Debug\net8.0\HiCone.Application.dll
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\obj\Debug\net8.0\refint\HiCone.Application.dll
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\obj\Debug\net8.0\HiCone.Application.pdb
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Application\obj\Debug\net8.0\ref\HiCone.Application.dll
