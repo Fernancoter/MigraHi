@@ -1,0 +1,11 @@
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\bin\Debug\net8.0\HiCone.Domain.deps.json
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\bin\Debug\net8.0\HiCone.Domain.dll
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\bin\Debug\net8.0\HiCone.Domain.pdb
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.AssemblyInfoInputs.cache
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.AssemblyInfo.cs
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.csproj.CoreCompileInputs.cache
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.dll
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\refint\HiCone.Domain.dll
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.pdb
+C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\ref\HiCone.Domain.dll
