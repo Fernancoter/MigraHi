@@ -13,18 +13,37 @@ export interface Articulo {
   categoria?: { nombre: string };
 }
 
+export interface Silo {
+  id: string;
+  nombre: string;
+  codigo: string;
+  capacidadMaxima: number;
+  existenciaActual: number;
+  kgMinimo: number;
+  kgMaximo: number;
+  estadoMaterial: string;
+  tipoMaterial: string;
+  activo: boolean;
+  estado: string;
+  ubicacion: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class InventarioService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5007/api/v1/articulos'; // Standard dev port
+  private apiUrl = 'http://localhost:5007/api/v1';
 
   getArticulos(): Observable<Articulo[]> {
-    return this.http.get<Articulo[]>(this.apiUrl);
+    return this.http.get<Articulo[]>(`${this.apiUrl}/articulos`);
   }
 
-  createArticulo(articulo: Partial<Articulo>): Observable<string> {
-    return this.http.post<string>(this.apiUrl, articulo);
+  getSilos(): Observable<Silo[]> {
+    return this.http.get<Silo[]>(`${this.apiUrl}/inventario/silos`);
+  }
+
+  createSilo(silo: Partial<Silo>): Observable<Silo> {
+    return this.http.post<Silo>(`${this.apiUrl}/inventario/silo`, silo);
   }
 }

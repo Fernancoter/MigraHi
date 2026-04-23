@@ -1,10 +1,13 @@
 using System.Reflection;
 using HiCone.Application.Common.Interfaces;
 using HiCone.Domain.Common;
+using HiCone.Domain.Entities.Calidad;
 using HiCone.Domain.Entities.Clientes;
 using HiCone.Domain.Entities.Identity;
 using HiCone.Domain.Entities.Inventario;
+using HiCone.Domain.Entities.Logistica;
 using HiCone.Domain.Entities.Produccion;
+using HiCone.Domain.Entities.SAE;
 using HiCone.Domain.Entities.Tenant;
 using HiCone.Domain.Entities.Ventas;
 using HiCone.Domain.Interfaces;
@@ -19,6 +22,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
     }
 
+    // ── Identity & Tenant ────────────────────────────────────────────────
     public DbSet<Tenant> Tenants => Set<Tenant>();
     public DbSet<TenantSetting> TenantSettings => Set<TenantSetting>();
     public DbSet<User> Users => Set<User>();
@@ -29,20 +33,75 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<UserTenant> UserTenants => Set<UserTenant>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
-    // Inventory Module
+    // ── Inventario ────────────────────────────────────────────────────────
     public DbSet<Articulo> Articulos => Set<Articulo>();
+    public DbSet<Silo> Silos => Set<Silo>();
+    public DbSet<Existencia> Existencias => Set<Existencia>();
+    public DbSet<ExistenciaSilo> ExistenciasSilos => Set<ExistenciaSilo>();
+    public DbSet<ExistenciaProducto> ExistenciaProductos => Set<ExistenciaProducto>();
     public DbSet<Categoria> Categorias => Set<Categoria>();
 
-    // Clientes Module
+    // ── Clientes ──────────────────────────────────────────────────────────
     public DbSet<Cliente> Clientes => Set<Cliente>();
 
-    // Ventas Module
+    // ── Ventas ────────────────────────────────────────────────────────────
     public DbSet<Venta> Ventas => Set<Venta>();
     public DbSet<VentaDetalle> VentaDetalles => Set<VentaDetalle>();
 
-    // Produccion Module
+    // ── Produccion — Catálogos Base ──────────────────────────────────────
+    public DbSet<Extrusora> Extrusoras => Set<Extrusora>();
+    public DbSet<ExtrusoraProducto> ExtrusoraProductos => Set<ExtrusoraProducto>();
+    public DbSet<ExtrusoraMezcladora> ExtrusoraMezcladoras => Set<ExtrusoraMezcladora>();
+    public DbSet<Prensa> Prensas => Set<Prensa>();
+    public DbSet<PrensaProducto> PrensaProductos => Set<PrensaProducto>();
+    public DbSet<Troquel> Troqueles => Set<Troquel>();
+    public DbSet<PrensaTroquel> PrensaTroqueles => Set<PrensaTroquel>();
+    public DbSet<Operario> Operarios => Set<Operario>();
+    public DbSet<Turno> Turnos => Set<Turno>();
+    public DbSet<CausaInterrupcion> CausasInterrupcion => Set<CausaInterrupcion>();
+
+    // ── Produccion — Catálogos Productos ─────────────────────────────────
+    public DbSet<Producto> Productos => Set<Producto>();
+    public DbSet<ProductoCategoria> ProductoCategorias => Set<ProductoCategoria>();
+    public DbSet<ProductoTerminado> ProductosTerminados => Set<ProductoTerminado>();
+
+    // ── Produccion — Extrusión ────────────────────────────────────────────
+    public DbSet<Extrusion> Extrusiones => Set<Extrusion>();
+    public DbSet<ExtrusionResultado> ExtrusionResultados => Set<ExtrusionResultado>();
+    public DbSet<ExtrusionInterrupcion> ExtrusionInterrupciones => Set<ExtrusionInterrupcion>();
     public DbSet<Bobina> Bobinas => Set<Bobina>();
+    public DbSet<Lote> Lotes => Set<Lote>();
+
+    // ── Produccion — Prensado ─────────────────────────────────────────────
+    public DbSet<Prensado> Prensados => Set<Prensado>();
+    public DbSet<PrensadoBobina> PrensadoBobinas => Set<PrensadoBobina>();
+    public DbSet<PrensadoResultado> PrensadoResultados => Set<PrensadoResultado>();
+    public DbSet<PrensadoInterrupcion> PrensadoInterrupciones => Set<PrensadoInterrupcion>();
+    public DbSet<Carrera> Carreras => Set<Carrera>();
+    public DbSet<Carrete> Carretes => Set<Carrete>();
     public DbSet<Palet> Palets => Set<Palet>();
+    public DbSet<PaletCarrete> PaletCarretes => Set<PaletCarrete>();
+    public DbSet<OrdenEtiquetado> OrdenesEtiquetado => Set<OrdenEtiquetado>();
+
+    // ── Logística ─────────────────────────────────────────────────────────
+    public DbSet<Embarque> Embarques => Set<Embarque>();
+    public DbSet<EmbarqueDetalle> EmbarqueDetalles => Set<EmbarqueDetalle>();
+    public DbSet<EmbarquePallet> EmbarquePallets => Set<EmbarquePallet>();
+
+    // ── Calidad ────────────────────────────────────────────────────────────
+    public DbSet<InspeccionCalidad> InspeccionesCalidad => Set<InspeccionCalidad>();
+    public DbSet<Reclamo> Reclamos => Set<Reclamo>();
+    public DbSet<ReclamoDetalle> ReclamoDetalles => Set<ReclamoDetalle>();
+    public DbSet<CarreteDefecto> CarreteDefectos => Set<CarreteDefecto>();
+
+    // ── SAE (espejo sincronizado) ──────────────────────────────────────────
+    public DbSet<SaeOrder> SaeOrders => Set<SaeOrder>();
+    public DbSet<SaeRemission> SaeRemissions => Set<SaeRemission>();
+    public DbSet<SaeCustomer> SaeCustomers => Set<SaeCustomer>();
+    public DbSet<SaeProduct> SaeProducts => Set<SaeProduct>();
+
+    // ── Retrocompatibilidad con Maquina ────────────────────────────────────
+    public DbSet<Maquina> Maquinas => Set<Maquina>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

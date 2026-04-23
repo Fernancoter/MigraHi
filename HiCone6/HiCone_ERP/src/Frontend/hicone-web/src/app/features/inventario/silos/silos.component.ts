@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { InventarioService, Silo } from '../../../core/services/inventario';
 
 @Component({
   selector: 'app-silos',
@@ -13,21 +14,114 @@ import { FormsModule } from '@angular/forms';
           <h1 class="premium-title">🏺 Gestión de Silos</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Inventarios</span>
-            <span class="sep">/</span>
+            <span class="sep">></span>
             <span class="active">Silos</span>
           </nav>
         </div>
         
         <div class="toolbar-premium">
           <div class="btn-group-modern">
-            <button class="btn-modern secondary">📥 Exportar</button>
-            <button class="btn-modern secondary">Seleccionar Columnas</button>
-            <button class="btn-modern primary">+ Agregar Silo</button>
+            <div class="dropdown-container">
+              <button class="btn-legacy secondary">📥 Exportar <span class="arrow">▼</span></button>
+            </div>
+            <button class="btn-legacy secondary" (click)="openModal()">Agregar</button>
+            
+            <!-- Selector de Columnas (Imagen 1) -->
+            <div class="dropdown-container">
+              <button class="btn-legacy primary" (click)="toggleColumnSelector()">Selecciona columnas <span class="arrow">▼</span></button>
+              <div class="column-selector-dropdown shadow-premium" *ngIf="showColumnSelector">
+                <div class="dropdown-header">
+                  <input type="text" placeholder="Filtrar..." class="search-mini">
+                </div>
+                <div class="column-list custom-scroll">
+                  <div class="column-group">
+                    <label class="group-label"><input type="checkbox" checked disabled> Fijas a la izquierda</label>
+                    <label class="item-label"><input type="checkbox" checked disabled> (Ninguna)</label>
+                  </div>
+                  <div class="column-group">
+                    <label class="group-label"><input type="checkbox" [checked]="allNonFixedVisible()" (change)="toggleAllNonFixed()"> No fijas</label>
+                    <div class="items">
+                      <label *ngFor="let col of columns" class="item-label">
+                        <input type="checkbox" [(ngModel)]="col.visible"> {{ col.label }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="dropdown-footer">
+                  <button class="btn-reset" (click)="resetColumns()">↺</button>
+                  <button class="btn-update" (click)="showColumnSelector = false">Actualizar</button>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="search-modern">
-            <input type="text" placeholder="Buscar silo..." [(ngModel)]="searchQuery">
+            <input type="text" placeholder="Buscar..." [(ngModel)]="searchQuery">
             <span class="search-icon">🔍</span>
           </div>
+        </div>
+      </div>
+
+      <!-- Modal para Gestionar Silo (Imagen 2) -->
+      <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+        <div class="modal-card legacy-card animate-scale-in" (click)="$event.stopPropagation()">
+          <div class="modal-header-legacy">
+            <span class="header-icon">🏷️</span> Información General
+          </div>
+          <form (submit)="saveSilo()">
+            <div class="modal-body-legacy">
+              <div class="form-row">
+                <label class="legacy-label">Id</label>
+                <div class="readonly-val">{{ newSilo.id || '0' }}</div>
+              </div>
+
+              <div class="form-row">
+                <label class="legacy-label">Silo Activo</label>
+                <input type="checkbox" class="legacy-checkbox" [(ngModel)]="newSilo.activo" name="activo">
+              </div>
+
+              <div class="form-row">
+                <label class="legacy-label">Nombre</label>
+                <input type="text" class="legacy-input" [(ngModel)]="newSilo.nombre" name="nombre" required>
+              </div>
+
+              <div class="form-row">
+                <label class="legacy-label">Capacidad (kg)</label>
+                <input type="number" class="legacy-input" [(ngModel)]="newSilo.capacidadMaxima" name="capacidad">
+              </div>
+
+              <div class="form-row">
+                <label class="legacy-label">Mínimo (kg)</label>
+                <input type="number" class="legacy-input" [(ngModel)]="newSilo.kgMinimo" name="minimo">
+              </div>
+
+              <div class="form-row">
+                <label class="legacy-label">Máximo (kg)</label>
+                <input type="number" class="legacy-input" [(ngModel)]="newSilo.kgMaximo" name="maximo">
+              </div>
+
+              <div class="form-row">
+                <label class="legacy-label">Estado Material</label>
+                <select class="legacy-select" [(ngModel)]="newSilo.estadoMaterial" name="estadoMat">
+                  <option value="Virgen (pelet)">Virgen (pelet)</option>
+                  <option value="Molido">Molido</option>
+                  <option value="Mezcla">Mezcla</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label class="legacy-label">Material</label>
+                <select class="legacy-select" [(ngModel)]="newSilo.tipoMaterial" name="tipoMat">
+                  <option value="PCR">PCR</option>
+                  <option value="HDPE">HDPE</option>
+                  <option value="PP">PP</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer-legacy">
+              <button type="submit" class="btn-confirm">CONFIRMAR</button>
+              <button type="button" class="btn-cancel" (click)="closeModal()">CANCELAR</button>
+            </div>
+          </form>
         </div>
       </div>
 
@@ -36,156 +130,203 @@ import { FormsModule } from '@angular/forms';
           <table class="premium-grid">
             <thead>
               <tr>
-                <th colspan="4" class="actions-header">Acciones</th>
-                <th class="sortable">Nombre</th>
-                <th class="text-right sortable">Capacidad (kg)</th>
-                <th class="text-right sortable">Mínimo (kg)</th>
-                <th class="text-right sortable">Máximo (kg)</th>
-                <th class="sortable">Estado Material</th>
-                <th class="sortable">Tipo Material</th>
-                <th class="text-center">Activo</th>
+                <th class="text-center sticky-col">Archivar</th>
+                <th class="text-center sticky-col">Visualizar</th>
+                <th *ngIf="isColVisible('nombre')">Nombre</th>
+                <th *ngIf="isColVisible('capacidad')" class="text-right">Capacidad (kg)</th>
+                <th *ngIf="isColVisible('minimo')" class="text-right">Mínimo (kg)</th>
+                <th *ngIf="isColVisible('maximo')" class="text-right">Máximo (kg)</th>
+                <th *ngIf="isColVisible('estadoMat')">Estado de Material</th>
+                <th *ngIf="isColVisible('tipoMat')">Tipo de Material</th>
+                <th *ngIf="isColVisible('activo')" class="text-center">Silo Activo</th>
+                <th class="text-center">Modificar</th>
+                <th class="text-center">Eliminar</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let s of filteredSilos" class="grid-row">
-                <td class="action-cell"><button class="btn-action archive">Archivar</button></td>
-                <td class="action-cell"><button class="btn-action view">Ver</button></td>
-                <td class="action-cell"><button class="btn-action edit">Editar</button></td>
-                <td class="action-cell"><button class="btn-action delete">Borrar</button></td>
-                <td class="font-semibold">{{ s.nombre }}</td>
-                <td class="text-right font-mono">{{ s.capacidad | number:'1.2-2' }}</td>
-                <td class="text-right font-mono">{{ s.kgMinimo | number:'1.2-2' }}</td>
-                <td class="text-right font-mono">{{ s.kgMaximo | number:'1.2-2' }}</td>
-                <td>
-                   <span class="status-badge" [class.virgin]="s.estadoMaterial.includes('Virgen')">
-                     {{ s.estadoMaterial }}
-                   </span>
+                <td class="text-center"><button class="link-btn archive" (click)="archiveSilo(s)">Archivar</button></td>
+                <td class="text-center"><button class="link-btn view">Visualizar</button></td>
+                
+                <td *ngIf="isColVisible('nombre')" class="font-semibold">{{ s.nombre }}</td>
+                <td *ngIf="isColVisible('capacidad')" class="text-right font-mono">{{ s.capacidadMaxima | number:'1.2-2' }}</td>
+                <td *ngIf="isColVisible('minimo')" class="text-right font-mono">{{ s.kgMinimo | number:'1.2-2' }}</td>
+                <td *ngIf="isColVisible('maximo')" class="text-right font-mono">{{ s.kgMaximo | number:'1.2-2' }}</td>
+                <td *ngIf="isColVisible('estadoMat')">{{ s.estadoMaterial }}</td>
+                <td *ngIf="isColVisible('tipoMat')">{{ s.tipoMaterial }}</td>
+                <td *ngIf="isColVisible('activo')" class="text-center">
+                  <div class="legacy-check-display" [class.checked]="s.activo"></div>
                 </td>
-                <td>{{ s.tipoMaterial }}</td>
-                <td class="text-center">
-                  <div class="active-indicator" [class.on]="s.activo"></div>
-                </td>
+                
+                <td class="text-center"><button class="link-btn edit">Modificar</button></td>
+                <td class="text-center"><button class="link-btn delete">Eliminar</button></td>
               </tr>
             </tbody>
           </table>
-          
-          <div class="table-footer-modern">
-            <div class="results-count">Mostrando 1-7 de 12 registros</div>
-            <div class="pagination-modern">
-              <button class="pag-btn-modern">Anterior</button>
-              <div class="pages">
-                <span class="page-num active">1</span>
-                <span class="page-num">2</span>
-              </div>
-              <button class="pag-btn-modern">Siguiente</button>
-            </div>
-          </div>
         </div>
       </div>
-      
-      <footer class="module-footer-premium">
-        <div class="footer-left">
-          🕒 Última actualización: <span class="highlight">22/04/2026</span>
-        </div>
-        <div class="footer-right">
-          © 2026 HI-CONE ERP | v2.1-Premium
-        </div>
-      </footer>
     </div>
   `,
   styles: [`
-    .module-page { padding: 2rem; background: #f8fafc; min-height: 100vh; font-family: 'Inter', sans-serif; }
+    .module-page { padding: 2rem; background: #fff; min-height: 100vh; font-family: 'Open Sans', Arial, sans-serif; }
     
-    .page-header-premium { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; }
-    .premium-title { font-size: 2rem; font-weight: 800; color: #1e293b; margin: 0; }
-    .breadcrumb-modern { font-size: 0.85rem; color: #64748b; margin-top: 0.25rem; }
-    .breadcrumb-modern .sep { margin: 0 0.5rem; opacity: 0.5; }
-    .breadcrumb-modern .active { color: #166534; font-weight: 700; }
+    .page-header-premium { margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; }
+    .premium-title { font-size: 1.5rem; color: #5cb85c; margin: 0; font-weight: 400; }
+    .breadcrumb-modern { font-size: 0.85rem; color: #999; margin-top: 0.25rem; }
+    .breadcrumb-modern .active { color: #999; }
 
-    .toolbar-premium { display: flex; flex-direction: column; align-items: flex-end; gap: 1rem; }
+    .toolbar-premium { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
     .btn-group-modern { display: flex; gap: 0.75rem; }
     
-    .btn-modern {
-      padding: 0.6rem 1.25rem; border-radius: 10px; font-weight: 700; font-size: 0.85rem;
-      cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: none;
+    .btn-legacy {
+      padding: 0.5rem 1rem; border-radius: 4px; font-size: 0.9rem; cursor: pointer;
+      transition: all 0.2s; border: 1px solid #ccc; background: #fff; color: #5cb85c;
     }
-    .btn-modern.primary { background: linear-gradient(135deg, #166534 0%, #22c55e 100%); color: white; box-shadow: 0 4px 12px rgba(22, 197, 94, 0.3); }
-    .btn-modern.primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(22, 197, 94, 0.4); }
-    .btn-modern.secondary { background: white; color: #334155; border: 1px solid #e2e8f0; }
-    .btn-modern.secondary:hover { background: #f1f5f9; border-color: #cbd5e1; }
+    .btn-legacy.primary { background: #5cb85c; color: white; border-color: #4cae4c; }
+    .btn-legacy.primary:hover { background: #449d44; }
+    .btn-legacy.secondary:hover { background: #f9f9f9; border-color: #adadad; }
+    .btn-legacy .arrow { font-size: 0.7rem; margin-left: 0.5rem; opacity: 0.7; }
 
-    .search-modern { position: relative; width: 300px; }
-    .search-modern input {
-      width: 100%; padding: 0.6rem 1rem 0.6rem 2.5rem; border-radius: 10px;
-      border: 1px solid #e2e8f0; background: white; font-size: 0.9rem;
-      transition: all 0.2s;
+    .dropdown-container { position: relative; }
+    .column-selector-dropdown {
+      position: absolute; top: 110%; right: 0; width: 250px; background: white;
+      border: 1px solid #ccc; border-radius: 4px; z-index: 100; padding: 1rem;
     }
-    .search-modern input:focus { outline: none; border-color: #22c55e; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1); }
+    .dropdown-header { margin-bottom: 1rem; }
+    .search-mini { width: 100%; padding: 0.4rem; border: 1px solid #eee; border-radius: 4px; }
+    .column-list { max-height: 300px; overflow-y: auto; }
+    .column-group { margin-bottom: 0.75rem; }
+    .group-label { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.85rem; color: #333; }
+    .items { padding-left: 1.5rem; display: flex; flex-direction: column; gap: 0.4rem; }
+    .item-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #666; cursor: pointer; }
+    .dropdown-footer { margin-top: 1rem; border-top: 1px solid #eee; padding-top: 0.75rem; display: flex; gap: 0.5rem; }
+    .btn-reset { background: #5cb85c; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; }
+    .btn-update { background: #5cb85c; color: white; border: none; padding: 0.4rem; flex-grow: 1; border-radius: 4px; font-weight: 700; cursor: pointer; }
+
+    .premium-grid { width: 100%; border-collapse: collapse; border: 1px solid #eee; }
+    .premium-grid th { padding: 1rem; background: #fff; text-align: left; font-size: 0.85rem; font-weight: 400; color: #333; border: 1px solid #eee; }
+    .grid-row td { padding: 1rem; font-size: 0.85rem; color: #333; border: 1px solid #eee; }
+    .link-btn { background: none; border: none; color: #5cb85c; cursor: pointer; font-size: 0.85rem; text-decoration: none; }
+    .link-btn:hover { text-decoration: underline; }
+
+    /* Modal Legacy (Imagen 2) */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .legacy-card { background: white; width: 90%; max-width: 1000px; border-radius: 4px; border: 1px solid #ccc; }
+    .modal-header-legacy { padding: 1rem; background: #f9f9f9; border-bottom: 1px solid #eee; color: #5cb85c; font-size: 0.9rem; }
+    .modal-body-legacy { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
+    .form-row { border-bottom: 1px solid #eee; padding-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .legacy-label { font-size: 0.8rem; color: #999; }
+    .readonly-val { font-size: 0.9rem; color: #333; }
+    .legacy-input, .legacy-select { border: none; border-bottom: 1px solid #eee; padding: 0.5rem 0; width: 100%; outline: none; font-size: 0.9rem; }
+    .legacy-input:focus { border-bottom-color: #5cb85c; }
+    .legacy-checkbox { width: 1.2rem; height: 1.2rem; cursor: pointer; accent-color: #5cb85c; }
+    .modal-footer-legacy { padding: 1rem; display: flex; gap: 0.5rem; }
+    .btn-confirm { background: #5cb85c; color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 4px; font-size: 0.85rem; cursor: pointer; }
+    .btn-cancel { background: #777; color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 4px; font-size: 0.85rem; cursor: pointer; }
+
+    .legacy-check-display { width: 16px; height: 16px; border: 1px solid #ccc; margin: 0 auto; position: relative; }
+    .legacy-check-display.checked::after { content: '✓'; position: absolute; top: -4px; left: 2px; color: #5cb85c; font-weight: bold; }
+
+    .search-modern { position: relative; width: 250px; }
+    .search-modern input { width: 100%; padding: 0.5rem 1rem 0.5rem 2.5rem; border: 1px solid #ccc; border-radius: 4px; }
     .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); opacity: 0.4; }
 
-    .shadow-premium { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); }
-    .table-card { background: white; border-radius: 16px; overflow: hidden; border: 1px solid #f1f5f9; }
-
-    .premium-grid { width: 100%; border-collapse: collapse; }
-    .premium-grid th {
-      background: #1e293b; color: white; padding: 1.2rem 1rem; text-align: left;
-      font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .actions-header { text-align: center; background: #0f172a !important; border-right: 1px solid rgba(255,255,255,0.1); }
-    
-    .grid-row { transition: background 0.2s; border-bottom: 1px solid #f1f5f9; }
-    .grid-row:hover { background: #f0fdf4; }
-    .grid-row td { padding: 1rem; font-size: 0.875rem; color: #334155; }
-
-    .action-cell { padding: 0.75rem 0.5rem !important; }
-    .btn-action {
-      width: 100%; padding: 0.35rem; border-radius: 6px; font-size: 0.7rem; font-weight: 700;
-      cursor: pointer; border: 1px solid transparent; transition: all 0.2s;
-    }
-    .btn-action.archive { color: #64748b; background: #f1f5f9; }
-    .btn-action.view { color: #166534; background: #dcfce7; }
-    .btn-action.edit { color: #1e40af; background: #dbeafe; }
-    .btn-action.delete { color: #991b1b; background: #fee2e2; }
-    .btn-action:hover { transform: scale(1.05); filter: brightness(0.95); }
-
-    .status-badge {
-      padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700;
-      background: #f1f5f9; color: #475569;
-    }
-    .status-badge.virgin { background: #dcfce7; color: #166534; }
-
-    .active-indicator { width: 12px; height: 12px; border-radius: 50%; background: #e2e8f0; margin: 0 auto; }
-    .active-indicator.on { background: #22c55e; box-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
-
-    .table-footer-modern { padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
-    .results-count { font-size: 0.85rem; color: #64748b; }
-    .pagination-modern { display: flex; align-items: center; gap: 1rem; }
-    .pag-btn-modern { background: white; border: 1px solid #e2e8f0; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer; }
-    .page-num { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.85rem; cursor: pointer; }
-    .page-num.active { background: #166534; color: white; font-weight: 700; }
-
-    .module-footer-premium { margin-top: 3rem; display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; }
-    .highlight { color: #166534; font-weight: 700; }
-    .font-semibold { font-weight: 600; }
-    .font-mono { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
     .text-right { text-align: right; }
     .text-center { text-align: center; }
+    .font-mono { font-family: monospace; }
+    .font-semibold { font-weight: 600; }
   `]
 })
-export class SilosComponent {
+export class SilosComponent implements OnInit {
+  private inventarioService = inject(InventarioService);
   searchQuery = '';
+  silos: Silo[] = [];
+  showModal = false;
+  showColumnSelector = false;
   
-  silos = [
-    { nombre: 'CAJA 100% PCR', capacidad: 589.00, kgMinimo: 180000.00, kgMaximo: 5500.00, actual: 42500, estadoMaterial: 'Virgen (pelet)', tipoMaterial: 'PCR', activo: true },
-    { nombre: 'CAJA 55% PCR', capacidad: 100000.00, kgMinimo: 589.00, kgMaximo: 100000.00, actual: 8000, estadoMaterial: 'Virgen (pelet)', tipoMaterial: 'PCR', activo: true },
-    { nombre: 'SUPER SAC 100% OMNI', capacidad: 500.00, kgMinimo: 0.00, kgMaximo: 30000.00, actual: 35000, estadoMaterial: 'Virgen (pelet)', tipoMaterial: 'PCR', activo: true },
-    { nombre: 'SUPER SACKS', capacidad: 600.00, kgMinimo: 500.00, kgMaximo: 7000.00, actual: 4500, estadoMaterial: 'Virgen (pelet)', tipoMaterial: 'PCR', activo: true },
-    { nombre: 'SUPER SACKS 100%', capacidad: 1200.00, kgMinimo: 1000.00, kgMaximo: 24000.00, actual: 0, estadoMaterial: 'Virgen (pelet)', tipoMaterial: 'PCR 100%', activo: true },
-    { nombre: 'Silo 1', capacidad: 74995.00, kgMinimo: 1000.00, kgMaximo: 80000.00, actual: 12000, estadoMaterial: 'Virgen (pelet)', tipoMaterial: 'PCR', activo: true },
-    { nombre: 'Silo 2', capacidad: 0.00, kgMinimo: 1000.00, kgMaximo: 55000.00, actual: 0, estadoMaterial: 'Molido', tipoMaterial: 'PCR', activo: true }
+  newSilo: Partial<Silo> = this.getDefaultSilo();
+
+  // Configuración de columnas (Imagen 1)
+  columns = [
+    { id: 'nombre', label: 'Nombre', visible: true },
+    { id: 'capacidad', label: 'Capacidad (kg)', visible: true },
+    { id: 'minimo', label: 'Mínimo (kg)', visible: true },
+    { id: 'maximo', label: 'Máximo (kg)', visible: true },
+    { id: 'estadoMat', label: 'Estado de Material', visible: true },
+    { id: 'tipoMat', label: 'Tipo de Material', visible: true },
+    { id: 'activo', label: 'Silo Activo', visible: true }
   ];
 
+  ngOnInit() {
+    this.loadSilos();
+  }
+
+  loadSilos() {
+    this.inventarioService.getSilos().subscribe(data => {
+      this.silos = data;
+    });
+  }
+
+  getDefaultSilo(): Partial<Silo> {
+    return {
+      nombre: '',
+      codigo: '',
+      capacidadMaxima: 0,
+      kgMinimo: 0,
+      kgMaximo: 0,
+      estadoMaterial: 'Virgen (pelet)',
+      tipoMaterial: 'PCR',
+      activo: true
+    };
+  }
+
+  openModal() {
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.newSilo = this.getDefaultSilo();
+  }
+
+  saveSilo() {
+    if (!this.newSilo.nombre) return;
+    this.inventarioService.createSilo(this.newSilo).subscribe(() => {
+      this.loadSilos();
+      this.closeModal();
+    });
+  }
+
+  archiveSilo(silo: Silo) {
+    if (confirm(`¿Desea archivar el silo ${silo.nombre}?`)) {
+      this.inventarioService.createSilo({ ...silo, activo: false }).subscribe(() => this.loadSilos());
+    }
+  }
+
+  // Lógica del Selector de Columnas
+  toggleColumnSelector() {
+    this.showColumnSelector = !this.showColumnSelector;
+  }
+
+  isColVisible(id: string): boolean {
+    return this.columns.find(c => c.id === id)?.visible || false;
+  }
+
+  allNonFixedVisible(): boolean {
+    return this.columns.every(c => c.visible);
+  }
+
+  toggleAllNonFixed() {
+    const target = !this.allNonFixedVisible();
+    this.columns.forEach(c => c.visible = target);
+  }
+
+  resetColumns() {
+    this.columns.forEach(c => c.visible = true);
+  }
+
   get filteredSilos() {
-    return this.silos.filter(s => s.nombre.toLowerCase().includes(this.searchQuery.toLowerCase()));
+    const q = this.searchQuery.toLowerCase();
+    return this.silos.filter(s => s.nombre.toLowerCase().includes(q) || s.codigo.toLowerCase().includes(q));
   }
 }
