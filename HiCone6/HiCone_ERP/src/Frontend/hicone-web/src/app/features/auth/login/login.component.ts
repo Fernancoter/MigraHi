@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,7 @@ import { Router } from '@angular/router';
     <div class="login-page">
       <div class="login-card glass animate-fade-in">
         <div class="login-header">
-          <div class="logo-large">H</div>
+          <div class="logo-large">HI-CONE</div>
           <h1>Bienvenido a HiCone<span class="text-primary">ERP</span></h1>
           <p>Ingresa tus credenciales para acceder</p>
         </div>
@@ -33,15 +34,12 @@ import { Router } from '@angular/router';
             </div>
           </div>
 
-          <div class="form-options">
-            <label class="checkbox-label">
-              <input type="checkbox"> Recordarme
-            </label>
-            <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+          <div class="error-msg" *ngIf="errorMessage">
+            {{ errorMessage }}
           </div>
 
-          <button type="submit" class="login-btn">
-            Iniciar Sesión
+          <button type="submit" class="login-btn" [disabled]="loading">
+            {{ loading ? 'Cargando...' : 'Iniciar Sesión' }}
           </button>
         </form>
 
@@ -65,120 +63,104 @@ import { Router } from '@angular/router';
       justify-content: center;
       position: relative;
       overflow: hidden;
-      background: #020617;
+      background: #2c3e50;
     }
 
     .login-card {
       width: 440px;
       padding: 3rem;
-      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 8px;
       z-index: 10;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
     }
 
-    .login-header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
+    .login-header { text-align: center; margin-bottom: 2.5rem; }
 
     .logo-large {
-      width: 60px;
-      height: 60px;
-      background: var(--primary);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
+      padding: 0.5rem 1rem;
+      border: 3px solid var(--primary);
+      color: var(--primary);
+      font-weight: 900;
       font-size: 2rem;
-      color: white;
       margin: 0 auto 1.5rem;
-      box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+      display: inline-block;
     }
 
-    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; color: white; }
-    p { color: #94a3b8; font-size: 0.875rem; }
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #2c3e50; }
+    p { color: #7f8c8d; font-size: 0.875rem; }
     .text-primary { color: var(--primary); }
 
     .login-form { display: flex; flex-direction: column; gap: 1.5rem; }
-
     .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-    label { font-size: 0.875rem; font-weight: 500; color: #cbd5e1; }
+    label { font-size: 0.875rem; font-weight: 600; color: #34495e; }
 
-    .input-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .input-icon {
-      position: absolute;
-      left: 1rem;
-      color: #64748b;
-    }
+    .input-wrapper { position: relative; display: flex; align-items: center; }
+    .input-icon { position: absolute; left: 1rem; }
 
     input {
       width: 100%;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: white;
+      border: 1px solid #dcdde1;
       padding: 0.75rem 1rem 0.75rem 2.5rem;
-      border-radius: var(--radius-md);
-      color: white;
+      border-radius: 4px;
       transition: all 0.2s;
     }
 
-    input:focus {
-      outline: none;
-      border-color: var(--primary);
-      background: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-    }
-
-    .form-options {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.875rem;
-    }
-
-    .checkbox-label { color: #94a3b8; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
-    .forgot-link { color: var(--primary); text-decoration: none; font-weight: 500; }
+    input:focus { outline: none; border-color: var(--primary); }
 
     .login-btn {
       background: var(--primary);
       color: white;
       border: none;
       padding: 0.875rem;
-      border-radius: var(--radius-md);
-      font-weight: 600;
+      border-radius: 4px;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
-      margin-top: 1rem;
     }
 
-    .login-btn:hover {
-      background: var(--primary-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
-    }
+    .login-btn:hover:not(:disabled) { background: var(--primary-hover); }
+    .login-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
-    .login-footer { margin-top: 2rem; text-align: center; font-size: 0.875rem; color: #64748b; }
-    .login-footer a { color: #cbd5e1; text-decoration: none; font-weight: 600; }
+    .error-msg {
+      color: #e74c3c;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-align: center;
+    }
 
     .login-bg { position: absolute; inset: 0; z-index: 1; }
-    .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; }
-    .orb-1 { width: 400px; height: 400px; background: var(--primary); top: -100px; right: -100px; }
-    .orb-2 { width: 300px; height: 300px; background: #4f46e5; bottom: -50px; left: -50px; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.2; }
+    .orb-1 { width: 600px; height: 600px; background: var(--primary); top: -200px; right: -200px; }
+    .orb-2 { width: 500px; height: 500px; background: #3d5a80; bottom: -100px; left: -100px; }
   `]
 })
 export class LoginComponent {
   email = '';
   password = '';
+  loading = false;
+  errorMessage = '';
 
-  constructor(private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   onLogin() {
-    // Simulación de login demo
-    this.router.navigate(['/dashboard']);
+    this.loading = true;
+    this.errorMessage = '';
+    
+    try {
+      this.authService.login(this.email, this.password).subscribe({
+        next: () => {
+          this.router.navigate(['/dashboard']);
+        },
+        error: (err) => {
+          this.errorMessage = 'Correo o contraseña incorrectos';
+          this.loading = false;
+        }
+      });
+    } catch (e) {
+      this.errorMessage = 'Error de conexión';
+      this.loading = false;
+    }
   }
 }
