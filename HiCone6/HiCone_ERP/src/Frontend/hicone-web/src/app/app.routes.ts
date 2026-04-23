@@ -15,8 +15,11 @@ import { ReportesSaeComponent } from './features/reportes-sae/reportes-sae.compo
 import { SeguridadComponent } from './features/seguridad/seguridad.component';
 import { authGuard } from './core/auth/auth.guard';
 
+import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
+
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
   {
     path: '',
     component: MainLayoutComponent,

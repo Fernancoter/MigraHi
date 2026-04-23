@@ -1,21 +1,21 @@
 {
   "format": 1,
   "restore": {
-    "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Persistence\\HiCone.Persistence.csproj": {}
+    "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Persistence\\HiCone.Persistence.csproj": {}
   },
   "projects": {
-    "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj": {
+    "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj",
+        "projectUniqueName": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj",
         "projectName": "HiCone.Application",
-        "projectPath": "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj",
-        "packagesPath": "C:\\Users\\FCO\\.nuget\\packages\\",
-        "outputPath": "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\obj\\",
+        "projectPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj",
+        "packagesPath": "C:\\Users\\Ronny\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\obj\\",
         "projectStyle": "PackageReference",
         "centralPackageVersionsManagementEnabled": true,
         "configFilePaths": [
-          "C:\\Users\\FCO\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Ronny\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -27,8 +27,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj": {
-                "projectPath": "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj"
+              "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj": {
+                "projectPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj"
               }
             }
           }
@@ -78,6 +78,7 @@
             "FluentValidation.DependencyInjectionExtensions": "[11.10.0, )",
             "MediatR": "[12.4.1, )",
             "Microsoft.AspNetCore.Authentication.JwtBearer": "[8.0.11, )",
+            "Microsoft.AspNetCore.Http.Abstractions": "[2.3.9, )",
             "Microsoft.AspNetCore.Mvc.Testing": "[8.0.11, )",
             "Microsoft.EntityFrameworkCore": "[8.0.11, )",
             "Microsoft.EntityFrameworkCore.Design": "[8.0.11, )",
@@ -113,22 +114,22 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.121/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.126/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj": {
+    "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj",
         "projectName": "HiCone.Domain",
-        "projectPath": "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj",
-        "packagesPath": "C:\\Users\\FCO\\.nuget\\packages\\",
-        "outputPath": "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\obj\\",
+        "projectPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj",
+        "packagesPath": "C:\\Users\\Ronny\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "centralPackageVersionsManagementEnabled": true,
         "configFilePaths": [
-          "C:\\Users\\FCO\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Ronny\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -165,6 +166,7 @@
             "FluentValidation.DependencyInjectionExtensions": "[11.10.0, )",
             "MediatR": "[12.4.1, )",
             "Microsoft.AspNetCore.Authentication.JwtBearer": "[8.0.11, )",
+            "Microsoft.AspNetCore.Http.Abstractions": "[2.3.9, )",
             "Microsoft.AspNetCore.Mvc.Testing": "[8.0.11, )",
             "Microsoft.EntityFrameworkCore": "[8.0.11, )",
             "Microsoft.EntityFrameworkCore.Design": "[8.0.11, )",
@@ -200,22 +202,22 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.121/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.126/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Persistence\\HiCone.Persistence.csproj": {
+    "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Persistence\\HiCone.Persistence.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Persistence\\HiCone.Persistence.csproj",
+        "projectUniqueName": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Persistence\\HiCone.Persistence.csproj",
         "projectName": "HiCone.Persistence",
-        "projectPath": "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Persistence\\HiCone.Persistence.csproj",
-        "packagesPath": "C:\\Users\\FCO\\.nuget\\packages\\",
-        "outputPath": "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Persistence\\obj\\",
+        "projectPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Persistence\\HiCone.Persistence.csproj",
+        "packagesPath": "C:\\Users\\Ronny\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Persistence\\obj\\",
         "projectStyle": "PackageReference",
         "centralPackageVersionsManagementEnabled": true,
         "configFilePaths": [
-          "C:\\Users\\FCO\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Ronny\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -227,8 +229,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj": {
-                "projectPath": "C:\\KBs\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj"
+              "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj": {
+                "projectPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj"
               }
             }
           }
@@ -243,6 +245,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )",
+              "versionCentrallyManaged": true
+            },
             "EFCore.NamingConventions": {
               "target": "Package",
               "version": "[8.0.3, )",
@@ -275,6 +282,7 @@
             "FluentValidation.DependencyInjectionExtensions": "[11.10.0, )",
             "MediatR": "[12.4.1, )",
             "Microsoft.AspNetCore.Authentication.JwtBearer": "[8.0.11, )",
+            "Microsoft.AspNetCore.Http.Abstractions": "[2.3.9, )",
             "Microsoft.AspNetCore.Mvc.Testing": "[8.0.11, )",
             "Microsoft.EntityFrameworkCore": "[8.0.11, )",
             "Microsoft.EntityFrameworkCore.Design": "[8.0.11, )",
@@ -310,7 +318,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.121/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.126/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -22,7 +22,8 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - Configured background with `background-size: cover` and precise centering to highlight the product.
     - Added dark linear-gradient overlay to improve text legibility while maintaining the glassmorphism effect.
     - Migrated global theme in `styles.scss` from blue to corporate green (`#10b981`).
-    - Adjusted shadows, glows, and interactive elements to harmonize with the new brand palette.
+    - Ajusted shadows, glows, and interactive elements to harmonize with the new brand palette.
+- [x] **Generación de Reporte de Estructura**: Se analizó el entorno heredado (`HiCone6`) identificando que la lógica existe como metadatos encriptados/comprimidos (base de datos `.mdf` y `kb.data`) exclusivos para el IDE de GeneXus. El reporte fue guardado como `reporteEstructura.md`.
 
 ## Key Files
 - Frontend: `src/Frontend/hicone-web/src/app`
