@@ -8,8 +8,11 @@ import { VentasListComponent } from './features/ventas/ventas-list/ventas-list';
 import { ProduccionListComponent } from './features/produccion/produccion-list/produccion-list';
 import { authGuard } from './core/guards/auth.guard';
 
+import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
+
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
   {
     path: '',
     component: MainLayoutComponent,

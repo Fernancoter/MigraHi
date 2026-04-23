@@ -4,6 +4,7 @@ namespace HiCone.Domain.Entities.Identity;
 
 public class User : TenantEntity
 {
+    public string Username { get; set; } = null!;
     public string Email { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
     public string FirstName { get; set; } = null!;
@@ -13,6 +14,16 @@ public class User : TenantEntity
     public bool IsActive { get; set; } = true;
     public bool EmailConfirmed { get; set; }
     public DateTime? LastLoginAt { get; set; }
+
+    // Business Context (Legacy Alignment)
+    public int? OperadorId { get; set; } 
+    
+    // Security State
+    public bool MustChangePassword { get; set; }
+    public DateTime? PasswordExpiresAt { get; set; }
+    public int AccessFailedCount { get; set; }
+    public bool IsLockedOut { get; set; }
+    public DateTime? LockoutEnd { get; set; }
 
     public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
     public virtual ICollection<UserTenant> UserTenants { get; set; } = new List<UserTenant>();

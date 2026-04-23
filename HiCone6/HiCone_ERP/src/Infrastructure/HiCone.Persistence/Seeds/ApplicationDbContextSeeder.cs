@@ -100,11 +100,14 @@ public class ApplicationDbContextSeeder
             
             var adminUser = new User
             {
+                Username = "admin",
                 Email = adminEmail,
-                PasswordHash = "$2a$11$qRzN2K9l.mR9S6Y7s8U1OeC9zP9zP9zP9zP9zP9zP9zP9zP9zP9zP", // Admin@123 (demo)
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("hicone123"), 
                 FirstName = "Admin",
                 LastName = "HiCone",
                 TenantId = defaultTenantId,
+                OperadorId = 1,
+                MustChangePassword = false,
                 EmailConfirmed = true
             };
 

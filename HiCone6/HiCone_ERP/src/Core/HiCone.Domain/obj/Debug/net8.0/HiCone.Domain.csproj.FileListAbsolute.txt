@@ -9,3 +9,15 @@ C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.
 C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\refint\HiCone.Domain.dll
 C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.pdb
 C:\KBs\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\ref\HiCone.Domain.dll
+C:\Users\Ronny\Desktop\HICONE\MigraHi\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\bin\Debug\net8.0\HiCone.Domain.deps.json
+C:\Users\Ronny\Desktop\HICONE\MigraHi\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\bin\Debug\net8.0\HiCone.Domain.dll
+C:\Users\Ronny\Desktop\HICONE\MigraHi\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\bin\Debug\net8.0\HiCone.Domain.pdb
+C:\Users\Ronny\Desktop\HICONE\MigraHi\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ronny\Desktop\HICONE\MigraHi\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.AssemblyInfoInputs.cache
+C:\Users\Ronny\Desktop\HICONE\MigraHi\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.AssemblyInfo.cs
+C:\Users\Ronny\Desktop\HICONE\MigraHi\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Ronny\Desktop\HICONE\MigraHi\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.sourcelink.json
+C:\Users\Ronny\Desktop\HICONE\MigraHi\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.dll
+C:\Users\Ronny\Desktop\HICONE\MigraHi\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\refint\HiCone.Domain.dll
+C:\Users\Ronny\Desktop\HICONE\MigraHi\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\HiCone.Domain.pdb
+C:\Users\Ronny\Desktop\HICONE\MigraHi\HiCone6\HiCone_ERP\src\Core\HiCone.Domain\obj\Debug\net8.0\ref\HiCone.Domain.dll
