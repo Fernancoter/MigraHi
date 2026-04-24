@@ -1,0 +1,121 @@
+{
+  "uniqueId": "144f2b4f-c19d-4c8b-b530-010e4e85763b",
+  "name": "NotificationsRegistrationHandler",
+  "type": "Procedure",
+  "module": "",
+  "description": "Notifications Registration Handler",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "/* \n   Typical implementation of Notification Registration Handler\n   Store Device Data in order to send notifications later.\n*/\nmsg(\u0026DeviceToken.ToString().Trim(), status)\n/*\nfor each\n   where DeviceType = \u0026DeviceType // enum domain SmartDeviceType\n   where DeviceId  = \u0026DeviceId   // Character(128)\n   DeviceToken = \u0026DeviceToken    // Character(1000)\n   DeviceName = \u0026DeviceName       // Character(128)\nwhen none\n   new\n      DeviceType  = \u0026DeviceType\n      DeviceId = \u0026DeviceId\n      DeviceToken = \u0026DeviceToken\n      DeviceName = \u0026DeviceName\n   endnew\nendfor\n*/\n",
+      "cleanSource": "/* \n   Typical implementation of Notification Registration Handler\n   Store Device Data in order to send notifications later.\n*/\nmsg(\u0026DeviceToken.ToString().Trim(), status)\n/*\nfor each\n   where DeviceType = \u0026DeviceType // enum domain SmartDeviceType\n   where DeviceId  = \u0026DeviceId   // Character(128)\n   DeviceToken = \u0026DeviceToken    // Character(1000)\n   DeviceName = \u0026DeviceName       // Character(128)\nwhen none\n   new\n      DeviceType  = \u0026DeviceType\n      DeviceId = \u0026DeviceId\n      DeviceToken = \u0026DeviceToken\n      DeviceName = \u0026DeviceName\n   endnew\nendfor\n*/"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in: \u0026DeviceType, in:\u0026DeviceID, in:\u0026DeviceToken, in:\u0026DeviceName);\n\n//\u0022Warning: Input Parameters definition (name, type) cannot be changed\u0022\n",
+      "cleanSource": "parm(in: \u0026DeviceType, in:\u0026DeviceID, in:\u0026DeviceToken, in:\u0026DeviceName);\n\n//\u0022Warning: Input Parameters definition (name, type) cannot be changed\u0022"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "DeviceId",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Device Id"
+    },
+    {
+      "name": "DeviceName",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Device Name"
+    },
+    {
+      "name": "DeviceToken",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Device Token"
+    },
+    {
+      "name": "DeviceType",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Device Type"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

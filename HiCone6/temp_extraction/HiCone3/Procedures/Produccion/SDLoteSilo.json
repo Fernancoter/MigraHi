@@ -1,0 +1,113 @@
+{
+  "uniqueId": "61db1dd1-2011-4f88-aba8-119cea6765d3",
+  "name": "SDLoteSilo",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDLote Silo",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "for each\n\t\n\twhere LoteId = \u0026LoteId\n\t\n\t\u0026LoteEmbarque = LoteEmbarque\n\tExit\nendfor\n",
+      "cleanSource": "for each\n\t\n\twhere LoteId = \u0026LoteId\n\t\n\t\u0026LoteEmbarque = LoteEmbarque\n\tExit\nendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026LoteId, out:\u0026LoteEmbarque);\n",
+      "cleanSource": "parm(in:\u0026LoteId, out:\u0026LoteEmbarque);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SiloId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Silo Id"
+    },
+    {
+      "name": "LoteEmbarque",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "Lote Embarque"
+    },
+    {
+      "name": "LoteId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Lote Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "uniqueId": "ba372c8c-380c-44e6-9a6f-ca41dcd353dd",
+  "name": "SetGAMAttribute",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Set GAM Attribute",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\n\t\u0026GUID = GamUser.GetId()\n\t\u0026GAMUser.Load(\u0026GUID)\n\t\u0026GAMUserAttribute.Id = \u0026Key.Trim()\n\t\u0026GAMUserAttribute.Value = \u0026Value\n\t\n\t\u0026isOK = \u0026GAMUser.SetAttribute(\u0026GAMUserAttribute,\u0026Errors)\n\tif \u0026isOK\n\t\tcommit\n\telse\n\t\t For \u0026Error in \u0026Errors\n                     Msg(Format(!\u0022%1 (GAM%2)\u0022, \u0026Error.Message, \u0026Error.Code))\n                 EndFor\n\tendif\n\t\t\t    \n",
+      "cleanSource": "\t\n\t\u0026GUID = GamUser.GetId()\n\t\u0026GAMUser.Load(\u0026GUID)\n\t\u0026GAMUserAttribute.Id = \u0026Key.Trim()\n\t\u0026GAMUserAttribute.Value = \u0026Value\n\t\n\t\u0026isOK = \u0026GAMUser.SetAttribute(\u0026GAMUserAttribute,\u0026Errors)\n\tif \u0026isOK\n\t\tcommit\n\telse\n\t\t For \u0026Error in \u0026Errors\n                     Msg(Format(!\u0022%1 (GAM%2)\u0022, \u0026Error.Message, \u0026Error.Code))\n                 EndFor\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "//parm(in:\u0026ExtrusionId);\nparm(in:\u0026Key,in:\u0026Value);\n",
+      "cleanSource": "//parm(in:\u0026ExtrusionId);\nparm(in:\u0026Key,in:\u0026Value);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "SDFinalizarPrensado",
+      "SDInitPrensado",
+      "SDInitExtrusion"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Id",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Id"
+    },
+    {
+      "name": "Error",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Error"
+    },
+    {
+      "name": "Errors",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Errors"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "GamUser",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Gam User"
+    },
+    {
+      "name": "GamUserAttribute",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Gam User Attribute"
+    },
+    {
+      "name": "GUID",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "GUID"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "Key",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Key"
+    },
+    {
+      "name": "Value",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Value"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

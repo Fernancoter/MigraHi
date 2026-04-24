@@ -1,0 +1,51 @@
+{
+  "uniqueId": "fa39b79c-eed3-48ca-b802-c38bd7138a4b",
+  "name": "DVelop_Menu_UserData",
+  "type": "SDT",
+  "module": "WWPBaseObjects",
+  "description": "Menu User Data ",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "PhotoUri",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Photo Uri"
+    },
+    {
+      "name": "FirstLine",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "First Line"
+    },
+    {
+      "name": "SecondLine",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Second Line"
+    }
+  ]
+}

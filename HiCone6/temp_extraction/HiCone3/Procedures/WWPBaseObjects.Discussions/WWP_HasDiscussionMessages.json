@@ -1,0 +1,145 @@
+{
+  "uniqueId": "5b43619f-2e58-431d-acbc-c53b1f026b9c",
+  "name": "WWP_HasDiscussionMessages",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.Discussions",
+  "description": "Has Discussion Messages",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\u0026HasDiscussionMessages = False\nFor Each WWP_DiscussionMessage\n\tWhere WWPEntityId = WWP_GetEntityByName(\u0026WWPEntityName)\n\tWhere WWPDiscussionMessageEntityRecordId = \u0026WWPDiscussionMessageEntityRecordId\n\tWhere WWPDiscussionMessageThreadId.IsNull() or WWPDiscussionMessageThreadId.IsEmpty()\n\t\u0026HasDiscussionMessages = True\n\tExit\nEndFor\n",
+      "cleanSource": "\n\u0026HasDiscussionMessages = False\nFor Each WWP_DiscussionMessage\n\tWhere WWPEntityId = WWP_GetEntityByName(\u0026WWPEntityName)\n\tWhere WWPDiscussionMessageEntityRecordId = \u0026WWPDiscussionMessageEntityRecordId\n\tWhere WWPDiscussionMessageThreadId.IsNull() or WWPDiscussionMessageThreadId.IsEmpty()\n\t\u0026HasDiscussionMessages = True\n\tExit\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026WWPEntityName, in:\u0026WWPDiscussionMessageEntityRecordId, out:\u0026HasDiscussionMessages);\n",
+      "cleanSource": "parm(in:\u0026WWPEntityName, in:\u0026WWPDiscussionMessageEntityRecordId, out:\u0026HasDiscussionMessages);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_GetEntityByName",
+      "WWPBaseObjects.Discussions.WWP_DiscussionMessage"
+    ],
+    "calledBy": [
+      "TroquelView",
+      "SalesPersonView",
+      "InterrupcionView",
+      "EtiquetadoOperadorView",
+      "PrensaObservacionView",
+      "ExtrusoraObservacionView",
+      "AuditView",
+      "reclamoview",
+      "CausaInterrupcionView",
+      "CarreraView",
+      "WWP_MailTemplateView",
+      "ExtrusionView",
+      "StatementOfIncomeView",
+      "PaletView",
+      "DownTimeCodeView",
+      "CarreteDefectoView",
+      "ExtrusionInterrupcionView",
+      "EmbarquePalletView",
+      "CompanyView",
+      "PrensadoView",
+      "ProductoTerminadoView",
+      "PrensadoInterrupcionView",
+      "ExistenciaView",
+      "ExtrusoraMezcladoraView",
+      "BudgetView",
+      "BobinaView",
+      "CarreteView",
+      "PrensadoBobinaView"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "HasDiscussionMessages",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Has Discussion Messages"
+    },
+    {
+      "name": "WWPDiscussionMessageEntityRecordId",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPDiscussion Message Entity Record Id"
+    },
+    {
+      "name": "WWPEntityName",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Entity Name"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

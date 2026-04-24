@@ -1,0 +1,37 @@
+{
+  "uniqueId": "396ae117-28ec-4487-b0e1-65a49f61dbbc",
+  "name": "Event",
+  "type": "SDT",
+  "module": "GeneXus.Common.Notifications",
+  "description": "Event",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "Notification"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Name",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Event Name"
+    }
+  ]
+}

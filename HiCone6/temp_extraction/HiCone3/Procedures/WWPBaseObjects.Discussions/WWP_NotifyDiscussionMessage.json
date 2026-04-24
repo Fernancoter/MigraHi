@@ -1,0 +1,233 @@
+{
+  "uniqueId": "a0242794-767c-42f9-9c93-85b382b3d476",
+  "name": "WWP_NotifyDiscussionMessage",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.Discussions",
+  "description": "WWP_Notify Discussion Message",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\u0026WWPNotificationMetadataSDT = New()\n\u0026WWPNotificationMetadataSDT.SessionKey = !\u0022DiscussionThreadIdToOpen\u0022\n\u0026WWPNotificationMetadataSDT.SessionValue = \u0026SessionValue\n\nIf Not \u0026MentionWWPUserExtendedIdCollectionJson.IsEmpty()\n\t\u0026WWPNotificationShortDescription = Format(\u0022WWP_Notifications_MentionShortMessage\u0022, \u0026WWPUserExtendedFullName, \u0026WWPEntityName, \u0026WWPSubscriptionEntityRecordDescription)\n\tWWP_SendMentionNotification(!\u0022Mention\u0022, \u0026WWPEntityName, \u0026WWPDiscussionMessageEntityRecordId, !\u0022fas fa-at NotificationFontIconInfoLight\u0022, \u0022WWP_Notifications_NewMention\u0022, \u0026WWPNotificationShortDescription, \u0026WWPNotificationShortDescription, \u0026WWPNotificationLink, \u0026WWPNotificationMetadataSDT.ToJson(), \u0026MentionWWPUserExtendedIdCollectionJson) \n\tWWP_SubscribeMentionedUsersToDiscussion(!\u0022Discussion\u0022, \u0026WWPEntityName, \u0026WWPDiscussionMessageEntityRecordId, \u0026WWPSubscriptionEntityRecordDescription, \u0026MentionWWPUserExtendedIdCollectionJson)\nEndIf\n\n\u0026WWPNotificationShortDescription = Format(\u0022WWP_Notifications_NewMessageShortMessage\u0022, \u0026WWPUserExtendedFullName, \u0026WWPEntityName, \u0026WWPSubscriptionEntityRecordDescription)\nWWP_SendNotification(!\u0022Discussion\u0022, \u0026WWPEntityName, \u0026WWPDiscussionMessageEntityRecordId, !\u0022far fa-comment-dots NotificationFontIconInfo\u0022,  \u0026NotificationTitle, \u0026WWPNotificationShortDescription, \u0026WWPNotificationShortDescription, \u0026WWPNotificationLink, \u0026WWPNotificationMetadataSDT.ToJson(),\u0026MentionWWPUserExtendedIdCollectionJson, true)  \nWWPBaseObjects.Discussions.WWP_SubscribeLoggedUserToDiscussion(!\u0022Discussion\u0022, \u0026WWPEntityName, \u0026WWPDiscussionMessageEntityRecordId, \u0026WWPSubscriptionEntityRecordDescription)\n\t\t\n",
+      "cleanSource": "\n\u0026WWPNotificationMetadataSDT = New()\n\u0026WWPNotificationMetadataSDT.SessionKey = !\u0022DiscussionThreadIdToOpen\u0022\n\u0026WWPNotificationMetadataSDT.SessionValue = \u0026SessionValue\n\nIf Not \u0026MentionWWPUserExtendedIdCollectionJson.IsEmpty()\n\t\u0026WWPNotificationShortDescription = Format(\u0022WWP_Notifications_MentionShortMessage\u0022, \u0026WWPUserExtendedFullName, \u0026WWPEntityName, \u0026WWPSubscriptionEntityRecordDescription)\n\tWWP_SendMentionNotification(!\u0022Mention\u0022, \u0026WWPEntityName, \u0026WWPDiscussionMessageEntityRecordId, !\u0022fas fa-at NotificationFontIconInfoLight\u0022, \u0022WWP_Notifications_NewMention\u0022, \u0026WWPNotificationShortDescription, \u0026WWPNotificationShortDescription, \u0026WWPNotificationLink, \u0026WWPNotificationMetadataSDT.ToJson(), \u0026MentionWWPUserExtendedIdCollectionJson) \n\tWWP_SubscribeMentionedUsersToDiscussion(!\u0022Discussion\u0022, \u0026WWPEntityName, \u0026WWPDiscussionMessageEntityRecordId, \u0026WWPSubscriptionEntityRecordDescription, \u0026MentionWWPUserExtendedIdCollectionJson)\nEndIf\n\n\u0026WWPNotificationShortDescription = Format(\u0022WWP_Notifications_NewMessageShortMessage\u0022, \u0026WWPUserExtendedFullName, \u0026WWPEntityName, \u0026WWPSubscriptionEntityRecordDescription)\nWWP_SendNotification(!\u0022Discussion\u0022, \u0026WWPEntityName, \u0026WWPDiscussionMessageEntityRecordId, !\u0022far fa-comment-dots NotificationFontIconInfo\u0022,  \u0026NotificationTitle, \u0026WWPNotificationShortDescription, \u0026WWPNotificationShortDescription, \u0026WWPNotificationLink, \u0026WWPNotificationMetadataSDT.ToJson(),\u0026MentionWWPUserExtendedIdCollectionJson, true)  \nWWPBaseObjects.Discussions.WWP_SubscribeLoggedUserToDiscussion(!\u0022Discussion\u0022, \u0026WWPEntityName, \u0026WWPDiscussionMessageEntityRecordId, \u0026WWPSubscriptionEntityRecordDescription)"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026WWPUserExtendedFullName, in:\u0026WWPEntityName, in:\u0026WWPDiscussionMessageEntityRecordId, in:\u0026MentionWWPUserExtendedIdCollectionJson, in:\u0026SessionValue, in:\u0026NotificationTitle, in:\u0026WWPSubscriptionEntityRecordDescription, in:\u0026WWPNotificationLink);\n",
+      "cleanSource": "parm(in:\u0026WWPUserExtendedFullName, in:\u0026WWPEntityName, in:\u0026WWPDiscussionMessageEntityRecordId, in:\u0026MentionWWPUserExtendedIdCollectionJson, in:\u0026SessionValue, in:\u0026NotificationTitle, in:\u0026WWPSubscriptionEntityRecordDescription, in:\u0026WWPNotificationLink);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.Notifications.Common.WWP_SendNotification",
+      "WWPBaseObjects.Notifications.Common.WWP_SendMentionNotification",
+      "WWPBaseObjects.Discussions.WWP_SubscribeMentionedUsersToDiscussion",
+      "WWPBaseObjects.Discussions.WWP_SubscribeLoggedUserToDiscussion",
+      "WWPBaseObjects.Notifications.Common.WWP_SDTNotificationMetadata"
+    ],
+    "calledBy": [
+      "WWP_CreateAndNotifyDiscussionMessage"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "NotificationTitle",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Notification Title"
+    },
+    {
+      "name": "WWPNotificationMetadataSDT",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPNotification Metadata SDT"
+    },
+    {
+      "name": "WWPNotificationShortDescription",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPNotification Short Description"
+    },
+    {
+      "name": "DiscussionMessageCreated",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Discussion Message Created"
+    },
+    {
+      "name": "MentionWWPUserExtendedIdCollection",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPUser Extended Id"
+    },
+    {
+      "name": "Message",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Message"
+    },
+    {
+      "name": "SessionValue",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Session Value"
+    },
+    {
+      "name": "WWPDiscussionMessageEntityRecordId",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPDiscussion Message Entity Record Id"
+    },
+    {
+      "name": "WWPDiscussionMessageThreadId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPDiscussion Message Thread Id"
+    },
+    {
+      "name": "WWPEntityId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPEntity Id"
+    },
+    {
+      "name": "WWPNotificationLink",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPNotification Link"
+    },
+    {
+      "name": "WWPSubscriptionEntityRecordDescription",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPSubscription Entity Record Description"
+    },
+    {
+      "name": "WWPUserExtendedId",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPUser Extended Id"
+    },
+    {
+      "name": "MentionWWPUserExtendedIdCollectionJson",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Mention WWPUser Extended Id Collection Json"
+    },
+    {
+      "name": "ExcludedWWPUserExtendedIdCollection",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "User Id"
+    },
+    {
+      "name": "WWPUserExtendedFullName",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "User Full Name"
+    },
+    {
+      "name": "WWPEntityName",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Entity Name"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

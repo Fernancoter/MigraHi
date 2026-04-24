@@ -1,0 +1,203 @@
+{
+  "uniqueId": "62034399-9559-4e03-99ef-bb890b2b6d2b",
+  "name": "WWP_SendMail",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.Mail",
+  "description": "Send Mail",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026SendStatus = -1\n\u0026Mail.Load(\u0026MailId)\n\nIf \u0026Mail.Fail()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Mail not found with id: \u0022 \u002B \u0026MailId.ToString())\n\treturn\nEndIf\n\nIf \u0026Mail.WWPMailSenderAddress.IsEmpty() or \u0026Mail.WWPMailSenderName.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Sender address/name cannot be empty: \u0022 \u002B \u0026MailId.ToString())\n\tWWP_UpdateMailStatus(\u0026MailId, WWPBaseObjects.Mail.WWP_StatusMail.Error, !\u0022Sender address/name cannot be empty\u0022)\n\treturn\nEndIf\n\nIf \u0026Mail.SAE.WWPMailSubject.IsEmpty() or \u0026Mail.WWPMailBody.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Mail subject/body cannot be empty: \u0022 \u002B \u0026MailId.ToString())\n\tWWP_UpdateMailStatus(\u0026MailId, WWP_StatusMail.Error, !\u0022Mail subject/body cannot be empty\u0022)\n\treturn\nEndIf\n\nIf \u0026Mail.WWPMailTo.IsEmpty() and \u0026Mail.WWPMailCC.IsEmpty() and \u0026Mail.WWPMailBCC.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Mail recipient cannot be empty: \u0022 \u002B \u0026MailId.ToString())\n\tWWPBaseObjects.Mail.WWP_UpdateMailStatus(\u0026MailId, WWP_StatusMail.Error, !\u0022Mail recipient cannot be empty\u0022)\n\treturn\nEndIf\n\n\u0026ToAddressList = WWP_ParseMailAddressList(\u0026Mail.WWPMailTo)\nIf not \u0026Mail.WWPMailTo.IsEmpty() and \u0026ToAddressList.Count = 0\n\tWWPBaseObjects.WWP_Logger.Error(\u0026Pgmname, !\u0022Mail recipient is not valid address list: \u0022 \u002B \u0026MailId.ToString())\n\tWWPBaseObjects.Mail.WWP_UpdateMailStatus(\u0026MailId, WWP_StatusMail.Error, !\u0022Mail To is invalid\u0022)\n\treturn\nEndIf\n\n\u0026CCAddressList = WWP_ParseMailAddressList(\u0026Mail.WWPMailCC)\nIf not \u0026Mail.WWPMailCC.IsEmpty() and \u0026CCAddressList.Count = 0\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Mail recipient is not valid address list: \u0022 \u002B \u0026MailId.ToString())\n\tWWP_UpdateMailStatus(\u0026MailId, WWPBaseObjects.Mail.WWP_StatusMail.Error, !\u0022Mail CC is invalid\u0022)\n\treturn\nEndIf\n\n\u0026BCCAddressList = WWP_ParseMailAddressList(\u0026Mail.WWPMailBCC)\nIf not \u0026Mail.WWPMailBCC.IsEmpty() and \u0026BCCAddressList.Count = 0\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Mail recipient is not valid address list: \u0022 \u002B \u0026MailId.ToString())\n\tWWP_UpdateMailStatus(\u0026MailId, WWP_StatusMail.Error, !\u0022Mail BCC is invalid\u0022)\n\treturn\nEndIf\n\nFor \u0026Attachment in \u0026Mail.Attachments\n\t\u0026FileExists = (FileExist(\u0026Attachment.WWPMailAttachmentFile) = 1)\n\tIf not \u0026FileExists\n\t\tWWP_Logger.Error(\u0026Pgmname, !\u0022Attachment is not a valid file: \u0022 \u002B \u0026Attachment.WWPMailAttachmentFile)\n\t\tWWP_UpdateMailStatus(\u0026MailId, WWPBaseObjects.Mail.WWP_StatusMail.Error, !\u0022Attachment invalid\u0022)\n\t\treturn\n\tEndIf\nEndFor\n\n\u0026MailMessage = new()\n\u0026MailMessage.From.Address = \u0026Mail.WWPMailSenderAddress\n\u0026MailMessage.From.Name = \u0026Mail.WWPMailSenderName\n\u0026MailMessage.Subject = \u0026Mail.WWPMailSubject\n\u0026MailMessage.HTMLText = \u0026Mail.WWPMailBody\n\n\u0026MailRecipient = new()\n\u0026MailRecipient.Address = \u0026Mail.WWPMailSenderAddress\n\u0026MailRecipient.Name = \u0026Mail.WWPMailSenderName\n\u0026SMTPSession.Sender = \u0026MailRecipient\n\nFor \u0026Address in \u0026ToAddressList\n\t\u0026MailRecipient = new()\n\t\u0026MailRecipient.Address = \u0026Address\n\t\u0026MailMessage.To.Add(\u0026MailRecipient)\nEndFor\n\nFor \u0026Address in \u0026CCAddressList\n\t\u0026MailRecipient = new()\n\t\u0026MailRecipient.Address = \u0026Address\n\t\u0026MailMessage.CC.Add(\u0026MailRecipient)\nEndFor\n\nFor \u0026Address in \u0026BCCAddressList\n\t\u0026MailRecipient = new()\n\t\u0026MailRecipient.Address = \u0026Address\n\t\u0026MailMessage.BCC.Add(\u0026MailRecipient)\nEndFor\n\nFor \u0026Attachment in \u0026Mail.Attachments\n\t\u0026MailMessage.Attachments.Add(\u0026Attachment.WWPMailAttachmentFile)\nEndFor\n\n\u0026SendStatus = \u0026SmtpSession.Send(\u0026MailMessage)\n\u0026StatusMessage = WWP_GetStatusCodeMessage(\u0026SendStatus)\n\nIf \u0026SendStatus \u003C\u003E 0\n\tWWP_Logger.Error(\u0026Pgmname, Format(!\u0022Error sending mail with id: %1 - Code: %2 - %3\u0022, \u0026MailId.ToString(), \u0026SendStatus.ToString().Trim(), \u0026StatusMessage))\n\tWWPBaseObjects.Mail.WWP_UpdateMailStatus(\u0026MailId, Mail.WWP_StatusMail.Error, Format(!\u0022Code: %1 - Message: %2\u0022, \u0026SendStatus.ToString().Trim(), \u0026StatusMessage))\n\treturn\nEndIf\n\nWWP_UpdateMailStatus(\u0026MailId, WWPBaseObjects.Mail.WWP_StatusMail.Sent, !\u0022OK\u0022)\ncommit\n",
+      "cleanSource": "\u0026SendStatus = -1\n\u0026Mail.Load(\u0026MailId)\n\nIf \u0026Mail.Fail()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Mail not found with id: \u0022 \u002B \u0026MailId.ToString())\n\treturn\nEndIf\n\nIf \u0026Mail.WWPMailSenderAddress.IsEmpty() or \u0026Mail.WWPMailSenderName.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Sender address/name cannot be empty: \u0022 \u002B \u0026MailId.ToString())\n\tWWP_UpdateMailStatus(\u0026MailId, WWPBaseObjects.Mail.WWP_StatusMail.Error, !\u0022Sender address/name cannot be empty\u0022)\n\treturn\nEndIf\n\nIf \u0026Mail.SAE.WWPMailSubject.IsEmpty() or \u0026Mail.WWPMailBody.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Mail subject/body cannot be empty: \u0022 \u002B \u0026MailId.ToString())\n\tWWP_UpdateMailStatus(\u0026MailId, WWP_StatusMail.Error, !\u0022Mail subject/body cannot be empty\u0022)\n\treturn\nEndIf\n\nIf \u0026Mail.WWPMailTo.IsEmpty() and \u0026Mail.WWPMailCC.IsEmpty() and \u0026Mail.WWPMailBCC.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Mail recipient cannot be empty: \u0022 \u002B \u0026MailId.ToString())\n\tWWPBaseObjects.Mail.WWP_UpdateMailStatus(\u0026MailId, WWP_StatusMail.Error, !\u0022Mail recipient cannot be empty\u0022)\n\treturn\nEndIf\n\n\u0026ToAddressList = WWP_ParseMailAddressList(\u0026Mail.WWPMailTo)\nIf not \u0026Mail.WWPMailTo.IsEmpty() and \u0026ToAddressList.Count = 0\n\tWWPBaseObjects.WWP_Logger.Error(\u0026Pgmname, !\u0022Mail recipient is not valid address list: \u0022 \u002B \u0026MailId.ToString())\n\tWWPBaseObjects.Mail.WWP_UpdateMailStatus(\u0026MailId, WWP_StatusMail.Error, !\u0022Mail To is invalid\u0022)\n\treturn\nEndIf\n\n\u0026CCAddressList = WWP_ParseMailAddressList(\u0026Mail.WWPMailCC)\nIf not \u0026Mail.WWPMailCC.IsEmpty() and \u0026CCAddressList.Count = 0\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Mail recipient is not valid address list: \u0022 \u002B \u0026MailId.ToString())\n\tWWP_UpdateMailStatus(\u0026MailId, WWPBaseObjects.Mail.WWP_StatusMail.Error, !\u0022Mail CC is invalid\u0022)\n\treturn\nEndIf\n\n\u0026BCCAddressList = WWP_ParseMailAddressList(\u0026Mail.WWPMailBCC)\nIf not \u0026Mail.WWPMailBCC.IsEmpty() and \u0026BCCAddressList.Count = 0\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Mail recipient is not valid address list: \u0022 \u002B \u0026MailId.ToString())\n\tWWP_UpdateMailStatus(\u0026MailId, WWP_StatusMail.Error, !\u0022Mail BCC is invalid\u0022)\n\treturn\nEndIf\n\nFor \u0026Attachment in \u0026Mail.Attachments\n\t\u0026FileExists = (FileExist(\u0026Attachment.WWPMailAttachmentFile) = 1)\n\tIf not \u0026FileExists\n\t\tWWP_Logger.Error(\u0026Pgmname, !\u0022Attachment is not a valid file: \u0022 \u002B \u0026Attachment.WWPMailAttachmentFile)\n\t\tWWP_UpdateMailStatus(\u0026MailId, WWPBaseObjects.Mail.WWP_StatusMail.Error, !\u0022Attachment invalid\u0022)\n\t\treturn\n\tEndIf\nEndFor\n\n\u0026MailMessage = new()\n\u0026MailMessage.From.Address = \u0026Mail.WWPMailSenderAddress\n\u0026MailMessage.From.Name = \u0026Mail.WWPMailSenderName\n\u0026MailMessage.Subject = \u0026Mail.WWPMailSubject\n\u0026MailMessage.HTMLText = \u0026Mail.WWPMailBody\n\n\u0026MailRecipient = new()\n\u0026MailRecipient.Address = \u0026Mail.WWPMailSenderAddress\n\u0026MailRecipient.Name = \u0026Mail.WWPMailSenderName\n\u0026SMTPSession.Sender = \u0026MailRecipient\n\nFor \u0026Address in \u0026ToAddressList\n\t\u0026MailRecipient = new()\n\t\u0026MailRecipient.Address = \u0026Address\n\t\u0026MailMessage.To.Add(\u0026MailRecipient)\nEndFor\n\nFor \u0026Address in \u0026CCAddressList\n\t\u0026MailRecipient = new()\n\t\u0026MailRecipient.Address = \u0026Address\n\t\u0026MailMessage.CC.Add(\u0026MailRecipient)\nEndFor\n\nFor \u0026Address in \u0026BCCAddressList\n\t\u0026MailRecipient = new()\n\t\u0026MailRecipient.Address = \u0026Address\n\t\u0026MailMessage.BCC.Add(\u0026MailRecipient)\nEndFor\n\nFor \u0026Attachment in \u0026Mail.Attachments\n\t\u0026MailMessage.Attachments.Add(\u0026Attachment.WWPMailAttachmentFile)\nEndFor\n\n\u0026SendStatus = \u0026SmtpSession.Send(\u0026MailMessage)\n\u0026StatusMessage = WWP_GetStatusCodeMessage(\u0026SendStatus)\n\nIf \u0026SendStatus \u003C\u003E 0\n\tWWP_Logger.Error(\u0026Pgmname, Format(!\u0022Error sending mail with id: %1 - Code: %2 - %3\u0022, \u0026MailId.ToString(), \u0026SendStatus.ToString().Trim(), \u0026StatusMessage))\n\tWWPBaseObjects.Mail.WWP_UpdateMailStatus(\u0026MailId, Mail.WWP_StatusMail.Error, Format(!\u0022Code: %1 - Message: %2\u0022, \u0026SendStatus.ToString().Trim(), \u0026StatusMessage))\n\treturn\nEndIf\n\nWWP_UpdateMailStatus(\u0026MailId, WWPBaseObjects.Mail.WWP_StatusMail.Sent, !\u0022OK\u0022)\ncommit"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026MailId, in:\u0026SMTPSession, out:\u0026SendStatus);\n",
+      "cleanSource": "parm(in:\u0026MailId, in:\u0026SMTPSession, out:\u0026SendStatus);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_Logger",
+      "WWPBaseObjects.Mail.WWP_UpdateMailStatus",
+      "WWPBaseObjects.Mail.WWP_ParseMailAddressList",
+      "WWPBaseObjects.Mail.WWP_GetStatusCodeMessage",
+      "WWPBaseObjects.Mail.WWP_Mail"
+    ],
+    "calledBy": [
+      "NotificarImpresion",
+      "NotificarSupervisor",
+      "WWP_SendPendingNotifications"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Address",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Address"
+    },
+    {
+      "name": "Attachment",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP_LEVEL",
+      "accessor": "",
+      "domain": "",
+      "description": "Attachment"
+    },
+    {
+      "name": "BCCAddressList",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "BCCAddress List"
+    },
+    {
+      "name": "CCAddressList",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "CCAddress List"
+    },
+    {
+      "name": "FileExists",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "File Exists"
+    },
+    {
+      "name": "Mail",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Mail"
+    },
+    {
+      "name": "MailId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Mail Id"
+    },
+    {
+      "name": "MailMessage",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Mail Message"
+    },
+    {
+      "name": "MailRecipient",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Mail Recipient"
+    },
+    {
+      "name": "SendStatus",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Send Status"
+    },
+    {
+      "name": "SMTPSession",
+      "elementType": "Parameter",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "in",
+      "domain": "",
+      "description": "SMTPSession"
+    },
+    {
+      "name": "StatusMessage",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Status Message"
+    },
+    {
+      "name": "ToAddressList",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "To Address List"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

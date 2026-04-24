@@ -1,0 +1,78 @@
+{
+  "uniqueId": "4853bccf-89c6-4a8f-b1b5-4a8ee74e4f3a",
+  "name": "Route",
+  "type": "SDT",
+  "module": "GeneXus.Common",
+  "description": "Route",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "Directions",
+      "DirectionsServiceRequest"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "name",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "The expected travel time in seconds"
+    },
+    {
+      "name": "advisoryNotices",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "A collection of advisory notice strings for the route"
+    },
+    {
+      "name": "distance",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "The route distance in meters"
+    },
+    {
+      "name": "expectedTravelTime",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "The expected travel time in seconds"
+    },
+    {
+      "name": "transportType",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "The overall route transport type"
+    },
+    {
+      "name": "geoline",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "The route geometry"
+    }
+  ]
+}

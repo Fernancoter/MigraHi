@@ -1,0 +1,95 @@
+{
+  "uniqueId": "00d1a926-22f5-4fec-af63-b8c5d5ada345",
+  "name": "UserCustomizations",
+  "type": "Transaction",
+  "module": "WWPBaseObjects",
+  "description": "User Custom",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "LoadUserKeyValue",
+      "SaveUserKeyValue"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Today",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "GxRemove",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Gx Remove"
+    },
+    {
+      "name": "Mode",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Mode"
+    },
+    {
+      "name": "UserCustomizationsId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "UserCustomizationsKey",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "UserCustomizationsValue",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    }
+  ]
+}

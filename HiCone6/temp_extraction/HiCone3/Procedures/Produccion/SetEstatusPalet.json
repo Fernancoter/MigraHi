@@ -1,0 +1,120 @@
+{
+  "uniqueId": "28b682c4-8fc7-46f8-b5fa-04e46f4b6908",
+  "name": "SetEstatusPalet",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Set Estatus Palet",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "        \n\t\u0026Palet.Load(\u0026PaletId)\n\t\u0026Palet.PaletEstatus = \u0026EstatusPalet\n\t\u0026Palet.Save()\n\t\n\tif(\u0026Palet.Success())\n\t\tcommit\n\tendif\n",
+      "cleanSource": "        \n\t\u0026Palet.Load(\u0026PaletId)\n\t\u0026Palet.PaletEstatus = \u0026EstatusPalet\n\t\u0026Palet.Save()\n\t\n\tif(\u0026Palet.Success())\n\t\tcommit\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PaletId, in:\u0026EstatusPalet);\n",
+      "cleanSource": "parm(in:\u0026PaletId, in:\u0026EstatusPalet);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Palet"
+    ],
+    "calledBy": [
+      "DesvincularPallet",
+      "SDConcluirEtiquetado",
+      "EncontrarPallet",
+      "SDEtiquetarCarreteExterno"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Palet",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet"
+    },
+    {
+      "name": "PaletId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Palet Id"
+    },
+    {
+      "name": "EstatusPalet",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Estatus Palet"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

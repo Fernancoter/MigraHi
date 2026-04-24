@@ -1,0 +1,73 @@
+{
+  "uniqueId": "b466340d-f110-454d-97c2-3864bb2a5310",
+  "name": "QueryViewerItemDoubleClickData",
+  "type": "SDT",
+  "module": "GeneXusReporting",
+  "description": "Query Viewer Item Double Click Data",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "TurnosPorSemanaExtrusoras",
+      "TurnosPorSemana",
+      "InicioPrensado",
+      "InicioProduccion",
+      "ReportITW",
+      "InicioEmbarques",
+      "inicioSeguridad",
+      "InicioInventario",
+      "ModuleA",
+      "ModuleB",
+      "InicioExtrusion",
+      "TurnosPorSemanaPrensas",
+      "ConsultarExtrusionesQuery"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Name",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Name"
+    },
+    {
+      "name": "Type",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Type"
+    },
+    {
+      "name": "Axis",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Axis"
+    },
+    {
+      "name": "Value",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Value"
+    }
+  ]
+}

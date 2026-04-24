@@ -1,0 +1,132 @@
+{
+  "uniqueId": "4b146438-435a-4f9f-b233-c21eff865b6b",
+  "name": "GuardarExtrusionResultado",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Guardar Extrusion Resultado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\n\t\u0026isOK = false\n\t\n\t\u0026ExtrusionResultado.Load(\u0026SDTExtrusionResultado.ExtrusionResultadoId)\n\t\u0026ExtrusionResultado.FromJson(\u0026SDTExtrusionResultado.ToJson())\n\t\u0026ExtrusionResultado.Save()\n\t\n\tif(\u0026ExtrusionResultado.Success())\n\t\tcommit\n\t\t\u0026isOK = true\n\t\t\n\t\tmsg(\u0027Operaci\u00F3n de guardado exitosa\u0027)\n\tendif\n",
+      "cleanSource": "\t\n\t\u0026isOK = false\n\t\n\t\u0026ExtrusionResultado.Load(\u0026SDTExtrusionResultado.ExtrusionResultadoId)\n\t\u0026ExtrusionResultado.FromJson(\u0026SDTExtrusionResultado.ToJson())\n\t\u0026ExtrusionResultado.Save()\n\t\n\tif(\u0026ExtrusionResultado.Success())\n\t\tcommit\n\t\t\u0026isOK = true\n\t\t\n\t\tmsg(\u0027Operaci\u00F3n de guardado exitosa\u0027)\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026SDTExtrusionResultado, out:\u0026isOK);\n",
+      "cleanSource": "parm(in:\u0026SDTExtrusionResultado, out:\u0026isOK);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SDTExtrusionResultado",
+      "DB.ExtrusionResultado"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ExtResultado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Ext Resultado"
+    },
+    {
+      "name": "ExtrusionResultado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion Resultado"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "ExtResultadoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Ext Resultado Id"
+    },
+    {
+      "name": "SDTExtrusionResultado",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "SDTExtrusion Resultado"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

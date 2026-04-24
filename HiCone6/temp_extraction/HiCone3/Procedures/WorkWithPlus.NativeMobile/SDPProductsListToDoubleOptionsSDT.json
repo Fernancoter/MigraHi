@@ -1,0 +1,140 @@
+{
+  "uniqueId": "e5146cce-a8e7-4b3e-b5b6-93dbb465c669",
+  "name": "SDPProductsListToDoubleOptionsSDT",
+  "type": "Procedure",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "SDPProducts List To Double Options SDT",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026IsFirstItem = true\nfor \u0026SDPProductData in \u0026SDPProductDataList\t\n\tif \u0026IsFirstItem\n\t\t\u0026SDPDoubleMenuOptionsItem = new()\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1ComponentToCall = \u0026SDPProductData.ComponentToCall\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Id = \u0026SDPProductData.Id\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Image = \u0026SDPProductData.Image\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Information1 = \u0026SDPProductData.Information1\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Information2 = \u0026SDPProductData.Information2\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Subtitle = \u0026SDPProductData.Subtitle\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Title = \u0026SDPProductData.Title\n\t\t\n\t\t\u0026SDPDoubleMenuOptions.Add(\u0026SDPDoubleMenuOptionsItem)\n\t\t\u0026IsFirstItem = false\n\tElse\n\t\t\u0026SDPDoubleMenuOptionsItem.Option2ComponentToCall = \u0026SDPProductData.ComponentToCall\n\t\t\u0026SDPDoubleMenuOptionsItem.Option2Id = \u0026SDPProductData.Id\n\t\t\u0026SDPDoubleMenuOptionsItem.Option2Image = \u0026SDPProductData.Image\n\t\t\u0026SDPDoubleMenuOptionsItem.Option2Information1 = \u0026SDPProductData.Information1\n\t\t\u0026SDPDoubleMenuOptionsItem.Option2Information2 = \u0026SDPProductData.Information2\n\t\t\u0026SDPDoubleMenuOptionsItem.Option2Subtitle = \u0026SDPProductData.Subtitle\n\t\t\u0026SDPDoubleMenuOptionsItem.Option2Title = \u0026SDPProductData.Title\n\t\t\n\t\t\u0026IsFirstItem = true\n\tEndIf\t\nEndFor\n",
+      "cleanSource": "\u0026IsFirstItem = true\nfor \u0026SDPProductData in \u0026SDPProductDataList\t\n\tif \u0026IsFirstItem\n\t\t\u0026SDPDoubleMenuOptionsItem = new()\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1ComponentToCall = \u0026SDPProductData.ComponentToCall\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Id = \u0026SDPProductData.Id\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Image = \u0026SDPProductData.Image\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Information1 = \u0026SDPProductData.Information1\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Information2 = \u0026SDPProductData.Information2\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Subtitle = \u0026SDPProductData.Subtitle\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Title = \u0026SDPProductData.Title\n\t\t\n\t\t\u0026SDPDoubleMenuOptions.Add(\u0026SDPDoubleMenuOptionsItem)\n\t\t\u0026IsFirstItem = false\n\tElse\n\t\t\u0026SDPDoubleMenuOptionsItem.Option2ComponentToCall = \u0026SDPProductData.ComponentToCall\n\t\t\u0026SDPDoubleMenuOptionsItem.Option2Id = \u0026SDPProductData.Id\n\t\t\u0026SDPDoubleMenuOptionsItem.Option2Image = \u0026SDPProductData.Image\n\t\t\u0026SDPDoubleMenuOptionsItem.Option2Information1 = \u0026SDPProductData.Information1\n\t\t\u0026SDPDoubleMenuOptionsItem.Option2Information2 = \u0026SDPProductData.Information2\n\t\t\u0026SDPDoubleMenuOptionsItem.Option2Subtitle = \u0026SDPProductData.Subtitle\n\t\t\u0026SDPDoubleMenuOptionsItem.Option2Title = \u0026SDPProductData.Title\n\t\t\n\t\t\u0026IsFirstItem = true\n\tEndIf\t\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026SDPProductDataList, out:\u0026SDPDoubleMenuOptions);\n",
+      "cleanSource": "Parm(in:\u0026SDPProductDataList, out:\u0026SDPDoubleMenuOptions);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WorkWithPlus.NativeMobile.SDPDoubleMenuOptions",
+      "WorkWithPlus.NativeMobile.SDPProductData"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SDPProductData",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDPProduct Data"
+    },
+    {
+      "name": "IsFirstItem",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Is First Item"
+    },
+    {
+      "name": "ItemCount",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Item Count"
+    },
+    {
+      "name": "SDPDoubleMenuOptions",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "SDPDouble Menu Options"
+    },
+    {
+      "name": "SDPDoubleMenuOptionsItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDPDouble Menu Options Item"
+    },
+    {
+      "name": "SDPProductDataList",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "SDPProduct Data List"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

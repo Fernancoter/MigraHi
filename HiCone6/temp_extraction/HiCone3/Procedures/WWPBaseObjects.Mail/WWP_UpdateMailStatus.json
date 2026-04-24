@@ -1,0 +1,126 @@
+{
+  "uniqueId": "45510734-7aca-4d32-b7d4-60a7e2b283c2",
+  "name": "WWP_UpdateMailStatus",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.Mail",
+  "description": "Update Mail Status",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026Mail.Load(\u0026MailId)\n\nIf \u0026Mail.Fail()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Mail not found with id: \u0022 \u002B \u0026MailId.ToString())\n\treturn\nEndIf\n\n\u0026Mail.WWPMailProcessed = ServerNow()\n\u0026Mail.WWPMailStatus = \u0026MailStatus\n\u0026Mail.WWPMailDetail = \u0026MailDetail\n\u0026Mail.Save()\n\nIf \u0026Mail.Fail()\n\tWWPBaseObjects.WWP_Logger.Error(\u0026Pgmname, !\u0022Error updating mail status with id: \u0022 \u002B \u0026MailId.ToString())\n\treturn\nEndIf\n",
+      "cleanSource": "\u0026Mail.Load(\u0026MailId)\n\nIf \u0026Mail.Fail()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Mail not found with id: \u0022 \u002B \u0026MailId.ToString())\n\treturn\nEndIf\n\n\u0026Mail.WWPMailProcessed = ServerNow()\n\u0026Mail.WWPMailStatus = \u0026MailStatus\n\u0026Mail.WWPMailDetail = \u0026MailDetail\n\u0026Mail.Save()\n\nIf \u0026Mail.Fail()\n\tWWPBaseObjects.WWP_Logger.Error(\u0026Pgmname, !\u0022Error updating mail status with id: \u0022 \u002B \u0026MailId.ToString())\n\treturn\nEndIf"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026MailId, in:\u0026MailStatus, in:\u0026MailDetail);\n",
+      "cleanSource": "parm(in:\u0026MailId, in:\u0026MailStatus, in:\u0026MailDetail);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_Logger",
+      "WWPBaseObjects.Mail.WWP_Mail"
+    ],
+    "calledBy": [
+      "WWP_SendMail"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Mail",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Mail"
+    },
+    {
+      "name": "MailDetail",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Mail Detail"
+    },
+    {
+      "name": "MailId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Mail Id"
+    },
+    {
+      "name": "MailStatus",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Mail Status"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

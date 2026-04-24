@@ -1,0 +1,47 @@
+{
+  "uniqueId": "4f4a56eb-c37e-441e-a784-04e625f6db16",
+  "name": "SynchronizationInfo",
+  "type": "SDT",
+  "module": "GeneXus.SD.Synchronization",
+  "description": "Synchronization\u0027s Additional Information",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "GxAfterEventReplicator",
+      "GxBeforeEventReplicator",
+      "GxOnPendingEventFailed"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "GxAppVersion",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Application Version"
+    },
+    {
+      "name": "Synchronizer",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Synchronizer"
+    }
+  ]
+}

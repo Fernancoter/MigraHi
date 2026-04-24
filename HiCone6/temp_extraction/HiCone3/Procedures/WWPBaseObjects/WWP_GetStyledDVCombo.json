@@ -1,0 +1,105 @@
+{
+  "uniqueId": "1b98036d-7df8-4b6a-a756-9edd9665c410",
+  "name": "WWP_GetStyledDVCombo",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "WWP_Get Styled DVCombo",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\nDo Case\n\tCase \u0026Style = !\u0027Title and subtitle\u0027\n\t\t\u0026html = !\u0027\u003Cdiv class=\u0022StyleTitleAndSubtitle\u0022\u003E\u003Cspan\u003E%1\u003C/span\u003E\u003Cspan\u003E%2\u003C/span\u003E\u003C/div\u003E\u0027\n\tCase \u0026Style = !\u0027Title, subtitle and image\u0027\n\t\t\u0026html = !\u0027\u003Cdiv class=\u0022StyleImageAndData StyleImageTitleAndSubtitle\u0022\u003E\u003Cdiv\u003E\u003Cimg src=\u0022%3\u0022 /\u003E\u003C/div\u003E\u003Cdiv\u003E\u003Cspan\u003E%1\u003C/span\u003E\u003Cspan\u003E%2\u003C/span\u003E\u003C/div\u003E\u003C/div\u003E\u0027\n\tCase \u0026Style = !\u0027Title and image\u0027\n\t\t\u0026html = !\u0027\u003Cdiv class=\u0022StyleImageAndData StyleImageAndTitle\u0022\u003E\u003Cdiv\u003E\u003Cimg src=\u0022%2\u0022 /\u003E\u003C/div\u003E\u003Cdiv\u003E\u003Cspan\u003E%1\u003C/span\u003E\u003C/div\u003E\u003C/div\u003E\u0027\nEndCase\n",
+      "cleanSource": "\nDo Case\n\tCase \u0026Style = !\u0027Title and subtitle\u0027\n\t\t\u0026html = !\u0027\u003Cdiv class=\u0022StyleTitleAndSubtitle\u0022\u003E\u003Cspan\u003E%1\u003C/span\u003E\u003Cspan\u003E%2\u003C/span\u003E\u003C/div\u003E\u0027\n\tCase \u0026Style = !\u0027Title, subtitle and image\u0027\n\t\t\u0026html = !\u0027\u003Cdiv class=\u0022StyleImageAndData StyleImageTitleAndSubtitle\u0022\u003E\u003Cdiv\u003E\u003Cimg src=\u0022%3\u0022 /\u003E\u003C/div\u003E\u003Cdiv\u003E\u003Cspan\u003E%1\u003C/span\u003E\u003Cspan\u003E%2\u003C/span\u003E\u003C/div\u003E\u003C/div\u003E\u0027\n\tCase \u0026Style = !\u0027Title and image\u0027\n\t\t\u0026html = !\u0027\u003Cdiv class=\u0022StyleImageAndData StyleImageAndTitle\u0022\u003E\u003Cdiv\u003E\u003Cimg src=\u0022%2\u0022 /\u003E\u003C/div\u003E\u003Cdiv\u003E\u003Cspan\u003E%1\u003C/span\u003E\u003C/div\u003E\u003C/div\u003E\u0027\nEndCase"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "\nparm(in:\u0026Style, out:\u0026html);\n",
+      "cleanSource": "\nparm(in:\u0026Style, out:\u0026html);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "html",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "html"
+    },
+    {
+      "name": "Style",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Style"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

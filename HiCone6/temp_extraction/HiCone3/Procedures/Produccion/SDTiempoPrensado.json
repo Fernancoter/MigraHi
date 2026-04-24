@@ -1,0 +1,151 @@
+{
+  "uniqueId": "6bc3ab12-f2b4-4d22-96ae-0ca1eb66bbda",
+  "name": "SDTiempoPrensado",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDTiempo Prensado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026SgtePrensadoId = SgteTurnoPrensado.Udp(\u0026PrensadoId)\n\nif(\u0026SgtePrensadoId \u003E 0)\n\t\u0026SgtePrensado.Load(\u0026SgtePrensadoId)\n\t\u0026SgtePrensadoFecha = \u0026SgtePrensado.PrensadoFecha\n\t\u0026Tiempo = \u0026SgtePrensadoFecha.Difference(\u0026IniciaProceso)\n\t\u0026TiempoMin = (\u0026Tiempo/60) - 60\nelse\n\t\u0026TiempoMin = SDTiempoLaboral.Udp()\nendif\n",
+      "cleanSource": "\u0026SgtePrensadoId = SgteTurnoPrensado.Udp(\u0026PrensadoId)\n\nif(\u0026SgtePrensadoId \u003E 0)\n\t\u0026SgtePrensado.Load(\u0026SgtePrensadoId)\n\t\u0026SgtePrensadoFecha = \u0026SgtePrensado.PrensadoFecha\n\t\u0026Tiempo = \u0026SgtePrensadoFecha.Difference(\u0026IniciaProceso)\n\t\u0026TiempoMin = (\u0026Tiempo/60) - 60\nelse\n\t\u0026TiempoMin = SDTiempoLaboral.Udp()\nendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensadoId, in:\u0026IniciaProceso, out:\u0026TiempoMin);\n",
+      "cleanSource": "parm(in:\u0026PrensadoId, in:\u0026IniciaProceso, out:\u0026TiempoMin);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SgteTurnoPrensado",
+      "Produccion.SDTiempoLaboral",
+      "DB.Prensado",
+      "SgteTurnoPrensado",
+      "SDTiempoLaboral"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "IniciaProceso",
+      "elementType": "Parameter",
+      "dataType": "DATETIME",
+      "accessor": "in",
+      "domain": "",
+      "description": "Inicia Proceso"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "SgtePrensado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Sgte Prensado"
+    },
+    {
+      "name": "SgtePrensadoFecha",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Fecha"
+    },
+    {
+      "name": "SgtePrensadoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "TiempoMin",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Tiempo Min"
+    },
+    {
+      "name": "Tiempo",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Tiempo"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

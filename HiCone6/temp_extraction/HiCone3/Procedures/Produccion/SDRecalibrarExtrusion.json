@@ -1,0 +1,289 @@
+{
+  "uniqueId": "8516c9a9-e307-425f-b896-f83865d8bcf8",
+  "name": "SDRecalibrarExtrusion",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDRecalibrar Extrusion",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\n\t\u0026NuevoProducto.Load(\u0026ProductoId)\n\t\u0026NPTipoMaterial = \u0026NuevoProducto.ProductoTipoMaterial\n\t\n\t//Sgte Extrusion\n        \u0026SgteExtrusion.Load(\u0026SgteExtrusionId)\n\t\u0026SgteExtrusoraId = \u0026SgteExtrusion.ExtrusionExtrusoraId\n\t\u0026SgteProductoId = \u0026SgteExtrusion.ExtrusionProductoId\n\t\n\tif(\u0026ProductoId \u003C\u003E \u0026SgteProductoId)\n\t\t\n\t\tdo \u0027CalibrarExtrusion\u0027\n\t\t\n\t\t\u0026SgteExtrusion.ExtrusionProductoId = \u0026ProductoId\n\t\t\u0026SgteExtrusion.ExtrusionCalibre = \u0026ExtrusionCalibre\n\t\t\u0026SgteExtrusion.ExtrusionAncho = \u0026ExtrusionAncho\n\t\t\u0026SgteExtrusion.ExtrusionLongitud = \u0026ExtrusionLongitud\n\t\t\u0026SgteExtrusion.Save()\n\t\t\n\t\tif(\u0026SgteExtrusion.Success())\n\t\t\tcommit\n\t\tendif\n        endif\n        \n        Sub \u0027CalibrarExtrusion\u0027\n\t     for each DB.ExtrusoraProducto\n\t\t   where ExtrusoraProductoId \u003E 0\n\t\t   where ExtrusoraId = \u0026SgteExtrusoraId\n\t\t   where ProductoId = \u0026ProductoId\n\t\t\n\t\t   \u0026ExtrusionCalibre = ExtrusoraProductoCalibre\n                   \u0026ExtrusionAncho = ExtrusoraProductoAncho\n                   \u0026ExtrusionLongitud = ExtrusoraProductoLongitud\n\t\t   Exit\n\t     endfor\n        EndSub\n",
+      "cleanSource": "\t\n\t\u0026NuevoProducto.Load(\u0026ProductoId)\n\t\u0026NPTipoMaterial = \u0026NuevoProducto.ProductoTipoMaterial\n\t\n\t//Sgte Extrusion\n        \u0026SgteExtrusion.Load(\u0026SgteExtrusionId)\n\t\u0026SgteExtrusoraId = \u0026SgteExtrusion.ExtrusionExtrusoraId\n\t\u0026SgteProductoId = \u0026SgteExtrusion.ExtrusionProductoId\n\t\n\tif(\u0026ProductoId \u003C\u003E \u0026SgteProductoId)\n\t\t\n\t\tdo \u0027CalibrarExtrusion\u0027\n\t\t\n\t\t\u0026SgteExtrusion.ExtrusionProductoId = \u0026ProductoId\n\t\t\u0026SgteExtrusion.ExtrusionCalibre = \u0026ExtrusionCalibre\n\t\t\u0026SgteExtrusion.ExtrusionAncho = \u0026ExtrusionAncho\n\t\t\u0026SgteExtrusion.ExtrusionLongitud = \u0026ExtrusionLongitud\n\t\t\u0026SgteExtrusion.Save()\n\t\t\n\t\tif(\u0026SgteExtrusion.Success())\n\t\t\tcommit\n\t\tendif\n        endif\n        \n        Sub \u0027CalibrarExtrusion\u0027\n\t     for each DB.ExtrusoraProducto\n\t\t   where ExtrusoraProductoId \u003E 0\n\t\t   where ExtrusoraId = \u0026SgteExtrusoraId\n\t\t   where ProductoId = \u0026ProductoId\n\t\t\n\t\t   \u0026ExtrusionCalibre = ExtrusoraProductoCalibre\n                   \u0026ExtrusionAncho = ExtrusoraProductoAncho\n                   \u0026ExtrusionLongitud = ExtrusoraProductoLongitud\n\t\t   Exit\n\t     endfor\n        EndSub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026SgteExtrusionId, in:\u0026ProductoId);\n",
+      "cleanSource": "parm(in:\u0026SgteExtrusionId, in:\u0026ProductoId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SDTBobina",
+      "DB.Producto",
+      "DB.ExtrusoraProducto",
+      "DB.Extrusion",
+      "DB.Bobina"
+    ],
+    "calledBy": [
+      "SDRecalibrarProducto"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Bobina",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina"
+    },
+    {
+      "name": "BobinaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Id"
+    },
+    {
+      "name": "BobinaNo",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina No"
+    },
+    {
+      "name": "BobinaProductoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Producto Id"
+    },
+    {
+      "name": "BPTipoMaterial",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "BPTipo Material"
+    },
+    {
+      "name": "CambioMaterial",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Cambio Material"
+    },
+    {
+      "name": "Extrusion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion"
+    },
+    {
+      "name": "ExtrusionAncho",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Ancho"
+    },
+    {
+      "name": "ExtrusionCalibre",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Calibre"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "ExtrusionLongitud",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Longitud"
+    },
+    {
+      "name": "ExtrusoraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "NPTipoMaterial",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "NPTipo Material"
+    },
+    {
+      "name": "NuevoProducto",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Nuevo Producto"
+    },
+    {
+      "name": "OrigenTipoMaterial",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Origen Tipo Material"
+    },
+    {
+      "name": "ProductoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "SDTBobinaItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTBobina Item"
+    },
+    {
+      "name": "SDTBobinaProceso",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTBobina Proceso"
+    },
+    {
+      "name": "SgteExtrusion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Sgte Extrusion"
+    },
+    {
+      "name": "SgteExtrusionId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "SgteExtrusoraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "SgteProductoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "SgteTipoMaterial",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Sgte Tipo Material"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

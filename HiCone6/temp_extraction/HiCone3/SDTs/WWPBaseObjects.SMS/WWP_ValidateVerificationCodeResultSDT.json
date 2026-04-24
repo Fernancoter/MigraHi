@@ -1,0 +1,77 @@
+{
+  "uniqueId": "da5b0006-2f54-4ddc-93ab-9e4129b9f261",
+  "name": "WWP_ValidateVerificationCodeResultSDT",
+  "type": "SDT",
+  "module": "WWPBaseObjects.SMS",
+  "description": "Validate Verification Code Result SDT",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "WWP_ValidateVerificationCode"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "id",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "id"
+    },
+    {
+      "name": "method",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "method"
+    },
+    {
+      "name": "status",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "status"
+    },
+    {
+      "name": "errorCode",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "error Code"
+    },
+    {
+      "name": "message",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "message"
+    },
+    {
+      "name": "reference",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "reference"
+    }
+  ]
+}

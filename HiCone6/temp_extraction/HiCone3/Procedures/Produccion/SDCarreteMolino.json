@@ -1,0 +1,124 @@
+{
+  "uniqueId": "860d3f61-e45f-4d83-9888-cf9fb39f72fc",
+  "name": "SDCarreteMolino",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDCarrete Molino",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\n\tfor each\n\t\twhere CarreteId \u003E 0\n\t\twhere CarreteCarreraId = \u0026CarreraId\n\t\twhere CarreteNoLinea = \u0026CarreteNoLinea\n\t\t\u0026CarreteId = CarreteId\n\t\tExit\n\tendfor\n\n\tif(\u0026Checked)\n\t\tSetEstadoCarrete.Call(\u0026CarreteId, Produccion.EstadoCarrete.Molino, \u0026Checked)\n\telse\n\t\t//SetEstadoCarrete.Call(\u0026CarreteId, EstadoCarrete.Valido, \u0026Checked)\n\tendif\n",
+      "cleanSource": "\t\n\tfor each\n\t\twhere CarreteId \u003E 0\n\t\twhere CarreteCarreraId = \u0026CarreraId\n\t\twhere CarreteNoLinea = \u0026CarreteNoLinea\n\t\t\u0026CarreteId = CarreteId\n\t\tExit\n\tendfor\n\n\tif(\u0026Checked)\n\t\tSetEstadoCarrete.Call(\u0026CarreteId, Produccion.EstadoCarrete.Molino, \u0026Checked)\n\telse\n\t\t//SetEstadoCarrete.Call(\u0026CarreteId, EstadoCarrete.Valido, \u0026Checked)\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026CarreraId, in:\u0026CarreteNoLinea, in:\u0026Checked, out:\u0026CarreteId);\n",
+      "cleanSource": "parm(in:\u0026CarreraId, in:\u0026CarreteNoLinea, in:\u0026Checked, out:\u0026CarreteId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SetEstadoCarrete",
+      "SetEstadoCarrete"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CarreraId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Carrera Id"
+    },
+    {
+      "name": "CarreteNoLinea",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Carrete No Linea"
+    },
+    {
+      "name": "Checked",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "in",
+      "domain": "",
+      "description": "Checked"
+    },
+    {
+      "name": "CarreteId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Carrete Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

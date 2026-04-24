@@ -1,0 +1,150 @@
+{
+  "uniqueId": "b6d7b4c4-9864-45e1-86cd-63f766eb1742",
+  "name": "SDPCartProductsRemove",
+  "type": "Procedure",
+  "module": "",
+  "description": "SDPCart Products Remove",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026ProductsInCartTxt = \u0026WebSession.Get(!\u0022ProductsInCart\u0022)\n\u0026ProductsInCart.FromJson(\u0026ProductsInCartTxt)\n\u0026Index = 0\nFor \u0026ProductsInCartItem in \u0026ProductsInCart\n\t\u0026Index = \u0026Index \u002B 1\n\tIf \u0026ProductId = \u0026ProductsInCartItem.ProductId\n\t\t\u0026ProductsInCart.Remove(\u0026Index)\n\t\texit\n\tEndIf\nEndFor\n\u0026ProductsInCartTxt = \u0026ProductsInCart.ToJson()\n\u0026WebSession.Set(!\u0022ProductsInCart\u0022, \u0026ProductsInCartTxt)\n",
+      "cleanSource": "\u0026ProductsInCartTxt = \u0026WebSession.Get(!\u0022ProductsInCart\u0022)\n\u0026ProductsInCart.FromJson(\u0026ProductsInCartTxt)\n\u0026Index = 0\nFor \u0026ProductsInCartItem in \u0026ProductsInCart\n\t\u0026Index = \u0026Index \u002B 1\n\tIf \u0026ProductId = \u0026ProductsInCartItem.ProductId\n\t\t\u0026ProductsInCart.Remove(\u0026Index)\n\t\texit\n\tEndIf\nEndFor\n\u0026ProductsInCartTxt = \u0026ProductsInCart.ToJson()\n\u0026WebSession.Set(!\u0022ProductsInCart\u0022, \u0026ProductsInCartTxt)"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026ProductId, in:\u0026Count);\n",
+      "cleanSource": "Parm(in:\u0026ProductId, in:\u0026Count);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "SDPCartProduct"
+    ],
+    "calledBy": [
+      "SDLimpiarNotificaciones",
+      "SDEliminarNotificacion"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "WebSession",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Web Session"
+    },
+    {
+      "name": "Count",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Count"
+    },
+    {
+      "name": "ProductId",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Product Id"
+    },
+    {
+      "name": "ProductsInCart",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Products In Cart"
+    },
+    {
+      "name": "ProductsInCartItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Products In Cart Item"
+    },
+    {
+      "name": "ProductsInCartTxt",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Products In Cart Txt"
+    },
+    {
+      "name": "Index",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Index"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

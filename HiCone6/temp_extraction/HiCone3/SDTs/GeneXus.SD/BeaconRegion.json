@@ -1,0 +1,47 @@
+{
+  "uniqueId": "9b6d62b2-8bd2-4173-9d46-253f3ab4ecae",
+  "name": "BeaconRegion",
+  "type": "SDT",
+  "module": "GeneXus.SD",
+  "description": "Beacon Region",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "GeneXus.SD.BeaconInfo"
+    ],
+    "calledBy": [
+      "BeaconProximityAlert"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Identifier",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Region\u0027s identifier"
+    },
+    {
+      "name": "BeaconMatch",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Beacons in region match criteria (GroupId and Id are optional)"
+    }
+  ]
+}

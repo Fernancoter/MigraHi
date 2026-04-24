@@ -1,0 +1,183 @@
+{
+  "uniqueId": "e5b7c6f7-dc7f-4a22-8dc3-b4e8e492a953",
+  "name": "AuditTransactionOriginal",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "Audit Transaction Original",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\n//This is a procedure in which you has to define the behaviour of auditing after a record has\n//being inserted, modified or deleted (when the transaction has auditing enabled).\n//There is an example below of a way to audit the actions of record, saving them in DataBase\n//(but this can be modified to do whatever you want):\nLoadWWPContext.call(\u0026WWPContext)\n\u0026AuditPrimaryKey = \u0022\u0022\n\u0026FirstRecord = True\nFor \u0026AuditingObjectRecordItem in \u0026AuditingObject.Record\n\n\t\u0026Audit = new()\n\t\u0026Audit.AuditDate = now()\n\t\u0026Audit.SecUserId = \u0026WWPContext.UserId\n\t\u0026Audit.AuditTableName = \u0026AuditingObjectRecordItem.TableName\n\t\n\tIf \u0026FirstRecord\n\t\t\u0026AuditShortDescription = \u0022Record with key \u0027\u0022\n\t\t\u0026AuditDescription = \u0022Record with key \u0027\u0022\n\t\t\u0026ActualMode = \u0026AuditingObject.Mode\n\tElse\n\t\t\u0026AuditShortDescription = \u0026AuditPrimaryKey\n\t\t\u0026AuditDescription = \u0026AuditPrimaryKey\n\t\t\u0026ActualMode = \u0026AuditingObjectRecordItem.Mode\n\tEndif\n\tdo case\n\t\tCase \u0026ActualMode = TrnMode.Insert\n\t\t\t\u0026Audit.AuditAction = \u0022Insert\u0022\n\t\tCase \u0026ActualMode = TrnMode.Update\n\t\t\t\u0026Audit.AuditAction = \u0022Update\u0022\n\t\tCase \u0026ActualMode = TrnMode.Delete\n\t\t\t\u0026Audit.AuditAction = \u0022Delete\u0022\n\tEndCase\n\tFor \u0026AuditingObjectRecordItemAttributeItem in \u0026AuditingObjectRecordItem.Attribute\n\t\t\n\t\tIf (\u0026AuditingObjectRecordItemAttributeItem.IsPartOfKey)\n\t\t\t\n\t\t\t\u0026Audit.AuditTableKey = \u0026AuditingObjectRecordItemAttributeItem.NewValue.ToNumeric()\n\t\t\t\n\t\t\tIf \u0026ActualMode = GeneXus.TrnMode.Insert\n\t\t\t\t\u0026AuditShortDescription \u002B= \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.NewValue\t\u002B \u0022 \u0022\t\t\n\t\t\t\t\u0026AuditDescription \u002B= \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.NewValue\t\u002B \u0022 \u0022\t\t\n\t\t\telse\n\t\t\t\t\u0026AuditShortDescription \u002B= \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.OldValue\t\u002B \u0022 \u0022\t\t\n\t\t\t\t\u0026AuditDescription \u002B= \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.OldValue\t\u002B \u0022 \u0022\t\t\n\t\t\tEndIf\n\t\tEndIf\n\t\tIf (\u0026AuditingObjectRecordItemAttributeItem.IsDescriptionAttribute)\n\t\t\tIf \u0026ActualMode = TrnMode.Insert\n\t\t\t\t\u0026AuditShortDescription \u002B= \u0022- \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.NewValue\t\u002B \u0022 \u0022\t\t\n\t\t\t\t\u0026AuditDescription \u002B= \u0022- \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.NewValue\t\u002B \u0022 \u0022\t\t\n\t\t\telse\n\t\t\t\t\u0026AuditShortDescription \u002B= \u0022- \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.OldValue\t\u002B \u0022 \u0022\t\t\n\t\t\t\t\u0026AuditDescription \u002B= \u0022- \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.OldValue\t\u002B \u0022 \u0022\t\t\n\t\t\tEndIf\n\t\tEndIf\n\tEndFor\n\t\n\tIf \u0026FirstRecord\n\t\t\u0026FirstRecord = False\n\t\t\u0026AuditPrimaryKey = \u0026AuditShortDescription\n\tEndif\n\t\u0026AuditShortDescription \u002B= \u0022\u0027 was \u0022\n\t\u0026AuditDescription \u002B= \u0022\u0027 was \u0022\n\tDo Case \n\t\tCase \u0026ActualMode = TrnMode.Insert\n\t\t\t\u0026AuditShortDescription \u002B= \u0022inserted\u0022\n\t\t\t\u0026AuditDescription \u002B= \u0022inserted.\u0022 \u002B NewLine() \u002B \u0022 Attributes:\u0022 \u002B NewLine()\n\t\tCase \u0026ActualMode = TrnMode.Update\n\t\t\t\u0026AuditShortDescription \u002B= \u0022updated\u0022\n\t\t\t\u0026AuditDescription \u002B= \u0022updated.\u0022 \u002B NewLine() \u002B \u0022 Modified attributes:\u0022 \u002B NewLine()\n\t\tCase \u0026ActualMode = TrnMode.Delete\n\t\t\t\u0026AuditShortDescription \u002B= \u0022deleted\u0022\n\t\t\t\u0026AuditDescription \u002B= \u0022deleted.\u0022 \u002B NewLine() \u002B \u0022 Attributes:\u0022 \u002B NewLine()\n\tEndCase\n\t\u0026AuditShortDescription \u002B= \u0022.\u0022\n\t\n\tFor \u0026AuditingObjectRecordItemAttributeItem in \u0026AuditingObjectRecordItem.Attribute\n\t\tIf not(\u0026AuditingObjectRecordItemAttributeItem.IsPartOfKey) \n\t\t\tDo Case \n\t\t\t\tCase \u0026ActualMode = TrnMode.Insert\n\t\t\t\t\tIf not \u0026AuditingObjectRecordItemAttributeItem.NewValue.IsEmpty()\n\t\t\t\t\t\t\u0026AuditDescription \u002B= \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.NewValue  \u002B NewLine()\n\t\t\t\t\tEndIf\n\t\t\t\tCase \u0026ActualMode = TrnMode.Update\n\t\t\t\t\tIf (\u0026AuditingObjectRecordItemAttributeItem.NewValue \u003C\u003E \u0026AuditingObjectRecordItemAttributeItem.OldValue)\n\t\t\t\t\t\t\u0026AuditDescription \u002B= \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.NewValue \u002B \u0022 (Old value = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.OldValue \u002B \u0022)\u0022 \u002B NewLine()\n\t\t\t\t\tEndIf\n\t\t\t\tCase \u0026ActualMode = TrnMode.Delete\n\t\t\t\t\tIf not (\u0026AuditingObjectRecordItemAttributeItem.OldValue.IsEmpty())\n\t\t\t\t\t\t\u0026AuditDescription \u002B= \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.OldValue \u002B NewLine()\n\t\t\t\t\tEndIf\n\t\t\tEndCase\t\n\t\tEndIf\n\tEndFor\n\t\u0026Audit.AuditDescription = \u0026AuditDescription\n\t\u0026Audit.AuditShortDescription = \u0026AuditShortDescription\n\t\u0026Audit.Save()\n\tIf \u0026Audit.Success()\n\t\tCommit\n\tEndIf\nEndFor\n\n//Finally, apply WorkWithPlus Pattern to Audit, removing actions of Insert, Update and Delete\n//Audit transaction cannot have Auditing enabled, because it will enter in loop\n//So, make sure that property \u0027Enable Auditing\u0027 is False in Audit transaction\n",
+      "cleanSource": "\n\n//This is a procedure in which you has to define the behaviour of auditing after a record has\n//being inserted, modified or deleted (when the transaction has auditing enabled).\n//There is an example below of a way to audit the actions of record, saving them in DataBase\n//(but this can be modified to do whatever you want):\nLoadWWPContext.call(\u0026WWPContext)\n\u0026AuditPrimaryKey = \u0022\u0022\n\u0026FirstRecord = True\nFor \u0026AuditingObjectRecordItem in \u0026AuditingObject.Record\n\n\t\u0026Audit = new()\n\t\u0026Audit.AuditDate = now()\n\t\u0026Audit.SecUserId = \u0026WWPContext.UserId\n\t\u0026Audit.AuditTableName = \u0026AuditingObjectRecordItem.TableName\n\t\n\tIf \u0026FirstRecord\n\t\t\u0026AuditShortDescription = \u0022Record with key \u0027\u0022\n\t\t\u0026AuditDescription = \u0022Record with key \u0027\u0022\n\t\t\u0026ActualMode = \u0026AuditingObject.Mode\n\tElse\n\t\t\u0026AuditShortDescription = \u0026AuditPrimaryKey\n\t\t\u0026AuditDescription = \u0026AuditPrimaryKey\n\t\t\u0026ActualMode = \u0026AuditingObjectRecordItem.Mode\n\tEndif\n\tdo case\n\t\tCase \u0026ActualMode = TrnMode.Insert\n\t\t\t\u0026Audit.AuditAction = \u0022Insert\u0022\n\t\tCase \u0026ActualMode = TrnMode.Update\n\t\t\t\u0026Audit.AuditAction = \u0022Update\u0022\n\t\tCase \u0026ActualMode = TrnMode.Delete\n\t\t\t\u0026Audit.AuditAction = \u0022Delete\u0022\n\tEndCase\n\tFor \u0026AuditingObjectRecordItemAttributeItem in \u0026AuditingObjectRecordItem.Attribute\n\t\t\n\t\tIf (\u0026AuditingObjectRecordItemAttributeItem.IsPartOfKey)\n\t\t\t\n\t\t\t\u0026Audit.AuditTableKey = \u0026AuditingObjectRecordItemAttributeItem.NewValue.ToNumeric()\n\t\t\t\n\t\t\tIf \u0026ActualMode = GeneXus.TrnMode.Insert\n\t\t\t\t\u0026AuditShortDescription \u002B= \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.NewValue\t\u002B \u0022 \u0022\t\t\n\t\t\t\t\u0026AuditDescription \u002B= \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.NewValue\t\u002B \u0022 \u0022\t\t\n\t\t\telse\n\t\t\t\t\u0026AuditShortDescription \u002B= \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.OldValue\t\u002B \u0022 \u0022\t\t\n\t\t\t\t\u0026AuditDescription \u002B= \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.OldValue\t\u002B \u0022 \u0022\t\t\n\t\t\tEndIf\n\t\tEndIf\n\t\tIf (\u0026AuditingObjectRecordItemAttributeItem.IsDescriptionAttribute)\n\t\t\tIf \u0026ActualMode = TrnMode.Insert\n\t\t\t\t\u0026AuditShortDescription \u002B= \u0022- \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.NewValue\t\u002B \u0022 \u0022\t\t\n\t\t\t\t\u0026AuditDescription \u002B= \u0022- \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.NewValue\t\u002B \u0022 \u0022\t\t\n\t\t\telse\n\t\t\t\t\u0026AuditShortDescription \u002B= \u0022- \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.OldValue\t\u002B \u0022 \u0022\t\t\n\t\t\t\t\u0026AuditDescription \u002B= \u0022- \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.OldValue\t\u002B \u0022 \u0022\t\t\n\t\t\tEndIf\n\t\tEndIf\n\tEndFor\n\t\n\tIf \u0026FirstRecord\n\t\t\u0026FirstRecord = False\n\t\t\u0026AuditPrimaryKey = \u0026AuditShortDescription\n\tEndif\n\t\u0026AuditShortDescription \u002B= \u0022\u0027 was \u0022\n\t\u0026AuditDescription \u002B= \u0022\u0027 was \u0022\n\tDo Case \n\t\tCase \u0026ActualMode = TrnMode.Insert\n\t\t\t\u0026AuditShortDescription \u002B= \u0022inserted\u0022\n\t\t\t\u0026AuditDescription \u002B= \u0022inserted.\u0022 \u002B NewLine() \u002B \u0022 Attributes:\u0022 \u002B NewLine()\n\t\tCase \u0026ActualMode = TrnMode.Update\n\t\t\t\u0026AuditShortDescription \u002B= \u0022updated\u0022\n\t\t\t\u0026AuditDescription \u002B= \u0022updated.\u0022 \u002B NewLine() \u002B \u0022 Modified attributes:\u0022 \u002B NewLine()\n\t\tCase \u0026ActualMode = TrnMode.Delete\n\t\t\t\u0026AuditShortDescription \u002B= \u0022deleted\u0022\n\t\t\t\u0026AuditDescription \u002B= \u0022deleted.\u0022 \u002B NewLine() \u002B \u0022 Attributes:\u0022 \u002B NewLine()\n\tEndCase\n\t\u0026AuditShortDescription \u002B= \u0022.\u0022\n\t\n\tFor \u0026AuditingObjectRecordItemAttributeItem in \u0026AuditingObjectRecordItem.Attribute\n\t\tIf not(\u0026AuditingObjectRecordItemAttributeItem.IsPartOfKey) \n\t\t\tDo Case \n\t\t\t\tCase \u0026ActualMode = TrnMode.Insert\n\t\t\t\t\tIf not \u0026AuditingObjectRecordItemAttributeItem.NewValue.IsEmpty()\n\t\t\t\t\t\t\u0026AuditDescription \u002B= \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.NewValue  \u002B NewLine()\n\t\t\t\t\tEndIf\n\t\t\t\tCase \u0026ActualMode = TrnMode.Update\n\t\t\t\t\tIf (\u0026AuditingObjectRecordItemAttributeItem.NewValue \u003C\u003E \u0026AuditingObjectRecordItemAttributeItem.OldValue)\n\t\t\t\t\t\t\u0026AuditDescription \u002B= \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.NewValue \u002B \u0022 (Old value = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.OldValue \u002B \u0022)\u0022 \u002B NewLine()\n\t\t\t\t\tEndIf\n\t\t\t\tCase \u0026ActualMode = TrnMode.Delete\n\t\t\t\t\tIf not (\u0026AuditingObjectRecordItemAttributeItem.OldValue.IsEmpty())\n\t\t\t\t\t\t\u0026AuditDescription \u002B= \u0026AuditingObjectRecordItemAttributeItem.Description \u002B \u0022 = \u0022 \u002B \u0026AuditingObjectRecordItemAttributeItem.OldValue \u002B NewLine()\n\t\t\t\t\tEndIf\n\t\t\tEndCase\t\n\t\tEndIf\n\tEndFor\n\t\u0026Audit.AuditDescription = \u0026AuditDescription\n\t\u0026Audit.AuditShortDescription = \u0026AuditShortDescription\n\t\u0026Audit.Save()\n\tIf \u0026Audit.Success()\n\t\tCommit\n\tEndIf\nEndFor\n\n//Finally, apply WorkWithPlus Pattern to Audit, removing actions of Insert, Update and Delete\n//Audit transaction cannot have Auditing enabled, because it will enter in loop\n//So, make sure that property \u0027Enable Auditing\u0027 is False in Audit transaction"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026AuditingObject, in:\u0026CallerName);\n",
+      "cleanSource": "parm(in:\u0026AuditingObject, in:\u0026CallerName);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.LoadWWPContext",
+      "WWPBaseObjects.AuditingObject",
+      "WWPBaseObjects.WWPContext",
+      "WWPBaseObjects.Audit",
+      "LoadWWPContext"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "AuditingObject",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "Auditing Object"
+    },
+    {
+      "name": "AuditingObjectRecordItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Auditing Object Record Item"
+    },
+    {
+      "name": "AuditingObjectRecordItemAttributeItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Auditing Object Record Item Attribute Item"
+    },
+    {
+      "name": "CallerName",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Caller Name"
+    },
+    {
+      "name": "Audit",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Audit"
+    },
+    {
+      "name": "AuditDescription",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Audit Description"
+    },
+    {
+      "name": "AuditShortDescription",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Audit Short Description"
+    },
+    {
+      "name": "AuditPrimaryKey",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Audit Primary Key"
+    },
+    {
+      "name": "WWPContext",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPContext"
+    },
+    {
+      "name": "FirstRecord",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "First Record"
+    },
+    {
+      "name": "ActualMode",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Actual Mode"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

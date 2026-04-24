@@ -1,0 +1,168 @@
+{
+  "uniqueId": "11876513-43f0-4d1e-bdb2-b8e956f5a7a4",
+  "name": "WWP_SMS",
+  "type": "Transaction",
+  "module": "WWPBaseObjects.SMS",
+  "description": "WWP_SMS",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "\ndefault(WWPSMSStatus, WWPBaseObjects.SMS.WWP_StatusSMS.Pending);\ndefault(WWPSMSCreated, ServerNow());\ndefault(WWPSMSScheduled, ServerNow());\n",
+      "cleanSource": "\ndefault(WWPSMSStatus, WWPBaseObjects.SMS.WWP_StatusSMS.Pending);\ndefault(WWPSMSCreated, ServerNow());\ndefault(WWPSMSScheduled, ServerNow());"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "WWP_CreateNotificationToUser",
+      "WWP_UpdateSMSStatus",
+      "WWP_SendSMS",
+      "WWP_SendPendingNotifications"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Today",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "GxRemove",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Gx Remove"
+    },
+    {
+      "name": "Mode",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Mode"
+    },
+    {
+      "name": "WWPSMSId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPSMSMessage",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPSMSSenderNumber",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPSMSRecipientNumbers",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPSMSStatus",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPSMSCreated",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPSMSScheduled",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPSMSProcessed",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPSMSDetail",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPNotificationId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPNotificationCreated",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    }
+  ]
+}

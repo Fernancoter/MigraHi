@@ -1,0 +1,56 @@
+{
+  "uniqueId": "4f69de40-170c-4278-87af-5f6626c07622",
+  "name": "SDTProductoCategoria",
+  "type": "SDT",
+  "module": "Produccion",
+  "description": "SDTProducto Categoria",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "gestionarPrensaProducto",
+      "GuardarProductoCategoria",
+      "gestionarInventario",
+      "gestionarProducto"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ProductoCategoriaId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Categoria Id"
+    },
+    {
+      "name": "ProductoCategoriaNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Categoria Nombre"
+    },
+    {
+      "name": "ProductoCategoriaClaveExterna",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Categoria Clave Externa"
+    }
+  ]
+}

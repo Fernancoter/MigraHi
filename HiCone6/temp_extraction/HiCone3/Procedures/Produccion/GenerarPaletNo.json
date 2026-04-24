@@ -1,0 +1,182 @@
+{
+  "uniqueId": "36419046-63ec-48c5-8002-11c236f20c49",
+  "name": "GenerarPaletNo",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Generar Palet No",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "        \n\t\u0026PaletNo = 0\n\t\u0026InventarioItem = SDInventarioItem.Udp(\u0026ProductoId)\n\t\n\t\u0026ConfiguracionValor =  ObtenerConfiguracion.Udp(!\u0027PaletNo_\u0027 \u002B \u0026PrensaId.ToString().Trim() \u002B\u0027_\u0027\u002B \u0026InventarioItem.InventarioFechaHora.Day().ToString().Trim()\u002B\u0027_\u0027 \u002B\u0026InventarioItem.InventarioFechaHora.Month().ToString().Trim() \u002B \u0027_\u0027 \u002B\u0026InventarioItem.InventarioFechaHora.Year().ToString().Trim() )\n\t\u0026PaletNo = \u0026ConfiguracionValor.ToNumeric()\n\t\n\tif(\u0026PaletNo\u003E0)\n\t\t\n\t\t\u0026AuxPaletNo = \u0026PaletNo \u002B 1\t\n\t\t\u0026ConfiguracionValor = \u0026AuxPaletNo.ToString().Trim()\n\t\tGuardarConfiguracion.Call(!\u0027PaletNo_\u0027 \u002B \u0026PrensaId.ToString().Trim() \u002B\u0027_\u0027\u002B \u0026InventarioItem.InventarioFechaHora.Day().ToString().Trim()\u002B\u0027_\u0027 \u002B\u0026InventarioItem.InventarioFechaHora.Month().ToString().Trim() \u002B \u0027_\u0027 \u002B\u0026InventarioItem.InventarioFechaHora.Year().ToString().Trim(),  \u0026ConfiguracionValor)\n\telse\n\t\t\n\t\tfor each DB.Palet\n\t\t\twhere PaletId \u003E 0\n\t\t\twhere PaletTipo = TipoPalet.Interno\n\t\t\twhere PaletPrensaId = \u0026PrensaId\n\t\t\twhere PaletHoraInicioEnsamble \u003E \u0026InventarioItem.InventarioFechaHora\n\t\t\t\n\t\t\t\n\t\t\t\n\t\t\t\u0026PaletNo \u002B= 1\t\n\t\tendfor\n\t\t\n\tendif\n\n\t\n\n\n        \n",
+      "cleanSource": "        \n\t\u0026PaletNo = 0\n\t\u0026InventarioItem = SDInventarioItem.Udp(\u0026ProductoId)\n\t\n\t\u0026ConfiguracionValor =  ObtenerConfiguracion.Udp(!\u0027PaletNo_\u0027 \u002B \u0026PrensaId.ToString().Trim() \u002B\u0027_\u0027\u002B \u0026InventarioItem.InventarioFechaHora.Day().ToString().Trim()\u002B\u0027_\u0027 \u002B\u0026InventarioItem.InventarioFechaHora.Month().ToString().Trim() \u002B \u0027_\u0027 \u002B\u0026InventarioItem.InventarioFechaHora.Year().ToString().Trim() )\n\t\u0026PaletNo = \u0026ConfiguracionValor.ToNumeric()\n\t\n\tif(\u0026PaletNo\u003E0)\n\t\t\n\t\t\u0026AuxPaletNo = \u0026PaletNo \u002B 1\t\n\t\t\u0026ConfiguracionValor = \u0026AuxPaletNo.ToString().Trim()\n\t\tGuardarConfiguracion.Call(!\u0027PaletNo_\u0027 \u002B \u0026PrensaId.ToString().Trim() \u002B\u0027_\u0027\u002B \u0026InventarioItem.InventarioFechaHora.Day().ToString().Trim()\u002B\u0027_\u0027 \u002B\u0026InventarioItem.InventarioFechaHora.Month().ToString().Trim() \u002B \u0027_\u0027 \u002B\u0026InventarioItem.InventarioFechaHora.Year().ToString().Trim(),  \u0026ConfiguracionValor)\n\telse\n\t\t\n\t\tfor each DB.Palet\n\t\t\twhere PaletId \u003E 0\n\t\t\twhere PaletTipo = TipoPalet.Interno\n\t\t\twhere PaletPrensaId = \u0026PrensaId\n\t\t\twhere PaletHoraInicioEnsamble \u003E \u0026InventarioItem.InventarioFechaHora\n\t\t\t\n\t\t\t\n\t\t\t\n\t\t\t\u0026PaletNo \u002B= 1\t\n\t\tendfor\n\t\t\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensaId, in:\u0026ProductoId, out:\u0026PaletNo);\n",
+      "cleanSource": "parm(in:\u0026PrensaId, in:\u0026ProductoId, out:\u0026PaletNo);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.ObtenerConfiguracion",
+      "Produccion.SDInventarioItem",
+      "Produccion.GuardarConfiguracion",
+      "Produccion.SDTInventario",
+      "DB.Prensado",
+      "DB.Inventario",
+      "DB.Palet",
+      "GuardarConfiguracion",
+      "SDInventarioItem",
+      "ObtenerConfiguracion"
+    ],
+    "calledBy": [
+      "ObtenerPalet"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Inventario",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Inventario"
+    },
+    {
+      "name": "InventarioFecha",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Inventario Fecha"
+    },
+    {
+      "name": "InventarioItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Inventario Item"
+    },
+    {
+      "name": "PaletNo",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Palet No"
+    },
+    {
+      "name": "PrenId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Pren Id"
+    },
+    {
+      "name": "Prensado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado"
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "ProductoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "ConfiguracionValor",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Configuracion Valor"
+    },
+    {
+      "name": "AuxPaletNo",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet No"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

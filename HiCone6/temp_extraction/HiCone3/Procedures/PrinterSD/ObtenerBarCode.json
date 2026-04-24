@@ -1,0 +1,140 @@
+{
+  "uniqueId": "c55b9112-9be9-42ea-8f9d-9b7d5d407c54",
+  "name": "ObtenerBarCode",
+  "type": "Procedure",
+  "module": "PrinterSD",
+  "description": "Obtener Bar Code",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026ImgTxt = \u0026StringLibrary.GetBarCodeBase64(\u0026BarCodeValue,2)\n\u0026ImgBlob.FromBase64String(\u0026ImgTxt)\nPrinterSD.GuardarBarCode.Call(\u0026BarCodeValue, \u0026ImgBlob)\n\nFor Each\n\tWhere BarCodeValue = \u0026BarCodeValue\n\t\u0026BarCodeImage = BarCodeImage\n\tExit\nEndFor\n\n\t\n",
+      "cleanSource": "\u0026ImgTxt = \u0026StringLibrary.GetBarCodeBase64(\u0026BarCodeValue,2)\n\u0026ImgBlob.FromBase64String(\u0026ImgTxt)\nPrinterSD.GuardarBarCode.Call(\u0026BarCodeValue, \u0026ImgBlob)\n\nFor Each\n\tWhere BarCodeValue = \u0026BarCodeValue\n\t\u0026BarCodeImage = BarCodeImage\n\tExit\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(In:\u0026BarCodeValue, Out:\u0026BarCodeImage);\n",
+      "cleanSource": "parm(In:\u0026BarCodeValue, Out:\u0026BarCodeImage);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "PrinterSD.GuardarBarCode"
+    ],
+    "calledBy": [
+      "BobinaReportMainMulti",
+      "BobinaReportMain",
+      "CarreteReportMainPCR",
+      "PaletReportMain",
+      "CarreteReportMain",
+      "PaletReportSAP",
+      "PalletCarreteReportMainPCR",
+      "PalletCarreteReportMain"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "BarCodeValue",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Bar Code Value"
+    },
+    {
+      "name": "BarCodeImage",
+      "elementType": "Parameter",
+      "dataType": "BITMAP",
+      "accessor": "out",
+      "domain": "",
+      "description": "Bar Code Image"
+    },
+    {
+      "name": "ImgBlob",
+      "elementType": "Variable",
+      "dataType": "BINARY",
+      "accessor": "",
+      "domain": "",
+      "description": "Img Blob"
+    },
+    {
+      "name": "ImgTxt",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Img Txt"
+    },
+    {
+      "name": "StringLibrary",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "String Library"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

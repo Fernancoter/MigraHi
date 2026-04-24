@@ -1,0 +1,65 @@
+{
+  "uniqueId": "80f49343-e550-421f-a3ae-9918f7572ad0",
+  "name": "DVB_SDTComboData",
+  "type": "SDT",
+  "module": "WWPBaseObjects",
+  "description": "DVB_SDTCombo Data",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.DVB_SDTComboData"
+    ],
+    "calledBy": [
+      "gestionarTroquel",
+      "DVB_SDTComboData",
+      "gestionarExtrusora",
+      "gestionarPrensaProducto",
+      "WWP_GridStateAddComboFilterValue",
+      "gestionarInventario",
+      "gestionarProducto",
+      "GAMUserEntry",
+      "gestionarExtrusoraProducto",
+      "WWP_GridStateAddComboDynFilterValue",
+      "WWP_Search"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ID",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "ID"
+    },
+    {
+      "name": "Title",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Title"
+    },
+    {
+      "name": "Children",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Children"
+    }
+  ]
+}

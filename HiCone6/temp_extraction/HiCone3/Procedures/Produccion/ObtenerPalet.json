@@ -1,0 +1,206 @@
+{
+  "uniqueId": "3c917d94-73c3-48e1-9149-f15f04c163b5",
+  "name": "ObtenerPalet",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Obtener Palet",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\n\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\u0026ProductoId = \u0026Prensado.PrensadoProductoId\n\t\u0026PrensaId = \u0026Prensado.PrensadoPrensaId\n\t\u0026TurnoId = \u0026Prensado.PrensadoTurnoId\n\t\u0026PrensadoFecha = \u0026Prensado.PrensadoFecha\n\t\u0026OperadorId = \u0026Prensado.PrensadoOperadorId\n\t\n\tfor each DB.Palet\n\t\twhere PaletId \u003E 0\n\t\twhere PaletPrensadoId = \u0026PrensadoId\n\t\twhere PaletTipo = TipoPalet.Interno\n\t\twhere PaletEstatus = EstatusPalet.EnEnsamble\n\t\t\u0026PaletId = PaletId\n\t\t\u0026Encontrado = true\n\t\tExit\n\twhen none\n\t\t\u0026Encontrado = false\n\tendfor\n\n        if(Not \u0026Encontrado)\n\t        \n\t\tfor each DB.Palet\n\t\t\twhere PaletId \u003E 0\n\t\t\twhere PaletPrensaId = \u0026PrensaId\n\t\t\twhere PaletProductoId = \u0026ProductoId\n\t\t\twhere PaletEstatus = EstatusPalet.EnEnsamble\n\t\t\t\u0026PaletId = PaletId\n\t\t\tExit\n\t\twhen none\n\t\t\t\n\t            \u0026PaletNo = GenerarPaletNo.Udp(\u0026PrensaId,\u0026ProductoId)\n\t\t\t\u0026PFecha = \u0026PrensadoFecha.ToDate()\n\t\t\t\u0026PaletNo \u002B= 1\n\t\t\t\n\t\t\t\u0026Palet = New()\n\t\t\t\u0026Palet.PaletNo = \u0026PaletNo\n\t\t\t\u0026Palet.PaletEstatus = EstatusPalet.EnEnsamble\n\t\t\t\u0026Palet.PaletHoraInicioEnsamble = Now()\n\t\t\t\u0026Palet.PaletHoraFinEnsamble = Now()\n\t\t\t\u0026Palet.PaletNoSerie = PaletNoSerie.Udp(\u0026PrensaId, \u0026TurnoId, \u0026PFecha, \u0026PaletNo)\n\t\t\t\u0026Palet.PaletOperadorId = \u0026OperadorId\n\t\t\t\u0026Palet.PaletPrensaId = \u0026PrensaId\n\t\t\t\u0026Palet.PaletTipo = TipoPalet.Interno\n\t\t\t\u0026Palet.PaletProductoId = \u0026ProductoId\n\t\t\t\u0026Palet.PaletPrensadoId = \u0026PrensadoId\n\t\t\t\u0026Palet.PaletPrensadoFinId = \u0026PrensadoId\n\t\t\t\n\t\t\tDO \u0027ObtenerCapacidad\u0027\n\t\t\t\n\t\t\t\u0026Palet.PaletCapacidad = \u0026PaletCapacidad\n\t\t\t\u0026Palet.PaletNoCarretes = 0\n\t\t\t\u0026Palet.Save()\n\t\t\t\n\t\t\tif(\u0026Palet.Success())\n\t\t\t\t\u0026PaletId = \u0026Palet.PaletId\n\t\t\t\tcommit\n\t\t\tendif\n\t\t\t\n\t\tendfor\n\t        \n\tendif\n        \t\t\n\tsub \u0027ObtenerCapacidad\u0027\n\t\t\u0026PaletCapacidad = 32\n\t\tFor each DB.ProductoTerminado\n\t\t\tWhere TerminadoProductoId = \t\u0026ProductoId\n\t\t\t\u0026PaletCapacidad = ProductoTerminadoPalets \n\t\t\texit\n\t\tendfor\n\t\n\tendsub\n\n",
+      "cleanSource": "\t\n\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\u0026ProductoId = \u0026Prensado.PrensadoProductoId\n\t\u0026PrensaId = \u0026Prensado.PrensadoPrensaId\n\t\u0026TurnoId = \u0026Prensado.PrensadoTurnoId\n\t\u0026PrensadoFecha = \u0026Prensado.PrensadoFecha\n\t\u0026OperadorId = \u0026Prensado.PrensadoOperadorId\n\t\n\tfor each DB.Palet\n\t\twhere PaletId \u003E 0\n\t\twhere PaletPrensadoId = \u0026PrensadoId\n\t\twhere PaletTipo = TipoPalet.Interno\n\t\twhere PaletEstatus = EstatusPalet.EnEnsamble\n\t\t\u0026PaletId = PaletId\n\t\t\u0026Encontrado = true\n\t\tExit\n\twhen none\n\t\t\u0026Encontrado = false\n\tendfor\n\n        if(Not \u0026Encontrado)\n\t        \n\t\tfor each DB.Palet\n\t\t\twhere PaletId \u003E 0\n\t\t\twhere PaletPrensaId = \u0026PrensaId\n\t\t\twhere PaletProductoId = \u0026ProductoId\n\t\t\twhere PaletEstatus = EstatusPalet.EnEnsamble\n\t\t\t\u0026PaletId = PaletId\n\t\t\tExit\n\t\twhen none\n\t\t\t\n\t            \u0026PaletNo = GenerarPaletNo.Udp(\u0026PrensaId,\u0026ProductoId)\n\t\t\t\u0026PFecha = \u0026PrensadoFecha.ToDate()\n\t\t\t\u0026PaletNo \u002B= 1\n\t\t\t\n\t\t\t\u0026Palet = New()\n\t\t\t\u0026Palet.PaletNo = \u0026PaletNo\n\t\t\t\u0026Palet.PaletEstatus = EstatusPalet.EnEnsamble\n\t\t\t\u0026Palet.PaletHoraInicioEnsamble = Now()\n\t\t\t\u0026Palet.PaletHoraFinEnsamble = Now()\n\t\t\t\u0026Palet.PaletNoSerie = PaletNoSerie.Udp(\u0026PrensaId, \u0026TurnoId, \u0026PFecha, \u0026PaletNo)\n\t\t\t\u0026Palet.PaletOperadorId = \u0026OperadorId\n\t\t\t\u0026Palet.PaletPrensaId = \u0026PrensaId\n\t\t\t\u0026Palet.PaletTipo = TipoPalet.Interno\n\t\t\t\u0026Palet.PaletProductoId = \u0026ProductoId\n\t\t\t\u0026Palet.PaletPrensadoId = \u0026PrensadoId\n\t\t\t\u0026Palet.PaletPrensadoFinId = \u0026PrensadoId\n\t\t\t\n\t\t\tDO \u0027ObtenerCapacidad\u0027\n\t\t\t\n\t\t\t\u0026Palet.PaletCapacidad = \u0026PaletCapacidad\n\t\t\t\u0026Palet.PaletNoCarretes = 0\n\t\t\t\u0026Palet.Save()\n\t\t\t\n\t\t\tif(\u0026Palet.Success())\n\t\t\t\t\u0026PaletId = \u0026Palet.PaletId\n\t\t\t\tcommit\n\t\t\tendif\n\t\t\t\n\t\tendfor\n\t        \n\tendif\n        \t\t\n\tsub \u0027ObtenerCapacidad\u0027\n\t\t\u0026PaletCapacidad = 32\n\t\tFor each DB.ProductoTerminado\n\t\t\tWhere TerminadoProductoId = \t\u0026ProductoId\n\t\t\t\u0026PaletCapacidad = ProductoTerminadoPalets \n\t\t\texit\n\t\tendfor\n\t\n\tendsub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensadoId, out:\u0026PaletId);\n",
+      "cleanSource": "parm(in:\u0026PrensadoId, out:\u0026PaletId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.GenerarPaletNo",
+      "Produccion.PaletNoSerie",
+      "DB.Prensado",
+      "DB.Palet",
+      "DB.ProductoTerminado",
+      "GenerarPaletNo",
+      "PaletNoSerie"
+    ],
+    "calledBy": [
+      "SDAgregarCarrete",
+      "SDVincularCarrete",
+      "SDInitPrensado",
+      "SDValidarCarrera"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Encontrado",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Encontrado"
+    },
+    {
+      "name": "OperadorId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Operador Id"
+    },
+    {
+      "name": "Palet",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet"
+    },
+    {
+      "name": "PaletId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Palet Id"
+    },
+    {
+      "name": "PaletNo",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet No"
+    },
+    {
+      "name": "PFecha",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "PFecha"
+    },
+    {
+      "name": "Prensado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado"
+    },
+    {
+      "name": "PrensadoFecha",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Fecha"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "ProductoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "TurnoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Turno Id"
+    },
+    {
+      "name": "PaletCapacidad",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet Capacidad"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

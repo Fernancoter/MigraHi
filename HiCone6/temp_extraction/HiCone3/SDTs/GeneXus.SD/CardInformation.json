@@ -1,0 +1,109 @@
+{
+  "uniqueId": "6880ecf5-ebfd-4982-8cb8-cdd6c0340a98",
+  "name": "CardInformation",
+  "type": "SDT",
+  "module": "GeneXus.SD",
+  "description": "Card Information",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "SDPCartPaymentMethodsAddNew"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CardNumber",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Card Number"
+    },
+    {
+      "name": "RedactedCardNumber",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Redacted Card Number"
+    },
+    {
+      "name": "ExpiryMonth",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Expiry Month"
+    },
+    {
+      "name": "ExpiryYear",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Expiry Year"
+    },
+    {
+      "name": "CVV",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "CVV"
+    },
+    {
+      "name": "PostalCode",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Postal Code"
+    },
+    {
+      "name": "CardHolderName",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Card Holder Name"
+    },
+    {
+      "name": "CardImage",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Card Image"
+    },
+    {
+      "name": "CardType",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Card Type"
+    },
+    {
+      "name": "CardLogo",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Card Logo"
+    }
+  ]
+}

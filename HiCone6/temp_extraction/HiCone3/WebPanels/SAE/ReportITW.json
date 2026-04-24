@@ -1,0 +1,162 @@
+{
+  "uniqueId": "5c894752-94bd-4fb4-9df7-7994c58abf03",
+  "name": "ReportITW",
+  "type": "WebPanel",
+  "module": "SAE",
+  "description": "Report ITW",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Enter",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": ""
+    },
+    {
+      "blockName": "Start",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "//csharp [!HTTP_HOST!] =  System.Web.HttpContext.Current.Request.ServerVariables[\u0022HTTP_HOST\u0022];\n\t\n\t//msg(\u0022http://\u0022 \u002B \u0026HTTP_HOST.Trim() \u002B \u0022/index.html\u0022)\n\t//EmbPage1.Source = \u0022http://\u0022 \u002B \u0026HTTP_HOST.Trim() \u002B \u0022/index.html\u0022"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "GeneXusReporting.QueryViewerElements",
+      "GeneXusReporting.QueryViewerParameters",
+      "GeneXusReporting.QueryViewerItemExpandData",
+      "GeneXusReporting.QueryViewerItemDoubleClickData",
+      "GeneXusReporting.QueryViewerItemCollapseData",
+      "GeneXusReporting.QueryViewerItemClickData",
+      "GeneXusReporting.QueryViewerFilterChangedData",
+      "GeneXusReporting.QueryViewerDragAndDropData"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Axes",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Axes"
+    },
+    {
+      "name": "Axis",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Axis"
+    },
+    {
+      "name": "DragAndDropData",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Drag And Drop Data"
+    },
+    {
+      "name": "FilterChangedData",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Filter Changed Data"
+    },
+    {
+      "name": "HTTP_HOST",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "HTTP_HOST"
+    },
+    {
+      "name": "ItemClickData",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Item Click Data"
+    },
+    {
+      "name": "ItemCollapseData",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Item Collapse Data"
+    },
+    {
+      "name": "ItemDoubleClickData",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Item Double Click Data"
+    },
+    {
+      "name": "ItemExpandData",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Item Expand Data"
+    },
+    {
+      "name": "Parameter",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Parameter"
+    },
+    {
+      "name": "Parameters",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Parameters"
+    },
+    {
+      "name": "Today",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    }
+  ]
+}

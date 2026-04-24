@@ -1,0 +1,109 @@
+{
+  "uniqueId": "039118ad-e04c-4247-b474-ed90e41b81c8",
+  "name": "TerminarCarrera",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Terminar Carrera",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\tfor \u0026SDTCarreraItem in \u0026SDTCarrera\n\t\tif(\u0026SDTCarreraItem.CarreraEstado = EstadoCarrera.EnProceso)\n\t\t\tSetEstadoCarrera.Call(\u0026SDTCarreraItem.CarreraId, EstadoCarrera.Terminada)\n\t\tendif\n\tendfor\n",
+      "cleanSource": "\n\tfor \u0026SDTCarreraItem in \u0026SDTCarrera\n\t\tif(\u0026SDTCarreraItem.CarreraEstado = EstadoCarrera.EnProceso)\n\t\t\tSetEstadoCarrera.Call(\u0026SDTCarreraItem.CarreraId, EstadoCarrera.Terminada)\n\t\tendif\n\tendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026SDTCarrera);\n",
+      "cleanSource": "parm(in:\u0026SDTCarrera);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SetEstadoCarrera",
+      "Produccion.SDTCarrera",
+      "SetEstadoCarrera"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SDTCarrera",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "SDTCarrera"
+    },
+    {
+      "name": "SDTCarreraItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrera Item"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

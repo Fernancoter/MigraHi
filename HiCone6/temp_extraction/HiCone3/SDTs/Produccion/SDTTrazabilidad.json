@@ -1,0 +1,174 @@
+{
+  "uniqueId": "0c55a748-3a81-4b8e-966a-3b19e84c0481",
+  "name": "SDTTrazabilidad",
+  "type": "SDT",
+  "module": "Produccion",
+  "description": "SDTTrazabilidad",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "GenerarSDTTrazabilidad",
+      "vwTrazabilidad"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "PrensaNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensa"
+    },
+    {
+      "name": "ProdcutoNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prodcuto"
+    },
+    {
+      "name": "CarreraNo",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "No Carrera"
+    },
+    {
+      "name": "CarreteNoLinea",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "No L\u00EDnea"
+    },
+    {
+      "name": "PaletNoSerie",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "No Serie del Pallet"
+    },
+    {
+      "name": "PaletNo",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "No Pallet"
+    },
+    {
+      "name": "PaletHoraInicioEnsamble",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Hr de Ini. de Ensamble del Pallet"
+    },
+    {
+      "name": "PaletHoraFinEnsamble",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Hr de Fin. de Ensamble del Pallet"
+    },
+    {
+      "name": "OperadorPrensado",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Operador del Prensado"
+    },
+    {
+      "name": "PaletEstatus",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Estatus del Pallet"
+    },
+    {
+      "name": "CarreteNoSerie",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "No Serie del Carrete"
+    },
+    {
+      "name": "BobinaNoSerie",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "No Serie de la Bobina"
+    },
+    {
+      "name": "BobinaNo",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "No de Bobina"
+    },
+    {
+      "name": "ExtrusoraNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora"
+    },
+    {
+      "name": "BobinaHoraInicio",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Hr de Ini. de la Bobina"
+    },
+    {
+      "name": "BobinaHoraSalida",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Hr de Fin. de la Bobina"
+    },
+    {
+      "name": "OperadorExtrusion",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Operador de Extrusi\u00F3n"
+    },
+    {
+      "name": "CarreteId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Id"
+    }
+  ]
+}

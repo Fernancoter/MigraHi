@@ -1,0 +1,103 @@
+{
+  "uniqueId": "7a0fd466-aa9b-4484-a257-9e91338bceca",
+  "name": "PrensaCarrera",
+  "type": "Transaction",
+  "module": "DB",
+  "description": "Prensa Carrera",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "SDPrensaCarrera",
+      "SDCerrarPrensado"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Today",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "GxRemove",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Gx Remove"
+    },
+    {
+      "name": "Mode",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Mode"
+    },
+    {
+      "name": "PrensaCarreraId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "CarreraId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "CarreraEstado",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    }
+  ]
+}

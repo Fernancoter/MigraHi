@@ -1,0 +1,51 @@
+{
+  "uniqueId": "9c714966-c77f-43ec-8b9a-b8e08346353b",
+  "name": "SDTPrensa",
+  "type": "SDT",
+  "module": "Produccion",
+  "description": "SDTPrensa",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "PrensaId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "PrensaNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensa Nombre"
+    },
+    {
+      "name": "PrensaImagen",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensa Imagen"
+    }
+  ]
+}

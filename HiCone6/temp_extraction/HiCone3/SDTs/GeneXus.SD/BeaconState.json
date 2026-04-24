@@ -1,0 +1,61 @@
+{
+  "uniqueId": "01c03c14-caee-424c-9b14-89553e9b1c6b",
+  "name": "BeaconState",
+  "type": "SDT",
+  "module": "GeneXus.SD",
+  "description": "Beacon State",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "GeneXus.SD.BeaconInfo"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Beacon",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "A single beacon."
+    },
+    {
+      "name": "Proximity",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Proximity of the beacon from the device. The value in this property gives a general sense of the relative distance to the beacon."
+    },
+    {
+      "name": "Distance",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "The estimated proximity value, measured in meters from the beacon. This value is heavily subject to variations in an RF environment. A negative accuracy value indicates the proximity is unknown."
+    },
+    {
+      "name": "Signal",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Received signal strength in decibels of the specified beacon. This value is an average of the RSSI samples collected since this beacon was last reported."
+    }
+  ]
+}

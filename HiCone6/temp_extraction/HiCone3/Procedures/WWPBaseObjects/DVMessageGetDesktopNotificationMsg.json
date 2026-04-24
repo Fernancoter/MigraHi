@@ -1,0 +1,139 @@
+{
+  "uniqueId": "12501eab-26a1-4b6d-9125-90e71667c60c",
+  "name": "DVMessageGetDesktopNotificationMsg",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "DVMessage Get Desktop Notification Msg",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\u0026Parms = DVMessageGetAdvancedNotificationMsg(\u0026Title, \u0026Text, \u0026Type, \u0027\u0027, DVMessageBoolean.NoSpecify, WWPBaseObjects.DVMessageBoolean.True, \u0026DesktopNotificationIconUrl, \u0026ClickRedirectURL)\n",
+      "cleanSource": "\n\u0026Parms = DVMessageGetAdvancedNotificationMsg(\u0026Title, \u0026Text, \u0026Type, \u0027\u0027, DVMessageBoolean.NoSpecify, WWPBaseObjects.DVMessageBoolean.True, \u0026DesktopNotificationIconUrl, \u0026ClickRedirectURL)"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026Title, in:\u0026Text, in:\u0026DesktopNotificationIconUrl, in:\u0026ClickRedirectURL, out:\u0026Parms);\n",
+      "cleanSource": "parm(in:\u0026Title, in:\u0026Text, in:\u0026DesktopNotificationIconUrl, in:\u0026ClickRedirectURL, out:\u0026Parms);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.DVMessageGetAdvancedNotificationMsg"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ClickRedirectURL",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Click Redirect URL"
+    },
+    {
+      "name": "DesktopNotificationIconUrl",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Desktop Notification Icon Url"
+    },
+    {
+      "name": "Parms",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "Parms"
+    },
+    {
+      "name": "Text",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Text"
+    },
+    {
+      "name": "Title",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Title"
+    },
+    {
+      "name": "Type",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Type"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

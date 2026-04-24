@@ -1,0 +1,51 @@
+{
+  "uniqueId": "6ed84b8e-083a-4ca9-b6e2-c49631d89a92",
+  "name": "WWP_WebNotificationMetadataSDT",
+  "type": "SDT",
+  "module": "WWPBaseObjects.Notifications.Web",
+  "description": "Web Notification Metadata SDT",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Url",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Url"
+    },
+    {
+      "name": "RequireInteraction",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Require Interaction"
+    },
+    {
+      "name": "Timeout",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Timeout"
+    }
+  ]
+}

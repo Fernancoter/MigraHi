@@ -1,0 +1,157 @@
+{
+  "uniqueId": "e19a3595-a6e4-4f7e-9b24-04e30ee731e7",
+  "name": "ObtenerProductoEtiquetable",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Obtener Producto Etiquetable",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "        \n\t\u0026ProductoId = 0\n\t\n\tfor each DB.ProductoTerminado\n\t\twhere ProductoTerminadoId \u003E 0\n\t\twhere ProductoTerminadoConEtiqueta = false\n\t\twhere ProductoTerminadoEtiquetable = true\n\t\twhere WWPBaseObjects.TerminadoProductoId \u003E 0\n\t\twhere TerminadoProductoNombre.Substring(1,5) = \u0026ProductoEtiquetaNombre.Substring(1,5)\n\t\t\u0026ProductoId = TerminadoProductoId\n\t\tExit\n\tEndfor\n",
+      "cleanSource": "        \n\t\u0026ProductoId = 0\n\t\n\tfor each DB.ProductoTerminado\n\t\twhere ProductoTerminadoId \u003E 0\n\t\twhere ProductoTerminadoConEtiqueta = false\n\t\twhere ProductoTerminadoEtiquetable = true\n\t\twhere WWPBaseObjects.TerminadoProductoId \u003E 0\n\t\twhere TerminadoProductoNombre.Substring(1,5) = \u0026ProductoEtiquetaNombre.Substring(1,5)\n\t\t\u0026ProductoId = TerminadoProductoId\n\t\tExit\n\tEndfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ProductoEtiquetaNombre, out:\u0026ProductoId);\n",
+      "cleanSource": "parm(in:\u0026ProductoEtiquetaNombre, out:\u0026ProductoId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Producto",
+      "DB.PaletCarrete",
+      "DB.ProductoTerminado"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ProductoEtiquetaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Etiqueta Id"
+    },
+    {
+      "name": "CarreteId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Id"
+    },
+    {
+      "name": "PaletCarrete",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet Carrete"
+    },
+    {
+      "name": "PaletId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet Id"
+    },
+    {
+      "name": "PCId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "PCId"
+    },
+    {
+      "name": "ProductoEtiqueta",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Etiqueta"
+    },
+    {
+      "name": "ProductoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "ProductoEtiquetaNombre",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Producto Etiqueta Nombre"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

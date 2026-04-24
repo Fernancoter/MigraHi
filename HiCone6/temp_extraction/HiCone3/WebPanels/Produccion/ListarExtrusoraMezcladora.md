@@ -1,0 +1,327 @@
+# WebPanel: ListarExtrusoraMezcladora
+
+- **Module:** Produccion
+- **Description:**  Extrusora Mezcladora
+- **GAM Object:** No
+
+## Data Dictionary / Parameters
+
+| Name | Element Type | Data Type | Accessor | Description |
+|---|---|---|---|---|
+| IsAuthorized | Variable | Boolean |  | Is Authorized |
+| WWPContext | Variable | GX_SDT |  | WWPContext |
+| SecurityFunctionalityKeys | Variable | VARCHAR |  | Security Functionality Keys |
+| HTTPRequest | Variable | GX_USRDEFTYP |  | HTTPRequest |
+| TrnContext | Variable | GX_SDT |  | Trn Context |
+| TrnContextAtt | Variable | GX_SDT |  | Trn Context Att |
+| GridState | Variable | GX_SDT |  | Grid State |
+| GridStateFilterValue | Variable | GX_SDT |  | Grid State Filter Value |
+| OrderedBy | Variable | NUMERIC |  | Ordered By |
+| OrderedDsc | Variable | Boolean |  | Ordered Dsc |
+| OrderedByAux | Variable | NUMERIC |  | Ordered By Aux |
+| FilterFullText | Variable | VARCHAR |  | Filter Full Text |
+| ColumnsSelectorXML | Variable | LONGVARCHAR |  | Columns Selector XML |
+| UserCustomValue | Variable | LONGVARCHAR |  | User Custom Value |
+| ColumnsSelector | Variable | GX_SDT |  | Columns Selector |
+| ColumnsSelectorAux | Variable | GX_SDT |  | Columns Selector Aux |
+| Session | Variable | GX_USRDEFTYP |  | Session |
+| ManageFiltersData | Variable | GX_SDT |  | Manage Filters Data |
+| ManageFiltersXml | Variable | LONGVARCHAR |  | Manage Filters Xml |
+| ManageFiltersExecutionStep | Variable | NUMERIC |  | Manage Filters Execution Step |
+| TFExtrusoraMezcladoraId | Variable | NUMERIC |  | TFExtrusora Mezcladora Id |
+| TFExtrusoraMezcladoraId_To | Variable | NUMERIC |  | TFExtrusora Mezcladora Id_To |
+| TFExtrusoraId | Variable | NUMERIC |  | TFExtrusora Id |
+| TFExtrusoraId_To | Variable | NUMERIC |  | TFExtrusora Id_To |
+| TFExtrusoraMezcladoraHusilloVirgenMin | Variable | NUMERIC |  | TFExtrusora Mezcladora Husillo Virgen Min |
+| TFExtrusoraMezcladoraHusilloVirgenMin_To | Variable | NUMERIC |  | TFExtrusora Mezcladora Husillo Virgen Min_To |
+| TFExtrusoraMezcladoraHusilloVirgenMax | Variable | NUMERIC |  | TFExtrusora Mezcladora Husillo Virgen Max |
+| TFExtrusoraMezcladoraHusilloVirgenMax_To | Variable | NUMERIC |  | TFExtrusora Mezcladora Husillo Virgen Max_To |
+| TFExtrusoraMezcladoraHusilloMolidoMin | Variable | NUMERIC |  | TFExtrusora Mezcladora Husillo Molido Min |
+| TFExtrusoraMezcladoraHusilloMolidoMin_To | Variable | NUMERIC |  | TFExtrusora Mezcladora Husillo Molido Min_To |
+| TFExtrusoraMezcladoraHusilloMolidoMax | Variable | NUMERIC |  | TFExtrusora Mezcladora Husillo Molido Max |
+| TFExtrusoraMezcladoraHusilloMolidoMax_To | Variable | NUMERIC |  | TFExtrusora Mezcladora Husillo Molido Max_To |
+| TFExtrusoraMezcladoraKgVirgen | Variable | NUMERIC |  | TFExtrusora Mezcladora Kg Virgen |
+| TFExtrusoraMezcladoraKgVirgen_To | Variable | NUMERIC |  | TFExtrusora Mezcladora Kg Virgen_To |
+| TFExtrusoraMezcladoraKgMolido | Variable | NUMERIC |  | TFExtrusora Mezcladora Kg Molido |
+| TFExtrusoraMezcladoraKgMolido_To | Variable | NUMERIC |  | TFExtrusora Mezcladora Kg Molido_To |
+| DDO_TitleSettingsIcons | Variable | GX_SDT |  | DDO_Title Settings Icons |
+| PageToGo | Variable | NUMERIC |  | Page To Go |
+| GridCurrentPage | Variable | NUMERIC |  | Grid Current Page |
+| GridPageCount | Variable | NUMERIC |  | Grid Page Count |
+| GridAppliedFilters | Variable | VARCHAR |  | Grid Applied Filters |
+| GridActions | Variable | NUMERIC |  | Grid Actions |
+| IsAuthorized_Display | Variable | Boolean |  | Is Authorized_Display |
+| IsAuthorized_Update | Variable | Boolean |  | Is Authorized_Update |
+| IsAuthorized_Delete | Variable | Boolean |  | Is Authorized_Delete |
+| ExtrusoraProductoId | Variable | NUMERIC |  | Extrusora Producto Id |
+| IsAuthorized_cmdAgregar | Variable | Boolean |  | Is Authorized_cmd Agregar |
+| TFExtrusoraNombre | Variable | VARCHAR |  | TFExtrusora Nombre |
+| TFExtrusoraNombre_Sel | Variable | VARCHAR |  | TFExtrusora Nombre_Sel |
+| GAMSession | Variable | GX_EXTERNAL_OBJECT |  | GAMSession |
+| GAMErrors | Variable | GX_EXTERNAL_OBJECT |  | GAMErrors |
+| Display | Variable | CHARACTER |  | Display |
+| Update | Variable | CHARACTER |  | Update |
+| Delete | Variable | CHARACTER |  | Delete |
+| ExtrusoraMezcladoraId | Variable | NUMERIC |  | Extrusora Mezcladora Id |
+| ExcelFilename | Variable | VARCHAR |  | Excel Filename |
+| ErrorMessage | Variable | VARCHAR |  | Error Message |
+| IsAuthorized_ExtrusoraMezcladoraHusilloVirgenMin | Variable | Boolean |  | Is Authorized_Extrusora Mezcladora Husillo Virgen Min |
+| AGExportData | Variable | GX_SDT |  | AGExport Data |
+| AGExportDataItem | Variable | GX_SDT |  | AGExport Data Item |
+| Today | Variable | DATE |  | Today |
+| Time | Variable | CHARACTER |  | Time |
+| Pgmname | Variable | CHARACTER |  | Pgmname |
+| Pgmdesc | Variable | CHARACTER |  | Pgmdesc |
+
+## Business Logic
+
+### Start (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Grid.Rows = Page.Rows
+	Grid_Empowerer.GridInternalName = Grid.InternalName
+	DDO_GridColumnsSelector.GridInternalName = Grid.InternalName
+	If &HTTPRequest.Method = HttpMethod.Get
+		Do 'LoadSavedFilters'
+	EndIf
+	ddo_AGExport.TitleControlIdToReplace = BtnAGExport.InternalName
+	&AGExportData = new()
+	
+	&AGExportDataItem = new()
+	&AGExportDataItem.Title = ''
+	&AGExportDataItem.Icon = ActionExport.Link()
+	&AGExportDataItem.EventKey = !'Export'
+	&AGExportDataItem.IsDivider = False
+	&AGExportData.Add(&AGExportDataItem)
+	
+	&AGExportDataItem = new()
+	&AGExportDataItem.Title = ''
+	&AGExportDataItem.Icon = ActionExportReport.Link()
+	&AGExportDataItem.EventKey = !'ExportReport'
+	&AGExportDataItem.IsDivider = False
+	&AGExportData.Add(&AGExportDataItem)
+	
+	&IsAuthorized_ExtrusoraMezcladoraHusilloVirgenMin = SecGAMIsAuthByFunctionalityKey.Udp(!'extrusoramezcladoraview_Execute')
+	
+	&GAMSession = GAMSession.Get(&GAMErrors)
+	DDO_Grid.GridInternalName = Grid.InternalName
+	DDO_Grid.GAMOAuthToken = &GAMSession.Token
+	Form.Caption = ' Extrusora Mezcladora'
+	Do 'PrepareTransaction'
+	Do 'LoadGridState'
+	If &OrderedBy < 1
+		&OrderedBy = 1
+		Do 'SetDDOSortedStatus'
+	EndIf
+	&DDO_TitleSettingsIcons = GetWWPTitleSettingsIcons()
+	DDO_GridColumnsSelector.TitleControlIdToReplace = BtnEditColumns.InternalName
+	GridPaginationBar.RowsPerPageSelectedValue = Grid.Rows
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### Refresh (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	LoadWWPContext.Call(&WWPContext)
+	Do 'CheckSecurityForActions'
+	Do Case
+		Case &ManageFiltersExecutionStep = 1
+			&ManageFiltersExecutionStep = 2
+		Case &ManageFiltersExecutionStep = 2
+			&ManageFiltersExecutionStep = 0
+			Do 'LoadSavedFilters'
+	EndCase
+	Do 'SaveGridState'
+	
+	If &Session.Get(!'Produccion.ListarExtrusoraMezcladoraColumnsSelector') <> ''
+		&ColumnsSelectorXML = &Session.Get(!'Produccion.ListarExtrusoraMezcladoraColumnsSelector')
+		&ColumnsSelector.FromXml(&ColumnsSelectorXML)
+	Else
+		Do 'InitializeColumnsSelector'
+	EndIf
+	ExtrusoraNombre.Visible = &ColumnsSelector.Columns.Item(1).IsVisible
+	ExtrusoraMezcladoraHusilloVirgenMin.Visible = &ColumnsSelector.Columns.Item(2).IsVisible
+	ExtrusoraMezcladoraHusilloVirgenMax.Visible = &ColumnsSelector.Columns.Item(3).IsVisible
+	ExtrusoraMezcladoraHusilloMolidoMin.Visible = &ColumnsSelector.Columns.Item(4).IsVisible
+	ExtrusoraMezcladoraHusilloMolidoMax.Visible = &ColumnsSelector.Columns.Item(5).IsVisible
+	ExtrusoraMezcladoraKgVirgen.Visible = &ColumnsSelector.Columns.Item(6).IsVisible
+	ExtrusoraMezcladoraKgMolido.Visible = &ColumnsSelector.Columns.Item(7).IsVisible
+	&GridCurrentPage = Grid.CurrentPage
+	&GridPageCount = Grid.PageCount
+	&GridAppliedFilters = WWP_GetAppliedFiltersDescription(&Pgmname)
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### GridPaginationBar.ChangePage (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Do Case
+		Case GridPaginationBar.SelectedPage = !'Previous'
+			Grid.PreviousPage()
+		Case GridPaginationBar.SelectedPage = !'Next'
+			Grid.NextPage()
+		Otherwise
+			&PageToGo.FromString(GridPaginationBar.SelectedPage)
+			Grid.GotoPage(&PageToGo)
+	EndCase
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### GridPaginationBar.ChangeRowsPerPage (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Grid.Rows = GridPaginationBar.RowsPerPageSelectedValue
+	Grid.FirstPage()
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### DDO_Grid.OnOptionClicked (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Do Case
+		Case DDO_Grid.ActiveEventKey = !'<#OrderASC#>' OR DDO_Grid.ActiveEventKey = !'<#OrderDSC#>'
+			&OrderedBy.FromString(DDO_Grid.SelectedValue_get)
+			&OrderedDsc = iif(DDO_Grid.ActiveEventKey = !'<#OrderDSC#>', true, false)
+			Do 'SetDDOSortedStatus'
+			Grid.FirstPage()
+		Case DDO_Grid.ActiveEventKey = !'<#Filter#>'
+			Do Case
+				Case DDO_Grid.SelectedColumn = !'ExtrusoraNombre'
+					&TFExtrusoraNombre = DDO_Grid.FilteredText_get
+					&TFExtrusoraNombre_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'ExtrusoraMezcladoraHusilloVirgenMin'
+					&TFExtrusoraMezcladoraHusilloVirgenMin.FromString(DDO_Grid.FilteredText_get)
+					&TFExtrusoraMezcladoraHusilloVirgenMin_To.FromString(DDO_Grid.FilteredTextTo_get)
+				Case DDO_Grid.SelectedColumn = !'ExtrusoraMezcladoraHusilloVirgenMax'
+					&TFExtrusoraMezcladoraHusilloVirgenMax.FromString(DDO_Grid.FilteredText_get)
+					&TFExtrusoraMezcladoraHusilloVirgenMax_To.FromString(DDO_Grid.FilteredTextTo_get)
+				Case DDO_Grid.SelectedColumn = !'ExtrusoraMezcladoraHusilloMolidoMin'
+					&TFExtrusoraMezcladoraHusilloMolidoMin.FromString(DDO_Grid.FilteredText_get)
+					&TFExtrusoraMezcladoraHusilloMolidoMin_To.FromString(DDO_Grid.FilteredTextTo_get)
+				Case DDO_Grid.SelectedColumn = !'ExtrusoraMezcladoraHusilloMolidoMax'
+					&TFExtrusoraMezcladoraHusilloMolidoMax.FromString(DDO_Grid.FilteredText_get)
+					&TFExtrusoraMezcladoraHusilloMolidoMax_To.FromString(DDO_Grid.FilteredTextTo_get)
+				Case DDO_Grid.SelectedColumn = !'ExtrusoraMezcladoraKgVirgen'
+					&TFExtrusoraMezcladoraKgVirgen.FromString(DDO_Grid.FilteredText_get)
+					&TFExtrusoraMezcladoraKgVirgen_To.FromString(DDO_Grid.FilteredTextTo_get)
+				Case DDO_Grid.SelectedColumn = !'ExtrusoraMezcladoraKgMolido'
+					&TFExtrusoraMezcladoraKgMolido.FromString(DDO_Grid.FilteredText_get)
+					&TFExtrusoraMezcladoraKgMolido_To.FromString(DDO_Grid.FilteredTextTo_get)
+			EndCase
+			Grid.FirstPage()
+	EndCase
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### Grid.Load (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	&Display = "GXM_display"
+	If (&IsAuthorized_Display)
+		&Display.Link = gestionarExtrusoraMezcladora.Link(TrnMode.Display, ExtrusoraMezcladoraId)
+	Endif
+	&Update = "GXM_update"
+	If (&IsAuthorized_Update)
+		&Update.Link = gestionarExtrusoraMezcladora.Link(TrnMode.Update, ExtrusoraMezcladoraId)
+	Endif
+	&Delete = "GX_BtnDelete"
+	If (&IsAuthorized_Delete)
+		&Delete.Link = gestionarExtrusoraMezcladora.Link(TrnMode.Delete, ExtrusoraMezcladoraId)
+	Endif
+	If (&IsAuthorized_ExtrusoraMezcladoraHusilloVirgenMin)
+		ExtrusoraMezcladoraHusilloVirgenMin.Link = ExtrusoraMezcladoraView.Link(ExtrusoraMezcladoraId, '')
+	Endif
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### DDO_GridColumnsSelector.OnColumnsChanged (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	&ColumnsSelectorXML = DDO_GridColumnsSelector.ColumnsSelectorValues
+	&ColumnsSelector.FromJson(&ColumnsSelectorXML)
+	SaveColumnsSelectorState(!'Produccion.ListarExtrusoraMezcladoraColumnsSelector', iif(&ColumnsSelectorXML.IsEmpty(), '', &ColumnsSelector.ToXml()))
+	Refresh
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### ddo_ManageFilters.OnOptionClicked (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Do Case
+		Case ddo_ManageFilters.ActiveEventKey = !'<#Clean#>'
+			Do 'CleanFilters'
+			Grid.FirstPage()
+			Refresh
+		Case ddo_ManageFilters.ActiveEventKey = !'<#Save#>'
+			Do 'SaveGridState'
+			SaveFilterAs.Popup(!'Produccion.ListarExtrusoraMezcladoraFilters', &PgmName + !"GridState")
+			&ManageFiltersExecutionStep = 2
+			Refresh
+		Case ddo_ManageFilters.ActiveEventKey = !'<#Manage#>'
+			ManageFilters.Popup(!'Produccion.ListarExtrusoraMezcladoraFilters')
+			&ManageFiltersExecutionStep = 2
+			Refresh
+		Otherwise
+			&ManageFiltersXml = GetFilterByName(!'Produccion.ListarExtrusoraMezcladoraFilters', ddo_ManageFilters.ActiveEventKey)
+			If &ManageFiltersXml.IsEmpty()
+				msg('WWP_FilterNotExist')
+			Else
+				Do 'CleanFilters'
+				SaveGridState.Call(&PgmName + !"GridState",  &ManageFiltersXml)
+				&GridState.FromXml(&ManageFiltersXml)
+				&OrderedBy = &GridState.OrderedBy
+				&OrderedDsc = &GridState.OrderedDsc
+				Do 'SetDDOSortedStatus' 
+				Do 'LoadRegFiltersState'
+				Grid.FirstPage()
+				Refresh
+			EndIf
+	EndCase
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### ddo_AGExport.OnOptionClicked (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Do Case
+		Case ddo_AGExport.ActiveEventKey = !'Export'
+			Do 'DoExport'
+		Case ddo_AGExport.ActiveEventKey = !'ExportReport'
+			Do 'DoExportReport'
+	EndCase
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### 'DocmdAgregar' (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	If (&IsAuthorized_cmdAgregar)
+		gestionarExtrusoraMezcladora.Call(TrnMode.Insert, &ExtrusoraMezcladoraId)
+	Else
+		msg("WWP_ActionNoLongerAvailable")
+		Refresh
+	Endif
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### Rules (Rules)
+
+```genexus
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+

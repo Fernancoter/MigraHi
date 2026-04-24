@@ -1,0 +1,111 @@
+{
+  "uniqueId": "2c3affd8-6ea2-4892-8d3b-f7ac54f9daf0",
+  "name": "MedirBobinasEnProceso",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Medir Bobinas En Proceso",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\n\t//Cambiar estado de las bobinas En Proceso -: En Medici\u00F3n\n\tFor \u0026SDTBobinaItem in \u0026SDTBobina\n\t\t\n\t      if(\u0026SDTBobinaItem.BobinaEstado = EstadoBobina.EnProceso)\n\t\t      \u0026SDTBobinaItem.BobinaEstado = EstadoBobina.EnMedicion\n\t\t      \u0026SDTBobinaItem.BobinaHoraSalida = Now()\n\t\t      GuardarBobina.Call(\u0026SDTBobinaItem)\n\t      endif\n      \n\tEndfor\n",
+      "cleanSource": "\t\n\t//Cambiar estado de las bobinas En Proceso -: En Medici\u00F3n\n\tFor \u0026SDTBobinaItem in \u0026SDTBobina\n\t\t\n\t      if(\u0026SDTBobinaItem.BobinaEstado = EstadoBobina.EnProceso)\n\t\t      \u0026SDTBobinaItem.BobinaEstado = EstadoBobina.EnMedicion\n\t\t      \u0026SDTBobinaItem.BobinaHoraSalida = Now()\n\t\t      GuardarBobina.Call(\u0026SDTBobinaItem)\n\t      endif\n      \n\tEndfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026SDTBobina);\n",
+      "cleanSource": "parm(in:\u0026SDTBobina);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.GuardarBobina",
+      "Produccion.SDTBobina",
+      "GuardarBobina"
+    ],
+    "calledBy": [
+      "ExtrusionDelDiaBobinas"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SDTBobina",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "SDTBobina"
+    },
+    {
+      "name": "SDTBobinaItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTBobina Item"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

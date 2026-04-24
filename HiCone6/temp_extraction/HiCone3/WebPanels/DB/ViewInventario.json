@@ -1,0 +1,144 @@
+{
+  "uniqueId": "94e5aeac-cb7a-4c1a-8c41-dc80a121374f",
+  "name": "ViewInventario",
+  "type": "WebPanel",
+  "module": "DB",
+  "description": "View Inventario",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Start",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "If not IsAuthorized(\u0026PgmName)\n\t\tNotAuthorized(\u0026PgmName)\n\tEndif\n\tFor each\n\t\tWhere InventarioId = \u0026InventarioId\n\t\tForm.Caption = InventarioProductoNombre.ToString()\n\t\tViewAll.Link = WWInventario.Link()\n\t\t\u0026Exists = True\n\tWhen none\n\t\tForm.Caption = \u0022Record not found\u0022\n\t\tViewAll.Visible = false\n\t\t\u0026Exists = False\n\tEndfor\n\t\u0026LoadAllTabs = false\n\tIf \u0026Exists\n\t\t\u0026SelectedTabCode = \u0026TabCode\n\t\tTab.ActivePageControlName = \u0026SelectedTabCode\n\t\tDo \u0027Load Tab\u0027\n\tEndif"
+    },
+    {
+      "blockName": "Tab.TabChanged",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "\u0026SelectedTabCode = Tab.ActivePageControlName\n\t\u0026LoadAllTabs = false\n\tDo \u0027Load Tab\u0027"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026InventarioId, in:\u0026TabCode);\n",
+      "cleanSource": "parm(in:\u0026InventarioId, in:\u0026TabCode);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.IsAuthorized",
+      "TabOptions",
+      "DB.WWInventario",
+      "DB.InventarioGeneral",
+      "WWPBaseObjects.NotAuthorized"
+    ],
+    "calledBy": [
+      "Inventario",
+      "WWInventario"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Today",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "IsAuthorized",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Is Authorized"
+    },
+    {
+      "name": "TabCode",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Tab Code"
+    },
+    {
+      "name": "SelectedTabCode",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Selected Tab Code"
+    },
+    {
+      "name": "Tabs",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Tabs"
+    },
+    {
+      "name": "Tab",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Tab"
+    },
+    {
+      "name": "Exists",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Exists"
+    },
+    {
+      "name": "LoadAllTabs",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "LoadAllTabs"
+    },
+    {
+      "name": "InventarioId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Inventario Id"
+    }
+  ]
+}

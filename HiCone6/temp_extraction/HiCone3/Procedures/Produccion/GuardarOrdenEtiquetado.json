@@ -1,0 +1,134 @@
+{
+  "uniqueId": "64b4b348-f0e3-4ce1-ace1-7912aaa8678b",
+  "name": "GuardarOrdenEtiquetado",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Guardar Orden Etiquetado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\n\t\u0026isOK = false\n\t\n\t\u0026OrdenEtiquetado.Load(\u0026SDTOrdenEtiquetado.OrdenEtiquetadoId)\n\t\u0026OrdenEtiquetado.FromJson(\u0026SDTOrdenEtiquetado.ToJson())\n\t\u0026OrdenEtiquetado.Save()\n\t\n\tif(\u0026OrdenEtiquetado.Success())\n\t\tcommit\n\t\t\u0026isOK = true\n\tendif\n",
+      "cleanSource": "\t\n\t\u0026isOK = false\n\t\n\t\u0026OrdenEtiquetado.Load(\u0026SDTOrdenEtiquetado.OrdenEtiquetadoId)\n\t\u0026OrdenEtiquetado.FromJson(\u0026SDTOrdenEtiquetado.ToJson())\n\t\u0026OrdenEtiquetado.Save()\n\t\n\tif(\u0026OrdenEtiquetado.Success())\n\t\tcommit\n\t\t\u0026isOK = true\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026SDTOrdenEtiquetado, out:\u0026isOK);\n",
+      "cleanSource": "parm(in:\u0026SDTOrdenEtiquetado, out:\u0026isOK);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SDTPrensadoResultado",
+      "Produccion.SDTOrdenEtiquetado",
+      "DB.PrensadoResultado",
+      "DB.OrdenEtiquetado"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "PrensadoResultado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Resultado"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "SDTPrensadoResultado",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTPrensado Resultado"
+    },
+    {
+      "name": "SDTOrdenEtiquetado",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "SDTOrden Etiquetado"
+    },
+    {
+      "name": "OrdenEtiquetado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Orden Etiquetado"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

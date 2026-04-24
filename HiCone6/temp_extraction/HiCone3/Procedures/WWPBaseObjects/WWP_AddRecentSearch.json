@@ -1,0 +1,207 @@
+{
+  "uniqueId": "ca35cab2-806b-46c3-b4f1-36b487d5d85b",
+  "name": "WWP_AddRecentSearch",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "WWP_Add Recent Search",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\u0026RecentSearchResultsJson = LoadUserKeyValue(!\u0027WWPRecentSearch\u0027)\nIf \u0026RecentSearchResultsJson.IsEmpty()\n\t\u0026RecentSearches = new()\nElse\n\t\u0026RecentSearches.FromJson(\u0026RecentSearchResultsJson)\nEndIf\n\n\u0026Found = False\nFor \u0026WWP_SearchResultsItem in \u0026WWP_SearchResults\n\tFor \u0026WWP_SearchResultItem in \u0026WWP_SearchResultsItem.Result\n\t\tIf \u0026WWP_SearchResultItem.Url = \u0026Url\n\t\t\t\u0026CategoryFound = False\n\t\t\tFor \u0026RecentSearchResults in \u0026RecentSearches\n\t\t\t\tIf \u0026RecentSearchResults.CategoryName = \u0026WWP_SearchResultsItem.CategoryName\n\t\t\t\t\t\u0026CategoryFound = True\n\t\t\t\t\t\u0026CurrentRecentSearchResults = \u0026RecentSearchResults\n\t\t\t\t\tExit\n\t\t\t\tEndIf\n\t\t\tEndFor\n\t\t\t\u0026RecentAlreadyAdded = False\n\t\t\tIf not \u0026CategoryFound\n\t\t\t\t\u0026CurrentRecentSearchResults = new()\n\t\t\t\t\u0026CurrentRecentSearchResults.CategoryName = \u0026WWP_SearchResultsItem.CategoryName\n\t\t\t\t\u0026CurrentRecentSearchResults.CategoryIcon = \u0026WWP_SearchResultsItem.CategoryIcon\n\t\t\t\t\u0026CurrentRecentSearchResults.OrderIndex = \u0026WWP_SearchResultsItem.OrderIndex\n\t\t\t\t\u0026CurrentRecentSearchResults.ShowingAllResults = True\n\t\t\t\t\u0026RecentSearches.Add(\u0026CurrentRecentSearchResults)\n\t\t\t\tIf \u0026RecentSearches.Count \u003E \u0026MaxCategories\n\t\t\t\t\t\u0026RecentSearches.Remove(1)\n\t\t\t\tEndIf\n\t\t\tElse\n\t\t\t\tFor \u0026RecentSearchResultItem in \u0026CurrentRecentSearchResults.Result\n\t\t\t\t\tIf \u0026RecentSearchResultItem.Url = \u0026Url\n\t\t\t\t\t\t\u0026RecentAlreadyAdded = True\n\t\t\t\t\t\tExit\n\t\t\t\t\tEndIf\n\t\t\t\tEndFor\n\t\t\tEndIf\n\t\t\tIf not \u0026RecentAlreadyAdded\n\t\t\t\t\u0026CurrentRecentSearchResults.Result.Add(\u0026WWP_SearchResultItem.Clone(), 1)\n\t\t\t\tIf \u0026CurrentRecentSearchResults.Result.Count \u003E \u0026MaxItemsPerCategory\n\t\t\t\t\t\u0026CurrentRecentSearchResults.Result.Remove(\u0026CurrentRecentSearchResults.Result.Count)\n\t\t\t\tEndIf\n\t\t\t\tSaveUserKeyValue(!\u0027WWPRecentSearch\u0027, \u0026RecentSearches.ToJson())\n\t\t\tEndIf\n\t\t\t\u0026Found = true\n\t\t\tExit\n\t\tEndIf\n\tEndFor\n\tIf \u0026Found\n\t\tExit\n\tEndIf\nEndFor\n",
+      "cleanSource": "\n\u0026RecentSearchResultsJson = LoadUserKeyValue(!\u0027WWPRecentSearch\u0027)\nIf \u0026RecentSearchResultsJson.IsEmpty()\n\t\u0026RecentSearches = new()\nElse\n\t\u0026RecentSearches.FromJson(\u0026RecentSearchResultsJson)\nEndIf\n\n\u0026Found = False\nFor \u0026WWP_SearchResultsItem in \u0026WWP_SearchResults\n\tFor \u0026WWP_SearchResultItem in \u0026WWP_SearchResultsItem.Result\n\t\tIf \u0026WWP_SearchResultItem.Url = \u0026Url\n\t\t\t\u0026CategoryFound = False\n\t\t\tFor \u0026RecentSearchResults in \u0026RecentSearches\n\t\t\t\tIf \u0026RecentSearchResults.CategoryName = \u0026WWP_SearchResultsItem.CategoryName\n\t\t\t\t\t\u0026CategoryFound = True\n\t\t\t\t\t\u0026CurrentRecentSearchResults = \u0026RecentSearchResults\n\t\t\t\t\tExit\n\t\t\t\tEndIf\n\t\t\tEndFor\n\t\t\t\u0026RecentAlreadyAdded = False\n\t\t\tIf not \u0026CategoryFound\n\t\t\t\t\u0026CurrentRecentSearchResults = new()\n\t\t\t\t\u0026CurrentRecentSearchResults.CategoryName = \u0026WWP_SearchResultsItem.CategoryName\n\t\t\t\t\u0026CurrentRecentSearchResults.CategoryIcon = \u0026WWP_SearchResultsItem.CategoryIcon\n\t\t\t\t\u0026CurrentRecentSearchResults.OrderIndex = \u0026WWP_SearchResultsItem.OrderIndex\n\t\t\t\t\u0026CurrentRecentSearchResults.ShowingAllResults = True\n\t\t\t\t\u0026RecentSearches.Add(\u0026CurrentRecentSearchResults)\n\t\t\t\tIf \u0026RecentSearches.Count \u003E \u0026MaxCategories\n\t\t\t\t\t\u0026RecentSearches.Remove(1)\n\t\t\t\tEndIf\n\t\t\tElse\n\t\t\t\tFor \u0026RecentSearchResultItem in \u0026CurrentRecentSearchResults.Result\n\t\t\t\t\tIf \u0026RecentSearchResultItem.Url = \u0026Url\n\t\t\t\t\t\t\u0026RecentAlreadyAdded = True\n\t\t\t\t\t\tExit\n\t\t\t\t\tEndIf\n\t\t\t\tEndFor\n\t\t\tEndIf\n\t\t\tIf not \u0026RecentAlreadyAdded\n\t\t\t\t\u0026CurrentRecentSearchResults.Result.Add(\u0026WWP_SearchResultItem.Clone(), 1)\n\t\t\t\tIf \u0026CurrentRecentSearchResults.Result.Count \u003E \u0026MaxItemsPerCategory\n\t\t\t\t\t\u0026CurrentRecentSearchResults.Result.Remove(\u0026CurrentRecentSearchResults.Result.Count)\n\t\t\t\tEndIf\n\t\t\t\tSaveUserKeyValue(!\u0027WWPRecentSearch\u0027, \u0026RecentSearches.ToJson())\n\t\t\tEndIf\n\t\t\t\u0026Found = true\n\t\t\tExit\n\t\tEndIf\n\tEndFor\n\tIf \u0026Found\n\t\tExit\n\tEndIf\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "\nparm(in:\u0026WWP_SearchResults, in:\u0026Url, in:\u0026MaxCategories, in:\u0026MaxItemsPerCategory);\n",
+      "cleanSource": "\nparm(in:\u0026WWP_SearchResults, in:\u0026Url, in:\u0026MaxCategories, in:\u0026MaxItemsPerCategory);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.LoadUserKeyValue",
+      "WWPBaseObjects.SaveUserKeyValue",
+      "WWPBaseObjects.WWP_SearchResults"
+    ],
+    "calledBy": [
+      "WWP_Search"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CategoryFound",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Category Found"
+    },
+    {
+      "name": "CurrentRecentSearchResults",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Current Recent Search Results"
+    },
+    {
+      "name": "Found",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Found"
+    },
+    {
+      "name": "MaxCategories",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Max Categories"
+    },
+    {
+      "name": "MaxItemsPerCategory",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Max Items Per Category"
+    },
+    {
+      "name": "RecentAlreadyAdded",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Recent Already Added"
+    },
+    {
+      "name": "RecentSearches",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Recent Searches"
+    },
+    {
+      "name": "RecentSearchResultItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Recent Search Result Item"
+    },
+    {
+      "name": "RecentSearchResults",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Recent Search Results"
+    },
+    {
+      "name": "RecentSearchResultsJson",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Recent Search Results Json"
+    },
+    {
+      "name": "Url",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Url"
+    },
+    {
+      "name": "WWP_SearchResultItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "WWP_Search Result Item"
+    },
+    {
+      "name": "WWP_SearchResults",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWP_Search Results"
+    },
+    {
+      "name": "WWP_SearchResultsItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "WWP_Search Results Item"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

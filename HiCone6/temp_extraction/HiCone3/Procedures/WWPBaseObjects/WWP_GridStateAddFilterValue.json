@@ -1,0 +1,234 @@
+{
+  "uniqueId": "216c62b2-eaf1-4d8f-82db-e1cb1206f68b",
+  "name": "WWP_GridStateAddFilterValue",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "WWP_Grid State Add Filter Value",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\nIf \u0026AddFitler\n\t\u0026GridStateFilterValue = new()\n\t\u0026GridStateFilterValue.Name = \u0026FilterName\n\t\u0026GridStateFilterValue.Dsc = \u0026FilterDsc\n\t\u0026GridStateFilterValue.Operator = \u0026FilterOperator\n\t\u0026GridStateFilterValue.Value = \u0026FilterValue\n\t\u0026GridStateFilterValue.ValueTo = \u0026FilterValueTo\n\t\u0026GridState.FilterValues.Add(\u0026GridStateFilterValue)\nEndIf\n\n",
+      "cleanSource": "\nIf \u0026AddFitler\n\t\u0026GridStateFilterValue = new()\n\t\u0026GridStateFilterValue.Name = \u0026FilterName\n\t\u0026GridStateFilterValue.Dsc = \u0026FilterDsc\n\t\u0026GridStateFilterValue.Operator = \u0026FilterOperator\n\t\u0026GridStateFilterValue.Value = \u0026FilterValue\n\t\u0026GridStateFilterValue.ValueTo = \u0026FilterValueTo\n\t\u0026GridState.FilterValues.Add(\u0026GridStateFilterValue)\nEndIf"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "\nparm(inout:\u0026GridState, in:\u0026FilterName, in:\u0026FilterDsc, in:\u0026AddFitler, in:\u0026FilterOperator, in:\u0026FilterValue, in:\u0026FilterValueTo);\n",
+      "cleanSource": "\nparm(inout:\u0026GridState, in:\u0026FilterName, in:\u0026FilterDsc, in:\u0026AddFitler, in:\u0026FilterOperator, in:\u0026FilterValue, in:\u0026FilterValueTo);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWPGridState"
+    ],
+    "calledBy": [
+      "GAMWWUserPermissions",
+      "InterrupcionPrompt",
+      "listarLotes",
+      "EtiquetadoOperadorWW",
+      "vwTrazabilidad",
+      "ProductoTerminadoWW",
+      "ListadoEmbarques",
+      "PrensaObservacionWW",
+      "BobinaWW",
+      "TableroDirectivoExtrusion",
+      "listarOperador",
+      "ConsolidatedWW",
+      "ListadoOrdenes",
+      "CompanyWW",
+      "ListadoRemisiones",
+      "CustomerWW",
+      "vwAnaliticaBobina",
+      "BudgetWW",
+      "ExtrusionInterrupcionWW",
+      "GAMWWUsers",
+      "GAMRolePermissionSelect",
+      "listarPrensaProducto",
+      "TroquelWW",
+      "PaletWW",
+      "listarPrensas",
+      "OrdenesWW",
+      "vwExtrusionResultado",
+      "listarProductoCategoria",
+      "ListarExtrusoraMezcladora",
+      "vwAnaliticaCarrete",
+      "GAMWWRoleRoles",
+      "vwPrensadoResultado",
+      "FTBWW",
+      "listarExtrusoraProducto",
+      "listarInventario",
+      "ExtrusoraObservacionWW",
+      "listarTurnos",
+      "ExtrusoraMezcladoraWW",
+      "AuditWW",
+      "listarProductos",
+      "PrensadoWW",
+      "listarSilos",
+      "GAMWWRolePermissions",
+      "RemissionsWW",
+      "SalesPersonWW",
+      "InterrupcionWW",
+      "ImprimirBobinas",
+      "CarreteEnPallet",
+      "PrensadoInterrupcionWW",
+      "WWP_SubscriptionsSettings",
+      "ExistenciaWW",
+      "WWP_MailTemplateWW",
+      "CausaInterrupcionWW",
+      "CarreraWW",
+      "EmbarquePalletWW",
+      "ExtrusionWW",
+      "ProductsWW",
+      "CarreteDefectoWW",
+      "vwCarreteCarrera",
+      "vwAnaliticaPrensado",
+      "listarTroquel",
+      "TableroDirectivoPrensado",
+      "reclamosww",
+      "CarreteWW",
+      "listarProductoTerminado",
+      "PrensadoBobinaWW",
+      "vwOrdenEtiquetado",
+      "listarExtrusora",
+      "GAMWWUserRoles",
+      "StatementOfIncomeWW",
+      "DownTimeCodeWW",
+      "PalletEnEmbarque",
+      "GAMWWRoles",
+      "WWP_SubscriptionsSettingsByRole",
+      "GAMUserPermissionSelect",
+      "GAMUserRoleSelect",
+      "GAMRoleSelect",
+      "listarExtrusion"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "FilterName",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Filter Name"
+    },
+    {
+      "name": "FilterDsc",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Filter Dsc"
+    },
+    {
+      "name": "FilterValueTo",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Filter Value To"
+    },
+    {
+      "name": "FilterValue",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Filter Value"
+    },
+    {
+      "name": "AddFitler",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "in",
+      "domain": "",
+      "description": "Add Fitler"
+    },
+    {
+      "name": "GridState",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "inout",
+      "domain": "",
+      "description": "Grid State"
+    },
+    {
+      "name": "GridStateFilterValue",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Grid State Filter Value"
+    },
+    {
+      "name": "FilterOperator",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Filter Operator"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

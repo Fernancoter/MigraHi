@@ -1,0 +1,161 @@
+{
+  "uniqueId": "5b1fcb2d-3c41-45b9-9882-e6033af0c2c5",
+  "name": "PalletCarreteReportMainPCR",
+  "type": "Procedure",
+  "module": "PrinterSD",
+  "description": "Pallet Carrete Report Main PCR",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "if(\u0026PaletId \u003E 0)\n\tfor each DB.PaletCarrete\n\t\twhere PaletId = \u0026PaletId\n\t\twhere CarreteId \u003E 0\n\t\t\u0026CarreteId = CarreteId\n\t\t\n\t\t\u0026EtiquetaCarretaSDT = ObtenerSDTEtiquetaCarrete.Udp(\u0026CarreteId)\n\t\t\u0026EtiquetaCarreraSDT.EtiquetaCarreteSDT.Add(\u0026EtiquetaCarretaSDT)\n\tendfor\nelse\n\t\u0026EtiquetaCarretaSDT = ObtenerSDTEtiquetaCarrete.Udp(\u0026CarreteId)\n\t\u0026EtiquetaCarreraSDT.EtiquetaCarreteSDT.Add(\u0026EtiquetaCarretaSDT)\nendif\n\nWeb.Debugger.Call(NivelDebug.Informativo, \u0026Pgmname, \u0026EtiquetaCarretaSDT.ToJson())\n\nFor \u0026EtiquetaCarretaSDT in \u0026EtiquetaCarreraSDT.EtiquetaCarreteSDT\n//\t\u0026linkURL=\u0027https://barcode.tec-it.com/barcode.ashx?data=\u0027\u002B\u0026EtiquetaCarretaSDT.CarreteNoSerie \u002B \u0027\u0026code=Code128\u0027\n//\t//\u0026linkURL=\u0027https://sdx.genexus.com/agetqrcode.aspx?\u0027\u002B\u0026EtiquetaCarretaSDT.CarreteNoSerie\n//\t\n//\t\u0026QRImage.FromURL(\u0026linkURL)\n\t\n\t\u0026QRImage = PrinterSD.ObtenerBarCode.Udp(\u0026EtiquetaCarretaSDT.CarreteNoSerie)\n\n\tprint printBlock1\nEndfor\n\n",
+      "cleanSource": "if(\u0026PaletId \u003E 0)\n\tfor each DB.PaletCarrete\n\t\twhere PaletId = \u0026PaletId\n\t\twhere CarreteId \u003E 0\n\t\t\u0026CarreteId = CarreteId\n\t\t\n\t\t\u0026EtiquetaCarretaSDT = ObtenerSDTEtiquetaCarrete.Udp(\u0026CarreteId)\n\t\t\u0026EtiquetaCarreraSDT.EtiquetaCarreteSDT.Add(\u0026EtiquetaCarretaSDT)\n\tendfor\nelse\n\t\u0026EtiquetaCarretaSDT = ObtenerSDTEtiquetaCarrete.Udp(\u0026CarreteId)\n\t\u0026EtiquetaCarreraSDT.EtiquetaCarreteSDT.Add(\u0026EtiquetaCarretaSDT)\nendif\n\nWeb.Debugger.Call(NivelDebug.Informativo, \u0026Pgmname, \u0026EtiquetaCarretaSDT.ToJson())\n\nFor \u0026EtiquetaCarretaSDT in \u0026EtiquetaCarreraSDT.EtiquetaCarreteSDT\n//\t\u0026linkURL=\u0027https://barcode.tec-it.com/barcode.ashx?data=\u0027\u002B\u0026EtiquetaCarretaSDT.CarreteNoSerie \u002B \u0027\u0026code=Code128\u0027\n//\t//\u0026linkURL=\u0027https://sdx.genexus.com/agetqrcode.aspx?\u0027\u002B\u0026EtiquetaCarretaSDT.CarreteNoSerie\n//\t\n//\t\u0026QRImage.FromURL(\u0026linkURL)\n\t\n\t\u0026QRImage = PrinterSD.ObtenerBarCode.Udp(\u0026EtiquetaCarretaSDT.CarreteNoSerie)\n\n\tprint printBlock1\nEndfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026PaletId,in:\u0026PDFNombre);\nOutput_File(\u0026PDFNombre, \u0027PDF\u0027);\n\n",
+      "cleanSource": "Parm(in:\u0026PaletId,in:\u0026PDFNombre);\nOutput_File(\u0026PDFNombre, \u0027PDF\u0027);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "PrinterSD.ObtenerSDTEtiquetaCarrete",
+      "Web.Debugger",
+      "PrinterSD.ObtenerBarCode",
+      "PrinterSD.EtiquetaCarreteSDT",
+      "PrinterSD.EtiquetaCarreraSDT",
+      "DB.PaletCarrete",
+      "ObtenerSDTEtiquetaCarrete"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "EtiquetaCarretaSDT",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Etiqueta Carreta SDT"
+    },
+    {
+      "name": "CarreteId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Id"
+    },
+    {
+      "name": "EtiquetaCarreraSDT",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Etiqueta Carrera SDT"
+    },
+    {
+      "name": "linkURL",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "link URL"
+    },
+    {
+      "name": "QRImage",
+      "elementType": "Variable",
+      "dataType": "BITMAP",
+      "accessor": "",
+      "domain": "",
+      "description": "QRImage"
+    },
+    {
+      "name": "CarreraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera Id"
+    },
+    {
+      "name": "PDFNombre",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "PDFNombre"
+    },
+    {
+      "name": "PaletId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Palet Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

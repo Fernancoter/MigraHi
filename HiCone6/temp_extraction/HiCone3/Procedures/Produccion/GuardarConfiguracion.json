@@ -1,0 +1,117 @@
+{
+  "uniqueId": "8060ad69-1d00-4ff4-a741-ba8baa501198",
+  "name": "GuardarConfiguracion",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Guardar Configuracion",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026Configuracion.Load(\u0026ConfiguracionKey)\n\u0026Configuracion.ConfiguracionValor = \u0026ConfiguracionValor\n\u0026Configuracion.Save()\n\n\ncommit\n",
+      "cleanSource": "\u0026Configuracion.Load(\u0026ConfiguracionKey)\n\u0026Configuracion.ConfiguracionValor = \u0026ConfiguracionValor\n\u0026Configuracion.Save()\n\n\ncommit"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "PARM(IN:\u0026ConfiguracionKey, in:\u0026ConfiguracionValor);\n",
+      "cleanSource": "PARM(IN:\u0026ConfiguracionKey, in:\u0026ConfiguracionValor);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Configuracion"
+    ],
+    "calledBy": [
+      "GenerarPaletNo"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ConfiguracionKey",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Configuracion Key"
+    },
+    {
+      "name": "ConfiguracionValor",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Configuracion Valor"
+    },
+    {
+      "name": "Configuracion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Configuracion"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

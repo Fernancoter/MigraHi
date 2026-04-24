@@ -1,0 +1,69 @@
+{
+  "uniqueId": "01537a2b-2775-4bf3-99e3-6b7e442e3b3c",
+  "name": "SDPMultiColumnOptions",
+  "type": "SDT",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "SDPMulti Column Options",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WorkWithPlus.NativeMobile.SDPMenuInfo"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Column1",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Column1"
+    },
+    {
+      "name": "Column2",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Column2"
+    },
+    {
+      "name": "Column3",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Column3"
+    },
+    {
+      "name": "Column4",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Column4"
+    },
+    {
+      "name": "Column5",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Column5"
+    }
+  ]
+}

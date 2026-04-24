@@ -1,0 +1,65 @@
+{
+  "uniqueId": "3a52c923-5427-4a7d-a5c5-2d69d4690927",
+  "name": "QueryViewerItemCollapseData",
+  "type": "SDT",
+  "module": "GeneXusReporting",
+  "description": "Query Viewer Item Collapse Data",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "TurnosPorSemanaExtrusoras",
+      "TurnosPorSemana",
+      "InicioPrensado",
+      "InicioProduccion",
+      "ReportITW",
+      "InicioEmbarques",
+      "inicioSeguridad",
+      "InicioInventario",
+      "ModuleA",
+      "ModuleB",
+      "InicioExtrusion",
+      "TurnosPorSemanaPrensas",
+      "ConsultarExtrusionesQuery"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Name",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Name"
+    },
+    {
+      "name": "Value",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Value"
+    },
+    {
+      "name": "ExpandedValues",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Expanded Values"
+    }
+  ]
+}

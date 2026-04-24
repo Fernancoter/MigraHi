@@ -1,0 +1,226 @@
+{
+  "uniqueId": "fb2cb45e-7f31-4675-810e-171e090ee782",
+  "name": "ObtenerTurnoPorSemanaExtrusion",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Obtener Turno Por Semana Extrusion",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\u0026fin = \u0026infinSemana.DayOfWeek()\n\n\u0026Turno.Load(\u0026TurnoId)\n\n\nIF(NOT \u0026inInicioSemana.IsEmpty())\n\t\n\t\u0026InicioSemana = \u0026inInicioSemana\n\t\u0026InicioSemana = \u0026InicioSemana.AddHours(\u0026Turno.TurnoHoraInicio.Hour())\n\t\n\tFor \u0026i = 1 to 7\n\t\t\n\t\t\n\t\t\n\t\t\u0026itemSDTTurnoPorSemana = new()\n\t\t\n\t\t\u0026itemSDTTurnoPorSemana.Dia = \u0026InicioSemana.DayOfWeekName(\u0027ES\u0027)\n\t\t\u0026itemSDTTurnoPorSemana.Fecha = \u0026InicioSemana \n\t\t\u0026itemSDTTurnoPorSemana.ExtrusoraId = \u0026ExtrusoraId\n\t\t\u0026itemSDTTurnoPorSemana.Hora = \u0026InicioSemana\n\t\t\t\n\t\t\t\t\n\t\tObtenerExtrusoraValoresPredeterminados.Call(\u0026ExtrusoraId,\u0026TurnoId, \u0026DefaultProductoId,\u0026DefaultOperadorId)\n\t\tif(\u0026DefaultProductoId \u003E0)\t\n\t\t\t\n\t\t\t\n\t\t\t\u0026Extrusion = ProgramarExtrusion.Udp(\u0026TurnoId,\u0026ExtrusoraId,\u0026itemSDTTurnoPorSemana.Fecha,\u0026DefaultProductoId,\u0026DefaultOperadorId)\n\t\t\tif(\u0026Extrusion.ExtrusionId\u003E0)\t\n\t\t\t\t\u0026itemSDTTurnoPorSemana.ExtrusionId1 =  \u0026Extrusion.ExtrusionId\n\t\t\t\t\u0026itemSDTTurnoPorSemana.ProductoId1 =  \u0026Extrusion.ExtrusionProductoId\n\t\t\t\t\u0026itemSDTTurnoPorSemana.OperadorId1 = \u0026Extrusion.ExtrusionOperadorId\n\t\t\t\t\u0026itemSDTTurnoPorSemana.Meta1 = \u0026Extrusion.ExtrusionMeta\n\t\t\t\t\u0026itemSDTTurnoPorSemana.ExtrusionEstado1 = \u0026Extrusion.ExtrusionEstado\n\t\t\t\t\u0026itemSDTTurnoPorSemana.Producido1 = \u0026Extrusion.ExtrusionResultadoBobinasReposoTotales\n\t\t\t\t\n\t\t\telse\n\t\t\t\tmsg(\u0027Error en Configuraci\u00F3n\u0027)\n\t\t\tendif\n\t\t\t\u0026SDTTurnoPorSemana.Add(\u0026itemSDTTurnoPorSemana)\t\n\t\tendif\n\t\n\t\t\t\n\t\tif(\u0026InicioSemana.DayOfWeek() = 1) Or (\u0026InicioSemana.DayOfWeek() = \u0026fin)\n\t\t\texit \n\t\tendif\n\t\t\n\t\t\u0026InicioSemana = \u0026InicioSemana.AddDays(1)\n\t\n\t\n\t\t\n\tEndfor\nENDIF\n\n",
+      "cleanSource": "\n\u0026fin = \u0026infinSemana.DayOfWeek()\n\n\u0026Turno.Load(\u0026TurnoId)\n\n\nIF(NOT \u0026inInicioSemana.IsEmpty())\n\t\n\t\u0026InicioSemana = \u0026inInicioSemana\n\t\u0026InicioSemana = \u0026InicioSemana.AddHours(\u0026Turno.TurnoHoraInicio.Hour())\n\t\n\tFor \u0026i = 1 to 7\n\t\t\n\t\t\n\t\t\n\t\t\u0026itemSDTTurnoPorSemana = new()\n\t\t\n\t\t\u0026itemSDTTurnoPorSemana.Dia = \u0026InicioSemana.DayOfWeekName(\u0027ES\u0027)\n\t\t\u0026itemSDTTurnoPorSemana.Fecha = \u0026InicioSemana \n\t\t\u0026itemSDTTurnoPorSemana.ExtrusoraId = \u0026ExtrusoraId\n\t\t\u0026itemSDTTurnoPorSemana.Hora = \u0026InicioSemana\n\t\t\t\n\t\t\t\t\n\t\tObtenerExtrusoraValoresPredeterminados.Call(\u0026ExtrusoraId,\u0026TurnoId, \u0026DefaultProductoId,\u0026DefaultOperadorId)\n\t\tif(\u0026DefaultProductoId \u003E0)\t\n\t\t\t\n\t\t\t\n\t\t\t\u0026Extrusion = ProgramarExtrusion.Udp(\u0026TurnoId,\u0026ExtrusoraId,\u0026itemSDTTurnoPorSemana.Fecha,\u0026DefaultProductoId,\u0026DefaultOperadorId)\n\t\t\tif(\u0026Extrusion.ExtrusionId\u003E0)\t\n\t\t\t\t\u0026itemSDTTurnoPorSemana.ExtrusionId1 =  \u0026Extrusion.ExtrusionId\n\t\t\t\t\u0026itemSDTTurnoPorSemana.ProductoId1 =  \u0026Extrusion.ExtrusionProductoId\n\t\t\t\t\u0026itemSDTTurnoPorSemana.OperadorId1 = \u0026Extrusion.ExtrusionOperadorId\n\t\t\t\t\u0026itemSDTTurnoPorSemana.Meta1 = \u0026Extrusion.ExtrusionMeta\n\t\t\t\t\u0026itemSDTTurnoPorSemana.ExtrusionEstado1 = \u0026Extrusion.ExtrusionEstado\n\t\t\t\t\u0026itemSDTTurnoPorSemana.Producido1 = \u0026Extrusion.ExtrusionResultadoBobinasReposoTotales\n\t\t\t\t\n\t\t\telse\n\t\t\t\tmsg(\u0027Error en Configuraci\u00F3n\u0027)\n\t\t\tendif\n\t\t\t\u0026SDTTurnoPorSemana.Add(\u0026itemSDTTurnoPorSemana)\t\n\t\tendif\n\t\n\t\t\t\n\t\tif(\u0026InicioSemana.DayOfWeek() = 1) Or (\u0026InicioSemana.DayOfWeek() = \u0026fin)\n\t\t\texit \n\t\tendif\n\t\t\n\t\t\u0026InicioSemana = \u0026InicioSemana.AddDays(1)\n\t\n\t\n\t\t\n\tEndfor\nENDIF"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ExtrusoraId,in:\u0026inInicioSemana,In:\u0026infinSemana,in:\u0026TurnoId, out:\u0026SDTTurnoPorSemana);\n",
+      "cleanSource": "parm(in:\u0026ExtrusoraId,in:\u0026inInicioSemana,In:\u0026infinSemana,in:\u0026TurnoId, out:\u0026SDTTurnoPorSemana);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.ObtenerExtrusoraValoresPredeterminados",
+      "Produccion.ProgramarExtrusion",
+      "Produccion.SDTExtrusion",
+      "Produccion.SDTTurnoPorSemana",
+      "DB.Extrusion",
+      "DB.Turno",
+      "ObtenerExtrusoraValoresPredeterminados",
+      "ProgramarExtrusion"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CollectionExtrusoraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "DefaultOperadorId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Operador Id"
+    },
+    {
+      "name": "DefaultProductoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "e",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "e"
+    },
+    {
+      "name": "Exito",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Exito"
+    },
+    {
+      "name": "Extrusion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion"
+    },
+    {
+      "name": "ExtrusoraId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "i",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "i"
+    },
+    {
+      "name": "infinSemana",
+      "elementType": "Parameter",
+      "dataType": "DATE",
+      "accessor": "in",
+      "domain": "",
+      "description": "infin Semana"
+    },
+    {
+      "name": "InicioSemana",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Inicio Semana"
+    },
+    {
+      "name": "inInicioSemana",
+      "elementType": "Parameter",
+      "dataType": "DATE",
+      "accessor": "in",
+      "domain": "",
+      "description": "in Inicio Semana"
+    },
+    {
+      "name": "itemSDTTurnoPorSemana",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "item SDTTurno Por Semana"
+    },
+    {
+      "name": "SDTExtrusion",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTExtrusion"
+    },
+    {
+      "name": "SDTTurnoPorSemana",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "SDTTurno Por Semana"
+    },
+    {
+      "name": "Turno",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Turno"
+    },
+    {
+      "name": "TurnoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Turno Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

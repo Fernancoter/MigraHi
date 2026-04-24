@@ -1,0 +1,278 @@
+{
+  "uniqueId": "9230b245-dffa-4c16-b945-e8ad21c5e8cc",
+  "name": "ExtrusionResultado",
+  "type": "Transaction",
+  "module": "DB",
+  "description": "Extrusion Resultado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "vwExtrusionResultadoExportReport",
+      "ObtenerExtrusionResultado",
+      "ExistenciaBobinasPorTurnoId",
+      "vwExtrusionResultado",
+      "GuardarExtrusionResultado",
+      "SDExtrusionResultado",
+      "SDPrensadoResultado",
+      "vwExtrusionResultadoGetFilterData",
+      "vwExtrusionResultadoExport"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Today",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "GxRemove",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Gx Remove"
+    },
+    {
+      "name": "Mode",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Mode"
+    },
+    {
+      "name": "ExtrusionResultadoId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionResultadoVelLaminadora",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionResultadoVelHusillo",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionResultadoBobinasMolino",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionResultadoBobinasReposo",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionResultadoTotalKg",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionResultadoTotalMermaKg",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionResultadoCOMBA",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionResultadoObservaciones",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionSiloId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionSiloNombre",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionProductoNombre",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionLoteSilo",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionRevHusilloMolido",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionRevHusilloVirgen",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionVirgenKg",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionMolidoKg",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionExtrusoraId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionExtrusoraNombre",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionTurnoId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionTurnoNombre",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionOperadorId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionOperadorNombre",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "ExtrusionFecha",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    }
+  ]
+}

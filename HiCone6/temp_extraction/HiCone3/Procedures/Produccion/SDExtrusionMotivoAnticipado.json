@@ -1,0 +1,115 @@
+{
+  "uniqueId": "43f74722-b324-4cf5-8d6d-2d204a37efc0",
+  "name": "SDExtrusionMotivoAnticipado",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDExtrusion Motivo Anticipado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "      \n      \u0026Extrusion.Load(\u0026ExtrusionId)\n      \u0026Extrusion.ExtrusionMotivoAnticipado = \u0026Observaciones\n      \u0026Extrusion.Save()\n      \n      if(\u0026Extrusion.Success())\n\t      commit\n      endif\n      \n",
+      "cleanSource": "      \n      \u0026Extrusion.Load(\u0026ExtrusionId)\n      \u0026Extrusion.ExtrusionMotivoAnticipado = \u0026Observaciones\n      \u0026Extrusion.Save()\n      \n      if(\u0026Extrusion.Success())\n\t      commit\n      endif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ExtrusionId, in:\u0026Observaciones);\n",
+      "cleanSource": "parm(in:\u0026ExtrusionId, in:\u0026Observaciones);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Extrusion"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Extrusion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "Observaciones",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Observaciones"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

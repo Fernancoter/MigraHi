@@ -1,0 +1,135 @@
+{
+  "uniqueId": "f515e0b8-6376-4e51-bbf4-7064d2a3eb1c",
+  "name": "SDInventarioItem",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SD Inventario Item",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": " \n\t\tfor each Order (InventarioFechaHora)\n\t\t\twhere InventarioId \u003E 0\n\t\t\t//where InventarioProductoId = \u0026ProductoId\n\t\t\t\u0026InventarioId = InventarioId\n\t\t\tExit\n\t\twhen none\n\t\t\t\u0026InventarioFecha = Today()\n\t\t\t\n\t\t\t\u0026Inventario = New()\n\t\t\t\u0026Inventario.InventarioProductoId.SetNull()\n\t\t\t\u0026Inventario.InventarioFechaHora = \u0026InventarioFecha\n\t\t\t\u0026Inventario.InventarioInicioConsecutivo =  #20-01-01 00:00#\n\t\t\t\u0026Inventario.Save()\n\t\t\t\n\t\t\tif(\u0026Inventario.Success())\n\t\t\t\t\u0026InventarioId = \u0026Inventario.InventarioId\n\t\t\t\tcommit\n\t\t\tendif\n\t\t\t\n\t\tendfor\n\t\n\t    \u0026Inventario.Load(\u0026InventarioId)\n\t\t\u0026InventarioItem.FromJson(\u0026Inventario.ToJson())\n",
+      "cleanSource": " \n\t\tfor each Order (InventarioFechaHora)\n\t\t\twhere InventarioId \u003E 0\n\t\t\t//where InventarioProductoId = \u0026ProductoId\n\t\t\t\u0026InventarioId = InventarioId\n\t\t\tExit\n\t\twhen none\n\t\t\t\u0026InventarioFecha = Today()\n\t\t\t\n\t\t\t\u0026Inventario = New()\n\t\t\t\u0026Inventario.InventarioProductoId.SetNull()\n\t\t\t\u0026Inventario.InventarioFechaHora = \u0026InventarioFecha\n\t\t\t\u0026Inventario.InventarioInicioConsecutivo =  #20-01-01 00:00#\n\t\t\t\u0026Inventario.Save()\n\t\t\t\n\t\t\tif(\u0026Inventario.Success())\n\t\t\t\t\u0026InventarioId = \u0026Inventario.InventarioId\n\t\t\t\tcommit\n\t\t\tendif\n\t\t\t\n\t\tendfor\n\t\n\t    \u0026Inventario.Load(\u0026InventarioId)\n\t\t\u0026InventarioItem.FromJson(\u0026Inventario.ToJson())"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ProductoId,out:\u0026InventarioItem);\n",
+      "cleanSource": "parm(in:\u0026ProductoId,out:\u0026InventarioItem);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SDTInventario",
+      "DB.Inventario"
+    ],
+    "calledBy": [
+      "GenerarPaletNo",
+      "GenerarBobinaNo"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Inventario",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Inventario"
+    },
+    {
+      "name": "InventarioFecha",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Inventario Fecha"
+    },
+    {
+      "name": "InventarioId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Inventario Id"
+    },
+    {
+      "name": "InventarioItem",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "Inventario Item"
+    },
+    {
+      "name": "ProductoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

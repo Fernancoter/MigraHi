@@ -1,0 +1,37 @@
+{
+  "uniqueId": "a68a6c29-39ba-4e24-8fda-18f01a1ff4fa",
+  "name": "ModuleAGridTodoListSDT",
+  "type": "SDT",
+  "module": "Web",
+  "description": "Module AGrid Todo List SDT",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "ModuleA"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "WWPEntityName",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Entity Name"
+    }
+  ]
+}

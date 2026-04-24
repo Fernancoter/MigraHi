@@ -1,0 +1,165 @@
+{
+  "uniqueId": "4608a6d4-90d9-44e8-a017-690fd353ce75",
+  "name": "WWP_Subscription",
+  "type": "Transaction",
+  "module": "WWPBaseObjects.Subscriptions",
+  "description": "WWP_Subscription",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "WWPUserExtendedId.SetNull() If WWPUserExtendedId.IsEmpty() On AfterValidate;\n",
+      "cleanSource": "WWPUserExtendedId.SetNull() If WWPUserExtendedId.IsEmpty() On AfterValidate;"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_GetUserFullName"
+    ],
+    "calledBy": [
+      "WWP_SendNotification",
+      "WWP_RoleUpdateSubscription",
+      "WWP_CheckUserIsNotUnsubscribed",
+      "WWP_SubscribeLoggedUserToDiscussion",
+      "WWP_SubscriptionsSettings",
+      "WWP_SubscribeMentionedUsersToDiscussion",
+      "WWP_UserUpdateSubscription"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Today",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "GxRemove",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Gx Remove"
+    },
+    {
+      "name": "Mode",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Mode"
+    },
+    {
+      "name": "WWPSubscriptionId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPNotificationDefinitionId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPNotificationDefinitionDescription",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPEntityName",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPUserExtendedId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPUserExtendedFullName",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPSubscriptionEntityRecordId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPSubscriptionEntityRecordDescription",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPSubscriptionRoleId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "WWPSubscriptionSubscribed",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    }
+  ]
+}

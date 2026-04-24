@@ -1,0 +1,133 @@
+{
+  "uniqueId": "f46223de-c759-4eaf-8e02-e8feca97b580",
+  "name": "SDPGetRangedRadialGaugeFromConfig",
+  "type": "Procedure",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "SDPGet Ranged Radial Gauge From Config",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026HTML = !\u0027\u003Cmeta name=\u0022viewport\u0022 content= \u0022width=device-width, user-scalable=no\u0022\u003E\u003Cstyle\u003Etext{font-size:40px;font-family:Arial,Helvetica,sans-serif;fill:black}div{text-align:center}#valuePoint{stroke:white;fill:%valuecolor%;stroke-width:10px}g{stroke-width:15}\u003C/style\u003E\u0027\n\u0026HTML \u002B= !\u0027\u003Cdiv\u003E\u003Csvg xmlns=\u0022http://www.w3.org/2000/svg\u0022 version=\u00221.1\u0022 width=\u0022%width%\u0022 height=\u0022%height%\u0022 viewBox=\u0022-20 -20 240 240\u0022\u003E \u003Cdefs\u003E \u003ClinearGradient id=\u0022firstSection\u0022 gradientUnits=\u0022objectBoundingBox\u0022 x1=\u00220\u0022 y1=\u00220\u0022 x2=\u00221\u0022 y2=\u00221\u0022\u003E \u003Cstop offset=\u00220%\u0022 stop-color=\u0022%firstColorStart%\u0022/\u003E \u003Cstop offset=\u0022100%\u0022 stop-color=\u0022%firstColorEnd%\u0022/\u003E \u003C/linearGradient\u003E \u003ClinearGradient id=\u0022secondSection\u0022 gradientUnits=\u0022objectBoundingBox\u0022 x1=\u00220\u0022 y1=\u00220\u0022 x2=\u00220\u0022 y2=\u00221\u0022\u003E \u003Cstop offset=\u00220%\u0022 stop-color=\u0022%secondColorStart%\u0022/\u003E \u003Cstop offset=\u0022100%\u0022 stop-color=\u0022%secondColorEnd%\u0022/\u003E \u003C/linearGradient\u003E \u003ClinearGradient id=\u0022thirdSection\u0022 gradientUnits=\u0022objectBoundingBox\u0022 x1=\u00221\u0022 y1=\u00220\u0022 x2=\u00220\u0022 y2=\u00221\u0022\u003E \u003Cstop offset=\u00220%\u0022 stop-color=\u0022%thirdColorStart%\u0022/\u003E \u003Cstop offset=\u0022100%\u0022 stop-color=\u0022%thirdColorEnd%\u0022/\u003E \u003C/linearGradient\u003E \u003ClinearGradient id=\u0022fourthSection\u0022 gradientUnits=\u0022objectBoundingBox\u0022 x1=\u00221\u0022 y1=\u00221\u0022 x2=\u00220\u0022 y2=\u00220\u0022\u003E \u003Cstop offset=\u00220%\u0022 stop-color=\u0022%fourthColorStart%\u0022/\u003E \u003Cstop offset=\u0022100%\u0022 stop-color=\u0022%fourthColorEnd%\u0022/\u003E \u003C/linearGradient\u003E \u003ClinearGradient id=\u0022fiveSection\u0022 gradientUnits=\u0022objectBoundingBox\u0022 x1=\u00220\u0022 y1=\u00221\u0022 x2=\u00220\u0022 y2=\u00220\u0022\u003E \u003Cstop offset=\u00220%\u0022 stop-color=\u0022%fiveColorStart%\u0022/\u003E \u003Cstop offset=\u0022100%\u0022 stop-color=\u0022%fiveColorEnd%\u0022/\u003E \u003C/linearGradient\u003E \u003C/defs\u003E\u003Cg fill=\u0022none\u0022 transform=\u0022translate(100,100), rotate(210)\u0022\u003E \u003Cpath d=\u0022M 0,-100 A 100,100 0 0,1 86.6,-50\u0022 stroke=\u0022url(#firstSection)\u0022 style=\u0022stroke-linecap: round;\u0022/\u003E \u003Cpath d=\u0022M 86.6,-50 A 100,100 0 0,1 86.6,50\u0022 stroke=\u0022url(#secondSection)\u0022/\u003E \u003Cpath d=\u0022M 86.6,50 A 100,100 0 0,1 0,100\u0022 stroke=\u0022url(#thirdSection)\u0022/\u003E \u003Cpath d=\u0022M 0,100 A 100,100 0 0,1 -86.6,50\u0022 stroke=\u0022url(#fourthSection)\u0022/\u003E \u003Cpath d=\u0022M -86.6,50 A 100,100 0 0,1 -86.6,-50\u0022 stroke=\u0022url(#fiveSection)\u0022 style=\u0022stroke-linecap: round;\u0022/\u003E \u003C/g\u003E \u003Ccircle id=\u0022valuePoint\u0022 cx=\u0022170\u0022 cy=\u0022170\u0022 r=\u002220\u0022 /\u003E \u003Ctext x=\u0022100\u0022 y=\u0022100\u0022 dominant-baseline=\u0022middle\u0022 text-anchor=\u0022middle\u0022\u003E%text%\u003C/text\u003E \u003C/svg\u003E\u003C/div\u003E\u0027\n\u0026HTML \u002B= !\u0027\u003Cscript\u003Evar degrees=%degrees%\u002B90;var radians=degrees_to_radians(degrees);var radius=100;var x=Math.cos(radians)*radius\u002B100;var y=Math.sin(radians)*radius\u002B100;setPosition(\u0022valuePoint\u0022,x,y);function setPosition(id,x,y){var ctrl=document.getElementById(id);ctrl.setAttribute(\u0022cx\u0022,x);ctrl.setAttribute(\u0022cy\u0022,y);} function degrees_to_radians(degrees) {var pi=Math.PI;return degrees*(pi/180);}\u003C/script\u003E\u0027\n\n\u0026propertyName = !\u0022height\u0022\n\u0026propertyValue = \u0026GaugeConfig.Height.ToString()\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022width\u0022\n\u0026propertyValue = \u0026GaugeConfig.Width.ToString()\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022degrees\u0022\n\u0026ValueNumeric = \u0026GaugeConfig.Value * 3 \u002B 30\n\u0026propertyValue = \u0026ValueNumeric.ToString()\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022valuecolor\u0022\n\u0026propertyValue = !\u0022blue\u0022\nIf Not \u0026GaugeConfig.ValueMarkerColor.Trim().IsEmpty()\n\t\u0026propertyValue = \u0026GaugeConfig.ValueMarkerColor\nEndIf\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022text\u0022\n\u0026propertyValue = \u0026GaugeConfig.Text\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022firstColorStart\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range1ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022firstColorEnd\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range1ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022secondColorStart\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range2ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022secondColorEnd\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range2ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022thirdColorStart\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range3ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022thirdColorEnd\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range3ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022fourthColorStart\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range4ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022fourthColorEnd\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range4ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\n\u0026propertyName = !\u0022fiveColorStart\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range5ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = \u0022fiveColorEnd\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range5ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\nSub \u0027ReplaceTemplate\u0027\n\t\u0026HTML = \u0026HTML.Replace(!\u0022%\u0022 \u002B \u0026propertyName.Trim() \u002B !\u0022%\u0022, \u0026propertyValue.Trim())\nendSub\n",
+      "cleanSource": "\u0026HTML = !\u0027\u003Cmeta name=\u0022viewport\u0022 content= \u0022width=device-width, user-scalable=no\u0022\u003E\u003Cstyle\u003Etext{font-size:40px;font-family:Arial,Helvetica,sans-serif;fill:black}div{text-align:center}#valuePoint{stroke:white;fill:%valuecolor%;stroke-width:10px}g{stroke-width:15}\u003C/style\u003E\u0027\n\u0026HTML \u002B= !\u0027\u003Cdiv\u003E\u003Csvg xmlns=\u0022http://www.w3.org/2000/svg\u0022 version=\u00221.1\u0022 width=\u0022%width%\u0022 height=\u0022%height%\u0022 viewBox=\u0022-20 -20 240 240\u0022\u003E \u003Cdefs\u003E \u003ClinearGradient id=\u0022firstSection\u0022 gradientUnits=\u0022objectBoundingBox\u0022 x1=\u00220\u0022 y1=\u00220\u0022 x2=\u00221\u0022 y2=\u00221\u0022\u003E \u003Cstop offset=\u00220%\u0022 stop-color=\u0022%firstColorStart%\u0022/\u003E \u003Cstop offset=\u0022100%\u0022 stop-color=\u0022%firstColorEnd%\u0022/\u003E \u003C/linearGradient\u003E \u003ClinearGradient id=\u0022secondSection\u0022 gradientUnits=\u0022objectBoundingBox\u0022 x1=\u00220\u0022 y1=\u00220\u0022 x2=\u00220\u0022 y2=\u00221\u0022\u003E \u003Cstop offset=\u00220%\u0022 stop-color=\u0022%secondColorStart%\u0022/\u003E \u003Cstop offset=\u0022100%\u0022 stop-color=\u0022%secondColorEnd%\u0022/\u003E \u003C/linearGradient\u003E \u003ClinearGradient id=\u0022thirdSection\u0022 gradientUnits=\u0022objectBoundingBox\u0022 x1=\u00221\u0022 y1=\u00220\u0022 x2=\u00220\u0022 y2=\u00221\u0022\u003E \u003Cstop offset=\u00220%\u0022 stop-color=\u0022%thirdColorStart%\u0022/\u003E \u003Cstop offset=\u0022100%\u0022 stop-color=\u0022%thirdColorEnd%\u0022/\u003E \u003C/linearGradient\u003E \u003ClinearGradient id=\u0022fourthSection\u0022 gradientUnits=\u0022objectBoundingBox\u0022 x1=\u00221\u0022 y1=\u00221\u0022 x2=\u00220\u0022 y2=\u00220\u0022\u003E \u003Cstop offset=\u00220%\u0022 stop-color=\u0022%fourthColorStart%\u0022/\u003E \u003Cstop offset=\u0022100%\u0022 stop-color=\u0022%fourthColorEnd%\u0022/\u003E \u003C/linearGradient\u003E \u003ClinearGradient id=\u0022fiveSection\u0022 gradientUnits=\u0022objectBoundingBox\u0022 x1=\u00220\u0022 y1=\u00221\u0022 x2=\u00220\u0022 y2=\u00220\u0022\u003E \u003Cstop offset=\u00220%\u0022 stop-color=\u0022%fiveColorStart%\u0022/\u003E \u003Cstop offset=\u0022100%\u0022 stop-color=\u0022%fiveColorEnd%\u0022/\u003E \u003C/linearGradient\u003E \u003C/defs\u003E\u003Cg fill=\u0022none\u0022 transform=\u0022translate(100,100), rotate(210)\u0022\u003E \u003Cpath d=\u0022M 0,-100 A 100,100 0 0,1 86.6,-50\u0022 stroke=\u0022url(#firstSection)\u0022 style=\u0022stroke-linecap: round;\u0022/\u003E \u003Cpath d=\u0022M 86.6,-50 A 100,100 0 0,1 86.6,50\u0022 stroke=\u0022url(#secondSection)\u0022/\u003E \u003Cpath d=\u0022M 86.6,50 A 100,100 0 0,1 0,100\u0022 stroke=\u0022url(#thirdSection)\u0022/\u003E \u003Cpath d=\u0022M 0,100 A 100,100 0 0,1 -86.6,50\u0022 stroke=\u0022url(#fourthSection)\u0022/\u003E \u003Cpath d=\u0022M -86.6,50 A 100,100 0 0,1 -86.6,-50\u0022 stroke=\u0022url(#fiveSection)\u0022 style=\u0022stroke-linecap: round;\u0022/\u003E \u003C/g\u003E \u003Ccircle id=\u0022valuePoint\u0022 cx=\u0022170\u0022 cy=\u0022170\u0022 r=\u002220\u0022 /\u003E \u003Ctext x=\u0022100\u0022 y=\u0022100\u0022 dominant-baseline=\u0022middle\u0022 text-anchor=\u0022middle\u0022\u003E%text%\u003C/text\u003E \u003C/svg\u003E\u003C/div\u003E\u0027\n\u0026HTML \u002B= !\u0027\u003Cscript\u003Evar degrees=%degrees%\u002B90;var radians=degrees_to_radians(degrees);var radius=100;var x=Math.cos(radians)*radius\u002B100;var y=Math.sin(radians)*radius\u002B100;setPosition(\u0022valuePoint\u0022,x,y);function setPosition(id,x,y){var ctrl=document.getElementById(id);ctrl.setAttribute(\u0022cx\u0022,x);ctrl.setAttribute(\u0022cy\u0022,y);} function degrees_to_radians(degrees) {var pi=Math.PI;return degrees*(pi/180);}\u003C/script\u003E\u0027\n\n\u0026propertyName = !\u0022height\u0022\n\u0026propertyValue = \u0026GaugeConfig.Height.ToString()\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022width\u0022\n\u0026propertyValue = \u0026GaugeConfig.Width.ToString()\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022degrees\u0022\n\u0026ValueNumeric = \u0026GaugeConfig.Value * 3 \u002B 30\n\u0026propertyValue = \u0026ValueNumeric.ToString()\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022valuecolor\u0022\n\u0026propertyValue = !\u0022blue\u0022\nIf Not \u0026GaugeConfig.ValueMarkerColor.Trim().IsEmpty()\n\t\u0026propertyValue = \u0026GaugeConfig.ValueMarkerColor\nEndIf\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022text\u0022\n\u0026propertyValue = \u0026GaugeConfig.Text\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022firstColorStart\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range1ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022firstColorEnd\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range1ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022secondColorStart\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range2ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022secondColorEnd\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range2ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022thirdColorStart\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range3ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022thirdColorEnd\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range3ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022fourthColorStart\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range4ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\u0022fourthColorEnd\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range4ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\n\u0026propertyName = !\u0022fiveColorStart\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range5ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = \u0022fiveColorEnd\u0022\n\u0026propertyValue = \u0026GaugeConfig.Range5ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\nSub \u0027ReplaceTemplate\u0027\n\t\u0026HTML = \u0026HTML.Replace(!\u0022%\u0022 \u002B \u0026propertyName.Trim() \u002B !\u0022%\u0022, \u0026propertyValue.Trim())\nendSub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026GaugeConfig, out:\u0026HTML);\n",
+      "cleanSource": "Parm(in:\u0026GaugeConfig, out:\u0026HTML);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WorkWithPlus.NativeMobile.SDPRangedRadialGaugeConfig"
+    ],
+    "calledBy": [
+      "SDPGetRangedRadialGauge"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "HTML",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "HTML"
+    },
+    {
+      "name": "GaugeConfig",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "Gauge Config"
+    },
+    {
+      "name": "propertyName",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "property Name"
+    },
+    {
+      "name": "propertyValue",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "property Value"
+    },
+    {
+      "name": "ValueNumeric",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Value Numeric"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

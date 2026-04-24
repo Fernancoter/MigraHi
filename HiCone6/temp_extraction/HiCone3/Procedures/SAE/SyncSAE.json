@@ -1,0 +1,105 @@
+{
+  "uniqueId": "1842c3a2-5c12-4d59-af8c-74ab01c04c9a",
+  "name": "SyncSAE",
+  "type": "Procedure",
+  "module": "SAE",
+  "description": "Sync SAE",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\t\u0026SP.CreateReportFTB() //Se llama al procedure Sync\n\tcommit\n\t\n\tActualizando.Call()\n\n",
+      "cleanSource": "\n\t\u0026SP.CreateReportFTB() //Se llama al procedure Sync\n\tcommit\n\t\n\tActualizando.Call()"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "SAE.Actualizando",
+      "Actualizando"
+    ],
+    "calledBy": [
+      "InicioReportes",
+      "InicioCatalogosSAE"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ProgressIndicator",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Progress Indicator"
+    },
+    {
+      "name": "SP",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "SP"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

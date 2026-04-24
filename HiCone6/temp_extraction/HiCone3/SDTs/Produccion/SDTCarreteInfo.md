@@ -1,0 +1,34 @@
+# SDT: SDTCarreteInfo
+
+- **Module:** Produccion
+- **Description:** SDTCarrete Info
+- **GAM Object:** No
+
+## Data Dictionary / Parameters
+
+| Name | Element Type | Data Type | Accessor | Description |
+|---|---|---|---|---|
+| PaletId | SDTItem | Dynamic |  | Palet Id |
+| PaletNoSerie | SDTItem | Dynamic |  | Palet No Serie |
+| PaletNo | SDTItem | Dynamic |  | Palet No |
+| PaletOperadorId | SDTItem | Dynamic |  | Palet Operador Id |
+| PaletProductoId | SDTItem | Dynamic |  | Palet Producto Id |
+| PaletProductoNombre | SDTItem | Dynamic |  | Palet Producto Nombre |
+| PaletProductoDescripcion | SDTItem | Dynamic |  | Palet Producto Descripcion |
+| PaletHoraInicioEnsamble | SDTItem | Dynamic |  | Palet Hora Inicio Ensamble |
+| PaletHoraFinEnsamble | SDTItem | Dynamic |  | Palet Hora Fin Ensamble |
+| PaletEstatus | SDTItem | Dynamic |  | Palet Estatus |
+| PaletPrensaId | SDTItem | Dynamic |  | Palet Prensa Id |
+| PaletPrensadoId | SDTItem | Dynamic |  | Palet Prensado Id |
+| PaletCapacidad | SDTItem | Dynamic |  | Palet Capacidad |
+| PaletNoCarretes | SDTItem | Dynamic |  | Palet No Carretes |
+
+## Business Logic
+
+### SDT Structure (Structure)
+
+```genexus
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+```
+

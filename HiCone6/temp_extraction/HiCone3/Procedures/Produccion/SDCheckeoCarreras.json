@@ -1,0 +1,119 @@
+{
+  "uniqueId": "63f6433f-5e5c-4d18-babc-c24a18fa0151",
+  "name": "SDCheckeoCarreras",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDCarreras Proceso BD",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\u0026isOK = true\n        \n\tfor each DB.Carrera\n\t\twhere CarreraId \u003E 0\n\t\twhere InicioPBPrensadoId = \u0026PrensadoId\n\t\twhere CarreraEstado = \u0026EstadoCarrera\n\t\t\u0026isOK = false\n\t\tExit\t\n\tendfor\n",
+      "cleanSource": "\t\u0026isOK = true\n        \n\tfor each DB.Carrera\n\t\twhere CarreraId \u003E 0\n\t\twhere InicioPBPrensadoId = \u0026PrensadoId\n\t\twhere CarreraEstado = \u0026EstadoCarrera\n\t\t\u0026isOK = false\n\t\tExit\t\n\tendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensadoId, in:\u0026EstadoCarrera, out:\u0026isOK);\n",
+      "cleanSource": "parm(in:\u0026PrensadoId, in:\u0026EstadoCarrera, out:\u0026isOK);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Carrera"
+    ],
+    "calledBy": [
+      "IniciarCarrera",
+      "SDTerminarCarrera",
+      "SDAgregarCarrera"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "EstadoCarrera",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Estado Carrera"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

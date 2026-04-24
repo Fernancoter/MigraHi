@@ -1,0 +1,101 @@
+{
+  "uniqueId": "fabf3763-3aa0-4062-8960-6f88f6e977b0",
+  "name": "SDTProductoTerminado",
+  "type": "SDT",
+  "module": "Produccion",
+  "description": "SDTProducto Terminado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "RptPrensado"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ProductoTerminadoId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Terminado Id"
+    },
+    {
+      "name": "ProductoTerminadoPalets",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Terminado Palets"
+    },
+    {
+      "name": "ProductoTerminadoCarreteMillar",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Terminado Carrete Millar"
+    },
+    {
+      "name": "ProductoTerminadoPaletMillar",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Terminado Palet Millar"
+    },
+    {
+      "name": "ProductoTerminadoPeso",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Terminado Peso"
+    },
+    {
+      "name": "ProductoTerminadoPesoCarrete",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Terminado Peso Carrete"
+    },
+    {
+      "name": "ProductoTerminadoPesoPalet",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Terminado Peso Palet"
+    },
+    {
+      "name": "TerminadoProductoId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Terminado Producto Id"
+    },
+    {
+      "name": "TerminadoProductoNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Terminado Producto Nombre"
+    }
+  ]
+}

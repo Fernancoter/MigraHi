@@ -1,0 +1,150 @@
+{
+  "uniqueId": "dba10ae6-abce-4a7d-afbe-39837e5a4049",
+  "name": "SessionLoad",
+  "type": "Procedure",
+  "module": "Web",
+  "description": "Session Load",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026RefreshNeeded = false\n\nIf \u0026WebSession.Get(!\u0022isSessionLoaded\u0022) \u003C\u003E !\u0022true\u0022\n\t\t\n\t\t\n\t\t\n\t\t\u0026GamUser = GamUser.Get()\n\t\tLoadWWPContext(\u0026WWPContext)\n\t\t\n\t\t//Fecha De Consulta\n\t\t\u0026NowDate = now()\n\t\t\u0026NowDate = \u0026NowDate.AddMonths(-3)\n\t\t\u0026WebSession.Set(!\u0022FechaInicialConsulta\u0022,\u0026NowDate.ToString())\n\t\t\n\t\t//ModuleId\n\t\t\u0026GamUserAttribute = \u0026GamUser.GetAttribute(\u0022ModuleId\u0022, \u0026Errors)\n\t\t\u0026WWPContext.ModuleId = \u0026GamUserAttribute.Value.ToNumeric()\n\t\t\n\t\tif(\u0026WWPContext.ModuleId = 0)\n\t\t\t//Busca el primer m\u00F3dulo disponible para usuarios nuevos\n\t\t\tSetDefaultModule()\n\t\t\t\u0026GamUserAttribute = \u0026GamUser.GetAttribute(\u0022ModuleId\u0022, \u0026Errors)\n\t\t\t\u0026WWPContext.ModuleId = \u0026GamUserAttribute.Value.ToNumeric()\n\t\tendif\n\t\n\t\t//Security User\n\t\t\u0026WWPContext.UserName = \u0026GamUser.Name\n\t\t\u0026WWPContext.UserEmail = \u0026GamUser.EMail\n\t\t\u0026WWPContext.UserGUID = \u0026GamUser.GUID\n\t\t\n\t\t//CompanyId\n\t\t\u0026GamUserAttribute = \u0026GamUser.GetAttribute(\u0022CompanyId\u0022, \u0026Errors)\n\t\t\u0026WWPContext.CompanyId = \u0026GamUserAttribute.Value.ToNumeric()\n\t\t\n\t\t//ImageModuleUrl\n\t\t\u0026GamUserAttribute = \u0026GamUser.GetAttribute(\u0022ImageModuleUrl\u0022, \u0026Errors)\n\t\t\u0026WWPContext.ModuleImageUrl = \u0026GamUserAttribute.Value.Trim()\n\t\t//OptionTitle\n\t\t\u0026GamUserAttribute = \u0026GamUser.GetAttribute(\u0022ModuleOptionTitle\u0022, \u0026Errors)\n  \t\t\u0026WWPContext.ModuleOptionTitle = \u0026GamUserAttribute.Value.Trim()\n  \t\t//ModuleOptionDescription\n\t\t\u0026GamUserAttribute = \u0026GamUser.GetAttribute(\u0022ModuleOptionDescription\u0022, \u0026Errors)\n  \t\t\u0026WWPContext.ModuleOptionDescription = \u0026GamUserAttribute.Value.Trim()\n  \t\t\n\t\n\t\n\t\t\n\t\tSetWWPContext(\u0026WWPContext)\n\t\t\u0026WebSession.Set(!\u0022isSessionLoaded\u0022,\u0022true\u0022)\nendif\n\n\t\n",
+      "cleanSource": "\u0026RefreshNeeded = false\n\nIf \u0026WebSession.Get(!\u0022isSessionLoaded\u0022) \u003C\u003E !\u0022true\u0022\n\t\t\n\t\t\n\t\t\n\t\t\u0026GamUser = GamUser.Get()\n\t\tLoadWWPContext(\u0026WWPContext)\n\t\t\n\t\t//Fecha De Consulta\n\t\t\u0026NowDate = now()\n\t\t\u0026NowDate = \u0026NowDate.AddMonths(-3)\n\t\t\u0026WebSession.Set(!\u0022FechaInicialConsulta\u0022,\u0026NowDate.ToString())\n\t\t\n\t\t//ModuleId\n\t\t\u0026GamUserAttribute = \u0026GamUser.GetAttribute(\u0022ModuleId\u0022, \u0026Errors)\n\t\t\u0026WWPContext.ModuleId = \u0026GamUserAttribute.Value.ToNumeric()\n\t\t\n\t\tif(\u0026WWPContext.ModuleId = 0)\n\t\t\t//Busca el primer m\u00F3dulo disponible para usuarios nuevos\n\t\t\tSetDefaultModule()\n\t\t\t\u0026GamUserAttribute = \u0026GamUser.GetAttribute(\u0022ModuleId\u0022, \u0026Errors)\n\t\t\t\u0026WWPContext.ModuleId = \u0026GamUserAttribute.Value.ToNumeric()\n\t\tendif\n\t\n\t\t//Security User\n\t\t\u0026WWPContext.UserName = \u0026GamUser.Name\n\t\t\u0026WWPContext.UserEmail = \u0026GamUser.EMail\n\t\t\u0026WWPContext.UserGUID = \u0026GamUser.GUID\n\t\t\n\t\t//CompanyId\n\t\t\u0026GamUserAttribute = \u0026GamUser.GetAttribute(\u0022CompanyId\u0022, \u0026Errors)\n\t\t\u0026WWPContext.CompanyId = \u0026GamUserAttribute.Value.ToNumeric()\n\t\t\n\t\t//ImageModuleUrl\n\t\t\u0026GamUserAttribute = \u0026GamUser.GetAttribute(\u0022ImageModuleUrl\u0022, \u0026Errors)\n\t\t\u0026WWPContext.ModuleImageUrl = \u0026GamUserAttribute.Value.Trim()\n\t\t//OptionTitle\n\t\t\u0026GamUserAttribute = \u0026GamUser.GetAttribute(\u0022ModuleOptionTitle\u0022, \u0026Errors)\n  \t\t\u0026WWPContext.ModuleOptionTitle = \u0026GamUserAttribute.Value.Trim()\n  \t\t//ModuleOptionDescription\n\t\t\u0026GamUserAttribute = \u0026GamUser.GetAttribute(\u0022ModuleOptionDescription\u0022, \u0026Errors)\n  \t\t\u0026WWPContext.ModuleOptionDescription = \u0026GamUserAttribute.Value.Trim()\n  \t\t\n\t\n\t\n\t\t\n\t\tSetWWPContext(\u0026WWPContext)\n\t\t\u0026WebSession.Set(!\u0022isSessionLoaded\u0022,\u0022true\u0022)\nendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(out:\u0026RefreshNeeded);\n",
+      "cleanSource": "parm(out:\u0026RefreshNeeded);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.LoadWWPContext",
+      "WWPBaseObjects.SetWWPContext",
+      "Web.SetDefaultModule",
+      "WWPBaseObjects.WWPContext"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "RefreshNeeded",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Refresh Needed"
+    },
+    {
+      "name": "WebSession",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Web Session"
+    },
+    {
+      "name": "GamUser",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Gam User"
+    },
+    {
+      "name": "Errors",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Errors"
+    },
+    {
+      "name": "WWPContext",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPContext"
+    },
+    {
+      "name": "GamUserAttribute",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Gam User Attribute"
+    },
+    {
+      "name": "NowDate",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Now Date"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

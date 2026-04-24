@@ -1,0 +1,155 @@
+{
+  "uniqueId": "94b04ba5-d1f5-4cd9-a3c5-422450fe5d4b",
+  "name": "SDPGetDecimalFromHex",
+  "type": "Procedure",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "SDPGet Decimal From Hex",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026HexadecimalValue = \u0026HexadecimalValueIn.ToUpper().Trim()\n\njava try { [!\u0026DecimalValue!] = Integer.parseInt([!\u0026HexadecimalValue!],16); } catch(Exception e) {}\ncsharp try {[!\u0026DecimalValue!] = System.Convert.ToInt32([!\u0026HexadecimalValue!],16); } catch {}\n\n// In case of SmartDevices Offline\nIf \u0026DecimalValue = 0 AND Not \u0026HexadecimalValue.IsEmpty()\t\n\t\u0026Dictionary = \u00220123456789ABCDEF\u0022\n\t\u0026i = 0\n\t\u0026len = \u0026HexadecimalValue.Length()\t\n\tDo While \u0026i \u003C \u0026len\n\t\t\u0026c = \u0026HexadecimalValue.CharAt(\u0026len - \u0026i)\n\t\t\u0026CharValue = \u0026Dictionary.IndexOf(\u0026c) - 1\t\t\n\t\t\u0026DecimalValue \u002B= (\u0026CharValue * (16 ^ \u0026i))\t\t\n\t\t\u0026i \u002B= 1\n\tEndDo\nEndIf\n",
+      "cleanSource": "\u0026HexadecimalValue = \u0026HexadecimalValueIn.ToUpper().Trim()\n\njava try { [!\u0026DecimalValue!] = Integer.parseInt([!\u0026HexadecimalValue!],16); } catch(Exception e) {}\ncsharp try {[!\u0026DecimalValue!] = System.Convert.ToInt32([!\u0026HexadecimalValue!],16); } catch {}\n\n// In case of SmartDevices Offline\nIf \u0026DecimalValue = 0 AND Not \u0026HexadecimalValue.IsEmpty()\t\n\t\u0026Dictionary = \u00220123456789ABCDEF\u0022\n\t\u0026i = 0\n\t\u0026len = \u0026HexadecimalValue.Length()\t\n\tDo While \u0026i \u003C \u0026len\n\t\t\u0026c = \u0026HexadecimalValue.CharAt(\u0026len - \u0026i)\n\t\t\u0026CharValue = \u0026Dictionary.IndexOf(\u0026c) - 1\t\t\n\t\t\u0026DecimalValue \u002B= (\u0026CharValue * (16 ^ \u0026i))\t\t\n\t\t\u0026i \u002B= 1\n\tEndDo\nEndIf"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026HexadecimalValueIn, out:\u0026DecimalValue);\n",
+      "cleanSource": "Parm(in:\u0026HexadecimalValueIn, out:\u0026DecimalValue);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "SDPGetUnicodeFromHex"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "c",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "c"
+    },
+    {
+      "name": "DecimalValue",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Decimal Value"
+    },
+    {
+      "name": "Dictionary",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Dictionary"
+    },
+    {
+      "name": "HexadecimalValue",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Hexadecimal Value"
+    },
+    {
+      "name": "HexadecimalValueIn",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Hexadecimal Value In"
+    },
+    {
+      "name": "i",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "i"
+    },
+    {
+      "name": "CharValue",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Char Value"
+    },
+    {
+      "name": "len",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "len"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

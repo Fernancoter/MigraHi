@@ -1,0 +1,171 @@
+{
+  "uniqueId": "3a8e0135-a57d-4875-8292-b00a0fcf8207",
+  "name": "ExportarPermisosPorRol",
+  "type": "Procedure",
+  "module": "",
+  "description": "Exportar Permisos Por Rol",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026FileName = !\u0027Permisos\u0027 \u002B \u0026GAMRole.Name.Trim() \u002B !\u0027.csv\u0027\n\u0026ok= DFWOpen(\u0026FileName, !\u0027,\u0027 , !\u0027\u0027, 0, \u0027utf_8\u0027)\nif(\u0026ok = 0)\t\n\t\u0026GAMRole.Load(\u0026RoleId)\n\t\u0026Permissions = \u0026GAMRole.GetPermissions(\u0026RolePermissionFilter, \u0026GAMErrors)\n\n\tIf \u0026Permissions.Count = 0\n\t\t\u0026varchar = \u0027Sin Permisos\u0027\n\t\t\u0026ok = DFWPTXT(\u0026varchar, \u0026varchar.Length())\n\t\t\u0026ok = DFWNext()\n\tElse\n\t\t\n\t\t\tFor \u0026Permission in \u0026Permissions\n\t\t\t\t\n\t\t\t\t\u0026varchar = \u0026Permission.GUID.Trim() \u002B \u0027|\u0027 \u002B \u0026Permission.Name.Trim() \u002B \u0027|\u0027\u002B \u0026Permission.Description.ToString().Trim()\u002B \u0027|\u0027 \u002B \u0026Permission.Type \u002B \u0027|\u0027 \u002B \u0026Permission.Inherited.ToString().Trim()  \u002B\u0027|\u0027 \u002B\u0026Permission.ApplicationId.ToString().Trim()\n\t\t\t\t\n\t\t\t\t\u0026ok = DFWPTXT(\u0026varchar, \u0026varchar.Length())\n\t\t\t\t\u0026ok = DFWNext()\n\t\t\tEndFor\t\t\n\tEndIf\nelse\n\tmsg(\u0027Error al generar el archivo\u0027)\nendif\t\n\n\u0026ok = DFWClose()\n\n\u0026HttpResponse.AddHeader(!\u0027Content-Type\u0027,!\u0027text/csv\u0027)\n\u0026HttpResponse.AddHeader(!\u0027Content-Disposition\u0027,!\u0027attachment;filename=\u0027 \u002B !\u0027archivo.csv\u0027)\n\u0026HttpResponse.AddFile(\u0026FileName)\n",
+      "cleanSource": "\u0026FileName = !\u0027Permisos\u0027 \u002B \u0026GAMRole.Name.Trim() \u002B !\u0027.csv\u0027\n\u0026ok= DFWOpen(\u0026FileName, !\u0027,\u0027 , !\u0027\u0027, 0, \u0027utf_8\u0027)\nif(\u0026ok = 0)\t\n\t\u0026GAMRole.Load(\u0026RoleId)\n\t\u0026Permissions = \u0026GAMRole.GetPermissions(\u0026RolePermissionFilter, \u0026GAMErrors)\n\n\tIf \u0026Permissions.Count = 0\n\t\t\u0026varchar = \u0027Sin Permisos\u0027\n\t\t\u0026ok = DFWPTXT(\u0026varchar, \u0026varchar.Length())\n\t\t\u0026ok = DFWNext()\n\tElse\n\t\t\n\t\t\tFor \u0026Permission in \u0026Permissions\n\t\t\t\t\n\t\t\t\t\u0026varchar = \u0026Permission.GUID.Trim() \u002B \u0027|\u0027 \u002B \u0026Permission.Name.Trim() \u002B \u0027|\u0027\u002B \u0026Permission.Description.ToString().Trim()\u002B \u0027|\u0027 \u002B \u0026Permission.Type \u002B \u0027|\u0027 \u002B \u0026Permission.Inherited.ToString().Trim()  \u002B\u0027|\u0027 \u002B\u0026Permission.ApplicationId.ToString().Trim()\n\t\t\t\t\n\t\t\t\t\u0026ok = DFWPTXT(\u0026varchar, \u0026varchar.Length())\n\t\t\t\t\u0026ok = DFWNext()\n\t\t\tEndFor\t\t\n\tEndIf\nelse\n\tmsg(\u0027Error al generar el archivo\u0027)\nendif\t\n\n\u0026ok = DFWClose()\n\n\u0026HttpResponse.AddHeader(!\u0027Content-Type\u0027,!\u0027text/csv\u0027)\n\u0026HttpResponse.AddHeader(!\u0027Content-Disposition\u0027,!\u0027attachment;filename=\u0027 \u002B !\u0027archivo.csv\u0027)\n\u0026HttpResponse.AddFile(\u0026FileName)"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026RoleId);\n",
+      "cleanSource": "parm(in:\u0026RoleId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "GAMWWRolePermissions"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "FileName",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "File Name"
+    },
+    {
+      "name": "GAMErrors",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMErrors"
+    },
+    {
+      "name": "GAMRole",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMRole"
+    },
+    {
+      "name": "HttpResponse",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Http Response"
+    },
+    {
+      "name": "ok",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "ok"
+    },
+    {
+      "name": "Permission",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Permission"
+    },
+    {
+      "name": "Permissions",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Permissions"
+    },
+    {
+      "name": "RoleId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Role Id"
+    },
+    {
+      "name": "RolePermissionFilter",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Role Permission Filter"
+    },
+    {
+      "name": "varchar",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "varchar"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

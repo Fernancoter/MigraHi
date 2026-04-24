@@ -1,0 +1,132 @@
+{
+  "uniqueId": "6979507d-8ddf-4515-92a5-1e61a5bf3ec9",
+  "name": "SDPDoubleMenuFromLaunchpad",
+  "type": "Procedure",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "SDPDouble Menu From Launchpad",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "//Type:\n//\t\t0 = 2 items per row (information for both options must be provided)\n//\t\t1 = 1 item full row\n//\t\t2 = only left option\n//\n\u0026SDPDoubleMenuOptionsLastItem = new()\n\u0026SDPDoubleMenuOptionsLastItem.Type = 10\n\nFor \u0026SDPLaunchpadOptionsItem in \u0026SDPLaunchpadOptions\n\t\u0026SDPDoubleMenuOptionsItem = new()\n\n\tif \u0026SDPDoubleMenuOptionsLastItem.Type = 2 And \u0026SDPLaunchpadOptionsItem.TileType = WorkWithPlus.NativeMobile.SDPTileSize.OneBlock\n\t\t\u0026SDPDoubleMenuOptionsLastItem.Option2ComponentToCall = \u0026SDPLaunchpadOptionsItem.Link\n\t\t\u0026SDPDoubleMenuOptionsLastItem.Option2Id = \u0026SDPLaunchpadOptionsItem.Name\n\t\t\u0026SDPDoubleMenuOptionsLastItem.Option2Image = \u0026SDPLaunchpadOptionsItem.Icon\n\t\t\u0026SDPDoubleMenuOptionsLastItem.Option2Subtitle = \u0026SDPLaunchpadOptionsItem.Description\n\t\t\u0026SDPDoubleMenuOptionsLastItem.Option2Title = \u0026SDPLaunchpadOptionsItem.Information\n\t\t\u0026SDPDoubleMenuOptionsLastItem.Type = 0\n\tElse\t\t\n\t\t\u0026SDPDoubleMenuOptions.Add(\u0026SDPDoubleMenuOptionsItem)\n\t\t\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1ComponentToCall = \u0026SDPLaunchpadOptionsItem.Link\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Id = \u0026SDPLaunchpadOptionsItem.Name\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Image = \u0026SDPLaunchpadOptionsItem.Icon\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Subtitle = \u0026SDPLaunchpadOptionsItem.Description\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Title = \u0026SDPLaunchpadOptionsItem.Information\n\t\t\n\t\tif \u0026SDPLaunchpadOptionsItem.TileType = SDPTileType.Image\n\t\t\t\u0026SDPDoubleMenuOptionsItem.Type = 1\n\t\tElse\n\t\t\t\u0026SDPDoubleMenuOptionsItem.Type = 2\n\t\tEndIf\n\tEndIf\n\n\t\u0026SDPDoubleMenuOptionsLastItem = \u0026SDPDoubleMenuOptionsItem\nEndFor\n",
+      "cleanSource": "//Type:\n//\t\t0 = 2 items per row (information for both options must be provided)\n//\t\t1 = 1 item full row\n//\t\t2 = only left option\n//\n\u0026SDPDoubleMenuOptionsLastItem = new()\n\u0026SDPDoubleMenuOptionsLastItem.Type = 10\n\nFor \u0026SDPLaunchpadOptionsItem in \u0026SDPLaunchpadOptions\n\t\u0026SDPDoubleMenuOptionsItem = new()\n\n\tif \u0026SDPDoubleMenuOptionsLastItem.Type = 2 And \u0026SDPLaunchpadOptionsItem.TileType = WorkWithPlus.NativeMobile.SDPTileSize.OneBlock\n\t\t\u0026SDPDoubleMenuOptionsLastItem.Option2ComponentToCall = \u0026SDPLaunchpadOptionsItem.Link\n\t\t\u0026SDPDoubleMenuOptionsLastItem.Option2Id = \u0026SDPLaunchpadOptionsItem.Name\n\t\t\u0026SDPDoubleMenuOptionsLastItem.Option2Image = \u0026SDPLaunchpadOptionsItem.Icon\n\t\t\u0026SDPDoubleMenuOptionsLastItem.Option2Subtitle = \u0026SDPLaunchpadOptionsItem.Description\n\t\t\u0026SDPDoubleMenuOptionsLastItem.Option2Title = \u0026SDPLaunchpadOptionsItem.Information\n\t\t\u0026SDPDoubleMenuOptionsLastItem.Type = 0\n\tElse\t\t\n\t\t\u0026SDPDoubleMenuOptions.Add(\u0026SDPDoubleMenuOptionsItem)\n\t\t\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1ComponentToCall = \u0026SDPLaunchpadOptionsItem.Link\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Id = \u0026SDPLaunchpadOptionsItem.Name\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Image = \u0026SDPLaunchpadOptionsItem.Icon\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Subtitle = \u0026SDPLaunchpadOptionsItem.Description\n\t\t\u0026SDPDoubleMenuOptionsItem.Option1Title = \u0026SDPLaunchpadOptionsItem.Information\n\t\t\n\t\tif \u0026SDPLaunchpadOptionsItem.TileType = SDPTileType.Image\n\t\t\t\u0026SDPDoubleMenuOptionsItem.Type = 1\n\t\tElse\n\t\t\t\u0026SDPDoubleMenuOptionsItem.Type = 2\n\t\tEndIf\n\tEndIf\n\n\t\u0026SDPDoubleMenuOptionsLastItem = \u0026SDPDoubleMenuOptionsItem\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026SDPLaunchpadOptions, out:\u0026SDPDoubleMenuOptions);\n",
+      "cleanSource": "Parm(in:\u0026SDPLaunchpadOptions, out:\u0026SDPDoubleMenuOptions);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WorkWithPlus.NativeMobile.SDPDoubleMenuOptions",
+      "WorkWithPlus.NativeMobile.SDPLaunchpadOptions"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SDPDoubleMenuOptions",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "SDPDouble Menu Options"
+    },
+    {
+      "name": "SDPDoubleMenuOptionsItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDPDouble Menu Options Item"
+    },
+    {
+      "name": "SDPDoubleMenuOptionsLastItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDPDouble Menu Options Last Item"
+    },
+    {
+      "name": "SDPLaunchpadOptions",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "SDPLaunchpad Options"
+    },
+    {
+      "name": "SDPLaunchpadOptionsItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDPLaunchpad Options Item"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

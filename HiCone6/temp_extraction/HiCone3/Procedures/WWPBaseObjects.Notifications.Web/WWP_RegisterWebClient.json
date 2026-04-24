@@ -1,0 +1,150 @@
+{
+  "uniqueId": "ead31b47-7410-46b9-a859-f31869af8b8a",
+  "name": "WWP_RegisterWebClient",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.Notifications.Web",
+  "description": "Register Web Client",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "WWP_Logger.Debug(\u0026Pgmname, !\u0022Begin Web Client Registration\u0022)\nIf Not WWP_ExistsUserExtended(\u0026UserGUID)\n\tWWPBaseObjects.WWP_Logger.Debug(\u0026Pgmname, format(!\u0027Creating User Extended %1...\u0027, \u0026UserGUID))\n\tWWP_CreateUserExtended(\u0026UserGUID, \u0027\u0027)\nEndIf\nFor each WWP_WebClient\n    where WWPWebClientId = \u0026ClientId\n\tWWP_Logger.Debug(\u0026Pgmname, !\u0022Updating Web Client\u0022)\n\tWWPWebClientBrowserId = GAMBrowser.Convert(\u0026BrowserId)\n\tWWPWebClientBrowserVersion = \u0026BrowserVersion\n\tWWPWebClientLastRegistered = ServerNow()\n\tWWPUserExtendedId = \u0026UserGUID\nwhen none\n\tWWP_Logger.Debug(\u0026Pgmname, !\u0022Creating Web Client\u0022)\n\tNew \n\t\tWWPWebClientId = \u0026ClientId\n\t\tWWPWebClientBrowserId = GAMBrowser.Convert(\u0026BrowserId)\n\t\tWWPWebClientBrowserVersion = \u0026BrowserVersion\n\t\tWWPWebClientFirstRegistered = ServerNow()\n\t\tWWPWebClientLastRegistered = ServerNow()\n\t\tWWPUserExtendedId = \u0026UserGUID\n\tEndNew\nEndFor\n\nWWPBaseObjects.WWP_Logger.Debug(\u0026Pgmname, !\u0022Completed Web Client Registration\u0022)\n",
+      "cleanSource": "WWP_Logger.Debug(\u0026Pgmname, !\u0022Begin Web Client Registration\u0022)\nIf Not WWP_ExistsUserExtended(\u0026UserGUID)\n\tWWPBaseObjects.WWP_Logger.Debug(\u0026Pgmname, format(!\u0027Creating User Extended %1...\u0027, \u0026UserGUID))\n\tWWP_CreateUserExtended(\u0026UserGUID, \u0027\u0027)\nEndIf\nFor each WWP_WebClient\n    where WWPWebClientId = \u0026ClientId\n\tWWP_Logger.Debug(\u0026Pgmname, !\u0022Updating Web Client\u0022)\n\tWWPWebClientBrowserId = GAMBrowser.Convert(\u0026BrowserId)\n\tWWPWebClientBrowserVersion = \u0026BrowserVersion\n\tWWPWebClientLastRegistered = ServerNow()\n\tWWPUserExtendedId = \u0026UserGUID\nwhen none\n\tWWP_Logger.Debug(\u0026Pgmname, !\u0022Creating Web Client\u0022)\n\tNew \n\t\tWWPWebClientId = \u0026ClientId\n\t\tWWPWebClientBrowserId = GAMBrowser.Convert(\u0026BrowserId)\n\t\tWWPWebClientBrowserVersion = \u0026BrowserVersion\n\t\tWWPWebClientFirstRegistered = ServerNow()\n\t\tWWPWebClientLastRegistered = ServerNow()\n\t\tWWPUserExtendedId = \u0026UserGUID\n\tEndNew\nEndFor\n\nWWPBaseObjects.WWP_Logger.Debug(\u0026Pgmname, !\u0022Completed Web Client Registration\u0022)"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ClientId, in:\u0026BrowserId, in:\u0026BrowserVersion, in:\u0026UserGUID);\n",
+      "cleanSource": "parm(in:\u0026ClientId, in:\u0026BrowserId, in:\u0026BrowserVersion, in:\u0026UserGUID);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_Logger",
+      "WWPBaseObjects.WWP_ExistsUserExtended",
+      "WWPBaseObjects.WWP_CreateUserExtended",
+      "WWPBaseObjects.Notifications.Web.WWP_WebClient"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "BrowserId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Browser Id"
+    },
+    {
+      "name": "BrowserVersion",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Browser Version"
+    },
+    {
+      "name": "ClientId",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Client Id"
+    },
+    {
+      "name": "DeviceType",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Device Type"
+    },
+    {
+      "name": "GAMBrowser",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMBrowser"
+    },
+    {
+      "name": "GAMBrowserId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMBrowser Id"
+    },
+    {
+      "name": "UserGUID",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "User GUID"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

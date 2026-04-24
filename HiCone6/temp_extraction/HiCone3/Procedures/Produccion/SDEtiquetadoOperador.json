@@ -1,0 +1,195 @@
+{
+  "uniqueId": "db4bbc23-2333-4440-bf75-dbc3b8c7da7f",
+  "name": "SDEtiquetadoOperador",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDEtiquetado Operador",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "       \u0026isOK = false\n\n       //Registrar Etiquetado Operador\n       for each DB.EtiquetadoOperador\n\t       where EtiquetadoOperadorId \u003E 0\n\t       where CarreteEtiquetadoId = \u0026CarreteId\n\t       where OrdenEtiquetadoId = \u0026OrdenEtiquetadoId\n\t       \u0026EOId = EtiquetadoOperadorId\n\n\t       \u0026EtiquetadoOperador.Load(\u0026EOId)\n\t       \u0026EtiquetadoOperador.EtiquetadoOperadorFechaHora = Now()\n\t       \u0026EtiquetadoOperador.WWPBaseObjects.SMS.EtiquetadoOperadorVoBoCarrete = \u0026VoBo\n\t       \u0026EtiquetadoOperador.EtiquetadoOperadorLineaEtiquetadora = \u0026Etiquetadora\n\t       \u0026EtiquetadoOperador.EtiquetadoOperadorObservacionCarrete = \u0026ObservacionCarrete\n\t\t   \u0026EtiquetadoOperador.EtiquetadoOperadorMotivoMolino = \u0026MotivoMolinoEtiquetado\n\t       \u0026EtiquetadoOperador.Save()\n\n\t       if(\u0026EtiquetadoOperador.Success())\n\t\t   commit\n\t\t   \u0026isOK = true\n\t       endif\n\n\t       Exit\n\twhen none\n\n\t       \u0026EtiquetadoOperador = new()\n\t       \u0026EtiquetadoOperador.CarreteEtiquetadoId = \u0026CarreteId\n\t       \u0026EtiquetadoOperador.OrdenEtiquetadoId = \u0026OrdenEtiquetadoId\n\t       \u0026EtiquetadoOperador.PalletEtiquetadoId = \u0026PaletId\n\t       \u0026EtiquetadoOperador.EtiquetadoOperadorObservacionCarrete = \u0026ObservacionCarrete\n\t\t   \u0026EtiquetadoOperador.EtiquetadoOperadorMotivoMolino = \u0026MotivoMolinoEtiquetado\n\t       \u0026EtiquetadoOperador.EtiquetadoOperadorFechaHora = Now()\n\t       \u0026EtiquetadoOperador.EtiquetadoOperadorLineaEtiquetadora = \u0026Etiquetadora\n\t       \u0026EtiquetadoOperador.EtiquetadoOperadorVoBoCarrete = \u0026VoBo\n\t       \u0026EtiquetadoOperador.Save()\n\n\t       if(\u0026EtiquetadoOperador.Success())\n\t\t   commit\n\t\t   \u0026isOK = true\n\t       endif\n\n        endfor\n",
+      "cleanSource": "       \u0026isOK = false\n\n       //Registrar Etiquetado Operador\n       for each DB.EtiquetadoOperador\n\t       where EtiquetadoOperadorId \u003E 0\n\t       where CarreteEtiquetadoId = \u0026CarreteId\n\t       where OrdenEtiquetadoId = \u0026OrdenEtiquetadoId\n\t       \u0026EOId = EtiquetadoOperadorId\n\n\t       \u0026EtiquetadoOperador.Load(\u0026EOId)\n\t       \u0026EtiquetadoOperador.EtiquetadoOperadorFechaHora = Now()\n\t       \u0026EtiquetadoOperador.WWPBaseObjects.SMS.EtiquetadoOperadorVoBoCarrete = \u0026VoBo\n\t       \u0026EtiquetadoOperador.EtiquetadoOperadorLineaEtiquetadora = \u0026Etiquetadora\n\t       \u0026EtiquetadoOperador.EtiquetadoOperadorObservacionCarrete = \u0026ObservacionCarrete\n\t\t   \u0026EtiquetadoOperador.EtiquetadoOperadorMotivoMolino = \u0026MotivoMolinoEtiquetado\n\t       \u0026EtiquetadoOperador.Save()\n\n\t       if(\u0026EtiquetadoOperador.Success())\n\t\t   commit\n\t\t   \u0026isOK = true\n\t       endif\n\n\t       Exit\n\twhen none\n\n\t       \u0026EtiquetadoOperador = new()\n\t       \u0026EtiquetadoOperador.CarreteEtiquetadoId = \u0026CarreteId\n\t       \u0026EtiquetadoOperador.OrdenEtiquetadoId = \u0026OrdenEtiquetadoId\n\t       \u0026EtiquetadoOperador.PalletEtiquetadoId = \u0026PaletId\n\t       \u0026EtiquetadoOperador.EtiquetadoOperadorObservacionCarrete = \u0026ObservacionCarrete\n\t\t   \u0026EtiquetadoOperador.EtiquetadoOperadorMotivoMolino = \u0026MotivoMolinoEtiquetado\n\t       \u0026EtiquetadoOperador.EtiquetadoOperadorFechaHora = Now()\n\t       \u0026EtiquetadoOperador.EtiquetadoOperadorLineaEtiquetadora = \u0026Etiquetadora\n\t       \u0026EtiquetadoOperador.EtiquetadoOperadorVoBoCarrete = \u0026VoBo\n\t       \u0026EtiquetadoOperador.Save()\n\n\t       if(\u0026EtiquetadoOperador.Success())\n\t\t   commit\n\t\t   \u0026isOK = true\n\t       endif\n\n        endfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026CarreteId, in:\u0026PaletId, in:\u0026OrdenEtiquetadoId, in:\u0026Etiquetadora, in:\u0026ObservacionCarrete, in:\u0026VoBo, in:\u0026MotivoMolinoEtiquetado, out:\u0026isOK);\n",
+      "cleanSource": "parm(in:\u0026CarreteId, in:\u0026PaletId, in:\u0026OrdenEtiquetadoId, in:\u0026Etiquetadora, in:\u0026ObservacionCarrete, in:\u0026VoBo, in:\u0026MotivoMolinoEtiquetado, out:\u0026isOK);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.EtiquetadoOperador"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CarreteId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Carrete Id"
+    },
+    {
+      "name": "Compatible",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Compatible"
+    },
+    {
+      "name": "EOId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "EOId"
+    },
+    {
+      "name": "EtiquetadoOperador",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Etiquetado Operador"
+    },
+    {
+      "name": "EtiquetadoPalletId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Etiquetado Pallet Id"
+    },
+    {
+      "name": "Etiquetadora",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Etiquetadora"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "ObservacionCarrete",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Observacion Carrete"
+    },
+    {
+      "name": "OperadorId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Operador Id"
+    },
+    {
+      "name": "OrdenEtiquetadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Orden Etiquetado Id"
+    },
+    {
+      "name": "PaletId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Palet Id"
+    },
+    {
+      "name": "VoBo",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "in",
+      "domain": "",
+      "description": "Vo Bo"
+    },
+    {
+      "name": "MotivoMolinoEtiquetado",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Motivo Molino Etiquetado"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

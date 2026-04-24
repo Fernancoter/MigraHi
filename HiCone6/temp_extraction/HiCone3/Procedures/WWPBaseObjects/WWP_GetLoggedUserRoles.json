@@ -1,0 +1,131 @@
+{
+  "uniqueId": "8b512911-7933-4524-abde-64858f7a9a55",
+  "name": "WWP_GetLoggedUserRoles",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "WWP_Get Logged User Roles",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026GAMUser = GAMUser.Get()\n\u0026GAMRoleCollection = \u0026GAMUser.GetRoles(\u0026GAMErrorCollection)\n\n\u0026WWPSubscriptionRoleIdCollection.Clear()\nFor \u0026GAMRole In \u0026GAMRoleCollection\n\t\u0026WWPSubscriptionRoleIdCollection.Add(\u0026GAMRole.GUID)\nEndFor\n",
+      "cleanSource": "\u0026GAMUser = GAMUser.Get()\n\u0026GAMRoleCollection = \u0026GAMUser.GetRoles(\u0026GAMErrorCollection)\n\n\u0026WWPSubscriptionRoleIdCollection.Clear()\nFor \u0026GAMRole In \u0026GAMRoleCollection\n\t\u0026WWPSubscriptionRoleIdCollection.Add(\u0026GAMRole.GUID)\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(out:\u0026WWPSubscriptionRoleIdCollection);\n",
+      "cleanSource": "parm(out:\u0026WWPSubscriptionRoleIdCollection);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "WWP_SubscriptionsSettings"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "GAMUser",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMUser"
+    },
+    {
+      "name": "GAMRoleCollection",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMRole Collection"
+    },
+    {
+      "name": "GAMRole",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMRole"
+    },
+    {
+      "name": "WWPSubscriptionRoleIdCollection",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "out",
+      "domain": "",
+      "description": "WWPSubscription Role Id"
+    },
+    {
+      "name": "GAMErrorCollection",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMError Collection"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

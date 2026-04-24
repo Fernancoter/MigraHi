@@ -1,0 +1,124 @@
+{
+  "uniqueId": "edb96a62-2e33-4abf-900b-c850c85ff420",
+  "name": "SDEscanearPallet",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDEscanear Pallet",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\n\tfor each DB.Palet\n\t\twhere PaletId \u003E 0\n\t\twhere WWPBaseObjects.SMS.PaletNoSerie.Trim() = \u0026PaletNoSerie.Trim()\n\t\t\u0026PaletId = PaletId\n\t\t\n\t\t\u0026Palet.Load(\u0026PaletId)\n\t\t\u0026PaletItem = New()\n\t\t\u0026PaletItem.FromJson(\u0026Palet.ToJson())\n\t\tExit\n\tendfor\n",
+      "cleanSource": "\t\n\tfor each DB.Palet\n\t\twhere PaletId \u003E 0\n\t\twhere WWPBaseObjects.SMS.PaletNoSerie.Trim() = \u0026PaletNoSerie.Trim()\n\t\t\u0026PaletId = PaletId\n\t\t\n\t\t\u0026Palet.Load(\u0026PaletId)\n\t\t\u0026PaletItem = New()\n\t\t\u0026PaletItem.FromJson(\u0026Palet.ToJson())\n\t\tExit\n\tendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PaletNoSerie, out:\u0026PaletItem);\n",
+      "cleanSource": "parm(in:\u0026PaletNoSerie, out:\u0026PaletItem);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SDTPalet",
+      "DB.Palet"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Palet",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet"
+    },
+    {
+      "name": "PaletId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet Id"
+    },
+    {
+      "name": "PaletItem",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "Palet Item"
+    },
+    {
+      "name": "PaletNoSerie",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Palet No Serie"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

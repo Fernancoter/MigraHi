@@ -1,0 +1,115 @@
+{
+  "uniqueId": "1da83494-c2fa-4c11-9974-b45e2f3a668b",
+  "name": "SDPGetCalendarDate",
+  "type": "Procedure",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "SDPGet Calendar Date",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\u0026CurrentDate = new()\n\u0026CurrentDate.Year = \u0026Date.Year()\n\u0026CurrentDate.Month = \u0026Date.Month()\n\u0026CurrentDate.Day = \u0026Date.Day()\n\u0026DateJson = \u0026CurrentDate.ToJson()\t\t\n",
+      "cleanSource": "\n\u0026CurrentDate = new()\n\u0026CurrentDate.Year = \u0026Date.Year()\n\u0026CurrentDate.Month = \u0026Date.Month()\n\u0026CurrentDate.Day = \u0026Date.Day()\n\u0026DateJson = \u0026CurrentDate.ToJson()"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026Date, out:\u0026DateJson);\n",
+      "cleanSource": "Parm(in:\u0026Date, out:\u0026DateJson);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WorkWithPlus.NativeMobile.SDPlusCalendarEntry"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CurrentDate",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Current Date"
+    },
+    {
+      "name": "Date",
+      "elementType": "Parameter",
+      "dataType": "DATE",
+      "accessor": "in",
+      "domain": "",
+      "description": "Date"
+    },
+    {
+      "name": "DateJson",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "Date Json"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "uniqueId": "1a986150-18b1-472f-933f-d76d6bddd993",
+  "name": "LlenarLoteReporte",
+  "type": "Procedure",
+  "module": "Embarques",
+  "description": "Llenar Lote Reporte",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\nFor each\n\tWhere EmbarqueId = \u0026EmbarqueId\n\tWhere LoteReporteId \u003E 0\n\tdelete\nEndFor\n\nFor Each\n\tWhere EmbarqueId = \u0026EmbarqueId\n\t\u0026EmbarqueDetalleProducto = EmbarqueDetalleProducto\n\t\u0026EmbarqueDetalleId = EmbarqueDetalleId\n\tDo \u0027LenarDetallePallet\u0027\nEndFor\n\nSub \u0027LenarDetallePallet\u0027\n\t\n\t\u0026LoteReporteNumero \u002B= 1\n\t\n\tNew\n\t\tLoteReporteDato = \u0026EmbarqueDetalleProducto\n\t\tLoteReporteNumero = \u0026LoteReporteNumero\n\t\tEmbarqueId = \u0026EmbarqueId\n\tendnew\n\t\n\t\u0026NumFila = 1\n\t\n\tFor Each\n\n\t\tWhere EmbarqueDetalleId = \u0026EmbarqueDetalleId\n\t\t\n\t\t\u0026EmbarquePalletNoPallet = EmbarquePalletNoPallet\n\t\t\u0026NumFila \u002B=1\n\t\t\u0026LoteReporteNumero \u002B= 1\n\t\t\n\t\tIf \u0026NumFila \u003E \u0026FilasLoteReporte\n\t\t\t\n\t\t\t\u0026NumFila = 2\n\t\t\t\n\t\t\tNew\n\t\t\t\tLoteReporteDato = \u0026EmbarqueDetalleProducto\n\t\t\t\tLoteReporteNumero = \u0026LoteReporteNumero\n\t\t\t\tEmbarqueId = \u0026EmbarqueId\n\t\t\tendnew\n\t\t\t\n\t\t\t\u0026LoteReporteNumero \u002B= 1\n\t\t\t\n\t\t\tNew\n\t\t\t\tLoteReporteDato = \u0026EmbarquePalletNoPallet\n\t\t\t\tLoteReporteNumero = \u0026LoteReporteNumero\n\t\t\t\tEmbarqueId = \u0026EmbarqueId\n\t\t\tendnew\n\t\t\t\n\t\tElse\n\t\t\t\n\t\t\tNew\n\t\t\t\tLoteReporteDato = \u0026EmbarquePalletNoPallet\n\t\t\t\tLoteReporteNumero = \u0026LoteReporteNumero\n\t\t\t\tEmbarqueId = \u0026EmbarqueId\n\t\t\tendnew\n\t\t\t\n\t\tEndIf\n\t\t\n\tEndFor\n\n\tIf mod(\u0026NumFila, \u0026FilasLoteReporte) \u003C\u003E 0\n\t\t\n\t\tDo while \u0026NumFila \u003C \u0026FilasLoteReporte\n\t\t\t\u0026LoteReporteNumero \u002B= 1\n\t\t\tNew\n\t\t\t\tLoteReporteDato.SetNull()\n\t\t\t\tLoteReporteNumero = \u0026LoteReporteNumero\n\t\t\t\tEmbarqueId = \u0026EmbarqueId\n\t\t\tendnew\n\t\t\t\n\t\t\t\u0026NumFila \u002B= 1\n\t\t\t\n\t\tenddo\n\t\t\n\tEndIf\n\nEndSub\n",
+      "cleanSource": "\nFor each\n\tWhere EmbarqueId = \u0026EmbarqueId\n\tWhere LoteReporteId \u003E 0\n\tdelete\nEndFor\n\nFor Each\n\tWhere EmbarqueId = \u0026EmbarqueId\n\t\u0026EmbarqueDetalleProducto = EmbarqueDetalleProducto\n\t\u0026EmbarqueDetalleId = EmbarqueDetalleId\n\tDo \u0027LenarDetallePallet\u0027\nEndFor\n\nSub \u0027LenarDetallePallet\u0027\n\t\n\t\u0026LoteReporteNumero \u002B= 1\n\t\n\tNew\n\t\tLoteReporteDato = \u0026EmbarqueDetalleProducto\n\t\tLoteReporteNumero = \u0026LoteReporteNumero\n\t\tEmbarqueId = \u0026EmbarqueId\n\tendnew\n\t\n\t\u0026NumFila = 1\n\t\n\tFor Each\n\n\t\tWhere EmbarqueDetalleId = \u0026EmbarqueDetalleId\n\t\t\n\t\t\u0026EmbarquePalletNoPallet = EmbarquePalletNoPallet\n\t\t\u0026NumFila \u002B=1\n\t\t\u0026LoteReporteNumero \u002B= 1\n\t\t\n\t\tIf \u0026NumFila \u003E \u0026FilasLoteReporte\n\t\t\t\n\t\t\t\u0026NumFila = 2\n\t\t\t\n\t\t\tNew\n\t\t\t\tLoteReporteDato = \u0026EmbarqueDetalleProducto\n\t\t\t\tLoteReporteNumero = \u0026LoteReporteNumero\n\t\t\t\tEmbarqueId = \u0026EmbarqueId\n\t\t\tendnew\n\t\t\t\n\t\t\t\u0026LoteReporteNumero \u002B= 1\n\t\t\t\n\t\t\tNew\n\t\t\t\tLoteReporteDato = \u0026EmbarquePalletNoPallet\n\t\t\t\tLoteReporteNumero = \u0026LoteReporteNumero\n\t\t\t\tEmbarqueId = \u0026EmbarqueId\n\t\t\tendnew\n\t\t\t\n\t\tElse\n\t\t\t\n\t\t\tNew\n\t\t\t\tLoteReporteDato = \u0026EmbarquePalletNoPallet\n\t\t\t\tLoteReporteNumero = \u0026LoteReporteNumero\n\t\t\t\tEmbarqueId = \u0026EmbarqueId\n\t\t\tendnew\n\t\t\t\n\t\tEndIf\n\t\t\n\tEndFor\n\n\tIf mod(\u0026NumFila, \u0026FilasLoteReporte) \u003C\u003E 0\n\t\t\n\t\tDo while \u0026NumFila \u003C \u0026FilasLoteReporte\n\t\t\t\u0026LoteReporteNumero \u002B= 1\n\t\t\tNew\n\t\t\t\tLoteReporteDato.SetNull()\n\t\t\t\tLoteReporteNumero = \u0026LoteReporteNumero\n\t\t\t\tEmbarqueId = \u0026EmbarqueId\n\t\t\tendnew\n\t\t\t\n\t\t\t\u0026NumFila \u002B= 1\n\t\t\t\n\t\tenddo\n\t\t\n\tEndIf\n\nEndSub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(In:\u0026EmbarqueId, In:\u0026FilasLoteReporte);\n",
+      "cleanSource": "parm(In:\u0026EmbarqueId, In:\u0026FilasLoteReporte);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "EmbarqueFormato"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "EmbarqueId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Embarque Id"
+    },
+    {
+      "name": "EmbarqueDetalleProducto",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Embarque Detalle Producto"
+    },
+    {
+      "name": "EmbarqueDetalleId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Embarque Detalle Id"
+    },
+    {
+      "name": "EmbarquePalletNoPallet",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Embarque Pallet No Pallet"
+    },
+    {
+      "name": "NumFila",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Num Fila"
+    },
+    {
+      "name": "LoteReporteNumero",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Lote Reporte Numero"
+    },
+    {
+      "name": "FilasLoteReporte",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Filas Lote Reporte"
+    },
+    {
+      "name": "i",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "i"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

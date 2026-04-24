@@ -1,0 +1,169 @@
+{
+  "uniqueId": "6d038d0e-4f78-41b9-8c7a-43fb1f60961d",
+  "name": "WWP_GetImportCSVColumnIndexes",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "WWP_Get Import CSVColumn Indexes",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\u0026ColumIndexes = new()\n\n\u0026ColumnsLineSplitted = \u0026ColumnsLineText.SplitRegEx(!\u0027;\u0027)\n\u0026ColumnsCount = \u0026ColumnsLineSplitted.Count\n\nFor \u0026TitleName in \u0026TitleNames\n\t\u0026Index = \u0026ColumnsLineSplitted.IndexOf(\u0026TitleName)\n\t\u0026ColumIndexes.Add(\u0026Index)\nEndFor\n\n\u0026ColumnsFound = 0\n\u0026DiscardedColumns = \u0027\u0027\nFor \u0026i = 1 To \u0026ColumnsLineSplitted.Count\n\tIf \u0026ColumIndexes.IndexOf(\u0026i) = 0\n\t\tIf not \u0026DiscardedColumns.IsEmpty()\n\t\t\t\u0026DiscardedColumns \u002B= \u0027, \u0027\n\t\tEndIf\n\t\t\u0026DiscardedColumns \u002B= \u0026ColumnsLineSplitted.Item(\u0026i)\n\tElse\n\t\t\u0026ColumnsFound \u002B= 1\n\tEndIf\nEndFor\n\nIf \u0026DiscardedColumns.Length() \u003E 50\n\t\u0026DiscardedColumns = \u0026DiscardedColumns.Substring(1, 50)\n\t\u0026DiscardedColumns = \u0026DiscardedColumns.Trim() \u002B \u0027...\u0027\nEndIf\n",
+      "cleanSource": "\n\u0026ColumIndexes = new()\n\n\u0026ColumnsLineSplitted = \u0026ColumnsLineText.SplitRegEx(!\u0027;\u0027)\n\u0026ColumnsCount = \u0026ColumnsLineSplitted.Count\n\nFor \u0026TitleName in \u0026TitleNames\n\t\u0026Index = \u0026ColumnsLineSplitted.IndexOf(\u0026TitleName)\n\t\u0026ColumIndexes.Add(\u0026Index)\nEndFor\n\n\u0026ColumnsFound = 0\n\u0026DiscardedColumns = \u0027\u0027\nFor \u0026i = 1 To \u0026ColumnsLineSplitted.Count\n\tIf \u0026ColumIndexes.IndexOf(\u0026i) = 0\n\t\tIf not \u0026DiscardedColumns.IsEmpty()\n\t\t\t\u0026DiscardedColumns \u002B= \u0027, \u0027\n\t\tEndIf\n\t\t\u0026DiscardedColumns \u002B= \u0026ColumnsLineSplitted.Item(\u0026i)\n\tElse\n\t\t\u0026ColumnsFound \u002B= 1\n\tEndIf\nEndFor\n\nIf \u0026DiscardedColumns.Length() \u003E 50\n\t\u0026DiscardedColumns = \u0026DiscardedColumns.Substring(1, 50)\n\t\u0026DiscardedColumns = \u0026DiscardedColumns.Trim() \u002B \u0027...\u0027\nEndIf"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "\nparm(in:\u0026TitleNames, in:\u0026ColumnsLineText, out:\u0026DiscardedColumns, out:\u0026ColumIndexes, out:\u0026ColumnsCount, out:\u0026ColumnsFound);\n",
+      "cleanSource": "\nparm(in:\u0026TitleNames, in:\u0026ColumnsLineText, out:\u0026DiscardedColumns, out:\u0026ColumIndexes, out:\u0026ColumnsCount, out:\u0026ColumnsFound);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ColumIndexes",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Colum Indexes"
+    },
+    {
+      "name": "ColumnsCount",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Columns Count"
+    },
+    {
+      "name": "ColumnsFound",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Columns Found"
+    },
+    {
+      "name": "ColumnsLineSplitted",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Columns Line Splitted"
+    },
+    {
+      "name": "ColumnsLineText",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Columns Line Text"
+    },
+    {
+      "name": "DiscardedColumns",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "Discarded Columns"
+    },
+    {
+      "name": "i",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "i"
+    },
+    {
+      "name": "Index",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Index"
+    },
+    {
+      "name": "TitleName",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Title Name"
+    },
+    {
+      "name": "TitleNames",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Title Names"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

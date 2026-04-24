@@ -1,0 +1,165 @@
+{
+  "uniqueId": "6899ad9c-2d9f-4974-af6e-808d5f67b64c",
+  "name": "CrearPrensado",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Crear Prensado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026Prensado = New()\n\u0026Prensado.PrensadoPrensaId = \u0026PrensaId \n\u0026Prensado.PrensadoTurnoId = \u0026TurnoId\n\u0026Prensado.PrensadoFecha = \u0026PrensadoFecha \n\u0026Prensado.PrensadoProductoId = \u0026ProductoId\nif(\u0026OperadorId\u003E0)\n\t\u0026Prensado.PrensadoOperadorId = \u0026OperadorId\nelse\n\t\u0026Prensado.PrensadoOperadorId.SetNull()\nendif\n\n\u0026Prensado.PrensadoTroquelId.SetNull()\n\u0026Prensado.PrensadoEstado = EstadoPrensado.PorProgramar\n\u0026Prensado.PrensadoLevasUnidadMedida = UnidadMedida.kg\n\u0026Prensado.PrensadoRodillosUnidadMedida = UnidadMedida.kg\n\n\n\u0026Prensado.Save()\nif(\u0026Prensado.Success())\n\tcommit\n\t\u0026PrensadoId = \u0026Prensado.PrensadoId\nelse\n\t\u0026PrensadoId = 0\nendif\n\n\n",
+      "cleanSource": "\u0026Prensado = New()\n\u0026Prensado.PrensadoPrensaId = \u0026PrensaId \n\u0026Prensado.PrensadoTurnoId = \u0026TurnoId\n\u0026Prensado.PrensadoFecha = \u0026PrensadoFecha \n\u0026Prensado.PrensadoProductoId = \u0026ProductoId\nif(\u0026OperadorId\u003E0)\n\t\u0026Prensado.PrensadoOperadorId = \u0026OperadorId\nelse\n\t\u0026Prensado.PrensadoOperadorId.SetNull()\nendif\n\n\u0026Prensado.PrensadoTroquelId.SetNull()\n\u0026Prensado.PrensadoEstado = EstadoPrensado.PorProgramar\n\u0026Prensado.PrensadoLevasUnidadMedida = UnidadMedida.kg\n\u0026Prensado.PrensadoRodillosUnidadMedida = UnidadMedida.kg\n\n\n\u0026Prensado.Save()\nif(\u0026Prensado.Success())\n\tcommit\n\t\u0026PrensadoId = \u0026Prensado.PrensadoId\nelse\n\t\u0026PrensadoId = 0\nendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026TurnoId, in:\u0026PrensaId, in:\u0026PrensadoFecha,in:\u0026ProductoId,in:\u0026OperadorId,out:\u0026PrensadoId);\n",
+      "cleanSource": "parm(in:\u0026TurnoId, in:\u0026PrensaId, in:\u0026PrensadoFecha,in:\u0026ProductoId,in:\u0026OperadorId,out:\u0026PrensadoId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Prensado"
+    ],
+    "calledBy": [
+      "PrensadoDelDia"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Exito",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Exito"
+    },
+    {
+      "name": "OperadorId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Operador Id"
+    },
+    {
+      "name": "Prensado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado"
+    },
+    {
+      "name": "PrensadoFecha",
+      "elementType": "Parameter",
+      "dataType": "DATETIME",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Fecha"
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "ProductoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "Result",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Result"
+    },
+    {
+      "name": "TurnoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Turno Id"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

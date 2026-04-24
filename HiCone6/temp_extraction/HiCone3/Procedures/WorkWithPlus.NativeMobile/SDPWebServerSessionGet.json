@@ -1,0 +1,117 @@
+{
+  "uniqueId": "0bcb703a-9ef6-452d-a37c-fa511e6fe590",
+  "name": "SDPWebServerSessionGet",
+  "type": "Procedure",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "SDPWeb Server Session Get",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026ParameterValue = \u0026WebSession.Get(\u0026ParameterKey)\n",
+      "cleanSource": "\u0026ParameterValue = \u0026WebSession.Get(\u0026ParameterKey)"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026ParameterKey, out:\u0026ParameterValue);\n",
+      "cleanSource": "Parm(in:\u0026ParameterKey, out:\u0026ParameterValue);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "SDPListFilteredGetTotalsExample",
+      "SDPCartAddressGetSelected",
+      "SDPCartPaymentMethodsGetSelected"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ParameterKey",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Parameter Key"
+    },
+    {
+      "name": "ParameterValue",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "Parameter Value"
+    },
+    {
+      "name": "WebSession",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Web Session"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

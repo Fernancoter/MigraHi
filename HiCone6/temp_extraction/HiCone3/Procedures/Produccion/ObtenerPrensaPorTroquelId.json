@@ -1,0 +1,115 @@
+{
+  "uniqueId": "3d3c8439-f676-4d8f-9081-63c1ba235a7e",
+  "name": "ObtenerPrensaPorTroquelId",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Obtener Prensa Por Troquel Id",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\tfor each DB.PrensaTroquel\n\t\tWhere TroquelEstado = EstadoTroquel.EnPrensa\n\t\tWhere TroquelId = \u0026TroquelId\n\t\t\u0026PrensaId = PrensaId\n\t\t\u0026PrensaNombre = PrensaNombre\n\t\tExit\n\tendfor\n",
+      "cleanSource": "\n\tfor each DB.PrensaTroquel\n\t\tWhere TroquelEstado = EstadoTroquel.EnPrensa\n\t\tWhere TroquelId = \u0026TroquelId\n\t\t\u0026PrensaId = PrensaId\n\t\t\u0026PrensaNombre = PrensaNombre\n\t\tExit\n\tendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026TroquelId, out:\u0026PrensaNombre );\n",
+      "cleanSource": "parm(in:\u0026TroquelId, out:\u0026PrensaNombre );"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.PrensaTroquel"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "TroquelId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Troquel Id"
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "PrensaNombre",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "Prensa Nombre"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

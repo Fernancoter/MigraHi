@@ -1,0 +1,139 @@
+{
+  "uniqueId": "105404da-26e5-493b-a83e-6c6a4dc2cd63",
+  "name": "SDCrearPrensaTroquel",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDCrear Prensa Troquel",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\n        SDTroquelMantenimiento.Call(\u0026PrensaId)\n\t\n\t\u0026isOK = false\n\t\u0026PrensaTroquel = New()\n        \u0026PrensaTroquel.PrensaId = \u0026PrensaId\n        \u0026PrensaTroquel.TroquelId = \u0026TroquelId\n        \u0026PrensaTroquel.Save()\n\n\tif(\u0026PrensaTroquel.Success())\n\t\t\u0026isOK = true\n\t\tcommit\n\tendif\n\t\n        if(\u0026isOK)\n\t\tSetEstadoTroquel.Call(\u0026TroquelId, EstadoTroquel.EnPrensa)\n\tendif\n",
+      "cleanSource": "\t\n        SDTroquelMantenimiento.Call(\u0026PrensaId)\n\t\n\t\u0026isOK = false\n\t\u0026PrensaTroquel = New()\n        \u0026PrensaTroquel.PrensaId = \u0026PrensaId\n        \u0026PrensaTroquel.TroquelId = \u0026TroquelId\n        \u0026PrensaTroquel.Save()\n\n\tif(\u0026PrensaTroquel.Success())\n\t\t\u0026isOK = true\n\t\tcommit\n\tendif\n\t\n        if(\u0026isOK)\n\t\tSetEstadoTroquel.Call(\u0026TroquelId, EstadoTroquel.EnPrensa)\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensaId, in:\u0026TroquelId, out:\u0026isOK);\n",
+      "cleanSource": "parm(in:\u0026PrensaId, in:\u0026TroquelId, out:\u0026isOK);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SetEstadoTroquel",
+      "Produccion.SDTroquelMantenimiento",
+      "DB.Troquel",
+      "DB.PrensaTroquel",
+      "SDTroquelMantenimiento",
+      "SetEstadoTroquel"
+    ],
+    "calledBy": [
+      "SDAsignarTroquel",
+      "SDPrensadoTemporal"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "PrensaTroquel",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensa Troquel"
+    },
+    {
+      "name": "TroquelId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Troquel Id"
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "Troquel",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Troquel"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

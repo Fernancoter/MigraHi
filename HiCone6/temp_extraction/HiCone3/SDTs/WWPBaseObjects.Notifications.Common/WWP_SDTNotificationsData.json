@@ -1,0 +1,78 @@
+{
+  "uniqueId": "14a42ec1-e8b8-40e6-a58a-93b717a17ea5",
+  "name": "WWP_SDTNotificationsData",
+  "type": "SDT",
+  "module": "WWPBaseObjects.Notifications.Common",
+  "description": "SDT Notifications Data",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "WWP_GetUnreadWebNotifications",
+      "Home"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "NotificationId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Notification Id"
+    },
+    {
+      "name": "NotificationIconClass",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Notification Icon Class"
+    },
+    {
+      "name": "NotificationTitle",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Notification Title"
+    },
+    {
+      "name": "NotificationDescription",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Notification Description"
+    },
+    {
+      "name": "NotificationDatetime",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Notification Datetime"
+    },
+    {
+      "name": "NotificationLink",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Notification Link"
+    }
+  ]
+}

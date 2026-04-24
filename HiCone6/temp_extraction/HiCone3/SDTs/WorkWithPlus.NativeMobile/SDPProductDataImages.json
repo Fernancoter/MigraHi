@@ -1,0 +1,45 @@
+{
+  "uniqueId": "d7055c35-b6f5-4608-afd3-37457c7ed2b0",
+  "name": "SDPProductDataImages",
+  "type": "SDT",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "SDPProduct Data Images",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "SDPCartProductImages"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Image",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Image"
+    },
+    {
+      "name": "Description",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Description"
+    }
+  ]
+}

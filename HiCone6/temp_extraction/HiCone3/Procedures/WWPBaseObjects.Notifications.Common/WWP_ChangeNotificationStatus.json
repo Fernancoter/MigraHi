@@ -1,0 +1,97 @@
+{
+  "uniqueId": "69714ac5-4146-4825-875c-03d0da9b6a20",
+  "name": "WWP_ChangeNotificationStatus",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.Notifications.Common",
+  "description": "Set Notification Read/Unread",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "Stub SetNotificationReadUnreadById(\u0026WWPNotificationId)\n\tFor Each WWP_Notification\n\t\tWhere WWPNotificationId = \u0026WWPNotificationId\n\t\tIf WWPNotificationIsRead\n\t\t\tWWPNotificationIsRead = False\n\t\tElse\n\t\t\tWWPNotificationIsRead = True\n\t\tEndif\n\tEndFor\nEndStub\n\nStub SetNotificationReadById(\u0026WWPNotificationId)\n\tFor Each WWP_Notification\n\t\tWhere WWPNotificationId = \u0026WWPNotificationId\n\t\t\tWWPNotificationIsRead = True\n\tEndFor\nEndStub\n\nStub SetAllNotificationsOfLoggedUserRead()\n\tFor Each WWP_Notification\n\t\tWhere DB.WWPUserExtendedId = WWP_GetLoggedUserId()\n\t\tWWPNotificationIsRead = true\n\tEndFor\nEndStub\n",
+      "cleanSource": "Stub SetNotificationReadUnreadById(\u0026WWPNotificationId)\n\tFor Each WWP_Notification\n\t\tWhere WWPNotificationId = \u0026WWPNotificationId\n\t\tIf WWPNotificationIsRead\n\t\t\tWWPNotificationIsRead = False\n\t\tElse\n\t\t\tWWPNotificationIsRead = True\n\t\tEndif\n\tEndFor\nEndStub\n\nStub SetNotificationReadById(\u0026WWPNotificationId)\n\tFor Each WWP_Notification\n\t\tWhere WWPNotificationId = \u0026WWPNotificationId\n\t\t\tWWPNotificationIsRead = True\n\tEndFor\nEndStub\n\nStub SetAllNotificationsOfLoggedUserRead()\n\tFor Each WWP_Notification\n\t\tWhere DB.WWPUserExtendedId = WWP_GetLoggedUserId()\n\t\tWWPNotificationIsRead = true\n\tEndFor\nEndStub"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_GetLoggedUserId",
+      "WWPBaseObjects.Notifications.Common.WWP_Notification"
+    ],
+    "calledBy": [
+      "WWP_VisualizeNotification",
+      "WWP_VisualizeAllNotifications"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "WWPNotificationId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPNotification Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

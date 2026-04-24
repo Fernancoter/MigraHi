@@ -1,0 +1,26 @@
+{
+  "uniqueId": "87811ad9-0b9c-42b2-af03-9915e2c86f82",
+  "name": "DashboardViewerValuesHighlightedData",
+  "type": "SDT",
+  "module": "GeneXusReporting",
+  "description": "Dashboard Viewer Values Highlighted Data",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": []
+}

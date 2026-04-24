@@ -1,0 +1,126 @@
+{
+  "uniqueId": "201cf1dd-e7ea-4ffd-a497-00aa0a5e70c9",
+  "name": "SDPCartPaymentMethodsGetAvailable",
+  "type": "Procedure",
+  "module": "",
+  "description": "SDPCart Payment Methods Get Available",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026SessionTxt = \u0026WebSession.Get(!\u0022PaymentMethods\u0022)\n\u0026SDPCartPaymentCollection.FromJson(\u0026SessionTxt)\n\nIf \u0026SDPCartPaymentCollection.Count = 0\n\t\u0026SDPCartPayment\t= new()\n\t\u0026SDPCartPayment.Id = !\u00221\u0022\n\t\u0026SDPCartPayment.VisibleName = !\u0022Visa *****1234\u0022\n\t\u0026SDPCartPayment.Owner = !\u0022Jhon Doe\u0022\n\t\u0026SDPCartPayment.Valid = !\u0022Expires on 11/2022\u0022\n\t\u0026SDPCartPayment.Selected = true\n\t\u0026SDPCartPaymentCollection.Add(\u0026SDPCartPayment)\n\t\n\t\u0026SDPCartPayment\t= new()\n\t\u0026SDPCartPayment.Id = !\u00222\u0022\n\t\u0026SDPCartPayment.VisibleName = !\u0022Master *****1234\u0022\n\t\u0026SDPCartPayment.Owner = !\u0022Jhon Doe\u0022\n\t\u0026SDPCartPayment.Valid = !\u0022Expires on 10/2022\u0022\n\t\u0026SDPCartPaymentCollection.Add(\u0026SDPCartPayment)\nEndIf\n",
+      "cleanSource": "\u0026SessionTxt = \u0026WebSession.Get(!\u0022PaymentMethods\u0022)\n\u0026SDPCartPaymentCollection.FromJson(\u0026SessionTxt)\n\nIf \u0026SDPCartPaymentCollection.Count = 0\n\t\u0026SDPCartPayment\t= new()\n\t\u0026SDPCartPayment.Id = !\u00221\u0022\n\t\u0026SDPCartPayment.VisibleName = !\u0022Visa *****1234\u0022\n\t\u0026SDPCartPayment.Owner = !\u0022Jhon Doe\u0022\n\t\u0026SDPCartPayment.Valid = !\u0022Expires on 11/2022\u0022\n\t\u0026SDPCartPayment.Selected = true\n\t\u0026SDPCartPaymentCollection.Add(\u0026SDPCartPayment)\n\t\n\t\u0026SDPCartPayment\t= new()\n\t\u0026SDPCartPayment.Id = !\u00222\u0022\n\t\u0026SDPCartPayment.VisibleName = !\u0022Master *****1234\u0022\n\t\u0026SDPCartPayment.Owner = !\u0022Jhon Doe\u0022\n\t\u0026SDPCartPayment.Valid = !\u0022Expires on 10/2022\u0022\n\t\u0026SDPCartPaymentCollection.Add(\u0026SDPCartPayment)\nEndIf"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(out:\u0026SDPCartPaymentCollection);\n",
+      "cleanSource": "Parm(out:\u0026SDPCartPaymentCollection);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "SDPCartPayment"
+    ],
+    "calledBy": [
+      "SDPCartPaymentMethodsAddNew",
+      "SDPCartPaymentMethodsGetSelected"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "WebSession",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Web Session"
+    },
+    {
+      "name": "SDPCartPayment",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDPCart Payment"
+    },
+    {
+      "name": "SDPCartPaymentCollection",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "SDPCart Payment Collection"
+    },
+    {
+      "name": "SessionTxt",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Session Txt"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

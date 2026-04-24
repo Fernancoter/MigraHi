@@ -1,0 +1,131 @@
+{
+  "uniqueId": "f9bc1ac4-318d-4c04-8e5a-c0c0845856ba",
+  "name": "CarrerasValidas",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Carreras Validas",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\u0026isOK = true\n\t\u0026Carreras = 0\n\t\u0026Validas = 0\n\t\n\tfor \u0026SDTCarreraItem in \u0026SDTCarrera\n\t\tif(\u0026SDTCarreraItem.CarreraEstado = EstadoCarrera.Validada)\n\t\t\t\u0026Validas \u002B= 1\n\t\tendif\n\t\n\t        \u0026Carreras \u002B= 1\n\tendfor\n \n        if(Not \u0026Carreras = \u0026Validas)\n\t      \u0026isOK = false\n              msg(\u0027Debe validar todas las carreras antes de finalizar el Prensado\u0027)\n\tendif\n",
+      "cleanSource": "\t\u0026isOK = true\n\t\u0026Carreras = 0\n\t\u0026Validas = 0\n\t\n\tfor \u0026SDTCarreraItem in \u0026SDTCarrera\n\t\tif(\u0026SDTCarreraItem.CarreraEstado = EstadoCarrera.Validada)\n\t\t\t\u0026Validas \u002B= 1\n\t\tendif\n\t\n\t        \u0026Carreras \u002B= 1\n\tendfor\n \n        if(Not \u0026Carreras = \u0026Validas)\n\t      \u0026isOK = false\n              msg(\u0027Debe validar todas las carreras antes de finalizar el Prensado\u0027)\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026SDTCarrera, out:\u0026isOK);\n",
+      "cleanSource": "parm(in:\u0026SDTCarrera, out:\u0026isOK);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SDTCarrera"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Carreras",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Carreras"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "SDTCarrera",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "SDTCarrera"
+    },
+    {
+      "name": "SDTCarreraItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrera Item"
+    },
+    {
+      "name": "Validas",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Validas"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

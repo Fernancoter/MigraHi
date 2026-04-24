@@ -1,0 +1,115 @@
+{
+  "uniqueId": "1d9466c7-7347-47f7-8930-b193c6fc9cb8",
+  "name": "EsCarreteEnPallet",
+  "type": "Procedure",
+  "module": "",
+  "description": "Es Carrete En Pallet",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026IsOk = false\n\nfor each DB.PaletCarrete\n\tWhere DB.PaletId = \u0026PaletId\n\tWhere CarreteId = \u0026CarreteId\n\t\u0026IsOk = true\n\tExit\nEndfor\n\n\n",
+      "cleanSource": "\u0026IsOk = false\n\nfor each DB.PaletCarrete\n\tWhere DB.PaletId = \u0026PaletId\n\tWhere CarreteId = \u0026CarreteId\n\t\u0026IsOk = true\n\tExit\nEndfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PaletId,in:\u0026CarreteId,out:\u0026IsOk);\n",
+      "cleanSource": "parm(in:\u0026PaletId,in:\u0026CarreteId,out:\u0026IsOk);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.PaletCarrete"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "PaletId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Palet Id"
+    },
+    {
+      "name": "CarreteId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Carrete Id"
+    },
+    {
+      "name": "IsOk",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Is Ok"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

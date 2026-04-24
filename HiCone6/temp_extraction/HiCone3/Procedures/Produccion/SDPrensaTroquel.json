@@ -1,0 +1,132 @@
+{
+  "uniqueId": "46cdd578-3e28-4815-8d86-2f617d3db16f",
+  "name": "SDPrensaTroquel",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDPrensa Troquel",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\t\n\t\u0026TroquelId = 0\n\t\n\tfor each DB.PrensaTroquel\n\t\t where PrensaTroquelId \u003E 0\n\t\t where PrensaId = \u0026PrensaId\n\t\t where TroquelId \u003E 0\n\t\t where DB.TroquelEstado = EstadoTroquel.EnPrensa\n\t\t \u0026AuxTroquelId = TroquelId\n\t\t \n\t\t for each DB.Troquel.Producto\n\t\t\t  where TroquelId = \u0026AuxTroquelId\n\t\t\t  where ProductoId = \u0026ProductoId\n\t\t\t  \u0026TroquelId = TroquelId\n\t\t\t  Exit\n\t\t endfor\n\t         \n\t\t Exit\n\tendfor\n",
+      "cleanSource": "\t\t\n\t\u0026TroquelId = 0\n\t\n\tfor each DB.PrensaTroquel\n\t\t where PrensaTroquelId \u003E 0\n\t\t where PrensaId = \u0026PrensaId\n\t\t where TroquelId \u003E 0\n\t\t where DB.TroquelEstado = EstadoTroquel.EnPrensa\n\t\t \u0026AuxTroquelId = TroquelId\n\t\t \n\t\t for each DB.Troquel.Producto\n\t\t\t  where TroquelId = \u0026AuxTroquelId\n\t\t\t  where ProductoId = \u0026ProductoId\n\t\t\t  \u0026TroquelId = TroquelId\n\t\t\t  Exit\n\t\t endfor\n\t         \n\t\t Exit\n\tendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensaId, in:\u0026ProductoId, out:\u0026TroquelId);\n",
+      "cleanSource": "parm(in:\u0026PrensaId, in:\u0026ProductoId, out:\u0026TroquelId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Troquel",
+      "DB.PrensaTroquel"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "PrensaId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "TroquelId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Troquel Id"
+    },
+    {
+      "name": "ProductoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "AuxTroquelId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Troquel Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

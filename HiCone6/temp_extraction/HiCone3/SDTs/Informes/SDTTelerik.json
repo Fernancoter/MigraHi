@@ -1,0 +1,51 @@
+{
+  "uniqueId": "09990187-1921-491b-9606-231a07e9d64b",
+  "name": "SDTTelerik",
+  "type": "SDT",
+  "module": "Informes",
+  "description": "SDTTelerik",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "Orders",
+      "FTBYTD",
+      "RealtimeInventory",
+      "EmbarqueFormato",
+      "OrdersMoney",
+      "InformesTelerik",
+      "UnitPlan2"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ReportName",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Report Name"
+    },
+    {
+      "name": "json",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "json"
+    }
+  ]
+}

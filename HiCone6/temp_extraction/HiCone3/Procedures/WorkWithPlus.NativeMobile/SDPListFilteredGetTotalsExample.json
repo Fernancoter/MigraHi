@@ -1,0 +1,164 @@
+{
+  "uniqueId": "2070f3a1-f8d5-459c-b3fc-60381b7584d7",
+  "name": "SDPListFilteredGetTotalsExample",
+  "type": "Procedure",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "SDPList Filtered Get Totals Example",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026FilterYesterdayFrom = \u0026Today.AddDays(-1)\n\u0026FilterWeekFrom = \u0026Today.AddDays(-7)\n\u0026FilterMonthFrom = \u0026Today.AddDays(-30)\n\t\n\u0026SelectedFilter = SDPWebServerSessionGet.Udp(!\u0027\u0026SelectedFilter\u0027).ToNumeric() \n/*\nFor each\n\tWhere ProductPublished \u003E= \u0026Today When \u0026SelectedFilter = 1\n\tWhere ProductPublished \u003C \u0026Today AND PropertyPublished \u003E= \u0026FilterYesterdayFrom When \u0026SelectedFilter = 2 \n\tWhere ProductPublished \u003E= \u0026FilterWeekFrom When \u0026SelectedFilter = 3 \n\tWhere ProductPublished \u003E= \u0026FilterMonthFrom When \u0026SelectedFilter = 4\t\n\t\n\tIf ProductType = Type.Type1\n\t\t\u0026Total1 \u002B= 1\n\tEndIf\n\tIf ProductType = Type.Type2\n\t\t\u0026Total2 \u002B= 1\n\tEndIf\t\t\n\t\u0026Total3 \u002B= 1\t\t\n\tIf ProductType = Type.Type3\n\t\t\u0026Total4 \u002B= 1\n\tEndIf\n\tIf ProductType = Type.Type4\n\t\t\u0026Total5 \u002B= 1\n\tEndIf\t\nendFor\n*/\n",
+      "cleanSource": "\u0026FilterYesterdayFrom = \u0026Today.AddDays(-1)\n\u0026FilterWeekFrom = \u0026Today.AddDays(-7)\n\u0026FilterMonthFrom = \u0026Today.AddDays(-30)\n\t\n\u0026SelectedFilter = SDPWebServerSessionGet.Udp(!\u0027\u0026SelectedFilter\u0027).ToNumeric() \n/*\nFor each\n\tWhere ProductPublished \u003E= \u0026Today When \u0026SelectedFilter = 1\n\tWhere ProductPublished \u003C \u0026Today AND PropertyPublished \u003E= \u0026FilterYesterdayFrom When \u0026SelectedFilter = 2 \n\tWhere ProductPublished \u003E= \u0026FilterWeekFrom When \u0026SelectedFilter = 3 \n\tWhere ProductPublished \u003E= \u0026FilterMonthFrom When \u0026SelectedFilter = 4\t\n\t\n\tIf ProductType = Type.Type1\n\t\t\u0026Total1 \u002B= 1\n\tEndIf\n\tIf ProductType = Type.Type2\n\t\t\u0026Total2 \u002B= 1\n\tEndIf\t\t\n\t\u0026Total3 \u002B= 1\t\t\n\tIf ProductType = Type.Type3\n\t\t\u0026Total4 \u002B= 1\n\tEndIf\n\tIf ProductType = Type.Type4\n\t\t\u0026Total5 \u002B= 1\n\tEndIf\t\nendFor\n*/"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(out:\u0026Total1, out:\u0026Total2, out:\u0026Total3, out:\u0026Total4, out:\u0026Total5);\n",
+      "cleanSource": "Parm(out:\u0026Total1, out:\u0026Total2, out:\u0026Total3, out:\u0026Total4, out:\u0026Total5);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WorkWithPlus.NativeMobile.SDPWebServerSessionGet",
+      "SDPWebServerSessionGet"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SelectedFilter",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Selected Filter"
+    },
+    {
+      "name": "Total1",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Total1"
+    },
+    {
+      "name": "Total2",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Total2"
+    },
+    {
+      "name": "Total3",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Total3"
+    },
+    {
+      "name": "Total4",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Total4"
+    },
+    {
+      "name": "Total5",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Total5"
+    },
+    {
+      "name": "FilterMonthFrom",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Filter Month From"
+    },
+    {
+      "name": "FilterWeekFrom",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Filter Week From"
+    },
+    {
+      "name": "FilterYesterdayFrom",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Filter Yesterday From"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

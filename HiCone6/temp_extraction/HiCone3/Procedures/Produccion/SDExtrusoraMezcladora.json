@@ -1,0 +1,156 @@
+{
+  "uniqueId": "45ddb97c-d5ca-4c9b-b6b4-525935846270",
+  "name": "SDExtrusoraMezcladora",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDExtrusoraMezcladora",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\n\tfor each DB.ExtrusoraMezcladora\n\t\twhere ExtrusoraMezcladoraId \u003E 0\n\t\twhere ExtrusoraId = \u0026ExtrusoraId\n\t\t\n\t\t\u0026VirgenMin = ExtrusoraMezcladoraHusilloVirgenMin\n\t\t\u0026VirgenMax = ExtrusoraMezcladoraHusilloVirgenMax\n\t\t\u0026MolidoMin = ExtrusoraMezcladoraHusilloMolidoMin\n\t\t\u0026MolidoMax = ExtrusoraMezcladoraHusilloMolidoMax\n\t\t\n\t\tif (\u0026HusilloVirgen \u003E= \u0026VirgenMin and \u0026HusilloVirgen \u003C= \u0026VirgenMax) and (\u0026HusilloMolido \u003E= \u0026MolidoMin and \u0026HusilloMolido \u003C= \u0026MolidoMax)\n\t\t\t\u0026SDTExtMezcladora = New()\n\t\t\t\u0026SDTExtMezcladora.ExtrusoraMezcladoraKgMolido = ExtrusoraMezcladoraKgMolido\n\t\t\t\u0026SDTExtMezcladora.ExtrusoraMezcladoraKgVirgen = ExtrusoraMezcladoraKgVirgen\n\t\t\tExit\n\t\tendif\n\tendfor\n",
+      "cleanSource": "\n\n\tfor each DB.ExtrusoraMezcladora\n\t\twhere ExtrusoraMezcladoraId \u003E 0\n\t\twhere ExtrusoraId = \u0026ExtrusoraId\n\t\t\n\t\t\u0026VirgenMin = ExtrusoraMezcladoraHusilloVirgenMin\n\t\t\u0026VirgenMax = ExtrusoraMezcladoraHusilloVirgenMax\n\t\t\u0026MolidoMin = ExtrusoraMezcladoraHusilloMolidoMin\n\t\t\u0026MolidoMax = ExtrusoraMezcladoraHusilloMolidoMax\n\t\t\n\t\tif (\u0026HusilloVirgen \u003E= \u0026VirgenMin and \u0026HusilloVirgen \u003C= \u0026VirgenMax) and (\u0026HusilloMolido \u003E= \u0026MolidoMin and \u0026HusilloMolido \u003C= \u0026MolidoMax)\n\t\t\t\u0026SDTExtMezcladora = New()\n\t\t\t\u0026SDTExtMezcladora.ExtrusoraMezcladoraKgMolido = ExtrusoraMezcladoraKgMolido\n\t\t\t\u0026SDTExtMezcladora.ExtrusoraMezcladoraKgVirgen = ExtrusoraMezcladoraKgVirgen\n\t\t\tExit\n\t\tendif\n\tendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ExtrusoraId, in:\u0026HusilloVirgen, in:\u0026HusilloMolido, out:\u0026SDTExtMezcladora);\n",
+      "cleanSource": "parm(in:\u0026ExtrusoraId, in:\u0026HusilloVirgen, in:\u0026HusilloMolido, out:\u0026SDTExtMezcladora);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SDTExtrusoraMezcladora",
+      "DB.ExtrusoraMezcladora"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ExtrusoraId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "HusilloMolido",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Husillo Molido"
+    },
+    {
+      "name": "HusilloVirgen",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Husillo Virgen"
+    },
+    {
+      "name": "MolidoMax",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Molido Max"
+    },
+    {
+      "name": "MolidoMin",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Molido Min"
+    },
+    {
+      "name": "SDTExtMezcladora",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "SDTExt Mezcladora"
+    },
+    {
+      "name": "VirgenMax",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Virgen Max"
+    },
+    {
+      "name": "VirgenMin",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Virgen Min"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

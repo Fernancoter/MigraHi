@@ -1,0 +1,154 @@
+{
+  "uniqueId": "be0f4d84-c384-4ac4-94ec-b295382577bf",
+  "name": "SDValidarCarrera",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDValidar Carrera",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\u0026PaletId = ObtenerPalet.Udp(\u0026PrensadoId)\n\t\n\tfor \u0026CarreraSDItem in \u0026SDTCarreraSD\n\t\tif(\u0026CarreraSDItem.CarreraEstado = EstadoCarrera.Terminada)\n\t\t\t\u0026CarreraId = \u0026CarreraSDItem.CarreraId\n\t\t\tVincularCarretePalet.Call(\u0026CarreraId, \u0026PaletId, \u0026PrensadoId)\n\t\t\tSetEstadoCarrera.Call(\u0026CarreraId,EstadoCarrera.Validada)\n\t\tendif\n\tendfor\n\n\n",
+      "cleanSource": "\t\u0026PaletId = ObtenerPalet.Udp(\u0026PrensadoId)\n\t\n\tfor \u0026CarreraSDItem in \u0026SDTCarreraSD\n\t\tif(\u0026CarreraSDItem.CarreraEstado = EstadoCarrera.Terminada)\n\t\t\t\u0026CarreraId = \u0026CarreraSDItem.CarreraId\n\t\t\tVincularCarretePalet.Call(\u0026CarreraId, \u0026PaletId, \u0026PrensadoId)\n\t\t\tSetEstadoCarrera.Call(\u0026CarreraId,EstadoCarrera.Validada)\n\t\tendif\n\tendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensadoId, in:\u0026SDTCarreraSD);\n",
+      "cleanSource": "parm(in:\u0026PrensadoId, in:\u0026SDTCarreraSD);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.ObtenerPalet",
+      "Produccion.SetEstadoCarrera",
+      "Produccion.VincularCarretePalet",
+      "Produccion.SDTCarrera",
+      "Produccion.SDTCarreraSD",
+      "VincularCarretePalet",
+      "SetEstadoCarrera",
+      "ObtenerPalet"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CarreraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera Id"
+    },
+    {
+      "name": "CarreraSDItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera SDItem"
+    },
+    {
+      "name": "PaletId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet Id"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "SDTCarrera",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrera"
+    },
+    {
+      "name": "SDTCarreraItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrera Item"
+    },
+    {
+      "name": "SDTCarreraSD",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "SDTCarrera SD"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

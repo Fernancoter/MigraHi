@@ -1,0 +1,131 @@
+{
+  "uniqueId": "b0314d39-7cb8-4a3b-bd88-797ae63632dc",
+  "name": "MenuByModule",
+  "type": "Procedure",
+  "module": "Web",
+  "description": "Menu By Module",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "Do Case\n\tCase \u0026ModuleId = 1\n\t\t\u0026DVelop_Menu = MenuSeguridad.Udp()\n\tCase \u0026ModuleId = 2\n\t\t\u0026DVelop_Menu = MenuConfiguracion.Udp()\n\tCase \u0026ModuleId = 3\n\t\t\u0026DVelop_Menu = MenuInventario.Udp()\n\tCase \u0026ModuleId = 4\n\t\t\u0026DVelop_Menu = MenuExtrusion.Udp() \n\tCase \u0026ModuleId = 5\n\t\t\u0026DVelop_Menu = MenuPrensado.Udp() \n\tCase \u0026ModuleId = 6\n\t\t\u0026DVelop_Menu = MenuMateriaPrima.Udp() \n\tCase \u0026ModuleId = 7\n\t\t\u0026DVelop_Menu = MenuModuleInformesSAE.Udp()\t\n\tCase \u0026ModuleId = 8\n\t\t\u0026DVelop_Menu = MenuModuleCatalogosSAE.Udp()\t\n\tCase \u0026ModuleId = 9\n\t\t\u0026DVelop_Menu = MenuEmbarques.Udp()\t\n\tCase \u0026ModuleId = 10\n\t\t\u0026DVelop_Menu = MenuCalidad.Udp()\n\tCase \u0026ModuleId = 11\n\t\t\u0026DVelop_Menu = MenuReportesHC.Udp()\n\tOtherwise\n\t\t//Men\u00FA by default\n\t\t\u0026DVelop_Menu = MenuProduccion.Udp()\nEndcase\n\n",
+      "cleanSource": "Do Case\n\tCase \u0026ModuleId = 1\n\t\t\u0026DVelop_Menu = MenuSeguridad.Udp()\n\tCase \u0026ModuleId = 2\n\t\t\u0026DVelop_Menu = MenuConfiguracion.Udp()\n\tCase \u0026ModuleId = 3\n\t\t\u0026DVelop_Menu = MenuInventario.Udp()\n\tCase \u0026ModuleId = 4\n\t\t\u0026DVelop_Menu = MenuExtrusion.Udp() \n\tCase \u0026ModuleId = 5\n\t\t\u0026DVelop_Menu = MenuPrensado.Udp() \n\tCase \u0026ModuleId = 6\n\t\t\u0026DVelop_Menu = MenuMateriaPrima.Udp() \n\tCase \u0026ModuleId = 7\n\t\t\u0026DVelop_Menu = MenuModuleInformesSAE.Udp()\t\n\tCase \u0026ModuleId = 8\n\t\t\u0026DVelop_Menu = MenuModuleCatalogosSAE.Udp()\t\n\tCase \u0026ModuleId = 9\n\t\t\u0026DVelop_Menu = MenuEmbarques.Udp()\t\n\tCase \u0026ModuleId = 10\n\t\t\u0026DVelop_Menu = MenuCalidad.Udp()\n\tCase \u0026ModuleId = 11\n\t\t\u0026DVelop_Menu = MenuReportesHC.Udp()\n\tOtherwise\n\t\t//Men\u00FA by default\n\t\t\u0026DVelop_Menu = MenuProduccion.Udp()\nEndcase"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ModuleId,out:\u0026DVelop_Menu);\n",
+      "cleanSource": "parm(in:\u0026ModuleId,out:\u0026DVelop_Menu);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Web.MenuProduccion",
+      "Web.MenuModuleInformesSAE",
+      "Web.MenuModuleCatalogosSAE",
+      "Web.MenuSeguridad",
+      "Web.MenuExtrusion",
+      "Web.MenuPrensado",
+      "Web.MenuMateriaPrima",
+      "Web.MenuConfiguracion",
+      "Web.MenuInventario",
+      "Web.MenuEmbarques",
+      "Web.MenuCalidad",
+      "Reportes.MenuReportesHC",
+      "WWPBaseObjects.DVelop_Menu",
+      "MenuSeguridad",
+      "MenuConfiguracion",
+      "MenuInventario",
+      "MenuExtrusion",
+      "MenuPrensado",
+      "MenuMateriaPrima",
+      "MenuModuleInformesSAE",
+      "MenuModuleCatalogosSAE",
+      "MenuEmbarques",
+      "MenuCalidad",
+      "MenuReportesHC",
+      "MenuProduccion"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "DVelop_Menu",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "DVelop_Menu"
+    },
+    {
+      "name": "ModuleId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Module Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

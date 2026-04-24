@@ -1,0 +1,352 @@
+# WebPanel: listarLotes
+
+- **Module:** Produccion
+- **Description:**  Lote
+- **GAM Object:** No
+
+## Data Dictionary / Parameters
+
+| Name | Element Type | Data Type | Accessor | Description |
+|---|---|---|---|---|
+| IsAuthorized | Variable | Boolean |  | Is Authorized |
+| WWPContext | Variable | GX_SDT |  | WWPContext |
+| SecurityFunctionalityKeys | Variable | VARCHAR |  | Security Functionality Keys |
+| HTTPRequest | Variable | GX_USRDEFTYP |  | HTTPRequest |
+| TrnContext | Variable | GX_SDT |  | Trn Context |
+| TrnContextAtt | Variable | GX_SDT |  | Trn Context Att |
+| GridState | Variable | GX_SDT |  | Grid State |
+| GridStateFilterValue | Variable | GX_SDT |  | Grid State Filter Value |
+| OrderedBy | Variable | NUMERIC |  | Ordered By |
+| OrderedDsc | Variable | Boolean |  | Ordered Dsc |
+| OrderedByAux | Variable | NUMERIC |  | Ordered By Aux |
+| FilterFullText | Variable | VARCHAR |  | Filter Full Text |
+| ColumnsSelectorXML | Variable | LONGVARCHAR |  | Columns Selector XML |
+| UserCustomValue | Variable | LONGVARCHAR |  | User Custom Value |
+| ColumnsSelector | Variable | GX_SDT |  | Columns Selector |
+| ColumnsSelectorAux | Variable | GX_SDT |  | Columns Selector Aux |
+| Session | Variable | GX_USRDEFTYP |  | Session |
+| ManageFiltersData | Variable | GX_SDT |  | Manage Filters Data |
+| ManageFiltersXml | Variable | LONGVARCHAR |  | Manage Filters Xml |
+| ManageFiltersExecutionStep | Variable | NUMERIC |  | Manage Filters Execution Step |
+| TFLoteSiloNombre | Variable | VARCHAR |  | TFLote Silo Nombre |
+| TFLoteSiloNombre_Sel | Variable | VARCHAR |  | TFLote Silo Nombre_Sel |
+| TFLoteEmbarque | Variable | VARCHAR |  | TFLote Embarque |
+| TFLoteEmbarque_Sel | Variable | VARCHAR |  | TFLote Embarque_Sel |
+| TFLoteFechaRegistro | Variable | DATE |  | TFLote Fecha Registro |
+| TFLoteFechaRegistro_To | Variable | DATE |  | TFLote Fecha Registro_To |
+| DDO_LoteFechaRegistroAuxDate | Variable | DATE |  | DDO_Lote Fecha Registro Aux Date |
+| DDO_LoteFechaRegistroAuxDateTo | Variable | DATE |  | DDO_Lote Fecha Registro Aux Date To |
+| DDO_LoteFechaRegistroAuxDateText | Variable | VARCHAR |  | DDO_Lote Fecha Registro Aux Date Text |
+| DDO_TitleSettingsIcons | Variable | GX_SDT |  | DDO_Title Settings Icons |
+| GAMSession | Variable | GX_EXTERNAL_OBJECT |  | GAMSession |
+| GAMErrors | Variable | GX_EXTERNAL_OBJECT |  | GAMErrors |
+| PageToGo | Variable | NUMERIC |  | Page To Go |
+| GridCurrentPage | Variable | NUMERIC |  | Grid Current Page |
+| GridPageCount | Variable | NUMERIC |  | Grid Page Count |
+| GridAppliedFilters | Variable | VARCHAR |  | Grid Applied Filters |
+| Display | Variable | CHARACTER |  | Display |
+| IsAuthorized_Display | Variable | Boolean |  | Is Authorized_Display |
+| Update | Variable | CHARACTER |  | Update |
+| IsAuthorized_Update | Variable | Boolean |  | Is Authorized_Update |
+| Delete | Variable | CHARACTER |  | Delete |
+| IsAuthorized_Delete | Variable | Boolean |  | Is Authorized_Delete |
+| IsAuthorized_Insert | Variable | Boolean |  | Is Authorized_Insert |
+| LoteId | Variable | NUMERIC |  | Lote Id |
+| IsAuthorized_cmdAgregar | Variable | Boolean |  | Is Authorized_cmd Agregar |
+| TFLoteSiloEnumTipoMaterial_SelsJson | Variable | LONGVARCHAR |  | TFLote Silo Enum Tipo Material_Sels Json |
+| TFLoteSiloEnumTipoMaterial_Sels | Variable | NUMERIC |  | TFLote Silo Enum Tipo Material_Sels |
+| TFLoteKg | Variable | NUMERIC |  | TFLote Kg |
+| TFLoteKg_To | Variable | NUMERIC |  | TFLote Kg_To |
+| TFLotePO | Variable | VARCHAR |  | TFLote PO |
+| TFLotePO_Sel | Variable | VARCHAR |  | TFLote PO_Sel |
+| TFLoteTrunkNo | Variable | VARCHAR |  | TFLote Trunk No |
+| TFLoteTrunkNo_Sel | Variable | VARCHAR |  | TFLote Trunk No_Sel |
+| TFLoteTipoMaterial_SelsJson | Variable | LONGVARCHAR |  | TFLote Tipo Material_Sels Json |
+| TFLoteTipoMaterial_Sels | Variable | VARCHAR |  | TFLote Tipo Material_Sels |
+| TFLoteSiloKgMaximo | Variable | NUMERIC |  | TFLote Silo Kg Maximo |
+| TFLoteSiloKgMaximo_To | Variable | NUMERIC |  | TFLote Silo Kg Maximo_To |
+| TFLoteConsumido_Sel | Variable | NUMERIC |  | TFLote Consumido_Sel |
+| ExcelFilename | Variable | VARCHAR |  | Excel Filename |
+| ErrorMessage | Variable | VARCHAR |  | Error Message |
+| TFLotePaqueteAditivos | Variable | VARCHAR |  | TFLote Paquete Aditivos |
+| TFLotePaqueteAditivos_Sel | Variable | VARCHAR |  | TFLote Paquete Aditivos_Sel |
+| TFLotePaqueteAditivos_SelsJson | Variable | LONGVARCHAR |  | TFLote Paquete Aditivos_Sels Json |
+| TFLotePaqueteAditivos_Sels | Variable | VARCHAR |  | TFLote Paquete Aditivos_Sels |
+| AGExportData | Variable | GX_SDT |  | AGExport Data |
+| AGExportDataItem | Variable | GX_SDT |  | AGExport Data Item |
+| Today | Variable | DATE |  | Today |
+| Time | Variable | CHARACTER |  | Time |
+| Pgmname | Variable | CHARACTER |  | Pgmname |
+| Pgmdesc | Variable | CHARACTER |  | Pgmdesc |
+
+## Business Logic
+
+### Start (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	TFLoteFechaRegistro_RangePicker.Attach(&DDO_LoteFechaRegistroAuxDateText.InternalName)
+	
+	Grid.Rows = Page.Rows
+	Grid_Empowerer.GridInternalName = Grid.InternalName
+	DDO_GridColumnsSelector.GridInternalName = Grid.InternalName
+	If &HTTPRequest.Method = HttpMethod.Get
+		Do 'LoadSavedFilters'
+	EndIf
+	ddo_AGExport.TitleControlIdToReplace = BtnAGExport.InternalName
+	&AGExportData = new()
+	
+	&AGExportDataItem = new()
+	&AGExportDataItem.Title = ''
+	&AGExportDataItem.Icon = ActionExportReport.Link()
+	&AGExportDataItem.EventKey = !'ExportReport'
+	&AGExportDataItem.IsDivider = False
+	&AGExportData.Add(&AGExportDataItem)
+	
+	&GAMSession = GAMSession.Get(&GAMErrors)
+	DDO_Grid.GridInternalName = Grid.InternalName
+	DDO_Grid.GAMOAuthToken = &GAMSession.Token
+	Form.Caption = ' Lote'
+	Do 'PrepareTransaction'
+	Do 'LoadGridState'
+	If &OrderedBy < 1
+		&OrderedBy = 1
+		&OrderedDsc = True
+		Do 'SetDDOSortedStatus'
+	EndIf
+	&DDO_TitleSettingsIcons = GetWWPTitleSettingsIcons()
+	DDO_GridColumnsSelector.TitleControlIdToReplace = BtnEditColumns.InternalName
+	GridPaginationBar.RowsPerPageSelectedValue = Grid.Rows
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### Refresh (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	LoadWWPContext.Call(&WWPContext)
+	Do 'CheckSecurityForActions'
+	Do Case
+		Case &ManageFiltersExecutionStep = 1
+			&ManageFiltersExecutionStep = 2
+		Case &ManageFiltersExecutionStep = 2
+			&ManageFiltersExecutionStep = 0
+			Do 'LoadSavedFilters'
+	EndCase
+	Do 'SaveGridState'
+	
+	If &Session.Get(!'Produccion.listarLotesColumnsSelector') <> ''
+		&ColumnsSelectorXML = &Session.Get(!'Produccion.listarLotesColumnsSelector')
+		&ColumnsSelector.FromXml(&ColumnsSelectorXML)
+	Else
+		Do 'InitializeColumnsSelector'
+	EndIf
+	LoteEmbarque.Visible = &ColumnsSelector.Columns.Item(1).IsVisible
+	LotePO.Visible = &ColumnsSelector.Columns.Item(2).IsVisible
+	LoteFechaRegistro.Visible = &ColumnsSelector.Columns.Item(3).IsVisible
+	LoteTrunkNo.Visible = &ColumnsSelector.Columns.Item(4).IsVisible
+	LoteTipoMaterial.Visible = &ColumnsSelector.Columns.Item(5).IsVisible
+	LoteSiloNombre.Visible = &ColumnsSelector.Columns.Item(6).IsVisible
+	LoteSiloKgMaximo.Visible = &ColumnsSelector.Columns.Item(7).IsVisible
+	LoteSiloEnumTipoMaterial.Visible = &ColumnsSelector.Columns.Item(8).IsVisible
+	LoteKg.Visible = &ColumnsSelector.Columns.Item(9).IsVisible
+	LoteConsumido.Visible = &ColumnsSelector.Columns.Item(10).IsVisible
+	LotePaqueteAditivos.Visible = &ColumnsSelector.Columns.Item(11).IsVisible
+	&GridCurrentPage = Grid.CurrentPage
+	&GridPageCount = Grid.PageCount
+	&GridAppliedFilters = WWP_GetAppliedFiltersDescription(&Pgmname)
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### GridPaginationBar.ChangePage (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Do Case
+		Case GridPaginationBar.SelectedPage = !'Previous'
+			Grid.PreviousPage()
+		Case GridPaginationBar.SelectedPage = !'Next'
+			Grid.NextPage()
+		Otherwise
+			&PageToGo.FromString(GridPaginationBar.SelectedPage)
+			Grid.GotoPage(&PageToGo)
+	EndCase
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### GridPaginationBar.ChangeRowsPerPage (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Grid.Rows = GridPaginationBar.RowsPerPageSelectedValue
+	Grid.FirstPage()
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### DDO_Grid.OnOptionClicked (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Do Case
+		Case DDO_Grid.ActiveEventKey = !'<#OrderASC#>' OR DDO_Grid.ActiveEventKey = !'<#OrderDSC#>'
+			&OrderedBy.FromString(DDO_Grid.SelectedValue_get)
+			&OrderedDsc = iif(DDO_Grid.ActiveEventKey = !'<#OrderDSC#>', true, false)
+			Do 'SetDDOSortedStatus'
+			Grid.FirstPage()
+		Case DDO_Grid.ActiveEventKey = !'<#Filter#>'
+			Do Case
+				Case DDO_Grid.SelectedColumn = !'LoteEmbarque'
+					&TFLoteEmbarque = DDO_Grid.FilteredText_get
+					&TFLoteEmbarque_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'LotePO'
+					&TFLotePO = DDO_Grid.FilteredText_get
+					&TFLotePO_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'LoteFechaRegistro'
+					&TFLoteFechaRegistro.FromString(DDO_Grid.FilteredText_get)
+					&TFLoteFechaRegistro_To.FromString(DDO_Grid.FilteredTextTo_get)
+				Case DDO_Grid.SelectedColumn = !'LoteTrunkNo'
+					&TFLoteTrunkNo = DDO_Grid.FilteredText_get
+					&TFLoteTrunkNo_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'LoteTipoMaterial'
+					&TFLoteTipoMaterial_SelsJson = DDO_Grid.SelectedValue_get
+					&TFLoteTipoMaterial_Sels.FromJson(&TFLoteTipoMaterial_SelsJson)
+				Case DDO_Grid.SelectedColumn = !'LoteSiloNombre'
+					&TFLoteSiloNombre = DDO_Grid.FilteredText_get
+					&TFLoteSiloNombre_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'LoteSiloKgMaximo'
+					&TFLoteSiloKgMaximo.FromString(DDO_Grid.FilteredText_get)
+					&TFLoteSiloKgMaximo_To.FromString(DDO_Grid.FilteredTextTo_get)
+				Case DDO_Grid.SelectedColumn = !'LoteSiloEnumTipoMaterial'
+					&TFLoteSiloEnumTipoMaterial_SelsJson = DDO_Grid.SelectedValue_get
+					&TFLoteSiloEnumTipoMaterial_Sels.FromJson(&TFLoteSiloEnumTipoMaterial_SelsJson.Replace(!'"', ''))
+				Case DDO_Grid.SelectedColumn = !'LoteKg'
+					&TFLoteKg.FromString(DDO_Grid.FilteredText_get)
+					&TFLoteKg_To.FromString(DDO_Grid.FilteredTextTo_get)
+				Case DDO_Grid.SelectedColumn = !'LoteConsumido'
+					&TFLoteConsumido_Sel.FromString(DDO_Grid.SelectedValue_get)
+				Case DDO_Grid.SelectedColumn = !'LotePaqueteAditivos'
+					&TFLotePaqueteAditivos_SelsJson = DDO_Grid.SelectedValue_get
+					&TFLotePaqueteAditivos_Sels.FromJson(&TFLotePaqueteAditivos_SelsJson)
+			EndCase
+			Grid.FirstPage()
+	EndCase
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### Grid.Load (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	&Display = "GXM_display"
+	If (&IsAuthorized_Display)
+		&Display.Link = gestionarLote.Link(TrnMode.Display, LoteId)
+	Endif
+	&Update = "GXM_update"
+	If (&IsAuthorized_Update)
+		&Update.Link = gestionarLote.Link(TrnMode.Update, LoteId)
+	Endif
+	&Delete = "GX_BtnDelete"
+	If (&IsAuthorized_Delete)
+		&Delete.Link = gestionarLote.Link(TrnMode.Delete, LoteId)
+	Endif
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### DDO_GridColumnsSelector.OnColumnsChanged (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	&ColumnsSelectorXML = DDO_GridColumnsSelector.ColumnsSelectorValues
+	&ColumnsSelector.FromJson(&ColumnsSelectorXML)
+	SaveColumnsSelectorState(!'Produccion.listarLotesColumnsSelector', iif(&ColumnsSelectorXML.IsEmpty(), '', &ColumnsSelector.ToXml()))
+	Refresh
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### ddo_ManageFilters.OnOptionClicked (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Do Case
+		Case ddo_ManageFilters.ActiveEventKey = !'<#Clean#>'
+			Do 'CleanFilters'
+			Grid.FirstPage()
+			Refresh
+		Case ddo_ManageFilters.ActiveEventKey = !'<#Save#>'
+			Do 'SaveGridState'
+			SaveFilterAs.Popup(!'Produccion.listarLotesFilters', &PgmName + !"GridState")
+			&ManageFiltersExecutionStep = 2
+			Refresh
+		Case ddo_ManageFilters.ActiveEventKey = !'<#Manage#>'
+			ManageFilters.Popup(!'Produccion.listarLotesFilters')
+			&ManageFiltersExecutionStep = 2
+			Refresh
+		Otherwise
+			&ManageFiltersXml = GetFilterByName(!'Produccion.listarLotesFilters', ddo_ManageFilters.ActiveEventKey)
+			If &ManageFiltersXml.IsEmpty()
+				msg('WWP_FilterNotExist')
+			Else
+				Do 'CleanFilters'
+				SaveGridState.Call(&PgmName + !"GridState",  &ManageFiltersXml)
+				&GridState.FromXml(&ManageFiltersXml)
+				&OrderedBy = &GridState.OrderedBy
+				&OrderedDsc = &GridState.OrderedDsc
+				Do 'SetDDOSortedStatus' 
+				Do 'LoadRegFiltersState'
+				Grid.FirstPage()
+				Refresh
+			EndIf
+	EndCase
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### ddo_AGExport.OnOptionClicked (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Do Case
+		Case ddo_AGExport.ActiveEventKey = !'ExportReport'
+			Do 'DoExportReport'
+	EndCase
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### 'DocmdAgregar' (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	If (&IsAuthorized_cmdAgregar)
+		gestionarLote.Call(TrnMode.Insert, &LoteId)
+	Else
+		msg("WWP_ActionNoLongerAvailable")
+		Refresh
+	Endif
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### 'DoExport' (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	// Generate Excel spreadsheet and download it.
+	Do 'LoadGridState'
+	Produccion.listarLotesExport.Call(&ExcelFilename, &ErrorMessage)
+	If (&ExcelFilename <> "")
+		Link(&ExcelFilename)
+	Else
+		msg(&ErrorMessage)
+	Endif
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### Rules (Rules)
+
+```genexus
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+

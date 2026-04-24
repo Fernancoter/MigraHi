@@ -1,0 +1,133 @@
+{
+  "uniqueId": "72a008df-19a4-44d1-b678-66f08fb18c02",
+  "name": "SDGuardarCarreteAMolino",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDGuardar Carrete AMolino",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026AplicarATodoCarreraId = \u0026Carrete.CarreteCarreraId\n\n\nFor each \n\tWHERE CarreteCarreraId = \u0026AplicarATodoCarreraId\n\tWHERE CarreteId  =\u0026CarreteId when \u0026AplicarATodo = False\n\tWhere CarreteEstado = EstadoCarrete.EnRevision\n\t\u0026CarreteId = CarreteId\n\t\u0026GuardarCarrete.Load(\u0026CarreteId)\n\t\n\tif(\u0026Carrete.CarreteId \u003E 0)\n\t\t\u0026GuardarCarrete.CarreteObservacion = \u0026Carrete.CarreteObservacion\n        \u0026GuardarCarrete.CarreteMolino = \u0026Carrete.CarreteMolino\n        \u0026GuardarCarrete.CarreteMermaMolino = \u0026Carrete.CarreteMermaMolino\n\t\t\u0026GuardarCarrete.CarreteMermaKg = \u0026Carrete.CarreteMermaKg\n\telse\n\t\t\u0026GuardarCarrete.CarreteObservacion.SetEmpty()\n        \u0026GuardarCarrete.CarreteMolino = Produccion.MolinoCarrete.NoAplica\n        \u0026GuardarCarrete.CarreteMermaMolino = false\n\t\t\u0026GuardarCarrete.CarreteMermaKg.SetEmpty()\n\tendif\n\t\u0026GuardarCarrete.CarreteEstado = EstadoCarrete.Molino\n\t\u0026GuardarCarrete.Save()\n\t\n\tif(\u0026GuardarCarrete.Success())\n\t\tcommit\n\t\t\n\tendif\nendfor\n\nValidarCarreraCompleta.Call(\u0026AplicarATodoCarreraId)\n",
+      "cleanSource": "\u0026AplicarATodoCarreraId = \u0026Carrete.CarreteCarreraId\n\n\nFor each \n\tWHERE CarreteCarreraId = \u0026AplicarATodoCarreraId\n\tWHERE CarreteId  =\u0026CarreteId when \u0026AplicarATodo = False\n\tWhere CarreteEstado = EstadoCarrete.EnRevision\n\t\u0026CarreteId = CarreteId\n\t\u0026GuardarCarrete.Load(\u0026CarreteId)\n\t\n\tif(\u0026Carrete.CarreteId \u003E 0)\n\t\t\u0026GuardarCarrete.CarreteObservacion = \u0026Carrete.CarreteObservacion\n        \u0026GuardarCarrete.CarreteMolino = \u0026Carrete.CarreteMolino\n        \u0026GuardarCarrete.CarreteMermaMolino = \u0026Carrete.CarreteMermaMolino\n\t\t\u0026GuardarCarrete.CarreteMermaKg = \u0026Carrete.CarreteMermaKg\n\telse\n\t\t\u0026GuardarCarrete.CarreteObservacion.SetEmpty()\n        \u0026GuardarCarrete.CarreteMolino = Produccion.MolinoCarrete.NoAplica\n        \u0026GuardarCarrete.CarreteMermaMolino = false\n\t\t\u0026GuardarCarrete.CarreteMermaKg.SetEmpty()\n\tendif\n\t\u0026GuardarCarrete.CarreteEstado = EstadoCarrete.Molino\n\t\u0026GuardarCarrete.Save()\n\t\n\tif(\u0026GuardarCarrete.Success())\n\t\tcommit\n\t\t\n\tendif\nendfor\n\nValidarCarreraCompleta.Call(\u0026AplicarATodoCarreraId)"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026CarreteId, in:\u0026Carrete, in:\u0026AplicarATodo);\n",
+      "cleanSource": "parm(in:\u0026CarreteId, in:\u0026Carrete, in:\u0026AplicarATodo);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.ValidarCarreraCompleta",
+      "DB.Carrete",
+      "ValidarCarreraCompleta"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CarreteId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Carrete Id"
+    },
+    {
+      "name": "Carrete",
+      "elementType": "Parameter",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "in",
+      "domain": "",
+      "description": "Carrete"
+    },
+    {
+      "name": "GuardarCarrete",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Guardar Carrete"
+    },
+    {
+      "name": "AplicarATodo",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "in",
+      "domain": "",
+      "description": "Aplicar ATodo"
+    },
+    {
+      "name": "AplicarATodoCarreraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

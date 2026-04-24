@@ -1,0 +1,133 @@
+{
+  "uniqueId": "1b159f5f-9e54-410d-b78e-fa2a907eb760",
+  "name": "ReposoTranscurrido",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Reposo Transcurrido",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\u0026ExtrusionId = 0\n\u0026TiempoReposo = 0\n\nfor each DB.Bobina\n\tOrder ExtrusionId\n\twhere BobinaId \u003E 0\n\twhere ExtrusionId \u003E 0\n\twhere BobinaEstado in (EstadoBobina.Reposo)\n\t\u0026BobinaId = BobinaId\n\t\u0026AuxExtrusionId = ExtrusionId\n\t\n\tif(\u0026ExtrusionId \u003C\u003E \u0026AuxExtrusionId)\n\t\t\u0026ExtrusionId = \u0026AuxExtrusionId\n\t\t\u0026TiempoReposo = ObtenerTiempoReposo.Udp(\u0026ExtrusionId)\n\tendif\n\t\n\tif(\u0026TiempoReposo \u003E 0)\n\t\tBobinaTiempoReposo.Call(\u0026BobinaId, \u0026TiempoReposo)\n\tendif\nendfor\n\n\n//for each DB.Extrusion\n//\twhere ExtrusionId \u003E 0\t\n//\t\u0026ExtrusionId = ExtrusionId\n//\t\u0026TiempoReposo = ObtenerTiempoReposo.Udp(\u0026ExtrusionId)\n//\t\n//\tif(\u0026TiempoReposo \u003E 0)\n//\t\tfor each DB.Bobina\n//\t\t\twhere BobinaId \u003E 0\n//\t\t\twhere ExtrusionId = \u0026ExtrusionId\n//\t\t\twhere BobinaEstado in (EstadoBobina.Reposo, EstadoBobina.Disponible)\n//\t\t\t\n//\t\t\t\u0026BobinaId = BobinaId\n//\t\t\tBobinaTiempoReposo.Call(\u0026BobinaId, \u0026TiempoReposo)\n//\t        endfor\n//\tendif\n//endfor\n\n\n\n",
+      "cleanSource": "\n\u0026ExtrusionId = 0\n\u0026TiempoReposo = 0\n\nfor each DB.Bobina\n\tOrder ExtrusionId\n\twhere BobinaId \u003E 0\n\twhere ExtrusionId \u003E 0\n\twhere BobinaEstado in (EstadoBobina.Reposo)\n\t\u0026BobinaId = BobinaId\n\t\u0026AuxExtrusionId = ExtrusionId\n\t\n\tif(\u0026ExtrusionId \u003C\u003E \u0026AuxExtrusionId)\n\t\t\u0026ExtrusionId = \u0026AuxExtrusionId\n\t\t\u0026TiempoReposo = ObtenerTiempoReposo.Udp(\u0026ExtrusionId)\n\tendif\n\t\n\tif(\u0026TiempoReposo \u003E 0)\n\t\tBobinaTiempoReposo.Call(\u0026BobinaId, \u0026TiempoReposo)\n\tendif\nendfor\n\n\n//for each DB.Extrusion\n//\twhere ExtrusionId \u003E 0\t\n//\t\u0026ExtrusionId = ExtrusionId\n//\t\u0026TiempoReposo = ObtenerTiempoReposo.Udp(\u0026ExtrusionId)\n//\t\n//\tif(\u0026TiempoReposo \u003E 0)\n//\t\tfor each DB.Bobina\n//\t\t\twhere BobinaId \u003E 0\n//\t\t\twhere ExtrusionId = \u0026ExtrusionId\n//\t\t\twhere BobinaEstado in (EstadoBobina.Reposo, EstadoBobina.Disponible)\n//\t\t\t\n//\t\t\t\u0026BobinaId = BobinaId\n//\t\t\tBobinaTiempoReposo.Call(\u0026BobinaId, \u0026TiempoReposo)\n//\t        endfor\n//\tendif\n//endfor"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.BobinaTiempoReposo",
+      "Produccion.ObtenerTiempoReposo",
+      "DB.Bobina",
+      "BobinaTiempoReposo",
+      "ObtenerTiempoReposo"
+    ],
+    "calledBy": [
+      "BobinaWW",
+      "vwAnaliticaBobina",
+      "PrensadoDelDiaCarrera"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ProductoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "TiempoReposo",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Tiempo Reposo"
+    },
+    {
+      "name": "BobinaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Id"
+    },
+    {
+      "name": "AuxExtrusionId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "uniqueId": "88b8b76e-e9a3-4690-8629-9f25706a2288",
+  "name": "SDTCarreteCalidad",
+  "type": "SDT",
+  "module": "PrinterSD",
+  "description": "SDTCarrete Calidad",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "RptPrensado"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SDTCarreteCalidad1",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrete Calidad1"
+    },
+    {
+      "name": "SDTCarreteCalidad2",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrete Calidad2"
+    },
+    {
+      "name": "SDTCarreteCalidad3",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrete Calidad3"
+    },
+    {
+      "name": "SDTCarreteCalidad4",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrete Calidad4"
+    },
+    {
+      "name": "SDTCarreteCalidad5",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrete Calidad5"
+    },
+    {
+      "name": "SDTCarreteCalidad6",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrete Calidad6"
+    },
+    {
+      "name": "SDTCarreteCalidadFajillasMolino",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrete Calidad Fajillas Molino"
+    },
+    {
+      "name": "CarretePaletSerie",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Palet Serie"
+    }
+  ]
+}

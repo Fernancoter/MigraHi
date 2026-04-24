@@ -1,0 +1,47 @@
+{
+  "uniqueId": "a6acb808-4e9c-4da5-9b24-485f0ee4739a",
+  "name": "SDPlusCalendarInfo",
+  "type": "SDT",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "SDPlus Calendar Info",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WorkWithPlus.NativeMobile.SDPlusCalendarEntry"
+    ],
+    "calledBy": [
+      "SDPCalendarGetSampleData"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Events",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Events"
+    },
+    {
+      "name": "Disabled",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Disabled"
+    }
+  ]
+}

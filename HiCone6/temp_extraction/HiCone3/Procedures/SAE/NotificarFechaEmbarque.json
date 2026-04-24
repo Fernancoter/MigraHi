@@ -1,0 +1,216 @@
+{
+  "uniqueId": "17ef9729-2d65-4bbf-8255-1bc655b95eeb",
+  "name": "NotificarFechaEmbarque",
+  "type": "Procedure",
+  "module": "SAE",
+  "description": "Notificar Fecha Embarque",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "      \n      for each DB.Remission\n\t      Order RemissionDate\n\t      where RemissionDate \u003E= \u0026FechaInicio and RemissionDate \u003C= \u0026FechaFin\n\t      \u0026OrderDoc = OrderDoc\n\t      \u0026RemissionDoc = RemissionDoc\n\t      \n\t      //Revisar cambios de fecha\n\t      InicializarEmbarque.Call(\u0026OrderDoc, \u0026RemissionDoc)\n      endfor\n\t\n",
+      "cleanSource": "      \n      for each DB.Remission\n\t      Order RemissionDate\n\t      where RemissionDate \u003E= \u0026FechaInicio and RemissionDate \u003C= \u0026FechaFin\n\t      \u0026OrderDoc = OrderDoc\n\t      \u0026RemissionDoc = RemissionDoc\n\t      \n\t      //Revisar cambios de fecha\n\t      InicializarEmbarque.Call(\u0026OrderDoc, \u0026RemissionDoc)\n      endfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026FechaInicio, in:\u0026FechaFin);\n",
+      "cleanSource": "parm(in:\u0026FechaInicio, in:\u0026FechaFin);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Embarques.InicializarEmbarque",
+      "DB.Budget",
+      "DB.Remission",
+      "InicializarEmbarque"
+    ],
+    "calledBy": [
+      "InicioEmbarques"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Budget",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Budget"
+    },
+    {
+      "name": "BudgetMonth",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Budget Month"
+    },
+    {
+      "name": "BudgetYear",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Budget Year"
+    },
+    {
+      "name": "Customer",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Customer"
+    },
+    {
+      "name": "FechaFin",
+      "elementType": "Parameter",
+      "dataType": "DATE",
+      "accessor": "in",
+      "domain": "",
+      "description": "Fecha Fin"
+    },
+    {
+      "name": "FechaInicio",
+      "elementType": "Parameter",
+      "dataType": "DATE",
+      "accessor": "in",
+      "domain": "",
+      "description": "Fecha Inicio"
+    },
+    {
+      "name": "i",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "i"
+    },
+    {
+      "name": "porcentaje",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "porcentaje"
+    },
+    {
+      "name": "ProductNumber",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Product Number"
+    },
+    {
+      "name": "ProgressIndicator",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Progress Indicator"
+    },
+    {
+      "name": "total",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "total"
+    },
+    {
+      "name": "Updating",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Updating"
+    },
+    {
+      "name": "WebSession",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Web Session"
+    },
+    {
+      "name": "OrderDoc",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Pedido SAE"
+    },
+    {
+      "name": "RemissionDoc",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Remisi\u00F3n SAE"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

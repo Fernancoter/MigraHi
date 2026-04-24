@@ -1,0 +1,652 @@
+{
+  "uniqueId": "ed80c965-4510-4a19-9c75-a7d28ffad6ca",
+  "name": "GAMUserEntry",
+  "type": "WebPanel",
+  "module": "",
+  "description": "User ",
+  "isGAMObject": true,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Start",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "\u0026GAMRepository = GAMrepository.Get()\n\tIf \u0026GAMRepository.AuthenticationMasterRepositoryId.IsEmpty()\n\t\t//User Authentication Type\n\t\t\u0026AuthenticationTypeName.Clear()\n\t\t\u0026AuthenticationTypes = GAMRepository.GetEnabledAuthenticationTypes(\u0026Language, \u0026Errors)\n\t\tFor \u0026AuthenticationTypesIns in \u0026AuthenticationTypes\n\t\t\t\u0026AuthenticationTypeName.AddItem(\u0026AuthenticationTypesIns.Name, \u0026AuthenticationTypesIns.Description)\n\t\tEndFor\n\tElse\n\t\t\u0026AuthenticationTypeName.Visible = False\n\tEndif\n\t//User Security Policy\n\t\u0026SecurityPolicies = GAMRepository.GetSecurityPolicies(\u0026FilterSecPol, \u0026Errors)\n\t\u0026SecurityPolicyId.AddItem(0,\u0022(None)\u0022)\n\tFor \u0026SecurityPolicy in \u0026SecurityPolicies\n\t\t\u0026SecurityPolicyId.AddItem(\u0026SecurityPolicy.Id,\u0026SecurityPolicy.Name)\n\tEndFor\n\tIf \u0026Mode = GAMAPiMode.Insert\t\t\n\t\t\u0026IsEnabledInRepository.Enabled\t= False\n\t\t\u0026AuthenticationTypeName.Enabled = True\n\t\t\u0026AuthenticationTypeName \t\t= !\u0022local\u0022\t\t\t\n\t\t\u0026AuthTypeId = \u0026AuthenticationType.GetTypeByName(\u0026AuthenticationTypeName, \u0026Errors)\n\t\t\u0026Repository \t\t  \t\t\t=  GeneXusSecurity.GAMRepository.Get()\n\t\t\u0026UserNameSpace \t\t  \t\t\t= \u0026Repository.NameSpace\t\t\t\n\t\t\u0026EnableTwoFactorAuthentication\t= False\n\t\tUserPhoto.Visible = False\n\tElse\n\t\t// Mode = Update\n\t\t\u0026User.Load(\u0026UserId)\n\t\t\u0026AuthenticationTypeName.Enabled = False\n\t\t\u0026AuthenticationTypeName \t\t= \u0026User.AuthenticationTypeName\t\t\t\n\t\t\u0026AuthTypeId = \u0026AuthenticationType.GetTypeByName(\u0026AuthenticationTypeName, \u0026Errors)\n\t\tIf \u0026AuthTypeId = GAMAuthenticationTypes.GAMLocal\n\t\t\t\u0026Name.Enabled \t\t\t\t= True\n\t\t\t\u0026Image.Enabled \t\t\t\t= True\n\t\t\t\u0026URLProfile.Enabled\t\t\t= False\t\t\t\n\t\tElse\t\t\t\n\t\t\t\u0026Name.Enabled \t\t\t\t= False\n\t\t\t\u0026Image.Enabled \t\t\t\t= False\n\t\t\t\u0026URLProfile.Enabled \t\t= True\n\t\tEndif\n\t\t\u0026UserId\t\t    = \u0026User.GUID\n\t\t\u0026UserNameSpace  = \u0026User.NameSpace\n\t\t\u0026Name \t\t\t= \u0026User.Name\n\t\t\u0026EMail\t \t\t= \u0026User.EMail\n\t\t\u0026FirstName \t\t= \u0026User.FirstName\n\t\t\u0026LastName\t\t= \u0026User.LastName\n\t\tIf not \u0026User.URLImage.IsEmpty()\n\t\t\t\u0026Image.FromURL(\u0026User.URLImage)\n\t\tEndif\n\t\t//\u0026Photo.FromURL(\u0026User.GetPhoto(\u0026Errors))\t\n\t\t\u0026ExternalId\t\t\t\t= \u0026User.ExternalId\n\t\t\u0026Birthday\t\t\t\t= \u0026User.Birthday\n\t\t\u0026Gender\t\t\t\t\t= GeneXusSecurityCommon.GAMUserGender.Convert(\u0026User.Gender)\n\t\t\u0026Phone\t\t\t\t\t= \u0026User.Phone\n\t\t\u0026IsActive \t\t\t\t= \u0026User.IsActive\n\t\t\n\t\t\n\t\t\u0026GamUserAttribute = \u0026User.GetAttribute(\u0022CompanyId\u0022, \u0026Errors)\n\t\t\u0026CompanyId  = \u0026GamUserAttribute.Value.ToNumeric()\n\t\t\n\t\t\u0026GamUserAttribute = \u0026User.GetAttribute(\u0022OperadorId\u0022, \u0026Errors)\n\t\t\u0026OperadorId  = \u0026GamUserAttribute.Value.ToNumeric()\n\t\t\n\t\t\n\t\t\u0026ActivationDate\t\t\t= \u0026User.ActivationDate\n\t\t\u0026DontReceiveInformation = \u0026User.DontReceiveInformation\n\t\t\u0026CannotChangePassword \t= \u0026User.CannotChangePassword\n\t\t\u0026MustChangePassword \t= \u0026User.MustChangePassword\n\t\t\u0026PasswordNeverExpires \t= \u0026User.PasswordNeverExpires\n\t\t\u0026IsBlocked  \t\t\t= \u0026User.IsBlocked\n\t\t\u0026SecurityPolicyId \t\t= \u0026User.SecurityPolicyId\n\t\t\u0026IsEnabledInRepository\t= \u0026User.IsEnabledInRepository\n\t\t\u0026DateLastAuthentication\t= \u0026User.DateLastAuthentication\n\t\t\u0026EnableTwoFactorAuthentication \t= \u0026User.EnableTwoFactorAuthentication\n\t\t\u0026OTPDailyNumberCodes\t\t\t= \u0026User.OTPDailyNumberCodes\n\t\t\u0026OTPLastDateRequestCode\t\t\t= \u0026User.OTPLastDateRequestCode\n\t\t\u0026OTPLastLockedDate\t\t\t\t= \u0026User.OTPLastLockedDate\n\t\t\u0026OTPNumberLocked\t\t\t\t= \u0026User.OTPNumberLocked\n\t\t\u0026WWPUserExtended.Load(\u0026User.GUID)\n\t\tIF \u0026WWPUserExtended.Success()\n\t\t\tIf \u0026WWPUserExtended.WWPUserExtendedPhoto.ImageURI \u003C\u003E \u0027\u0027\n\t\t\t\tUserPhoto.FromURL(\u0026WWPUserExtended.WWPUserExtendedPhoto.ImageURI)\n\t\t\tElse\n\t\t\t\tUserPhoto.Visible = False\n\t\t\tEndIf\n\t\tElse\n\t\t\tUserPhoto.Visible = False\n\t\tEndIf\n\tEndif\n\tIf \u0026Mode = GeneXusSecurityCommon.GAMAPIMode.Display or \u0026Mode = GAMAPiMode.Delete\n\t\t\u0026Name.Enabled \t\t= False\n\t\t\u0026EMail.Enabled \t\t= False\n\t\t\u0026FirstName.Enabled \t= False\n\t\t\u0026LastName.Enabled \t= False\n\t\t\u0026URLProfile.Enabled\t= False\n\t\t\u0026ExternalId.Enabled = False\t\t\n\t\t\u0026Birthday.Enabled \t= False\n\t\t\u0026Gender.Enabled \t= False\n\t\t\u0026Phone.Enabled\t\t= False\n\t\t\u0026IsActive.Enabled\t= False\n\t\t\u0026DontReceiveInformation.Enabled = False\n\t\t\u0026CannotChangePassword.Enabled \t= False\n\t\t\u0026MustChangePassword.Enabled \t= False\n\t\t\u0026IsBlocked.Enabled\t\t\t\t= False\n\t\t\u0026PasswordNeverExpires.Enabled \t= False\n\t\t\u0026SecurityPolicyId.Enabled \t\t= False\t\n\t\t\u0026IsEnabledInRepository.Enabled\t= False\n\t\tIf \u0026EnableTwoFactorAuthentication\n\t\t\t\u0026EnableTwoFactorAuthentication.Enabled \t= False\n\t\t\t\u0026OTPDailyNumberCodes.Enabled\t\t\t= False\n\t\t\t\u0026OTPLastDateRequestCode.Enabled\t\t\t= False\n\t\t\t\u0026OTPLastLockedDate.Enabled\t\t\t\t= False\n\t\t\t\u0026OTPNumberLocked.Enabled\t\t\t\t= False\n\t\tEndif\n\t\tIf \u0026Mode = GeneXusSecurityCommon.GAMAPIMode.Delete\n\t\t\tBtnEnter.Caption \t= \u0022WWP_GAM_Delete\u0022\n\t\tElse\n\t\t\tBtnEnter.Visible \t= False\n\t\tEndIf\n\t\t\u0026WWPUserExtendedPhoto.Enabled = False\n\tEndif\n\tIf \u0026IsActive \n\t\t\u0026IsActive.Enabled \t= False\n\tEndif\n\t/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */\n\t\u0026OperadorId.Visible = False\n\t\u0026CompanyId.Visible = False\n\tDo \u0027LoadComboCompanyId\u0027\n\tDo \u0027LoadComboOperadorId\u0027\n\tDo \u0027AttributesSecurityCode\u0027\n\tUser_IsEnabledInRepository.Visible = False\n\t/* Generated by DVelop Work With Plus Pattern [End] - Do not change */"
+    },
+    {
+      "blockName": "Refresh",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */\n\tDo \u0027CheckSecurityForActions\u0027\n\t/* Generated by DVelop Work With Plus Pattern [End] - Do not change */"
+    },
+    {
+      "blockName": "\u0027DoSendActivationEmail\u0027",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "\u0026User.Load(\u0026UserId)\n\tIf not \u0026User.IsActive\n\t\t\u0026UserActivationKey = \u0026User.GetNewActivationKey(\u0026Errors)\n\t\tCommit\n\t\t\u0026LinkURL = GAMRepository.ApplicationGetAccountActivationURL(\u0022\u0022)\n\t\tGAMCheckUserActivationMethod(\u0026UserId, \u0026LinkURL, \u0026Messages)\n\t\tFor \u0026Message in \u0026Messages\n\t\t\tMsg(\u0026Message.Description)\n\t\tEndFor\n\tEndif\n\t/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */\n\t/* Generated by DVelop Work With Plus Pattern [End] - Do not change */"
+    },
+    {
+      "blockName": "\u0027DoUrlProfileGo\u0027",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "Link(\u0026URLProfile)\n\t/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */\n\t/* Generated by DVelop Work With Plus Pattern [End] - Do not change */"
+    },
+    {
+      "blockName": "Combo_OperadorId.OnOptionClicked",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */\n\t\u0026OperadorId.FromString(Combo_OperadorId.SelectedValue_get)\n\t/* Generated by DVelop Work With Plus Pattern [End] - Do not change */"
+    },
+    {
+      "blockName": "Combo_CompanyId.OnOptionClicked",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */\n\t\u0026CompanyId.FromString(Combo_CompanyId.SelectedValue_get)\n\t/* Generated by DVelop Work With Plus Pattern [End] - Do not change */"
+    },
+    {
+      "blockName": "Enter",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "Do \u0027CheckRequiredFields\u0027\n\tIf \u0026CheckRequiredFieldsResult\n\t  If \u0026Mode \u003C\u003E TrnMode.Insert\n\t\t  \u0026User.Load(\u0026UserId)\n\t  Endif\n\t  \u0026PasswordIsOK = True\n\t  Do Case\n\t  Case \u0026Mode = GAMAPiMode.Insert or \u0026Mode = GAMAPiMode.Update \n\t\t  If \u0026Mode = GAMAPiMode.Insert\n\t\t\t  \u0026AuthTypeId = \u0026AuthenticationType.GetTypeByName(\u0026AuthenticationTypeName, \u0026Errors)\n\t\t\t  \u0026IsEnabledInRepository = true\n\t\t\t  If \u0026AuthTypeId = GeneXusSecurityCommon.GAMAuthenticationTypes.GAMLocal\n\t\t\t\t  If \u0026Password \u003C\u003E \u0026PasswordConf\n\t\t\t\t\t  \u0026PasswordIsOK = False\n\t\t\t\t\t  Msg(\u0022WWP_GAM_PasswordNotMatch\u0022)\n\t\t\t\t  Endif\n\t\t\t  Else\n\t\t\t\t  \u0026Password = NullValue(\u0026Password)\n\t\t\t  Endif\n\t\t  Endif\n\t\t  If \u0026PasswordIsOK\t\t\t\n\t\t\t  \u0026User.AuthenticationTypeName = \u0026AuthenticationTypeName\n\t\t\t  \u0026User.Name\t\t\t= \u0026Name\n\t\t\t  \u0026User.EMail\t\t\t= \u0026EMail\n\t\t\t  \u0026User.FirstName\t\t= \u0026FirstName\n\t\t\t  \u0026User.LastName\t\t= \u0026LastName\t\t\n\t\t\t  \u0026User.Password\t\t= \u0026Password\n\t\t\t  \u0026User.ExternalId\t= \u0026ExternalId\n\t\t\t  \u0026User.Birthday\t\t= \u0026Birthday\n\t\t\t  \u0026User.Phone\t\t\t= \u0026Phone\n\t\t\t  \u0026User.Gender.FromString(\u0026Gender)\t\t\t\n\t\t\t  \u0026User.IsActive\t\t= \u0026IsActive\n\t\t\t  \u0026BlobPhoto \t\t\t= \u0026Photo\t\t\n\t\t\t  //\u0026User.SetPhoto(\u0026BlobPhoto, \u0026Errors)\t\t\t\t\t\n\t\t\t  \u0026User.URLProfile\t\t\t= \u0026URLProfile\n\t\t\t  \u0026User.DontReceiveInformation= \u0026DontReceiveInformation\n\t\t\t  \u0026User.CannotChangePassword\t= \u0026CannotChangePassword\n\t\t\t  \u0026User.MustChangePassword\t= \u0026MustChangePassword\n\t\t\t  \u0026User.IsBlocked\t\t\t\t= \u0026IsBlocked\n\t\t\t  \u0026User.PasswordNeverExpires\t= \u0026PasswordNeverExpires\n\t\t\t  \u0026User.SecurityPolicyId\t\t= \u0026SecurityPolicyId\n\t\t\t  \u0026User.EnableTwoFactorAuthentication = \u0026EnableTwoFactorAuthentication\n\t\t\t  \u0026User.Save()\n\t\t  Endif\n\t  Case \u0026Mode = GAMAPiMode.Delete\n\t\t  \u0026User.Delete()\n\t  EndCase\n\t  If \u0026PasswordIsOK\n\t\t  If \u0026User.Success()\n\t\t\t  \n\t\t\t  \u0026GAMUserAttribute.Id = \u0022CompanyId\u0022\n\t\t\t  \u0026GAMUserAttribute.Value = \u0026CompanyId.ToFormattedString()\n\t\t\t  \u0026Att_isOK = \u0026User.SetAttribute(\u0026GAMUserAttribute,\u0026Errors)\n\t\t\t  \n\t\t\t  \u0026GAMUserAttribute.Id = \u0022OperadorId\u0022\n\t\t\t  \u0026GAMUserAttribute.Value = \u0026OperadorId.ToFormattedString()\n\t\t\t  \u0026Att_isOK = \u0026User.SetAttribute(\u0026GAMUserAttribute,\u0026Errors)\n\t\t\t  \n  \t\t\t\tDo Case\n\t\t\t\t\tCase \u0026Mode = GeneXusSecurityCommon.GAMAPIMode.Insert\n\t\t\t\t\t\tWWP_CreateUserExtended(\u0026User.GUID, \u0026WWPUserExtendedPhoto)\n\t\t\t\t\tCase \u0026Mode = GAMAPiMode.Update\n\t\t\t\t\t\tWWP_UpdateUserExtendedPhoto(\u0026User.GUID, \u0026WWPUserExtendedPhoto)\n\t\t\t\tEndCase\n\t\t\t  Commit\n\t\t\t  \u0026isOK = True\n\t\t\t  If \u0026Mode \u003C\u003E GAMAPiMode.Insert\n\t\t\t\t  If \u0026IsEnabledInRepository \u003C\u003E \u0026User.IsEnabledInRepository\n\t\t\t\t\t  If \u0026IsEnabledInRepository\n\t\t\t\t\t\t  \u0026isOK = \u0026User.RepositoryEnable(\u0026Errors)\n\t\t\t\t\t  Else\n\t\t\t\t\t\t  \u0026isOK = \u0026User.RepositoryDisable(\u0026Errors)\n\t\t\t\t\t  EndIf\n\t\t\t\t  EndIf\n\t\t\t  EndIf\n\t\t\t  If \u0026isOK\n\t\t\t\t  commit\n\t\t\t\t  If \u0026Mode = GAMAPiMode.Delete\n\t\t\t\t\t  GAMWWUsers()\n\t\t\t\t  Else\n\t\t\t\t\t  Return\t\n\t\t\t\t  EndIf\n\t\t\t  Else\n\t\t\t\t  For \u0026Error in \u0026Errors\n\t\t\t\t\t  Msg(Format(!\u0022%1 (GAM%2)\u0022, \u0026Error.Message, \u0026Error.Code))\n\t\t\t\t  EndFor\n\t\t\t  EndIf\t\t\t\n\t\t  Else\n\t\t\t  \u0026Errors = \u0026User.GetErrors()\n\t\t\t  For \u0026Error in \u0026Errors\n\t\t\t\t  Msg(Format(!\u0022%1 (GAM%2)\u0022, \u0026Error.Message, \u0026Error.Code))\n\t\t\t  EndFor\n\t\t  Endif\n\t  Endif\n  Endif"
+    },
+    {
+      "blockName": "\u0026WWPUserExtendedPhoto.ControlValueChanged",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "\u0026CheckRequiredFieldsResult = True\n\tDo \u0027CheckExtensionImage\u0027\n\tIf \u0026CheckRequiredFieldsResult\n\t\tIf \u0026WWPUserExtendedPhoto \u003C\u003E \u0027\u0027\n\t\t\tUserPhoto.Visible = False\n\t\tEndIf\n\tEndIf"
+    },
+    {
+      "blockName": "\u0026AuthenticationTypeName.IsValid",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "\u0026AuthTypeId = \u0026AuthenticationType.GetTypeByName(\u0026AuthenticationTypeName, \u0026Errors)\n\tDo \u0027AttributesSecurityCode\u0027"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */\nparm(\u0026Mode, \u0026UserId);\n/* Generated by DVelop Work With Plus Pattern [End] - Do not change */\n// Parm(\u0026Mode, \u0026UserId);\n",
+      "cleanSource": "/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */\nparm(\u0026Mode, \u0026UserId);\n/* Generated by DVelop Work With Plus Pattern [End] - Do not change */\n// Parm(\u0026Mode, \u0026UserId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "GAMCheckUserActivationMethod",
+      "WWPBaseObjects.DVMessageGetBasicNotificationMsg",
+      "WWPBaseObjects.WWP_CreateUserExtended",
+      "WWPBaseObjects.WWP_UpdateUserExtendedPhoto",
+      "GeneXus.Common.Messages",
+      "WWPBaseObjects.DVB_SDTComboData",
+      "WWPBaseObjects.WWP_UserExtended",
+      "GAMWWUsers"
+    ],
+    "calledBy": [
+      "GAMWWUsers"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "WWPUserExtendedPhotoExtension",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPUser Extended Photo Extension"
+    },
+    {
+      "name": "WWPUserExtended",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPUser Extended"
+    },
+    {
+      "name": "WWPUserExtendedPhoto",
+      "elementType": "Variable",
+      "dataType": "BINARY",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPUser Extended Photo"
+    },
+    {
+      "name": "ActivationDate",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Activation Date"
+    },
+    {
+      "name": "AuthenticationType",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Authentication Type"
+    },
+    {
+      "name": "AuthenticationTypeName",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Authentication Type Name"
+    },
+    {
+      "name": "AuthenticationTypes",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Authentication Types"
+    },
+    {
+      "name": "AuthenticationTypesIns",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Authentication Types Ins"
+    },
+    {
+      "name": "AuthTypeId",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Auth Type Id"
+    },
+    {
+      "name": "Birthday",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Birthday"
+    },
+    {
+      "name": "BlobPhoto",
+      "elementType": "Variable",
+      "dataType": "BINARY",
+      "accessor": "",
+      "domain": "",
+      "description": "Blob Photo"
+    },
+    {
+      "name": "CannotChangePassword",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Cannot Change Password"
+    },
+    {
+      "name": "DateLastAuthentication",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Date Last Authentication"
+    },
+    {
+      "name": "DontReceiveInformation",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Dont Receive Information"
+    },
+    {
+      "name": "Email",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Email"
+    },
+    {
+      "name": "EnableTwoFactorAuthentication",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Enable two factor authentication?"
+    },
+    {
+      "name": "Error",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Error"
+    },
+    {
+      "name": "Errors",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Errors"
+    },
+    {
+      "name": "ExternalId",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "External Id"
+    },
+    {
+      "name": "FilterSecPol",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Filter Sec Pol"
+    },
+    {
+      "name": "FirstName",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "First Name"
+    },
+    {
+      "name": "GAMRepository",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMRepository"
+    },
+    {
+      "name": "Gender",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Gender"
+    },
+    {
+      "name": "Image",
+      "elementType": "Variable",
+      "dataType": "BITMAP",
+      "accessor": "",
+      "domain": "",
+      "description": "Image"
+    },
+    {
+      "name": "IsActive",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Is Active"
+    },
+    {
+      "name": "IsBlocked",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Is Blocked"
+    },
+    {
+      "name": "IsEnabledInRepository",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Is Enabled In Repository"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "Language",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Language"
+    },
+    {
+      "name": "LastName",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Last Name"
+    },
+    {
+      "name": "LinkURL",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Link URL"
+    },
+    {
+      "name": "Message",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Message"
+    },
+    {
+      "name": "Messages",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Messages"
+    },
+    {
+      "name": "MustChangePassword",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Must Change Password"
+    },
+    {
+      "name": "Name",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Name"
+    },
+    {
+      "name": "OTPDailyNumberCodes",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Number of daily OTP codes requested"
+    },
+    {
+      "name": "OTPLastDateRequestCode",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Last date requested a OTP code"
+    },
+    {
+      "name": "OTPLastLockedDate",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Last time OTP code is locked"
+    },
+    {
+      "name": "OTPNumberLocked",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Number of locked OTP codes"
+    },
+    {
+      "name": "Password",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Password"
+    },
+    {
+      "name": "PasswordConf",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Password Conf"
+    },
+    {
+      "name": "PasswordIsOK",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Password Is OK"
+    },
+    {
+      "name": "PasswordNeverExpires",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Password Never Expires"
+    },
+    {
+      "name": "Phone",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Phone"
+    },
+    {
+      "name": "Photo",
+      "elementType": "Variable",
+      "dataType": "BITMAP",
+      "accessor": "",
+      "domain": "",
+      "description": "Photo"
+    },
+    {
+      "name": "Repository",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Repository"
+    },
+    {
+      "name": "SecurityPolicies",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Security Policies"
+    },
+    {
+      "name": "SecurityPolicy",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Security Policy"
+    },
+    {
+      "name": "SecurityPolicyId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Security Policy Id"
+    },
+    {
+      "name": "String",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "String"
+    },
+    {
+      "name": "URLProfile",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "URLProfile"
+    },
+    {
+      "name": "User",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "User"
+    },
+    {
+      "name": "UserActivationKey",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "User Activation Key"
+    },
+    {
+      "name": "UserId",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "User Id"
+    },
+    {
+      "name": "UserNameSpace",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "User Name Space"
+    },
+    {
+      "name": "IsAuthorized",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Is Authorized"
+    },
+    {
+      "name": "SecurityFunctionalityKeys",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Security Functionality Keys"
+    },
+    {
+      "name": "CheckRequiredFieldsResult",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Check Required Fields Result"
+    },
+    {
+      "name": "CompanyId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Company Id"
+    },
+    {
+      "name": "CompanyId_Data",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Company Id_Data"
+    },
+    {
+      "name": "Combo_DataItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Combo_Data Item"
+    },
+    {
+      "name": "GAMUserAttribute",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMUser Attribute"
+    },
+    {
+      "name": "Att_isOK",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Att_is OK"
+    },
+    {
+      "name": "GAMError",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMError"
+    },
+    {
+      "name": "OperadorId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Operador Id"
+    },
+    {
+      "name": "OperadorId_Data",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Operador Id_Data"
+    },
+    {
+      "name": "Today",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    }
+  ]
+}

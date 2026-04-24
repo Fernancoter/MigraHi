@@ -1,0 +1,154 @@
+{
+  "uniqueId": "ba27e5f2-c56a-46c1-a917-d2c79ca7b1fb",
+  "name": "WWP_GetParameter",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "Get Parameter",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\nStub Text(in:\u0026ParameterName, inout:\u0026TextParameter)\n\tDo Case\n\t\t\n\t\t//SMPT Parameters (Sample SMTP Parameters for a GMAIL email account)\n\t\tCase \u0026ParameterName = !\u0022SMTP_Host\u0022\n\t\t\t\u0026TextParameter = !\u0022smtp.ionos.mx\u0022 \n\t\tCase \u0026ParameterName = !\u0022SMTP_Username\u0022\n\t\t\t\u0026TextParameter = !\u0022contact@erphi-cone.com\u0022 //Your GMAIL account\n\t\tCase \u0026ParameterName = !\u0022SMTP_Password\u0022\n\t\t\t\u0026TextParameter = !\u0022wMV13ZBrkU@\u0022 //Your GMAIL account password\n\t\t\t\n\t\t//SMS Parameters (From Sinch Account)\n\t\tCase \u0026ParameterName = !\u0022SMS_ServicePlanId\u0022\n\t\t\t\u0026TextParameter = !\u00279361a7469c1344ee8f4c957e36226d93\u0027\n\t\tCase \u0026ParameterName = !\u0022SMS_Token\u0022\n\t\t\t\u0026TextParameter = !\u0027fcd01c5592574e2d9b07248b2a6b9ab4\u0027\n\t\tCase \u0026ParameterName = !\u0022SMS_ApplicationKey\u0022\n\t\t\t\u0026TextParameter = !\u0022dddddddd-dddd-dddd-dddd-dddddddddddd\u0022\n\t\tCase \u0026ParameterName = !\u0022SMS_ApplicationSecret\u0022\n\t\t\t\u0026TextParameter = !\u0022dddddddddddddddddddddd==\u0022\n\t\tCase \u0026ParameterName = !\u0022SMS_DefaultSender\u0022\n\t\t\t\u0026TextParameter = !\u0027\u002B447537455299\u0027\n\n\t\t//Mail Sender Parameters\n\t\tCase \u0026ParameterName = !\u0022Sender_Name\u0022\n\t\t\t\u0026TextParameter = !\u0022Hi-Cone\u0022 \n\t\tCase \u0026ParameterName = !\u0022Sender_Address\u0022\n\t\t\t\u0026TextParameter = !\u0022contact@erphi-cone.com\u0022 //Your GMAIL account\n      \n\t\t//Notification Parameters\n\t\tCase \u0026ParameterName = !\u0022Notification_BaseURL\u0022\n\t\t\t//This should be replaced with your fixed BaseURL if you will send Notifications by an scheduled process \n\t\t\t\u0026TextParameter = \u0026HTTPRequest.BaseUrl \n\tEndCase\nEndStub\n\n\nStub Integer(in:\u0026ParameterName, inout:\u0026IntegerParameter)\n\tDo Case\n\t\t//SMPT Parameters (Sample SMTP Parameters for a GMAIL email account)\n\t\tCase \u0026ParameterName = !\u0022SMTP_Port\u0022\n\t\t\t\u0026IntegerParameter = 587\n\t\t\t\n\t\tCase \u0026ParameterName = !\u0022SMTP_Timeout\u0022\n\t\t\t\u0026IntegerParameter = 30\n\tEndCase\nEndStub\n\nStub Decimal(in:\u0026ParameterName, inout:\u0026DecimalParameter)\n\nEndStub\n\nStub Boolean(in:\u0026ParameterName, inout:\u0026BooleanParameter)\n\tDo Case\n\t\t//SMPT Parameters (Sample SMTP Parameters for a GMAIL email account)\n\t\tCase \u0026ParameterName = !\u0022SMTP_Authentication\u0022\n\t\t\u0026BooleanParameter = True\n\t\tCase \u0026ParameterName = !\u0022SMTP_Secure\u0022\n\t\t\tcsharp [!\u0026BooleanParameter!] = true;\n\t\t\tjava [!\u0026BooleanParameter!] = false;\n\tEndCase\nEndStub\n\nStub Date(in:\u0026ParameterName, inout:\u0026DateParameter)\n\nEndStub\n\nStub DateTime(in:\u0026ParameterName, inout:\u0026DateTimeParameter)\n\nEndStub\n\n\n",
+      "cleanSource": "\n\nStub Text(in:\u0026ParameterName, inout:\u0026TextParameter)\n\tDo Case\n\t\t\n\t\t//SMPT Parameters (Sample SMTP Parameters for a GMAIL email account)\n\t\tCase \u0026ParameterName = !\u0022SMTP_Host\u0022\n\t\t\t\u0026TextParameter = !\u0022smtp.ionos.mx\u0022 \n\t\tCase \u0026ParameterName = !\u0022SMTP_Username\u0022\n\t\t\t\u0026TextParameter = !\u0022contact@erphi-cone.com\u0022 //Your GMAIL account\n\t\tCase \u0026ParameterName = !\u0022SMTP_Password\u0022\n\t\t\t\u0026TextParameter = !\u0022wMV13ZBrkU@\u0022 //Your GMAIL account password\n\t\t\t\n\t\t//SMS Parameters (From Sinch Account)\n\t\tCase \u0026ParameterName = !\u0022SMS_ServicePlanId\u0022\n\t\t\t\u0026TextParameter = !\u00279361a7469c1344ee8f4c957e36226d93\u0027\n\t\tCase \u0026ParameterName = !\u0022SMS_Token\u0022\n\t\t\t\u0026TextParameter = !\u0027fcd01c5592574e2d9b07248b2a6b9ab4\u0027\n\t\tCase \u0026ParameterName = !\u0022SMS_ApplicationKey\u0022\n\t\t\t\u0026TextParameter = !\u0022dddddddd-dddd-dddd-dddd-dddddddddddd\u0022\n\t\tCase \u0026ParameterName = !\u0022SMS_ApplicationSecret\u0022\n\t\t\t\u0026TextParameter = !\u0022dddddddddddddddddddddd==\u0022\n\t\tCase \u0026ParameterName = !\u0022SMS_DefaultSender\u0022\n\t\t\t\u0026TextParameter = !\u0027\u002B447537455299\u0027\n\n\t\t//Mail Sender Parameters\n\t\tCase \u0026ParameterName = !\u0022Sender_Name\u0022\n\t\t\t\u0026TextParameter = !\u0022Hi-Cone\u0022 \n\t\tCase \u0026ParameterName = !\u0022Sender_Address\u0022\n\t\t\t\u0026TextParameter = !\u0022contact@erphi-cone.com\u0022 //Your GMAIL account\n      \n\t\t//Notification Parameters\n\t\tCase \u0026ParameterName = !\u0022Notification_BaseURL\u0022\n\t\t\t//This should be replaced with your fixed BaseURL if you will send Notifications by an scheduled process \n\t\t\t\u0026TextParameter = \u0026HTTPRequest.BaseUrl \n\tEndCase\nEndStub\n\n\nStub Integer(in:\u0026ParameterName, inout:\u0026IntegerParameter)\n\tDo Case\n\t\t//SMPT Parameters (Sample SMTP Parameters for a GMAIL email account)\n\t\tCase \u0026ParameterName = !\u0022SMTP_Port\u0022\n\t\t\t\u0026IntegerParameter = 587\n\t\t\t\n\t\tCase \u0026ParameterName = !\u0022SMTP_Timeout\u0022\n\t\t\t\u0026IntegerParameter = 30\n\tEndCase\nEndStub\n\nStub Decimal(in:\u0026ParameterName, inout:\u0026DecimalParameter)\n\nEndStub\n\nStub Boolean(in:\u0026ParameterName, inout:\u0026BooleanParameter)\n\tDo Case\n\t\t//SMPT Parameters (Sample SMTP Parameters for a GMAIL email account)\n\t\tCase \u0026ParameterName = !\u0022SMTP_Authentication\u0022\n\t\t\u0026BooleanParameter = True\n\t\tCase \u0026ParameterName = !\u0022SMTP_Secure\u0022\n\t\t\tcsharp [!\u0026BooleanParameter!] = true;\n\t\t\tjava [!\u0026BooleanParameter!] = false;\n\tEndCase\nEndStub\n\nStub Date(in:\u0026ParameterName, inout:\u0026DateParameter)\n\nEndStub\n\nStub DateTime(in:\u0026ParameterName, inout:\u0026DateTimeParameter)\n\nEndStub"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "WWP_GetSMSParameters",
+      "WWP_CreateNotificationToUser",
+      "NotificarImpresion",
+      "NotificarSupervisor",
+      "WWP_UpdateNotificationDefinitions",
+      "WWP_GetSMTPParameters"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "BooleanParameter",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Boolean Parameter"
+    },
+    {
+      "name": "DateParameter",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Date Parameter"
+    },
+    {
+      "name": "DateTimeParameter",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Date Time Parameter"
+    },
+    {
+      "name": "DecimalParameter",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Decimal Parameter"
+    },
+    {
+      "name": "HTTPRequest",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "HTTPRequest"
+    },
+    {
+      "name": "IntegerParameter",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Integer Parameter"
+    },
+    {
+      "name": "ParameterName",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Parameter Name"
+    },
+    {
+      "name": "TextParameter",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Text Parameter"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

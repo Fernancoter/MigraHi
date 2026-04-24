@@ -1,0 +1,174 @@
+{
+  "uniqueId": "b9153dbc-2a86-4dc9-bf6c-3e85350124a3",
+  "name": "ObtenerExistenciaSilo",
+  "type": "Procedure",
+  "module": "Existencia",
+  "description": "Obtener Existencia Silo",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\u0026SDTExistenciaSilo.Clear()\n\nfor each DB.Silo\n\twhere SiloId \u003E 0\n\twhere SiloActivo = True\n\t\u0026SiloId = SiloId\n\t\u0026SiloNombre = SiloNombre\n\t\u0026SiloTipoMaterial = SiloTipoMaterial\n\t\u0026SiloEstadoMaterial = SiloEstadoMaterial\n\n\tfor each DB.ExistenciaSilo\n\t\twhere ExistenciaSiloId \u003E 0\n\t\twhere SiloId = \u0026SiloId\n\t\twhere ExistenciaId = \u0026ExistenciaId\n\t\t\u0026ESId = ExistenciaSiloId\n\n\t\t\u0026ESItem = New()\n\t\t\u0026ESItem.ExistenciaSiloId = \u0026ESId\n\t\t\u0026ESItem.SiloId = \u0026SiloId\n\t\t\u0026ESItem.SiloNombre = \u0026SiloNombre\n\t\t\u0026ESItem.SiloTipoMaterial = \u0026SiloTipoMaterial\n\t\t\u0026ESItem.SiloEstadoMaterial = \u0026SiloEstadoMaterial\n\t\t\u0026ESItem.ExistenciaId = \u0026ExistenciaId\n\t\t\u0026ESItem.ExistenciaSiloCantidad = ExistenciaSiloCantidad\n\t\t\u0026ESItem.ExistenciaSiloVirgenLote = ExistenciaSiloVirgenLote\n\t\t\u0026SDTExistenciaSilo.Add(\u0026ESItem)\n\t\tExit\n\n\twhen none\n\n\n\n\t\t\u0026ESItem = New()\n\t\t\u0026ESItem.ExistenciaSiloId = 0\n\t\t\u0026ESItem.SiloId = \u0026SiloId\n\t\t\u0026ESItem.SiloNombre = \u0026SiloNombre\n\t\t\u0026ESItem.SiloTipoMaterial = \u0026SiloTipoMaterial\n\t\t\u0026ESItem.SiloEstadoMaterial = \u0026SiloEstadoMaterial\n\t\t\u0026ESItem.ExistenciaId = \u0026ExistenciaId\n\t\t\u0026ESItem.ExistenciaSiloCantidad = 0\n\n\t\tif(\u0026SiloEstadoMaterial = EstadoMaterial.Virgen)\n\t\t\tdo \u0027LoteSilo\u0027\n\t\t\t\u0026ESItem.ExistenciaSiloVirgenLote = \u0026LoteEmbarque\n\t\telse\n\t\t\t\u0026ESItem.ExistenciaSiloVirgenLote = \u0027N/A\u0027\n\t\tendif\n\n\t\t\u0026SDTExistenciaSilo.Add(\u0026ESItem)\n\n        endfor\n\nendfor\n\nSub \u0027LoteSilo\u0027\n\n\t\u0026LoteEmbarque.SetEmpty()\n\n\tfor each DB.Lote\n\t\tOrder (LoteFechaRegistro)\n\t\twhere LoteId \u003E 0\n\t\twhere LoteSiloId = \u0026SiloId\n\t\t\u0026LoteEmbarque = LoteEmbarque\n\t\tExit\n\tendfor\n\nEndSub\n",
+      "cleanSource": "\n\u0026SDTExistenciaSilo.Clear()\n\nfor each DB.Silo\n\twhere SiloId \u003E 0\n\twhere SiloActivo = True\n\t\u0026SiloId = SiloId\n\t\u0026SiloNombre = SiloNombre\n\t\u0026SiloTipoMaterial = SiloTipoMaterial\n\t\u0026SiloEstadoMaterial = SiloEstadoMaterial\n\n\tfor each DB.ExistenciaSilo\n\t\twhere ExistenciaSiloId \u003E 0\n\t\twhere SiloId = \u0026SiloId\n\t\twhere ExistenciaId = \u0026ExistenciaId\n\t\t\u0026ESId = ExistenciaSiloId\n\n\t\t\u0026ESItem = New()\n\t\t\u0026ESItem.ExistenciaSiloId = \u0026ESId\n\t\t\u0026ESItem.SiloId = \u0026SiloId\n\t\t\u0026ESItem.SiloNombre = \u0026SiloNombre\n\t\t\u0026ESItem.SiloTipoMaterial = \u0026SiloTipoMaterial\n\t\t\u0026ESItem.SiloEstadoMaterial = \u0026SiloEstadoMaterial\n\t\t\u0026ESItem.ExistenciaId = \u0026ExistenciaId\n\t\t\u0026ESItem.ExistenciaSiloCantidad = ExistenciaSiloCantidad\n\t\t\u0026ESItem.ExistenciaSiloVirgenLote = ExistenciaSiloVirgenLote\n\t\t\u0026SDTExistenciaSilo.Add(\u0026ESItem)\n\t\tExit\n\n\twhen none\n\n\n\n\t\t\u0026ESItem = New()\n\t\t\u0026ESItem.ExistenciaSiloId = 0\n\t\t\u0026ESItem.SiloId = \u0026SiloId\n\t\t\u0026ESItem.SiloNombre = \u0026SiloNombre\n\t\t\u0026ESItem.SiloTipoMaterial = \u0026SiloTipoMaterial\n\t\t\u0026ESItem.SiloEstadoMaterial = \u0026SiloEstadoMaterial\n\t\t\u0026ESItem.ExistenciaId = \u0026ExistenciaId\n\t\t\u0026ESItem.ExistenciaSiloCantidad = 0\n\n\t\tif(\u0026SiloEstadoMaterial = EstadoMaterial.Virgen)\n\t\t\tdo \u0027LoteSilo\u0027\n\t\t\t\u0026ESItem.ExistenciaSiloVirgenLote = \u0026LoteEmbarque\n\t\telse\n\t\t\t\u0026ESItem.ExistenciaSiloVirgenLote = \u0027N/A\u0027\n\t\tendif\n\n\t\t\u0026SDTExistenciaSilo.Add(\u0026ESItem)\n\n        endfor\n\nendfor\n\nSub \u0027LoteSilo\u0027\n\n\t\u0026LoteEmbarque.SetEmpty()\n\n\tfor each DB.Lote\n\t\tOrder (LoteFechaRegistro)\n\t\twhere LoteId \u003E 0\n\t\twhere LoteSiloId = \u0026SiloId\n\t\t\u0026LoteEmbarque = LoteEmbarque\n\t\tExit\n\tendfor\n\nEndSub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ExistenciaId, out:\u0026SDTExistenciaSilo);\n",
+      "cleanSource": "parm(in:\u0026ExistenciaId, out:\u0026SDTExistenciaSilo);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Existencia.SDTExistenciaSilo",
+      "DB.Silo",
+      "DB.Lote",
+      "DB.ExistenciaSilo"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Categoria",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Categoria"
+    },
+    {
+      "name": "ESId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "ESId"
+    },
+    {
+      "name": "ESItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "ESItem"
+    },
+    {
+      "name": "ExistenciaId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Existencia Id"
+    },
+    {
+      "name": "SDTExistenciaSilo",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "SDTExistencia Silo"
+    },
+    {
+      "name": "SiloId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Silo Id"
+    },
+    {
+      "name": "SiloNombre",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Silo Nombre"
+    },
+    {
+      "name": "SiloEstadoMaterial",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Estado Material"
+    },
+    {
+      "name": "SiloTipoMaterial",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Tipo Material"
+    },
+    {
+      "name": "LoteEmbarque",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Lote NO."
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

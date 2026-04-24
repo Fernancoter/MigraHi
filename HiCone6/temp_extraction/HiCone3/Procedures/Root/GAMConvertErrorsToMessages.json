@@ -1,0 +1,129 @@
+{
+  "uniqueId": "0d3de45b-b692-49c4-8f95-57923e972dbf",
+  "name": "GAMConvertErrorsToMessages",
+  "type": "Procedure",
+  "module": "",
+  "description": "GAMConvert Errors To Messages",
+  "isGAMObject": true,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "For \u0026GAMError in \u0026GAMErrorCollection\n\t\u0026Message = new()\n\t\u0026Message.Type = MessageTypes.Error\n\t\u0026Message.Description = \u0026GAMError.Message\n\t\u0026Message.Id = Format(!\u0022GAM%2\u0022, \u0026GAMError.Code)\n\t\u0026Messages.Add(\u0026Message)\nEndFor\n",
+      "cleanSource": "For \u0026GAMError in \u0026GAMErrorCollection\n\t\u0026Message = new()\n\t\u0026Message.Type = MessageTypes.Error\n\t\u0026Message.Description = \u0026GAMError.Message\n\t\u0026Message.Id = Format(!\u0022GAM%2\u0022, \u0026GAMError.Code)\n\t\u0026Messages.Add(\u0026Message)\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026GAMErrorCollection, out:\u0026Messages);\n\t\n",
+      "cleanSource": "Parm(in:\u0026GAMErrorCollection, out:\u0026Messages);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "GeneXus.Common.Messages"
+    ],
+    "calledBy": [
+      "GAMSDChangePasswordUser",
+      "GAMCheckUserActivationMethod",
+      "GAMSDDisplayLastGAMErrors",
+      "GAMSDRegisterUser",
+      "GAMSDUpdateRegisterUser"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "GAMError",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMError"
+    },
+    {
+      "name": "GAMErrorCollection",
+      "elementType": "Parameter",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "in",
+      "domain": "",
+      "description": "GAMError Collection"
+    },
+    {
+      "name": "Message",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Message"
+    },
+    {
+      "name": "Messages",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "Messages"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

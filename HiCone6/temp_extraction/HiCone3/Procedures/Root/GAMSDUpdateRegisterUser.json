@@ -1,0 +1,188 @@
+{
+  "uniqueId": "b37c168f-aeab-485a-8db0-d888667910e2",
+  "name": "GAMSDUpdateRegisterUser",
+  "type": "Procedure",
+  "module": "",
+  "description": "Update Register User",
+  "isGAMObject": true,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026User = GAMUser.Get()\n//Gets last error in the GAM \n\u0026Errors = GAMRepository.GetLastErrors()\nIf \u0026Errors.Count = 0\n\t\u0026User.Name\t\t\t= \u0026UserName\n\t\u0026User.EMail\t\t\t= \u0026EMail\n\t\u0026User.FirstName\t\t= \u0026FirstName\n\t\u0026User.LastName\t\t= \u0026LastName\n\t\u0026isOK = GAMRepository.UpdateUserByKeyToCompleteUserData(\u0026User, \u0026Errors)\n\tIf not \u0026isOK\n\t\t\u0026Messages = GAMConvertErrorsToMessages(\u0026Errors)\n\tendif\nelse\n\t\u0026Messages = GAMConvertErrorsToMessages(\u0026Errors)\nendif\n",
+      "cleanSource": "\u0026User = GAMUser.Get()\n//Gets last error in the GAM \n\u0026Errors = GAMRepository.GetLastErrors()\nIf \u0026Errors.Count = 0\n\t\u0026User.Name\t\t\t= \u0026UserName\n\t\u0026User.EMail\t\t\t= \u0026EMail\n\t\u0026User.FirstName\t\t= \u0026FirstName\n\t\u0026User.LastName\t\t= \u0026LastName\n\t\u0026isOK = GAMRepository.UpdateUserByKeyToCompleteUserData(\u0026User, \u0026Errors)\n\tIf not \u0026isOK\n\t\t\u0026Messages = GAMConvertErrorsToMessages(\u0026Errors)\n\tendif\nelse\n\t\u0026Messages = GAMConvertErrorsToMessages(\u0026Errors)\nendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026UserGUID, in:\u0026UserName, in:\u0026Email, in:\u0026FirstName, in:\u0026LastName, out:\u0026Messages);\n",
+      "cleanSource": "Parm(in:\u0026UserGUID, in:\u0026UserName, in:\u0026Email, in:\u0026FirstName, in:\u0026LastName, out:\u0026Messages);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "GAMConvertErrorsToMessages",
+      "GeneXus.Common.Messages"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Messages",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "Messages"
+    },
+    {
+      "name": "ConfirmPassword",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Confirm Password"
+    },
+    {
+      "name": "Email",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Email"
+    },
+    {
+      "name": "Errors",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Errors"
+    },
+    {
+      "name": "FirstName",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "First Name"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "LastName",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Last Name"
+    },
+    {
+      "name": "Message",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Message"
+    },
+    {
+      "name": "Password",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Password"
+    },
+    {
+      "name": "User",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "User"
+    },
+    {
+      "name": "UserName",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "User Name"
+    },
+    {
+      "name": "UserGUID",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "GUID User "
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

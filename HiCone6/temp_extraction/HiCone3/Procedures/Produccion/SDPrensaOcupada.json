@@ -1,0 +1,131 @@
+{
+  "uniqueId": "91c55cba-9394-485e-8cff-40fb9a767dd0",
+  "name": "SDPrensaOcupada",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDPrensa Ocupada",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": " \n \u0026PrenActivoId = 0\n \n for each DB.Prensado\n\t where PrensadoId \u003E 0\n\t where Not PrensadoId = \u0026PrensadoId\n\t where PrensadoPrensaId = \u0026PrensaId\n\t where PrensadoEstado = EstadoPrensado.EnProceso\n\t \u0026PrenActivoId = PrensadoId\n\t Exit\n Endfor\n \n",
+      "cleanSource": " \n \u0026PrenActivoId = 0\n \n for each DB.Prensado\n\t where PrensadoId \u003E 0\n\t where Not PrensadoId = \u0026PrensadoId\n\t where PrensadoPrensaId = \u0026PrensaId\n\t where PrensadoEstado = EstadoPrensado.EnProceso\n\t \u0026PrenActivoId = PrensadoId\n\t Exit\n Endfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensadoId, in:\u0026PrensaId, out:\u0026PrenActivoId);\n",
+      "cleanSource": "parm(in:\u0026PrensadoId, in:\u0026PrensaId, out:\u0026PrenActivoId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Prensado"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Disponible",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Disponible"
+    },
+    {
+      "name": "PrensadoEstado",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Estado"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "PrenActivoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Pren Activo Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

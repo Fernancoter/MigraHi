@@ -1,0 +1,109 @@
+{
+  "uniqueId": "e584a3be-60bd-4d01-b7b6-5b30cfd60c64",
+  "name": "MDFLoadSampleFields",
+  "type": "Procedure",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "MDFLoad Sample Fields",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\u0026DynamicFormFields = new()\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field1\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Sample text field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Character\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = true\n\t/*\n\t//Change Field and/or label class\n\t\u0026DynamicFormField.MDFDynamicFieldClass = !\u0022TestField\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldDescriptionClass = !\u0022TestLabel\u0022\n\t*/\n\t\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field2\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValue = !\u0022value\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Text field with value\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Character\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field3\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Bool field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldType = WorkWithPlus.NativeMobile.SDPMDFFieldType.Boolean\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field4\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Boolean\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Checked field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValueCheck = true\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field5\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Numeric\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Numeric field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field6\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Numeric\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Numeric with value\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValueNumeric = 123\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = true\n\t\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field7\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Decimal\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Decimal field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field8\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Decimal\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Decimal with value\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValueDecimal = 125.05\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = true\n\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field9\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Date\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Date field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = true\n\t/**/\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field10\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Date\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Date with value\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValueDate = today()\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t/**/\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field11\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Decimal\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Disabled field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValueDecimal = 125.05\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = false\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field12\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Date\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Disabled date\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValueDate = today()\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = false\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022FieldCombo1\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldComboValues =  !\u0022cval 1:CVombo Valor 1;cval 2:CVombo Valor 2;cval 3:CVombo Valor 3\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Enum field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Combo\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022FieldCombo2\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldComboValues =  !\u0022vvv 1:Descripcion 1;vv 2:Descripcion 2;vv 3:Descripcion 3\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValue = !\u0022vv 2\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Enum with selected value\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Combo\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022FieldCombo3Dis\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldComboValues =  !\u00221:D1;2:No Editable2;3:D3\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValue = !\u00222\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Disabled enum\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Combo\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = false\n",
+      "cleanSource": "\t\u0026DynamicFormFields = new()\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field1\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Sample text field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Character\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = true\n\t/*\n\t//Change Field and/or label class\n\t\u0026DynamicFormField.MDFDynamicFieldClass = !\u0022TestField\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldDescriptionClass = !\u0022TestLabel\u0022\n\t*/\n\t\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field2\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValue = !\u0022value\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Text field with value\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Character\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field3\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Bool field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldType = WorkWithPlus.NativeMobile.SDPMDFFieldType.Boolean\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field4\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Boolean\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Checked field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValueCheck = true\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field5\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Numeric\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Numeric field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field6\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Numeric\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Numeric with value\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValueNumeric = 123\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = true\n\t\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field7\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Decimal\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Decimal field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field8\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Decimal\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Decimal with value\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValueDecimal = 125.05\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = true\n\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field9\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Date\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Date field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = true\n\t/**/\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field10\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Date\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Date with value\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValueDate = today()\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t/**/\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field11\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Decimal\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Disabled field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValueDecimal = 125.05\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = false\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022Field12\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Date\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Disabled date\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValueDate = today()\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = false\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022FieldCombo1\u0022\t\n\t\u0026DynamicFormField.MDFDynamicFieldComboValues =  !\u0022cval 1:CVombo Valor 1;cval 2:CVombo Valor 2;cval 3:CVombo Valor 3\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Enum field\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Combo\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022FieldCombo2\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldComboValues =  !\u0022vvv 1:Descripcion 1;vv 2:Descripcion 2;vv 3:Descripcion 3\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValue = !\u0022vv 2\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Enum with selected value\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Combo\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\u0022FieldCombo3Dis\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldComboValues =  !\u00221:D1;2:No Editable2;3:D3\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldValue = !\u00222\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\u0022Disabled enum\u0022\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Combo\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = false"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(out:\u0026DynamicFormFields);\n",
+      "cleanSource": "parm(out:\u0026DynamicFormFields);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WorkWithPlus.NativeMobile.MDFDynamicField"
+    ],
+    "calledBy": [
+      "MDFLoadSampleFieldsSession"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "DynamicFormFields",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "Dynamic Form Fields"
+    },
+    {
+      "name": "DynamicFormField",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Dynamic Form Field"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

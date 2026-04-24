@@ -1,0 +1,258 @@
+{
+  "uniqueId": "f3e08152-acef-4d05-9eb7-ec3581f1601c",
+  "name": "IniciarCarrera",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Iniciar Carrera",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\t\u0026isOK = SDCheckeoCarreras.Udp(\u0026PrensadoId, EstadoCarrera.EnProceso)\n\n\tif(\u0026isOK)\n\n\t\t//Obtener troquel calibrado en prensado\n\t\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\t\u0026CarreraTroquel = \u0026Prensado.PrensadoTroquelNombre\n\n\t\t//Obtener PrensadoBobina en uso\n\t        \u0026PBobinaId = ObtenerPrensadoBobina.Udp(\u0026PrensadoId)\n\n\t\t//Obtener NoCarrera\n\t        \u0026NoCarrera = ObtenerCarreraNo.Udp(\u0026PrensadoId)\n\t\t\u0026NoCarrera \u002B= 1\n\n\t        //Instanciar Carrera\n\t\t\u0026Carrera = New()\n\t\t\u0026Carrera.CarreraNo = \u0026NoCarrera\n\t\t\u0026Carrera.CarreraEstado = EstadoCarrera.EnProceso\n\t\t\u0026Carrera.CarreraFechaRegistro = Now()\n\t\t\u0026Carrera.CarreraFechaValidacion.SetNull()\n\t\t\u0026Carrera.CarreraPaletTerminado.SetEmpty()\n\t\t\u0026Carrera.InicioPrensadoBobinaId = \u0026PBobinaId\n\t\t\u0026Carrera.CarreraTroquel = \u0026CarreraTroquel\n\t\t\u0026Carrera.CarreraInterrupcionId.SetNull()\n\t\t\u0026Carrera.Save()\n\n\t\tif(\u0026Carrera.Success())\n\t\t\t\u0026CarreraId = \u0026Carrera.CarreraId\n\t\t\tcommit\n\n\t\t\t//Generar 6 carretes\n\t\t\tdo \u0027GenerarCarretes\u0027\n\n\t\t\t//Carreras del PrensadoBobina\n\t\t\tdo \u0027PBobinaCarrera\u0027\n\n\t\tendif\n\tendif\n\n        Sub \u0027GenerarCarretes\u0027\n\n\t\t\u0026NoLinea = 6\n\t\tDo while \u0026NoLinea \u003E= 1\n\n\t\t\t\u0026Carrete = New()\n\t\t\t\u0026Carrete.CarreteNoLinea = \u0026NoLinea\n\t\t\t\u0026Carrete.DB.CarreteNoSerie = CarreteNoSerie.Udp(\u0026PrensadoId, \u0026NoCarrera, \u0026NoLinea)\n\t\t\t\u0026Carrete.CarreteEstado = EstadoCarrete.EnProceso\n\t\t\t\u0026Carrete.CarreteMolino = MolinoCarrete.NoAplica\n\t\t\t\u0026Carrete.CarreteTerminaPalet = false\n\t\t\t\u0026Carrete.CarretePaletSerie.SetEmpty()\n\t\t\t\u0026Carrete.CarreteCarreraId = \u0026CarreraId\n\t\t\t\u0026Carrete.Save()\n\n\t\t\tif(\u0026Carrete.Success())\n\t\t\t\tcommit\n\t\t\tendif\n\n\t\t        \u0026NoLinea -= 1\n\t\tEndDo\n\n\tEndSub\n\n        Sub \u0027PBobinaCarrera\u0027\n\n\t\t//Carretes de la Bobina en el Prensado\n\t\t\u0026PrensadoBobina.Load(\u0026PBobinaId)\n\t\t\u0026BobinaId = \u0026PrensadoBobina.BobinaId\n\t        \u0026PrensadoBobina.PrensadoBobinaCantCarrera \u002B= 1\n\t        \u0026PrensadoBobina.Save()\n\n\t\tif(\u0026PrensadoBobina.Success())\n\t\t\tcommit\n\n\t\t\t//Carretes totales de la Bobina\n\t\t\t\u0026Bobina.Load(\u0026BobinaId)\n\t\t\t\u0026Bobina.BobinaCarreras \u002B= 1\n\t\t\t\u0026Bobina.Save()\n\t\t\tcommit\n\t\tendif\n\tEndsub\n",
+      "cleanSource": "\n\t\u0026isOK = SDCheckeoCarreras.Udp(\u0026PrensadoId, EstadoCarrera.EnProceso)\n\n\tif(\u0026isOK)\n\n\t\t//Obtener troquel calibrado en prensado\n\t\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\t\u0026CarreraTroquel = \u0026Prensado.PrensadoTroquelNombre\n\n\t\t//Obtener PrensadoBobina en uso\n\t        \u0026PBobinaId = ObtenerPrensadoBobina.Udp(\u0026PrensadoId)\n\n\t\t//Obtener NoCarrera\n\t        \u0026NoCarrera = ObtenerCarreraNo.Udp(\u0026PrensadoId)\n\t\t\u0026NoCarrera \u002B= 1\n\n\t        //Instanciar Carrera\n\t\t\u0026Carrera = New()\n\t\t\u0026Carrera.CarreraNo = \u0026NoCarrera\n\t\t\u0026Carrera.CarreraEstado = EstadoCarrera.EnProceso\n\t\t\u0026Carrera.CarreraFechaRegistro = Now()\n\t\t\u0026Carrera.CarreraFechaValidacion.SetNull()\n\t\t\u0026Carrera.CarreraPaletTerminado.SetEmpty()\n\t\t\u0026Carrera.InicioPrensadoBobinaId = \u0026PBobinaId\n\t\t\u0026Carrera.CarreraTroquel = \u0026CarreraTroquel\n\t\t\u0026Carrera.CarreraInterrupcionId.SetNull()\n\t\t\u0026Carrera.Save()\n\n\t\tif(\u0026Carrera.Success())\n\t\t\t\u0026CarreraId = \u0026Carrera.CarreraId\n\t\t\tcommit\n\n\t\t\t//Generar 6 carretes\n\t\t\tdo \u0027GenerarCarretes\u0027\n\n\t\t\t//Carreras del PrensadoBobina\n\t\t\tdo \u0027PBobinaCarrera\u0027\n\n\t\tendif\n\tendif\n\n        Sub \u0027GenerarCarretes\u0027\n\n\t\t\u0026NoLinea = 6\n\t\tDo while \u0026NoLinea \u003E= 1\n\n\t\t\t\u0026Carrete = New()\n\t\t\t\u0026Carrete.CarreteNoLinea = \u0026NoLinea\n\t\t\t\u0026Carrete.DB.CarreteNoSerie = CarreteNoSerie.Udp(\u0026PrensadoId, \u0026NoCarrera, \u0026NoLinea)\n\t\t\t\u0026Carrete.CarreteEstado = EstadoCarrete.EnProceso\n\t\t\t\u0026Carrete.CarreteMolino = MolinoCarrete.NoAplica\n\t\t\t\u0026Carrete.CarreteTerminaPalet = false\n\t\t\t\u0026Carrete.CarretePaletSerie.SetEmpty()\n\t\t\t\u0026Carrete.CarreteCarreraId = \u0026CarreraId\n\t\t\t\u0026Carrete.Save()\n\n\t\t\tif(\u0026Carrete.Success())\n\t\t\t\tcommit\n\t\t\tendif\n\n\t\t        \u0026NoLinea -= 1\n\t\tEndDo\n\n\tEndSub\n\n        Sub \u0027PBobinaCarrera\u0027\n\n\t\t//Carretes de la Bobina en el Prensado\n\t\t\u0026PrensadoBobina.Load(\u0026PBobinaId)\n\t\t\u0026BobinaId = \u0026PrensadoBobina.BobinaId\n\t        \u0026PrensadoBobina.PrensadoBobinaCantCarrera \u002B= 1\n\t        \u0026PrensadoBobina.Save()\n\n\t\tif(\u0026PrensadoBobina.Success())\n\t\t\tcommit\n\n\t\t\t//Carretes totales de la Bobina\n\t\t\t\u0026Bobina.Load(\u0026BobinaId)\n\t\t\t\u0026Bobina.BobinaCarreras \u002B= 1\n\t\t\t\u0026Bobina.Save()\n\t\t\tcommit\n\t\tendif\n\tEndsub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensadoId);\n",
+      "cleanSource": "parm(in:\u0026PrensadoId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.ObtenerPrensadoBobina",
+      "Produccion.ObtenerCarreraNo",
+      "Produccion.CarreteNoSerie",
+      "Produccion.SDCheckeoCarreras",
+      "DB.Bobina",
+      "DB.Prensado",
+      "DB.Palet",
+      "DB.Carrera",
+      "DB.Carrete",
+      "DB.PrensadoBobina",
+      "SDCheckeoCarreras",
+      "ObtenerPrensadoBobina",
+      "ObtenerCarreraNo",
+      "CarreteNoSerie"
+    ],
+    "calledBy": [
+      "SDAgregarCarrera"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Carrera",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera"
+    },
+    {
+      "name": "CarreraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera Id"
+    },
+    {
+      "name": "Carrete",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete"
+    },
+    {
+      "name": "NoCarrera",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "No Carrera"
+    },
+    {
+      "name": "NoLinea",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "No Linea"
+    },
+    {
+      "name": "NoPalet",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "No Palet"
+    },
+    {
+      "name": "PrensadoBobina",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Bobina"
+    },
+    {
+      "name": "PrensadoBobinaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Bobina Id"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "CarreraNo",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera No"
+    },
+    {
+      "name": "PBId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "PBId"
+    },
+    {
+      "name": "PaletId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet Id"
+    },
+    {
+      "name": "Palet",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet"
+    },
+    {
+      "name": "PBobinaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Id"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "BobinaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Id"
+    },
+    {
+      "name": "Bobina",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina"
+    },
+    {
+      "name": "Prensado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado"
+    },
+    {
+      "name": "CarreraTroquel",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera Troquel"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

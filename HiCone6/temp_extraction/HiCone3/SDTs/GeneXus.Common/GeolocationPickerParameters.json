@@ -1,0 +1,51 @@
+{
+  "uniqueId": "15446f5c-2e09-4a73-8416-9b8bd15e4741",
+  "name": "GeolocationPickerParameters",
+  "type": "SDT",
+  "module": "GeneXus.Common",
+  "description": "Geolocation Picker Parameters",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "InitialLocation",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Initial Location"
+    },
+    {
+      "name": "MapType",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Map Type"
+    },
+    {
+      "name": "ShowMyLocation",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Show My Location"
+    }
+  ]
+}

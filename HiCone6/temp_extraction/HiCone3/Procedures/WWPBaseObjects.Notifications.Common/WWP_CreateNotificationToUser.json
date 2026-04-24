@@ -1,0 +1,297 @@
+{
+  "uniqueId": "be52e927-94f5-45b9-8580-9bc15e133d87",
+  "name": "WWP_CreateNotificationToUser",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.Notifications.Common",
+  "description": "Create Notification To User",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "For Each WWPBaseObjects.WWP_UserExtended\n\tWhere WWPUserExtendedId = \u0026WWPUserExtendedId\n\t\u0026WWP_Notification = New()\n\t\u0026WWP_Notification.WWPUserExtendedId = \u0026WWPUserExtendedId\n\t\u0026WWP_Notification.WWPNotificationDefinitionId = \u0026WWPNotificationDefinitionId\n\t\u0026WWP_Notification.WWPNotificationTitle = \u0026WWPNotificationDefinitionTitle\n\t\u0026WWP_Notification.WWPNotificationShortDescription = \u0026WWPNotificationDefinitionShortDescription\n\t\u0026WWP_Notification.WWPNotificationIcon = \u0026WWPNotificationDefinitionIcon\n\tWWP_CleanNotificationURL(\u0026WWPNotificationDefinitionLink)\n\t\n\t\u0026WWP_Notification.WWPNotificationLink = \u0026WWPNotificationDefinitionLink\n\t\u0026WWP_Notification.WWPNotificationMetadata = \u0026WWPNotificationMetadata\n\t\u0026WWP_Notification.Save()\n\t\u0026WWPNotificationID = \u0026WWP_Notification.WWPNotificationId\n\t\n\t\u0026SmsAndMailUrl = Notifications.Common.WWP_VisualizeNotification.Link(\u0026WWPNotificationID)\n\tWWPBaseObjects.Notifications.Common.WWP_CleanNotificationURL(\u0026SmsAndMailUrl)\n\t\n\tWWPBaseObjects.WWP_GetParameter.Text(\u0022Notification_BaseURL\u0022, \u0026Notification_BaseUrl)\n\t\u0026SmsAndMailUrl = Format(\u0022%1%2\u0022, \u0026Notification_BaseUrl, \u0026SmsAndMailUrl) \n\t\n\tIf WWPUserExtendedEmaiNotif\n\t\t\u0026WWPUserExtendedEmail = WWPUserExtendedEmail\n\t\tDo \u0027CreateMail\u0027\n\tEndIf\n\t\n\tIf \u0026IsDiscussionNotification Or WWPUserExtendedDesktopNotif\n\t\tDo \u0027CreateDesktopNotification\u0027\n\tEndIf\n\t\n\tIf WWPUserExtendedMobileNotif\n\t\tDo \u0027CreateMobileNotification\u0027\n\tEndIf\n\t\n\tIf WWPUserExtendedSMSNotif\n\t\tIf Not WWPUserExtendedPhone.IsEmpty()\n\t\t\t\u0026WWPUserExtendedPhone = WWPUserExtendedPhone \n\t\t\tDo \u0027CreateSMS\u0027\n\t\tEndIf\n\tEndIf\n\t\nEndFor\n\nSub \u0027CreateMail\u0027\n\t\u0026Mail = New()\n\t\u0026Mail.WWPBaseObjects.WWPNotificationId = \u0026WWPNotificationID\n\t\n\t\u0026MailTemplate.Load(!\u0022MailNotification\u0022)\n\tIf \u0026MailTemplate.Success()\n\t\t\n\t\t\u0026Mail.WWPMailSenderName = \u0026MailTemplate.WWPMailTemplateSenderName\n\t\t\u0026Mail.WWPMailSenderAddress = \u0026MailTemplate.Subscriptions.WWPMailTemplateSenderAddress\n\t\t\u0026MailBody = \u0026MailTemplate.WWPMailTemplateBody\n\tElse\n\t\tWWP_GetParameter.Text(!\u0022Sender_Name\u0022, \u0026SenderName)\n\t\t\u0026Mail.WWPMailSenderName = \u0026SenderName\n\t\t\n\t\tWWPBaseObjects.WWP_GetParameter.Text(!\u0022Sender_Address\u0022, \u0026SenderAddress)\n\t\t\u0026Mail.WWPMailSenderAddress = \u0026SenderAddress\n    \n\t\t\u0026MailBody = \u0026WWPNotificationDefinitionLongDescription\n\t\t\n\tEndif\n\t\u0026MailBody = \u0026MailBody.Replace(!\u0022[SHORT_DESCRIPTION]\u0022, \u0026WWPNotificationDefinitionShortDescription)\n\t\u0026MailBody = \u0026MailBody.Replace(!\u0022[LONG_DESCRIPTION]\u0022, \u0026WWPNotificationDefinitionLongDescription)\n\t\u0026MailBody = \u0026MailBody.Replace(!\u0022[TITLE]\u0022, \u0026WWPNotificationDefinitionTitle)\n\t\u0026MailBody = \u0026MailBody.Replace(!\u0022[LINK]\u0022, \u0026SmsAndMailUrl)\t\t\n\t\u0026MailBody = \u0026MailBody.Replace(!\u0022[BASE_URL]\u0022, \u0026Notification_BaseUrl)\t\t\n\t\u0026Mail.WWPMailBody = \u0026MailBody\n\t\u0026Mail.WWPMailTo = \u0026WWPUserExtendedEmail\n\t\u0026Mail.WWPMailSubject = \u0026WWPNotificationDefinitionTitle\n\t\u0026Mail.Save()\nEndSub\n\n\nSub \u0027CreateDesktopNotification\u0027\n\tFor Each Web.WWP_WebClient\n\t\tWhere WWPUserExtendedId = \u0026WWPUserExtendedId \n\t\t\u0026WebNotification = New()\n\t\t\u0026WebNotification.WWPNotificationId = \u0026WWPNotificationID\n\t\t\u0026WebNotification.WWPWebNotificationClientId = WWPWebClientId\n\t\t\u0026WebNotification.WWPWebNotificationTitle = \u0026WWPNotificationDefinitionTitle\n\t\t\u0026WebNotification.WWPWebNotificationIcon = \u0026WWPNotificationDefinitionIcon\n\t\t\u0026WebNotification.WWPWebNotificationText = \u0026WWPNotificationDefinitionShortDescription\n\t\t\u0026WebNotification.Save()\n\tEndFor\nEndSub\n\nSub \u0027CreateSMS\u0027\n\t\u0026SMS = New()\n\t\u0026SMS.WWPNotificationId = \u0026WWPNotificationID\n\t\u0026SMS.WWPSMSMessage = \u0026WWPNotificationDefinitionShortDescription\n\t\u0026SMS.WWPSMSRecipientNumbers = \u0026WWPUserExtendedPhone\n\tWWPBaseObjects.WWP_GetParameter.Text(!\u0022SMS_DefaultSender\u0022, \u0026TextParameter)\n\t\u0026SMS.WWPSMSSenderNumber = \u0026TextParameter\n\t\u0026SMS.Save()\nEndSub\n\n\nSub \u0027CreateMobileNotification\u0027\nEndSub\n\n",
+      "cleanSource": "For Each WWPBaseObjects.WWP_UserExtended\n\tWhere WWPUserExtendedId = \u0026WWPUserExtendedId\n\t\u0026WWP_Notification = New()\n\t\u0026WWP_Notification.WWPUserExtendedId = \u0026WWPUserExtendedId\n\t\u0026WWP_Notification.WWPNotificationDefinitionId = \u0026WWPNotificationDefinitionId\n\t\u0026WWP_Notification.WWPNotificationTitle = \u0026WWPNotificationDefinitionTitle\n\t\u0026WWP_Notification.WWPNotificationShortDescription = \u0026WWPNotificationDefinitionShortDescription\n\t\u0026WWP_Notification.WWPNotificationIcon = \u0026WWPNotificationDefinitionIcon\n\tWWP_CleanNotificationURL(\u0026WWPNotificationDefinitionLink)\n\t\n\t\u0026WWP_Notification.WWPNotificationLink = \u0026WWPNotificationDefinitionLink\n\t\u0026WWP_Notification.WWPNotificationMetadata = \u0026WWPNotificationMetadata\n\t\u0026WWP_Notification.Save()\n\t\u0026WWPNotificationID = \u0026WWP_Notification.WWPNotificationId\n\t\n\t\u0026SmsAndMailUrl = Notifications.Common.WWP_VisualizeNotification.Link(\u0026WWPNotificationID)\n\tWWPBaseObjects.Notifications.Common.WWP_CleanNotificationURL(\u0026SmsAndMailUrl)\n\t\n\tWWPBaseObjects.WWP_GetParameter.Text(\u0022Notification_BaseURL\u0022, \u0026Notification_BaseUrl)\n\t\u0026SmsAndMailUrl = Format(\u0022%1%2\u0022, \u0026Notification_BaseUrl, \u0026SmsAndMailUrl) \n\t\n\tIf WWPUserExtendedEmaiNotif\n\t\t\u0026WWPUserExtendedEmail = WWPUserExtendedEmail\n\t\tDo \u0027CreateMail\u0027\n\tEndIf\n\t\n\tIf \u0026IsDiscussionNotification Or WWPUserExtendedDesktopNotif\n\t\tDo \u0027CreateDesktopNotification\u0027\n\tEndIf\n\t\n\tIf WWPUserExtendedMobileNotif\n\t\tDo \u0027CreateMobileNotification\u0027\n\tEndIf\n\t\n\tIf WWPUserExtendedSMSNotif\n\t\tIf Not WWPUserExtendedPhone.IsEmpty()\n\t\t\t\u0026WWPUserExtendedPhone = WWPUserExtendedPhone \n\t\t\tDo \u0027CreateSMS\u0027\n\t\tEndIf\n\tEndIf\n\t\nEndFor\n\nSub \u0027CreateMail\u0027\n\t\u0026Mail = New()\n\t\u0026Mail.WWPBaseObjects.WWPNotificationId = \u0026WWPNotificationID\n\t\n\t\u0026MailTemplate.Load(!\u0022MailNotification\u0022)\n\tIf \u0026MailTemplate.Success()\n\t\t\n\t\t\u0026Mail.WWPMailSenderName = \u0026MailTemplate.WWPMailTemplateSenderName\n\t\t\u0026Mail.WWPMailSenderAddress = \u0026MailTemplate.Subscriptions.WWPMailTemplateSenderAddress\n\t\t\u0026MailBody = \u0026MailTemplate.WWPMailTemplateBody\n\tElse\n\t\tWWP_GetParameter.Text(!\u0022Sender_Name\u0022, \u0026SenderName)\n\t\t\u0026Mail.WWPMailSenderName = \u0026SenderName\n\t\t\n\t\tWWPBaseObjects.WWP_GetParameter.Text(!\u0022Sender_Address\u0022, \u0026SenderAddress)\n\t\t\u0026Mail.WWPMailSenderAddress = \u0026SenderAddress\n    \n\t\t\u0026MailBody = \u0026WWPNotificationDefinitionLongDescription\n\t\t\n\tEndif\n\t\u0026MailBody = \u0026MailBody.Replace(!\u0022[SHORT_DESCRIPTION]\u0022, \u0026WWPNotificationDefinitionShortDescription)\n\t\u0026MailBody = \u0026MailBody.Replace(!\u0022[LONG_DESCRIPTION]\u0022, \u0026WWPNotificationDefinitionLongDescription)\n\t\u0026MailBody = \u0026MailBody.Replace(!\u0022[TITLE]\u0022, \u0026WWPNotificationDefinitionTitle)\n\t\u0026MailBody = \u0026MailBody.Replace(!\u0022[LINK]\u0022, \u0026SmsAndMailUrl)\t\t\n\t\u0026MailBody = \u0026MailBody.Replace(!\u0022[BASE_URL]\u0022, \u0026Notification_BaseUrl)\t\t\n\t\u0026Mail.WWPMailBody = \u0026MailBody\n\t\u0026Mail.WWPMailTo = \u0026WWPUserExtendedEmail\n\t\u0026Mail.WWPMailSubject = \u0026WWPNotificationDefinitionTitle\n\t\u0026Mail.Save()\nEndSub\n\n\nSub \u0027CreateDesktopNotification\u0027\n\tFor Each Web.WWP_WebClient\n\t\tWhere WWPUserExtendedId = \u0026WWPUserExtendedId \n\t\t\u0026WebNotification = New()\n\t\t\u0026WebNotification.WWPNotificationId = \u0026WWPNotificationID\n\t\t\u0026WebNotification.WWPWebNotificationClientId = WWPWebClientId\n\t\t\u0026WebNotification.WWPWebNotificationTitle = \u0026WWPNotificationDefinitionTitle\n\t\t\u0026WebNotification.WWPWebNotificationIcon = \u0026WWPNotificationDefinitionIcon\n\t\t\u0026WebNotification.WWPWebNotificationText = \u0026WWPNotificationDefinitionShortDescription\n\t\t\u0026WebNotification.Save()\n\tEndFor\nEndSub\n\nSub \u0027CreateSMS\u0027\n\t\u0026SMS = New()\n\t\u0026SMS.WWPNotificationId = \u0026WWPNotificationID\n\t\u0026SMS.WWPSMSMessage = \u0026WWPNotificationDefinitionShortDescription\n\t\u0026SMS.WWPSMSRecipientNumbers = \u0026WWPUserExtendedPhone\n\tWWPBaseObjects.WWP_GetParameter.Text(!\u0022SMS_DefaultSender\u0022, \u0026TextParameter)\n\t\u0026SMS.WWPSMSSenderNumber = \u0026TextParameter\n\t\u0026SMS.Save()\nEndSub\n\n\nSub \u0027CreateMobileNotification\u0027\nEndSub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026WWPUserExtendedId, in:\u0026WWPNotificationDefinitionId, in:\u0026WWPNotificationDefinitionTitle, in:\u0026WWPNotificationDefinitionShortDescription, in:\u0026WWPNotificationDefinitionLongDescription, inout:\u0026WWPNotificationDefinitionLink, in:\u0026WWPNotificationMetadata, in:\u0026WWPNotificationDefinitionIcon, in:\u0026IsDiscussionNotification);\n",
+      "cleanSource": "parm(in:\u0026WWPUserExtendedId, in:\u0026WWPNotificationDefinitionId, in:\u0026WWPNotificationDefinitionTitle, in:\u0026WWPNotificationDefinitionShortDescription, in:\u0026WWPNotificationDefinitionLongDescription, inout:\u0026WWPNotificationDefinitionLink, in:\u0026WWPNotificationMetadata, in:\u0026WWPNotificationDefinitionIcon, in:\u0026IsDiscussionNotification);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_GetUserEmail",
+      "WWPBaseObjects.WWP_GetUserPhone",
+      "WWPBaseObjects.WWP_GetParameter",
+      "WWPBaseObjects.Notifications.Common.WWP_CleanNotificationURL",
+      "WWPBaseObjects.WWP_UserExtended",
+      "WWPBaseObjects.SMS.WWP_SMS",
+      "WWPBaseObjects.Notifications.Web.WWP_WebNotification",
+      "WWPBaseObjects.Notifications.Web.WWP_WebClient",
+      "WWPBaseObjects.Notifications.Common.WWP_Notification",
+      "WWPBaseObjects.Mail.WWP_MailTemplate",
+      "WWPBaseObjects.Mail.WWP_Mail",
+      "WWPBaseObjects.Notifications.Common.WWP_VisualizeNotification"
+    ],
+    "calledBy": [
+      "WWP_SendNotification",
+      "WWP_SendMentionNotification"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SenderName",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Sender Name"
+    },
+    {
+      "name": "SenderAddress",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Sender Address"
+    },
+    {
+      "name": "WWPNotificationDefinitionIcon",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPNotification Definition Icon"
+    },
+    {
+      "name": "WWPNotificationDefinitionTitle",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPNotification Definition Title"
+    },
+    {
+      "name": "WWPNotificationDefinitionShortDescription",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPNotification Definition Short Description"
+    },
+    {
+      "name": "WWPNotificationDefinitionLongDescription",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPNotification Definition Long Description"
+    },
+    {
+      "name": "WWPNotificationDefinitionLink",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "inout",
+      "domain": "",
+      "description": "WWPNotification Definition Link"
+    },
+    {
+      "name": "WWPNotificationMetadata",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPNotification Metadata"
+    },
+    {
+      "name": "WWPUserExtendedId",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPUser Extended Id"
+    },
+    {
+      "name": "WWPNotificationDefinitionId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPNotification Definition Id"
+    },
+    {
+      "name": "WWPNotificationID",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPNotification Id"
+    },
+    {
+      "name": "Mail",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Mail"
+    },
+    {
+      "name": "WebNotification",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Web Notification"
+    },
+    {
+      "name": "SMS",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "SMS"
+    },
+    {
+      "name": "MailBody",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Mail Body"
+    },
+    {
+      "name": "WWP_Notification",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "WWP_Notification"
+    },
+    {
+      "name": "MailTemplate",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Mail Template"
+    },
+    {
+      "name": "IsDiscussionNotification",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "in",
+      "domain": "",
+      "description": "Is Discussion Notification"
+    },
+    {
+      "name": "Notification_BaseUrl",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Notification_Base Url"
+    },
+    {
+      "name": "Url",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Url"
+    },
+    {
+      "name": "WWPUserExtendedEmail",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPUser Extended Email"
+    },
+    {
+      "name": "WWPUserExtendedPhone",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPUser Extended Phone"
+    },
+    {
+      "name": "SmsAndMailUrl",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Sms And Mail Url"
+    },
+    {
+      "name": "TextParameter",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Text Parameter"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

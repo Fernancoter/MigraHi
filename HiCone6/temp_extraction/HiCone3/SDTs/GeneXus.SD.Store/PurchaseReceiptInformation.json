@@ -1,0 +1,91 @@
+{
+  "uniqueId": "b1152cfa-d7ec-4d71-a418-14f01fd26ad5",
+  "name": "PurchaseReceiptInformation",
+  "type": "SDT",
+  "module": "GeneXus.SD.Store",
+  "description": "Purchase Receipt Information",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Valid",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Valid"
+    },
+    {
+      "name": "Quantity",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Quantity"
+    },
+    {
+      "name": "ProductId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Product Id"
+    },
+    {
+      "name": "TransactionId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Transaction Id"
+    },
+    {
+      "name": "PurchaseDate",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Purchase Date"
+    },
+    {
+      "name": "OriginalTransactionId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Original Transaction Id"
+    },
+    {
+      "name": "OriginalPurchaseDate",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Original Purchase Date"
+    },
+    {
+      "name": "ApplicationItemsId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Application Items Id"
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "uniqueId": "adea6166-8fab-494c-b9b9-0d5e4d1a8955",
+  "name": "MillarReportado",
+  "type": "Procedure",
+  "module": "Calidad",
+  "description": "Millar Reportado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "        \n\t\u0026MillarReportado = 0\n\t\n\tfor each ReclamoDetalle\n\t\twhere ReclamoDetalleId \u003E 0\n\t\twhere ReclamoId = \u0026ReclamoId\n                \u0026CarreteMillar = ReclamoDetalleMillar\n\t\t\u0026MillarReportado \u002B= \u0026CarreteMillar\n\tendfor\n",
+      "cleanSource": "        \n\t\u0026MillarReportado = 0\n\t\n\tfor each ReclamoDetalle\n\t\twhere ReclamoDetalleId \u003E 0\n\t\twhere ReclamoId = \u0026ReclamoId\n                \u0026CarreteMillar = ReclamoDetalleMillar\n\t\t\u0026MillarReportado \u002B= \u0026CarreteMillar\n\tendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ReclamoId, out:\u0026MillarReportado);\n",
+      "cleanSource": "parm(in:\u0026ReclamoId, out:\u0026MillarReportado);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Calidad.ReclamoDetalle"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CarreteMillar",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Millar"
+    },
+    {
+      "name": "MillarReportado",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Millar Reportado"
+    },
+    {
+      "name": "ReclamoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Reclamo Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

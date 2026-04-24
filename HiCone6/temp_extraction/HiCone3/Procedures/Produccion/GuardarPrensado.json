@@ -1,0 +1,126 @@
+{
+  "uniqueId": "c4f2b3cd-0278-4df3-a3d6-af801746186e",
+  "name": "GuardarPrensado",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Guardar Prensado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\u0026Correcto = false\n\t\n\t\u0026PrensadoId = \u0026SDTPrensadoItem.PrensadoId\n\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\u0026Prensado.PrensadoFecha = \u0026SDTPrensadoItem.PrensadoFecha\n\t\n\t//Llaves foraneas\n\t\u0026Prensado.PrensadoPrensaId = \u0026SDTPrensadoItem.PrensadoPrensaId\n\t\u0026Prensado.PrensadoTurnoId = \u0026SDTPrensadoItem.PrensadoTurnoId    \n\t\u0026Prensado.PrensadoProductoId = \u0026SDTPrensadoItem.PrensadoProductoId\n\t\u0026Prensado.PrensadoOperadorId = \u0026SDTPrensadoItem.PrensadoOperadorId \n\t\u0026Prensado.PrensadoTroquelId = \u0026SDTPrensadoItem.PrensadoTroquelId\n\t\n\t//Estado y Progreso\n\t\u0026Prensado.PrensadoEstado = \u0026SDTPrensadoItem.PrensadoEstado\n\t\u0026Prensado.PrensadoHoraIniciaProceso = \u0026SDTPrensadoItem.PrensadoHoraIniciaProceso\n\t\u0026Prensado.PrensadoHoraFinProceso = \u0026SDTPrensadoItem.PrensadoHoraFinProceso\n\t\u0026Prensado.PrensadoMeta = \u0026SDTPrensadoItem.PrensadoMeta\n\t\u0026Prensado.PrensadoMotivoAnticipado = \u0026SDTPrensadoItem.PrensadoMotivoAnticipado\n\t\n\t//Levas\n\t\u0026Prensado.PrensadoLevasUnidadMedida = \u0026SDTPrensadoItem.PrensadoLevasUnidadMedida\n\t\u0026Prensado.PrensadoLevasKgEntrada = \u0026SDTPrensadoItem.PrensadoLevasKgEntrada\n\t\u0026Prensado.PrensadoLevasKgSalida = \u0026SDTPrensadoItem.PrensadoLevasKgSalida\n\t\u0026Prensado.PrensadoLevasGradosEntrada = \u0026SDTPrensadoItem.PrensadoLevasGradosEntrada\n\t\u0026Prensado.PrensadoLevasGradosSalida = \u0026SDTPrensadoItem.PrensadoLevasGradosSalida\n\t\n\t//Rodillos\n\t\u0026Prensado.PrensadoRodillosUnidadMedida = \u0026SDTPrensadoItem.PrensadoRodillosUnidadMedida\n\t\u0026Prensado.PrensadoRodillosKgEntrada = \u0026SDTPrensadoItem.PrensadoRodillosKgEntrada\n\t\u0026Prensado.PrensadoRodillosKgSalida = \u0026SDTPrensadoItem.PrensadoRodillosKgSalida\n\t\u0026Prensado.PrensadoRodillosGradosEntrada = \u0026SDTPrensadoItem.PrensadoRodillosGradosEntrada \n\t\u0026Prensado.PrensadoRodillosGradosSalida = \u0026SDTPrensadoItem.PrensadoRodillosGradosSalida\n\t\n\t\u0026Prensado.Save()\n\t\n\tif(\u0026Prensado.Success())\n\t\tcommit\n\t\t\u0026Correcto = true\n\tendif\n",
+      "cleanSource": "\t\u0026Correcto = false\n\t\n\t\u0026PrensadoId = \u0026SDTPrensadoItem.PrensadoId\n\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\u0026Prensado.PrensadoFecha = \u0026SDTPrensadoItem.PrensadoFecha\n\t\n\t//Llaves foraneas\n\t\u0026Prensado.PrensadoPrensaId = \u0026SDTPrensadoItem.PrensadoPrensaId\n\t\u0026Prensado.PrensadoTurnoId = \u0026SDTPrensadoItem.PrensadoTurnoId    \n\t\u0026Prensado.PrensadoProductoId = \u0026SDTPrensadoItem.PrensadoProductoId\n\t\u0026Prensado.PrensadoOperadorId = \u0026SDTPrensadoItem.PrensadoOperadorId \n\t\u0026Prensado.PrensadoTroquelId = \u0026SDTPrensadoItem.PrensadoTroquelId\n\t\n\t//Estado y Progreso\n\t\u0026Prensado.PrensadoEstado = \u0026SDTPrensadoItem.PrensadoEstado\n\t\u0026Prensado.PrensadoHoraIniciaProceso = \u0026SDTPrensadoItem.PrensadoHoraIniciaProceso\n\t\u0026Prensado.PrensadoHoraFinProceso = \u0026SDTPrensadoItem.PrensadoHoraFinProceso\n\t\u0026Prensado.PrensadoMeta = \u0026SDTPrensadoItem.PrensadoMeta\n\t\u0026Prensado.PrensadoMotivoAnticipado = \u0026SDTPrensadoItem.PrensadoMotivoAnticipado\n\t\n\t//Levas\n\t\u0026Prensado.PrensadoLevasUnidadMedida = \u0026SDTPrensadoItem.PrensadoLevasUnidadMedida\n\t\u0026Prensado.PrensadoLevasKgEntrada = \u0026SDTPrensadoItem.PrensadoLevasKgEntrada\n\t\u0026Prensado.PrensadoLevasKgSalida = \u0026SDTPrensadoItem.PrensadoLevasKgSalida\n\t\u0026Prensado.PrensadoLevasGradosEntrada = \u0026SDTPrensadoItem.PrensadoLevasGradosEntrada\n\t\u0026Prensado.PrensadoLevasGradosSalida = \u0026SDTPrensadoItem.PrensadoLevasGradosSalida\n\t\n\t//Rodillos\n\t\u0026Prensado.PrensadoRodillosUnidadMedida = \u0026SDTPrensadoItem.PrensadoRodillosUnidadMedida\n\t\u0026Prensado.PrensadoRodillosKgEntrada = \u0026SDTPrensadoItem.PrensadoRodillosKgEntrada\n\t\u0026Prensado.PrensadoRodillosKgSalida = \u0026SDTPrensadoItem.PrensadoRodillosKgSalida\n\t\u0026Prensado.PrensadoRodillosGradosEntrada = \u0026SDTPrensadoItem.PrensadoRodillosGradosEntrada \n\t\u0026Prensado.PrensadoRodillosGradosSalida = \u0026SDTPrensadoItem.PrensadoRodillosGradosSalida\n\t\n\t\u0026Prensado.Save()\n\t\n\tif(\u0026Prensado.Success())\n\t\tcommit\n\t\t\u0026Correcto = true\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026SDTPrensadoItem,out:\u0026Correcto);\n",
+      "cleanSource": "parm(in:\u0026SDTPrensadoItem,out:\u0026Correcto);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SDTPrensado",
+      "DB.Prensado"
+    ],
+    "calledBy": [
+      "SDInitPrensado"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Correcto",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Correcto"
+    },
+    {
+      "name": "Prensado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado"
+    },
+    {
+      "name": "SDTPrensadoItem",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "SDTPrensado Item"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

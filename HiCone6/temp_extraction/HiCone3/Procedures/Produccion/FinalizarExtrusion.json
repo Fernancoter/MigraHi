@@ -1,0 +1,171 @@
+{
+  "uniqueId": "62b7291a-261e-4a97-a631-ea957c0bebfb",
+  "name": "FinalizarExtrusion",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Finalizar Extrusion",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\n\t\u0026isOK = true\n\t\u0026EnMedicion = 0\n\t\u0026EnProceso = 0\n\t\u0026SDTBobinaPendiente.Clear()\n\t\n        For \u0026SDTBobinaItem in \u0026SDTBobina\n\t\t\n\t\t\u0026BobinaEstado = \u0026SDTBobinaItem.BobinaEstado\n\t\tDo Case\n\t\t\t\n\t\t\tCase \u0026BobinaEstado = EstadoBobina.EnMedicion\n\t\t\t\t\u0026EnMedicion \u002B= 1\n\t\t\t\t\n\t\t\tCase \u0026BobinaEstado = EstadoBobina.EnProceso\n\t\t\t        \u0026EnProceso \u002B= 1\n\t\t\t\t\u0026SDTBobinaPendiente.Add(\u0026SDTBobinaItem)\n\t\tEndCase\n        \t\n\tEndfor\n\n        if(\u0026EnMedicion = 0)\n\t\tif(\u0026EnProceso \u003E 0)\n\t\t\t\u0026ExtId = SgteTurnoExtrusora.Udp(\u0026ExtrusionId)\n\t\t\t\n\t\t\tif(\u0026ExtId \u003E 0)\n\t\t\t\tReasignarBobinaTurno.Call(\u0026ExtId, \u0026SDTBobinaPendiente)\n\t\t\t\tSetEstadoExtrusion.Call(\u0026ExtId, EstadoExtrusion.EnProceso)\n\t\t\telse\n\t\t\t\t\u0026isOK = false\n\t\t\t\tmsg(\u0027No se ha podido encontrar el sgte turno\u0027)\n\t\t\tendif\t\n\t\tendif\n        else\n\t\t\u0026isOK = false\n\t\tmsg(\u0027Debe validar las bobinas que se encuentran En Medici\u00F3n\u0027)\n\tendif\n",
+      "cleanSource": "\t\n\t\u0026isOK = true\n\t\u0026EnMedicion = 0\n\t\u0026EnProceso = 0\n\t\u0026SDTBobinaPendiente.Clear()\n\t\n        For \u0026SDTBobinaItem in \u0026SDTBobina\n\t\t\n\t\t\u0026BobinaEstado = \u0026SDTBobinaItem.BobinaEstado\n\t\tDo Case\n\t\t\t\n\t\t\tCase \u0026BobinaEstado = EstadoBobina.EnMedicion\n\t\t\t\t\u0026EnMedicion \u002B= 1\n\t\t\t\t\n\t\t\tCase \u0026BobinaEstado = EstadoBobina.EnProceso\n\t\t\t        \u0026EnProceso \u002B= 1\n\t\t\t\t\u0026SDTBobinaPendiente.Add(\u0026SDTBobinaItem)\n\t\tEndCase\n        \t\n\tEndfor\n\n        if(\u0026EnMedicion = 0)\n\t\tif(\u0026EnProceso \u003E 0)\n\t\t\t\u0026ExtId = SgteTurnoExtrusora.Udp(\u0026ExtrusionId)\n\t\t\t\n\t\t\tif(\u0026ExtId \u003E 0)\n\t\t\t\tReasignarBobinaTurno.Call(\u0026ExtId, \u0026SDTBobinaPendiente)\n\t\t\t\tSetEstadoExtrusion.Call(\u0026ExtId, EstadoExtrusion.EnProceso)\n\t\t\telse\n\t\t\t\t\u0026isOK = false\n\t\t\t\tmsg(\u0027No se ha podido encontrar el sgte turno\u0027)\n\t\t\tendif\t\n\t\tendif\n        else\n\t\t\u0026isOK = false\n\t\tmsg(\u0027Debe validar las bobinas que se encuentran En Medici\u00F3n\u0027)\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ExtrusionId, in:\u0026SDTBobina, out:\u0026isOK);\n",
+      "cleanSource": "parm(in:\u0026ExtrusionId, in:\u0026SDTBobina, out:\u0026isOK);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.ReasignarBobinaTurno",
+      "Produccion.SgteTurnoExtrusora",
+      "Produccion.SetEstadoExtrusion",
+      "Produccion.SDTBobina",
+      "ReasignarBobinaTurno",
+      "SetEstadoExtrusion",
+      "SgteTurnoExtrusora"
+    ],
+    "calledBy": [
+      "ExtrusionDelDiaBobinas"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "BobinaEstado",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Estado"
+    },
+    {
+      "name": "ExtId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Ext Id"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "EnMedicion",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "En Medicion"
+    },
+    {
+      "name": "EnProceso",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "En Proceso"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "SDTBobina",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "SDTBobina"
+    },
+    {
+      "name": "SDTBobinaItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTBobina Item"
+    },
+    {
+      "name": "SDTBobinaPendiente",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTBobina Pendiente"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

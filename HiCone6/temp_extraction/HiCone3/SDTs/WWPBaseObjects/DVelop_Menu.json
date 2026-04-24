@@ -1,0 +1,120 @@
+{
+  "uniqueId": "d2106f07-871c-4087-81b8-2508bbd465f4",
+  "name": "DVelop_Menu",
+  "type": "SDT",
+  "module": "WWPBaseObjects",
+  "description": "DVelop Menu",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.DVelop_Menu"
+    ],
+    "calledBy": [
+      "GetMenuAuthorizedOptionsRecursive",
+      "IsMenuAuthorizedOption",
+      "MenuByModule",
+      "GetMenuAuthorizedOptions",
+      "DVelop_Menu",
+      "GetBookmarkFontIcon",
+      "LoadBreadcrumb",
+      "SetDefaultModule",
+      "WWP_SearchMenuOptions",
+      "WWP_GetSearchWCData"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "id",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "id"
+    },
+    {
+      "name": "tooltip",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "tooltip"
+    },
+    {
+      "name": "link",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "link"
+    },
+    {
+      "name": "linkTarget",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "link Target"
+    },
+    {
+      "name": "iconClass",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "icon Class"
+    },
+    {
+      "name": "caption",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "caption"
+    },
+    {
+      "name": "authorizationKey",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Authorization Key"
+    },
+    {
+      "name": "additionalData",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "additional Data"
+    },
+    {
+      "name": "submenuImage",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "submenu Image"
+    },
+    {
+      "name": "subItems",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "sub Items"
+    }
+  ]
+}

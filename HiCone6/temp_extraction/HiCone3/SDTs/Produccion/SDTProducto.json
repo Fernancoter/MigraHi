@@ -1,0 +1,128 @@
+{
+  "uniqueId": "c9292018-0ea1-427f-90c5-c58256ccf5ad",
+  "name": "SDTProducto",
+  "type": "SDT",
+  "module": "Produccion",
+  "description": "SDTProducto",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "GuardarProducto",
+      "SDProductoInsumo",
+      "SDProductoItem",
+      "gestionarProducto"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ProductoId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "ProductoClave",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Clave"
+    },
+    {
+      "name": "ProductoNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Nombre"
+    },
+    {
+      "name": "ProductoDescripcion",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Descripcion"
+    },
+    {
+      "name": "ProductoCategoriaId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Categoria Id"
+    },
+    {
+      "name": "ProductoCategoriaNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Categoria Nombre"
+    },
+    {
+      "name": "ProductoPrecioUnitario",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Precio Unitario"
+    },
+    {
+      "name": "ProductoInventarioActual",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Inventario Actual"
+    },
+    {
+      "name": "ProductoActivo",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Activo"
+    },
+    {
+      "name": "ProductoClaveExterna",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Clave Externa"
+    },
+    {
+      "name": "ProductoImagen",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Imagen"
+    },
+    {
+      "name": "ProductoTipoMaterial",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Tipo Material"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "uniqueId": "5843efb0-4554-4af2-aae5-82c4b8e75f97",
+  "name": "SDTExistenciaSilo",
+  "type": "SDT",
+  "module": "Existencia",
+  "description": "SDTExistencia Silo",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "GuardarExistenciaSilo",
+      "ObtenerExistenciaSilo"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ExistenciaSiloId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Existencia Silo Id"
+    },
+    {
+      "name": "SiloId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Silo Id"
+    },
+    {
+      "name": "SiloNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Silo Nombre"
+    },
+    {
+      "name": "SiloTipoMaterial",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Tipo Material"
+    },
+    {
+      "name": "SiloEstadoMaterial",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Estado Material"
+    },
+    {
+      "name": "ExistenciaId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Existencia Id"
+    },
+    {
+      "name": "ExistenciaSiloCantidad",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Existencia Silo Cantidad"
+    },
+    {
+      "name": "ExistenciaSiloVirgenLote",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Existencia Silo Virgen Lote"
+    }
+  ]
+}

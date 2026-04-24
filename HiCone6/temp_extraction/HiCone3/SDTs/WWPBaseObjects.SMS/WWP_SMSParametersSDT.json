@@ -1,0 +1,73 @@
+{
+  "uniqueId": "6af22cc0-2302-4acd-85fc-dc6aa244de42",
+  "name": "WWP_SMSParametersSDT",
+  "type": "SDT",
+  "module": "WWPBaseObjects.SMS",
+  "description": "SMS Parameters SDT",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "WWP_GetSMSParameters",
+      "WWP_ValidateVerificationCode",
+      "WWP_SendSMS",
+      "WWP_SendVerificationCode",
+      "WWP_SendPendingNotifications"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ServicePlanId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Service Plan Id"
+    },
+    {
+      "name": "Token",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Token"
+    },
+    {
+      "name": "ApplicationKey",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Application Key"
+    },
+    {
+      "name": "ApplicationSecret",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Application Secret"
+    },
+    {
+      "name": "DefaultSender",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Default Sender"
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "uniqueId": "b090961c-55be-4f93-afbe-654d0fff8f7d",
+  "name": "GxOnPendingEventFailed",
+  "type": "Procedure",
+  "module": "",
+  "description": "Gx On Pending Event Failed",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026Continue = true\n",
+      "cleanSource": "\u0026Continue = true"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in: \u0026PendingEvent, in: \u0026BCName, in: \u0026BCJson, in: \u0026EventResult, in:\u0026GxSyncroInfo, out: \u0026Continue);\n",
+      "cleanSource": "parm(in: \u0026PendingEvent, in: \u0026BCName, in: \u0026BCJson, in: \u0026EventResult, in:\u0026GxSyncroInfo, out: \u0026Continue);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "GeneXus.SD.Synchronization.SynchronizationInfo",
+      "GeneXus.SD.Synchronization.SynchronizationEventList",
+      "GeneXus.SD.Synchronization.SynchronizationEventResultList"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "PendingEvent",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "Pending Event"
+    },
+    {
+      "name": "BCName",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "BCName"
+    },
+    {
+      "name": "BCJson",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "BCJson"
+    },
+    {
+      "name": "Continue",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Continue"
+    },
+    {
+      "name": "EventResult",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "Event Result"
+    },
+    {
+      "name": "GxSyncroInfo",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "Gx Syncro Info"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

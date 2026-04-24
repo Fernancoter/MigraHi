@@ -1,0 +1,128 @@
+{
+  "uniqueId": "61660332-7579-4429-9694-efdb30f712d6",
+  "name": "ObtenerConfiguracion",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Obtener Configuracion",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "FOR EACH DB.Configuracion\n\tWHERE ConfiguracionKey = \u0026ConfiguracionKey\n\t\u0026ConfiguracionValor = ConfiguracionValor\n\tEXIT\nWHEN NONE\n\tnew \n\t\tConfiguracionKey = \u0026ConfiguracionKey\n\t\tConfiguracionValor = \u0027\u0027\n\tendnew\n\tcommit\nENDFOR\n",
+      "cleanSource": "FOR EACH DB.Configuracion\n\tWHERE ConfiguracionKey = \u0026ConfiguracionKey\n\t\u0026ConfiguracionValor = ConfiguracionValor\n\tEXIT\nWHEN NONE\n\tnew \n\t\tConfiguracionKey = \u0026ConfiguracionKey\n\t\tConfiguracionValor = \u0027\u0027\n\tendnew\n\tcommit\nENDFOR"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "PARM(IN:\u0026ConfiguracionKey, OUT:\u0026ConfiguracionValor);\n",
+      "cleanSource": "PARM(IN:\u0026ConfiguracionKey, OUT:\u0026ConfiguracionValor);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Configuracion"
+    ],
+    "calledBy": [
+      "gestionarTroquel",
+      "GenerarPaletNo",
+      "wpImportarPermisosPorRol",
+      "gestionarPrensaProducto",
+      "NotificarImpresion",
+      "EmbarqueFormato",
+      "UnitPlan",
+      "ITWOutlook",
+      "NotificarSupervisor",
+      "gestionarExtrusoraProducto",
+      "wpExistenciaMain",
+      "GAMUserRoleSelect"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ConfiguracionKey",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Configuracion Key"
+    },
+    {
+      "name": "ConfiguracionValor",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "Configuracion Valor"
+    },
+    {
+      "name": "Configuracion",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Configuracion"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

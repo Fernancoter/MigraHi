@@ -1,0 +1,140 @@
+{
+  "uniqueId": "96963665-0b3d-4ba7-93bd-c6851a80381e",
+  "name": "WWP_UserUpdateSubscription",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.Subscriptions",
+  "description": "User Update Subscription",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "If \u0026Subscribe\n\t\u0026WWPSubscription.Load(\u0026WWPSubscriptionId)\n\tIf \u0026WWPSubscription.Success()\n\t\t\u0026WWPSubscription.Delete()\n\t\t\u0026WWPSubscriptionId = 0\n\tElse\n\t\t\u0026WWPSubscription = new()\n\t\t\u0026WWPSubscription.WWPNotificationDefinitionId = \u0026WWPNotificationDefinitionId\n\t\t\u0026WWPSubscription.WWPSubscriptionEntityRecordId = \u0026WWPSubscriptionEntityRecordId\n\t\t\u0026WWPSubscription.DB.WWPSubscriptionEntityRecordDescription = \u0026WWPSubscriptionEntityRecordDescription\n\t\t\u0026WWPSubscription.WWPSubscriptionSubscribed = True\n\t\t\u0026WWPSubscription.WWPUserExtendedId = WWP_GetLoggedUserId()\n\t\t\u0026WWPSubscription.Save()\n\t\t\u0026WWPSubscriptionId = \u0026WWPSubscription.WWPSubscriptionId\n\tEndIf\n\t\nElse\n\tIf \u0026WWPSubscriptionID = 0\n\t\tDo \u0027CreateSubscriptionNotSubscribed\u0027\n\tElse\n\t\t\u0026WWPSubscription.Load(\u0026WWPSubscriptionId)\n\t\tIf \u0026WWPSubscription.WWPUserExtendedId = WWPBaseObjects.WWP_GetLoggedUserId()\n\t\t\t\u0026WWPSubscription.Delete()\n\t\tElse\n\t\t\tDo \u0027CreateSubscriptionNotSubscribed\u0027\n\t\tEndIf\t\n\tEndIf\nEndIf\nIf \u0026WWPSubscription.Success()\n\tCommit\nEndif\n\nSub \u0027CreateSubscriptionNotSubscribed\u0027\n\t\u0026WWPSubscription = new()\n\t\u0026WWPSubscription.WWPNotificationDefinitionId = \u0026WWPNotificationDefinitionId\n\t\u0026WWPSubscription.WWPSubscriptionEntityRecordId = \u0026WWPSubscriptionEntityRecordId\n\t\u0026WWPSubscription.WWPSubscriptionEntityRecordDescription = \u0026WWPSubscriptionEntityRecordDescription\n\t\u0026WWPSubscription.WWPSubscriptionSubscribed = False\n\t\u0026WWPSubscription.WWPUserExtendedId = WWP_GetLoggedUserId()\n\t\u0026WWPSubscription.Save()\n\t\u0026WWPSubscriptionId = \u0026WWPSubscription.WWPSubscriptionId\nEndSub\n\n",
+      "cleanSource": "If \u0026Subscribe\n\t\u0026WWPSubscription.Load(\u0026WWPSubscriptionId)\n\tIf \u0026WWPSubscription.Success()\n\t\t\u0026WWPSubscription.Delete()\n\t\t\u0026WWPSubscriptionId = 0\n\tElse\n\t\t\u0026WWPSubscription = new()\n\t\t\u0026WWPSubscription.WWPNotificationDefinitionId = \u0026WWPNotificationDefinitionId\n\t\t\u0026WWPSubscription.WWPSubscriptionEntityRecordId = \u0026WWPSubscriptionEntityRecordId\n\t\t\u0026WWPSubscription.DB.WWPSubscriptionEntityRecordDescription = \u0026WWPSubscriptionEntityRecordDescription\n\t\t\u0026WWPSubscription.WWPSubscriptionSubscribed = True\n\t\t\u0026WWPSubscription.WWPUserExtendedId = WWP_GetLoggedUserId()\n\t\t\u0026WWPSubscription.Save()\n\t\t\u0026WWPSubscriptionId = \u0026WWPSubscription.WWPSubscriptionId\n\tEndIf\n\t\nElse\n\tIf \u0026WWPSubscriptionID = 0\n\t\tDo \u0027CreateSubscriptionNotSubscribed\u0027\n\tElse\n\t\t\u0026WWPSubscription.Load(\u0026WWPSubscriptionId)\n\t\tIf \u0026WWPSubscription.WWPUserExtendedId = WWPBaseObjects.WWP_GetLoggedUserId()\n\t\t\t\u0026WWPSubscription.Delete()\n\t\tElse\n\t\t\tDo \u0027CreateSubscriptionNotSubscribed\u0027\n\t\tEndIf\t\n\tEndIf\nEndIf\nIf \u0026WWPSubscription.Success()\n\tCommit\nEndif\n\nSub \u0027CreateSubscriptionNotSubscribed\u0027\n\t\u0026WWPSubscription = new()\n\t\u0026WWPSubscription.WWPNotificationDefinitionId = \u0026WWPNotificationDefinitionId\n\t\u0026WWPSubscription.WWPSubscriptionEntityRecordId = \u0026WWPSubscriptionEntityRecordId\n\t\u0026WWPSubscription.WWPSubscriptionEntityRecordDescription = \u0026WWPSubscriptionEntityRecordDescription\n\t\u0026WWPSubscription.WWPSubscriptionSubscribed = False\n\t\u0026WWPSubscription.WWPUserExtendedId = WWP_GetLoggedUserId()\n\t\u0026WWPSubscription.Save()\n\t\u0026WWPSubscriptionId = \u0026WWPSubscription.WWPSubscriptionId\nEndSub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026Subscribe,inout:\u0026WWPSubscriptionId, in:\u0026WWPNotificationDefinitionId, in:\u0026WWPSubscriptionEntityRecordId, in:\u0026WWPSubscriptionEntityRecordDescription);\n",
+      "cleanSource": "parm(in:\u0026Subscribe,inout:\u0026WWPSubscriptionId, in:\u0026WWPNotificationDefinitionId, in:\u0026WWPSubscriptionEntityRecordId, in:\u0026WWPSubscriptionEntityRecordDescription);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_GetLoggedUserId",
+      "WWPBaseObjects.Subscriptions.WWP_Subscription"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "WWPSubscriptionId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "inout",
+      "domain": "",
+      "description": "WWPSubscription Id"
+    },
+    {
+      "name": "WWPNotificationDefinitionId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPNotification Definition Id"
+    },
+    {
+      "name": "WWPSubscriptionEntityRecordId",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPSubscription Entity Record Id"
+    },
+    {
+      "name": "WWPSubscriptionEntityRecordDescription",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPSubscription Entity Record Description"
+    },
+    {
+      "name": "Subscribe",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "in",
+      "domain": "",
+      "description": "Subscribe"
+    },
+    {
+      "name": "WWPSubscription",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPSubscription"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

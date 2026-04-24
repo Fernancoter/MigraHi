@@ -1,0 +1,235 @@
+{
+  "uniqueId": "6902ae80-ab21-481a-9fa5-0217340b0b0e",
+  "name": "InicializarEmbarque",
+  "type": "Procedure",
+  "module": "Embarques",
+  "description": "Inicializar Embarque",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\u0026EmbarqueId = BuscarEmbarqueRemission.Udp(\u0026OrderDoc,\u0026RemissionDoc)\n\ndo \u0027ObtenerFechaPedidoSAE\u0027\n\nif(\u0026EmbarqueId = 0)\n\t\t\n\t\u0026Embarque.Load(\u0026EmbarqueId)\n\t\u0026EmbarqueFecha = ObtenerFechaRemisionDesdeSAE.Udp(\u0026RemissionDoc)\n\tObtenerDatosRemisionDesdeSAE.Call(\u0026RemissionDoc,\u0026CustomerName, \u0026OrderShipping, \u0026ConsolidatedName, \u0026CustomerShipping)\n\t\u0026Embarque.Load(\u0026EmbarqueId)\n\t\u0026Embarque.EmbarqueOrderDoc = \u0026OrderDoc.Trim()\n\t\u0026Embarque.EmbarqueRemissionDoc = \u0026RemissionDoc.Trim()\n\t\u0026Embarque.EmbarqueFecha = \u0026EmbarqueFecha\n\t\u0026Embarque.EmbarqueEstatus = Estatusembarque.PorProgramar\n\t\u0026Embarque.EmbarqueCliente = \u0026CustomerName\n\t\u0026Embarque.EmbarqueClienteGrupo = \u0026ConsolidatedName\n\t\u0026Embarque.EmbarqueClienteEnvia = \u0026CustomerShipping\n\t\u0026Embarque.EmbarqueDestino = \u0026OrderShipping\n\t\u0026Embarque.EmbarqueHoraInicio = now()\n\t\u0026Embarque.EmbarqueOrderDate = \u0026OrderDate\n\t\u0026Embarque.EmbarqueOrderDeliveryDate = \u0026OrderDeliveryDate\n\t\u0026Embarque.EmbarqueObservaciones.SetEmpty()\n\n\t\u0026Embarque.Save()\n\t\u0026CantidadProductos = 0\n\t\n\tfor each DB.Remission\n\t\tWhere DB.RemissionDoc = \u0026RemissionDoc\n\t\t\n\t\t\u0026CantidadProductos = \u0026CantidadProductos \u002B1\n\t\t\u0026EmbarqueDetalle = new()\n\t\t\u0026EmbarqueDetalle.WWPBaseObjects.EmbarqueDetalleCantidadPallets = Informes.TotalPalletPorProductNumber.udp(ProductNumber,RemissionQuantity)\n\t\t\u0026EmbarqueDetalle.EmbarqueDetalleProducto = ProductNumber\n\t\t\u0026EmbarqueDetalle.EmbarqueDetalleConfirmadoPorAdministracion = False\n\t\t\u0026TerminadoProductoNombre = ProductNumber.ToString().Trim()\n\t\t\n\t\tdo \u0027BuscarProductoEnPallet\u0027\n\t\t\n\t\tif(\u0026EmbarqueProductoId=0)\n\t\t\t\u0026EmbarqueDetalle.EmbarqueProductoId.SetNull()\n\t\telse\n\t\t\t\u0026EmbarqueDetalle.EmbarqueProductoId = \u0026EmbarqueProductoId\n\t\tendif\n\t\t\n\t\t\u0026EmbarqueDetalle.EmbarqueId = \u0026Embarque.EmbarqueId\n\t\t\n\t\t\u0026EmbarqueDetalle.Save()\n\t\t\n\tendfor\n\t\n\t\u0026Embarque.EmbarqueNoProductos = \u0026CantidadProductos\n\t\n\tif(\u0026Embarque.Success())\n\t\tcommit\n\t\t\n\t\t\u0026Embarque.Load(\u0026Embarque.EmbarqueId)\n\t\t\u0026Embarque.Check() //Calcular formulas\n\t\t\u0026Embarque.Save()\n\t\tcommit\n\t\t\n\t\tEmbarqueWP.Call(\u0026Embarque.EmbarqueId)\n\telse\n\t\tmsg(\u0026Embarque.GetMessages().ToJson())\n\tendif\n\t\nelse\n\tdo \u0027NotificarCambioFecha\u0027\nendif\n\n\nsub \u0027BuscarProductoEnPallet\u0027\n\t\u0026EmbarqueProductoId = 0\n\tfor each DB.ProductoTerminado\n\t\twhere TerminadoProductoNombre = \u0026TerminadoProductoNombre\n\t\t\n\t\t\u0026EmbarqueProductoId = TerminadoProductoId\n\t\texit\n\tendfor\nendsub\n\n\nSub \u0027ObtenerFechaPedidoSAE\u0027\n\t\n\tfor each DB.Order\n\t\twhere OrderDoc.Trim() = \u0026OrderDoc.Trim()\n\t\t\u0026OrderDate = OrderDate\n\t\t\u0026OrderDeliveryDate = OrderDeliveryDate\n\t\tExit\n\tendfor\nEndSub\n\nSub \u0027NotificarCambioFecha\u0027\n\t\n\t\u0026Embarque.Load(\u0026EmbarqueId)\n        \n        if(\u0026Embarque.EmbarqueEstatus in (EstatusEmbarque.PorProgramar, EstatusEmbarque.Programado))\n\t\t\n\t\t\u0026DeliveryDate.SetEmpty()\n\t\t\u0026DeliveryDate = \u0026Embarque.EmbarqueOrderDeliveryDate\n\t\t\n\t\tif(Not \u0026DeliveryDate.IsEmpty())\n\t\t\t\n\t                //Cambio de Fechas\n\t\t\tif(\u0026DeliveryDate \u003C\u003E \u0026OrderDeliveryDate)\n\t\t\t\t\n\t\t\t\t\u0026Embarque.EmbarqueOrderDate = \u0026OrderDate\n\t\t\t\t\u0026Embarque.EmbarqueOrderDeliveryDate = \u0026OrderDeliveryDate\n\t\t\t\t\u0026Embarque.Save()\n\t\t\t\t\n\t\t\t\tif(\u0026Embarque.Success())\n\t\t\t\t\tcommit\n\t\t\t\t\t\n\t\t\t\t\t//Enviar notificaci\u00F3n\n\t\t\t\t\tWWP_SendNotification(!\u0027CambioFechaEstimada\u0027, !\u0022Embarque\u0022, \u0027\u0027, \u0022fas fa-info\u0022, \u0022Cambio Fecha de Embarque\u0022, \u0026Embarque.EmbarqueCodigo.ToString(), \u0022El embarque \u0022 \u002B \u0026Embarque.EmbarqueCodigo.ToString() \u002B \u0022 ha cambiado su fecha estimada de entrega\u0022, \u0027\u0027, \u0027\u0027, \u0027\u0027, true)\n\t\t\t\tendif\n\t\t\tendif\n\t\tendif\n\tendif\n\nEndSub\n",
+      "cleanSource": "\n\u0026EmbarqueId = BuscarEmbarqueRemission.Udp(\u0026OrderDoc,\u0026RemissionDoc)\n\ndo \u0027ObtenerFechaPedidoSAE\u0027\n\nif(\u0026EmbarqueId = 0)\n\t\t\n\t\u0026Embarque.Load(\u0026EmbarqueId)\n\t\u0026EmbarqueFecha = ObtenerFechaRemisionDesdeSAE.Udp(\u0026RemissionDoc)\n\tObtenerDatosRemisionDesdeSAE.Call(\u0026RemissionDoc,\u0026CustomerName, \u0026OrderShipping, \u0026ConsolidatedName, \u0026CustomerShipping)\n\t\u0026Embarque.Load(\u0026EmbarqueId)\n\t\u0026Embarque.EmbarqueOrderDoc = \u0026OrderDoc.Trim()\n\t\u0026Embarque.EmbarqueRemissionDoc = \u0026RemissionDoc.Trim()\n\t\u0026Embarque.EmbarqueFecha = \u0026EmbarqueFecha\n\t\u0026Embarque.EmbarqueEstatus = Estatusembarque.PorProgramar\n\t\u0026Embarque.EmbarqueCliente = \u0026CustomerName\n\t\u0026Embarque.EmbarqueClienteGrupo = \u0026ConsolidatedName\n\t\u0026Embarque.EmbarqueClienteEnvia = \u0026CustomerShipping\n\t\u0026Embarque.EmbarqueDestino = \u0026OrderShipping\n\t\u0026Embarque.EmbarqueHoraInicio = now()\n\t\u0026Embarque.EmbarqueOrderDate = \u0026OrderDate\n\t\u0026Embarque.EmbarqueOrderDeliveryDate = \u0026OrderDeliveryDate\n\t\u0026Embarque.EmbarqueObservaciones.SetEmpty()\n\n\t\u0026Embarque.Save()\n\t\u0026CantidadProductos = 0\n\t\n\tfor each DB.Remission\n\t\tWhere DB.RemissionDoc = \u0026RemissionDoc\n\t\t\n\t\t\u0026CantidadProductos = \u0026CantidadProductos \u002B1\n\t\t\u0026EmbarqueDetalle = new()\n\t\t\u0026EmbarqueDetalle.WWPBaseObjects.EmbarqueDetalleCantidadPallets = Informes.TotalPalletPorProductNumber.udp(ProductNumber,RemissionQuantity)\n\t\t\u0026EmbarqueDetalle.EmbarqueDetalleProducto = ProductNumber\n\t\t\u0026EmbarqueDetalle.EmbarqueDetalleConfirmadoPorAdministracion = False\n\t\t\u0026TerminadoProductoNombre = ProductNumber.ToString().Trim()\n\t\t\n\t\tdo \u0027BuscarProductoEnPallet\u0027\n\t\t\n\t\tif(\u0026EmbarqueProductoId=0)\n\t\t\t\u0026EmbarqueDetalle.EmbarqueProductoId.SetNull()\n\t\telse\n\t\t\t\u0026EmbarqueDetalle.EmbarqueProductoId = \u0026EmbarqueProductoId\n\t\tendif\n\t\t\n\t\t\u0026EmbarqueDetalle.EmbarqueId = \u0026Embarque.EmbarqueId\n\t\t\n\t\t\u0026EmbarqueDetalle.Save()\n\t\t\n\tendfor\n\t\n\t\u0026Embarque.EmbarqueNoProductos = \u0026CantidadProductos\n\t\n\tif(\u0026Embarque.Success())\n\t\tcommit\n\t\t\n\t\t\u0026Embarque.Load(\u0026Embarque.EmbarqueId)\n\t\t\u0026Embarque.Check() //Calcular formulas\n\t\t\u0026Embarque.Save()\n\t\tcommit\n\t\t\n\t\tEmbarqueWP.Call(\u0026Embarque.EmbarqueId)\n\telse\n\t\tmsg(\u0026Embarque.GetMessages().ToJson())\n\tendif\n\t\nelse\n\tdo \u0027NotificarCambioFecha\u0027\nendif\n\n\nsub \u0027BuscarProductoEnPallet\u0027\n\t\u0026EmbarqueProductoId = 0\n\tfor each DB.ProductoTerminado\n\t\twhere TerminadoProductoNombre = \u0026TerminadoProductoNombre\n\t\t\n\t\t\u0026EmbarqueProductoId = TerminadoProductoId\n\t\texit\n\tendfor\nendsub\n\n\nSub \u0027ObtenerFechaPedidoSAE\u0027\n\t\n\tfor each DB.Order\n\t\twhere OrderDoc.Trim() = \u0026OrderDoc.Trim()\n\t\t\u0026OrderDate = OrderDate\n\t\t\u0026OrderDeliveryDate = OrderDeliveryDate\n\t\tExit\n\tendfor\nEndSub\n\nSub \u0027NotificarCambioFecha\u0027\n\t\n\t\u0026Embarque.Load(\u0026EmbarqueId)\n        \n        if(\u0026Embarque.EmbarqueEstatus in (EstatusEmbarque.PorProgramar, EstatusEmbarque.Programado))\n\t\t\n\t\t\u0026DeliveryDate.SetEmpty()\n\t\t\u0026DeliveryDate = \u0026Embarque.EmbarqueOrderDeliveryDate\n\t\t\n\t\tif(Not \u0026DeliveryDate.IsEmpty())\n\t\t\t\n\t                //Cambio de Fechas\n\t\t\tif(\u0026DeliveryDate \u003C\u003E \u0026OrderDeliveryDate)\n\t\t\t\t\n\t\t\t\t\u0026Embarque.EmbarqueOrderDate = \u0026OrderDate\n\t\t\t\t\u0026Embarque.EmbarqueOrderDeliveryDate = \u0026OrderDeliveryDate\n\t\t\t\t\u0026Embarque.Save()\n\t\t\t\t\n\t\t\t\tif(\u0026Embarque.Success())\n\t\t\t\t\tcommit\n\t\t\t\t\t\n\t\t\t\t\t//Enviar notificaci\u00F3n\n\t\t\t\t\tWWP_SendNotification(!\u0027CambioFechaEstimada\u0027, !\u0022Embarque\u0022, \u0027\u0027, \u0022fas fa-info\u0022, \u0022Cambio Fecha de Embarque\u0022, \u0026Embarque.EmbarqueCodigo.ToString(), \u0022El embarque \u0022 \u002B \u0026Embarque.EmbarqueCodigo.ToString() \u002B \u0022 ha cambiado su fecha estimada de entrega\u0022, \u0027\u0027, \u0027\u0027, \u0027\u0027, true)\n\t\t\t\tendif\n\t\t\tendif\n\t\tendif\n\tendif\n\nEndSub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026OrderDoc, in:\u0026RemissionDoc);\n",
+      "cleanSource": "parm(in:\u0026OrderDoc, in:\u0026RemissionDoc);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.Notifications.Common.WWP_SendNotification",
+      "Informes.TotalPalletPorProductNumber",
+      "Embarques.ObtenerFechaRemisionDesdeSAE",
+      "Embarques.BuscarEmbarqueRemission",
+      "Embarques.ObtenerDatosRemisionDesdeSAE",
+      "DB.Order",
+      "DB.Remission",
+      "DB.ProductoTerminado",
+      "DB.Embarque",
+      "DB.EmbarqueDetalle",
+      "Embarques.EmbarqueWP",
+      "ObtenerDatosRemisionDesdeSAE",
+      "EmbarqueWP",
+      "BuscarEmbarqueRemission",
+      "ObtenerFechaRemisionDesdeSAE"
+    ],
+    "calledBy": [
+      "NotificarFechaEmbarque"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "EmbarqueFecha",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Fecha de Embarque"
+    },
+    {
+      "name": "EmbarqueId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Embarque Id"
+    },
+    {
+      "name": "EmbarqueProductoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Embarque Producto Id"
+    },
+    {
+      "name": "CantidadProductos",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Cantidad Productos"
+    },
+    {
+      "name": "CustomerName",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Cliente"
+    },
+    {
+      "name": "Embarque",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Embarque"
+    },
+    {
+      "name": "EmbarqueDetalle",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Embarque Detalle"
+    },
+    {
+      "name": "OrderDate",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Fecha de Elaboraci\u00F3n"
+    },
+    {
+      "name": "OrderDeliveryDate",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Fecha de Entrega"
+    },
+    {
+      "name": "OrderDoc",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Order Doc"
+    },
+    {
+      "name": "OrderShipping",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Env\u00EDo"
+    },
+    {
+      "name": "RemissionDoc",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Remission Doc"
+    },
+    {
+      "name": "TerminadoProductoNombre",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Terminado Producto Nombre"
+    },
+    {
+      "name": "ConsolidatedName",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Grupo"
+    },
+    {
+      "name": "CustomerShipping",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Envi\u00F3"
+    },
+    {
+      "name": "DeliveryDate",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Delivery Date"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

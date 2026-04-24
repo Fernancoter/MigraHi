@@ -1,0 +1,121 @@
+{
+  "uniqueId": "1ecbe2ef-3b1c-4a10-9378-e330916fd018",
+  "name": "SetNotSuccessMessagesLog",
+  "type": "Procedure",
+  "module": "Web",
+  "description": "Set Not Success Messages Log",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "for \u0026itemMsg in \u0026Messages\n\tmsg(\u0026itemMsg.Description)\n\tdebugger.Call(niveldebug.Informativo, \u0026varPgmname, \u0026itemMsg.Description)\nendfor\t\n",
+      "cleanSource": "for \u0026itemMsg in \u0026Messages\n\tmsg(\u0026itemMsg.Description)\n\tdebugger.Call(niveldebug.Informativo, \u0026varPgmname, \u0026itemMsg.Description)\nendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026Messages, in:\u0026varPgmname);\n",
+      "cleanSource": "parm(in:\u0026Messages, in:\u0026varPgmname);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Web.Debugger",
+      "GeneXus.Common.Messages",
+      "debugger"
+    ],
+    "calledBy": [
+      "HabilitarOperador",
+      "CrearExtrusion",
+      "DeshabilitarOperador"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "itemMsg",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "item Msg"
+    },
+    {
+      "name": "Messages",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "Messages"
+    },
+    {
+      "name": "varPgmname",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "var Pgmname"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

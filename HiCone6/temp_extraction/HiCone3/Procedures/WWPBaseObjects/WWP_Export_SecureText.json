@@ -1,0 +1,171 @@
+{
+  "uniqueId": "1a449917-57b7-41c8-aa2a-782128cb4887",
+  "name": "WWP_Export_SecureText",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "WWP_Export_Secure Text",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\u0026SecureText = \u0026Text\nIf \u0026SecureText.Length() \u003E 0 AND (\u0026SecureText.StartsWith(!\u0027=\u0027) OR \u0026SecureText.StartsWith(!\u0027\u002B\u0027) OR \u0026SecureText.StartsWith(!\u0027-\u0027) OR \u0026SecureText.StartsWith(!\u0027@\u0027))\n\t\u0026SecureText = !\u0022\u0027\u0022 \u002B \u0026SecureText\nEndIf\n",
+      "cleanSource": "\n\u0026SecureText = \u0026Text\nIf \u0026SecureText.Length() \u003E 0 AND (\u0026SecureText.StartsWith(!\u0027=\u0027) OR \u0026SecureText.StartsWith(!\u0027\u002B\u0027) OR \u0026SecureText.StartsWith(!\u0027-\u0027) OR \u0026SecureText.StartsWith(!\u0027@\u0027))\n\t\u0026SecureText = !\u0022\u0027\u0022 \u002B \u0026SecureText\nEndIf"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "\nparm(in:\u0026Text, out:\u0026SecureText);\n",
+      "cleanSource": "\nparm(in:\u0026Text, out:\u0026SecureText);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "OrdenesWWExport",
+      "WCDetallePrensadoBobinaExport",
+      "vwPrensadoResultadoExport",
+      "DownTimeCodeWWExport",
+      "FTBWWExport",
+      "listarLotesExport",
+      "CarreraWWExport",
+      "reclamoswwExport",
+      "listarProductoCategoriaExport",
+      "EtiquetadoOperadorWWExport",
+      "CarreteWWExport",
+      "vwOrdenEtiquetadoExport",
+      "listarExtrusoraExport",
+      "ExtrusionInterrupcionWWExport",
+      "BudgetWWExport",
+      "wcCarreteInfoExport",
+      "PrensadoWWExport",
+      "ExistenciaWWExport",
+      "listarProductoTerminadoExport",
+      "BobinaWWExport",
+      "ConsolidatedWWExport",
+      "ExtrusoraObservacionWWExport",
+      "listarProductosExport",
+      "SalesPersonWWExport",
+      "vwAnaliticaPrensadoExport",
+      "TroquelWWExport",
+      "PalletEnEmbarqueExport",
+      "listarExtrusionExport",
+      "StatementOfIncomeWWExport",
+      "ProductoTerminadoWWExport",
+      "ProductsWWExport",
+      "ExtrusionWWExport",
+      "CarreteDefectoWWExport",
+      "WWP_MailTemplateWWExport",
+      "EmbarquePalletWWExport",
+      "vwAnaliticaCarreteExport",
+      "ListadoOrdenesExport",
+      "listarPrensasExport",
+      "PaletWWExport",
+      "ListadoEmbarquesExport",
+      "listarSilosExport",
+      "vwAnaliticaBobinaExport",
+      "CustomerWWExport",
+      "vwCarreteCarreraExport",
+      "RemissionsWWExport",
+      "vwExtrusionResultadoExport",
+      "wcBobinasPorExtrusionExport",
+      "PrensaObservacionWWExport",
+      "listarTroquelExport",
+      "listarInventarioExport",
+      "listarOperadorExport",
+      "listarExtrusoraProductoExport",
+      "PrensadoInterrupcionWWExport",
+      "ExtrusoraMezcladoraWWExport",
+      "listarTurnosExport",
+      "InterrupcionWWExport",
+      "listarPrensaProductoExport",
+      "vwTrazabilidadExport",
+      "ListarExtrusoraMezcladoraExport",
+      "CausaInterrupcionWWExport",
+      "CarreteEnPalletExport",
+      "CompanyWWExport",
+      "ListadoRemisionesExport",
+      "AuditWWExport",
+      "PrensadoBobinaWWExport"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Text",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Text"
+    },
+    {
+      "name": "SecureText",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "Secure Text"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "uniqueId": "d47b7b78-9f43-40d8-976b-9cad3214f2e3",
+  "name": "GAMSDRegisterUser",
+  "type": "Procedure",
+  "module": "",
+  "description": "Register New User",
+  "isGAMObject": true,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "If \u0026UserName.IsEmpty()\n\t\u0026Message.Type = MessageTypes.Error\n\t\u0026Message.Description = \u0022User name must be entered.\u0022\n\t\u0026Messages.Add(\u0026Message)\n\tReturn\t\nEndif\n\nIf \u0026Password \u003C\u003E \u0026ConfirmPassword\n\t\u0026Message.Type = MessageTypes.Error\n\t\u0026Message.Description = \u0022Passwords don\u0027t match.\u0022\n\t\u0026Messages.Add(\u0026Message)\n\tReturn\nEndif\n\n\u0026User.Name\t\t\t= \u0026UserName\n\u0026User.EMail\t\t\t= \u0026EMail\n\u0026User.FirstName\t\t= \u0026FirstName\n\u0026User.LastName\t\t= \u0026LastName\n\u0026User.Password\t\t= \u0026Password\n\u0026User.Save()\nif \u0026User.Success()\n\tCommit\n\t\u0026LinkURL = GAMRepository.ApplicationGetAccountActivationURL(\u0022\u0022)\n\tGAMCheckUserActivationMethod(\u0026User.GUID, \u0026LinkURL, \u0026Messages)\nelse\n\t\u0026Errors = \u0026User.GetErrors()\n\t\u0026Messages = GAMConvertErrorsToMessages(\u0026Errors)\nendif\n\n",
+      "cleanSource": "If \u0026UserName.IsEmpty()\n\t\u0026Message.Type = MessageTypes.Error\n\t\u0026Message.Description = \u0022User name must be entered.\u0022\n\t\u0026Messages.Add(\u0026Message)\n\tReturn\t\nEndif\n\nIf \u0026Password \u003C\u003E \u0026ConfirmPassword\n\t\u0026Message.Type = MessageTypes.Error\n\t\u0026Message.Description = \u0022Passwords don\u0027t match.\u0022\n\t\u0026Messages.Add(\u0026Message)\n\tReturn\nEndif\n\n\u0026User.Name\t\t\t= \u0026UserName\n\u0026User.EMail\t\t\t= \u0026EMail\n\u0026User.FirstName\t\t= \u0026FirstName\n\u0026User.LastName\t\t= \u0026LastName\n\u0026User.Password\t\t= \u0026Password\n\u0026User.Save()\nif \u0026User.Success()\n\tCommit\n\t\u0026LinkURL = GAMRepository.ApplicationGetAccountActivationURL(\u0022\u0022)\n\tGAMCheckUserActivationMethod(\u0026User.GUID, \u0026LinkURL, \u0026Messages)\nelse\n\t\u0026Errors = \u0026User.GetErrors()\n\t\u0026Messages = GAMConvertErrorsToMessages(\u0026Errors)\nendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026UserName, in:\u0026Email, in:\u0026FirstName, in:\u0026LastName, in:\u0026Password, in:\u0026ConfirmPassword, out:\u0026Messages);\n",
+      "cleanSource": "parm(in:\u0026UserName, in:\u0026Email, in:\u0026FirstName, in:\u0026LastName, in:\u0026Password, in:\u0026ConfirmPassword, out:\u0026Messages);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "GAMConvertErrorsToMessages",
+      "GAMCheckUserActivationMethod",
+      "GeneXus.Common.Messages"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ConfirmPassword",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Confirm Password"
+    },
+    {
+      "name": "Email",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Email"
+    },
+    {
+      "name": "Errors",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Errors"
+    },
+    {
+      "name": "FirstName",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "First Name"
+    },
+    {
+      "name": "LastName",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Last Name"
+    },
+    {
+      "name": "LinkURL",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Link URL"
+    },
+    {
+      "name": "Message",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Message"
+    },
+    {
+      "name": "Messages",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "Messages"
+    },
+    {
+      "name": "Password",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Password"
+    },
+    {
+      "name": "User",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "User"
+    },
+    {
+      "name": "UserName",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "User Name"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "uniqueId": "ff473aa2-f5bf-4b40-9815-5afc95d19495",
+  "name": "SDPProductData",
+  "type": "SDT",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "SDPProduct Data",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "SDPCartProduct",
+      "SDPGetProductData",
+      "SDPProductsListToDoubleOptionsSDT"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Id",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Id"
+    },
+    {
+      "name": "Type",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Type"
+    },
+    {
+      "name": "Title",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Title"
+    },
+    {
+      "name": "Description",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Description"
+    },
+    {
+      "name": "Image",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Image"
+    },
+    {
+      "name": "Subtitle",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Subtitle"
+    },
+    {
+      "name": "Information1",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Information1"
+    },
+    {
+      "name": "Information2",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Information2"
+    },
+    {
+      "name": "ComponentToCall",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Component To Call"
+    }
+  ]
+}

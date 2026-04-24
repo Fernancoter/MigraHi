@@ -1,0 +1,179 @@
+{
+  "uniqueId": "ae0f066f-8720-4be0-8198-1b0aa819d964",
+  "name": "ExportReportTemplate_Style1",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "Export Report Template_Style1",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\nHeader\n\t\u0026AppName = \u0022DVelop Software Solutions\u0022\n\t\u0026Phone = !\u0022\u002B1 550 8923\u0022\n\t\u0026Mail = !\u0022info@mail.com\u0022\n\t\u0026Website = !\u0022http://www.web.com\u0022\n\t\u0026AddressLine1 = !\u0022French Boulevard 2859\u0022\n\t\u0026AddressLine2 = !\u0022Downtown\u0022\n\t\u0026AddressLine3 = !\u0022Paris, France\u0022\n\tPrint printTitle\nEnd \nFooter\n\t\u0026PageInfo = \u0022Page: \u0022 \u002B \u0026Page.ToString().Trim()\n\t\u0026DateInfo = \u0022Date: \u0022 \u002B \u0026Today.ToFormattedString()\n\tPrint printFooter\nEnd\n\n",
+      "cleanSource": "\nHeader\n\t\u0026AppName = \u0022DVelop Software Solutions\u0022\n\t\u0026Phone = !\u0022\u002B1 550 8923\u0022\n\t\u0026Mail = !\u0022info@mail.com\u0022\n\t\u0026Website = !\u0022http://www.web.com\u0022\n\t\u0026AddressLine1 = !\u0022French Boulevard 2859\u0022\n\t\u0026AddressLine2 = !\u0022Downtown\u0022\n\t\u0026AddressLine3 = !\u0022Paris, France\u0022\n\tPrint printTitle\nEnd \nFooter\n\t\u0026PageInfo = \u0022Page: \u0022 \u002B \u0026Page.ToString().Trim()\n\t\u0026DateInfo = \u0022Date: \u0022 \u002B \u0026Today.ToFormattedString()\n\tPrint printFooter\nEnd"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "AddressLine1",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Address Line1"
+    },
+    {
+      "name": "AddressLine2",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Address Line2"
+    },
+    {
+      "name": "AddressLine3",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Address Line3"
+    },
+    {
+      "name": "AppName",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "App Name"
+    },
+    {
+      "name": "Attribute",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Attribute"
+    },
+    {
+      "name": "DateInfo",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Date Info"
+    },
+    {
+      "name": "Filter",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Filter"
+    },
+    {
+      "name": "Mail",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Mail"
+    },
+    {
+      "name": "PageInfo",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Page Info"
+    },
+    {
+      "name": "Phone",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Phone"
+    },
+    {
+      "name": "Title",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Title"
+    },
+    {
+      "name": "Website",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Website"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

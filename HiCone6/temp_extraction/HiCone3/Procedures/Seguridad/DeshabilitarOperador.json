@@ -1,0 +1,151 @@
+{
+  "uniqueId": "bb6bea56-d1ca-498d-a439-d5d93a85fe72",
+  "name": "DeshabilitarOperador",
+  "type": "Procedure",
+  "module": "Seguridad",
+  "description": "Deshabilitar Operador",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026isOk = False\n\n\u0026User.Load(\u0026Operador.OperadorUserGUID)\n\t\t\t\nIf \u0026User.IsEnabledInRepository\n\t\u0026isOK = \u0026User.RepositoryDisable(\u0026Errors) \nEndIf\n\nIf \u0026isOK\n    \n\t\u0026Operador.OperadorActivo = False\n\t\u0026Operador.Save()\n\t\u0026isOk = \u0026Operador.Success()\n\t\n\tIf Not \u0026isOk\n\t\tWeb.SetNotSuccessMessagesLog.Call(\u0026Operador.GetMessages(), \u0026Pgmname)\n\tEndIf\n\t\nElse\n\t\n\tFor \u0026Error in \u0026Errors\n        Msg(Format(!\u0022%1 (GAM%2)\u0022, \u0026Error.Message, \u0026Error.Code))\n    EndFor\n\t\nEndIf\n\t\t\n\t\t\n",
+      "cleanSource": "\u0026isOk = False\n\n\u0026User.Load(\u0026Operador.OperadorUserGUID)\n\t\t\t\nIf \u0026User.IsEnabledInRepository\n\t\u0026isOK = \u0026User.RepositoryDisable(\u0026Errors) \nEndIf\n\nIf \u0026isOK\n    \n\t\u0026Operador.OperadorActivo = False\n\t\u0026Operador.Save()\n\t\u0026isOk = \u0026Operador.Success()\n\t\n\tIf Not \u0026isOk\n\t\tWeb.SetNotSuccessMessagesLog.Call(\u0026Operador.GetMessages(), \u0026Pgmname)\n\tEndIf\n\t\nElse\n\t\n\tFor \u0026Error in \u0026Errors\n        Msg(Format(!\u0022%1 (GAM%2)\u0022, \u0026Error.Message, \u0026Error.Code))\n    EndFor\n\t\nEndIf"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(In:\u0026Operador, Out:\u0026IsOk);\n",
+      "cleanSource": "parm(In:\u0026Operador, Out:\u0026IsOk);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Web.SetNotSuccessMessagesLog",
+      "GeneXus.Common.Messages",
+      "DB.Operador"
+    ],
+    "calledBy": [
+      "gestionarOperador"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "isOk",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "is Ok"
+    },
+    {
+      "name": "User",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "User"
+    },
+    {
+      "name": "Operador",
+      "elementType": "Parameter",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "in",
+      "domain": "",
+      "description": "Operador"
+    },
+    {
+      "name": "Errors",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Errors"
+    },
+    {
+      "name": "Error",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Error"
+    },
+    {
+      "name": "Messages",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Messages"
+    },
+    {
+      "name": "Message",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Message"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

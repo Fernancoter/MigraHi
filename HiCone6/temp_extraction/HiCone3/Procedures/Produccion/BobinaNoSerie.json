@@ -1,0 +1,203 @@
+{
+  "uniqueId": "1895c34c-6e68-46bc-87e3-49d5c2ef6ca1",
+  "name": "BobinaNoSerie",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Bobina No Serie",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\n\t\u0026NoSerie.SetEmpty()\n\t\u0026Extrusion.Load(\u0026ExtrusionId)\n\t\u0026ExtrusoraId = \u0026Extrusion.ExtrusionExtrusoraId\n\t\u0026Fecha = \u0026Extrusion.ExtrusionFecha.ToDate()\n\t\n\t\u0026Day = Day(\u0026Fecha)\n\t\u0026Month = Month(\u0026Fecha)\n\t\u0026Year = Year(\u0026Fecha)\n\t\u0026YearFormat = \u0026Year.ToFormattedString()\n\t\u0026YearFormat = \u0026YearFormat.Substring(3,2)\n\t\n\t\u0026NoSerie = \u0027B\u0027 \u002B \u0027-\u0027 \u002B \u0026Day.ToFormattedString() \u002B \u0026Month.ToFormattedString() \u002B \u0026YearFormat \u002B \u0027-\u0027 \u002B \u0026ExtrusoraId.ToFormattedString()\n\t\n\t//Debugger.Call(NivelDebug.Informativo,\u0027AnioFormatted\u0027, \u0026YearFormat)\n\t\n\t\u0026Bobina.Load(\u0026BobinaId)\n\t\u0026BobinaConsecutivo = \u0026Bobina.BobinaNo\n\t\u0026Bobina.BobinaNoSerie = \u0026NoSerie.Trim() \u002B \u0027-\u0027 \u002B \u0026BobinaConsecutivo.ToFormattedString() \u002B \u0026Bobina.BobinaOrigen.Trim()\n\t\u0026Bobina.Save()\n\t\n\tif(\u0026Bobina.Success())\n\t      //Debugger.Call(NivelDebug.Informativo,\u0027Save\u0027 \u002B \u0026Bobina.BobinaNoSerie)\n\t      commit\n\tendif\n\n\n",
+      "cleanSource": "\t\n\t\u0026NoSerie.SetEmpty()\n\t\u0026Extrusion.Load(\u0026ExtrusionId)\n\t\u0026ExtrusoraId = \u0026Extrusion.ExtrusionExtrusoraId\n\t\u0026Fecha = \u0026Extrusion.ExtrusionFecha.ToDate()\n\t\n\t\u0026Day = Day(\u0026Fecha)\n\t\u0026Month = Month(\u0026Fecha)\n\t\u0026Year = Year(\u0026Fecha)\n\t\u0026YearFormat = \u0026Year.ToFormattedString()\n\t\u0026YearFormat = \u0026YearFormat.Substring(3,2)\n\t\n\t\u0026NoSerie = \u0027B\u0027 \u002B \u0027-\u0027 \u002B \u0026Day.ToFormattedString() \u002B \u0026Month.ToFormattedString() \u002B \u0026YearFormat \u002B \u0027-\u0027 \u002B \u0026ExtrusoraId.ToFormattedString()\n\t\n\t//Debugger.Call(NivelDebug.Informativo,\u0027AnioFormatted\u0027, \u0026YearFormat)\n\t\n\t\u0026Bobina.Load(\u0026BobinaId)\n\t\u0026BobinaConsecutivo = \u0026Bobina.BobinaNo\n\t\u0026Bobina.BobinaNoSerie = \u0026NoSerie.Trim() \u002B \u0027-\u0027 \u002B \u0026BobinaConsecutivo.ToFormattedString() \u002B \u0026Bobina.BobinaOrigen.Trim()\n\t\u0026Bobina.Save()\n\t\n\tif(\u0026Bobina.Success())\n\t      //Debugger.Call(NivelDebug.Informativo,\u0027Save\u0027 \u002B \u0026Bobina.BobinaNoSerie)\n\t      commit\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026BobinaId, in:\u0026ExtrusionId);\n",
+      "cleanSource": "parm(in:\u0026BobinaId, in:\u0026ExtrusionId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Extrusion",
+      "DB.Bobina",
+      "Debugger"
+    ],
+    "calledBy": [
+      "SDTransferirBobina",
+      "SDExtrusoraBobina",
+      "SDNuevoProducto",
+      "SDExtrusionTemporal",
+      "GuardarBobina"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Bobina",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina"
+    },
+    {
+      "name": "BobinaConsecutivo",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Consecutivo"
+    },
+    {
+      "name": "BobinaId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Bobina Id"
+    },
+    {
+      "name": "Day",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Day"
+    },
+    {
+      "name": "Extrusion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion"
+    },
+    {
+      "name": "ExtrusionFecha",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Fecha"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "ExtrusoraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "Fecha",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Fecha"
+    },
+    {
+      "name": "Month",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Month"
+    },
+    {
+      "name": "NoSerie",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "No Serie"
+    },
+    {
+      "name": "Year",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Year"
+    },
+    {
+      "name": "YearFormat",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Year Format"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "uniqueId": "1dc1bc2e-7bcb-4c35-a89e-1b2dea52314b",
+  "name": "SgteTurnoPrensado",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Sgte Turno Prensado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "   \n   \u0026Prensado.Load(\u0026PrensadoId)\n   \u0026PrensadoFecha = \u0026Prensado.PrensadoFecha\n   \u0026PrensaId = \u0026Prensado.PrensadoPrensaId\n   \n   //Obtener el sgte turno para la Prensa\n   for each Order PrensadoFecha\n\t   where PrensadoId \u003E 0\n\t   where DB.PrensadoFecha \u003E= \u0026PrensadoFecha\n\t   where PrensadoPrensaId = \u0026PrensaId\n\t   where PrensadoEstado = EstadoPrensado.Programado\n\t   \u0026NextPrenId = PrensadoId\n\t   Exit\n   when none\n\t   \u0026NextPrenId = 0\t\n   endfor\n",
+      "cleanSource": "   \n   \u0026Prensado.Load(\u0026PrensadoId)\n   \u0026PrensadoFecha = \u0026Prensado.PrensadoFecha\n   \u0026PrensaId = \u0026Prensado.PrensadoPrensaId\n   \n   //Obtener el sgte turno para la Prensa\n   for each Order PrensadoFecha\n\t   where PrensadoId \u003E 0\n\t   where DB.PrensadoFecha \u003E= \u0026PrensadoFecha\n\t   where PrensadoPrensaId = \u0026PrensaId\n\t   where PrensadoEstado = EstadoPrensado.Programado\n\t   \u0026NextPrenId = PrensadoId\n\t   Exit\n   when none\n\t   \u0026NextPrenId = 0\t\n   endfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensadoId, out:\u0026NextPrenId);\n",
+      "cleanSource": "parm(in:\u0026PrensadoId, out:\u0026NextPrenId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Extrusion",
+      "DB.Prensado"
+    ],
+    "calledBy": [
+      "SDFinalizarPrensado",
+      "SDTiempoPrensado",
+      "SDPrensadoAnticipado"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Extrusion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "NextExtId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Next Ext Id"
+    },
+    {
+      "name": "ExtrusionFecha",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Fecha"
+    },
+    {
+      "name": "ExtrusoraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "PrensadoFecha",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Fecha"
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "Prensado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado"
+    },
+    {
+      "name": "NextPrenId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Next Pren Id"
+    },
+    {
+      "name": "ProductoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

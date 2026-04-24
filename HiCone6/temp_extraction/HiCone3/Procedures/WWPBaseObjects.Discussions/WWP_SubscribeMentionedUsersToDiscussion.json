@@ -1,0 +1,160 @@
+{
+  "uniqueId": "c7f1123b-01cd-4f54-85e9-b07227eed936",
+  "name": "WWP_SubscribeMentionedUsersToDiscussion",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.Discussions",
+  "description": "Subscribe the mentioned users to a discussion",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026MentionWWPUserExtendedIdCollection.FromJson(\u0026MentionWWPUserExtendedIdCollectionJson)\nFor Each WWP_NotificationDefinition\n\tWhere WWPNotificationDefinitionName = \u0026WWPNotificationDefinitionName\n\tWhere WWPEntityId = WWP_GetEntityByName(\u0026WWPEntityName)\n\tFor \u0026WWPUserExtendedId In \u0026MentionWWPUserExtendedIdCollection\n\t\tFor Each WWPBaseObjects.Subscriptions.WWP_Subscription\n\t\t\tWhere WWPUserExtendedId = \u0026WWPUserExtendedId\n\t\t\tWhere WWPSubscriptionEntityRecordId = \u0026WWPSubscriptionEntityRecordId\n\t\t\t\n\t\t\tWWPSubscriptionSubscribed = True\n\t\tWhen None\n\t\t\t\u0026WWPSubscription = New()\n\t\t\t\u0026WWPSubscription.WWPNotificationDefinitionId = WWPNotificationDefinitionId\n\t\t\t\u0026WWPSubscription.WWPUserExtendedId = \u0026WWPUserExtendedId\n\t\t\t\u0026WWPSubscription.WWPSubscriptionEntityRecordId = \u0026WWPSubscriptionEntityRecordId\n\t\t\t\u0026WWPSubscription.WWPSubscriptionEntityRecordDescription = \u0026WWPSubscriptionEntityRecordDescription\n\t\t\t\u0026WWPSubscription.WWPSubscriptionSubscribed = True\n\t\t\t\u0026WWPSubscription.Save()\n\t\t\tIf Not \u0026WWPSubscription.Success()\n\t\t\t\tWWP_Logger.Error(\u0022Subscribe Mentioned User\u0022, \u0026WWPSubscription.GetMessages().ToJson())\n\t\t\tEndIf\n\t\tEndFor\n\tEndFor\nWhen None\n\tWWP_Logger.Error(\u0026pgmname, format(!\u0027WWP_NotificationDefinition not found: %1\u0027, \u0026WWPNotificationDefinitionName))\nEndFor\nCommit\n",
+      "cleanSource": "\u0026MentionWWPUserExtendedIdCollection.FromJson(\u0026MentionWWPUserExtendedIdCollectionJson)\nFor Each WWP_NotificationDefinition\n\tWhere WWPNotificationDefinitionName = \u0026WWPNotificationDefinitionName\n\tWhere WWPEntityId = WWP_GetEntityByName(\u0026WWPEntityName)\n\tFor \u0026WWPUserExtendedId In \u0026MentionWWPUserExtendedIdCollection\n\t\tFor Each WWPBaseObjects.Subscriptions.WWP_Subscription\n\t\t\tWhere WWPUserExtendedId = \u0026WWPUserExtendedId\n\t\t\tWhere WWPSubscriptionEntityRecordId = \u0026WWPSubscriptionEntityRecordId\n\t\t\t\n\t\t\tWWPSubscriptionSubscribed = True\n\t\tWhen None\n\t\t\t\u0026WWPSubscription = New()\n\t\t\t\u0026WWPSubscription.WWPNotificationDefinitionId = WWPNotificationDefinitionId\n\t\t\t\u0026WWPSubscription.WWPUserExtendedId = \u0026WWPUserExtendedId\n\t\t\t\u0026WWPSubscription.WWPSubscriptionEntityRecordId = \u0026WWPSubscriptionEntityRecordId\n\t\t\t\u0026WWPSubscription.WWPSubscriptionEntityRecordDescription = \u0026WWPSubscriptionEntityRecordDescription\n\t\t\t\u0026WWPSubscription.WWPSubscriptionSubscribed = True\n\t\t\t\u0026WWPSubscription.Save()\n\t\t\tIf Not \u0026WWPSubscription.Success()\n\t\t\t\tWWP_Logger.Error(\u0022Subscribe Mentioned User\u0022, \u0026WWPSubscription.GetMessages().ToJson())\n\t\t\tEndIf\n\t\tEndFor\n\tEndFor\nWhen None\n\tWWP_Logger.Error(\u0026pgmname, format(!\u0027WWP_NotificationDefinition not found: %1\u0027, \u0026WWPNotificationDefinitionName))\nEndFor\nCommit"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026WWPNotificationDefinitionName, in:\u0026WWPEntityName, in:\u0026WWPSubscriptionEntityRecordId, in:\u0026WWPSubscriptionEntityRecordDescription, in:\u0026MentionWWPUserExtendedIdCollectionJson);\n",
+      "cleanSource": "parm(in:\u0026WWPNotificationDefinitionName, in:\u0026WWPEntityName, in:\u0026WWPSubscriptionEntityRecordId, in:\u0026WWPSubscriptionEntityRecordDescription, in:\u0026MentionWWPUserExtendedIdCollectionJson);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_Logger",
+      "WWPBaseObjects.WWP_GetEntityByName",
+      "WWPBaseObjects.Subscriptions.WWP_Subscription",
+      "WWPBaseObjects.Notifications.Common.WWP_NotificationDefinition"
+    ],
+    "calledBy": [
+      "WWP_NotifyDiscussionMessage"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "WWPNotificationDefinitionName",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPNotification Definition Internal Name"
+    },
+    {
+      "name": "WWPSubscriptionEntityRecordId",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPSubscription Entity Record Id"
+    },
+    {
+      "name": "WWPSubscription",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPSubscription"
+    },
+    {
+      "name": "WWPSubscriptionEntityRecordDescription",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPSubscription Entity Record Description"
+    },
+    {
+      "name": "MentionWWPUserExtendedIdCollection",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPUser Extended Id"
+    },
+    {
+      "name": "WWPUserExtendedId",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPUser Extended Id"
+    },
+    {
+      "name": "WWPEntityName",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Entity Name"
+    },
+    {
+      "name": "MentionWWPUserExtendedIdCollectionJson",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Mention WWPUser Extended Id Collection Json"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

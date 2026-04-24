@@ -1,0 +1,159 @@
+{
+  "uniqueId": "9edaabd2-76a0-4fd2-87db-23c5f7e5c037",
+  "name": "WWP_SearchMenuOptions",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "WWP_Search Menu Options",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\nFor \u0026MenuDataItem in \u0026MenuData\n\t\u0026MenuOptionsPath = \u0026CurrentMenuOptionPath.ToJson()\n\tIf (not \u0026MenuDataItem.link.IsEmpty()) AND (\u0026MenuDataItem.caption.ToLower().Contains(\u0026SearchText.Trim().ToLower())\n\t\t\t\t\t\t\t\t\t\t\t\tOR \u0026MenuOptionsPath.ToLower().Contains(\u0026SearchText.Trim().ToLower()))\n\t\t\u0026MenuOptions.Add(\u0026MenuDataItem)\n\t\t\u0026MenuOptionsPaths.Add(\u0026MenuOptionsPath)\n\tEndIf\n\tIf \u0026MenuDataItem.subItems.Count \u003E 0\n\t\t\u0026NewMenuOptionPath.FromJson(\u0026MenuOptionsPath)\n\t\t\u0026NewMenuOptionPath.Add(\u0026MenuDataItem.caption)\n\t\tWWPBaseObjects.WWP_SearchMenuOptions(\u0026SearchText, \u0026MenuDataItem.subItems, \u0026NewMenuOptionPath, \u0026MenuOptions, \u0026MenuOptionsPaths)\n\tEndIf\nEndFor\n",
+      "cleanSource": "\nFor \u0026MenuDataItem in \u0026MenuData\n\t\u0026MenuOptionsPath = \u0026CurrentMenuOptionPath.ToJson()\n\tIf (not \u0026MenuDataItem.link.IsEmpty()) AND (\u0026MenuDataItem.caption.ToLower().Contains(\u0026SearchText.Trim().ToLower())\n\t\t\t\t\t\t\t\t\t\t\t\tOR \u0026MenuOptionsPath.ToLower().Contains(\u0026SearchText.Trim().ToLower()))\n\t\t\u0026MenuOptions.Add(\u0026MenuDataItem)\n\t\t\u0026MenuOptionsPaths.Add(\u0026MenuOptionsPath)\n\tEndIf\n\tIf \u0026MenuDataItem.subItems.Count \u003E 0\n\t\t\u0026NewMenuOptionPath.FromJson(\u0026MenuOptionsPath)\n\t\t\u0026NewMenuOptionPath.Add(\u0026MenuDataItem.caption)\n\t\tWWPBaseObjects.WWP_SearchMenuOptions(\u0026SearchText, \u0026MenuDataItem.subItems, \u0026NewMenuOptionPath, \u0026MenuOptions, \u0026MenuOptionsPaths)\n\tEndIf\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "\nparm(in:\u0026SearchText, in:\u0026MenuData, in:\u0026CurrentMenuOptionPath, inout:\u0026MenuOptions, inout:\u0026MenuOptionsPaths);\n",
+      "cleanSource": "\nparm(in:\u0026SearchText, in:\u0026MenuData, in:\u0026CurrentMenuOptionPath, inout:\u0026MenuOptions, inout:\u0026MenuOptionsPaths);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_SearchMenuOptions",
+      "WWPBaseObjects.DVelop_Menu"
+    ],
+    "calledBy": [
+      "WWP_SearchMenuOptions",
+      "WWP_GetSearchWCData"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SearchText",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Search Text"
+    },
+    {
+      "name": "MenuData",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "Menu Data"
+    },
+    {
+      "name": "MenuOptions",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "inout",
+      "domain": "",
+      "description": "Menu Options"
+    },
+    {
+      "name": "MenuOptionsPaths",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "inout",
+      "domain": "",
+      "description": "Menu Options Paths"
+    },
+    {
+      "name": "MenuOptionsPath",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Menu Options Path"
+    },
+    {
+      "name": "MenuDataItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Menu Data Item"
+    },
+    {
+      "name": "CurrentMenuOptionPath",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Current Menu Option Path"
+    },
+    {
+      "name": "NewMenuOptionPath",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "New Menu Option Path"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

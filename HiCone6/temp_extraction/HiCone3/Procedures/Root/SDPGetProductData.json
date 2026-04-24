@@ -1,0 +1,116 @@
+{
+  "uniqueId": "52598714-fa66-4e24-9e64-dbbce1b4fcd2",
+  "name": "SDPGetProductData",
+  "type": "Procedure",
+  "module": "",
+  "description": "SDPGet Product Data",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026SDPProductDataListAll = WorkWithPlus.NativeMobile.SDPProductsListDP()\n\nFor \u0026SDPProductData in \u0026SDPProductDataListAll\n\tIf \u0026SDPProductData.Id = \u0026ProductId\n\t\texit\n\tEndIf\t\nEndFor\n",
+      "cleanSource": "\u0026SDPProductDataListAll = WorkWithPlus.NativeMobile.SDPProductsListDP()\n\nFor \u0026SDPProductData in \u0026SDPProductDataListAll\n\tIf \u0026SDPProductData.Id = \u0026ProductId\n\t\texit\n\tEndIf\t\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026ProductId, out:\u0026SDPProductData);\n",
+      "cleanSource": "Parm(in:\u0026ProductId, out:\u0026SDPProductData);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WorkWithPlus.NativeMobile.SDPProductsListDP",
+      "WorkWithPlus.NativeMobile.SDPProductData"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SDPProductDataListAll",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDPProduct Data List All"
+    },
+    {
+      "name": "SDPProductData",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "SDPProduct Data"
+    },
+    {
+      "name": "ProductId",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Product Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

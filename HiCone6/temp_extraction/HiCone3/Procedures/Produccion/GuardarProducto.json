@@ -1,0 +1,129 @@
+{
+  "uniqueId": "c58390d2-f1ff-4d32-b386-ad5bc9cd717e",
+  "name": "GuardarProducto",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Guardar Producto",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\nif(not \u0026SDTProductoItem.ProductoClaveExterna.IsEmpty())\n\tObtenerProductoPorClaveExterna.Call(\u0026SDTProductoItem.ProductoClaveExterna,\u0026SDTProductoItem.ProductoId)\nendif\n\n\u0026Producto.Load(\u0026SDTProductoItem.ProductoId)\n\u0026Producto.ProductoClave = \u0026SDTProductoItem.ProductoClave\n\u0026Producto.ProductoNombre = \u0026SDTProductoItem.ProductoNombre\n\u0026Producto.ProductoDescripcion = \u0026SDTProductoItem.ProductoDescripcion\n\nif(\u0026SDTProductoItem.ProductoCategoriaId.IsEmpty() and not \u0026SDTProductoItem.ProductoCategoriaNombre.IsEmpty())\n\t//Se busca llave foranea\n\t\u0026SDTProductoItem.ProductoCategoriaId = ObtenerProductoCategoriaPorNombre.Udp(\u0026SDTProductoItem.ProductoCategoriaNombre)\nendif\n\n\n\u0026Producto.ProductoCategoriaId = \u0026SDTProductoItem.ProductoCategoriaId\n\u0026Producto.ProductoPrecioUnitario = \u0026SDTProductoItem.ProductoPrecioUnitario\n\u0026Producto.ProductoInventarioActual = \u0026SDTProductoItem.ProductoInventarioActual\n\u0026Producto.ProductoActivo = \u0026SDTProductoItem.ProductoActivo\n\u0026Producto.ProductoClaveExterna = \u0026SDTProductoItem.ProductoClaveExterna\n\n\u0026Producto.Save()\n\u0026Correcto = \u0026Producto.Success()\n\nif(\u0026Correcto)\n\tcommit\nendif\n",
+      "cleanSource": "\nif(not \u0026SDTProductoItem.ProductoClaveExterna.IsEmpty())\n\tObtenerProductoPorClaveExterna.Call(\u0026SDTProductoItem.ProductoClaveExterna,\u0026SDTProductoItem.ProductoId)\nendif\n\n\u0026Producto.Load(\u0026SDTProductoItem.ProductoId)\n\u0026Producto.ProductoClave = \u0026SDTProductoItem.ProductoClave\n\u0026Producto.ProductoNombre = \u0026SDTProductoItem.ProductoNombre\n\u0026Producto.ProductoDescripcion = \u0026SDTProductoItem.ProductoDescripcion\n\nif(\u0026SDTProductoItem.ProductoCategoriaId.IsEmpty() and not \u0026SDTProductoItem.ProductoCategoriaNombre.IsEmpty())\n\t//Se busca llave foranea\n\t\u0026SDTProductoItem.ProductoCategoriaId = ObtenerProductoCategoriaPorNombre.Udp(\u0026SDTProductoItem.ProductoCategoriaNombre)\nendif\n\n\n\u0026Producto.ProductoCategoriaId = \u0026SDTProductoItem.ProductoCategoriaId\n\u0026Producto.ProductoPrecioUnitario = \u0026SDTProductoItem.ProductoPrecioUnitario\n\u0026Producto.ProductoInventarioActual = \u0026SDTProductoItem.ProductoInventarioActual\n\u0026Producto.ProductoActivo = \u0026SDTProductoItem.ProductoActivo\n\u0026Producto.ProductoClaveExterna = \u0026SDTProductoItem.ProductoClaveExterna\n\n\u0026Producto.Save()\n\u0026Correcto = \u0026Producto.Success()\n\nif(\u0026Correcto)\n\tcommit\nendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "PARM(IN:\u0026SDTProductoItem,out:\u0026Correcto);\n",
+      "cleanSource": "PARM(IN:\u0026SDTProductoItem,out:\u0026Correcto);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.ObtenerProductoCategoriaPorNombre",
+      "Produccion.ObtenerProductoPorClaveExterna",
+      "Produccion.SDTProducto",
+      "DB.Producto",
+      "DB.ProductoCategoria",
+      "ObtenerProductoPorClaveExterna",
+      "ObtenerProductoCategoriaPorNombre"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SDTProductoItem",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "SDTProducto Item"
+    },
+    {
+      "name": "Correcto",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Correcto"
+    },
+    {
+      "name": "Producto",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto"
+    },
+    {
+      "name": "ProductoCategoria",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Categoria"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

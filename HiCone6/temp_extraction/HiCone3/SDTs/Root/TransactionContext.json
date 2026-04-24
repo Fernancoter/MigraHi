@@ -1,0 +1,76 @@
+{
+  "uniqueId": "a660ec17-05af-4659-8c50-50db237c3b29",
+  "name": "TransactionContext",
+  "type": "SDT",
+  "module": "",
+  "description": "Transaction Context",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "WWOperador",
+      "WWPrensa",
+      "Extrusora",
+      "Producto",
+      "WWConfiguracion",
+      "WWProductoCategoria",
+      "ProductoCategoria",
+      "Operador",
+      "Configuracion",
+      "PrensaProducto",
+      "WWPrensaProducto",
+      "WWExtrusora",
+      "WWExtrusoraProducto",
+      "ExtrusoraProducto",
+      "WWInventario",
+      "WWProducto"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CallerObject",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Caller Object"
+    },
+    {
+      "name": "CallerOnDelete",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Caller On Delete"
+    },
+    {
+      "name": "CallerURL",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Caller URL"
+    },
+    {
+      "name": "TransactionName",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Transaction Name"
+    }
+  ]
+}

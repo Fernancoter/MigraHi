@@ -1,0 +1,134 @@
+{
+  "uniqueId": "fa1551cb-0d08-4a70-ac4d-2e1c629033e8",
+  "name": "CrearPrensadoBobina",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Crear Prensado Bobina",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\t\u0026PrensadoBobina = New()\n\t\u0026PrensadoBobina.PrensadoId = \u0026PrensadoId\n        \u0026PrensadoBobina.BobinaId = \u0026BobinaId\n        \u0026PrensadoBobina.Save()\n\n\tif(\u0026PrensadoBobina.Success())\n\t\t\u0026PBId = \u0026PrensadoBobina.PrensadoBobinaId\n\t\tcommit\n\tendif\n\n\n",
+      "cleanSource": "\n\t\u0026PrensadoBobina = New()\n\t\u0026PrensadoBobina.PrensadoId = \u0026PrensadoId\n        \u0026PrensadoBobina.BobinaId = \u0026BobinaId\n        \u0026PrensadoBobina.Save()\n\n\tif(\u0026PrensadoBobina.Success())\n\t\t\u0026PBId = \u0026PrensadoBobina.PrensadoBobinaId\n\t\tcommit\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensadoId, in:\u0026BobinaId, out:\u0026PBId);\n",
+      "cleanSource": "parm(in:\u0026PrensadoId, in:\u0026BobinaId, out:\u0026PBId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.PrensadoBobina"
+    ],
+    "calledBy": [
+      "SDFinalizarPrensado",
+      "SDPrensaCarrera"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "BobinaId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Bobina Id"
+    },
+    {
+      "name": "PrensadoBobina",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Bobina"
+    },
+    {
+      "name": "PrensadoBobinaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Bobina Id"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "PBId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "PBId"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

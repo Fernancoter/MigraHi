@@ -1,0 +1,156 @@
+{
+  "uniqueId": "cbb5b2c8-3817-4750-8a83-6d9bc58c0316",
+  "name": "TieneTraslapePrensado",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Tiene Traslape Prensado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026HasOverlapTime = True \n\nFor Each order PrensadoTurnoId\n\tWhere PrensadoFecha.Year() = \u0026PrensadoFecha.Year()\n\twhere PrensadoFecha.Month() = \u0026PrensadoFecha.Month()\n\tWhere PrensadoFecha.Day() = \u0026PrensadoFecha.Day()\n\tWhere PrensadoPrensaId = \u0026PrensadoPrensaId\n\twhere PrensadoTurnoId \u003C\u003E \u0026PrensadoTurnoId\n\t\n\tdebugger.Call(niveldebug.Informativo, \u0026Pgmname,PrensadoTurnoId.ToString() \u002B\u0027|\u0027\u002B \u0026PrensadoTurnoId.ToString() \u002B \u0027|\u0027 \u002B PrensadoFecha.ToFormattedString() \u002B \u0027-\u0027 \u002B \u0026PrensadoFecha.ToFormattedString())\n\t\n\t\n//\tDo Case \n//\t\tCase \u0026PrensadoTurnoId = EnumTurno.UNO\n//\t\t\tIf PrensadoFecha \u003C= \u0026PrensadoFecha\n//\t\t\t\t\u0026HasOverlapTime = True\n//\t\t\t\tExit \n//\t\t\tEndIf\n//\t\tCase \u0026PrensadoTurnoId = EnumTurno.TRES\n//\t\t\tIf PrensadoFecha \u003E= \u0026PrensadoFecha\n//\t\t\t\t\u0026HasOverlapTime = True\n//\t\t\t\tExit \n//\t\t\tEndIf\n//\t\tCase \u0026PrensadoTurnoId = EnumTurno.DOS\n//\t\t\tIf prensadoTurnoId = EnumTurno.UNO\n//\t\t\t\tIf PrensadoFecha \u003E= \u0026PrensadoFecha\n//\t\t\t\t\t\u0026HasOverlapTime = True\n//\t\t\t\t\tExit \n//\t\t\t\tEndIf\n//\t\t\telse \n//\t\t\t\tIf PrensadoFecha \u003C= \u0026PrensadoFecha\n//\t\t\t\t\t\u0026HasOverlapTime = True\n//\t\t\t\t\tExit \n//\t\t\t\tEndIf\n//\t\t\tEndIf\n//\t\t\n//\tEndCase\n\n\t\n\nEndFor\n\n\t\n",
+      "cleanSource": "\u0026HasOverlapTime = True \n\nFor Each order PrensadoTurnoId\n\tWhere PrensadoFecha.Year() = \u0026PrensadoFecha.Year()\n\twhere PrensadoFecha.Month() = \u0026PrensadoFecha.Month()\n\tWhere PrensadoFecha.Day() = \u0026PrensadoFecha.Day()\n\tWhere PrensadoPrensaId = \u0026PrensadoPrensaId\n\twhere PrensadoTurnoId \u003C\u003E \u0026PrensadoTurnoId\n\t\n\tdebugger.Call(niveldebug.Informativo, \u0026Pgmname,PrensadoTurnoId.ToString() \u002B\u0027|\u0027\u002B \u0026PrensadoTurnoId.ToString() \u002B \u0027|\u0027 \u002B PrensadoFecha.ToFormattedString() \u002B \u0027-\u0027 \u002B \u0026PrensadoFecha.ToFormattedString())\n\t\n\t\n//\tDo Case \n//\t\tCase \u0026PrensadoTurnoId = EnumTurno.UNO\n//\t\t\tIf PrensadoFecha \u003C= \u0026PrensadoFecha\n//\t\t\t\t\u0026HasOverlapTime = True\n//\t\t\t\tExit \n//\t\t\tEndIf\n//\t\tCase \u0026PrensadoTurnoId = EnumTurno.TRES\n//\t\t\tIf PrensadoFecha \u003E= \u0026PrensadoFecha\n//\t\t\t\t\u0026HasOverlapTime = True\n//\t\t\t\tExit \n//\t\t\tEndIf\n//\t\tCase \u0026PrensadoTurnoId = EnumTurno.DOS\n//\t\t\tIf prensadoTurnoId = EnumTurno.UNO\n//\t\t\t\tIf PrensadoFecha \u003E= \u0026PrensadoFecha\n//\t\t\t\t\t\u0026HasOverlapTime = True\n//\t\t\t\t\tExit \n//\t\t\t\tEndIf\n//\t\t\telse \n//\t\t\t\tIf PrensadoFecha \u003C= \u0026PrensadoFecha\n//\t\t\t\t\t\u0026HasOverlapTime = True\n//\t\t\t\t\tExit \n//\t\t\t\tEndIf\n//\t\t\tEndIf\n//\t\t\n//\tEndCase\n\n\t\n\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(In:\u0026PrensadoFecha, In:\u0026PrensadoPrensaId, In:\u0026PrensadoTurnoId, Out:\u0026HasOverlapTime);\n",
+      "cleanSource": "parm(In:\u0026PrensadoFecha, In:\u0026PrensadoPrensaId, In:\u0026PrensadoTurnoId, Out:\u0026HasOverlapTime);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Web.Debugger",
+      "debugger"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "HasOverlapTime",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Has Overlap Time"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "PrensadoTurnoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Turno Id"
+    },
+    {
+      "name": "PrensadoFecha",
+      "elementType": "Parameter",
+      "dataType": "DATETIME",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Fecha"
+    },
+    {
+      "name": "JustDate",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Just Date"
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "PrensadoPrensaId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "MinPrensadoFecha",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Fecha"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

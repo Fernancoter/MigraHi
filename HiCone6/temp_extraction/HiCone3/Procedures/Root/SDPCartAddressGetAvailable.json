@@ -1,0 +1,125 @@
+{
+  "uniqueId": "eb9a0632-670f-4ad8-9e31-64addb3853a0",
+  "name": "SDPCartAddressGetAvailable",
+  "type": "Procedure",
+  "module": "",
+  "description": "SDPCart Address Get Available",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026SessionTxt = \u0026WebSession.Get(!\u0022UserAddressList\u0022)\n\u0026SDPUserAddressCollection.FromJson(\u0026SessionTxt)\n\nIf \u0026SDPUserAddressCollection.Count = 0\n\t\u0026SDPCartUserAddress\t= new()\n\t\u0026SDPCartUserAddress.Id = !\u00221\u0022\n\t\u0026SDPCartUserAddress.PersonName = !\u0022Jhon Doe\u0022\n\t\u0026SDPCartUserAddress.AddressLine1 = !\u0022Evergreen Terrace 1234\u0022\n\t\u0026SDPCartUserAddress.AddressLine2 = !\u0022Ap. 101\u0022\n\t\u0026SDPCartUserAddress.CountryName = !\u0022United States\u0022\n\t\u0026SDPCartUserAddress.StateName = !\u0022Florida\u0022\n\t\u0026SDPCartUserAddress.PhoneNumber = !\u00225-555-555-5555\u0022\t\n\t\u0026SDPUserAddressCollection.Add(\u0026SDPCartUserAddress)\t\nEndIf\n",
+      "cleanSource": "\u0026SessionTxt = \u0026WebSession.Get(!\u0022UserAddressList\u0022)\n\u0026SDPUserAddressCollection.FromJson(\u0026SessionTxt)\n\nIf \u0026SDPUserAddressCollection.Count = 0\n\t\u0026SDPCartUserAddress\t= new()\n\t\u0026SDPCartUserAddress.Id = !\u00221\u0022\n\t\u0026SDPCartUserAddress.PersonName = !\u0022Jhon Doe\u0022\n\t\u0026SDPCartUserAddress.AddressLine1 = !\u0022Evergreen Terrace 1234\u0022\n\t\u0026SDPCartUserAddress.AddressLine2 = !\u0022Ap. 101\u0022\n\t\u0026SDPCartUserAddress.CountryName = !\u0022United States\u0022\n\t\u0026SDPCartUserAddress.StateName = !\u0022Florida\u0022\n\t\u0026SDPCartUserAddress.PhoneNumber = !\u00225-555-555-5555\u0022\t\n\t\u0026SDPUserAddressCollection.Add(\u0026SDPCartUserAddress)\t\nEndIf"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(out:\u0026SDPUserAddressCollection);\n",
+      "cleanSource": "Parm(out:\u0026SDPUserAddressCollection);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "SDPCartUserAddress"
+    ],
+    "calledBy": [
+      "SDPCartAddressGetSelected"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "WebSession",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Web Session"
+    },
+    {
+      "name": "SDPCartUserAddress",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDPCart User Address"
+    },
+    {
+      "name": "SDPUserAddressCollection",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "SDPUser Address Collection"
+    },
+    {
+      "name": "SessionTxt",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Session Txt"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

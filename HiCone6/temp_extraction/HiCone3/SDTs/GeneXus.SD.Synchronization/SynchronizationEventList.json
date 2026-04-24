@@ -1,0 +1,86 @@
+{
+  "uniqueId": "254c7342-5c59-48fa-a33d-38fa7b73d126",
+  "name": "SynchronizationEventList",
+  "type": "SDT",
+  "module": "GeneXus.SD.Synchronization",
+  "description": "Synchronization Event List",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "GxBeforeEventReplicator",
+      "GxOnPendingEventFailed"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "EventId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Pending Event Id"
+    },
+    {
+      "name": "EventTimestamp",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Pending Event Timestamp"
+    },
+    {
+      "name": "EventBC",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Pending Event BC"
+    },
+    {
+      "name": "EventAction",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Pending Event Action"
+    },
+    {
+      "name": "EventData",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Pending Event Data"
+    },
+    {
+      "name": "EventStatus",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Pending Event Status"
+    },
+    {
+      "name": "EventErrors",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Pending Event Extras"
+    }
+  ]
+}

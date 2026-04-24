@@ -1,0 +1,155 @@
+{
+  "uniqueId": "d5a30fb7-197b-45f7-a4ab-925bdad253e2",
+  "name": "WizardAuxiliarDataProcedure",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "Wizard Auxiliar Data Procedure",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\nDo Case\n\tCase \u0026WizardMode.ToUpper() = !\u0027GET\u0027\n\t\n\t\tFor \u0026WizardAuxiliarDataItem in \u0026WizardAuxiliarData\n\t\t\tIf \u0026WizardAuxiliarDataItem.Key = \u0026Key\n\t\t\t\t\u0026Value = \u0026WizardAuxiliarDataItem.Value\n\t\t\tEndIf\n\t\tEndFor\n\t\t\n\tCase \u0026WizardMode.ToUpper() = !\u0027SET\u0027\n\t\t\n\t\t\u0026ExistKey = False\n\t\tFor \u0026WizardAuxiliarDataItem in \u0026WizardAuxiliarData\n\t\t\tIf \u0026WizardAuxiliarDataItem.Key = \u0026Key\n\t\t\t\t\u0026ExistKey = True\n\t\t\t\t\u0026WizardAuxiliarDataItem.Value = \u0026Value\n\t\t\tEndIf\n\t\tEndFor\n\t\tIf not \u0026ExistKey\n\t\t\t\u0026WizardAuxiliarDataItem = new()\n\t\t\t\u0026WizardAuxiliarDataItem.Key = \u0026Key\n\t\t\t\u0026WizardAuxiliarDataItem.Value = \u0026Value\n\t\t\t\u0026WizardAuxiliarData.Add(\u0026WizardAuxiliarDataItem)\n\t\tEndIf\n\t\t\n\tCase \u0026WizardMode.ToUpper() = !\u0027DLT\u0027\n\t\t\n\t\t\u0026Index = 1\n\t\tFor \u0026WizardAuxiliarDataItem in \u0026WizardAuxiliarData\n\t\t\tIf \u0026WizardAuxiliarDataItem.Key = \u0026Key\n\t\t\t\tExit\n\t\t\tElse\n\t\t\t\t\u0026Index \u002B= 1\n\t\t\tEndIf\n\t\tEndFor\n\t\tIf \u0026Index \u003C= \u0026WizardAuxiliarData.Count\n\t\t\t\u0026WizardAuxiliarData.Remove(\u0026Index)\n\t\tEndIf\nEndCase\n\n",
+      "cleanSource": "\nDo Case\n\tCase \u0026WizardMode.ToUpper() = !\u0027GET\u0027\n\t\n\t\tFor \u0026WizardAuxiliarDataItem in \u0026WizardAuxiliarData\n\t\t\tIf \u0026WizardAuxiliarDataItem.Key = \u0026Key\n\t\t\t\t\u0026Value = \u0026WizardAuxiliarDataItem.Value\n\t\t\tEndIf\n\t\tEndFor\n\t\t\n\tCase \u0026WizardMode.ToUpper() = !\u0027SET\u0027\n\t\t\n\t\t\u0026ExistKey = False\n\t\tFor \u0026WizardAuxiliarDataItem in \u0026WizardAuxiliarData\n\t\t\tIf \u0026WizardAuxiliarDataItem.Key = \u0026Key\n\t\t\t\t\u0026ExistKey = True\n\t\t\t\t\u0026WizardAuxiliarDataItem.Value = \u0026Value\n\t\t\tEndIf\n\t\tEndFor\n\t\tIf not \u0026ExistKey\n\t\t\t\u0026WizardAuxiliarDataItem = new()\n\t\t\t\u0026WizardAuxiliarDataItem.Key = \u0026Key\n\t\t\t\u0026WizardAuxiliarDataItem.Value = \u0026Value\n\t\t\t\u0026WizardAuxiliarData.Add(\u0026WizardAuxiliarDataItem)\n\t\tEndIf\n\t\t\n\tCase \u0026WizardMode.ToUpper() = !\u0027DLT\u0027\n\t\t\n\t\t\u0026Index = 1\n\t\tFor \u0026WizardAuxiliarDataItem in \u0026WizardAuxiliarData\n\t\t\tIf \u0026WizardAuxiliarDataItem.Key = \u0026Key\n\t\t\t\tExit\n\t\t\tElse\n\t\t\t\t\u0026Index \u002B= 1\n\t\t\tEndIf\n\t\tEndFor\n\t\tIf \u0026Index \u003C= \u0026WizardAuxiliarData.Count\n\t\t\t\u0026WizardAuxiliarData.Remove(\u0026Index)\n\t\tEndIf\nEndCase"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(inout:\u0026WizardAuxiliarData, in:\u0026Key, inout:\u0026Value, in:\u0026WizardMode);\n",
+      "cleanSource": "parm(inout:\u0026WizardAuxiliarData, in:\u0026Key, inout:\u0026Value, in:\u0026WizardMode);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WizardAuxiliarData"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "WizardDataXML",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Wizard Data XML"
+    },
+    {
+      "name": "Key",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Key"
+    },
+    {
+      "name": "Value",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "inout",
+      "domain": "",
+      "description": "Value"
+    },
+    {
+      "name": "WizardMode",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Wizard Mode"
+    },
+    {
+      "name": "WizardAuxiliarData",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "inout",
+      "domain": "",
+      "description": "Wizard Auxiliar Data"
+    },
+    {
+      "name": "WizardAuxiliarDataItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Wizard Auxiliar Data Item"
+    },
+    {
+      "name": "ExistKey",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Exist Key"
+    },
+    {
+      "name": "Index",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Index"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

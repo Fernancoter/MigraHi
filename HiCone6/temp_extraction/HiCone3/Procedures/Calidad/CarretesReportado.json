@@ -1,0 +1,107 @@
+{
+  "uniqueId": "efbb9600-0d5f-4544-893d-22f5f410657e",
+  "name": "CarretesReportado",
+  "type": "Procedure",
+  "module": "Calidad",
+  "description": "Carretes Reportado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026Carretes = 0\n\nfor each ReclamoDetalle\n\twhere ReclamoDetalleId \u003E 0\n\twhere ReclamoId = \u0026ReclamoId\n\t\u0026Carretes \u002B= 1\nendfor\n",
+      "cleanSource": "\u0026Carretes = 0\n\nfor each ReclamoDetalle\n\twhere ReclamoDetalleId \u003E 0\n\twhere ReclamoId = \u0026ReclamoId\n\t\u0026Carretes \u002B= 1\nendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ReclamoId, out:\u0026Carretes);\n",
+      "cleanSource": "parm(in:\u0026ReclamoId, out:\u0026Carretes);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Calidad.ReclamoDetalle"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ReclamoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Reclamo Id"
+    },
+    {
+      "name": "Carretes",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Carretes"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

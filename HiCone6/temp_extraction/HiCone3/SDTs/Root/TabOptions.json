@@ -1,0 +1,69 @@
+{
+  "uniqueId": "759800ad-c380-43eb-af22-8f63796a0e0f",
+  "name": "TabOptions",
+  "type": "SDT",
+  "module": "",
+  "description": "Tab Options",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "ViewOperador",
+      "ViewInventario",
+      "ViewPrensaProducto",
+      "ViewProducto",
+      "ViewConfiguracion",
+      "ViewExtrusora",
+      "ViewPrensa",
+      "ViewProductoCategoria",
+      "ViewExtrusoraProducto"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Code",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Code"
+    },
+    {
+      "name": "Description",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Description"
+    },
+    {
+      "name": "Link",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Link"
+    },
+    {
+      "name": "WebComponent",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Web Component"
+    }
+  ]
+}

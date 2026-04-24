@@ -1,0 +1,127 @@
+{
+  "uniqueId": "a24997e4-8051-4345-9046-95ae6d7a4f2c",
+  "name": "WWP_GetSMTPParameters",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.Mail",
+  "description": "Get SMTPParameters",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "WWP_Logger.Debug(\u0026Pgmname, !\u0022Getting SMTP Parameters\u0022)\n\u0026SMTPParametersSDT = new()\n\nWWPBaseObjects.WWP_GetParameter.Text(!\u0022SMTP_Host\u0022, \u0026TextParameter)\n\u0026SMTPParametersSDT.Host = \u0026TextParameter\n\nWWP_GetParameter.Integer(!\u0022SMTP_Port\u0022, \u0026IntegerParameter)\n\u0026SMTPParametersSDT.Port = \u0026IntegerParameter\n\nWWPBaseObjects.WWP_GetParameter.Text(!\u0022SMTP_Username\u0022, \u0026TextParameter)\n\u0026SMTPParametersSDT.Username = \u0026TextParameter\n\nWWP_GetParameter.Text(!\u0022SMTP_Password\u0022, \u0026TextParameter)\n\u0026SMTPParametersSDT.Password = \u0026TextParameter\n\nWWPBaseObjects.WWP_GetParameter.Boolean(!\u0022SMTP_Authentication\u0022, \u0026BooleanParameter)\nIf \u0026BooleanParameter\n\t\u0026SMTPParametersSDT.Authentication = 1\nElse\t\n\t\u0026SMTPParametersSDT.Authentication = 0\nEndIf\n\nWWPBaseObjects.WWP_GetParameter.Boolean(!\u0022SMTP_Secure\u0022, \u0026BooleanParameter)\nIf \u0026BooleanParameter\n\t\u0026SMTPParametersSDT.Secure = 1\nElse\t\n\t\u0026SMTPParametersSDT.Secure = 0\nEndIf\n\nWWP_GetParameter.Integer(!\u0022SMTP_Timeout\u0022, \u0026IntegerParameter)\n\u0026SMTPParametersSDT.Timeout = \u0026IntegerParameter\n\nWWPBaseObjects.WWP_Logger.Debug(\u0026Pgmname, !\u0022SMTP Parameters: \u0022 \u002B \u0026SMTPParametersSDT.ToJson())\n",
+      "cleanSource": "WWP_Logger.Debug(\u0026Pgmname, !\u0022Getting SMTP Parameters\u0022)\n\u0026SMTPParametersSDT = new()\n\nWWPBaseObjects.WWP_GetParameter.Text(!\u0022SMTP_Host\u0022, \u0026TextParameter)\n\u0026SMTPParametersSDT.Host = \u0026TextParameter\n\nWWP_GetParameter.Integer(!\u0022SMTP_Port\u0022, \u0026IntegerParameter)\n\u0026SMTPParametersSDT.Port = \u0026IntegerParameter\n\nWWPBaseObjects.WWP_GetParameter.Text(!\u0022SMTP_Username\u0022, \u0026TextParameter)\n\u0026SMTPParametersSDT.Username = \u0026TextParameter\n\nWWP_GetParameter.Text(!\u0022SMTP_Password\u0022, \u0026TextParameter)\n\u0026SMTPParametersSDT.Password = \u0026TextParameter\n\nWWPBaseObjects.WWP_GetParameter.Boolean(!\u0022SMTP_Authentication\u0022, \u0026BooleanParameter)\nIf \u0026BooleanParameter\n\t\u0026SMTPParametersSDT.Authentication = 1\nElse\t\n\t\u0026SMTPParametersSDT.Authentication = 0\nEndIf\n\nWWPBaseObjects.WWP_GetParameter.Boolean(!\u0022SMTP_Secure\u0022, \u0026BooleanParameter)\nIf \u0026BooleanParameter\n\t\u0026SMTPParametersSDT.Secure = 1\nElse\t\n\t\u0026SMTPParametersSDT.Secure = 0\nEndIf\n\nWWP_GetParameter.Integer(!\u0022SMTP_Timeout\u0022, \u0026IntegerParameter)\n\u0026SMTPParametersSDT.Timeout = \u0026IntegerParameter\n\nWWPBaseObjects.WWP_Logger.Debug(\u0026Pgmname, !\u0022SMTP Parameters: \u0022 \u002B \u0026SMTPParametersSDT.ToJson())"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(out:\u0026SMTPParametersSDT);\n",
+      "cleanSource": "Parm(out:\u0026SMTPParametersSDT);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_Logger",
+      "WWPBaseObjects.WWP_GetParameter",
+      "WWPBaseObjects.Mail.WWP_SMTPParametersSDT"
+    ],
+    "calledBy": [
+      "WWP_SendPendingNotifications"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "BooleanParameter",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Boolean Parameter"
+    },
+    {
+      "name": "IntegerParameter",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Integer Parameter"
+    },
+    {
+      "name": "SMTPParametersSDT",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "SMTPParameters SDT"
+    },
+    {
+      "name": "TextParameter",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Text Parameter"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

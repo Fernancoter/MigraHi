@@ -1,0 +1,127 @@
+{
+  "uniqueId": "69a74882-fe5f-48a8-98db-086672bf92db",
+  "name": "SDTerminarCarrera",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDTerminar Carrera",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "        \n\t\u0026Mensajes.Clear()\n\t\u0026isOK = SDCheckeoCarreras.Udp(\u0026PrensadoId, EstadoCarrera.Terminada)\n\t\n\tif(\u0026isOK)\n\t\tSDTerminarCarreraDB.Call()\n\telse\n\t\t\u0026Msj = New()\n\t\t\u0026Msj.Id = !\u0027Validar carrera\u0027\n\t\t\u0026Msj.Description = \u0027Debe validar la carrera terminada\u0027\n\t\t\u0026Msj.Type = MessageTypes.Warning\n\t\t\u0026Mensajes.Add(\u0026Msj)\n\tendif\n",
+      "cleanSource": "        \n\t\u0026Mensajes.Clear()\n\t\u0026isOK = SDCheckeoCarreras.Udp(\u0026PrensadoId, EstadoCarrera.Terminada)\n\t\n\tif(\u0026isOK)\n\t\tSDTerminarCarreraDB.Call()\n\telse\n\t\t\u0026Msj = New()\n\t\t\u0026Msj.Id = !\u0027Validar carrera\u0027\n\t\t\u0026Msj.Description = \u0027Debe validar la carrera terminada\u0027\n\t\t\u0026Msj.Type = MessageTypes.Warning\n\t\t\u0026Mensajes.Add(\u0026Msj)\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensadoId, out:\u0026Mensajes);\n",
+      "cleanSource": "parm(in:\u0026PrensadoId, out:\u0026Mensajes);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SDCheckeoCarreras",
+      "Produccion.SDTerminarCarreraDB",
+      "GeneXus.Common.Messages",
+      "SDTerminarCarreraDB",
+      "SDCheckeoCarreras"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "PrensadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "Mensajes",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "Mensajes"
+    },
+    {
+      "name": "Msj",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Msj"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

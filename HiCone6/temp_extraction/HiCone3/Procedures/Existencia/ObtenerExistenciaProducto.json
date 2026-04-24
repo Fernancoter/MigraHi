@@ -1,0 +1,244 @@
+{
+  "uniqueId": "85fbbf95-639f-4ade-9c8b-be83d513187e",
+  "name": "ObtenerExistenciaProducto",
+  "type": "Procedure",
+  "module": "Existencia",
+  "description": "Obtener Existencia Producto",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\u0026SDTExistenciaProducto.Clear()\n\u0026Existencia.Load(\u0026ExistenciaId)\n\u0026ExistenciaFecha = \u0026Existencia.ExistenciaFechaHora\n\u0026ExistenciaTurnoId = \u0026Existencia.ExistenciaTurnoId\n\n\nfor each DB.Producto\n\twhere ProductoId \u003E 0\n\twhere ProductoCategoriaNombre = \u0026Categoria\n\twhere ProductoActivo = true\n\t\n\t\u0026ProductoId = ProductoId\n\t\u0026ProductoNombre = ProductoNombre\n\t\n\tfor each DB.ExistenciaProducto\n\t\twhere ExistenciaProductoId \u003E 0\n\t\twhere ProductoId = \u0026ProductoId\n\t\twhere ExistenciaId = \u0026ExistenciaId\n\t\t\n\t\t\u0026EPId = ExistenciaProductoId\n\t\t\n\t\t//SIEMPRES ACTUALIZAR DE BD\n\t\tDo Case\n\t\t Case \u0026TipoProducto = TipoProducto.Bobina\n\t\t      \n\t\t\t \u0026ExistenciaProductoCantidadTurnoSistema = ExistenciaBobinasPorTurnoId.Udp(\u0026ExistenciaTurnoId,\u0026ProductoId,\u0026ExistenciaFecha)\n\t\t  \t\n\t\t Case \u0026TipoProducto = TipoProducto.Pallet\n\t\t       \n\t\t   \t\u0026ExistenciaProductoCantidadTurnoSistema = ExistenciaPalletPorTurnoId.Udp(\u0026ExistenciaTurnoId,\u0026ProductoId,\u0026ExistenciaFecha)\n\t      \n        EndCase\n\t\t\n\t\t\u0026EPItem = New()\n\t\t\u0026EPItem.ExistenciaProductoId = \u0026EPId\n\t\t\u0026EPItem.ProductoId = \u0026ProductoId\n\t\t\u0026EPItem.ProductoNombre = \u0026ProductoNombre\n\t\t\u0026EPItem.ExistenciaId = \u0026ExistenciaId\n\t\t\u0026EPItem.ExistenciaProductoCantidad = ExistenciaProductoCantidad\n\t\t\u0026EPItem.ExistenciaProductoCantidadSistema = ExistenciaProductoCantidadSistema\n\t\t\u0026EPItem.ExistenciaProductoCantidadTurno = ExistenciaProductoCantidadTurno\n\t\t\u0026EPItem.ExistenciaProductoCantidadTurnoSistema = \u0026ExistenciaProductoCantidadTurnoSistema\n\t\t\u0026EPItem.ExistenciaProductoMillarReal = ExistenciaProductoMillarReal\n\t\t\u0026EPItem.ExistenciaProductoMillarSistema = ExistenciaProductoMillarSistema\n\t\t\u0026SDTExistenciaProducto.Add(\u0026EPItem)\n\t\tExit\n\t\t\n\twhen none\n\t\tdo \u0027ObtenerCantidadSistema\u0027\n\t\t\n\t\t\u0026EPItem = New()\n\t\t\u0026EPItem.ExistenciaProductoId = 0\n\t\t\u0026EPItem.ProductoId = \u0026ProductoId\n\t\t\u0026EPItem.ProductoNombre = \u0026ProductoNombre\n\t\t\u0026EPItem.ExistenciaId = \u0026ExistenciaId\n\t\t\u0026EPItem.ExistenciaProductoCantidad = 0\n\t\t\u0026EPItem.ExistenciaProductoCantidadSistema = \u0026Count\n\t\t\u0026EPItem.ExistenciaProductoCantidadTurnoSistema = \u0026ExistenciaProductoCantidadTurnoSistema\n\t\t\n\t\t\u0026EPItem.ExistenciaProductoMillarReal = 0\n\t\t\u0026EPItem.ExistenciaProductoMillarSistema = \u0026MillarSistema\n\t\t\u0026SDTExistenciaProducto.Add(\u0026EPItem)\n\t\n        endfor\n\t\nendfor\n\n\nSub \u0027ObtenerCantidadSistema\u0027\n\t\u0026Count = 0\n\t\u0026MillarSistema = 0\n\t\u0026PaletMillar = 0\n\t\n\tDo Case\n\t\t Case \u0026TipoProducto = TipoProducto.Bobina\n\t\t      \n\t\t      for each DB.Bobina\n\t\t\t      where BobinaId \u003E 0\n\t\t\t      where BobinaProductoId = \u0026ProductoId\n\t\t\t      where  BobinaHoraSalida.ToDate() \u003C= \u0026ExistenciaFecha.ToDate()\n\t\t\t      where  BobinaEstado in (EstadoBobina.Reposo,EstadoBobina.Disponible, EstadoBobina.Desmontada )\n\t\t\t      \u0026Count \u002B= 1\n\t\t      endfor\n\t\t  \t \n\t\t\t \u0026ExistenciaProductoCantidadTurnoSistema = ExistenciaBobinasPorTurnoId.Udp(\u0026ExistenciaTurnoId,\u0026ProductoId,\u0026ExistenciaFecha)\n\t\t  \t\n\t\t      \n\t\t Case \u0026TipoProducto = TipoProducto.Pallet\n\t\t     \n\t\t      for each DB.Palet\n\t\t\t      where PaletId \u003E 0\n\t\t\t      where PaletProductoId = \u0026ProductoId\n\t\t\t      where PaletEstatus in (EstatusPalet.Terminado)\n\t\t\t      //where PaletHoraFinEnsamble \u003E \u0026ExistenciaFechaAnterior and PaletHoraFinEnsamble \u003C= \u0026ExistenciaFecha when Not \u0026ExistenciaFechaAnterior.IsEmpty()\n\t\t\t      where PaletHoraFinEnsamble \u003C= \u0026ExistenciaFecha \n\t\t\t      \u0026Count \u002B= 1\n\t\t      endfor\n\t\t  \n\t\t   \u0026ExistenciaProductoCantidadTurnoSistema = ExistenciaPalletPorTurnoId.Udp(\u0026ExistenciaTurnoId,\u0026ProductoId,\u0026ExistenciaFecha)\n\t      \n        EndCase\nEndSub\n\n",
+      "cleanSource": "\n\u0026SDTExistenciaProducto.Clear()\n\u0026Existencia.Load(\u0026ExistenciaId)\n\u0026ExistenciaFecha = \u0026Existencia.ExistenciaFechaHora\n\u0026ExistenciaTurnoId = \u0026Existencia.ExistenciaTurnoId\n\n\nfor each DB.Producto\n\twhere ProductoId \u003E 0\n\twhere ProductoCategoriaNombre = \u0026Categoria\n\twhere ProductoActivo = true\n\t\n\t\u0026ProductoId = ProductoId\n\t\u0026ProductoNombre = ProductoNombre\n\t\n\tfor each DB.ExistenciaProducto\n\t\twhere ExistenciaProductoId \u003E 0\n\t\twhere ProductoId = \u0026ProductoId\n\t\twhere ExistenciaId = \u0026ExistenciaId\n\t\t\n\t\t\u0026EPId = ExistenciaProductoId\n\t\t\n\t\t//SIEMPRES ACTUALIZAR DE BD\n\t\tDo Case\n\t\t Case \u0026TipoProducto = TipoProducto.Bobina\n\t\t      \n\t\t\t \u0026ExistenciaProductoCantidadTurnoSistema = ExistenciaBobinasPorTurnoId.Udp(\u0026ExistenciaTurnoId,\u0026ProductoId,\u0026ExistenciaFecha)\n\t\t  \t\n\t\t Case \u0026TipoProducto = TipoProducto.Pallet\n\t\t       \n\t\t   \t\u0026ExistenciaProductoCantidadTurnoSistema = ExistenciaPalletPorTurnoId.Udp(\u0026ExistenciaTurnoId,\u0026ProductoId,\u0026ExistenciaFecha)\n\t      \n        EndCase\n\t\t\n\t\t\u0026EPItem = New()\n\t\t\u0026EPItem.ExistenciaProductoId = \u0026EPId\n\t\t\u0026EPItem.ProductoId = \u0026ProductoId\n\t\t\u0026EPItem.ProductoNombre = \u0026ProductoNombre\n\t\t\u0026EPItem.ExistenciaId = \u0026ExistenciaId\n\t\t\u0026EPItem.ExistenciaProductoCantidad = ExistenciaProductoCantidad\n\t\t\u0026EPItem.ExistenciaProductoCantidadSistema = ExistenciaProductoCantidadSistema\n\t\t\u0026EPItem.ExistenciaProductoCantidadTurno = ExistenciaProductoCantidadTurno\n\t\t\u0026EPItem.ExistenciaProductoCantidadTurnoSistema = \u0026ExistenciaProductoCantidadTurnoSistema\n\t\t\u0026EPItem.ExistenciaProductoMillarReal = ExistenciaProductoMillarReal\n\t\t\u0026EPItem.ExistenciaProductoMillarSistema = ExistenciaProductoMillarSistema\n\t\t\u0026SDTExistenciaProducto.Add(\u0026EPItem)\n\t\tExit\n\t\t\n\twhen none\n\t\tdo \u0027ObtenerCantidadSistema\u0027\n\t\t\n\t\t\u0026EPItem = New()\n\t\t\u0026EPItem.ExistenciaProductoId = 0\n\t\t\u0026EPItem.ProductoId = \u0026ProductoId\n\t\t\u0026EPItem.ProductoNombre = \u0026ProductoNombre\n\t\t\u0026EPItem.ExistenciaId = \u0026ExistenciaId\n\t\t\u0026EPItem.ExistenciaProductoCantidad = 0\n\t\t\u0026EPItem.ExistenciaProductoCantidadSistema = \u0026Count\n\t\t\u0026EPItem.ExistenciaProductoCantidadTurnoSistema = \u0026ExistenciaProductoCantidadTurnoSistema\n\t\t\n\t\t\u0026EPItem.ExistenciaProductoMillarReal = 0\n\t\t\u0026EPItem.ExistenciaProductoMillarSistema = \u0026MillarSistema\n\t\t\u0026SDTExistenciaProducto.Add(\u0026EPItem)\n\t\n        endfor\n\t\nendfor\n\n\nSub \u0027ObtenerCantidadSistema\u0027\n\t\u0026Count = 0\n\t\u0026MillarSistema = 0\n\t\u0026PaletMillar = 0\n\t\n\tDo Case\n\t\t Case \u0026TipoProducto = TipoProducto.Bobina\n\t\t      \n\t\t      for each DB.Bobina\n\t\t\t      where BobinaId \u003E 0\n\t\t\t      where BobinaProductoId = \u0026ProductoId\n\t\t\t      where  BobinaHoraSalida.ToDate() \u003C= \u0026ExistenciaFecha.ToDate()\n\t\t\t      where  BobinaEstado in (EstadoBobina.Reposo,EstadoBobina.Disponible, EstadoBobina.Desmontada )\n\t\t\t      \u0026Count \u002B= 1\n\t\t      endfor\n\t\t  \t \n\t\t\t \u0026ExistenciaProductoCantidadTurnoSistema = ExistenciaBobinasPorTurnoId.Udp(\u0026ExistenciaTurnoId,\u0026ProductoId,\u0026ExistenciaFecha)\n\t\t  \t\n\t\t      \n\t\t Case \u0026TipoProducto = TipoProducto.Pallet\n\t\t     \n\t\t      for each DB.Palet\n\t\t\t      where PaletId \u003E 0\n\t\t\t      where PaletProductoId = \u0026ProductoId\n\t\t\t      where PaletEstatus in (EstatusPalet.Terminado)\n\t\t\t      //where PaletHoraFinEnsamble \u003E \u0026ExistenciaFechaAnterior and PaletHoraFinEnsamble \u003C= \u0026ExistenciaFecha when Not \u0026ExistenciaFechaAnterior.IsEmpty()\n\t\t\t      where PaletHoraFinEnsamble \u003C= \u0026ExistenciaFecha \n\t\t\t      \u0026Count \u002B= 1\n\t\t      endfor\n\t\t  \n\t\t   \u0026ExistenciaProductoCantidadTurnoSistema = ExistenciaPalletPorTurnoId.Udp(\u0026ExistenciaTurnoId,\u0026ProductoId,\u0026ExistenciaFecha)\n\t      \n        EndCase\nEndSub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026TipoProducto, in:\u0026Categoria, in:\u0026ExistenciaId, out:\u0026SDTExistenciaProducto);\n",
+      "cleanSource": "parm(in:\u0026TipoProducto, in:\u0026Categoria, in:\u0026ExistenciaId, out:\u0026SDTExistenciaProducto);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Existencia.ExistenciaBobinasPorTurnoId",
+      "Existencia.ExistenciaPalletPorTurnoId",
+      "Existencia.SDTExistenciaProducto",
+      "DB.Producto",
+      "DB.Bobina",
+      "DB.Palet",
+      "DB.Existencia",
+      "DB.ExistenciaProducto",
+      "ExistenciaBobinasPorTurnoId",
+      "ExistenciaPalletPorTurnoId"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Existencia",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Existencia"
+    },
+    {
+      "name": "Categoria",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Categoria"
+    },
+    {
+      "name": "Count",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Count"
+    },
+    {
+      "name": "CountBobina",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Count Bobina"
+    },
+    {
+      "name": "CountPallet",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Count Pallet"
+    },
+    {
+      "name": "EPId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "EPId"
+    },
+    {
+      "name": "EPItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "EPItem"
+    },
+    {
+      "name": "ExistenciaFecha",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Existencia Fecha"
+    },
+    {
+      "name": "ExistenciaId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Existencia Id"
+    },
+    {
+      "name": "MillarSistema",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Millar Sistema"
+    },
+    {
+      "name": "PaletMillar",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet Millar"
+    },
+    {
+      "name": "ProductoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "ProductoNombre",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Nombre"
+    },
+    {
+      "name": "SDTExistenciaProducto",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "SDTExistencia Producto"
+    },
+    {
+      "name": "TipoProducto",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Tipo Producto"
+    },
+    {
+      "name": "ExistenciaFechaAnterior",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Existencia Fecha Anterior"
+    },
+    {
+      "name": "ExistenciaTurnoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Existencia Turno Id"
+    },
+    {
+      "name": "ExistenciaProductoCantidadTurnoSistema",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Existencia Producto Cantidad Turno Sistema"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

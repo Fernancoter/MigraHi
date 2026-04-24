@@ -1,0 +1,53 @@
+{
+  "uniqueId": "c32e5b56-2cea-4241-a7d3-5a7898c4b6d8",
+  "name": "SDTExtrusoraTurno",
+  "type": "SDT",
+  "module": "Produccion",
+  "description": "SDTExtrusora Turno",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "gestionarExtrusora"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ExtrusoraId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "ExtrusoraNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Nombre"
+    },
+    {
+      "name": "ExtrusoraImagen",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Imagen"
+    }
+  ]
+}

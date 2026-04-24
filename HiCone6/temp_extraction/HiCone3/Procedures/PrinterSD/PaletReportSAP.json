@@ -1,0 +1,139 @@
+{
+  "uniqueId": "678f3479-4630-4d6a-9e35-27f26772b559",
+  "name": "PaletReportSAP",
+  "type": "Procedure",
+  "module": "PrinterSD",
+  "description": "Palet Report SAP",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026EtiquetaPaletSDT = ObtenerSDTEtiquetaPalet.Udp(\u0026PaletId)\n\n//\u0026linkURL=\u0027https://barcode.tec-it.com/barcode.ashx?data=\u0027\u002B\u0026EtiquetaPaletSDT.PaletNoSerie\u002B \u0027\u0026code=Code128\u0027\n//\u0026QRImage.FromURL(\u0026linkURL)\ndebugger.Call(niveldebug.Informativo, \u0026Pgmname, \u0026EtiquetaPaletSDT.ToJson())\n\u0026QRImage = ObtenerBarCode.Udp(\u0026EtiquetaPaletSDT.PaletNoSerie)\n\nprint printBlock1\nprint printBlock1\nprint printBlock1\nprint printBlock1\n",
+      "cleanSource": "\u0026EtiquetaPaletSDT = ObtenerSDTEtiquetaPalet.Udp(\u0026PaletId)\n\n//\u0026linkURL=\u0027https://barcode.tec-it.com/barcode.ashx?data=\u0027\u002B\u0026EtiquetaPaletSDT.PaletNoSerie\u002B \u0027\u0026code=Code128\u0027\n//\u0026QRImage.FromURL(\u0026linkURL)\ndebugger.Call(niveldebug.Informativo, \u0026Pgmname, \u0026EtiquetaPaletSDT.ToJson())\n\u0026QRImage = ObtenerBarCode.Udp(\u0026EtiquetaPaletSDT.PaletNoSerie)\n\nprint printBlock1\nprint printBlock1\nprint printBlock1\nprint printBlock1"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Output_File(\u0026PDFNombre, \u0027PDF\u0027);\nParm(in:\u0026PaletId,in:\u0026PDFNombre);\n\n",
+      "cleanSource": "Output_File(\u0026PDFNombre, \u0027PDF\u0027);\nParm(in:\u0026PaletId,in:\u0026PDFNombre);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "PrinterSD.ObtenerSDTEtiquetaPalet",
+      "Web.Debugger",
+      "PrinterSD.ObtenerBarCode",
+      "PrinterSD.EtiquetaPaletSDT",
+      "debugger",
+      "ObtenerSDTEtiquetaPalet",
+      "ObtenerBarCode"
+    ],
+    "calledBy": [
+      "PaletReport"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "EtiquetaPaletSDT",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Etiqueta Palet SDT"
+    },
+    {
+      "name": "PaletId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Palet Id"
+    },
+    {
+      "name": "linkURL",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "link URL"
+    },
+    {
+      "name": "QRImage",
+      "elementType": "Variable",
+      "dataType": "BITMAP",
+      "accessor": "",
+      "domain": "",
+      "description": "QRImage"
+    },
+    {
+      "name": "PDFNombre",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "PDFNombre"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

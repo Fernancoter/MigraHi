@@ -1,0 +1,170 @@
+{
+  "uniqueId": "e18f476b-f3b9-4416-800a-d343caa16f1c",
+  "name": "WWP_SendSMS",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.SMS",
+  "description": "Send SMS",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026Success = False\n\u0026SMS.Load(\u0026SMSId)\n\nIf \u0026SMS.Fail()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022SMS not found with id: \u0022 \u002B \u0026SMSId.ToString().Trim())\n\treturn\nEndIf\n\nIf \u0026SMS.WWPSMSMessage.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022SMS message cannot be empty: \u0022 \u002B \u0026SMSId.ToString().Trim())\n\tWWP_UpdateSMSStatus(\u0026SMSId, WWP_StatusSMS.Error, !\u0022SMS message cannot be empty\u0022)\n\treturn\nEndIf\n\nIf \u0026SMS.WWPSMSSenderNumber.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022SMS sender cannot be empty: \u0022 \u002B \u0026SMSId.ToString().Trim())\n\tWWP_UpdateSMSStatus(\u0026SMSId, SMS.WWP_StatusSMS.Error, !\u0022SMS sender cannot be empty\u0022)\n\treturn\nEndIf\n\nIf \u0026SMS.WWPSMSRecipientNumbers.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022SMS recipient cannot be empty: \u0022 \u002B \u0026SMSId.ToString().Trim())\n\tWWP_UpdateSMSStatus(\u0026SMSId, WWP_StatusSMS.Error, !\u0022SMS recipient cannot be empty\u0022)\n\treturn\nEndIf\n\n\u0026RecipientPhoneList = WWP_ParsePhoneNumbersList(\u0026SMS.WWPSMSRecipientNumbers)\nIf not \u0026SMS.WWPSMSRecipientNumbers.IsEmpty() and \u0026RecipientPhoneList.Count = 0\n\tWWPBaseObjects.WWP_Logger.Error(\u0026Pgmname, !\u0022SMS recipient is not valid phone list: \u0022 \u002B \u0026SMSId.ToString().Trim())\n\tWWPBaseObjects.SMS.WWP_UpdateSMSStatus(\u0026SMSId, WWPBaseObjects.SMS.WWP_StatusSMS.Error, !\u0022SMS recipient is not valid\u0022)\n\treturn\nEndIf\n\n\u0026RequestBody = !\u0027{\u0022from\u0022: \u0022%1\u0022, \u0022to\u0022: %2, \u0022body\u0022: \u0022%3\u0022 }\u0027\n\u0026RequestBody = Format(\u0026RequestBody, \u0026SMS.DB.WWPSMSSenderNumber.Trim(), \u0026RecipientPhoneList.ToJson(), \u0026SMS.DB.DB.WWPSMSMessage.Trim())\n\nWWPBaseObjects.WWP_Logger.Debug(\u0026Pgmname, !\u0022Calling Sinch API with body: \u0022 \u002B \u0026RequestBody)\n\n\u0026HttpClient = new()\n\u0026HttpClient.Secure = 1\n\u0026HttpClient.Host = !\u0022sms.api.sinch.com\u0022\n\u0026HttpClient.BaseUrl = Format(!\u0022xms/v1/%1/\u0022, \u0026SMSParametersSDT.ServicePlanId)\n\u0026HttpClient.AddHeader(!\u0022Authorization\u0022, !\u0022Bearer \u0022 \u002B \u0026SMSParametersSDT.Token.Trim())\n\u0026HttpClient.AddHeader(!\u0022Content-Type\u0022, !\u0022application/json\u0022)\n\u0026HttpClient.AddString(\u0026RequestBody)\n\u0026HttpClient.Execute(!\u0022POST\u0022, !\u0022batches\u0022)\n\n\u0026Response = \u0026HttpClient.ToString()\nWWP_Logger.Debug(\u0026Pgmname, !\u0022Sinch API response: \u0022 \u002B \u0026Response)\n\u0026SendSMSResultSDT.FromJson(\u0026Response)\n\nIf \u0026HttpClient.StatusCode \u003C\u003E 201\n\tWWP_Logger.Error(\u0026Pgmname, Format(!\u0022Error sending sms with id: %1 - Code: %2 - %3\u0022, \u0026SMSId.ToString().Trim(), \u0026HttpClient.ErrCode.ToString().Trim(), \u0026HttpClient.ErrDescription))\n\tWWP_UpdateSMSStatus(\u0026SMSId, SMS.WWP_StatusSMS.Error, Format(!\u0022Code: %1 - %2\u0022, \u0026HttpClient.ErrCode.ToString().Trim(), \u0026HttpClient.ErrDescription))\n\treturn\nEndIf\n\nWWP_UpdateSMSStatus(\u0026SMSId, WWPBaseObjects.SMS.WWP_StatusSMS.Sent, \u0026Response)\n\u0026Success = True\ncommit\n",
+      "cleanSource": "\u0026Success = False\n\u0026SMS.Load(\u0026SMSId)\n\nIf \u0026SMS.Fail()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022SMS not found with id: \u0022 \u002B \u0026SMSId.ToString().Trim())\n\treturn\nEndIf\n\nIf \u0026SMS.WWPSMSMessage.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022SMS message cannot be empty: \u0022 \u002B \u0026SMSId.ToString().Trim())\n\tWWP_UpdateSMSStatus(\u0026SMSId, WWP_StatusSMS.Error, !\u0022SMS message cannot be empty\u0022)\n\treturn\nEndIf\n\nIf \u0026SMS.WWPSMSSenderNumber.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022SMS sender cannot be empty: \u0022 \u002B \u0026SMSId.ToString().Trim())\n\tWWP_UpdateSMSStatus(\u0026SMSId, SMS.WWP_StatusSMS.Error, !\u0022SMS sender cannot be empty\u0022)\n\treturn\nEndIf\n\nIf \u0026SMS.WWPSMSRecipientNumbers.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022SMS recipient cannot be empty: \u0022 \u002B \u0026SMSId.ToString().Trim())\n\tWWP_UpdateSMSStatus(\u0026SMSId, WWP_StatusSMS.Error, !\u0022SMS recipient cannot be empty\u0022)\n\treturn\nEndIf\n\n\u0026RecipientPhoneList = WWP_ParsePhoneNumbersList(\u0026SMS.WWPSMSRecipientNumbers)\nIf not \u0026SMS.WWPSMSRecipientNumbers.IsEmpty() and \u0026RecipientPhoneList.Count = 0\n\tWWPBaseObjects.WWP_Logger.Error(\u0026Pgmname, !\u0022SMS recipient is not valid phone list: \u0022 \u002B \u0026SMSId.ToString().Trim())\n\tWWPBaseObjects.SMS.WWP_UpdateSMSStatus(\u0026SMSId, WWPBaseObjects.SMS.WWP_StatusSMS.Error, !\u0022SMS recipient is not valid\u0022)\n\treturn\nEndIf\n\n\u0026RequestBody = !\u0027{\u0022from\u0022: \u0022%1\u0022, \u0022to\u0022: %2, \u0022body\u0022: \u0022%3\u0022 }\u0027\n\u0026RequestBody = Format(\u0026RequestBody, \u0026SMS.DB.WWPSMSSenderNumber.Trim(), \u0026RecipientPhoneList.ToJson(), \u0026SMS.DB.DB.WWPSMSMessage.Trim())\n\nWWPBaseObjects.WWP_Logger.Debug(\u0026Pgmname, !\u0022Calling Sinch API with body: \u0022 \u002B \u0026RequestBody)\n\n\u0026HttpClient = new()\n\u0026HttpClient.Secure = 1\n\u0026HttpClient.Host = !\u0022sms.api.sinch.com\u0022\n\u0026HttpClient.BaseUrl = Format(!\u0022xms/v1/%1/\u0022, \u0026SMSParametersSDT.ServicePlanId)\n\u0026HttpClient.AddHeader(!\u0022Authorization\u0022, !\u0022Bearer \u0022 \u002B \u0026SMSParametersSDT.Token.Trim())\n\u0026HttpClient.AddHeader(!\u0022Content-Type\u0022, !\u0022application/json\u0022)\n\u0026HttpClient.AddString(\u0026RequestBody)\n\u0026HttpClient.Execute(!\u0022POST\u0022, !\u0022batches\u0022)\n\n\u0026Response = \u0026HttpClient.ToString()\nWWP_Logger.Debug(\u0026Pgmname, !\u0022Sinch API response: \u0022 \u002B \u0026Response)\n\u0026SendSMSResultSDT.FromJson(\u0026Response)\n\nIf \u0026HttpClient.StatusCode \u003C\u003E 201\n\tWWP_Logger.Error(\u0026Pgmname, Format(!\u0022Error sending sms with id: %1 - Code: %2 - %3\u0022, \u0026SMSId.ToString().Trim(), \u0026HttpClient.ErrCode.ToString().Trim(), \u0026HttpClient.ErrDescription))\n\tWWP_UpdateSMSStatus(\u0026SMSId, SMS.WWP_StatusSMS.Error, Format(!\u0022Code: %1 - %2\u0022, \u0026HttpClient.ErrCode.ToString().Trim(), \u0026HttpClient.ErrDescription))\n\treturn\nEndIf\n\nWWP_UpdateSMSStatus(\u0026SMSId, WWPBaseObjects.SMS.WWP_StatusSMS.Sent, \u0026Response)\n\u0026Success = True\ncommit"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026SMSId, in:\u0026SMSParametersSDT, out:\u0026Success, out:\u0026SendSMSResultSDT);\n",
+      "cleanSource": "parm(in:\u0026SMSId, in:\u0026SMSParametersSDT, out:\u0026Success, out:\u0026SendSMSResultSDT);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_Logger",
+      "WWPBaseObjects.SMS.WWP_UpdateSMSStatus",
+      "WWPBaseObjects.SMS.WWP_ParsePhoneNumbersList",
+      "WWPBaseObjects.SMS.WWP_SMSParametersSDT",
+      "WWPBaseObjects.SMS.WWP_SendSMSResultSDT",
+      "WWPBaseObjects.SMS.WWP_SMS"
+    ],
+    "calledBy": [
+      "WWP_SendPendingNotifications"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "HttpClient",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Http Client"
+    },
+    {
+      "name": "RecipientPhoneList",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Recipient Phone List"
+    },
+    {
+      "name": "RequestBody",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Request Body"
+    },
+    {
+      "name": "Response",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Response"
+    },
+    {
+      "name": "SendSMSResultSDT",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "Send SMSResult SDT"
+    },
+    {
+      "name": "SMS",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "SMS"
+    },
+    {
+      "name": "SMSId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "SMSId"
+    },
+    {
+      "name": "SMSParametersSDT",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "SMSParameters SDT"
+    },
+    {
+      "name": "Success",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Success"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

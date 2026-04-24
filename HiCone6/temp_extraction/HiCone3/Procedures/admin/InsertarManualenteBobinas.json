@@ -1,0 +1,208 @@
+{
+  "uniqueId": "48016f68-6fa5-4330-ab89-584a16868707",
+  "name": "InsertarManualenteBobinas",
+  "type": "Procedure",
+  "module": "admin",
+  "description": "Insertar Manualente Bobinas",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "LoadWWPContext.Call(\u0026WWPContext)\n\nDebugger.Call(NivelDebug.Informativo, \u0026Pgmname, \u0027Inicio Insertar Extrusi\u00F3n: \u0027 \u002B \u0026ExtrusionId.ToString())\n\n\n\n\t\u0026i = 1\n\nDo while \u0026Pares \u003E= \u0026i\n\t\n\t\u0026Extrusion.Load(\u0026ExtrusionId)\n\t\u0026SiloVirgenId = \u0026Extrusion.ExtrusionSiloId\n\t\u0026LoteVirgen = \u0026Extrusion.DB.ExtrusionLoteSilo\n\t\u0026SiloMolidoId = \u0026Extrusion.ExtrusionSiloMolidoId\n\t\u0026ProductoId = \u0026Extrusion.ExtrusionProductoId\n\t\u0026ExtrusoraId = \u0026Extrusion.ExtrusionExtrusoraId\n\t\n\t\u0026BobinaNo = GenerarBobinaNo.Udp(\u0026ExtrusoraId, \u0026ProductoId)\n\t\u0026BobinaNo \u002B= 1\n\t\n\t//Estacion A\n\t\u0026SDTBobinaItem = new()\n\t\u0026SDTBobinaItem.ExtrusionId = \u0026ExtrusionId\n\t\u0026SDTBobinaItem.BobinaNo = \u0026BobinaNo\n\t\u0026SDTBobinaItem.BobinaEstado = EstadoBobina.Disponible\n\t\u0026SDTBobinaItem.BobinaHoraInicio = Now()\n\t\u0026SDTBobinaItem.BobinaHoraSalida = Now()\n\t\u0026SDTBobinaItem.BobinaOrigen = OrigenBobina.A\n\t\u0026SDTBobinaItem.BobinaSiloVirgenId = \u0026SiloVirgenId\n\t\u0026SDTBobinaItem.BobinaLoteVirgen = \u0026LoteVirgen\n\t\u0026SDTBobinaItem.BobinaSiloMolidoId = \u0026SiloMolidoId\n\t\n\t\u0026SDTBobinaItem.BobinaKg = 500\n\t\u0026SDTBobinaItem.BobinaEspesor = 12\n\t\u0026SDTBobinaItem.BobinaObservaciones = \u0027Insertada manualmente por \u0027 \u002B \u0026WWPContext.UserName\n\t\n\tGuardarBobina.Call(\u0026SDTBobinaItem)\n\t\n\t//Estacion B\n\t\u0026SDTBobinaItem = new()\n\t\u0026SDTBobinaItem.ExtrusionId = \u0026ExtrusionId\n\t\u0026SDTBobinaItem.BobinaNo = \u0026BobinaNo\n\t\u0026SDTBobinaItem.BobinaEstado = EstadoBobina.Disponible\n\t\u0026SDTBobinaItem.BobinaHoraInicio = Now()\n\t\u0026SDTBobinaItem.BobinaHoraSalida = Now()\n\t\u0026SDTBobinaItem.BobinaOrigen = OrigenBobina.B\n\t\u0026SDTBobinaItem.BobinaSiloVirgenId = \u0026SiloVirgenId\n\t\u0026SDTBobinaItem.BobinaLoteVirgen = \u0026LoteVirgen\n\t\u0026SDTBobinaItem.BobinaSiloMolidoId = \u0026SiloMolidoId\n\t\n\t\u0026SDTBobinaItem.BobinaKg = 500\n\t\u0026SDTBobinaItem.BobinaEspesor = 12\n\t\u0026SDTBobinaItem.BobinaObservaciones = \u0027Insertada manualmente por \u0027 \u002B \u0026WWPContext.UserName\n\t\n\tGuardarBobina.Call(\u0026SDTBobinaItem)\n\t\u0026i =  \u0026i\u002B1\n\nEnddo\n\t\n\n\n\t\n\n\t\n\n\n\t\n\n\t\n\t\n\t\n\t\n",
+      "cleanSource": "LoadWWPContext.Call(\u0026WWPContext)\n\nDebugger.Call(NivelDebug.Informativo, \u0026Pgmname, \u0027Inicio Insertar Extrusi\u00F3n: \u0027 \u002B \u0026ExtrusionId.ToString())\n\n\n\n\t\u0026i = 1\n\nDo while \u0026Pares \u003E= \u0026i\n\t\n\t\u0026Extrusion.Load(\u0026ExtrusionId)\n\t\u0026SiloVirgenId = \u0026Extrusion.ExtrusionSiloId\n\t\u0026LoteVirgen = \u0026Extrusion.DB.ExtrusionLoteSilo\n\t\u0026SiloMolidoId = \u0026Extrusion.ExtrusionSiloMolidoId\n\t\u0026ProductoId = \u0026Extrusion.ExtrusionProductoId\n\t\u0026ExtrusoraId = \u0026Extrusion.ExtrusionExtrusoraId\n\t\n\t\u0026BobinaNo = GenerarBobinaNo.Udp(\u0026ExtrusoraId, \u0026ProductoId)\n\t\u0026BobinaNo \u002B= 1\n\t\n\t//Estacion A\n\t\u0026SDTBobinaItem = new()\n\t\u0026SDTBobinaItem.ExtrusionId = \u0026ExtrusionId\n\t\u0026SDTBobinaItem.BobinaNo = \u0026BobinaNo\n\t\u0026SDTBobinaItem.BobinaEstado = EstadoBobina.Disponible\n\t\u0026SDTBobinaItem.BobinaHoraInicio = Now()\n\t\u0026SDTBobinaItem.BobinaHoraSalida = Now()\n\t\u0026SDTBobinaItem.BobinaOrigen = OrigenBobina.A\n\t\u0026SDTBobinaItem.BobinaSiloVirgenId = \u0026SiloVirgenId\n\t\u0026SDTBobinaItem.BobinaLoteVirgen = \u0026LoteVirgen\n\t\u0026SDTBobinaItem.BobinaSiloMolidoId = \u0026SiloMolidoId\n\t\n\t\u0026SDTBobinaItem.BobinaKg = 500\n\t\u0026SDTBobinaItem.BobinaEspesor = 12\n\t\u0026SDTBobinaItem.BobinaObservaciones = \u0027Insertada manualmente por \u0027 \u002B \u0026WWPContext.UserName\n\t\n\tGuardarBobina.Call(\u0026SDTBobinaItem)\n\t\n\t//Estacion B\n\t\u0026SDTBobinaItem = new()\n\t\u0026SDTBobinaItem.ExtrusionId = \u0026ExtrusionId\n\t\u0026SDTBobinaItem.BobinaNo = \u0026BobinaNo\n\t\u0026SDTBobinaItem.BobinaEstado = EstadoBobina.Disponible\n\t\u0026SDTBobinaItem.BobinaHoraInicio = Now()\n\t\u0026SDTBobinaItem.BobinaHoraSalida = Now()\n\t\u0026SDTBobinaItem.BobinaOrigen = OrigenBobina.B\n\t\u0026SDTBobinaItem.BobinaSiloVirgenId = \u0026SiloVirgenId\n\t\u0026SDTBobinaItem.BobinaLoteVirgen = \u0026LoteVirgen\n\t\u0026SDTBobinaItem.BobinaSiloMolidoId = \u0026SiloMolidoId\n\t\n\t\u0026SDTBobinaItem.BobinaKg = 500\n\t\u0026SDTBobinaItem.BobinaEspesor = 12\n\t\u0026SDTBobinaItem.BobinaObservaciones = \u0027Insertada manualmente por \u0027 \u002B \u0026WWPContext.UserName\n\t\n\tGuardarBobina.Call(\u0026SDTBobinaItem)\n\t\u0026i =  \u0026i\u002B1\n\nEnddo"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ExtrusionId, in: \u0026Pares);\n",
+      "cleanSource": "parm(in:\u0026ExtrusionId, in: \u0026Pares);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.LoadWWPContext",
+      "Produccion.GuardarBobina",
+      "Produccion.GenerarBobinaNo",
+      "Web.Debugger",
+      "WWPBaseObjects.WWPContext",
+      "Produccion.SDTBobina",
+      "DB.Extrusion",
+      "DB.Bobina",
+      "LoadWWPContext",
+      "Debugger",
+      "GuardarBobina",
+      "GenerarBobinaNo"
+    ],
+    "calledBy": [
+      "AgregarBobinas"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "BobinaNo",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina No"
+    },
+    {
+      "name": "Extrusion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "ExtrusoraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "LoteVirgen",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Lote Virgen"
+    },
+    {
+      "name": "ProductoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "SDTBobinaItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTBobina Item"
+    },
+    {
+      "name": "SiloMolidoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Silo Molido Id"
+    },
+    {
+      "name": "SiloVirgenId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Silo Virgen Id"
+    },
+    {
+      "name": "Bobina",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina"
+    },
+    {
+      "name": "WWPContext",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPContext"
+    },
+    {
+      "name": "Pares",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Pares"
+    },
+    {
+      "name": "i",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "i"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

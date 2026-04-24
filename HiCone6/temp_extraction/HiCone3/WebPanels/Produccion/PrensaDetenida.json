@@ -1,0 +1,159 @@
+{
+  "uniqueId": "0d2e0824-8e4b-4465-8a72-1bfd12875d27",
+  "name": "PrensaDetenida",
+  "type": "WebPanel",
+  "module": "Produccion",
+  "description": "Prensa Detenida",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "\u0026Detenido.ControlValueChanged",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "if(Not \u0026Detenido)\n\t\ttb1.Visible = true\n\telse\n\t\ttb1.Visible = false\n\tendif"
+    },
+    {
+      "blockName": "Start",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "\u0026Detenido = true\n\ttb1.Visible = false\n\ttb2.Visible = false\n\tRetomar.Enabled = false"
+    },
+    {
+      "blockName": "\u0027Aceptar\u0027",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "if(Not \u0026Detenido) //Interrupcion\n\t\tif(Not \u0026Motivo.IsEmpty())\n\t              Aceptar.Enabled = false\n\t\t      Retomar.Enabled = true\n\t\t      \u0026Motivo.Enabled = false\n\t\t      \u0026Detenido.Enabled = false\n\t\t      tb2.Visible = true\n\t\t      \n\t\t      \u0026Id = CrearInterrupcion.Udp(\u0026Motivo)\n\t\t      do \u0027PrensadoInterrupcion\u0027 \n\t       else\n\t\t       msg(\u0027Debe redactar el motivo de la interrupci\u00F3n\u0027)\n\t       endif\n\t\t     \n\telse\n\t      GlobalEvents.DetenerPrensa(\u0026Detenido)\n\t      return\n\tendif"
+    },
+    {
+      "blockName": "\u0027Retomar\u0027",
+      "blockType": "Event",
+      "rawSource": "(Extracted from full RTF)",
+      "cleanSource": "\u0026Temporizador.Stop()\n\t\n\t//Actualizar hora\n\t\u0026Interrupcion.Load(\u0026Id)\n\t\u0026Interrupcion.InterrupcionHoraFin = Now()\n\t\u0026Interrupcion.InterrupcionTiempo = \u0026Temporizador\n\t\u0026Interrupcion.InterrupcionConcluida = true\n\t\u0026Interrupcion.Save()\n\t\n\tif(\u0026Interrupcion.Success())\n\t\tcommit\n\t\treturn\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensadoId);\n",
+      "cleanSource": "parm(in:\u0026PrensadoId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Interrupcion",
+      "DB.PrensadoInterrupcion",
+      "CrearInterrupcion"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Detenido",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Detenido"
+    },
+    {
+      "name": "Id",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Id"
+    },
+    {
+      "name": "Interrupcion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Interrupcion"
+    },
+    {
+      "name": "InterrupcionId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Interrupcion Id"
+    },
+    {
+      "name": "Motivo",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Motivo"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "PrensadoInterrupcion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Interrupcion"
+    },
+    {
+      "name": "Temporizador",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Temporizador"
+    },
+    {
+      "name": "Tiempo",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Tiempo"
+    },
+    {
+      "name": "Today",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    }
+  ]
+}

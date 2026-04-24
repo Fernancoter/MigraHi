@@ -1,0 +1,132 @@
+{
+  "uniqueId": "9f455089-db24-4181-bebb-4fcee17c45c8",
+  "name": "JornadaLaboral",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Jornada Laboral",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\u0026Now = Now()\n\t\u0026Today = Today()\n\t\u0026Hora = \u0026Now.Hour()\n\t\n\t\u0026FechaLaboral = \u0026Today\n\tif(\u0026Hora \u003C 6)\n\t\t\u0026FechaLaboral = \u0026Today - 1\n\tendif\n\n//\tdo \u0027JornadaInicioHora\u0027\n//\tdo \u0027FechaLaboral\u0027\n//\t\n//\tSub \u0027FechaLaboral\u0027\n//\t\tif(\u0026Now.Hour() \u003E= \u0026HoraInicio.Hour())\n//\t\t\t\u0026FechaLaboral = \u0026Today\n//\t\telse\n//\t\t        \u0026FechaLaboral = \u0026Today - 1\n//\t\tendif\n//        EndSub\n//\t\n//\tSub \u0027JornadaInicioHora\u0027\n//\t\tfor each DB.Turno\n//\t\t\twhere TurnoId \u003E 0\n//\t\t\twhere TurnoEnum = EnumTurno.UNO\n//\t\t\t\u0026HoraInicio = TurnoHoraInicio\n//\t\t\tExit\n//\t\tendfor\n//\tendsub\n",
+      "cleanSource": "\t\u0026Now = Now()\n\t\u0026Today = Today()\n\t\u0026Hora = \u0026Now.Hour()\n\t\n\t\u0026FechaLaboral = \u0026Today\n\tif(\u0026Hora \u003C 6)\n\t\t\u0026FechaLaboral = \u0026Today - 1\n\tendif\n\n//\tdo \u0027JornadaInicioHora\u0027\n//\tdo \u0027FechaLaboral\u0027\n//\t\n//\tSub \u0027FechaLaboral\u0027\n//\t\tif(\u0026Now.Hour() \u003E= \u0026HoraInicio.Hour())\n//\t\t\t\u0026FechaLaboral = \u0026Today\n//\t\telse\n//\t\t        \u0026FechaLaboral = \u0026Today - 1\n//\t\tendif\n//        EndSub\n//\t\n//\tSub \u0027JornadaInicioHora\u0027\n//\t\tfor each DB.Turno\n//\t\t\twhere TurnoId \u003E 0\n//\t\t\twhere TurnoEnum = EnumTurno.UNO\n//\t\t\t\u0026HoraInicio = TurnoHoraInicio\n//\t\t\tExit\n//\t\tendfor\n//\tendsub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(out:\u0026FechaLaboral);\n",
+      "cleanSource": "parm(out:\u0026FechaLaboral);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "PrensadosDelDiaWCGetFilterData",
+      "ExtrusionesDelDiaWCGetFilterData"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "FechaLaboral",
+      "elementType": "Parameter",
+      "dataType": "DATE",
+      "accessor": "out",
+      "domain": "",
+      "description": "Fecha Laboral"
+    },
+    {
+      "name": "HoraFin",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Hora Fin"
+    },
+    {
+      "name": "HoraInicio",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Hora Inicio"
+    },
+    {
+      "name": "Now",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Now"
+    },
+    {
+      "name": "Hora",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Hora"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

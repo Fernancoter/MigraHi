@@ -1,0 +1,140 @@
+{
+  "uniqueId": "eb681a47-ec5f-4a61-8dc6-61b8ac4fd7a3",
+  "name": "SDPMDFFieldsRequiredChek",
+  "type": "Procedure",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "SDPMDFFields Required Chek",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\nfor \u0026DynamicFormField in \u0026DynamicFormFields\n\tif \u0026DynamicFormField.MDFDynamicFieldRequired\n\t\t\u0026error = false\t\t\n\t\t\n\t\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Character and \u0026DynamicFormField.MDFDynamicFieldValue.IsEmpty()\n\t\t\t\u0026error = true\n\t\tendif\n\t\t\n\t\t//\u002B Old versions of iOS must compare using \u0022\u003Cnull\u003E\u0022\n\t\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Date  //and \u0026DynamicFormField.MDFDynamicFieldValueDate.IsEmpty()\n\t\t\t\u0026text = \u0026DynamicFormField.MDFDynamicFieldValueDate.ToString().Trim()\n\t\t\tif \u0026text.IsEmpty() or \u0026text = !\u0022\u003Cnull\u003E\u0022 or \u0026DynamicFormField.MDFDynamicFieldValueDate.IsEmpty()\n\t\t\t\t\u0026error = true\n\t\t\tendif\n\t\tendif\t\t\n\t\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Decimal  //and \u0026DynamicFormField.MDFDynamicFieldValueDecimal.IsEmpty()\n\t\t\t\u0026text = \u0026DynamicFormField.MDFDynamicFieldValueDecimal.ToString().Trim()\n\t\t\tif \u0026text.IsEmpty() or \u0026text = !\u0022\u003Cnull\u003E\u0022 or \u0026DynamicFormField.MDFDynamicFieldValueDecimal.IsEmpty()\n\t\t\t\t\u0026error = true\n\t\t\tendif\n\t\tendif\t\t\n\t\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Numeric  //and \u0026DynamicFormField.MDFDynamicFieldValueNumeric.IsEmpty()\n\t\t\t\u0026text = \u0026DynamicFormField.MDFDynamicFieldValueNumeric.ToString().Trim()\n\t\t\tif \u0026text.IsEmpty() or \u0026text = !\u0022\u003Cnull\u003E\u0022 or \u0026DynamicFormField.MDFDynamicFieldValueNumeric.IsEmpty()\n\t\t\t\t\u0026error = true\n\t\t\tendif\n\t\tendif\n\t\n\t\tif \u0026error\n\t\t\t\u0026Message = new()\n\t\t\t\u0026Messages.Add(\u0026Message)\n\t\t\t\n\t\t\t\u0026Message.Type = MessageTypes.Error\n\t\t\t\u0026Message.Description = format(\u0022The field \u0027%1\u0027 is required\u0022, \u0026DynamicFormField.MDFDynamicFieldDescription)\n\t\tendif\t\n\tendif\nendfor\n",
+      "cleanSource": "\nfor \u0026DynamicFormField in \u0026DynamicFormFields\n\tif \u0026DynamicFormField.MDFDynamicFieldRequired\n\t\t\u0026error = false\t\t\n\t\t\n\t\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Character and \u0026DynamicFormField.MDFDynamicFieldValue.IsEmpty()\n\t\t\t\u0026error = true\n\t\tendif\n\t\t\n\t\t//\u002B Old versions of iOS must compare using \u0022\u003Cnull\u003E\u0022\n\t\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Date  //and \u0026DynamicFormField.MDFDynamicFieldValueDate.IsEmpty()\n\t\t\t\u0026text = \u0026DynamicFormField.MDFDynamicFieldValueDate.ToString().Trim()\n\t\t\tif \u0026text.IsEmpty() or \u0026text = !\u0022\u003Cnull\u003E\u0022 or \u0026DynamicFormField.MDFDynamicFieldValueDate.IsEmpty()\n\t\t\t\t\u0026error = true\n\t\t\tendif\n\t\tendif\t\t\n\t\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Decimal  //and \u0026DynamicFormField.MDFDynamicFieldValueDecimal.IsEmpty()\n\t\t\t\u0026text = \u0026DynamicFormField.MDFDynamicFieldValueDecimal.ToString().Trim()\n\t\t\tif \u0026text.IsEmpty() or \u0026text = !\u0022\u003Cnull\u003E\u0022 or \u0026DynamicFormField.MDFDynamicFieldValueDecimal.IsEmpty()\n\t\t\t\t\u0026error = true\n\t\t\tendif\n\t\tendif\t\t\n\t\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Numeric  //and \u0026DynamicFormField.MDFDynamicFieldValueNumeric.IsEmpty()\n\t\t\t\u0026text = \u0026DynamicFormField.MDFDynamicFieldValueNumeric.ToString().Trim()\n\t\t\tif \u0026text.IsEmpty() or \u0026text = !\u0022\u003Cnull\u003E\u0022 or \u0026DynamicFormField.MDFDynamicFieldValueNumeric.IsEmpty()\n\t\t\t\t\u0026error = true\n\t\t\tendif\n\t\tendif\n\t\n\t\tif \u0026error\n\t\t\t\u0026Message = new()\n\t\t\t\u0026Messages.Add(\u0026Message)\n\t\t\t\n\t\t\t\u0026Message.Type = MessageTypes.Error\n\t\t\t\u0026Message.Description = format(\u0022The field \u0027%1\u0027 is required\u0022, \u0026DynamicFormField.MDFDynamicFieldDescription)\n\t\tendif\t\n\tendif\nendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026DynamicFormFields, out:\u0026Messages);\n",
+      "cleanSource": "parm(in:\u0026DynamicFormFields, out:\u0026Messages);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "GeneXus.Common.Messages",
+      "WorkWithPlus.NativeMobile.MDFDynamicField"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "DynamicFormField",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Dynamic Form Field"
+    },
+    {
+      "name": "DynamicFormFields",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "Dynamic Form Fields"
+    },
+    {
+      "name": "error",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "error"
+    },
+    {
+      "name": "Message",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Message"
+    },
+    {
+      "name": "Messages",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "Messages"
+    },
+    {
+      "name": "text",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "text"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

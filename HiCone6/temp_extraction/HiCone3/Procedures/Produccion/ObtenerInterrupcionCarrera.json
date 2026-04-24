@@ -1,0 +1,157 @@
+{
+  "uniqueId": "2266bfdd-ade2-450c-9318-32997c2c654e",
+  "name": "ObtenerInterrupcionCarrera",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Obtener Interrupcion Carrera",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "/*If \u0026CarreraFechaValidacion.IsEmpty()\n\t\u0026CarreraFechaValidacion = Today()\nEndIf*/\n\nFor Each\n\tOrder InterrupcionHoraInicio\n\tWhere InterrupcionHoraInicio \u003E= \u0026CarreraFechaRegistro\n    //Where InterrupcionHoraFin \u003C= \u0026CarreraFechaValidacion.AddDays(1)\n\tWhere \u0026CarreraEstado = \u0027En Proceso\u0027 or InterrupcionHoraFin \u003C= \u0026CarreraFechaValidacion\n\n    //Where InterrupcionId = PrensadoInterrupcion.InterrupcionId\n    Defined by InterrupcionId\n\n    \u0026AuxInterrupcionId = InterrupcionId\n\tFor Each DB.PrensadoInterrupcion\n\t\tWhere InterrupcionId = \u0026AuxInterrupcionId\n\t\t\t\u0026InterrupcionId = InterrupcionId\n\t\tExit\n\tEndFor\nEndFor\n",
+      "cleanSource": "/*If \u0026CarreraFechaValidacion.IsEmpty()\n\t\u0026CarreraFechaValidacion = Today()\nEndIf*/\n\nFor Each\n\tOrder InterrupcionHoraInicio\n\tWhere InterrupcionHoraInicio \u003E= \u0026CarreraFechaRegistro\n    //Where InterrupcionHoraFin \u003C= \u0026CarreraFechaValidacion.AddDays(1)\n\tWhere \u0026CarreraEstado = \u0027En Proceso\u0027 or InterrupcionHoraFin \u003C= \u0026CarreraFechaValidacion\n\n    //Where InterrupcionId = PrensadoInterrupcion.InterrupcionId\n    Defined by InterrupcionId\n\n    \u0026AuxInterrupcionId = InterrupcionId\n\tFor Each DB.PrensadoInterrupcion\n\t\tWhere InterrupcionId = \u0026AuxInterrupcionId\n\t\t\t\u0026InterrupcionId = InterrupcionId\n\t\tExit\n\tEndFor\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026CarreraFechaRegistro, in:\u0026CarreraFechaValidacion,in:\u0026CarreraEstado, out:\u0026InterrupcionId);\n",
+      "cleanSource": "parm(in:\u0026CarreraFechaRegistro, in:\u0026CarreraFechaValidacion,in:\u0026CarreraEstado, out:\u0026InterrupcionId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.PrensadoInterrupcion"
+    ],
+    "calledBy": [
+      "LlenadoCarreraInterrupcion"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "BobinaHoraInicio",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Hora Inicio"
+    },
+    {
+      "name": "BobinaHoraSalida",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Hora Salida"
+    },
+    {
+      "name": "BobinaEstado",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Estado"
+    },
+    {
+      "name": "InterrupcionId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Interrupcion Id"
+    },
+    {
+      "name": "CarreraFechaRegistro",
+      "elementType": "Parameter",
+      "dataType": "DATETIME",
+      "accessor": "in",
+      "domain": "",
+      "description": "Carrera Fecha Registro"
+    },
+    {
+      "name": "CarreraFechaValidacion",
+      "elementType": "Parameter",
+      "dataType": "DATETIME",
+      "accessor": "in",
+      "domain": "",
+      "description": "Carrera Fecha Validacion"
+    },
+    {
+      "name": "AuxInterrupcionId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Interrupcion Id"
+    },
+    {
+      "name": "CarreraEstado",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Carrera Estado"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

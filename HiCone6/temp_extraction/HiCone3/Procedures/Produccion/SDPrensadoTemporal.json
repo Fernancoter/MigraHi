@@ -1,0 +1,409 @@
+{
+  "uniqueId": "34af10cc-bf95-45cb-b243-34085515998c",
+  "name": "SDPrensadoTemporal",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDPrensado Temporal",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\n\t\u0026PrensadoOrigen.Load(\u0026PrenOrigenId)\n\t\u0026PrensaId = \u0026PrensadoOrigen.PrensadoPrensaId\n\t\u0026TroquelOrigenId = \u0026PrensadoOrigen.PrensadoTroquelId\n\t\n\t\u0026Prensado = New()\n\t\u0026Prensado.PrensadoPrensaId = \u0026PrensaId\n\t\u0026Prensado.PrensadoHoraIniciaProceso = \u0026PrensadoOrigen.PrensadoHoraIniciaProceso\n\t\u0026Prensado.PrensadoTurnoId = \u0026PrensadoOrigen.PrensadoTurnoId\n\t\u0026Prensado.PrensadoFecha = \u0026PrensadoOrigen.PrensadoFecha\n\t\u0026Prensado.PrensadoOperadorId.SetNull()\n\t\u0026Prensado.PrensadoEstado = EstadoPrensado.Intermedio\n\t\u0026Prensado.PrensadoLevasUnidadMedida = UnidadMedida.kg\n        \u0026Prensado.PrensadoRodillosUnidadMedida = UnidadMedida.kg\n\t\n\tif(\u0026ProductoId \u003E 0)\n\t\t\n\t\t//Calibraci\u00F3n Nueva\n\t\t\u0026Prensado.PrensadoProductoId = \u0026ProductoId\n\t\t\n\t\t//Tratamiento de Troqueles\n\t\tif(\u0026TroquelId \u003E 0)\n\t\t\t\u0026Prensado.PrensadoTroquelId = \u0026TroquelId\n\t\t\tSDCrearPrensaTroquel.Call(\u0026PrensaId, \u0026TroquelId)\n\t\telse\n\t\t\t\u0026Prensado.DB.PrensadoTroquelId = \u0026PrensadoOrigen.PrensadoTroquelId\n\t\tendif\n\telse\n\t\t//Calibraci\u00F3n Original\n\t\t\u0026Prensado.PrensadoProductoId = \u0026PrensadoOrigen.PrensadoProductoId\n\t\t\u0026Prensado.PrensadoTroquelId = \u0026PrensadoOrigen.PrensadoTroquelId\n\tendif\n\n\t\u0026Prensado.Save()\n\t\n\tif(\u0026Prensado.Success())\n\t\t\u0026NextPrenId = \u0026Prensado.PrensadoId\n\t\t\n\t\tdo \u0027GestionarBobina\u0027\n\t\t\n\t\tcommit\n\tendif\n\n        Sub \u0027GestionarBobina\u0027\n\t\t\n\t\t\u0026BobinaItem = SDBobinaEnPrensado.Udp(\u0026PrenOrigenId)\n\t\t\n\t\tif(\u0026BobinaItem.BobinaId \u003E 0)\n\t\t\t\n\t\t\t\u0026Factor = SDFactorConsumoKg.Udp(\u0026BobinaItem.BobinaKg)\n\t\t\t\n\t\t\tif(\u0026BobinaItem.BobinaCarreras \u003C \u0026Factor)\n\t                        \n\t\t\t\tSetEstadoBobina.Call(\u0026BobinaItem.BobinaId, EstadoBobina.Desmontada)\n\t\t\t\t\n//\t\t\t\tif(\u0026ProductoId \u003E 0)\n//\t\t\t\t        SetEstadoBobina.Call(\u0026BobinaItem.BobinaId, EstadoBobina.Desmontada)\n//\t\t\t\telse\n//\t\t\t\t\tCrearPrensadoBobina.Call(\u0026NextPrenId, \u0026BobinaItem.BobinaId)\n//\t\t\t\tendif\n\t\t\telse\n\t\t\t\tSetEstadoBobina.Call(\u0026BobinaItem.BobinaId, EstadoBobina.Consumida)\n\t\t\t\tSDPrensadoMermaKg.Call(\u0026PrenOrigenId)\n\t\t\tendif\n\t        endif\n\t\n\tEndSub\n\n\t\t\n\t\t\t\t\n",
+      "cleanSource": "\t\n\t\u0026PrensadoOrigen.Load(\u0026PrenOrigenId)\n\t\u0026PrensaId = \u0026PrensadoOrigen.PrensadoPrensaId\n\t\u0026TroquelOrigenId = \u0026PrensadoOrigen.PrensadoTroquelId\n\t\n\t\u0026Prensado = New()\n\t\u0026Prensado.PrensadoPrensaId = \u0026PrensaId\n\t\u0026Prensado.PrensadoHoraIniciaProceso = \u0026PrensadoOrigen.PrensadoHoraIniciaProceso\n\t\u0026Prensado.PrensadoTurnoId = \u0026PrensadoOrigen.PrensadoTurnoId\n\t\u0026Prensado.PrensadoFecha = \u0026PrensadoOrigen.PrensadoFecha\n\t\u0026Prensado.PrensadoOperadorId.SetNull()\n\t\u0026Prensado.PrensadoEstado = EstadoPrensado.Intermedio\n\t\u0026Prensado.PrensadoLevasUnidadMedida = UnidadMedida.kg\n        \u0026Prensado.PrensadoRodillosUnidadMedida = UnidadMedida.kg\n\t\n\tif(\u0026ProductoId \u003E 0)\n\t\t\n\t\t//Calibraci\u00F3n Nueva\n\t\t\u0026Prensado.PrensadoProductoId = \u0026ProductoId\n\t\t\n\t\t//Tratamiento de Troqueles\n\t\tif(\u0026TroquelId \u003E 0)\n\t\t\t\u0026Prensado.PrensadoTroquelId = \u0026TroquelId\n\t\t\tSDCrearPrensaTroquel.Call(\u0026PrensaId, \u0026TroquelId)\n\t\telse\n\t\t\t\u0026Prensado.DB.PrensadoTroquelId = \u0026PrensadoOrigen.PrensadoTroquelId\n\t\tendif\n\telse\n\t\t//Calibraci\u00F3n Original\n\t\t\u0026Prensado.PrensadoProductoId = \u0026PrensadoOrigen.PrensadoProductoId\n\t\t\u0026Prensado.PrensadoTroquelId = \u0026PrensadoOrigen.PrensadoTroquelId\n\tendif\n\n\t\u0026Prensado.Save()\n\t\n\tif(\u0026Prensado.Success())\n\t\t\u0026NextPrenId = \u0026Prensado.PrensadoId\n\t\t\n\t\tdo \u0027GestionarBobina\u0027\n\t\t\n\t\tcommit\n\tendif\n\n        Sub \u0027GestionarBobina\u0027\n\t\t\n\t\t\u0026BobinaItem = SDBobinaEnPrensado.Udp(\u0026PrenOrigenId)\n\t\t\n\t\tif(\u0026BobinaItem.BobinaId \u003E 0)\n\t\t\t\n\t\t\t\u0026Factor = SDFactorConsumoKg.Udp(\u0026BobinaItem.BobinaKg)\n\t\t\t\n\t\t\tif(\u0026BobinaItem.BobinaCarreras \u003C \u0026Factor)\n\t                        \n\t\t\t\tSetEstadoBobina.Call(\u0026BobinaItem.BobinaId, EstadoBobina.Desmontada)\n\t\t\t\t\n//\t\t\t\tif(\u0026ProductoId \u003E 0)\n//\t\t\t\t        SetEstadoBobina.Call(\u0026BobinaItem.BobinaId, EstadoBobina.Desmontada)\n//\t\t\t\telse\n//\t\t\t\t\tCrearPrensadoBobina.Call(\u0026NextPrenId, \u0026BobinaItem.BobinaId)\n//\t\t\t\tendif\n\t\t\telse\n\t\t\t\tSetEstadoBobina.Call(\u0026BobinaItem.BobinaId, EstadoBobina.Consumida)\n\t\t\t\tSDPrensadoMermaKg.Call(\u0026PrenOrigenId)\n\t\t\tendif\n\t        endif\n\t\n\tEndSub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrenOrigenId, in:\u0026ProductoId, in:\u0026TroquelId);\n",
+      "cleanSource": "parm(in:\u0026PrenOrigenId, in:\u0026ProductoId, in:\u0026TroquelId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SetEstadoBobina",
+      "Produccion.SDCrearPrensaTroquel",
+      "Produccion.SDBobinaEnPrensado",
+      "Produccion.SDPrensadoMermaKg",
+      "Produccion.SDFactorConsumoKg",
+      "Produccion.SDTBobina",
+      "DB.Extrusion",
+      "DB.Bobina",
+      "DB.Prensado",
+      "SDCrearPrensaTroquel",
+      "SetEstadoBobina",
+      "CrearPrensadoBobina",
+      "SDPrensadoMermaKg",
+      "SDBobinaEnPrensado",
+      "SDFactorConsumoKg"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Bobina",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina"
+    },
+    {
+      "name": "BobinaEstado",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Estado"
+    },
+    {
+      "name": "BobinaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Id"
+    },
+    {
+      "name": "BobinaItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Item"
+    },
+    {
+      "name": "BobinaNo",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina No"
+    },
+    {
+      "name": "Cambio",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Cambio"
+    },
+    {
+      "name": "CambioMaterial",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Cambio Material"
+    },
+    {
+      "name": "Chr1",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Chr1"
+    },
+    {
+      "name": "Chr2",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Chr2"
+    },
+    {
+      "name": "Compatible",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Compatible"
+    },
+    {
+      "name": "EnProceso",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "En Proceso"
+    },
+    {
+      "name": "Exito",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Exito"
+    },
+    {
+      "name": "ExtOrigenId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Ext Origen Id"
+    },
+    {
+      "name": "Extrusion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion"
+    },
+    {
+      "name": "ExtrusionAncho",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Ancho"
+    },
+    {
+      "name": "ExtrusionCalibre",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Calibre"
+    },
+    {
+      "name": "ExtrusionLongitud",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Longitud"
+    },
+    {
+      "name": "ExtrusionOrigen",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion Origen"
+    },
+    {
+      "name": "ExtrusoraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "Length",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Length"
+    },
+    {
+      "name": "NextExtId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Next Ext Id"
+    },
+    {
+      "name": "NextPrenId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Next Pren Id"
+    },
+    {
+      "name": "NuevoTipoMaterial",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Nuevo Tipo Material"
+    },
+    {
+      "name": "OrigenProductoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "OrigenTipoMaterial",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Origen Tipo Material"
+    },
+    {
+      "name": "PrenOrigenId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Pren Origen Id"
+    },
+    {
+      "name": "Prensado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado"
+    },
+    {
+      "name": "PrensadoOrigen",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Origen"
+    },
+    {
+      "name": "PrensadoOrigenId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Origen Id"
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "ProductoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "ProductoNombre",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Nombre"
+    },
+    {
+      "name": "ProductoTipoMaterial",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Tipo Material"
+    },
+    {
+      "name": "SDTBobinaItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTBobina Item"
+    },
+    {
+      "name": "SDTBobinaPendiente",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTBobina Pendiente"
+    },
+    {
+      "name": "TroquelId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Troquel Id"
+    },
+    {
+      "name": "TroquelOrigenId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Troquel Origen Id"
+    },
+    {
+      "name": "Factor",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Factor"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

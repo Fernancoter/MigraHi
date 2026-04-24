@@ -1,0 +1,120 @@
+{
+  "uniqueId": "88d31942-78f0-4607-af4d-2e64c70ae1ba",
+  "name": "WWP_CreateUserExtended",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "WWP_Create User Extended",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026WWPUserExtended = New()\n\u0026WWPUserExtended.WWPUserExtendedId = \u0026WWPUserExtendedId\nIf Not \u0026PhotURL.IsEmpty()\n\t\u0026WWPUserExtended.WWPUserExtendedPhoto.FromURL(\u0026PhotURL)\nEndIf\n\u0026WWPUserExtended.WWPUserExtendedDesktopNotif = True\n\u0026WWPUserExtended.WWPUserExtendedEmaiNotif = True\n\u0026WWPUserExtended.WWPUserExtendedSMSNotif = True\n\u0026WWPUserExtended.WWPUserExtendedMobileNotif = True\n\u0026WWPUserExtended.Save()\nIf \u0026WWPUserExtended.Success()\n\tCommit\nElse\n\tWWP_Logger.Error(\u0026pgmname, !\u0022Create Extended User: \u0022 \u002B \u0026WWPUserExtended.GetMessages().ToJson())\nEndIf\n\n\n\t\n",
+      "cleanSource": "\u0026WWPUserExtended = New()\n\u0026WWPUserExtended.WWPUserExtendedId = \u0026WWPUserExtendedId\nIf Not \u0026PhotURL.IsEmpty()\n\t\u0026WWPUserExtended.WWPUserExtendedPhoto.FromURL(\u0026PhotURL)\nEndIf\n\u0026WWPUserExtended.WWPUserExtendedDesktopNotif = True\n\u0026WWPUserExtended.WWPUserExtendedEmaiNotif = True\n\u0026WWPUserExtended.WWPUserExtendedSMSNotif = True\n\u0026WWPUserExtended.WWPUserExtendedMobileNotif = True\n\u0026WWPUserExtended.Save()\nIf \u0026WWPUserExtended.Success()\n\tCommit\nElse\n\tWWP_Logger.Error(\u0026pgmname, !\u0022Create Extended User: \u0022 \u002B \u0026WWPUserExtended.GetMessages().ToJson())\nEndIf"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026WWPUserExtendedId, in:\u0026PhotURL);\n",
+      "cleanSource": "parm(in:\u0026WWPUserExtendedId, in:\u0026PhotURL);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_Logger",
+      "WWPBaseObjects.WWP_UserExtended"
+    ],
+    "calledBy": [
+      "WWP_RegisterWebClient",
+      "GAMUserEntry",
+      "WWP_ImpactMetadata"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "WWPUserExtended",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "WWPUser Extended"
+    },
+    {
+      "name": "PhotURL",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Phot URL"
+    },
+    {
+      "name": "WWPUserExtendedId",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "User Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

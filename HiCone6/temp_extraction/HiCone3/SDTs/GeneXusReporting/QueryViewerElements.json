@@ -1,0 +1,97 @@
+{
+  "uniqueId": "ec628ad1-668f-4f95-9c6b-80f096502a02",
+  "name": "QueryViewerElements",
+  "type": "SDT",
+  "module": "GeneXusReporting",
+  "description": "Query Viewer Elements",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "TurnosPorSemanaExtrusoras",
+      "TurnosPorSemana",
+      "InicioPrensado",
+      "InicioProduccion",
+      "ReportITW",
+      "InicioEmbarques",
+      "inicioSeguridad",
+      "InicioInventario",
+      "ModuleA",
+      "ModuleB",
+      "InicioExtrusion",
+      "TurnosPorSemanaPrensas",
+      "ConsultarExtrusionesQuery"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Name",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Name"
+    },
+    {
+      "name": "Title",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Title"
+    },
+    {
+      "name": "Visible",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Visible"
+    },
+    {
+      "name": "Type",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Type"
+    },
+    {
+      "name": "Axis",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Axis"
+    },
+    {
+      "name": "Aggregation",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Aggregation"
+    },
+    {
+      "name": "DataField",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Data Field"
+    }
+  ]
+}

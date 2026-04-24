@@ -1,0 +1,126 @@
+{
+  "uniqueId": "e087a38e-e2af-41b2-9a7f-c979fc72f85d",
+  "name": "PaletCarrete",
+  "type": "Transaction",
+  "module": "DB",
+  "description": "Palet Carrete",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "CarreteEnPalletExportReport",
+      "vwTrazabilidad",
+      "CountCarretes",
+      "EsCarreteEnPallet",
+      "SDRetiquetarPallet",
+      "wcCarretePalletGetFilterData",
+      "SDCorregirPallet",
+      "SDVincularCarrete",
+      "SDRevertirValidacionCarreteId",
+      "PaletPaletCarreteWCGetFilterData",
+      "SDConcluirEtiquetado",
+      "SDEliminarRefPallet",
+      "CarreteEnPalletGetFilterData",
+      "CarreteEnPallet",
+      "ConsultarCarrete",
+      "vwTrazabilidadExportReport",
+      "SDEtiquetarCarreteExterno",
+      "PalletCarreteReportMainPCR",
+      "PalletCarreteReportMain",
+      "ReclamoSumarioCarrete",
+      "vwTrazabilidadExport",
+      "CarreteEnPalletExport",
+      "ObtenerSDTEtiquetaCarrete",
+      "vwTrazabilidadGetFilterData",
+      "ObtenerProductoEtiquetable"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Today",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "GxRemove",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Gx Remove"
+    },
+    {
+      "name": "Mode",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Mode"
+    },
+    {
+      "name": "PaletCarreteId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "PaletId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "PaletNoSerie",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    },
+    {
+      "name": "CarreteId",
+      "elementType": "Attribute",
+      "dataType": "Resolved via KB",
+      "accessor": "",
+      "domain": "",
+      "description": ""
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "uniqueId": "433aea5d-5baf-45c0-9f57-e95248561367",
+  "name": "LoadBreadcrumb",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "Load Breadcrumb",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026MenuOptionFounded = False\nFor \u0026DVelop_Menu_Item In \u0026DVelop_Menu\n\tIf \u0026DVelop_Menu_Item.link.ToLower().Trim() = \u0026MenuOptionToFind.ToLower().Trim()\n\t\t\u0026Breadcrumb =  Format(!\u0027\u003Cspan class=\u0022BreadCrumb\u0022\u003E%1\u003C/span\u003E\u0027, \u0026DVelop_Menu_Item.caption)\n\t\t\u0026MenuOptionFounded = true\n\t\tExit\n\tElse\n\t\tLoadBreadCrumb(\u0026DVelop_Menu_Item.subItems, \u0026MenuOptionToFind, \u0026Breadcrumb, \u0026MenuOptionFounded)\n\t\tIf \u0026MenuOptionFounded\n\t\t\t\u0026Breadcrumb =  Format(!\u0027\u003Cspan class=\u0022%3\u0022\u003E%1\u003C/span\u003E\u003Ci class=\u0022fa fa-angle-right %4\u0022\u003E\u003C/i\u003E%2\u0027, \u0026DVelop_Menu_Item.caption, \u0026Breadcrumb, ThemeClass:BreadCrumb, ThemeClass:BreadCrumbIcon)\n\t\t\tExit\n\t\tEndif\n\tEndIf\nEndFor\n",
+      "cleanSource": "\u0026MenuOptionFounded = False\nFor \u0026DVelop_Menu_Item In \u0026DVelop_Menu\n\tIf \u0026DVelop_Menu_Item.link.ToLower().Trim() = \u0026MenuOptionToFind.ToLower().Trim()\n\t\t\u0026Breadcrumb =  Format(!\u0027\u003Cspan class=\u0022BreadCrumb\u0022\u003E%1\u003C/span\u003E\u0027, \u0026DVelop_Menu_Item.caption)\n\t\t\u0026MenuOptionFounded = true\n\t\tExit\n\tElse\n\t\tLoadBreadCrumb(\u0026DVelop_Menu_Item.subItems, \u0026MenuOptionToFind, \u0026Breadcrumb, \u0026MenuOptionFounded)\n\t\tIf \u0026MenuOptionFounded\n\t\t\t\u0026Breadcrumb =  Format(!\u0027\u003Cspan class=\u0022%3\u0022\u003E%1\u003C/span\u003E\u003Ci class=\u0022fa fa-angle-right %4\u0022\u003E\u003C/i\u003E%2\u0027, \u0026DVelop_Menu_Item.caption, \u0026Breadcrumb, ThemeClass:BreadCrumb, ThemeClass:BreadCrumbIcon)\n\t\t\tExit\n\t\tEndif\n\tEndIf\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(In:\u0026DVelop_Menu, In:\u0026MenuOptionToFind, InOut:\u0026Breadcrumb, InOut:\u0026MenuOptionFounded);\n",
+      "cleanSource": "parm(In:\u0026DVelop_Menu, In:\u0026MenuOptionToFind, InOut:\u0026Breadcrumb, InOut:\u0026MenuOptionFounded);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.LoadBreadcrumb",
+      "WWPBaseObjects.DVelop_Menu"
+    ],
+    "calledBy": [
+      "LoadBreadcrumb"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Breadcrumb",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "inout",
+      "domain": "",
+      "description": "Breadcrumb"
+    },
+    {
+      "name": "DVelop_Menu",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "DVelop_Menu"
+    },
+    {
+      "name": "DVelop_Menu_Item",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "DVelop_Menu_Item"
+    },
+    {
+      "name": "MenuOptionFounded",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "inout",
+      "domain": "",
+      "description": "Menu Option Founded"
+    },
+    {
+      "name": "MenuOptionToFind",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Menu Option To Find"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "uniqueId": "64e56bee-4d7c-4813-8f4d-1e5243177bb8",
+  "name": "WWP_SendPendingNotifications",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.Notifications.Common",
+  "description": "Send Pending Notifications",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "Do \u0027SendPendingMails\u0027\n\nDo \u0027SendPendingSMS\u0027\n\nDo \u0027SendPendingWebNotifications\u0027\n\nDo \u0027SendPendingMobileNotifications\u0027\n\n\nSub \u0027SendPendingMails\u0027\n\t\u0026SMTPParametersSDT = WWP_GetSMTPParameters()\n\t\n\t\u0026SmtpSession = new()\n\t\u0026SmtpSession.Host = \u0026SMTPParametersSDT.Host\n\t\u0026SmtpSession.Port = \u0026SMTPParametersSDT.Port\n\t\u0026SmtpSession.Username = \u0026SMTPParametersSDT.Username\n\t\u0026SmtpSession.Password = \u0026SMTPParametersSDT.Password\n\t\u0026SmtpSession.Authentication = \u0026SMTPParametersSDT.Authentication\n\t\u0026SmtpSession.Secure = \u0026SMTPParametersSDT.Secure\n\t\u0026SmtpSession.Timeout = \u0026SMTPParametersSDT.Timeout\n\t\n\t\u0026StatusCode = \u0026SmtpSession.Login()\n\tIf \u0026StatusCode \u003C\u003E 0\n\t\tWWP_Logger.Error(\u0026Pgmname, !\u0022Error during SMTP Login: \u0022 \u002B \u0026SmtpSession.ErrDescription)\n\tElse\n\t\tFor Each WWP_Mail\n\t\t\tWhere WWPMailStatus = WWPBaseObjects.Mail.WWP_StatusMail.Pending\n\t\t\t\n\t\t\t\u0026StatusCode = WWP_SendMail(WWPMailId, \u0026SmtpSession)\n\t\t\n\t\tEndFor\n\t\t\n\t\t\u0026SmtpSession.Logout()\n\tEndIf\nEndSub\n\n\nSub \u0027SendPendingSMS\u0027\n\t\u0026SMSParametersSDT = WWP_GetSMSParameters()\n\tFor Each WWP_SMS\n\t\tWhere WWPSMSStatus = WWPBaseObjects.SMS.WWP_StatusSMS.Pending\n\t\tWWP_SendSMS(WWPSMSId, \u0026SMSParametersSDT, \u0026Success, \u0026SendSMSResultSDT)\n\tEndFor\nEndSub\n\n\nSub \u0027SendPendingWebNotifications\u0027\n\tFor Each WWPBaseObjects.Notifications.Web.WWP_WebNotification\n\t\tWhere WWPWebNotificationStatus = WWP_StatusWebNotification.Pending\n\t\t\n\t\t\u0026SendStatus = WWP_SendWebNotification(WWPWebNotificationId)\n\tEndFor\n\t\nEndSub\n\nSub \u0027SendPendingMobileNotifications\u0027\nEndSub\n\n",
+      "cleanSource": "Do \u0027SendPendingMails\u0027\n\nDo \u0027SendPendingSMS\u0027\n\nDo \u0027SendPendingWebNotifications\u0027\n\nDo \u0027SendPendingMobileNotifications\u0027\n\n\nSub \u0027SendPendingMails\u0027\n\t\u0026SMTPParametersSDT = WWP_GetSMTPParameters()\n\t\n\t\u0026SmtpSession = new()\n\t\u0026SmtpSession.Host = \u0026SMTPParametersSDT.Host\n\t\u0026SmtpSession.Port = \u0026SMTPParametersSDT.Port\n\t\u0026SmtpSession.Username = \u0026SMTPParametersSDT.Username\n\t\u0026SmtpSession.Password = \u0026SMTPParametersSDT.Password\n\t\u0026SmtpSession.Authentication = \u0026SMTPParametersSDT.Authentication\n\t\u0026SmtpSession.Secure = \u0026SMTPParametersSDT.Secure\n\t\u0026SmtpSession.Timeout = \u0026SMTPParametersSDT.Timeout\n\t\n\t\u0026StatusCode = \u0026SmtpSession.Login()\n\tIf \u0026StatusCode \u003C\u003E 0\n\t\tWWP_Logger.Error(\u0026Pgmname, !\u0022Error during SMTP Login: \u0022 \u002B \u0026SmtpSession.ErrDescription)\n\tElse\n\t\tFor Each WWP_Mail\n\t\t\tWhere WWPMailStatus = WWPBaseObjects.Mail.WWP_StatusMail.Pending\n\t\t\t\n\t\t\t\u0026StatusCode = WWP_SendMail(WWPMailId, \u0026SmtpSession)\n\t\t\n\t\tEndFor\n\t\t\n\t\t\u0026SmtpSession.Logout()\n\tEndIf\nEndSub\n\n\nSub \u0027SendPendingSMS\u0027\n\t\u0026SMSParametersSDT = WWP_GetSMSParameters()\n\tFor Each WWP_SMS\n\t\tWhere WWPSMSStatus = WWPBaseObjects.SMS.WWP_StatusSMS.Pending\n\t\tWWP_SendSMS(WWPSMSId, \u0026SMSParametersSDT, \u0026Success, \u0026SendSMSResultSDT)\n\tEndFor\nEndSub\n\n\nSub \u0027SendPendingWebNotifications\u0027\n\tFor Each WWPBaseObjects.Notifications.Web.WWP_WebNotification\n\t\tWhere WWPWebNotificationStatus = WWP_StatusWebNotification.Pending\n\t\t\n\t\t\u0026SendStatus = WWP_SendWebNotification(WWPWebNotificationId)\n\tEndFor\n\t\nEndSub\n\nSub \u0027SendPendingMobileNotifications\u0027\nEndSub"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_Logger",
+      "WWPBaseObjects.SMS.WWP_SendSMS",
+      "WWPBaseObjects.SMS.WWP_GetSMSParameters",
+      "WWPBaseObjects.Notifications.Web.WWP_SendWebNotification",
+      "WWPBaseObjects.Mail.WWP_GetSMTPParameters",
+      "WWPBaseObjects.Mail.WWP_SendMail",
+      "WWPBaseObjects.SMS.WWP_SMSParametersSDT",
+      "WWPBaseObjects.SMS.WWP_SendSMSResultSDT",
+      "WWPBaseObjects.Mail.WWP_SMTPParametersSDT",
+      "WWPBaseObjects.SMS.WWP_SMS",
+      "WWPBaseObjects.Notifications.Web.WWP_WebNotification",
+      "WWPBaseObjects.Mail.WWP_Mail"
+    ],
+    "calledBy": [
+      "WWP_SendNotification"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SMTPParametersSDT",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SMTPParameters SDT"
+    },
+    {
+      "name": "SmtpSession",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Smtp Session"
+    },
+    {
+      "name": "SMSParametersSDT",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SMSParameters SDT"
+    },
+    {
+      "name": "SendStatus",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Send Status"
+    },
+    {
+      "name": "Success",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Success"
+    },
+    {
+      "name": "SendSMSResultSDT",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Send SMSResult SDT"
+    },
+    {
+      "name": "StatusCode",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Status Code"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

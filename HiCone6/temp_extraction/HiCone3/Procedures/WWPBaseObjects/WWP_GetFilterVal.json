@@ -1,0 +1,174 @@
+{
+  "uniqueId": "714ada92-3a65-48bf-95e1-49e289aa4e44",
+  "name": "WWP_GetFilterVal",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "WWP_Get Filter Val",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\nIf not \u0026IsEmpty\n\t\u0026FilterResult = \u0026FilterValue.Replace(!\u0027\\\u0027, !\u0027\\\\\u0027).Replace(!\u0027|\u0027, !\u0027\\|\u0027)\nEndIf\n",
+      "cleanSource": "\nIf not \u0026IsEmpty\n\t\u0026FilterResult = \u0026FilterValue.Replace(!\u0027\\\u0027, !\u0027\\\\\u0027).Replace(!\u0027|\u0027, !\u0027\\|\u0027)\nEndIf"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "\nparm(in:\u0026IsEmpty, in:\u0026FilterValue, out:\u0026FilterResult);\n",
+      "cleanSource": "\nparm(in:\u0026IsEmpty, in:\u0026FilterValue, out:\u0026FilterResult);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "listarLotes",
+      "EtiquetadoOperadorWW",
+      "vwTrazabilidad",
+      "ProductoTerminadoWW",
+      "ListadoEmbarques",
+      "PrensaObservacionWW",
+      "BobinaWW",
+      "TableroDirectivoExtrusion",
+      "listarOperador",
+      "ConsolidatedWW",
+      "ListadoOrdenes",
+      "CompanyWW",
+      "ListadoRemisiones",
+      "CustomerWW",
+      "vwAnaliticaBobina",
+      "BudgetWW",
+      "listarPrensaProducto",
+      "TroquelWW",
+      "PaletWW",
+      "listarPrensas",
+      "OrdenesWW",
+      "vwExtrusionResultado",
+      "listarProductoCategoria",
+      "ListarExtrusoraMezcladora",
+      "vwAnaliticaCarrete",
+      "vwPrensadoResultado",
+      "FTBWW",
+      "listarExtrusoraProducto",
+      "ExtrusoraObservacionWW",
+      "listarTurnos",
+      "ExtrusoraMezcladoraWW",
+      "AuditWW",
+      "listarProductos",
+      "PrensadoWW",
+      "listarSilos",
+      "RemissionsWW",
+      "SalesPersonWW",
+      "InterrupcionWW",
+      "CarreteEnPallet",
+      "ExistenciaWW",
+      "WWP_MailTemplateWW",
+      "CausaInterrupcionWW",
+      "CarreraWW",
+      "EmbarquePalletWW",
+      "ExtrusionWW",
+      "ProductsWW",
+      "CarreteDefectoWW",
+      "vwAnaliticaPrensado",
+      "listarTroquel",
+      "TableroDirectivoPrensado",
+      "reclamosww",
+      "CarreteWW",
+      "listarProductoTerminado",
+      "PrensadoBobinaWW",
+      "vwOrdenEtiquetado",
+      "listarExtrusora",
+      "StatementOfIncomeWW",
+      "DownTimeCodeWW",
+      "PalletEnEmbarque",
+      "listarExtrusion"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "FilterResult",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "Filter Result"
+    },
+    {
+      "name": "FilterValue",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Filter Value"
+    },
+    {
+      "name": "IsEmpty",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "in",
+      "domain": "",
+      "description": "Is Empty"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

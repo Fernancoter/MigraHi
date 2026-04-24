@@ -1,0 +1,158 @@
+{
+  "uniqueId": "b70db59d-c2e5-4b40-919e-196d875d358e",
+  "name": "SDPalletEtiquetado",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDPalletEtiquetado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "       \u0026SDTPalet.Clear()\n       \n       for each DB.ProductoTerminado\n\t       where ProductoTerminadoId \u003E 0\n\t       where TerminadoProductoActivo = true\n\t       where ProductoTerminadoConEtiqueta = true\n\t       \u0026ProductoEtiquetaId = TerminadoProductoId\n\t       \n\t       for each DB.Palet\n\t\t      where PaletId \u003E 0\n\t\t      where PaletEstatus in (EstatusPalet.Terminado)\n\t\t      where PaletProductoId = \u0026ProductoEtiquetaId\n\t\t      \n\t\t      \u0026PaletItem = New()\n\t\t      \u0026PaletItem.PaletId = PaletId\n\t\t      \u0026PaletItem.PaletNoSerie = PaletNoSerie\n\t\t      \u0026PaletItem.PaletNo = PaletNo\n\t\t      \u0026PaletItem.PaletNoCarretes = PaletNoCarretes\n\t\t      \u0026PaletItem.PaletOperadorId = PaletOperadorId\n\t\t      \u0026PaletItem.PaletProductoId = PaletProductoId\n\t\t      \u0026PaletItem.PaletPrensaId = PaletPrensaId\n\t\t      \u0026PaletItem.PaletProductoNombre = PaletProductoNombre\n\t\t      \u0026PaletItem.PaletHoraInicioEnsamble = PaletHoraInicioEnsamble\n                      \u0026PaletItem.PaletHoraFinEnsamble = PaletHoraFinEnsamble\n\t\t      \u0026PaletItem.PaletEstatus = PaletEstatus\n\t\t      \u0026PaletItem.PaletPrensadoId = PaletPrensadoId\n\t\t      \u0026PaletItem.PaletPrensadoFinId = PaletPrensadoFinId\n\t\t      \u0026SDTPalet.Add(\u0026PaletItem)\n\t       endfor     \n       endfor\n\n\n       \n",
+      "cleanSource": "       \u0026SDTPalet.Clear()\n       \n       for each DB.ProductoTerminado\n\t       where ProductoTerminadoId \u003E 0\n\t       where TerminadoProductoActivo = true\n\t       where ProductoTerminadoConEtiqueta = true\n\t       \u0026ProductoEtiquetaId = TerminadoProductoId\n\t       \n\t       for each DB.Palet\n\t\t      where PaletId \u003E 0\n\t\t      where PaletEstatus in (EstatusPalet.Terminado)\n\t\t      where PaletProductoId = \u0026ProductoEtiquetaId\n\t\t      \n\t\t      \u0026PaletItem = New()\n\t\t      \u0026PaletItem.PaletId = PaletId\n\t\t      \u0026PaletItem.PaletNoSerie = PaletNoSerie\n\t\t      \u0026PaletItem.PaletNo = PaletNo\n\t\t      \u0026PaletItem.PaletNoCarretes = PaletNoCarretes\n\t\t      \u0026PaletItem.PaletOperadorId = PaletOperadorId\n\t\t      \u0026PaletItem.PaletProductoId = PaletProductoId\n\t\t      \u0026PaletItem.PaletPrensaId = PaletPrensaId\n\t\t      \u0026PaletItem.PaletProductoNombre = PaletProductoNombre\n\t\t      \u0026PaletItem.PaletHoraInicioEnsamble = PaletHoraInicioEnsamble\n                      \u0026PaletItem.PaletHoraFinEnsamble = PaletHoraFinEnsamble\n\t\t      \u0026PaletItem.PaletEstatus = PaletEstatus\n\t\t      \u0026PaletItem.PaletPrensadoId = PaletPrensadoId\n\t\t      \u0026PaletItem.PaletPrensadoFinId = PaletPrensadoFinId\n\t\t      \u0026SDTPalet.Add(\u0026PaletItem)\n\t       endfor     \n       endfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(out:\u0026SDTPalet);\n",
+      "cleanSource": "parm(out:\u0026SDTPalet);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "GeneXus.Common.Messages",
+      "Produccion.SDTPalet",
+      "DB.Palet",
+      "DB.ProductoTerminado"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Compatible",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Compatible"
+    },
+    {
+      "name": "Mensaje",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Mensaje"
+    },
+    {
+      "name": "Mensajes",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Mensajes"
+    },
+    {
+      "name": "Palet",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet"
+    },
+    {
+      "name": "PaletId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet Id"
+    },
+    {
+      "name": "PaletItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet Item"
+    },
+    {
+      "name": "ProductoEtiquetaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Etiqueta Id"
+    },
+    {
+      "name": "SDTPalet",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "SDTPalet"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

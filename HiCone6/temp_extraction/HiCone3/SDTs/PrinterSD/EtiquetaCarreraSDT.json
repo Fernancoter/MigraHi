@@ -1,0 +1,42 @@
+{
+  "uniqueId": "c08e8029-a48b-4407-8623-a455f094a83d",
+  "name": "EtiquetaCarreraSDT",
+  "type": "SDT",
+  "module": "PrinterSD",
+  "description": "Etiqueta Carrera SDT",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "PrinterSD.EtiquetaCarreteSDT"
+    ],
+    "calledBy": [
+      "CarreteReportMainPCR",
+      "CarreteReportMain",
+      "PalletCarreteReportMainPCR",
+      "PalletCarreteReportMain"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "EtiquetaCarreteSDT",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Etiqueta Carrete SDT"
+    }
+  ]
+}

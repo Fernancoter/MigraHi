@@ -1,0 +1,135 @@
+{
+  "uniqueId": "a62a55cb-ea53-45db-93ec-81ac3120652d",
+  "name": "LoadUserKeyValue",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "Load User Key Value",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "//This is a procedure in which user has to define how to save information related to each end user\n//By default it saves the ColumnsSelector State, the Grid State (filters, orders, etc) and Filters within \u0027ManageFilters\u0027 Action\n\n\u0026UserCustomizationsValue = \u0026Session.Get(\u0026UserCustomizationsKey)\n\nIf (\u0026UserCustomizationsValue.IsEmpty())\n  \u0026UserCustomizations.Load(GAMUser.GetId(),\u0026UserCustomizationsKey)\n  If \u0026UserCustomizations.Success()\n\t  \u0026UserCustomizationsValue = \u0026UserCustomizations.UserCustomizationsValue\n  Else\n\t  \u0026UserCustomizationsValue.SetEmpty()\n  Endif\nEndif\n\n",
+      "cleanSource": "//This is a procedure in which user has to define how to save information related to each end user\n//By default it saves the ColumnsSelector State, the Grid State (filters, orders, etc) and Filters within \u0027ManageFilters\u0027 Action\n\n\u0026UserCustomizationsValue = \u0026Session.Get(\u0026UserCustomizationsKey)\n\nIf (\u0026UserCustomizationsValue.IsEmpty())\n  \u0026UserCustomizations.Load(GAMUser.GetId(),\u0026UserCustomizationsKey)\n  If \u0026UserCustomizations.Success()\n\t  \u0026UserCustomizationsValue = \u0026UserCustomizations.UserCustomizationsValue\n  Else\n\t  \u0026UserCustomizationsValue.SetEmpty()\n  Endif\nEndif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026UserCustomizationsKey, out:\u0026UserCustomizationsValue);\n",
+      "cleanSource": "parm(in:\u0026UserCustomizationsKey, out:\u0026UserCustomizationsValue);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.UserCustomizations"
+    ],
+    "calledBy": [
+      "WWP_AddRecentSearch",
+      "LoadColumnsSelectorState",
+      "LoadGridState"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Session",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Session"
+    },
+    {
+      "name": "UserCustomizationsKey",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "User Custom Key"
+    },
+    {
+      "name": "UserCustomizationsValue",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "User Custom Value"
+    },
+    {
+      "name": "Context",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Context"
+    },
+    {
+      "name": "UserCustomizations",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "User Customizations"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

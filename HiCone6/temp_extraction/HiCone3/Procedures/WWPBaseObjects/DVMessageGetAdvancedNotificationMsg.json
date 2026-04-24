@@ -1,0 +1,356 @@
+{
+  "uniqueId": "08270e78-0af4-4eaa-9f5a-a780104d0908",
+  "name": "DVMessageGetAdvancedNotificationMsg",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "DVMessage Get Advanced Notification",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n//All default settings plus History and Stack options are retrieved from UC properties.\n\n\u0026Parms = !\u0027{\u0027\nIf not \u0026Title.IsEmpty()\n\t\u0026Parms \u002B= !\u0027\u0022title\u0022:\u0022\u0027 \u002B \u0026Title.Replace(!\u0027\u0022\u0027,!\u0027\u0027).Trim() \u002B !\u0027\u0022,\u0027\nEndIf\nIf not \u0026Text.IsEmpty()\n\t\u0026Parms \u002B= !\u0027\u0022text\u0022:\u0022\u0027 \u002B \u0026Text.Replace(!\u0027\u0022\u0027,!\u0027\u0027).Trim() \u002B !\u0027\u0022,\u0027\nEndIf\nIf \u0026Type \u003C\u003E DVMessageType.noSpecIfy\n\t\u0026Parms \u002B= !\u0027\u0022type\u0022:\u0022\u0027 \u002B \u0026Type.ToString() \u002B !\u0027\u0022,\u0027\nEndIf\nIf not \u0026ControlSelector.IsEmpty()\n\t\u0026Parms \u002B= !\u0027\u0022att\u0022:\u0022\u0027 \u002B iif(\u0026ControlSelector.Trim().StartsWith(!\u0027#\u0027), \u0027\u0027, !\u0027#\u0027) \u002B \u0026ControlSelector.Replace(!\u0027\u0022\u0027,!\u0027\u0027).Trim() \u002B !\u0027\u0022,\u0027\nEndIf\n//If not \u0026Width.IsEmpty()\n//\t\u0026Parms \u002B= !\u0027\u0022width\u0022:\u0022\u0027 \u002B \u0026Width.ToString().Trim() \u002B !\u0027\u0022,\u0027\n//EndIf\n//If not \u0026MinHeight.IsEmpty()\n//\t\u0026Parms \u002B= !\u0027\u0022min_height\u0022:\u0022\u0027 \u002B \u0026MinHeight.ToString().Trim() \u002B !\u0027\u0022,\u0027\n//EndIf\n//If \u0026StylingType \u003C\u003E DVMessageStyling.NoSpecIfy\n//\t\u0026Parms \u002B= !\u0027\u0022styling\u0022:\u0022\u0027 \u002B \u0026StylingType.Trim() \u002B !\u0027\u0022,\u0027\n//EndIf\n//If \u0026ShadowVisible \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\u0026Parms \u002B= !\u0027\u0022shadow\u0022:\u0027 \u002B \u0026ShadowVisible.ToString().Trim() \u002B !\u0027,\u0027\n//EndIf\n//If not \u0026Opacity.IsEmpty()\t\n//\t\u0026Parms \u002B= !\u0027\u0022opacity\u0022:\u0022\u0027 \u002B \u0026Opacity.ToString().Substring(2,2).Trim() \u002B !\u0027\u0022,\u0027\n//EndIf\n\nIf \u0026Hide \u003C\u003E DVMessageBoolean.NoSpecIfy\n\t\u0026Parms \u002B= !\u0027\u0022hide\u0022:\u0027 \u002B \u0026Hide.ToString().Trim() \u002B !\u0027,\u0027\nEndIf\n//If not \u0026HideDelayMilliseconds.IsEmpty()\n//\t\u0026Parms \u002B= !\u0027\u0022delay\u0022:\u0022\u0027 \u002B \u0026HideDelayMilliseconds.ToString().Trim() \u002B !\u0027\u0022,\u0027\n//EndIf\n//If \u0026HideMouseReset \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\u0026Parms \u002B= !\u0027\u0022mouse_reset\u0022:\u0027 \u002B \u0026HideMouseReset.ToString().Trim() \u002B !\u0027,\u0027\n//EndIf\n//\n//If \u0026TitleEscape \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\u0026Parms \u002B= !\u0027\u0022title_escape\u0022:\u0027 \u002B \u0026TitleEscape.ToString().Trim() \u002B !\u0027,\u0027\n//EndIf\n//If \u0026TextEscape \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\u0026Parms \u002B= !\u0027\u0022text_escape\u0022:\u0027 \u002B \u0026TextEscape.ToString().Trim() \u002B !\u0027,\u0027\n//EndIf\n//\n//If not \u0026MessageCornerClass.IsEmpty()\n//\t\u0026Parms \u002B= !\u0027\u0022cornerclass\u0022:\u0022\u0027 \u002B \u0026MessageCornerClass.Trim() \u002B !\u0027\u0022,\u0027\n//EndIf\n\nIf not \u0026ClickRedirectURL.IsEmpty()\n\t\u0026Parms \u002B= !\u0027\u0022clickUrl\u0022:\u0022\u0027 \u002B \u0026ClickRedirectURL.Trim() \u002B !\u0027\u0022,\u0027\nEndIf\n\n////animation group\n//If \u0026AnimationEffectIn \u003C\u003E DVMessageEffect.NoSpecIfy or \u0026AnimationEffectOut \u003C\u003E DVMessageEffect.NoSpecIfy\n//\t\u0026Parms \u002B= !\u0027\u0022animation\u0022: {\u0027\n//\t\n//\tIf \u0026AnimationEffectIn \u003C\u003E DVMessageEffect.NoSpecIfy\n//\t\t\u0026Parms \u002B= !\u0027\u0022effect_in\u0022:\u0022\u0027 \u002B \u0026AnimationEffectIn.ToString().Trim() \u002B !\u0027\u0022,\u0027\n//\tEndIf\n//\tIf \u0026AnimationEffectOut \u003C\u003E DVMessageEffect.NoSpecIfy\n//\t\t\u0026Parms \u002B= !\u0027\u0022effect_out\u0022:\u0022\u0027 \u002B \u0026AnimationEffectOut.ToString().Trim() \u002B !\u0027\u0022,\u0027\n//\tEndIf\n//\n//\t\u0026Parms \u002B= !\u0027},\u0027\n//EndIf\n//\n//If not \u0026AnimateSpeed.IsEmpty()\n//\t\u0026Parms \u002B= !\u0027\u0022animate_speed\u0022:\u0022\u0027 \u002B \u0026AnimateSpeed.ToString().Trim() \u002B !\u0027\u0022,\u0027\n//EndIf\n//\n////buttons group\n//If \u0026ButtonCloserEnable \u003C\u003E DVMessageBoolean.NoSpecIfy or \u0026ButtonCloserHoverEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\tor \u0026ButtonStickerEnable \u003C\u003E DVMessageBoolean.NoSpecIfy or \u0026ButtonStickerHoverEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\tor \u0026ButtonsShowOnNonBlock \u003C\u003E DVMessageBoolean.NoSpecIfy\n\t\n//\t\u0026Parms \u002B= !\u0027\u0022buttons\u0022: {\u0027\n//\t\n//\t\tIf \u0026ButtonCloserEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022closer\u0022:\u0027 \u002B \u0026ButtonCloserEnable.ToString().Trim() \u002B !\u0027,\u0027\n//\t\tEndIf\n//\t\tIf \u0026ButtonCloserHoverEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022closer_hover\u0022:\u0027 \u002B \u0026ButtonCloserHoverEnable.ToString().Trim() \u002B !\u0027,\u0027\n//\t\tEndIf\n//\t\n//\t\tIf \u0026ButtonStickerEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022sticker\u0022:\u0027 \u002B \u0026ButtonStickerEnable.ToString().Trim() \u002B !\u0027,\u0027\n//\t\tEndIf\n//\t\tIf \u0026ButtonStickerHoverEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022sticker_hover\u0022:\u0027 \u002B \u0026ButtonStickerHoverEnable.ToString().Trim() \u002B !\u0027,\u0027\n//\t\tEndIf\n//\t\tIf \u0026ButtonsShowOnNonBlock \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022show_on_nonblock\u0022:\u0027 \u002B \u0026ButtonsShowOnNonBlock.ToString().Trim() \u002B !\u0027,\u0027\n//\t\tEndIf\n//\t\n//\t\tIf not \u0026ButtonCloseLabel.IsEmpty() or not \u0026ButtonStickerLabel.IsEmpty()\n//\t\t\t//label subgroup\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022labels\u0022: {\u0027\n//\t\t\t\n//\t\t\tIf not \u0026ButtonCloseLabel.IsEmpty()\n//\t\t\t\t\u0026Parms \u002B= !\u0027\u0022close\u0022:\u0022\u0027 \u002B \u0026ButtonCloseLabel.Trim() \u002B !\u0027\u0022,\u0027\n//\t\t\tEndIf\n//\t\t\tIf not \u0026ButtonStickerLabel.IsEmpty()\n//\t\t\t\t\u0026Parms \u002B= !\u0027\u0022stick\u0022:\u0022\u0027 \u002B \u0026ButtonStickerLabel.Trim() \u002B !\u0027\u0022,\u0027\n//\t\t\tEndIf\n//\t\t\n//\t\t\t\u0026Parms \u002B= !\u0027}\u0027\n//\t\tEndIf\n//\n//\t\u0026Parms \u002B= !\u0027},\u0027\n//EndIf\n//\n////NonBlock group\n//If \u0026NonBlockEnable \u003C\u003E DVMessageBoolean.NoSpecIfy or not \u0026NonBlockOpacity.IsEmpty()\n//\t\u0026Parms \u002B= !\u0027\u0022nonblock\u0022: {\u0027\n//\t\n//\t\tIf \u0026NonBlockEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022nonblock\u0022:\u0027 \u002B \u0026NonBlockEnable.ToString().Trim() \u002B !\u0027,\u0027\n//\t\tEndIf\n//\t\tIf not \u0026NonBlockOpacity.IsEmpty()\t\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022nonblock_opacity\u0022:\u0022\u0027 \u002B \u0026NonBlockOpacity.ToString().Substring(2,2).Trim() \u002B !\u0027\u0022,\u0027\n//\t\tEndIf\n//\t\n//\t\u0026Parms \u002B= !\u0027},\u0027\n//EndIf\n\n//Desktop group\nIf \u0026IsDesktopNotIfication \u003C\u003E DVMessageBoolean.NoSpecIfy \n\tor not \u0026DesktopNotIficationIconUrl.IsEmpty()\n//\tor \u0026DesktopNotIficationFallBackEnable \u003C\u003E DVMessageBoolean.NoSpecIfy \n//\tor not \u0026DesktopNotIficationTag.IsEmpty()\n\t\n\t\u0026Parms \u002B= !\u0027\u0022desktop\u0022: {\u0027\n\t\n//\t\tIf \u0026DesktopNotIficationFallBackEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022fallback\u0022:\u0027 \u002B \u0026DesktopNotIficationFallBackEnable.ToString().Trim() \u002B !\u0027,\u0027\n//\t\tEndIf\n//\t\tIf not \u0026DesktopNotIficationTag.IsEmpty()\t\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022tag\u0022:\u0022\u0027 \u002B \u0026DesktopNotIficationTag.Trim() \u002B !\u0027\u0022,\u0027\n//\t\tEndIf\n\t\tIf \u0026IsDesktopNotIfication \u003C\u003E DVMessageBoolean.NoSpecIfy\n\t\t\t\u0026Parms \u002B= !\u0027\u0022desktop\u0022:\u0027 \u002B \u0026IsDesktopNotIfication.ToString().Trim() \u002B !\u0027,\u0027\n\t\tEndIf\n\t\tIf not \u0026DesktopNotIficationIconUrl.IsEmpty()\t\n\t\t\t\u0026Parms \u002B= !\u0027\u0022icon\u0022:\u0022\u0027 \u002B \u0026DesktopNotIficationIconUrl.Trim() \u002B !\u0027\u0022,\u0027\n\t\tEndIf\n\t\n\t\u0026Parms \u002B= !\u0027}\u0027\nEndIf\n\n\u0026Parms \u002B= !\u0027}\u0027\n\n\n",
+      "cleanSource": "\n//All default settings plus History and Stack options are retrieved from UC properties.\n\n\u0026Parms = !\u0027{\u0027\nIf not \u0026Title.IsEmpty()\n\t\u0026Parms \u002B= !\u0027\u0022title\u0022:\u0022\u0027 \u002B \u0026Title.Replace(!\u0027\u0022\u0027,!\u0027\u0027).Trim() \u002B !\u0027\u0022,\u0027\nEndIf\nIf not \u0026Text.IsEmpty()\n\t\u0026Parms \u002B= !\u0027\u0022text\u0022:\u0022\u0027 \u002B \u0026Text.Replace(!\u0027\u0022\u0027,!\u0027\u0027).Trim() \u002B !\u0027\u0022,\u0027\nEndIf\nIf \u0026Type \u003C\u003E DVMessageType.noSpecIfy\n\t\u0026Parms \u002B= !\u0027\u0022type\u0022:\u0022\u0027 \u002B \u0026Type.ToString() \u002B !\u0027\u0022,\u0027\nEndIf\nIf not \u0026ControlSelector.IsEmpty()\n\t\u0026Parms \u002B= !\u0027\u0022att\u0022:\u0022\u0027 \u002B iif(\u0026ControlSelector.Trim().StartsWith(!\u0027#\u0027), \u0027\u0027, !\u0027#\u0027) \u002B \u0026ControlSelector.Replace(!\u0027\u0022\u0027,!\u0027\u0027).Trim() \u002B !\u0027\u0022,\u0027\nEndIf\n//If not \u0026Width.IsEmpty()\n//\t\u0026Parms \u002B= !\u0027\u0022width\u0022:\u0022\u0027 \u002B \u0026Width.ToString().Trim() \u002B !\u0027\u0022,\u0027\n//EndIf\n//If not \u0026MinHeight.IsEmpty()\n//\t\u0026Parms \u002B= !\u0027\u0022min_height\u0022:\u0022\u0027 \u002B \u0026MinHeight.ToString().Trim() \u002B !\u0027\u0022,\u0027\n//EndIf\n//If \u0026StylingType \u003C\u003E DVMessageStyling.NoSpecIfy\n//\t\u0026Parms \u002B= !\u0027\u0022styling\u0022:\u0022\u0027 \u002B \u0026StylingType.Trim() \u002B !\u0027\u0022,\u0027\n//EndIf\n//If \u0026ShadowVisible \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\u0026Parms \u002B= !\u0027\u0022shadow\u0022:\u0027 \u002B \u0026ShadowVisible.ToString().Trim() \u002B !\u0027,\u0027\n//EndIf\n//If not \u0026Opacity.IsEmpty()\t\n//\t\u0026Parms \u002B= !\u0027\u0022opacity\u0022:\u0022\u0027 \u002B \u0026Opacity.ToString().Substring(2,2).Trim() \u002B !\u0027\u0022,\u0027\n//EndIf\n\nIf \u0026Hide \u003C\u003E DVMessageBoolean.NoSpecIfy\n\t\u0026Parms \u002B= !\u0027\u0022hide\u0022:\u0027 \u002B \u0026Hide.ToString().Trim() \u002B !\u0027,\u0027\nEndIf\n//If not \u0026HideDelayMilliseconds.IsEmpty()\n//\t\u0026Parms \u002B= !\u0027\u0022delay\u0022:\u0022\u0027 \u002B \u0026HideDelayMilliseconds.ToString().Trim() \u002B !\u0027\u0022,\u0027\n//EndIf\n//If \u0026HideMouseReset \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\u0026Parms \u002B= !\u0027\u0022mouse_reset\u0022:\u0027 \u002B \u0026HideMouseReset.ToString().Trim() \u002B !\u0027,\u0027\n//EndIf\n//\n//If \u0026TitleEscape \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\u0026Parms \u002B= !\u0027\u0022title_escape\u0022:\u0027 \u002B \u0026TitleEscape.ToString().Trim() \u002B !\u0027,\u0027\n//EndIf\n//If \u0026TextEscape \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\u0026Parms \u002B= !\u0027\u0022text_escape\u0022:\u0027 \u002B \u0026TextEscape.ToString().Trim() \u002B !\u0027,\u0027\n//EndIf\n//\n//If not \u0026MessageCornerClass.IsEmpty()\n//\t\u0026Parms \u002B= !\u0027\u0022cornerclass\u0022:\u0022\u0027 \u002B \u0026MessageCornerClass.Trim() \u002B !\u0027\u0022,\u0027\n//EndIf\n\nIf not \u0026ClickRedirectURL.IsEmpty()\n\t\u0026Parms \u002B= !\u0027\u0022clickUrl\u0022:\u0022\u0027 \u002B \u0026ClickRedirectURL.Trim() \u002B !\u0027\u0022,\u0027\nEndIf\n\n////animation group\n//If \u0026AnimationEffectIn \u003C\u003E DVMessageEffect.NoSpecIfy or \u0026AnimationEffectOut \u003C\u003E DVMessageEffect.NoSpecIfy\n//\t\u0026Parms \u002B= !\u0027\u0022animation\u0022: {\u0027\n//\t\n//\tIf \u0026AnimationEffectIn \u003C\u003E DVMessageEffect.NoSpecIfy\n//\t\t\u0026Parms \u002B= !\u0027\u0022effect_in\u0022:\u0022\u0027 \u002B \u0026AnimationEffectIn.ToString().Trim() \u002B !\u0027\u0022,\u0027\n//\tEndIf\n//\tIf \u0026AnimationEffectOut \u003C\u003E DVMessageEffect.NoSpecIfy\n//\t\t\u0026Parms \u002B= !\u0027\u0022effect_out\u0022:\u0022\u0027 \u002B \u0026AnimationEffectOut.ToString().Trim() \u002B !\u0027\u0022,\u0027\n//\tEndIf\n//\n//\t\u0026Parms \u002B= !\u0027},\u0027\n//EndIf\n//\n//If not \u0026AnimateSpeed.IsEmpty()\n//\t\u0026Parms \u002B= !\u0027\u0022animate_speed\u0022:\u0022\u0027 \u002B \u0026AnimateSpeed.ToString().Trim() \u002B !\u0027\u0022,\u0027\n//EndIf\n//\n////buttons group\n//If \u0026ButtonCloserEnable \u003C\u003E DVMessageBoolean.NoSpecIfy or \u0026ButtonCloserHoverEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\tor \u0026ButtonStickerEnable \u003C\u003E DVMessageBoolean.NoSpecIfy or \u0026ButtonStickerHoverEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\tor \u0026ButtonsShowOnNonBlock \u003C\u003E DVMessageBoolean.NoSpecIfy\n\t\n//\t\u0026Parms \u002B= !\u0027\u0022buttons\u0022: {\u0027\n//\t\n//\t\tIf \u0026ButtonCloserEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022closer\u0022:\u0027 \u002B \u0026ButtonCloserEnable.ToString().Trim() \u002B !\u0027,\u0027\n//\t\tEndIf\n//\t\tIf \u0026ButtonCloserHoverEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022closer_hover\u0022:\u0027 \u002B \u0026ButtonCloserHoverEnable.ToString().Trim() \u002B !\u0027,\u0027\n//\t\tEndIf\n//\t\n//\t\tIf \u0026ButtonStickerEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022sticker\u0022:\u0027 \u002B \u0026ButtonStickerEnable.ToString().Trim() \u002B !\u0027,\u0027\n//\t\tEndIf\n//\t\tIf \u0026ButtonStickerHoverEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022sticker_hover\u0022:\u0027 \u002B \u0026ButtonStickerHoverEnable.ToString().Trim() \u002B !\u0027,\u0027\n//\t\tEndIf\n//\t\tIf \u0026ButtonsShowOnNonBlock \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022show_on_nonblock\u0022:\u0027 \u002B \u0026ButtonsShowOnNonBlock.ToString().Trim() \u002B !\u0027,\u0027\n//\t\tEndIf\n//\t\n//\t\tIf not \u0026ButtonCloseLabel.IsEmpty() or not \u0026ButtonStickerLabel.IsEmpty()\n//\t\t\t//label subgroup\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022labels\u0022: {\u0027\n//\t\t\t\n//\t\t\tIf not \u0026ButtonCloseLabel.IsEmpty()\n//\t\t\t\t\u0026Parms \u002B= !\u0027\u0022close\u0022:\u0022\u0027 \u002B \u0026ButtonCloseLabel.Trim() \u002B !\u0027\u0022,\u0027\n//\t\t\tEndIf\n//\t\t\tIf not \u0026ButtonStickerLabel.IsEmpty()\n//\t\t\t\t\u0026Parms \u002B= !\u0027\u0022stick\u0022:\u0022\u0027 \u002B \u0026ButtonStickerLabel.Trim() \u002B !\u0027\u0022,\u0027\n//\t\t\tEndIf\n//\t\t\n//\t\t\t\u0026Parms \u002B= !\u0027}\u0027\n//\t\tEndIf\n//\n//\t\u0026Parms \u002B= !\u0027},\u0027\n//EndIf\n//\n////NonBlock group\n//If \u0026NonBlockEnable \u003C\u003E DVMessageBoolean.NoSpecIfy or not \u0026NonBlockOpacity.IsEmpty()\n//\t\u0026Parms \u002B= !\u0027\u0022nonblock\u0022: {\u0027\n//\t\n//\t\tIf \u0026NonBlockEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022nonblock\u0022:\u0027 \u002B \u0026NonBlockEnable.ToString().Trim() \u002B !\u0027,\u0027\n//\t\tEndIf\n//\t\tIf not \u0026NonBlockOpacity.IsEmpty()\t\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022nonblock_opacity\u0022:\u0022\u0027 \u002B \u0026NonBlockOpacity.ToString().Substring(2,2).Trim() \u002B !\u0027\u0022,\u0027\n//\t\tEndIf\n//\t\n//\t\u0026Parms \u002B= !\u0027},\u0027\n//EndIf\n\n//Desktop group\nIf \u0026IsDesktopNotIfication \u003C\u003E DVMessageBoolean.NoSpecIfy \n\tor not \u0026DesktopNotIficationIconUrl.IsEmpty()\n//\tor \u0026DesktopNotIficationFallBackEnable \u003C\u003E DVMessageBoolean.NoSpecIfy \n//\tor not \u0026DesktopNotIficationTag.IsEmpty()\n\t\n\t\u0026Parms \u002B= !\u0027\u0022desktop\u0022: {\u0027\n\t\n//\t\tIf \u0026DesktopNotIficationFallBackEnable \u003C\u003E DVMessageBoolean.NoSpecIfy\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022fallback\u0022:\u0027 \u002B \u0026DesktopNotIficationFallBackEnable.ToString().Trim() \u002B !\u0027,\u0027\n//\t\tEndIf\n//\t\tIf not \u0026DesktopNotIficationTag.IsEmpty()\t\n//\t\t\t\u0026Parms \u002B= !\u0027\u0022tag\u0022:\u0022\u0027 \u002B \u0026DesktopNotIficationTag.Trim() \u002B !\u0027\u0022,\u0027\n//\t\tEndIf\n\t\tIf \u0026IsDesktopNotIfication \u003C\u003E DVMessageBoolean.NoSpecIfy\n\t\t\t\u0026Parms \u002B= !\u0027\u0022desktop\u0022:\u0027 \u002B \u0026IsDesktopNotIfication.ToString().Trim() \u002B !\u0027,\u0027\n\t\tEndIf\n\t\tIf not \u0026DesktopNotIficationIconUrl.IsEmpty()\t\n\t\t\t\u0026Parms \u002B= !\u0027\u0022icon\u0022:\u0022\u0027 \u002B \u0026DesktopNotIficationIconUrl.Trim() \u002B !\u0027\u0022,\u0027\n\t\tEndIf\n\t\n\t\u0026Parms \u002B= !\u0027}\u0027\nEndIf\n\n\u0026Parms \u002B= !\u0027}\u0027"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "\nparm(in:\u0026Title, in:\u0026Text, in:\u0026Type, in:\u0026ControlSelector, in:\u0026Hide, in:\u0026IsDesktopNotification, in:\u0026DesktopNotificationIconUrl, in:\u0026ClickRedirectURL,\tout:\u0026Parms);\n\n",
+      "cleanSource": "\nparm(in:\u0026Title, in:\u0026Text, in:\u0026Type, in:\u0026ControlSelector, in:\u0026Hide, in:\u0026IsDesktopNotification, in:\u0026DesktopNotificationIconUrl, in:\u0026ClickRedirectURL,\tout:\u0026Parms);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "DVMessageGetBasicNotificationMsg",
+      "DVMessageGetDesktopNotificationMsg"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "AnimateSpeed",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Animate Speed Milliseconds"
+    },
+    {
+      "name": "AnimationEffectIn",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Animation Effect In"
+    },
+    {
+      "name": "AnimationEffectOut",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Animation Effect Out"
+    },
+    {
+      "name": "ButtonCloseLabel",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Button Close Label"
+    },
+    {
+      "name": "ButtonCloserEnable",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Button Closer Enable"
+    },
+    {
+      "name": "ButtonCloserHoverEnable",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Button Closer Hover Enable"
+    },
+    {
+      "name": "ButtonsShowOnNonBlock",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Buttons Show On Non Block"
+    },
+    {
+      "name": "ButtonStickerEnable",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Button Sticker Enable"
+    },
+    {
+      "name": "ButtonStickerHoverEnable",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Button Sticker Hover Enable"
+    },
+    {
+      "name": "ButtonStickerLabel",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Button Sticker Label"
+    },
+    {
+      "name": "ControlSelector",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Control Selector"
+    },
+    {
+      "name": "IsDesktopNotification",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Is Desktop Notification"
+    },
+    {
+      "name": "DesktopNotificationFallBackEnable",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Desktop Notification Fall Back Enable"
+    },
+    {
+      "name": "DesktopNotificationIconUrl",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Desktop Notification Icon Url"
+    },
+    {
+      "name": "DesktopNotificationTag",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Desktop Notification Tag"
+    },
+    {
+      "name": "Hide",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Hide"
+    },
+    {
+      "name": "HideDelayMilliseconds",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Hide Delay Milliseconds"
+    },
+    {
+      "name": "HideMouseReset",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Hide Mouse Reset"
+    },
+    {
+      "name": "MessageCornerClass",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Message Corner Class"
+    },
+    {
+      "name": "MinHeight",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Min Height"
+    },
+    {
+      "name": "NonBlockEnable",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Non Block Enable"
+    },
+    {
+      "name": "NonBlockOpacity",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Non Block Opacity"
+    },
+    {
+      "name": "Opacity",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Opacity"
+    },
+    {
+      "name": "Parms",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "Parms"
+    },
+    {
+      "name": "ShadowVisible",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Shadow Visible"
+    },
+    {
+      "name": "StylingType",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Styling Type"
+    },
+    {
+      "name": "Text",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Text"
+    },
+    {
+      "name": "TextEscape",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Text Escape"
+    },
+    {
+      "name": "Title",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Title"
+    },
+    {
+      "name": "TitleEscape",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Title Escape"
+    },
+    {
+      "name": "Type",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Type"
+    },
+    {
+      "name": "Width",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Width"
+    },
+    {
+      "name": "ClickRedirectURL",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Click Redirect URL"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

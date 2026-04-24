@@ -1,0 +1,107 @@
+{
+  "uniqueId": "220df1b8-7a65-41ac-8dae-8241febad3a4",
+  "name": "MostrarMensajes",
+  "type": "Procedure",
+  "module": "Web",
+  "description": "Mostrar Mensajes",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "msg(\u0027Mensajes a continuaci\u00F3n\u0027)\nFor \u0026Messages in \u0026CollectionMessages\n\tmsg(\u0026Messages.Description)\nEndfor\n",
+      "cleanSource": "msg(\u0027Mensajes a continuaci\u00F3n\u0027)\nFor \u0026Messages in \u0026CollectionMessages\n\tmsg(\u0026Messages.Description)\nEndfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(\u0026CollectionMessages);\n",
+      "cleanSource": "Parm(\u0026CollectionMessages);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "GeneXus.Common.Messages"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CollectionMessages",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "inout",
+      "domain": "",
+      "description": "Collection Messages"
+    },
+    {
+      "name": "Messages",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Messages"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "uniqueId": "a65a193d-7bf8-47ef-a79d-0276b2533da3",
+  "name": "SDPCartPayment",
+  "type": "SDT",
+  "module": "",
+  "description": "SDPCart Payment",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "SDPCartPaymentMethodsAddNew",
+      "SDPCartPaymentMethodsGetAvailable",
+      "SDPCartPaymentMethodsGetSelected"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Id",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Id"
+    },
+    {
+      "name": "VisibleName",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Visible Name"
+    },
+    {
+      "name": "Owner",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Owner"
+    },
+    {
+      "name": "Valid",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Valid"
+    },
+    {
+      "name": "Selected",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Selected"
+    }
+  ]
+}

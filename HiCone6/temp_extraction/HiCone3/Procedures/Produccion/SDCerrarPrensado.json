@@ -1,0 +1,224 @@
+{
+  "uniqueId": "052f8282-dab6-4062-ad84-0fec0e693bd3",
+  "name": "SDCerrarPrensado",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDCerrar Prensado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "      \n      \n      do \u0027PrensaCarreras\u0027\n      SetEstadoPrensado.Call(\u0026PrensadoId, EstadoPrensado.Terminado)\n      Produccion.SDLimpiarNotificaciones.Call(\u0026PrensadoId, NotificacionTipo.Carrera)\n      do \u0027LiberarOperador\u0027\n      \n      Sub \u0027LiberarOperador\u0027\n\t      \u0026Prensado.Load(\u0026PrensadoId)\n\t      \u0026GUID = \u0026Prensado.PrensadoOperadorGUID\n\t      \n\t      \u0026GAMUser.Load(\u0026GUID)\n\t      \u0026GAMUserAttribute.Id = \u0027PrensadoID\u0027\n\t      \u0026GAMUserAttribute.Value = \u00270\u0027\n\t      \u0026isOK = \u0026GAMUser.SetAttribute(\u0026GAMUserAttribute,\u0026Errors)\n\t      \n\t      if \u0026isOK\n\t\t    commit\n\t      endif\n      Endsub\n\n      Sub \u0027PrensaCarreras\u0027\n\t      for each\n\t\t      where CarreraId \u003E 0\n\t\t      where InicioPBPrensadoId = \u0026PrensadoId\n\t\t      where CarreraEstado in (EstadoCarrera.EnProceso, EstadoCarrera.Terminada)\n\t\t      \u0026PrensaId = InicioPBPrensaId\n\t\t      \u0026CarreraId = DB.CarreraId\n\t\t      \n\t\t      \u0026PrensaCarrera = New()\n\t\t      \u0026PrensaCarrera.CarreraId = \u0026CarreraId\n\t\t      \u0026PrensaCarrera.PrensaId = \u0026PrensaId\n\t\t      \u0026PrensaCarrera.Save()\n\t\t      \n\t\t      if(\u0026PrensaCarrera.Success())\n\t\t\t      commit\n\t\t      endif\n\t      endfor\n      EndSub\n",
+      "cleanSource": "      \n      \n      do \u0027PrensaCarreras\u0027\n      SetEstadoPrensado.Call(\u0026PrensadoId, EstadoPrensado.Terminado)\n      Produccion.SDLimpiarNotificaciones.Call(\u0026PrensadoId, NotificacionTipo.Carrera)\n      do \u0027LiberarOperador\u0027\n      \n      Sub \u0027LiberarOperador\u0027\n\t      \u0026Prensado.Load(\u0026PrensadoId)\n\t      \u0026GUID = \u0026Prensado.PrensadoOperadorGUID\n\t      \n\t      \u0026GAMUser.Load(\u0026GUID)\n\t      \u0026GAMUserAttribute.Id = \u0027PrensadoID\u0027\n\t      \u0026GAMUserAttribute.Value = \u00270\u0027\n\t      \u0026isOK = \u0026GAMUser.SetAttribute(\u0026GAMUserAttribute,\u0026Errors)\n\t      \n\t      if \u0026isOK\n\t\t    commit\n\t      endif\n      Endsub\n\n      Sub \u0027PrensaCarreras\u0027\n\t      for each\n\t\t      where CarreraId \u003E 0\n\t\t      where InicioPBPrensadoId = \u0026PrensadoId\n\t\t      where CarreraEstado in (EstadoCarrera.EnProceso, EstadoCarrera.Terminada)\n\t\t      \u0026PrensaId = InicioPBPrensaId\n\t\t      \u0026CarreraId = DB.CarreraId\n\t\t      \n\t\t      \u0026PrensaCarrera = New()\n\t\t      \u0026PrensaCarrera.CarreraId = \u0026CarreraId\n\t\t      \u0026PrensaCarrera.PrensaId = \u0026PrensaId\n\t\t      \u0026PrensaCarrera.Save()\n\t\t      \n\t\t      if(\u0026PrensaCarrera.Success())\n\t\t\t      commit\n\t\t      endif\n\t      endfor\n      EndSub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensadoId);\n",
+      "cleanSource": "parm(in:\u0026PrensadoId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SetEstadoPrensado",
+      "Produccion.SDLimpiarNotificaciones",
+      "DB.Extrusion",
+      "DB.Prensado",
+      "DB.PrensaCarrera",
+      "SetEstadoPrensado"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "DiaExtrusionId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "Disponible",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Disponible"
+    },
+    {
+      "name": "Errors",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "Errors"
+    },
+    {
+      "name": "Extrusion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion"
+    },
+    {
+      "name": "ExtrusionEstado",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion Estado"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "ExtrusoraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "GAMUser",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMUser"
+    },
+    {
+      "name": "GAMUserAttribute",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMUser Attribute"
+    },
+    {
+      "name": "GUID",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "GUID"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "Prensado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "PrensaCarrera",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensa Carrera"
+    },
+    {
+      "name": "CarreraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera Id"
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

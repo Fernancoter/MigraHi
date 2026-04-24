@@ -1,0 +1,132 @@
+{
+  "uniqueId": "ddedd990-9290-4975-b015-75edabc7ce16",
+  "name": "SDBobinasEnMedicion",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDBobinas En Medicion",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\u0026isOK = true\n\t\n\t//Cambiar estado de las bobinas En Proceso -: En Medici\u00F3n\n\tFor each DB.Bobina\n\t\twhere BobinaId \u003E 0\n\t\twhere ExtrusionId = \u0026ExtrusionId\n\t\t\u0026BobinaEstado = BobinaEstado\n\t        \n\t\tif(\u0026BobinaEstado = EstadoBobina.EnMedicion)\n\t\t      \u0026isOK = false\n\t\t      Exit\n\t        endif\n\tEndfor\n",
+      "cleanSource": "\t\u0026isOK = true\n\t\n\t//Cambiar estado de las bobinas En Proceso -: En Medici\u00F3n\n\tFor each DB.Bobina\n\t\twhere BobinaId \u003E 0\n\t\twhere ExtrusionId = \u0026ExtrusionId\n\t\t\u0026BobinaEstado = BobinaEstado\n\t        \n\t\tif(\u0026BobinaEstado = EstadoBobina.EnMedicion)\n\t\t      \u0026isOK = false\n\t\t      Exit\n\t        endif\n\tEndfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ExtrusionId, out:\u0026isOK);\n",
+      "cleanSource": "parm(in:\u0026ExtrusionId, out:\u0026isOK);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SDTBobina",
+      "DB.Bobina"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SDTBobina",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTBobina"
+    },
+    {
+      "name": "SDTBobinaItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTBobina Item"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "BobinaEstado",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Estado"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

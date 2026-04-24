@@ -1,0 +1,148 @@
+{
+  "uniqueId": "865dd352-c2a0-4cd2-981b-61036708977b",
+  "name": "SDEtiquetaCarrete",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDEtiqueta Carrete",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026Carrete.Load(\u0026CarreteId)\n\u0026CarreraId = \u0026Carrete.CarreteCarreraId\n\u0026Carrera.Load(\u0026CarreraId)\n\n\u0026CarreraNo = \u0026Carrera.CarreraNo\n\u0026NoLinea = \u0026Carrete.CarreteNoLinea\n\u0026Etiqueta = \u0027C\u0027 \u002B \u0026CarreraNo.ToString().Trim() \u002B \u0027L\u0027\u002B \u0026NoLinea.ToString().Trim()\n",
+      "cleanSource": "\u0026Carrete.Load(\u0026CarreteId)\n\u0026CarreraId = \u0026Carrete.CarreteCarreraId\n\u0026Carrera.Load(\u0026CarreraId)\n\n\u0026CarreraNo = \u0026Carrera.CarreraNo\n\u0026NoLinea = \u0026Carrete.CarreteNoLinea\n\u0026Etiqueta = \u0027C\u0027 \u002B \u0026CarreraNo.ToString().Trim() \u002B \u0027L\u0027\u002B \u0026NoLinea.ToString().Trim()"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026CarreteId, out:\u0026Etiqueta);\n",
+      "cleanSource": "parm(in:\u0026CarreteId, out:\u0026Etiqueta);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Carrera",
+      "DB.Carrete"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CarreraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera Id"
+    },
+    {
+      "name": "CarreteId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Carrete Id"
+    },
+    {
+      "name": "Carrera",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera"
+    },
+    {
+      "name": "Carrete",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete"
+    },
+    {
+      "name": "Etiqueta",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "out",
+      "domain": "",
+      "description": "Etiqueta"
+    },
+    {
+      "name": "CarreraNo",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera No"
+    },
+    {
+      "name": "NoLinea",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "No Linea"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

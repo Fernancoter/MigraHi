@@ -1,0 +1,117 @@
+{
+  "uniqueId": "54484edb-00a8-469f-99ce-5e8fdca6d1f3",
+  "name": "SDPCartProduct",
+  "type": "SDT",
+  "module": "",
+  "description": "SDPCart Product",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WorkWithPlus.NativeMobile.SDPProductData"
+    ],
+    "calledBy": [
+      "SDPCartProductsAdd",
+      "SDPCartProductsCount",
+      "SDLimpiarNotificaciones",
+      "SDPAddNotification",
+      "SDPCartProductsList",
+      "SDPCartProductsRemove",
+      "SDEliminarNotificacion"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ProductId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Product Id"
+    },
+    {
+      "name": "Count",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Count"
+    },
+    {
+      "name": "Color",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Color"
+    },
+    {
+      "name": "Variant",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Variant"
+    },
+    {
+      "name": "Promotion",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Promotion"
+    },
+    {
+      "name": "ProductData",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Product Data"
+    },
+    {
+      "name": "ItemId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Item Id"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "Notificacion",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Notificacion"
+    }
+  ]
+}

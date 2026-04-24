@@ -1,0 +1,120 @@
+{
+  "uniqueId": "77339c64-0b1b-4e96-a5bb-387651409065",
+  "name": "SDTiempoLaboral",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDTiempo Laboral",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\tfor each\n\t\twhere ConfiguracionKey = \u0027TiempoLaboral\u0027\n\t\t\u0026ConfiguracionValor = ConfiguracionValor\n\twhen none\n\t\t\n\t\t//Valor predeterminado en minutos (7 horas)\n\t\t\u0026ConfiguracionValor = \u0027420\u0027\n\t\t\n\t\t//Registro de paramtero TiempoMinLaboral\n\t\t\u0026Configuracion = New()\n\t\t\u0026Configuracion.ConfiguracionKey = \u0027TiempoLaboral\u0027\n\t\t\u0026Configuracion.ConfiguracionValor = \u0026ConfiguracionValor\n\t\t\u0026Configuracion.Save()\n\t\t\n\t\tif(\u0026Configuracion.Success())\n\t\t\tcommit\n\t\tendif\n\tendfor\n\n        \u0026TiempoLaboralMinutos =  \u0026ConfiguracionValor.ToNumeric()\n",
+      "cleanSource": "\tfor each\n\t\twhere ConfiguracionKey = \u0027TiempoLaboral\u0027\n\t\t\u0026ConfiguracionValor = ConfiguracionValor\n\twhen none\n\t\t\n\t\t//Valor predeterminado en minutos (7 horas)\n\t\t\u0026ConfiguracionValor = \u0027420\u0027\n\t\t\n\t\t//Registro de paramtero TiempoMinLaboral\n\t\t\u0026Configuracion = New()\n\t\t\u0026Configuracion.ConfiguracionKey = \u0027TiempoLaboral\u0027\n\t\t\u0026Configuracion.ConfiguracionValor = \u0026ConfiguracionValor\n\t\t\u0026Configuracion.Save()\n\t\t\n\t\tif(\u0026Configuracion.Success())\n\t\t\tcommit\n\t\tendif\n\tendfor\n\n        \u0026TiempoLaboralMinutos =  \u0026ConfiguracionValor.ToNumeric()"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(out:\u0026TiempoLaboralMinutos);\n",
+      "cleanSource": "parm(out:\u0026TiempoLaboralMinutos);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Configuracion"
+    ],
+    "calledBy": [
+      "SDTiempoExtrusion",
+      "SDTiempoPrensado",
+      "SDPrensadoAnticipado",
+      "SDExtrusionAnticipada"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Configuracion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Configuracion"
+    },
+    {
+      "name": "ConfiguracionValor",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Configuracion Valor"
+    },
+    {
+      "name": "TiempoLaboralMinutos",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Tiempo Laboral Minutos"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

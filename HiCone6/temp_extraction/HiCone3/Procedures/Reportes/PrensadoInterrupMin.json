@@ -1,0 +1,149 @@
+{
+  "uniqueId": "06f644e5-f071-4174-b4ea-1c5555e41072",
+  "name": "PrensadoInterrupMin",
+  "type": "Procedure",
+  "module": "Reportes",
+  "description": "Prensado Interrup Min",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\u0026TiempoMin = 0\n\t\u0026Now = Now()\n\t\n\tfor each DB.PrensadoInterrupcion\n\t\twhere PrensadoInterrupcionId \u003E 0\n\t\twhere PrensadoId = \u0026PrensadoId\n\t\twhere InterrupcionId \u003E 0\n\t\t\u0026InterrupcionConcluida = InterrupcionConcluida\n\t\t\u0026FechaHoraRegistro = InterrupcionHoraInicio\n\n\t\tif \u0026InterrupcionConcluida\n\t\t\t\u0026Tiempo \u002B= InterrupcionTiempo\n\t\telse\n\t\t\t\u0026DiffProgreso = \u0026Now.Difference(\u0026FechaHoraRegistro)\n\t\t\t\u0026Tiempo \u002B= \u0026DiffProgreso\n\t\tendif\n\tendfor\n\n\tif \u0026Tiempo \u003E 0\n\t\t\u0026TiempoMin = trunc((\u0026Tiempo/60),0)\n\tendif\n",
+      "cleanSource": "\t\u0026TiempoMin = 0\n\t\u0026Now = Now()\n\t\n\tfor each DB.PrensadoInterrupcion\n\t\twhere PrensadoInterrupcionId \u003E 0\n\t\twhere PrensadoId = \u0026PrensadoId\n\t\twhere InterrupcionId \u003E 0\n\t\t\u0026InterrupcionConcluida = InterrupcionConcluida\n\t\t\u0026FechaHoraRegistro = InterrupcionHoraInicio\n\n\t\tif \u0026InterrupcionConcluida\n\t\t\t\u0026Tiempo \u002B= InterrupcionTiempo\n\t\telse\n\t\t\t\u0026DiffProgreso = \u0026Now.Difference(\u0026FechaHoraRegistro)\n\t\t\t\u0026Tiempo \u002B= \u0026DiffProgreso\n\t\tendif\n\tendfor\n\n\tif \u0026Tiempo \u003E 0\n\t\t\u0026TiempoMin = trunc((\u0026Tiempo/60),0)\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensadoId, out:\u0026TiempoMin);\n",
+      "cleanSource": "parm(in:\u0026PrensadoId, out:\u0026TiempoMin);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.PrensadoInterrupcion"
+    ],
+    "calledBy": [
+      "LoadAuditPrensado"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "PrensadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "TiempoMin",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Tiempo Min"
+    },
+    {
+      "name": "Tiempo",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Tiempo"
+    },
+    {
+      "name": "InterrupcionConcluida",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Interrupcion Concluida"
+    },
+    {
+      "name": "FechaHoraRegistro",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Fecha Hora Registro"
+    },
+    {
+      "name": "Now",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Now"
+    },
+    {
+      "name": "DiffProgreso",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Diff Progreso"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

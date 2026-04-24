@@ -1,0 +1,124 @@
+{
+  "uniqueId": "91bc8374-31ea-4dcd-b4c2-3e9d3eae4a1d",
+  "name": "WWP_AddImportErrorMessage",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "WWP_Add Import Error Message",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\nIf not \u0026LineId.IsEmpty()\n\tWWP_AddMessage(!\u0027WWP_LineId\u0027, MessageTypes.Info, format(\u0027File line: %1\u0027, \u0026LineId), \u0026Messages)\nEndIf\n\nWWP_AddMessage(\u0026ErrorToAddId, MessageTypes.Error, \u0026ErrorToAddDsc, \u0026Messages)\n",
+      "cleanSource": "\nIf not \u0026LineId.IsEmpty()\n\tWWP_AddMessage(!\u0027WWP_LineId\u0027, MessageTypes.Info, format(\u0027File line: %1\u0027, \u0026LineId), \u0026Messages)\nEndIf\n\nWWP_AddMessage(\u0026ErrorToAddId, MessageTypes.Error, \u0026ErrorToAddDsc, \u0026Messages)"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "\nparm(inout:\u0026Messages, in:\u0026LineId, in:\u0026ErrorToAddId, in:\u0026ErrorToAddDsc);\n",
+      "cleanSource": "\nparm(inout:\u0026Messages, in:\u0026LineId, in:\u0026ErrorToAddId, in:\u0026ErrorToAddDsc);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_AddMessage",
+      "GeneXus.Common.Messages"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ErrorToAddDsc",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Error To Add Dsc"
+    },
+    {
+      "name": "ErrorToAddId",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Error To Add Id"
+    },
+    {
+      "name": "LineId",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Line Id"
+    },
+    {
+      "name": "Messages",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "inout",
+      "domain": "",
+      "description": "Messages"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

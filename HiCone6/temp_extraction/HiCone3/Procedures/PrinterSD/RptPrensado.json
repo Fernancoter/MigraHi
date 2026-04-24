@@ -1,0 +1,267 @@
+{
+  "uniqueId": "12529b86-7c76-4cdb-ae1b-4539a03def72",
+  "name": "RptPrensado",
+  "type": "Procedure",
+  "module": "PrinterSD",
+  "description": "Rpt Prensado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026SDTRptPrensado = DPSDTRptPrensado.Udp(\u0026PrensadoId)\n\u0026SDTPrensadoResultado = DPPrensadoResultado.Udp(\u0026PrensadoId)\n\u0026SDTProductoTerminado = DPProductoTerminado.Udp(\u0026SDTRptPrensado.PrensadoProductoId)\n\nheader\n\tprint pb_header\nend\n\n\u0026SDTCarrera = CarreraDP.Udp(\u0026PrensadoId)\n\nFor \u0026SDTCarreraItem In \u0026SDTCarrera\n\t\n\t\u0026SDTPrensadoBobina = DPPrensadoBobinaSDT.Udp(\u0026SDTCarreraItem.InicioPrensadoBobinaId)\n\t\u0026SDTPrensadoBobinaItem = \u0026SDTPrensadoBobina.Item(1)\n\t\n\t\u0026EtiquetaBobinaSDT = ObtenerSDTEtiquetaBobina.Udp(\u0026SDTPrensadoBobinaItem.BobinaId)\n\t\n\t\u0026SDTCarrete = CarreteDP.Udp(\u0026SDTCarreraItem.CarreraId, Orden.Ascendente)\n\t\n\t\u0026FajillasAlMolino = 0\n\t\n\tFor \u0026SDTCarreteItem In \u0026SDTCarrete\n\t\t\u0026IsInMolino = \u0026SDTCarreteItem.CarreteEstado = EstadoCarrete.Molino\n\t\tIf \u0026IsInMolino\n\t\t\t\u0026FajillasAlMolino \u002B= \u0026SDTProductoTerminado.ProductoTerminadoCarreteMillar\n\t\tEndIf\n\t\t\n\t\tDo Case\n\t\t\tCase \u0026SDTCarreteItem.CarreteNoLinea = 1\n\t\t\t\t\u0026SDTCarreteCalidad.SDTCarreteCalidad1 = iif(\u0026IsInMolino,\u0022X\u0022,chr(10003))\n\t\t\tCase \u0026SDTCarreteItem.CarreteNoLinea = 2\n\t\t\t\t\u0026SDTCarreteCalidad.SDTCarreteCalidad2 = iif(\u0026IsInMolino,\u0022X\u0022,chr(10003))\n\t\t\tCase \u0026SDTCarreteItem.CarreteNoLinea = 3\n\t\t\t\t\u0026SDTCarreteCalidad.SDTCarreteCalidad3 = iif(\u0026IsInMolino,\u0022X\u0022,chr(10003))\n\t\t\tCase \u0026SDTCarreteItem.CarreteNoLinea = 4\n\t\t\t\t\u0026SDTCarreteCalidad.SDTCarreteCalidad4 = iif(\u0026IsInMolino,\u0022X\u0022,chr(10003))\n\t\t\tCase \u0026SDTCarreteItem.CarreteNoLinea = 5\n\t\t\t\t\u0026SDTCarreteCalidad.SDTCarreteCalidad5 = iif(\u0026IsInMolino,\u0022X\u0022,chr(10003))\n\t\t\tCase \u0026SDTCarreteItem.CarreteNoLinea = 6\n\t\t\t\t\u0026SDTCarreteCalidad.SDTCarreteCalidad6 = iif(\u0026IsInMolino,\u0022X\u0022,chr(10003))\n\t\tEndCase\n\t\t\n\tEndFor\n\t\n\t\u0026SDTCarreteCalidad.CarretePaletSerie = \u0026SDTCarreteItem.CarretePaletSerie\n\t\n\t\u0026SDTCarreteCalidad.SDTCarreteCalidadFajillasMolino = \u0026FajillasAlMolino\n\t\n\tprint pb_prensado_body\n\t\nEndFor\n\nprint Interrupcion_header\nfor each \n\twhere PrensadoId = \u0026PrensadoId\n\t\u0026InterrupcionHoraInicio  = InterrupcionHoraInicio\n\t\u0026InterrupcionHoraFin = InterrupcionHoraFin\n\t\u0026InterrupcionMotivo = InterrupcionMotivo\n\t\n\tprint Interrupcion_Body\n\t\nwhen none\n\t\nendfor\n\n\nprint pb_footer\n\t\n",
+      "cleanSource": "\u0026SDTRptPrensado = DPSDTRptPrensado.Udp(\u0026PrensadoId)\n\u0026SDTPrensadoResultado = DPPrensadoResultado.Udp(\u0026PrensadoId)\n\u0026SDTProductoTerminado = DPProductoTerminado.Udp(\u0026SDTRptPrensado.PrensadoProductoId)\n\nheader\n\tprint pb_header\nend\n\n\u0026SDTCarrera = CarreraDP.Udp(\u0026PrensadoId)\n\nFor \u0026SDTCarreraItem In \u0026SDTCarrera\n\t\n\t\u0026SDTPrensadoBobina = DPPrensadoBobinaSDT.Udp(\u0026SDTCarreraItem.InicioPrensadoBobinaId)\n\t\u0026SDTPrensadoBobinaItem = \u0026SDTPrensadoBobina.Item(1)\n\t\n\t\u0026EtiquetaBobinaSDT = ObtenerSDTEtiquetaBobina.Udp(\u0026SDTPrensadoBobinaItem.BobinaId)\n\t\n\t\u0026SDTCarrete = CarreteDP.Udp(\u0026SDTCarreraItem.CarreraId, Orden.Ascendente)\n\t\n\t\u0026FajillasAlMolino = 0\n\t\n\tFor \u0026SDTCarreteItem In \u0026SDTCarrete\n\t\t\u0026IsInMolino = \u0026SDTCarreteItem.CarreteEstado = EstadoCarrete.Molino\n\t\tIf \u0026IsInMolino\n\t\t\t\u0026FajillasAlMolino \u002B= \u0026SDTProductoTerminado.ProductoTerminadoCarreteMillar\n\t\tEndIf\n\t\t\n\t\tDo Case\n\t\t\tCase \u0026SDTCarreteItem.CarreteNoLinea = 1\n\t\t\t\t\u0026SDTCarreteCalidad.SDTCarreteCalidad1 = iif(\u0026IsInMolino,\u0022X\u0022,chr(10003))\n\t\t\tCase \u0026SDTCarreteItem.CarreteNoLinea = 2\n\t\t\t\t\u0026SDTCarreteCalidad.SDTCarreteCalidad2 = iif(\u0026IsInMolino,\u0022X\u0022,chr(10003))\n\t\t\tCase \u0026SDTCarreteItem.CarreteNoLinea = 3\n\t\t\t\t\u0026SDTCarreteCalidad.SDTCarreteCalidad3 = iif(\u0026IsInMolino,\u0022X\u0022,chr(10003))\n\t\t\tCase \u0026SDTCarreteItem.CarreteNoLinea = 4\n\t\t\t\t\u0026SDTCarreteCalidad.SDTCarreteCalidad4 = iif(\u0026IsInMolino,\u0022X\u0022,chr(10003))\n\t\t\tCase \u0026SDTCarreteItem.CarreteNoLinea = 5\n\t\t\t\t\u0026SDTCarreteCalidad.SDTCarreteCalidad5 = iif(\u0026IsInMolino,\u0022X\u0022,chr(10003))\n\t\t\tCase \u0026SDTCarreteItem.CarreteNoLinea = 6\n\t\t\t\t\u0026SDTCarreteCalidad.SDTCarreteCalidad6 = iif(\u0026IsInMolino,\u0022X\u0022,chr(10003))\n\t\tEndCase\n\t\t\n\tEndFor\n\t\n\t\u0026SDTCarreteCalidad.CarretePaletSerie = \u0026SDTCarreteItem.CarretePaletSerie\n\t\n\t\u0026SDTCarreteCalidad.SDTCarreteCalidadFajillasMolino = \u0026FajillasAlMolino\n\t\n\tprint pb_prensado_body\n\t\nEndFor\n\nprint Interrupcion_header\nfor each \n\twhere PrensadoId = \u0026PrensadoId\n\t\u0026InterrupcionHoraInicio  = InterrupcionHoraInicio\n\t\u0026InterrupcionHoraFin = InterrupcionHoraFin\n\t\u0026InterrupcionMotivo = InterrupcionMotivo\n\t\n\tprint Interrupcion_Body\n\t\nwhen none\n\t\nendfor\n\n\nprint pb_footer"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026PrensadoId,in:\u0026PDFNombre);\nOutput_File(\u0026PDFNombre, \u0027PDF\u0027);\n",
+      "cleanSource": "Parm(in:\u0026PrensadoId,in:\u0026PDFNombre);\nOutput_File(\u0026PDFNombre, \u0027PDF\u0027);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.CarreteDP",
+      "Produccion.CarreraDP",
+      "PrinterSD.DPSDTRptPrensado",
+      "Produccion.DPPrensadoResultado",
+      "Produccion.DPPrensadoBobinaSDT",
+      "Produccion.DPProductoTerminado",
+      "PrinterSD.ObtenerSDTEtiquetaBobina",
+      "Produccion.SDTCarrete",
+      "Produccion.SDTCarrera",
+      "Produccion.SDTPrensadoBobina",
+      "PrinterSD.EtiquetaBobinaSDT",
+      "Produccion.SDTPrensadoResultado",
+      "PrinterSD.SDTRptPrensado",
+      "PrinterSD.SDTCarreteCalidad",
+      "Produccion.SDTProductoTerminado",
+      "DPSDTRptPrensado",
+      "DPPrensadoResultado",
+      "DPProductoTerminado",
+      "CarreraDP",
+      "DPPrensadoBobinaSDT",
+      "ObtenerSDTEtiquetaBobina",
+      "CarreteDP"
+    ],
+    "calledBy": [
+      "PrensadoWW",
+      "vwAnaliticaPrensado"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "EtiquetaBobinaSDT",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Etiqueta Bobina SDT"
+    },
+    {
+      "name": "FajillasAlMolino",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Fajillas Al Molino"
+    },
+    {
+      "name": "IsInMolino",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Is In Molino"
+    },
+    {
+      "name": "PDFNombre",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "PDFNombre"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "SDTCarrera",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrera"
+    },
+    {
+      "name": "SDTCarreraItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrera Item"
+    },
+    {
+      "name": "SDTCarrete",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrete"
+    },
+    {
+      "name": "SDTCarreteCalidad",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrete Calidad"
+    },
+    {
+      "name": "SDTCarreteItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTCarrete Item"
+    },
+    {
+      "name": "SDTPrensadoBobina",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTPrensado Bobina"
+    },
+    {
+      "name": "SDTPrensadoBobinaItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTPrensado Bobina Item"
+    },
+    {
+      "name": "SDTPrensadoResultado",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTPrensado Resultado"
+    },
+    {
+      "name": "SDTProductoTerminado",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTProducto Terminado"
+    },
+    {
+      "name": "SDTRptPrensado",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTRpt Prensado"
+    },
+    {
+      "name": "InterrupcionHoraInicio",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Interrupcion Hora Inicio"
+    },
+    {
+      "name": "InterrupcionHoraFin",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Interrupcion Hora Fin"
+    },
+    {
+      "name": "InterrupcionMotivo",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Interrupcion Motivo"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

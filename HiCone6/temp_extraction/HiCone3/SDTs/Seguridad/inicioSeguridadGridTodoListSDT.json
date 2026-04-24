@@ -1,0 +1,37 @@
+{
+  "uniqueId": "9ff9798c-4a4e-472d-9a2f-7c2dfec4172b",
+  "name": "inicioSeguridadGridTodoListSDT",
+  "type": "SDT",
+  "module": "Seguridad",
+  "description": "inicio Seguridad Grid Todo List SDT",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "inicioSeguridad"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "WWPNotificationDefinitionDescription",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Notification Definition Description"
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "uniqueId": "81627646-3007-46d5-8088-81d231f378c5",
+  "name": "IsAuthorized",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "Is Authorized",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026Authorized = True\n\n/*\nLoadContext(\u0026Context)\nIf (\u0026GxObject = \u0027ViewInvoices\u0027 and \u0026Context.UserLevel = 0)\n        \u0026Authorized = False\nEndif\n*/\n",
+      "cleanSource": "\u0026Authorized = True\n\n/*\nLoadContext(\u0026Context)\nIf (\u0026GxObject = \u0027ViewInvoices\u0027 and \u0026Context.UserLevel = 0)\n        \u0026Authorized = False\nEndif\n*/"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026GxObject, out:\u0026Authorized);\n",
+      "cleanSource": "parm(in:\u0026GxObject, out:\u0026Authorized);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "WWOperador",
+      "ViewOperador",
+      "ViewInventario",
+      "WWPrensa",
+      "Extrusora",
+      "Producto",
+      "ViewPrensaProducto",
+      "ViewProducto",
+      "Inventario",
+      "WWConfiguracion",
+      "WWProductoCategoria",
+      "ViewConfiguracion",
+      "ProductoCategoria",
+      "ViewExtrusora",
+      "Operador",
+      "Configuracion",
+      "ViewPrensa",
+      "PrensaProducto",
+      "ViewProductoCategoria",
+      "WWPrensaProducto",
+      "WWExtrusora",
+      "WWExtrusoraProducto",
+      "ExtrusoraProducto",
+      "WWInventario",
+      "ViewExtrusoraProducto",
+      "WWProducto"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "GxObject",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Gx Object"
+    },
+    {
+      "name": "Authorized",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Authorized"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

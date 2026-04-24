@@ -1,0 +1,91 @@
+{
+  "uniqueId": "c7115412-a799-4dc7-b084-f06f32c7ee60",
+  "name": "HomeModulesSDT",
+  "type": "SDT",
+  "module": "WWPBaseObjects",
+  "description": "Home Modules SDT",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "OptionTitle",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Option Title"
+    },
+    {
+      "name": "OptionDescription",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Option Description"
+    },
+    {
+      "name": "OptionIconThemeClass",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Option Icon Theme Class"
+    },
+    {
+      "name": "OptionType",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Option Type"
+    },
+    {
+      "name": "OptionBackgroundImage",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Option Background Image"
+    },
+    {
+      "name": "OptionSize",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Option Size"
+    },
+    {
+      "name": "OptionProgressValue",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Option Progress Value"
+    },
+    {
+      "name": "OptionWCLink",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Option WCLink"
+    }
+  ]
+}

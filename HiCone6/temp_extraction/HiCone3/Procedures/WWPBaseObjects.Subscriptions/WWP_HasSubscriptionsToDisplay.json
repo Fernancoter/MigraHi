@@ -1,0 +1,196 @@
+{
+  "uniqueId": "b8537b1c-58a9-4414-86ea-4c760a1ca03c",
+  "name": "WWP_HasSubscriptionsToDisplay",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.Subscriptions",
+  "description": "WWP_Has Subscriptions To Display",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026WWPEntityId = WWPBaseObjects.WWP_GetEntityByName(\u0026WWPEntityName)\n\u0026HasSubscriptions = False\nFor Each WWP_NotificationDefinition\n\tWhere WWPNotificationDefinitionAllowUserSubscription = true\n\tWhere WWPNotificationDefinitionAppliesTo = \u0026WWPNotificationAppliesTo\n\tWhere WWPEntityId = \u0026WWPEntityId\n\tWhere WWPNotificationDefinitionIsAuthorized = True\n\t\u0026HasSubscriptions = True\n\tExit\nEndFor\n\n",
+      "cleanSource": "\u0026WWPEntityId = WWPBaseObjects.WWP_GetEntityByName(\u0026WWPEntityName)\n\u0026HasSubscriptions = False\nFor Each WWP_NotificationDefinition\n\tWhere WWPNotificationDefinitionAllowUserSubscription = true\n\tWhere WWPNotificationDefinitionAppliesTo = \u0026WWPNotificationAppliesTo\n\tWhere WWPEntityId = \u0026WWPEntityId\n\tWhere WWPNotificationDefinitionIsAuthorized = True\n\t\u0026HasSubscriptions = True\n\tExit\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026WWPEntityName, in:\u0026WWPNotificationAppliesTo, out:\u0026HasSubscriptions);\n",
+      "cleanSource": "Parm(in:\u0026WWPEntityName, in:\u0026WWPNotificationAppliesTo, out:\u0026HasSubscriptions);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.SecGAMIsAuthByFunctionalityKey",
+      "WWPBaseObjects.WWP_GetEntityByName",
+      "WWPBaseObjects.Notifications.Common.WWP_NotificationDefinition"
+    ],
+    "calledBy": [
+      "EtiquetadoOperadorWW",
+      "TroquelView",
+      "SalesPersonView",
+      "InterrupcionView",
+      "EtiquetadoOperadorView",
+      "ListadoEmbarques",
+      "PrensaObservacionWW",
+      "BobinaWW",
+      "PrensaObservacionView",
+      "ExtrusoraObservacionView",
+      "AuditView",
+      "ConsolidatedWW",
+      "ListadoOrdenes",
+      "CompanyWW",
+      "ListadoRemisiones",
+      "CustomerWW",
+      "vwAnaliticaBobina",
+      "BudgetWW",
+      "ExtrusionInterrupcionWW",
+      "reclamoview",
+      "TroquelWW",
+      "PaletWW",
+      "OrdenesWW",
+      "CausaInterrupcionView",
+      "vwExtrusionResultado",
+      "CarreraView",
+      "vwAnaliticaCarrete",
+      "WWP_MailTemplateView",
+      "vwPrensadoResultado",
+      "FTBWW",
+      "ExtrusionView",
+      "StatementOfIncomeView",
+      "ExtrusoraObservacionWW",
+      "PaletView",
+      "DownTimeCodeView",
+      "CarreteDefectoView",
+      "ExtrusoraMezcladoraWW",
+      "AuditWW",
+      "ExtrusionInterrupcionView",
+      "PrensadoWW",
+      "RemissionsWW",
+      "SalesPersonWW",
+      "InterrupcionWW",
+      "EmbarquePalletView",
+      "PrensadoInterrupcionWW",
+      "WWP_SubscriptionsSettings",
+      "CompanyView",
+      "ExistenciaWW",
+      "PrensadoView",
+      "WWP_MailTemplateWW",
+      "ProductoTerminadoView",
+      "CausaInterrupcionWW",
+      "CarreraWW",
+      "EmbarquePalletWW",
+      "ProductsWW",
+      "CarreteDefectoWW",
+      "vwAnaliticaPrensado",
+      "PrensadoInterrupcionView",
+      "ExistenciaView",
+      "ExtrusoraMezcladoraView",
+      "BudgetView",
+      "reclamosww",
+      "BobinaView",
+      "CarreteView",
+      "PrensadoBobinaWW",
+      "vwOrdenEtiquetado",
+      "StatementOfIncomeWW",
+      "DownTimeCodeWW",
+      "PalletEnEmbarque",
+      "PrensadoBobinaView"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "WWPEntityId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Entity Id"
+    },
+    {
+      "name": "HasSubscriptions",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Has Subscriptions"
+    },
+    {
+      "name": "WWPNotificationAppliesTo",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "WWPNotification Applies To"
+    },
+    {
+      "name": "WWPEntityName",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Entity Name"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

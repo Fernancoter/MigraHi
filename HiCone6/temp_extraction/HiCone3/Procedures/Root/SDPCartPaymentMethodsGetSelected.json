@@ -1,0 +1,117 @@
+{
+  "uniqueId": "ec0047b2-5192-4686-af03-997fd9578523",
+  "name": "SDPCartPaymentMethodsGetSelected",
+  "type": "Procedure",
+  "module": "",
+  "description": "SDPCart Payment Methods Get Selected",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026Selected = SDPWebServerSessionGet(!\u0022SelectedPayment\u0022)\n\u0026SDPCartPaymentCollection = SDPCartPaymentMethodsGetAvailable()\nFor \u0026SDPCartPayment in \u0026SDPCartPaymentCollection\n\tIf \u0026Selected = \u0026SDPCartPayment.Id\n\t\texit\n\tEndIf\nEndFor\n",
+      "cleanSource": "\u0026Selected = SDPWebServerSessionGet(!\u0022SelectedPayment\u0022)\n\u0026SDPCartPaymentCollection = SDPCartPaymentMethodsGetAvailable()\nFor \u0026SDPCartPayment in \u0026SDPCartPaymentCollection\n\tIf \u0026Selected = \u0026SDPCartPayment.Id\n\t\texit\n\tEndIf\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(out:\u0026SDPCartPayment);\n",
+      "cleanSource": "Parm(out:\u0026SDPCartPayment);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WorkWithPlus.NativeMobile.SDPWebServerSessionGet",
+      "SDPCartPaymentMethodsGetAvailable",
+      "SDPCartPayment"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Selected",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Selected"
+    },
+    {
+      "name": "SDPCartPayment",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "SDPCart Payment"
+    },
+    {
+      "name": "SDPCartPaymentCollection",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDPCart Payment Collection"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

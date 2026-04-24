@@ -1,0 +1,63 @@
+{
+  "uniqueId": "db3a2c86-910c-486c-a0f4-86c653c9f918",
+  "name": "WWP_SearchResults",
+  "type": "SDT",
+  "module": "WWPBaseObjects",
+  "description": "WWP_Search Results",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "WWP_AddRecentSearch",
+      "WWP_GetSearchWCData",
+      "WWP_Search"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CategoryName",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Category Name"
+    },
+    {
+      "name": "CategoryIcon",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Category Icon"
+    },
+    {
+      "name": "ShowingAllResults",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Showing All Results"
+    },
+    {
+      "name": "OrderIndex",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Order Index"
+    }
+  ]
+}

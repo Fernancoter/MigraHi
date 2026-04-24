@@ -1,0 +1,166 @@
+{
+  "uniqueId": "8d139eae-335a-48df-9864-e492b76896c2",
+  "name": "SDRecalibrarProducto",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDRecalibrar Producto",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\u0026Fecha = Today()\n\t\n\tif(\u0026InitExtrusion)\n\t\tfor each DB.Extrusion\n\t\t\twhere ExtrusionId \u003E 0\n\t\t        where ExtrusionExtrusoraId = \u0026ExtrusoraId\n\t\t        where ExtrusionTurnoId = \u0026TurnoId\n\t\t        where ExtrusionFecha.ToDate() = \u0026Fecha\n\t\t        where ExtrusionEstado = EstadoExtrusion.Programada\n\t\t\t\u0026ExtrusionId = ExtrusionId\n\t\t\t\n\t\t\tSDRecalibrarExtrusion.Call(\u0026ExtrusionId,\u0026ProductoId)\n\t\tendfor\n        else\n\t\t\n\t\tfor each DB.Prensado\n\t\t        where PrensadoId \u003E 0\n\t\t\twhere PrensadoPrensaId = \u0026PrensaId\n\t\t\twhere PrensadoTurnoId = \u0026TurnoId\n\t\t\twhere PrensadoFecha.ToDate() = \u0026Fecha\n\t\t\twhere DB.PrensadoEstado = EstadoPrensado.Programado\n\t\t\t\u0026PrensadoId = PrensadoId\n\t\t\t\n\t\t\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\t\t\u0026Prensado.PrensadoProductoId = \u0026ProductoId\n\t\t\t\u0026Prensado.Save()\n\t\t\tcommit\n\t\tendfor\n        endif\n",
+      "cleanSource": "\t\u0026Fecha = Today()\n\t\n\tif(\u0026InitExtrusion)\n\t\tfor each DB.Extrusion\n\t\t\twhere ExtrusionId \u003E 0\n\t\t        where ExtrusionExtrusoraId = \u0026ExtrusoraId\n\t\t        where ExtrusionTurnoId = \u0026TurnoId\n\t\t        where ExtrusionFecha.ToDate() = \u0026Fecha\n\t\t        where ExtrusionEstado = EstadoExtrusion.Programada\n\t\t\t\u0026ExtrusionId = ExtrusionId\n\t\t\t\n\t\t\tSDRecalibrarExtrusion.Call(\u0026ExtrusionId,\u0026ProductoId)\n\t\tendfor\n        else\n\t\t\n\t\tfor each DB.Prensado\n\t\t        where PrensadoId \u003E 0\n\t\t\twhere PrensadoPrensaId = \u0026PrensaId\n\t\t\twhere PrensadoTurnoId = \u0026TurnoId\n\t\t\twhere PrensadoFecha.ToDate() = \u0026Fecha\n\t\t\twhere DB.PrensadoEstado = EstadoPrensado.Programado\n\t\t\t\u0026PrensadoId = PrensadoId\n\t\t\t\n\t\t\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\t\t\u0026Prensado.PrensadoProductoId = \u0026ProductoId\n\t\t\t\u0026Prensado.Save()\n\t\t\tcommit\n\t\tendfor\n        endif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026TurnoId, in:\u0026ExtrusoraId, in:\u0026PrensaId, in:\u0026ProductoId, in:\u0026InitExtrusion);\n",
+      "cleanSource": "parm(in:\u0026TurnoId, in:\u0026ExtrusoraId, in:\u0026PrensaId, in:\u0026ProductoId, in:\u0026InitExtrusion);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SDRecalibrarExtrusion",
+      "DB.Extrusion",
+      "DB.Prensado",
+      "SDRecalibrarExtrusion"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Prensado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "ExtrusoraId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "Fecha",
+      "elementType": "Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Fecha"
+    },
+    {
+      "name": "InitExtrusion",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "in",
+      "domain": "",
+      "description": "Init Extrusion"
+    },
+    {
+      "name": "TurnoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Turno Id"
+    },
+    {
+      "name": "ProductoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

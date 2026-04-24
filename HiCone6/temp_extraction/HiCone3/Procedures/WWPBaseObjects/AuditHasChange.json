@@ -1,0 +1,125 @@
+{
+  "uniqueId": "b011a962-936d-4d32-995a-884f8ad7ed95",
+  "name": "AuditHasChange",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "Audit Has Change",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\tif(\u0026ActualMode = TrnMode.Update)\n\t\t\n\t\t\u0026isOK = false\n\t\tfor \u0026AttributeItem in \u0026ObjectAttribute.Attribute\n\t\t\tif(\u0026AttributeItem.Name = !\u0027PaletNoCarretes\u0027)\n\t\t\t\tExit\n\t\t\tendif\n\t\t\n\t\t\tif(\u0026AttributeItem.NewValue \u003C\u003E \u0026AttributeItem.OldValue)\n\t\t\t\t\u0026isOK = true\n\t\t\t\tExit\n\t\t\tendif\n\t\tendfor\n\telse\n\t\t\u0026isOK = true\n\tendif\n",
+      "cleanSource": "\n\tif(\u0026ActualMode = TrnMode.Update)\n\t\t\n\t\t\u0026isOK = false\n\t\tfor \u0026AttributeItem in \u0026ObjectAttribute.Attribute\n\t\t\tif(\u0026AttributeItem.Name = !\u0027PaletNoCarretes\u0027)\n\t\t\t\tExit\n\t\t\tendif\n\t\t\n\t\t\tif(\u0026AttributeItem.NewValue \u003C\u003E \u0026AttributeItem.OldValue)\n\t\t\t\t\u0026isOK = true\n\t\t\t\tExit\n\t\t\tendif\n\t\tendfor\n\telse\n\t\t\u0026isOK = true\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ObjectAttribute, in:\u0026ActualMode, out:\u0026isOK);\n",
+      "cleanSource": "parm(in:\u0026ObjectAttribute, in:\u0026ActualMode, out:\u0026isOK);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.AuditingObjectAttribute"
+    ],
+    "calledBy": [
+      "AuditTransaction"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "AttributeItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Attribute Item"
+    },
+    {
+      "name": "isOK",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "is OK"
+    },
+    {
+      "name": "ObjectAttribute",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "Object Attribute"
+    },
+    {
+      "name": "ActualMode",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "Actual Mode"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "uniqueId": "2c2aeb85-5f60-4bb5-9361-a288b07606b6",
+  "name": "GetMenuAuthorizedOptions",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "/*\nThis procedure returns only authorized options. \n\nSDT DVExtUC_SDTSidebarMenuOptionsData\u0027s Item has an \u0022authorizationKey\u0022 property.\nPossible values:\n - If it is empty, the item will be checked automatically based on its url\n - If it has the \u0022public\u0022 value, the item will be authorized.\n - If it has aNother value, it will be used as the authorization key.\n*/ \n\nFor \u0026DVelop_Menu_Item In \u0026DVelop_Menu\n \t//with subitems\n\tIf \u0026DVelop_Menu_Item.subItems.Count \u003E 0\n \t\tGetMenuAuthorizedOptionsRecursive.Call(\u0026DVelop_Menu_Item.ToJson(),\u0026ResultJson) \n\t\t\u0026Aux_DVelop_Menu_Item.FromJson(\u0026ResultJson)\n\t\tIf \u0026Aux_DVelop_Menu_Item.subItems.Count = 0 \n\t\t\t\u0026RemoveIds.Add(\u0026DVelop_Menu_Item.id)\n\t\telse\n\t\t\t\u0026DVelop_Menu_Item.FromJson(\u0026ResultJson) \n\t\tEndIf\n\telse   \n\t\t//main level item\n\t\t\u0026IsAuthorized = IsMenuAuthorizedOption(\u0026DVelop_Menu_Item)\n\t\tIf Not \u0026IsAuthorized \n\t\t\t\u0026RemoveIds.Add(\u0026DVelop_Menu_Item.id) \n\t\tEndIf\n\tEndIf\nEndFor\n \nFor \u0026i = 1 To \u0026RemoveIds.Count\n\tFor \u0026j = 1 To \u0026DVelop_Menu.Count\n\t\tIf \u0026DVelop_Menu.Item(\u0026j).id.Trim() = \u0026RemoveIds.Item(\u0026i).Trim()\n\t\t\t\u0026DVelop_Menu.Remove(\u0026j)\n\t\t\texit\n\t\tEndIf\n\tEndFor\nEndFor\n \n",
+      "cleanSource": "/*\nThis procedure returns only authorized options. \n\nSDT DVExtUC_SDTSidebarMenuOptionsData\u0027s Item has an \u0022authorizationKey\u0022 property.\nPossible values:\n - If it is empty, the item will be checked automatically based on its url\n - If it has the \u0022public\u0022 value, the item will be authorized.\n - If it has aNother value, it will be used as the authorization key.\n*/ \n\nFor \u0026DVelop_Menu_Item In \u0026DVelop_Menu\n \t//with subitems\n\tIf \u0026DVelop_Menu_Item.subItems.Count \u003E 0\n \t\tGetMenuAuthorizedOptionsRecursive.Call(\u0026DVelop_Menu_Item.ToJson(),\u0026ResultJson) \n\t\t\u0026Aux_DVelop_Menu_Item.FromJson(\u0026ResultJson)\n\t\tIf \u0026Aux_DVelop_Menu_Item.subItems.Count = 0 \n\t\t\t\u0026RemoveIds.Add(\u0026DVelop_Menu_Item.id)\n\t\telse\n\t\t\t\u0026DVelop_Menu_Item.FromJson(\u0026ResultJson) \n\t\tEndIf\n\telse   \n\t\t//main level item\n\t\t\u0026IsAuthorized = IsMenuAuthorizedOption(\u0026DVelop_Menu_Item)\n\t\tIf Not \u0026IsAuthorized \n\t\t\t\u0026RemoveIds.Add(\u0026DVelop_Menu_Item.id) \n\t\tEndIf\n\tEndIf\nEndFor\n \nFor \u0026i = 1 To \u0026RemoveIds.Count\n\tFor \u0026j = 1 To \u0026DVelop_Menu.Count\n\t\tIf \u0026DVelop_Menu.Item(\u0026j).id.Trim() = \u0026RemoveIds.Item(\u0026i).Trim()\n\t\t\t\u0026DVelop_Menu.Remove(\u0026j)\n\t\t\texit\n\t\tEndIf\n\tEndFor\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(inout:\u0026DVelop_Menu);\n",
+      "cleanSource": "parm(inout:\u0026DVelop_Menu);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.GetMenuAuthorizedOptionsRecursive",
+      "WWPBaseObjects.IsMenuAuthorizedOption",
+      "WWPBaseObjects.DVelop_Menu",
+      "GetMenuAuthorizedOptionsRecursive"
+    ],
+    "calledBy": [
+      "SetDefaultModule",
+      "WWP_GetSearchWCData"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Aux_DVelop_Menu_Item",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Aux_DVelop_Menu_Item"
+    },
+    {
+      "name": "DVelop_Menu",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "inout",
+      "domain": "",
+      "description": "DVelop_Menu"
+    },
+    {
+      "name": "DVelop_Menu_Item",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "DVelop_Menu_Item"
+    },
+    {
+      "name": "i",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "i"
+    },
+    {
+      "name": "IsAuthorized",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Is Authorized"
+    },
+    {
+      "name": "j",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "j"
+    },
+    {
+      "name": "RemoveIds",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Remove Ids"
+    },
+    {
+      "name": "ResultJson",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Result Json"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

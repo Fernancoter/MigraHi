@@ -1,0 +1,201 @@
+{
+  "uniqueId": "1ec85f03-4400-46be-864b-8301f75bbb85",
+  "name": "EncontrarPallet",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Encontrar Pallet",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\u0026PaletId = 0\n\t\u0026Encontrado = false\n\t\u0026isValid = true\n\t\u0026Mensajes.Clear()\n\n\tfor each DB.Palet\n\t\twhere PaletId \u003E 0\n\t\twhere PaletNoSerie.Trim() = \u0026NoPallet.Trim()\n\t\t\n\t\tif(PaletProductoId = \u0026ProductoId)\n\t\t\t\u0026Encontrado = true\n\t\t\t\u0026PaletId = PaletId\n\t\telse\n\t\t\t\u0026Msj = New()\n\t\t\t\u0026Msj.Id = !\u0027Producto no compatible\u0027\n\t\t\t\u0026Msj.Description = \u0027Palet no compatible con el producto del embarque.\u0027\n\t\t\t\u0026Msj.Type = MessageTypes.Warning\n\t\t\t\u0026Mensajes.Add(\u0026Msj)\n\t\t\t\u0026isValid = false\n\t\tendif\n\t\n\t        Exit\n\tWhen none\n\t\t\u0026Externo = EscaneoPaletExterno.Udp()\n\t\t\n\t\tif(\u0026Externo)\n\t\t\t\u0026PaletExterno = New()\n\t\t\t\u0026PaletExterno.PaletPrensadoId.SetNull()\n\t\t\t\u0026PaletExterno.PaletOperadorId.SetNull()\n\t\t\t\u0026PaletExterno.PaletPrensaId.SetNull()\n\t\t\t\u0026PaletExterno.PaletNoSerie = \u0026NoPallet.Trim()\n\t\t\t\u0026PaletExterno.PaletProductoId = \u0026ProductoId\n\t\n\t\t\t\u0026PaletExterno.PaletPrensadoFinId.SetNull()\n\t\t\t\u0026PaletExterno.PaletTipo = TipoPalet.Externo\n\t\t\t\u0026PaletExterno.PaletCapacidad = 0\n\t\t\t\u0026PaletExterno.PaletEstatus = EstatusPalet.Terminado\n\t\t\t\u0026PaletExterno.PaletHoraInicioEnsamble = Today()\n\t\t\t\u0026PaletExterno.PaletHoraFinEnsamble = Today()\n\t\t\t\u0026PaletExterno.Save()\n\t\t\t\u0026PaletId = \u0026PaletExterno.PaletId\n\t\t\tcommit\n\t\t\t\n\t\t\tif(\u0026isValid)\n\t\t             SetEstatusPalet.Call(\u0026PaletId, EstatusPalet.Embarcado)\n\t          endif\n\t\telse\n\t\t\t\u0026Msj = New()\n\t\t\t\u0026Msj.Id = !\u0027Pallet no registrado\u0027\n\t\t\t\u0026Msj.Description = \u0027Palet no encontrado en sistema. Si desea agregarlo, habilite el escaneo de pallets externos.\u0027\n\t\t\t\u0026Msj.Type = MessageTypes.Warning\n\t\t\t\u0026Mensajes.Add(\u0026Msj)\n\t\t\t\u0026isValid = false\n\t\tendif\n\tendfor\n        \n\tif(\u0026Encontrado)\n\t\t\u0026Palet.Load(\u0026PaletId)\n\t\t\u0026PaletEstatus = \u0026Palet.PaletEstatus\n\t\t\n\t\tDo Case\n\t\t\tCase \u0026PaletEstatus = EstatusPalet.EnEnsamble\n\t\t\t     \u0026Msj = New()\n\t\t\t     \u0026Msj.Id = !\u0027Pallet en ensamble\u0027\n\t\t\t     \u0026Msj.Description = \u0027El pallet se encuentra en ensamble.\u0027\n\t\t\t     \u0026Msj.Type = MessageTypes.Info\n\t\t\t     \u0026Mensajes.Add(\u0026Msj)\n\t\t\t     \u0026isValid = false\n\t\t\t     \n\t\t\tCase \u0026PaletEstatus = EstatusPalet.Embarcado\n\t\t\t\t\n\t\t\t     \u0026Msj = New()\n\t\t\t     \u0026Msj.Id = !\u0027Pallet embarcado\u0027\n\t\t\t     \u0026Msj.Description = \u0027El pallet ya se encuentra embarcado.\u0027\n\t\t\t     \u0026Msj.Type = MessageTypes.Info\n\t\t\t     \u0026Mensajes.Add(\u0026Msj)\n\t\t\t     \u0026isValid = false\n\t\tEndCase\n\t\n\t        if(\u0026isValid)\n\t\t     Produccion.SetEstatusPalet.Call(\u0026PaletId, EstatusPalet.Embarcado)\n\t        endif\n\tendif\n        \n\t\n",
+      "cleanSource": "\t\u0026PaletId = 0\n\t\u0026Encontrado = false\n\t\u0026isValid = true\n\t\u0026Mensajes.Clear()\n\n\tfor each DB.Palet\n\t\twhere PaletId \u003E 0\n\t\twhere PaletNoSerie.Trim() = \u0026NoPallet.Trim()\n\t\t\n\t\tif(PaletProductoId = \u0026ProductoId)\n\t\t\t\u0026Encontrado = true\n\t\t\t\u0026PaletId = PaletId\n\t\telse\n\t\t\t\u0026Msj = New()\n\t\t\t\u0026Msj.Id = !\u0027Producto no compatible\u0027\n\t\t\t\u0026Msj.Description = \u0027Palet no compatible con el producto del embarque.\u0027\n\t\t\t\u0026Msj.Type = MessageTypes.Warning\n\t\t\t\u0026Mensajes.Add(\u0026Msj)\n\t\t\t\u0026isValid = false\n\t\tendif\n\t\n\t        Exit\n\tWhen none\n\t\t\u0026Externo = EscaneoPaletExterno.Udp()\n\t\t\n\t\tif(\u0026Externo)\n\t\t\t\u0026PaletExterno = New()\n\t\t\t\u0026PaletExterno.PaletPrensadoId.SetNull()\n\t\t\t\u0026PaletExterno.PaletOperadorId.SetNull()\n\t\t\t\u0026PaletExterno.PaletPrensaId.SetNull()\n\t\t\t\u0026PaletExterno.PaletNoSerie = \u0026NoPallet.Trim()\n\t\t\t\u0026PaletExterno.PaletProductoId = \u0026ProductoId\n\t\n\t\t\t\u0026PaletExterno.PaletPrensadoFinId.SetNull()\n\t\t\t\u0026PaletExterno.PaletTipo = TipoPalet.Externo\n\t\t\t\u0026PaletExterno.PaletCapacidad = 0\n\t\t\t\u0026PaletExterno.PaletEstatus = EstatusPalet.Terminado\n\t\t\t\u0026PaletExterno.PaletHoraInicioEnsamble = Today()\n\t\t\t\u0026PaletExterno.PaletHoraFinEnsamble = Today()\n\t\t\t\u0026PaletExterno.Save()\n\t\t\t\u0026PaletId = \u0026PaletExterno.PaletId\n\t\t\tcommit\n\t\t\t\n\t\t\tif(\u0026isValid)\n\t\t             SetEstatusPalet.Call(\u0026PaletId, EstatusPalet.Embarcado)\n\t          endif\n\t\telse\n\t\t\t\u0026Msj = New()\n\t\t\t\u0026Msj.Id = !\u0027Pallet no registrado\u0027\n\t\t\t\u0026Msj.Description = \u0027Palet no encontrado en sistema. Si desea agregarlo, habilite el escaneo de pallets externos.\u0027\n\t\t\t\u0026Msj.Type = MessageTypes.Warning\n\t\t\t\u0026Mensajes.Add(\u0026Msj)\n\t\t\t\u0026isValid = false\n\t\tendif\n\tendfor\n        \n\tif(\u0026Encontrado)\n\t\t\u0026Palet.Load(\u0026PaletId)\n\t\t\u0026PaletEstatus = \u0026Palet.PaletEstatus\n\t\t\n\t\tDo Case\n\t\t\tCase \u0026PaletEstatus = EstatusPalet.EnEnsamble\n\t\t\t     \u0026Msj = New()\n\t\t\t     \u0026Msj.Id = !\u0027Pallet en ensamble\u0027\n\t\t\t     \u0026Msj.Description = \u0027El pallet se encuentra en ensamble.\u0027\n\t\t\t     \u0026Msj.Type = MessageTypes.Info\n\t\t\t     \u0026Mensajes.Add(\u0026Msj)\n\t\t\t     \u0026isValid = false\n\t\t\t     \n\t\t\tCase \u0026PaletEstatus = EstatusPalet.Embarcado\n\t\t\t\t\n\t\t\t     \u0026Msj = New()\n\t\t\t     \u0026Msj.Id = !\u0027Pallet embarcado\u0027\n\t\t\t     \u0026Msj.Description = \u0027El pallet ya se encuentra embarcado.\u0027\n\t\t\t     \u0026Msj.Type = MessageTypes.Info\n\t\t\t     \u0026Mensajes.Add(\u0026Msj)\n\t\t\t     \u0026isValid = false\n\t\tEndCase\n\t\n\t        if(\u0026isValid)\n\t\t     Produccion.SetEstatusPalet.Call(\u0026PaletId, EstatusPalet.Embarcado)\n\t        endif\n\tendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026NoPallet, in:\u0026ProductoId, out:\u0026Mensajes);\n",
+      "cleanSource": "parm(in:\u0026NoPallet, in:\u0026ProductoId, out:\u0026Mensajes);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.EscaneoPaletExterno",
+      "Produccion.SetEstatusPalet",
+      "GeneXus.Common.Messages",
+      "DB.Palet",
+      "DB.EmbarquePallet",
+      "SetEstatusPalet",
+      "EscaneoPaletExterno"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "isValid",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "is Valid"
+    },
+    {
+      "name": "DeleteEmbarquePallet",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Delete Embarque Pallet"
+    },
+    {
+      "name": "EmbarqueDetalleId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Embarque Detalle Id"
+    },
+    {
+      "name": "Encontrado",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Encontrado"
+    },
+    {
+      "name": "Externo",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Externo"
+    },
+    {
+      "name": "Mensajes",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "Mensajes"
+    },
+    {
+      "name": "Msj",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Msj"
+    },
+    {
+      "name": "NoPallet",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "No Pallet"
+    },
+    {
+      "name": "Palet",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet"
+    },
+    {
+      "name": "PaletEstatus",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet Estatus"
+    },
+    {
+      "name": "PaletExterno",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet Externo"
+    },
+    {
+      "name": "PaletId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Palet Id"
+    },
+    {
+      "name": "ProductoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

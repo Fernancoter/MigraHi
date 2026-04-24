@@ -1,0 +1,150 @@
+{
+  "uniqueId": "482897e2-2b0a-4f0a-b720-62803f9a546f",
+  "name": "WWP_SendVerificationCode",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.SMS",
+  "description": "Send Verification Code",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026Success = False\n\nIf \u0026PhoneNumber.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Phone number cannot be empty\u0022)\n\treturn\nEndIf\n\n\u0026SMSParametersSDT = WWP_GetSMSParameters()\n\u0026BasicAuthHeader = !\u0022Basic \u0022 \u002B ToBase64(\u0026SMSParametersSDT.ApplicationKey \u002B !\u0022:\u0022 \u002B \u0026SMSParametersSDT.ApplicationSecret)\n\n\u0026RequestBody = !\u0027{ \u0022identity\u0022: { \u0022type\u0022:\u0022number\u0022, \u0022endpoint\u0022:\u0022%1\u0022 }, \u0022method\u0022: \u0022sms\u0022 }\u0027\n\u0026RequestBody = Format(\u0026RequestBody, \u0026PhoneNumber.Trim())\n\nWWP_Logger.Debug(\u0026Pgmname, !\u0022Calling Sinch API with header: \u0022 \u002B \u0026BasicAuthHeader)\nWWP_Logger.Debug(\u0026Pgmname, !\u0022Calling Sinch API with body: \u0022 \u002B \u0026RequestBody)\n\n\u0026HttpClient = new()\n\u0026HttpClient.Secure = 1\n\u0026HttpClient.Host = !\u0022verificationapi-v1.sinch.com\u0022\n\u0026HttpClient.BaseUrl = !\u0022verification/v1/\u0022\n\u0026HttpClient.AddHeader(!\u0022Content-Type\u0022, !\u0022application/json\u0022)\n\u0026HttpClient.AddHeader(!\u0022Authorization\u0022, \u0026BasicAuthHeader)\n\u0026HttpClient.AddString(\u0026RequestBody)\n\u0026HttpClient.Execute(!\u0022POST\u0022, !\u0022verifications\u0022)\n\n\u0026Response = \u0026HttpClient.ToString()\nWWP_Logger.Debug(\u0026Pgmname, !\u0022Sinch API response: \u0022 \u002B \u0026Response)\n\u0026SendVerificationCodeResultSDT.FromJson(\u0026Response)\n\nIf \u0026HttpClient.StatusCode \u003C\u003E 200\n\tWWP_Logger.Error(\u0026Pgmname, Format(!\u0022Error sending verification SMS - Code: %1 - %2\u0022, \u0026HttpClient.ErrCode.ToString().Trim(), \u0026HttpClient.ErrDescription))\n\treturn\nEndIf\n\n\u0026Success = True\n",
+      "cleanSource": "\u0026Success = False\n\nIf \u0026PhoneNumber.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Phone number cannot be empty\u0022)\n\treturn\nEndIf\n\n\u0026SMSParametersSDT = WWP_GetSMSParameters()\n\u0026BasicAuthHeader = !\u0022Basic \u0022 \u002B ToBase64(\u0026SMSParametersSDT.ApplicationKey \u002B !\u0022:\u0022 \u002B \u0026SMSParametersSDT.ApplicationSecret)\n\n\u0026RequestBody = !\u0027{ \u0022identity\u0022: { \u0022type\u0022:\u0022number\u0022, \u0022endpoint\u0022:\u0022%1\u0022 }, \u0022method\u0022: \u0022sms\u0022 }\u0027\n\u0026RequestBody = Format(\u0026RequestBody, \u0026PhoneNumber.Trim())\n\nWWP_Logger.Debug(\u0026Pgmname, !\u0022Calling Sinch API with header: \u0022 \u002B \u0026BasicAuthHeader)\nWWP_Logger.Debug(\u0026Pgmname, !\u0022Calling Sinch API with body: \u0022 \u002B \u0026RequestBody)\n\n\u0026HttpClient = new()\n\u0026HttpClient.Secure = 1\n\u0026HttpClient.Host = !\u0022verificationapi-v1.sinch.com\u0022\n\u0026HttpClient.BaseUrl = !\u0022verification/v1/\u0022\n\u0026HttpClient.AddHeader(!\u0022Content-Type\u0022, !\u0022application/json\u0022)\n\u0026HttpClient.AddHeader(!\u0022Authorization\u0022, \u0026BasicAuthHeader)\n\u0026HttpClient.AddString(\u0026RequestBody)\n\u0026HttpClient.Execute(!\u0022POST\u0022, !\u0022verifications\u0022)\n\n\u0026Response = \u0026HttpClient.ToString()\nWWP_Logger.Debug(\u0026Pgmname, !\u0022Sinch API response: \u0022 \u002B \u0026Response)\n\u0026SendVerificationCodeResultSDT.FromJson(\u0026Response)\n\nIf \u0026HttpClient.StatusCode \u003C\u003E 200\n\tWWP_Logger.Error(\u0026Pgmname, Format(!\u0022Error sending verification SMS - Code: %1 - %2\u0022, \u0026HttpClient.ErrCode.ToString().Trim(), \u0026HttpClient.ErrDescription))\n\treturn\nEndIf\n\n\u0026Success = True"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PhoneNumber, out:\u0026Success, out:\u0026SendVerificationCodeResultSDT);\n",
+      "cleanSource": "parm(in:\u0026PhoneNumber, out:\u0026Success, out:\u0026SendVerificationCodeResultSDT);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_Logger",
+      "WWPBaseObjects.SMS.WWP_GetSMSParameters",
+      "WWPBaseObjects.SMS.WWP_SMSParametersSDT",
+      "WWPBaseObjects.SMS.WWP_SendVerificationCodeResultSDT"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "BasicAuthHeader",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Basic Auth Header"
+    },
+    {
+      "name": "HttpClient",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Http Client"
+    },
+    {
+      "name": "PhoneNumber",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Phone Number"
+    },
+    {
+      "name": "RequestBody",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Request Body"
+    },
+    {
+      "name": "SendVerificationCodeResultSDT",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "Send Verification Code Result SDT"
+    },
+    {
+      "name": "SMSParametersSDT",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SMSParameters SDT"
+    },
+    {
+      "name": "Success",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Success"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

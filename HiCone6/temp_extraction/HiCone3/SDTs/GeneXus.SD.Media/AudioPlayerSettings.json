@@ -1,0 +1,61 @@
+{
+  "uniqueId": "1d10634f-78fd-41a5-b3c9-be59495bd84c",
+  "name": "AudioPlayerSettings",
+  "type": "SDT",
+  "module": "GeneXus.SD.Media",
+  "description": "Audio Player Settings",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "GeneXus.SD.Media.AudioPlayerCustomAction"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SupportsFavorite",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Supports Favorite"
+    },
+    {
+      "name": "SupportsRepeat",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Supports Repeat"
+    },
+    {
+      "name": "SupportsShuffle",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Supports Shuffle"
+    },
+    {
+      "name": "CustomActions",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Custom Actions"
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "uniqueId": "6a836d43-189b-4b4a-965c-3b903c28e95f",
+  "name": "SDFactorConsumoKg",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDFactor Consumo Kg",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\n\tfor each\n\t\twhere ConfiguracionKey = \u0027MaterialBobina\u0027\n\t\t\u0026ConfiguracionValor = ConfiguracionValor\n\t\tExit\n\twhen none\n\t\t\n\t\t//Valor predeterminado carreras (3 Carreras)\n\t\t\u0026ConfiguracionValor = \u00273\u0027\n\t\t\n\t\t//Registro de paramtero MaterialBobina\n\t\t\u0026Configuracion = New()\n\t\t\u0026Configuracion.ConfiguracionKey = \u0027MaterialBobina\u0027\n\t\t\u0026Configuracion.ConfiguracionValor = \u0026ConfiguracionValor\n\t\t\u0026Configuracion.Save()\n\t\t\n\t\tif(\u0026Configuracion.Success())\n\t\t\tcommit\n\t\tendif\n\tendfor\n\n        \u0026Factor =  \u0026ConfiguracionValor.ToNumeric()\n\t\n\t//\tDo Case\n//\t\tCase \u0026BobinaKg \u003E 650 and \u0026BobinaKg \u003C= 800\n//\t\t        \u0026Factor = 3\n//\t\tCase \u0026BobinaKg \u003E 480 and \u0026BobinaKg \u003C= 650\n//\t\t\t\u0026Factor = 3\n//\t\tCase \u0026BobinaKg \u003E 350 and \u0026BobinaKg \u003C= 480\n//\t\t        \u0026Factor = 2\n//\t\tCase \u0026BobinaKg \u003E= 150 and \u0026BobinaKg \u003C= 350\n//\t\t        \u0026Factor = 1\n//\t\tOtherwise\n//\t\t        \u0026Factor = 1\n//\tEndCase\n",
+      "cleanSource": "\t\n\tfor each\n\t\twhere ConfiguracionKey = \u0027MaterialBobina\u0027\n\t\t\u0026ConfiguracionValor = ConfiguracionValor\n\t\tExit\n\twhen none\n\t\t\n\t\t//Valor predeterminado carreras (3 Carreras)\n\t\t\u0026ConfiguracionValor = \u00273\u0027\n\t\t\n\t\t//Registro de paramtero MaterialBobina\n\t\t\u0026Configuracion = New()\n\t\t\u0026Configuracion.ConfiguracionKey = \u0027MaterialBobina\u0027\n\t\t\u0026Configuracion.ConfiguracionValor = \u0026ConfiguracionValor\n\t\t\u0026Configuracion.Save()\n\t\t\n\t\tif(\u0026Configuracion.Success())\n\t\t\tcommit\n\t\tendif\n\tendfor\n\n        \u0026Factor =  \u0026ConfiguracionValor.ToNumeric()\n\t\n\t//\tDo Case\n//\t\tCase \u0026BobinaKg \u003E 650 and \u0026BobinaKg \u003C= 800\n//\t\t        \u0026Factor = 3\n//\t\tCase \u0026BobinaKg \u003E 480 and \u0026BobinaKg \u003C= 650\n//\t\t\t\u0026Factor = 3\n//\t\tCase \u0026BobinaKg \u003E 350 and \u0026BobinaKg \u003C= 480\n//\t\t        \u0026Factor = 2\n//\t\tCase \u0026BobinaKg \u003E= 150 and \u0026BobinaKg \u003C= 350\n//\t\t        \u0026Factor = 1\n//\t\tOtherwise\n//\t\t        \u0026Factor = 1\n//\tEndCase"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026BobinaKg, out:\u0026Factor);\n",
+      "cleanSource": "parm(in:\u0026BobinaKg, out:\u0026Factor);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Configuracion"
+    ],
+    "calledBy": [
+      "SDFinalizarPrensado",
+      "SDAgregarCarrera",
+      "SDPrensadoTemporal"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "BobinaKg",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Bobina Kg"
+    },
+    {
+      "name": "Factor",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Factor"
+    },
+    {
+      "name": "ConfiguracionValor",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Configuracion Valor"
+    },
+    {
+      "name": "Configuracion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Configuracion"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

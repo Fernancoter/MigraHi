@@ -1,0 +1,137 @@
+{
+  "uniqueId": "2119c61c-aa9c-4452-aad9-f9221081bb05",
+  "name": "SDTCarrete",
+  "type": "SDT",
+  "module": "Produccion",
+  "description": "SDTCarrete",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "SDEscanearCarrete",
+      "SDVincularCarrete",
+      "SDCarreteItem",
+      "RptPrensado",
+      "PrensadoDelDiaCarrera"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CarreteId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Id"
+    },
+    {
+      "name": "CarreteNoLinea",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete No Linea"
+    },
+    {
+      "name": "CarreteNoSerie",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete No Serie"
+    },
+    {
+      "name": "CarreteEstado",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Estado"
+    },
+    {
+      "name": "CarreteObservacion",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Observacion"
+    },
+    {
+      "name": "CarreteCarreraId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Carrera Id"
+    },
+    {
+      "name": "CarreteTerminaPalet",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Termina Palet"
+    },
+    {
+      "name": "CarretePaletSerie",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Palet Serie"
+    },
+    {
+      "name": "selected",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "selected"
+    },
+    {
+      "name": "CarreteEnMolino",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete En Molino"
+    },
+    {
+      "name": "CarreteMolino",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Molino"
+    },
+    {
+      "name": "CarreteMermaMolino",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Merma Molino"
+    },
+    {
+      "name": "CarreteMermaKg",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Merma Kg"
+    }
+  ]
+}

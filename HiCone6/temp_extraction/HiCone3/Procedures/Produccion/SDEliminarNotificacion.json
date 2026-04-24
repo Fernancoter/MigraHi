@@ -1,0 +1,128 @@
+{
+  "uniqueId": "efa03a44-5eee-4e79-a49b-19f08792e96f",
+  "name": "SDEliminarNotificacion",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDEliminar Notificacion",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026Notificaciones = SDPCartProductsList()\n\nfor \u0026CurrentItem in \u0026Notificaciones\n\t\n\tDo Case\n\t\tCase \u0026TipoNotificacion = NotificacionTipo.Bobina\n\t\t     if(\u0026CurrentItem.ItemId = \u0026Id)\n\t\t          SDPCartProductsRemove(\u0026CurrentItem.ProductId, 0)\n\t\t\t  Exit\n\t             endif\t\n\t        \n\t\tCase \u0026TipoNotificacion = NotificacionTipo.Carrera\n\t\t    if(\u0026CurrentItem.ItemId = \u0026Id)\n\t\t          SDPCartProductsRemove(\u0026CurrentItem.ProductId, 0)\n\t\t\t  Exit\n\t        endif\n\tEndCase\nendfor\n\t\t\n",
+      "cleanSource": "\u0026Notificaciones = SDPCartProductsList()\n\nfor \u0026CurrentItem in \u0026Notificaciones\n\t\n\tDo Case\n\t\tCase \u0026TipoNotificacion = NotificacionTipo.Bobina\n\t\t     if(\u0026CurrentItem.ItemId = \u0026Id)\n\t\t          SDPCartProductsRemove(\u0026CurrentItem.ProductId, 0)\n\t\t\t  Exit\n\t             endif\t\n\t        \n\t\tCase \u0026TipoNotificacion = NotificacionTipo.Carrera\n\t\t    if(\u0026CurrentItem.ItemId = \u0026Id)\n\t\t          SDPCartProductsRemove(\u0026CurrentItem.ProductId, 0)\n\t\t\t  Exit\n\t        endif\n\tEndCase\nendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026Id, in:\u0026TipoNotificacion);\n",
+      "cleanSource": "parm(in:\u0026Id, in:\u0026TipoNotificacion);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "SDPCartProductsList",
+      "SDPCartProductsRemove",
+      "SDPCartProduct"
+    ],
+    "calledBy": [
+      "ValidarBobina",
+      "ValidarCarreraCompleta"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CurrentItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Current Item"
+    },
+    {
+      "name": "Id",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Id"
+    },
+    {
+      "name": "Notificaciones",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Notificaciones"
+    },
+    {
+      "name": "TipoNotificacion",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Tipo Notificacion"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

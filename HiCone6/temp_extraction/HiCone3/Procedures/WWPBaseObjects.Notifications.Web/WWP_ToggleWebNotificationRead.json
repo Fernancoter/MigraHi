@@ -1,0 +1,108 @@
+{
+  "uniqueId": "358ce208-fbeb-4a8a-9ede-d152c4ea5973",
+  "name": "WWP_ToggleWebNotificationRead",
+  "type": "Procedure",
+  "module": "WWPBaseObjects.Notifications.Web",
+  "description": "Toggle Web Notification Read",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026WebNotification.Load(\u0026WebNotificationId)\n\nIf \u0026WebNotification.Fail()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Notification not found with id: \u0022 \u002B \u0026WebNotificationId.ToString().Trim())\n\treturn\nEndIf\n\nIf \u0026WebNotification.WWPWebNotificationRead.IsNull() or \u0026WebNotification.WWPWebNotificationRead.IsEmpty()\n\t\u0026WebNotification.WWPWebNotificationRead = ServerNow()\nElse\n\t\u0026WebNotification.WWPWebNotificationRead.SetNull()\nEndIf\n\n\u0026WebNotification.Save()\nCommit\n",
+      "cleanSource": "\u0026WebNotification.Load(\u0026WebNotificationId)\n\nIf \u0026WebNotification.Fail()\n\tWWP_Logger.Error(\u0026Pgmname, !\u0022Notification not found with id: \u0022 \u002B \u0026WebNotificationId.ToString().Trim())\n\treturn\nEndIf\n\nIf \u0026WebNotification.WWPWebNotificationRead.IsNull() or \u0026WebNotification.WWPWebNotificationRead.IsEmpty()\n\t\u0026WebNotification.WWPWebNotificationRead = ServerNow()\nElse\n\t\u0026WebNotification.WWPWebNotificationRead.SetNull()\nEndIf\n\n\u0026WebNotification.Save()\nCommit"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026WebNotificationId);\n",
+      "cleanSource": "parm(in:\u0026WebNotificationId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_Logger",
+      "WWPBaseObjects.Notifications.Web.WWP_WebNotification"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "WebNotification",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Web Notification"
+    },
+    {
+      "name": "WebNotificationId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Notification Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+{
+  "uniqueId": "29e1f0f3-32d7-4515-9d92-4cd3fceb08d6",
+  "name": "RptExtrusion",
+  "type": "Procedure",
+  "module": "PrinterSD",
+  "description": "Rpt Extrusion",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026SDTRptExtrusion = DPSDTRptExtrusion.Udp(\u0026ExtrusionId)\n\u0026SDTExtrusionResultado = DPExtrusionResultado.Udp(\u0026ExtrusionId)\n//debugger.Call(niveldebug.Informativo, \u0026Pgmname, \u0026SDTRptExtrusion.ToJson())\nheader\n\t\n\tprint pb_header\n\t\nend\n\n\u0026SDTBobina = BobinaDP.Udp(\u0026ExtrusionId, \u0027\u0027, 0)\n//debugger.Call(niveldebug.Informativo, \u0026Pgmname, \u0026SDTBobina.ToJson())\n\nprint pb_header_bobina_a\n\nFor \u0026SDTBobinaItem In \u0026SDTBobina\n\t\n\tDo Case\n\t\t\n\t\tCase \u0026SDTBobinaItem.BobinaOrigen = OrigenBobina.A\n\t\t\tprint If detail\n\t\t\tprint pb_body_bobina_a\n\t\t\t\u0026ABobinaKg \u002B= \u0026SDTBobinaItem.BobinaKg\n\t\t\t\u0026ABobinaMermaKg \u002B= \u0026SDTBobinaItem.BobinaMermaKg\n\tEndCase\n\t\nEndFor\n\n\u0026SDTRptExtrusion.ABobinaTotalKgTexto = \u0026ABobinaKg.ToString().Trim()\n\nprint pb_foot_bobina_a\n\nprint pb_header_bobina_b\n\nFor \u0026SDTBobinaItem In \u0026SDTBobina\n\t\n\tDo Case\n\t\t\n\t\tCase \u0026SDTBobinaItem.BobinaOrigen = OrigenBobina.B\n\t\t\tprint If detail\n\t\t\tprint pb_body_bobina_b\n\t\t\t\u0026BBobinaKg \u002B= \u0026SDTBobinaItem.BobinaKg\n\t\t\t\u0026BBobinaMermaKg \u002B= \u0026SDTBobinaItem.BobinaMermaKg\n\tEndCase\n\t\nEndFor\n\n\u0026SDTRptExtrusion.BBobinaTotalKgTexto = \u0026BBobinaKg.ToString().Trim()\n\nprint pb_foot_bobina_b\n\n\nprint Interrupcion_header\nfor each \n\twhere ExtrusionId = \u0026ExtrusionId\n\t\u0026InterrupcionHoraInicio  = InterrupcionHoraInicio\n\t\u0026InterrupcionHoraFin = InterrupcionHoraFin\n\t\u0026InterrupcionMotivo = InterrupcionMotivo\n\t\n\tprint Interrupcion_Body\n\t\nwhen none\n\nendfor\n\n\t\n\t\n\n\n\n\n\u0026BobinaKg = \u0026ABobinaKg \u002B \u0026BBobinaKg\n\u0026BobinaMermaKg = \u0026ABobinaMermaKg \u002B \u0026BBobinaMermaKg\n\n\u0026SDTRptExtrusion.KgUtilesTexto = \u0026BobinaKg.ToFormattedString()\n\u0026SDTRptExtrusion.kgMermaTexto = \u0026BobinaMermaKg.ToFormattedString()\n\nprint pb_footer\n\t\n",
+      "cleanSource": "\u0026SDTRptExtrusion = DPSDTRptExtrusion.Udp(\u0026ExtrusionId)\n\u0026SDTExtrusionResultado = DPExtrusionResultado.Udp(\u0026ExtrusionId)\n//debugger.Call(niveldebug.Informativo, \u0026Pgmname, \u0026SDTRptExtrusion.ToJson())\nheader\n\t\n\tprint pb_header\n\t\nend\n\n\u0026SDTBobina = BobinaDP.Udp(\u0026ExtrusionId, \u0027\u0027, 0)\n//debugger.Call(niveldebug.Informativo, \u0026Pgmname, \u0026SDTBobina.ToJson())\n\nprint pb_header_bobina_a\n\nFor \u0026SDTBobinaItem In \u0026SDTBobina\n\t\n\tDo Case\n\t\t\n\t\tCase \u0026SDTBobinaItem.BobinaOrigen = OrigenBobina.A\n\t\t\tprint If detail\n\t\t\tprint pb_body_bobina_a\n\t\t\t\u0026ABobinaKg \u002B= \u0026SDTBobinaItem.BobinaKg\n\t\t\t\u0026ABobinaMermaKg \u002B= \u0026SDTBobinaItem.BobinaMermaKg\n\tEndCase\n\t\nEndFor\n\n\u0026SDTRptExtrusion.ABobinaTotalKgTexto = \u0026ABobinaKg.ToString().Trim()\n\nprint pb_foot_bobina_a\n\nprint pb_header_bobina_b\n\nFor \u0026SDTBobinaItem In \u0026SDTBobina\n\t\n\tDo Case\n\t\t\n\t\tCase \u0026SDTBobinaItem.BobinaOrigen = OrigenBobina.B\n\t\t\tprint If detail\n\t\t\tprint pb_body_bobina_b\n\t\t\t\u0026BBobinaKg \u002B= \u0026SDTBobinaItem.BobinaKg\n\t\t\t\u0026BBobinaMermaKg \u002B= \u0026SDTBobinaItem.BobinaMermaKg\n\tEndCase\n\t\nEndFor\n\n\u0026SDTRptExtrusion.BBobinaTotalKgTexto = \u0026BBobinaKg.ToString().Trim()\n\nprint pb_foot_bobina_b\n\n\nprint Interrupcion_header\nfor each \n\twhere ExtrusionId = \u0026ExtrusionId\n\t\u0026InterrupcionHoraInicio  = InterrupcionHoraInicio\n\t\u0026InterrupcionHoraFin = InterrupcionHoraFin\n\t\u0026InterrupcionMotivo = InterrupcionMotivo\n\t\n\tprint Interrupcion_Body\n\t\nwhen none\n\nendfor\n\n\t\n\t\n\n\n\n\n\u0026BobinaKg = \u0026ABobinaKg \u002B \u0026BBobinaKg\n\u0026BobinaMermaKg = \u0026ABobinaMermaKg \u002B \u0026BBobinaMermaKg\n\n\u0026SDTRptExtrusion.KgUtilesTexto = \u0026BobinaKg.ToFormattedString()\n\u0026SDTRptExtrusion.kgMermaTexto = \u0026BobinaMermaKg.ToFormattedString()\n\nprint pb_footer"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026ExtrusionId,in:\u0026PDFNombre);\nOutput_File(\u0026PDFNombre, \u0027PDF\u0027);\n",
+      "cleanSource": "Parm(in:\u0026ExtrusionId,in:\u0026PDFNombre);\nOutput_File(\u0026PDFNombre, \u0027PDF\u0027);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.BobinaDP",
+      "PrinterSD.DPSDTRptExtrusion",
+      "Produccion.DPExtrusionResultado",
+      "Produccion.SDTBobina",
+      "Produccion.SDTExtrusionResultado",
+      "Produccion.SDTPrensadoResultado",
+      "PrinterSD.SDTRptExtrusion",
+      "debugger",
+      "DPSDTRptExtrusion",
+      "DPExtrusionResultado",
+      "BobinaDP"
+    ],
+    "calledBy": [
+      "ExtrusionWW"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SDTExtrusionResultado",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTExtrusion Resultado"
+    },
+    {
+      "name": "ABobinaKg",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Kg"
+    },
+    {
+      "name": "ABobinaMermaKg",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Merma Kg"
+    },
+    {
+      "name": "BBobinaKg",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Kg"
+    },
+    {
+      "name": "BBobinaMermaKg",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Merma Kg"
+    },
+    {
+      "name": "BobinaKg",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Kg"
+    },
+    {
+      "name": "BobinaMermaKg",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Merma Kg"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "PDFNombre",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "PDFNombre"
+    },
+    {
+      "name": "SDTBobina",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTBobina"
+    },
+    {
+      "name": "SDTBobinaItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTBobina Item"
+    },
+    {
+      "name": "SDTPrensadoResultado",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTPrensado Resultado"
+    },
+    {
+      "name": "SDTRptExtrusion",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTRpt Extrusion"
+    },
+    {
+      "name": "InterrupcionHoraInicio",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Interrupcion Hora Inicio"
+    },
+    {
+      "name": "InterrupcionHoraFin",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Interrupcion Hora Fin"
+    },
+    {
+      "name": "InterrupcionMotivo",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Interrupcion Motivo"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

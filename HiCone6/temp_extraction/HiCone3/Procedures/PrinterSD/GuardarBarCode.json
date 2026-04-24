@@ -1,0 +1,115 @@
+{
+  "uniqueId": "d0d33d75-b436-4c7b-8d3a-6611c39870b3",
+  "name": "GuardarBarCode",
+  "type": "Procedure",
+  "module": "PrinterSD",
+  "description": "Guardar Bar Code",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "For Each\n\tWhere BarCodeValue = \u0026BarCodeValue\n\tdelete\nEndFor\n\u0026datetime = datetime.Now()\n\u0026datetime = \u0026datetime.AddDays(-1)\nFor Each\n\tWhere BarCodeDateTime \u003C \u0026datetime or BarCodeDateTime.IsNull()\n\tdelete\nEndFor\n\n\nNew\n\tBarCodeValue = \u0026BarCodeValue\n\tBarCodeImage = \u0026ImgBlob\n\tBarCodeDateTime = datetime.Now()\nendnew\ncommit\n",
+      "cleanSource": "For Each\n\tWhere BarCodeValue = \u0026BarCodeValue\n\tdelete\nEndFor\n\u0026datetime = datetime.Now()\n\u0026datetime = \u0026datetime.AddDays(-1)\nFor Each\n\tWhere BarCodeDateTime \u003C \u0026datetime or BarCodeDateTime.IsNull()\n\tdelete\nEndFor\n\n\nNew\n\tBarCodeValue = \u0026BarCodeValue\n\tBarCodeImage = \u0026ImgBlob\n\tBarCodeDateTime = datetime.Now()\nendnew\ncommit"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(In:\u0026BarCodeValue,In: \u0026ImgBlob);\n",
+      "cleanSource": "parm(In:\u0026BarCodeValue,In: \u0026ImgBlob);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "ObtenerBarCode"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "BarCodeValue",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Bar Code Value"
+    },
+    {
+      "name": "ImgBlob",
+      "elementType": "Parameter",
+      "dataType": "BINARY",
+      "accessor": "in",
+      "domain": "",
+      "description": "Img Blob"
+    },
+    {
+      "name": "datetime",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "datetime"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

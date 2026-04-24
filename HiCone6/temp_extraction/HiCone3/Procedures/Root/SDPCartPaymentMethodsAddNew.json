@@ -1,0 +1,141 @@
+{
+  "uniqueId": "b35c5c8e-de92-401c-9ec5-6c60064cf245",
+  "name": "SDPCartPaymentMethodsAddNew",
+  "type": "Procedure",
+  "module": "",
+  "description": "SDPCart Payment Methods Add New",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026CardInformation.FromJson(\u0026CardInformationJson)\n\n\u0026SDPCartPaymentCollection = SDPCartPaymentMethodsGetAvailable()\n\n\u0026SDPCartPayment\t= new()\n\u0026SDPCartPayment.Id = \u0026CardInformation.CardNumber\n\u0026SDPCartPayment.VisibleName = \u0026CardInformation.CardType.ToFormattedString() \u002B !\u0022 ***** \u0022 \u002B \u0026CardInformation.CardNumber.Substring(13)\n\u0026SDPCartPayment.Owner = \u0026CardInformation.CardHolderName\n\u0026SDPCartPayment.Valid = !\u0022Expires on \u0022 \u002B \u0026CardInformation.ExpiryMonth.ToFormattedString() \u002B !\u0022/\u0022 \u002B \u0026CardInformation.ExpiryYear.ToFormattedString()\n\u0026SDPCartPaymentCollection.Add(\u0026SDPCartPayment)\n\n\u0026SessionTxt = \u0026SDPCartPaymentCollection.ToJson()\n\u0026WebSession.Set(!\u0022PaymentMethods\u0022, \u0026SessionTxt)\n",
+      "cleanSource": "\u0026CardInformation.FromJson(\u0026CardInformationJson)\n\n\u0026SDPCartPaymentCollection = SDPCartPaymentMethodsGetAvailable()\n\n\u0026SDPCartPayment\t= new()\n\u0026SDPCartPayment.Id = \u0026CardInformation.CardNumber\n\u0026SDPCartPayment.VisibleName = \u0026CardInformation.CardType.ToFormattedString() \u002B !\u0022 ***** \u0022 \u002B \u0026CardInformation.CardNumber.Substring(13)\n\u0026SDPCartPayment.Owner = \u0026CardInformation.CardHolderName\n\u0026SDPCartPayment.Valid = !\u0022Expires on \u0022 \u002B \u0026CardInformation.ExpiryMonth.ToFormattedString() \u002B !\u0022/\u0022 \u002B \u0026CardInformation.ExpiryYear.ToFormattedString()\n\u0026SDPCartPaymentCollection.Add(\u0026SDPCartPayment)\n\n\u0026SessionTxt = \u0026SDPCartPaymentCollection.ToJson()\n\u0026WebSession.Set(!\u0022PaymentMethods\u0022, \u0026SessionTxt)"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026CardInformationJson);\n",
+      "cleanSource": "Parm(in:\u0026CardInformationJson);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "SDPCartPaymentMethodsGetAvailable",
+      "GeneXus.SD.CardInformation",
+      "SDPCartPayment"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CardInformation",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Card Information"
+    },
+    {
+      "name": "CardInformationJson",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Card Information Json"
+    },
+    {
+      "name": "SDPCartPayment",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDPCart Payment"
+    },
+    {
+      "name": "SDPCartPaymentCollection",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDPCart Payment Collection"
+    },
+    {
+      "name": "SessionTxt",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Session Txt"
+    },
+    {
+      "name": "WebSession",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Web Session"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

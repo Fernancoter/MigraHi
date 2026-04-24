@@ -1,0 +1,230 @@
+{
+  "uniqueId": "71c8c38d-23a3-4b71-aa0a-ba79944b0b1c",
+  "name": "WWP_ManageFiltersLoadSavedFilters",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "WWP_Manage Filters Load Saved Filters",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\u0026ManageFiltersData = new()\n\n\u0026ManageFiltersDataItem = new()\n\u0026ManageFiltersDataItem.Title = \u0027WWP_CleanFiltersCaption\u0027\n\u0026ManageFiltersDataItem.EventKey = !\u0027\u003C#Clean#\u003E\u0027\n\u0026ManageFiltersDataItem.IsDivider = False\n\u0026ManageFiltersDataItem.FontIcon = !\u0027fa fa-times-circle\u0027\nIf not \u0026CleanJSFormat.IsEmpty()\n\t\u0026ManageFiltersDataItem.JSonclickEvent = format(\u0026CleanJSFormat, \u0026TableInternalName)\nEndIf\n\u0026ManageFiltersData.Add(\u0026ManageFiltersDataItem)\n\n\u0026ManageFiltersDataItem = new()\n\u0026ManageFiltersDataItem.Title = \u0027WWP_SaveFilterAsOption\u0027\n\u0026ManageFiltersDataItem.EventKey = !\u0027\u003C#Save#\u003E\u0027\n\u0026ManageFiltersDataItem.IsDivider = False\n\u0026ManageFiltersDataItem.FontIcon = !\u0027fa fa-save\u0027\n\u0026ManageFiltersData.Add(\u0026ManageFiltersDataItem)\n\nIf \u0026HasAdvancedFilters\n\t\u0026ManageFiltersDataItem = new()\n\t\u0026ManageFiltersDataItem.Title = \u0027WWP_ShowAdvancedFilters\u0027 \u002B !\u0027|\u0027 \u002B \u0027WWP_HideAdvancedFilters\u0027\n\t\u0026ManageFiltersDataItem.EventKey = !\u0027\u003C#ADV#\u003E\u0027\n\t\u0026ManageFiltersDataItem.IsDivider = False\n\t\u0026ManageFiltersDataItem.FontIcon = !\u0027fas fa-filter\u0027\n\t\u0026ManageFiltersData.Add(\u0026ManageFiltersDataItem)\nEndIf\n\n\u0026ManageFiltersItems.FromXml(udp(LoadManageFiltersState, \u0026Key))\nIf \u0026ManageFiltersItems.Count \u003E 0\n\t\u0026ManageFiltersDataItem = new()\n\t\u0026ManageFiltersDataItem.IsDivider = True\n\t\u0026ManageFiltersData.Add(\u0026ManageFiltersDataItem)\n\t\n\tFor \u0026ManageFiltersItem in \u0026ManageFiltersItems\n\t\t\u0026ManageFiltersDataItem = new()\n\t\t\u0026ManageFiltersDataItem.Title = \u0026ManageFiltersItem.Title\n\t\t\u0026ManageFiltersDataItem.EventKey = \u0026ManageFiltersItem.Title\n\t\t\u0026ManageFiltersDataItem.IsDivider = False\n\t\tIf not \u0026CleanJSFormat.IsEmpty()\n\t\t\t\u0026ManageFiltersDataItem.JSonclickEvent = format(\u0026CleanJSFormat, \u0026TableInternalName)\n\t\tEndIf\n\t\t\u0026ManageFiltersData.Add(\u0026ManageFiltersDataItem)\n\t\n\t\tIf \u0026ManageFiltersData.Count = 13\n\t\t\tExit\n\t\tEndIf\n\tEndFor\n\n\t\u0026ManageFiltersDataItem = new()\n\t\u0026ManageFiltersDataItem.IsDivider = True\n\t\u0026ManageFiltersData.Add(\u0026ManageFiltersDataItem)\n\n\t\u0026ManageFiltersDataItem = new()\n\t\u0026ManageFiltersDataItem.Title = \u0027WWP_ManageFiltersOption\u0027\n\t\u0026ManageFiltersDataItem.EventKey = !\u0027\u003C#Manage#\u003E\u0027\n\t\u0026ManageFiltersDataItem.IsDivider = False\n\t\u0026ManageFiltersDataItem.FontIcon = !\u0027fa fa-cog\u0027\n\t\u0026ManageFiltersDataItem.JSonclickEvent = \u0027\u0027\n\t\u0026ManageFiltersData.Add(\u0026ManageFiltersDataItem)\nEndIf\n",
+      "cleanSource": "\n\u0026ManageFiltersData = new()\n\n\u0026ManageFiltersDataItem = new()\n\u0026ManageFiltersDataItem.Title = \u0027WWP_CleanFiltersCaption\u0027\n\u0026ManageFiltersDataItem.EventKey = !\u0027\u003C#Clean#\u003E\u0027\n\u0026ManageFiltersDataItem.IsDivider = False\n\u0026ManageFiltersDataItem.FontIcon = !\u0027fa fa-times-circle\u0027\nIf not \u0026CleanJSFormat.IsEmpty()\n\t\u0026ManageFiltersDataItem.JSonclickEvent = format(\u0026CleanJSFormat, \u0026TableInternalName)\nEndIf\n\u0026ManageFiltersData.Add(\u0026ManageFiltersDataItem)\n\n\u0026ManageFiltersDataItem = new()\n\u0026ManageFiltersDataItem.Title = \u0027WWP_SaveFilterAsOption\u0027\n\u0026ManageFiltersDataItem.EventKey = !\u0027\u003C#Save#\u003E\u0027\n\u0026ManageFiltersDataItem.IsDivider = False\n\u0026ManageFiltersDataItem.FontIcon = !\u0027fa fa-save\u0027\n\u0026ManageFiltersData.Add(\u0026ManageFiltersDataItem)\n\nIf \u0026HasAdvancedFilters\n\t\u0026ManageFiltersDataItem = new()\n\t\u0026ManageFiltersDataItem.Title = \u0027WWP_ShowAdvancedFilters\u0027 \u002B !\u0027|\u0027 \u002B \u0027WWP_HideAdvancedFilters\u0027\n\t\u0026ManageFiltersDataItem.EventKey = !\u0027\u003C#ADV#\u003E\u0027\n\t\u0026ManageFiltersDataItem.IsDivider = False\n\t\u0026ManageFiltersDataItem.FontIcon = !\u0027fas fa-filter\u0027\n\t\u0026ManageFiltersData.Add(\u0026ManageFiltersDataItem)\nEndIf\n\n\u0026ManageFiltersItems.FromXml(udp(LoadManageFiltersState, \u0026Key))\nIf \u0026ManageFiltersItems.Count \u003E 0\n\t\u0026ManageFiltersDataItem = new()\n\t\u0026ManageFiltersDataItem.IsDivider = True\n\t\u0026ManageFiltersData.Add(\u0026ManageFiltersDataItem)\n\t\n\tFor \u0026ManageFiltersItem in \u0026ManageFiltersItems\n\t\t\u0026ManageFiltersDataItem = new()\n\t\t\u0026ManageFiltersDataItem.Title = \u0026ManageFiltersItem.Title\n\t\t\u0026ManageFiltersDataItem.EventKey = \u0026ManageFiltersItem.Title\n\t\t\u0026ManageFiltersDataItem.IsDivider = False\n\t\tIf not \u0026CleanJSFormat.IsEmpty()\n\t\t\t\u0026ManageFiltersDataItem.JSonclickEvent = format(\u0026CleanJSFormat, \u0026TableInternalName)\n\t\tEndIf\n\t\t\u0026ManageFiltersData.Add(\u0026ManageFiltersDataItem)\n\t\n\t\tIf \u0026ManageFiltersData.Count = 13\n\t\t\tExit\n\t\tEndIf\n\tEndFor\n\n\t\u0026ManageFiltersDataItem = new()\n\t\u0026ManageFiltersDataItem.IsDivider = True\n\t\u0026ManageFiltersData.Add(\u0026ManageFiltersDataItem)\n\n\t\u0026ManageFiltersDataItem = new()\n\t\u0026ManageFiltersDataItem.Title = \u0027WWP_ManageFiltersOption\u0027\n\t\u0026ManageFiltersDataItem.EventKey = !\u0027\u003C#Manage#\u003E\u0027\n\t\u0026ManageFiltersDataItem.IsDivider = False\n\t\u0026ManageFiltersDataItem.FontIcon = !\u0027fa fa-cog\u0027\n\t\u0026ManageFiltersDataItem.JSonclickEvent = \u0027\u0027\n\t\u0026ManageFiltersData.Add(\u0026ManageFiltersDataItem)\nEndIf"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "\nparm(in:\u0026Key, in:\u0026CleanJSFormat, in:\u0026TableInternalName, in:\u0026HasAdvancedFilters, out:\u0026ManageFiltersData);\n",
+      "cleanSource": "\nparm(in:\u0026Key, in:\u0026CleanJSFormat, in:\u0026TableInternalName, in:\u0026HasAdvancedFilters, out:\u0026ManageFiltersData);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.LoadManageFiltersState",
+      "WWPBaseObjects.GridStateCollection",
+      "WWPBaseObjects.DVB_SDTDropDownOptionsData"
+    ],
+    "calledBy": [
+      "GAMWWUserPermissions",
+      "listarLotes",
+      "EtiquetadoOperadorWW",
+      "vwTrazabilidad",
+      "ProductoTerminadoWW",
+      "ListadoEmbarques",
+      "PrensaObservacionWW",
+      "BobinaWW",
+      "listarOperador",
+      "ConsolidatedWW",
+      "ListadoOrdenes",
+      "CompanyWW",
+      "ListadoRemisiones",
+      "CustomerWW",
+      "vwAnaliticaBobina",
+      "BudgetWW",
+      "ExtrusionInterrupcionWW",
+      "GAMWWUsers",
+      "GAMRolePermissionSelect",
+      "listarPrensaProducto",
+      "TroquelWW",
+      "PaletWW",
+      "listarPrensas",
+      "OrdenesWW",
+      "vwExtrusionResultado",
+      "listarProductoCategoria",
+      "ListarExtrusoraMezcladora",
+      "vwAnaliticaCarrete",
+      "GAMWWRoleRoles",
+      "vwPrensadoResultado",
+      "FTBWW",
+      "listarExtrusoraProducto",
+      "listarInventario",
+      "ExtrusoraObservacionWW",
+      "listarTurnos",
+      "ExtrusoraMezcladoraWW",
+      "AuditWW",
+      "listarProductos",
+      "PrensadoWW",
+      "listarSilos",
+      "GAMWWRolePermissions",
+      "RemissionsWW",
+      "SalesPersonWW",
+      "InterrupcionWW",
+      "CarreteEnPallet",
+      "PrensadoInterrupcionWW",
+      "ExistenciaWW",
+      "WWP_MailTemplateWW",
+      "CausaInterrupcionWW",
+      "CarreraWW",
+      "EmbarquePalletWW",
+      "ExtrusionWW",
+      "ProductsWW",
+      "CarreteDefectoWW",
+      "vwCarreteCarrera",
+      "vwAnaliticaPrensado",
+      "listarTroquel",
+      "reclamosww",
+      "CarreteWW",
+      "listarProductoTerminado",
+      "PrensadoBobinaWW",
+      "vwOrdenEtiquetado",
+      "listarExtrusora",
+      "GAMWWUserRoles",
+      "StatementOfIncomeWW",
+      "DownTimeCodeWW",
+      "PalletEnEmbarque",
+      "GAMWWRoles",
+      "GAMUserPermissionSelect",
+      "GAMUserRoleSelect",
+      "GAMRoleSelect",
+      "listarExtrusion"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Key",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Key"
+    },
+    {
+      "name": "HasAdvancedFilters",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "in",
+      "domain": "",
+      "description": "Has Advanced Filters"
+    },
+    {
+      "name": "ManageFiltersData",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "Manage Filters Data"
+    },
+    {
+      "name": "ManageFiltersDataItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Manage Filters Data Item"
+    },
+    {
+      "name": "ManageFiltersItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Manage Filters Item"
+    },
+    {
+      "name": "ManageFiltersItems",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Manage Filters Items"
+    },
+    {
+      "name": "CleanJSFormat",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Clean JSFormat"
+    },
+    {
+      "name": "TableInternalName",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Table Internal Name"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

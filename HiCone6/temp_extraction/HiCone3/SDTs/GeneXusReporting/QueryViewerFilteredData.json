@@ -1,0 +1,35 @@
+{
+  "uniqueId": "27f134d8-7874-44cd-a3a1-5f9cd920261c",
+  "name": "QueryViewerFilteredData",
+  "type": "SDT",
+  "module": "GeneXusReporting",
+  "description": "Query Viewer Filtered Data",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "XmlData",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Xml Data"
+    }
+  ]
+}

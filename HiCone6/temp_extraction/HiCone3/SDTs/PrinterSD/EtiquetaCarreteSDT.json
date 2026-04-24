@@ -1,0 +1,218 @@
+{
+  "uniqueId": "bb9ab55b-f1fa-46cb-a761-1142a676c143",
+  "name": "EtiquetaCarreteSDT",
+  "type": "SDT",
+  "module": "PrinterSD",
+  "description": "Etiqueta Carrete SDT",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "EtiquetaCarreraSDT",
+      "CarreteReportMainPCR",
+      "CarreteReportMain",
+      "PalletCarreteReportMainPCR",
+      "PalletCarreteReportMain",
+      "ObtenerSDTEtiquetaCarrete"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CarreteId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Id"
+    },
+    {
+      "name": "CarreteNoLinea",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete No Linea"
+    },
+    {
+      "name": "CarreteNoSerie",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete No Serie"
+    },
+    {
+      "name": "CarreteEstado",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Estado"
+    },
+    {
+      "name": "CarreteEnMolino",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete En Molino"
+    },
+    {
+      "name": "CarreteMolino",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Molino"
+    },
+    {
+      "name": "CarreteObservacion",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Observacion"
+    },
+    {
+      "name": "CarreteTerminaPalet",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Termina Palet"
+    },
+    {
+      "name": "CarreteCarreraId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrete Carrera Id"
+    },
+    {
+      "name": "InicioPBPrensadoId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "PrensadoProductoDescripcion",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Producto Descripcion"
+    },
+    {
+      "name": "PrensadoProductoNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Producto Nombre"
+    },
+    {
+      "name": "PrensadoProductoId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Producto Id"
+    },
+    {
+      "name": "CarreraNo",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera No"
+    },
+    {
+      "name": "TurnoId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Turno Id"
+    },
+    {
+      "name": "TurnoNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Turno"
+    },
+    {
+      "name": "PrensaNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensa Nombre"
+    },
+    {
+      "name": "PrensadoLevasGradosEntrada",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Levas Grados Entrada"
+    },
+    {
+      "name": "PrensadoLevasGradosSalida",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Levas Grados Salida"
+    },
+    {
+      "name": "PrensadoHoraIniciaProceso",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Hora Inicia Proceso"
+    },
+    {
+      "name": "PrensadoHoraFinProceso",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Hora Fin Proceso"
+    },
+    {
+      "name": "PrensadoOperadorNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Operador Nombre"
+    },
+    {
+      "name": "PrensadoTroquelNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Troquel Nombre"
+    }
+  ]
+}

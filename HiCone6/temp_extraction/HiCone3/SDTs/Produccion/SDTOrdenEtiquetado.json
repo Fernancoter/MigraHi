@@ -1,0 +1,158 @@
+{
+  "uniqueId": "62f5b18e-122f-47c3-ab81-49a67faaaab6",
+  "name": "SDTOrdenEtiquetado",
+  "type": "SDT",
+  "module": "Produccion",
+  "description": "SDTOrden Etiquetado",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "GuardarOrdenEtiquetado",
+      "SDOrdenEtiquetado"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "OrdenEtiquetadoId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Orden Etiquetado Id"
+    },
+    {
+      "name": "OrdenEtiquetadoFechaInicio",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Orden Etiquetado Fecha Inicio"
+    },
+    {
+      "name": "OrdenEtiquetadoFechaTermina",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Orden Etiquetado Fecha Termina"
+    },
+    {
+      "name": "OrdenEtiquetadoObservaciones",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Orden Etiquetado Observaciones"
+    },
+    {
+      "name": "OrdenEtiquetadoVelLineaUno",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Orden Etiquetado Vel Linea Uno"
+    },
+    {
+      "name": "OrdenEtiquetadoVelLineaDos",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Orden Etiquetado Vel Linea Dos"
+    },
+    {
+      "name": "OrdenEtiquetadoPiezasBuenas",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Orden Etiquetado Piezas Buenas"
+    },
+    {
+      "name": "OrdenEtiquetadoPiezasMolino",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Orden Etiquetado Piezas Molino"
+    },
+    {
+      "name": "OrdenEtiquetadoHorasUtiles",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Orden Etiquetado Horas Utiles"
+    },
+    {
+      "name": "OrdenEtiquetadoEficiencia",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Orden Etiquetado Eficiencia"
+    },
+    {
+      "name": "OrdenEtiquetadoEstado",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Orden Etiquetado Estado"
+    },
+    {
+      "name": "OrdenEtiquetadoEtiquetadoraActiva",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Orden Etiquetado Etiquetadora Activa"
+    },
+    {
+      "name": "TurnoEtiquetadoId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Turno Etiquetado Id"
+    },
+    {
+      "name": "TurnoEtiquetadoNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Turno Etiquetado Nombre"
+    },
+    {
+      "name": "OperadorEtiquetadoId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Operador Etiquetado Id"
+    },
+    {
+      "name": "OperadorEtiquetadoNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Operador Etiquetado Nombre"
+    }
+  ]
+}

@@ -1,0 +1,243 @@
+{
+  "uniqueId": "6180d4ad-6a68-4642-8af6-1877ad44e7cc",
+  "name": "NotificarImpresion",
+  "type": "Procedure",
+  "module": "Embarques",
+  "description": "Notificar Impresion",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\tdo \u0027Init_SMTP\u0027\n\t\n\tSub \u0027Init_SMTP\u0027\t\n\tWWP_GetParameter.Text(!\u0022SMTP_Host\u0022, \u0026Parameter)\n\t\t\u0026SMTPSession.Host = \u0026Parameter\n\tWWPBaseObjects.WWP_GetParameter.Integer(!\u0022SMTP_Port\u0022, \u0026IntParameter)\n    \t\u0026SMTPSession.Port = \u0026IntParameter\n\t\tWWPBaseObjects.WWP_GetParameter.Integer(!\u0022SMTP_Timeout\u0022, \u0026IntParameter)\n    \t\u0026SMTPSession.Timeout = \u0026IntParameter\n\t\tWWP_GetParameter.Text(!\u0022Sender_Address\u0022, \u0026Parameter)\n    \t\u0026SMTPSession.Sender.Address  = \u0026Parameter\n\t\tWWPBaseObjects.WWP_GetParameter.Text(!\u0022Sender_Name\u0022, \u0026Parameter)\n    \t\u0026SMTPSession.Sender.Name = \u0026Parameter\n\t\tWWP_GetParameter.Text(!\u0022SMTP_Username\u0022, \u0026Parameter)\n\t\t\u0026SMTPSession.UserName = \u0026Parameter\n\t\tWWPBaseObjects.WWP_GetParameter.Text(!\u0022SMTP_Password\u0022, \u0026Parameter)\n    \t\u0026SMTPSession.Password = \u0026Parameter\n\t\t\u0026SMTPSession.Secure = 1\n    \t\u0026SMTPSession.Authentication = 1\n\t\t\n\n\t\t\n\t\u0026ret = \u0026SMTPSession.Login() \n    \tif \u0026SMTPSession.ErrCode = 0 \n       \t\t  do \u0027MailTemplate\u0027\n\t\t\t  \u0026SMTPSession.Logout()\n\t\telse\n\t\t\t Msg(\u0027SMTP: \u0027 \u002B \u0026ret.ToString() \u002B \u0027:error al autenticarse\u0027)\n    \tendif\n\tEndSub\n\n\tSub \u0027MailTemplate\u0027\n\t\t\u0026TempMail.Load(\u0027REIMPRESION_PALLET\u0027)\n\t\tIf \u0026TempMail.Fail() = false\n\t\t\t\u0026Body = \u0026TempMail.WWPMailTemplateBody\n\t\t\t\u0026Body = \u0026Body.Replace(\u0027@PaletNoSerie\u0027, \u0026PaletNoSerie)\n\n\t\t\tdo \u0027SendMail\u0027\n\t\tendif\n\tEndSub\n\n\tSub \u0027SendMail\u0027\n\t\t\u0026MAIL_TO_SUP = ObtenerConfiguracion.Udp(!\u0027NOTIFICACION_EMBARQUE\u0027)\n\t\t\n\t\tif \u0026MAIL_TO_SUP.IsEmpty() = false\n\t\t\t\u0026MailId = 0\n\t\t\t\u0026Mail = New()\n\t\t\t\u0026Mail.WWPNotificationId.SetNull()\n\t\t\t\u0026Mail.WWPMailSubject = \u0026TempMail.WWPMailTemplateSubject\n\t\t\t\u0026Mail.WWPMailSenderAddress = \u0026TempMail.WWPMailTemplateSenderAddress\n\t\t\t\u0026Mail.WWPMailSenderName = \u0026TempMail.WWPMailTemplateSenderName\n\t\t\t\u0026Mail.WWPMailTo = \u0026MAIL_TO_SUP\n\t\t\t\u0026Mail.WWPMailBody = \u0026Body\n\t\t\t\u0026Mail.Save()\n\t\t\t\n\t\t\tif \u0026Mail.Success()\n\t\t\t\t\u0026MailId = \u0026Mail.WWPMailId\n\t\t\t\tcommit\n\t\t\telse\n\t\t\t\tMsg(\u0027ErrMail: \u0027 \u002B \u0026Mail.GetMessages().ToJson())\n\t\t\tendif\n\t\t\t\n\t\t\tif \u0026MailId \u003E 0\n\t\t\t\tWWP_SendMail(\u0026MailId, \u0026SMTPSession, \u0026Status)\n\t\t\tendif\n\t\tendif\n\t\n\tEndSub\n\n\t\n",
+      "cleanSource": "\n\tdo \u0027Init_SMTP\u0027\n\t\n\tSub \u0027Init_SMTP\u0027\t\n\tWWP_GetParameter.Text(!\u0022SMTP_Host\u0022, \u0026Parameter)\n\t\t\u0026SMTPSession.Host = \u0026Parameter\n\tWWPBaseObjects.WWP_GetParameter.Integer(!\u0022SMTP_Port\u0022, \u0026IntParameter)\n    \t\u0026SMTPSession.Port = \u0026IntParameter\n\t\tWWPBaseObjects.WWP_GetParameter.Integer(!\u0022SMTP_Timeout\u0022, \u0026IntParameter)\n    \t\u0026SMTPSession.Timeout = \u0026IntParameter\n\t\tWWP_GetParameter.Text(!\u0022Sender_Address\u0022, \u0026Parameter)\n    \t\u0026SMTPSession.Sender.Address  = \u0026Parameter\n\t\tWWPBaseObjects.WWP_GetParameter.Text(!\u0022Sender_Name\u0022, \u0026Parameter)\n    \t\u0026SMTPSession.Sender.Name = \u0026Parameter\n\t\tWWP_GetParameter.Text(!\u0022SMTP_Username\u0022, \u0026Parameter)\n\t\t\u0026SMTPSession.UserName = \u0026Parameter\n\t\tWWPBaseObjects.WWP_GetParameter.Text(!\u0022SMTP_Password\u0022, \u0026Parameter)\n    \t\u0026SMTPSession.Password = \u0026Parameter\n\t\t\u0026SMTPSession.Secure = 1\n    \t\u0026SMTPSession.Authentication = 1\n\t\t\n\n\t\t\n\t\u0026ret = \u0026SMTPSession.Login() \n    \tif \u0026SMTPSession.ErrCode = 0 \n       \t\t  do \u0027MailTemplate\u0027\n\t\t\t  \u0026SMTPSession.Logout()\n\t\telse\n\t\t\t Msg(\u0027SMTP: \u0027 \u002B \u0026ret.ToString() \u002B \u0027:error al autenticarse\u0027)\n    \tendif\n\tEndSub\n\n\tSub \u0027MailTemplate\u0027\n\t\t\u0026TempMail.Load(\u0027REIMPRESION_PALLET\u0027)\n\t\tIf \u0026TempMail.Fail() = false\n\t\t\t\u0026Body = \u0026TempMail.WWPMailTemplateBody\n\t\t\t\u0026Body = \u0026Body.Replace(\u0027@PaletNoSerie\u0027, \u0026PaletNoSerie)\n\n\t\t\tdo \u0027SendMail\u0027\n\t\tendif\n\tEndSub\n\n\tSub \u0027SendMail\u0027\n\t\t\u0026MAIL_TO_SUP = ObtenerConfiguracion.Udp(!\u0027NOTIFICACION_EMBARQUE\u0027)\n\t\t\n\t\tif \u0026MAIL_TO_SUP.IsEmpty() = false\n\t\t\t\u0026MailId = 0\n\t\t\t\u0026Mail = New()\n\t\t\t\u0026Mail.WWPNotificationId.SetNull()\n\t\t\t\u0026Mail.WWPMailSubject = \u0026TempMail.WWPMailTemplateSubject\n\t\t\t\u0026Mail.WWPMailSenderAddress = \u0026TempMail.WWPMailTemplateSenderAddress\n\t\t\t\u0026Mail.WWPMailSenderName = \u0026TempMail.WWPMailTemplateSenderName\n\t\t\t\u0026Mail.WWPMailTo = \u0026MAIL_TO_SUP\n\t\t\t\u0026Mail.WWPMailBody = \u0026Body\n\t\t\t\u0026Mail.Save()\n\t\t\t\n\t\t\tif \u0026Mail.Success()\n\t\t\t\t\u0026MailId = \u0026Mail.WWPMailId\n\t\t\t\tcommit\n\t\t\telse\n\t\t\t\tMsg(\u0027ErrMail: \u0027 \u002B \u0026Mail.GetMessages().ToJson())\n\t\t\tendif\n\t\t\t\n\t\t\tif \u0026MailId \u003E 0\n\t\t\t\tWWP_SendMail(\u0026MailId, \u0026SMTPSession, \u0026Status)\n\t\t\tendif\n\t\tendif\n\t\n\tEndSub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PaletNoSerie);\n",
+      "cleanSource": "parm(in:\u0026PaletNoSerie);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_GetParameter",
+      "WWPBaseObjects.Mail.WWP_SendMail",
+      "Produccion.ObtenerConfiguracion",
+      "Produccion.SDTPalet",
+      "WWPBaseObjects.Mail.WWP_MailTemplate",
+      "WWPBaseObjects.Mail.WWP_Mail",
+      "ObtenerConfiguracion"
+    ],
+    "calledBy": [
+      "ProcedureNotificarReimpresionEtiquetaPalet"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Body",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Body"
+    },
+    {
+      "name": "EmbarqueId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Embarque Id"
+    },
+    {
+      "name": "EmbCodigo",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Emb Codigo"
+    },
+    {
+      "name": "EmbNoPallet",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Emb No Pallet"
+    },
+    {
+      "name": "IntParameter",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Int Parameter"
+    },
+    {
+      "name": "Mail",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Mail"
+    },
+    {
+      "name": "MAIL_TO_SUP",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "MAIL_TO_SUP"
+    },
+    {
+      "name": "MailId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Mail Id"
+    },
+    {
+      "name": "PalletItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Pallet Item"
+    },
+    {
+      "name": "Parameter",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Parameter"
+    },
+    {
+      "name": "ret",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "ret"
+    },
+    {
+      "name": "SDTPalletExterno",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "SDTPallet Externo"
+    },
+    {
+      "name": "SMTPSession",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "SMTPSession"
+    },
+    {
+      "name": "Status",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Status"
+    },
+    {
+      "name": "tabHTML",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "tab HTML"
+    },
+    {
+      "name": "TempMail",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Temp Mail"
+    },
+    {
+      "name": "TextParameter",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Text Parameter"
+    },
+    {
+      "name": "PaletNoSerie",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Palet No Serie"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

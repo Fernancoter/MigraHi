@@ -1,0 +1,137 @@
+{
+  "uniqueId": "9457f782-4f4d-4cad-92ca-3819edd70a5d",
+  "name": "SDLimpiarNotificaciones",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDLimpiar Notificaciones",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026Notificaciones = SDPCartProductsList()\n\nfor \u0026CurrentItem in \u0026Notificaciones\n\t\n\tDo Case\n\t\tCase \u0026TipoNotificacion = NotificacionTipo.Bobina\n\t\t     if(\u0026CurrentItem.ExtrusionId = \u0026Id)\n\t\t          SDPCartProductsRemove(\u0026CurrentItem.ProductId, 0)\n\t             endif\t\n\t        \n\t\tCase \u0026TipoNotificacion = NotificacionTipo.Carrera\n\t\t     if(\u0026CurrentItem.PrensadoId = \u0026Id)\n\t\t          SDPCartProductsRemove(\u0026CurrentItem.ProductId, 0)\n\t             endif\n\tEndCase\nendfor\n\t\t\n",
+      "cleanSource": "\u0026Notificaciones = SDPCartProductsList()\n\nfor \u0026CurrentItem in \u0026Notificaciones\n\t\n\tDo Case\n\t\tCase \u0026TipoNotificacion = NotificacionTipo.Bobina\n\t\t     if(\u0026CurrentItem.ExtrusionId = \u0026Id)\n\t\t          SDPCartProductsRemove(\u0026CurrentItem.ProductId, 0)\n\t             endif\t\n\t        \n\t\tCase \u0026TipoNotificacion = NotificacionTipo.Carrera\n\t\t     if(\u0026CurrentItem.PrensadoId = \u0026Id)\n\t\t          SDPCartProductsRemove(\u0026CurrentItem.ProductId, 0)\n\t             endif\n\tEndCase\nendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "//parm(in:\u0026ExtrusionId);\nparm(in:\u0026Id, in:\u0026TipoNotificacion);\n",
+      "cleanSource": "//parm(in:\u0026ExtrusionId);\nparm(in:\u0026Id, in:\u0026TipoNotificacion);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "SDPCartProductsList",
+      "SDPCartProductsRemove",
+      "SDPCartProduct"
+    ],
+    "calledBy": [
+      "SDFinalizarPrensado",
+      "SDCerrarExtrusion",
+      "SDCerrarPrensado"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CurrentItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Current Item"
+    },
+    {
+      "name": "Id",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Id"
+    },
+    {
+      "name": "Notificaciones",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Notificaciones"
+    },
+    {
+      "name": "TipoNotificacion",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Tipo Notificacion"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Parameter",
+      "dataType": "Unknown",
+      "accessor": "in",
+      "domain": "",
+      "description": ""
+    }
+  ]
+}

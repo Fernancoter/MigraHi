@@ -1,0 +1,169 @@
+{
+  "uniqueId": "ef4eaa62-fc17-45e0-95a7-8e4e2efb7e1c",
+  "name": "GetMenuAuthorizedOptionsRecursive",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "Get Menu Authorized Options Recursive",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026RemoveIds.Clear()\n\u0026DVelop_Menu_Item.FromJson(\u0026ParentItemJson)\n\nFor \u0026AuxDVelop_Menu_Item in \u0026DVelop_Menu_Item.subItems\n\t\n\t//Has subitems?\n\tIf \u0026AuxDVelop_Menu_Item.subItems.Count \u003E 0\n \t\tGetMenuAuthorizedOptionsRecursive.Call(\u0026AuxDVelop_Menu_Item.ToJson(),\u0026Result2Json)  \n\t\t\u0026AuxDVelop_Menu_Item.FromJson(\u0026Result2Json)\n\t\tIf \u0026AuxDVelop_Menu_Item.SubItems.Count = 0\n\t\t\t\u0026RemoveIds.Add(\u0026AuxDVelop_Menu_Item.id)\n\t\tEndIf\n\telse   \n\t\t\u0026IsAuthorized = IsMenuAuthorizedOption(\u0026AuxDVelop_Menu_Item)\n\t\tIf Not \u0026IsAuthorized  \n\t\t\t\u0026RemoveIds.Add(\u0026AuxDVelop_Menu_Item.id)\n\t\tEndIf\n\t\t\n\tEndIf\n\t\nEndFor\n\nFor \u0026i = 1 to \u0026RemoveIds.Count\n\t//Workaround For gx\n\t\u0026j = 0\n\tFor \u0026AuxDVelop_Menu_Item in \u0026DVelop_Menu_Item.subItems\n\t\t\u0026j \u002B= 1\n\t\tIf \u0026AuxDVelop_Menu_Item.id.Trim() = \u0026RemoveIds.Item(\u0026i).Trim()\n\t\t\t\u0026DVelop_Menu_Item.subItems.Remove(\u0026j)\n\t\t\tExit\n\t\tEndIf\n\tEndFor\nEndFor\n\n\u0026ResultJson = \u0026DVelop_Menu_Item.ToJson()\n",
+      "cleanSource": "\u0026RemoveIds.Clear()\n\u0026DVelop_Menu_Item.FromJson(\u0026ParentItemJson)\n\nFor \u0026AuxDVelop_Menu_Item in \u0026DVelop_Menu_Item.subItems\n\t\n\t//Has subitems?\n\tIf \u0026AuxDVelop_Menu_Item.subItems.Count \u003E 0\n \t\tGetMenuAuthorizedOptionsRecursive.Call(\u0026AuxDVelop_Menu_Item.ToJson(),\u0026Result2Json)  \n\t\t\u0026AuxDVelop_Menu_Item.FromJson(\u0026Result2Json)\n\t\tIf \u0026AuxDVelop_Menu_Item.SubItems.Count = 0\n\t\t\t\u0026RemoveIds.Add(\u0026AuxDVelop_Menu_Item.id)\n\t\tEndIf\n\telse   \n\t\t\u0026IsAuthorized = IsMenuAuthorizedOption(\u0026AuxDVelop_Menu_Item)\n\t\tIf Not \u0026IsAuthorized  \n\t\t\t\u0026RemoveIds.Add(\u0026AuxDVelop_Menu_Item.id)\n\t\tEndIf\n\t\t\n\tEndIf\n\t\nEndFor\n\nFor \u0026i = 1 to \u0026RemoveIds.Count\n\t//Workaround For gx\n\t\u0026j = 0\n\tFor \u0026AuxDVelop_Menu_Item in \u0026DVelop_Menu_Item.subItems\n\t\t\u0026j \u002B= 1\n\t\tIf \u0026AuxDVelop_Menu_Item.id.Trim() = \u0026RemoveIds.Item(\u0026i).Trim()\n\t\t\t\u0026DVelop_Menu_Item.subItems.Remove(\u0026j)\n\t\t\tExit\n\t\tEndIf\n\tEndFor\nEndFor\n\n\u0026ResultJson = \u0026DVelop_Menu_Item.ToJson()"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ParentItemJson, out:\u0026ResultJson);\n",
+      "cleanSource": "parm(in:\u0026ParentItemJson, out:\u0026ResultJson);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.GetMenuAuthorizedOptionsRecursive",
+      "WWPBaseObjects.IsMenuAuthorizedOption",
+      "WWPBaseObjects.DVelop_Menu",
+      "GetMenuAuthorizedOptionsRecursive"
+    ],
+    "calledBy": [
+      "GetMenuAuthorizedOptionsRecursive",
+      "GetMenuAuthorizedOptions"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "IsAuthorized",
+      "elementType": "Variable",
+      "dataType": "Boolean",
+      "accessor": "",
+      "domain": "",
+      "description": "Is Authorized"
+    },
+    {
+      "name": "AuxDVelop_Menu_Item",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Aux DVelop_Menu_Item"
+    },
+    {
+      "name": "DVelop_Menu_Item",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "DVelop_Menu_Item"
+    },
+    {
+      "name": "i",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "i"
+    },
+    {
+      "name": "j",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "j"
+    },
+    {
+      "name": "ParentItemJson",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Parent Item Json"
+    },
+    {
+      "name": "RemoveIds",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Remove Ids"
+    },
+    {
+      "name": "Result2Json",
+      "elementType": "Variable",
+      "dataType": "LONGVARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Result2 Json"
+    },
+    {
+      "name": "ResultJson",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "Result Json"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

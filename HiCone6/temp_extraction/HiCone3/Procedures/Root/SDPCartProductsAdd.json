@@ -1,0 +1,139 @@
+{
+  "uniqueId": "df660c69-6017-4350-823f-861fa55be599",
+  "name": "SDPCartProductsAdd",
+  "type": "Procedure",
+  "module": "",
+  "description": "SDPCart Products Add",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026ProductsInCartItem = new()\n\u0026ProductsInCartItem.ProductId = \u0026ProductId\n\u0026ProductsInCartItem.Count = \u0026Count\n\n\u0026ProductsInCartTxt = \u0026WebSession.Get(!\u0022ProductsInCart\u0022)\n\u0026ProductsInCart.FromJson(\u0026ProductsInCartTxt)\n\u0026ProductsInCart.Add(\u0026ProductsInCartItem)\n\u0026ProductsInCartTxt = \u0026ProductsInCart.ToJson()\n\u0026WebSession.Set(!\u0022ProductsInCart\u0022, \u0026ProductsInCartTxt)\n",
+      "cleanSource": "\u0026ProductsInCartItem = new()\n\u0026ProductsInCartItem.ProductId = \u0026ProductId\n\u0026ProductsInCartItem.Count = \u0026Count\n\n\u0026ProductsInCartTxt = \u0026WebSession.Get(!\u0022ProductsInCart\u0022)\n\u0026ProductsInCart.FromJson(\u0026ProductsInCartTxt)\n\u0026ProductsInCart.Add(\u0026ProductsInCartItem)\n\u0026ProductsInCartTxt = \u0026ProductsInCart.ToJson()\n\u0026WebSession.Set(!\u0022ProductsInCart\u0022, \u0026ProductsInCartTxt)"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026ProductId, in:\u0026Count);\n",
+      "cleanSource": "Parm(in:\u0026ProductId, in:\u0026Count);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "SDPCartProduct"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "WebSession",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Web Session"
+    },
+    {
+      "name": "Count",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Count"
+    },
+    {
+      "name": "ProductId",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Product Id"
+    },
+    {
+      "name": "ProductsInCart",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Products In Cart"
+    },
+    {
+      "name": "ProductsInCartItem",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Products In Cart Item"
+    },
+    {
+      "name": "ProductsInCartTxt",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Products In Cart Txt"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

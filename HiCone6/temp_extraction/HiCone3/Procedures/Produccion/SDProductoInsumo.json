@@ -1,0 +1,150 @@
+{
+  "uniqueId": "1012dc13-90da-45b4-9750-f158fcd671ec",
+  "name": "SDProductoInsumo",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDProducto Insumo",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": " \n \u0026Prensado.Load(\u0026PrensadoId)\n \u0026PrensaId = \u0026Prensado.PrensadoPrensaId\n \u0026ProductoId = \u0026Prensado.PrensadoProductoId\n \n \u0026IPId = 0\n\t\n for each DB.PrensaProducto\n\twhere PrensaProductoId \u003E 0\n\twhere PrensaId = \u0026PrensaId\n\twhere ComercialProductoId = \u0026ProductoId\n\t\u0026IPId = InsumoProductoId\n\tExit\t\n endfor\n\n if(\u0026IPId \u003E 0)\n\t\u0026InsumoProducto.Load(\u0026IPId)\n        \u0026SDTProductoItem.FromJson(\u0026InsumoProducto.ToJson())\n endif\n",
+      "cleanSource": " \n \u0026Prensado.Load(\u0026PrensadoId)\n \u0026PrensaId = \u0026Prensado.PrensadoPrensaId\n \u0026ProductoId = \u0026Prensado.PrensadoProductoId\n \n \u0026IPId = 0\n\t\n for each DB.PrensaProducto\n\twhere PrensaProductoId \u003E 0\n\twhere PrensaId = \u0026PrensaId\n\twhere ComercialProductoId = \u0026ProductoId\n\t\u0026IPId = InsumoProductoId\n\tExit\t\n endfor\n\n if(\u0026IPId \u003E 0)\n\t\u0026InsumoProducto.Load(\u0026IPId)\n        \u0026SDTProductoItem.FromJson(\u0026InsumoProducto.ToJson())\n endif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensadoId, out:\u0026SDTProductoItem);\n",
+      "cleanSource": "parm(in:\u0026PrensadoId, out:\u0026SDTProductoItem);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SDTProducto",
+      "DB.Producto",
+      "DB.Prensado",
+      "DB.PrensaProducto"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "InsumoProducto",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Insumo Producto"
+    },
+    {
+      "name": "IPId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "IPId"
+    },
+    {
+      "name": "Prensado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "ProductoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "SDTProductoItem",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "SDTProducto Item"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

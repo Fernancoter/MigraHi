@@ -1,0 +1,113 @@
+{
+  "uniqueId": "e4e4952f-e538-442c-90ee-cf8a9557ffb0",
+  "name": "GAMIsAuthByFunctionalityKey",
+  "type": "Procedure",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "GAMIs Auth By Functionality Key",
+  "isGAMObject": true,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "If \u0026FunctionalityKey = !\u0027\u003CCheck_Is_Authenticated\u003E\u0027\n\t\u0026IsAuthorized = Not (GAMSession.IsAnonymousUser(\u0026GAMErrors))\nElse\n\t\u0026IsAuthorized = GAMRepository.CheckPermission(\u0026FunctionalityKey)\nEndif\n",
+      "cleanSource": "If \u0026FunctionalityKey = !\u0027\u003CCheck_Is_Authenticated\u003E\u0027\n\t\u0026IsAuthorized = Not (GAMSession.IsAnonymousUser(\u0026GAMErrors))\nElse\n\t\u0026IsAuthorized = GAMRepository.CheckPermission(\u0026FunctionalityKey)\nEndif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026FunctionalityKey, out:\u0026IsAuthorized);\n",
+      "cleanSource": "parm(in:\u0026FunctionalityKey, out:\u0026IsAuthorized);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "FunctionalityKey",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Functionality Key"
+    },
+    {
+      "name": "GAMErrors",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMErrors"
+    },
+    {
+      "name": "IsAuthorized",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Is Authorized"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

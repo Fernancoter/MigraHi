@@ -1,0 +1,115 @@
+{
+  "uniqueId": "e8c9620b-a315-42a1-983b-91791060bf75",
+  "name": "SecGAMIsAuthByFunctionalityKeys",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "Is Authorized By Functionalities",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\n\u0026IsAuthorized = False\nFor \u0026SecGAMFunctionalityKey in \u0026SecGAMFunctionalityKeys\n\t\u0026IsAuthorized = WWPBaseObjects.SecGAMIsAuthByFunctionalityKey.Udp(\u0026SecGAMFunctionalityKey)\n\tIf \u0026IsAuthorized\n\t\tExit\n\tEndIf\nEndFor\n",
+      "cleanSource": "\n\u0026IsAuthorized = False\nFor \u0026SecGAMFunctionalityKey in \u0026SecGAMFunctionalityKeys\n\t\u0026IsAuthorized = WWPBaseObjects.SecGAMIsAuthByFunctionalityKey.Udp(\u0026SecGAMFunctionalityKey)\n\tIf \u0026IsAuthorized\n\t\tExit\n\tEndIf\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "\nparm(in:\u0026SecGAMFunctionalityKeys, out:\u0026IsAuthorized);\n",
+      "cleanSource": "\nparm(in:\u0026SecGAMFunctionalityKeys, out:\u0026IsAuthorized);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.SecGAMIsAuthByFunctionalityKey"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "IsAuthorized",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Is Authorized"
+    },
+    {
+      "name": "SecGAMFunctionalityKeys",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Sec GAMFunctionality Keys"
+    },
+    {
+      "name": "SecGAMFunctionalityKey",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Sec GAMFunctionality Key"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

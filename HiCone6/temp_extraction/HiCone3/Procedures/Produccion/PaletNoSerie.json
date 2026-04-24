@@ -1,0 +1,189 @@
+{
+  "uniqueId": "135dba70-0543-43a3-9211-028d8ab6d356",
+  "name": "PaletNoSerie",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "No Serie Palet",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\n\t\u0026Day = Day(\u0026PrensadoFecha)\n\t\u0026Month = Month(\u0026PrensadoFecha)\n\t\u0026Year = Year(\u0026PrensadoFecha)\n\t\u0026YearFormat = \u0026Year.ToFormattedString()\n\t\u0026YearFormat = \u0026YearFormat.Substring(3,2)\n\t\n\t\u0026NoSerie.SetEmpty()\n\t\u0026NoSerie = \u0027P\u0027 \u002B \u0026PrensaId.ToString().Trim() \u002B \u0027T\u0027 \u002B \u0026TurnoId.ToString().Trim() \u002B \u0027-\u0027 \u002B \u0026Day.ToFormattedString() \u002B \u0026Month.ToFormattedString() \u002B \u0026YearFormat \u002B \u0027-\u0027 \u002B \u0027N\u0027 \u002B \u0026PaletNo.ToString().Trim()\n",
+      "cleanSource": "\t\n\t\u0026Day = Day(\u0026PrensadoFecha)\n\t\u0026Month = Month(\u0026PrensadoFecha)\n\t\u0026Year = Year(\u0026PrensadoFecha)\n\t\u0026YearFormat = \u0026Year.ToFormattedString()\n\t\u0026YearFormat = \u0026YearFormat.Substring(3,2)\n\t\n\t\u0026NoSerie.SetEmpty()\n\t\u0026NoSerie = \u0027P\u0027 \u002B \u0026PrensaId.ToString().Trim() \u002B \u0027T\u0027 \u002B \u0026TurnoId.ToString().Trim() \u002B \u0027-\u0027 \u002B \u0026Day.ToFormattedString() \u002B \u0026Month.ToFormattedString() \u002B \u0026YearFormat \u002B \u0027-\u0027 \u002B \u0027N\u0027 \u002B \u0026PaletNo.ToString().Trim()"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensaId, in:\u0026TurnoId, in:\u0026PrensadoFecha, in:\u0026PaletNo, out:\u0026NoSerie);\n",
+      "cleanSource": "parm(in:\u0026PrensaId, in:\u0026TurnoId, in:\u0026PrensadoFecha, in:\u0026PaletNo, out:\u0026NoSerie);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Prensado"
+    ],
+    "calledBy": [
+      "ObtenerPalet"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CarreraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera Id"
+    },
+    {
+      "name": "Day",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Day"
+    },
+    {
+      "name": "Month",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Month"
+    },
+    {
+      "name": "NoSerie",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "No Serie"
+    },
+    {
+      "name": "PaletNo",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Palet No"
+    },
+    {
+      "name": "Prensado",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado"
+    },
+    {
+      "name": "PrensadoFecha",
+      "elementType": "Parameter",
+      "dataType": "DATE",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensado Fecha"
+    },
+    {
+      "name": "PrensadoId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Prensado Id"
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "TurnoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Turno Id"
+    },
+    {
+      "name": "Year",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Year"
+    },
+    {
+      "name": "YearFormat",
+      "elementType": "Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Year Format"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

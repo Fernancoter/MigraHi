@@ -1,0 +1,110 @@
+{
+  "uniqueId": "e127a528-f978-459c-9981-66dd710f39f5",
+  "name": "WWP_ExistsUserExtended",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "WWP_Exists User Extended",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026Exists = False\nFor Each WWP_UserExtended\n\tWhere WWPUserExtendedId = \u0026WWPUserExtendedId\n\t\u0026Exists = True\nEndFor\n",
+      "cleanSource": "\u0026Exists = False\nFor Each WWP_UserExtended\n\tWhere WWPUserExtendedId = \u0026WWPUserExtendedId\n\t\u0026Exists = True\nEndFor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026WWPUserExtendedId, out:\u0026Exists);\n",
+      "cleanSource": "parm(in:\u0026WWPUserExtendedId, out:\u0026Exists);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.WWP_UserExtended"
+    ],
+    "calledBy": [
+      "WWP_RegisterWebClient",
+      "WWP_ImpactMetadata"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Exists",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Exists"
+    },
+    {
+      "name": "WWPUserExtendedId",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "User Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "uniqueId": "d08bb01d-c45f-4702-adb6-d284c2582fe4",
+  "name": "SaveUserKeyValue",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "Save User Key Value",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "//This is a procedure in which user has to define how to load information related to each end user\n//By default it loads the ColumnsSelector State, the Grid State (filters, orders, etc) and Filters within \u0027ManageFilters\u0027 Action\n\nIf \u0026UserCustomizationsValue.IsEmpty()\n\t\u0026Session.Remove(\u0026UserCustomizationsKey)\nElse\n\t\u0026Session.Set(\u0026UserCustomizationsKey, \u0026UserCustomizationsValue)\nEndIf\n\n\u0026UserCustomizations.Load(GAMUser.GetId(), \u0026UserCustomizationsKey)\nIf \u0026UserCustomizationsValue.IsEmpty()\n\tIf \u0026UserCustomizations.Success()\n\t\t\u0026UserCustomizations.Delete()\n\t\tCommit\n\tEndIf\nElse\n\tIf not \u0026UserCustomizations.Success()\n\t\t\u0026UserCustomizations = new()\n\t\t\u0026UserCustomizations.UserCustomizationsId = GAMUser.GetId()\n\t\t\u0026UserCustomizations.UserCustomizationsKey = \u0026UserCustomizationsKey\n\tEndIf\n\t\u0026UserCustomizations.UserCustomizationsValue = \u0026UserCustomizationsValue\n\t\u0026UserCustomizations.Save()\n\tCommit\nEndIf\n",
+      "cleanSource": "//This is a procedure in which user has to define how to load information related to each end user\n//By default it loads the ColumnsSelector State, the Grid State (filters, orders, etc) and Filters within \u0027ManageFilters\u0027 Action\n\nIf \u0026UserCustomizationsValue.IsEmpty()\n\t\u0026Session.Remove(\u0026UserCustomizationsKey)\nElse\n\t\u0026Session.Set(\u0026UserCustomizationsKey, \u0026UserCustomizationsValue)\nEndIf\n\n\u0026UserCustomizations.Load(GAMUser.GetId(), \u0026UserCustomizationsKey)\nIf \u0026UserCustomizationsValue.IsEmpty()\n\tIf \u0026UserCustomizations.Success()\n\t\t\u0026UserCustomizations.Delete()\n\t\tCommit\n\tEndIf\nElse\n\tIf not \u0026UserCustomizations.Success()\n\t\t\u0026UserCustomizations = new()\n\t\t\u0026UserCustomizations.UserCustomizationsId = GAMUser.GetId()\n\t\t\u0026UserCustomizations.UserCustomizationsKey = \u0026UserCustomizationsKey\n\tEndIf\n\t\u0026UserCustomizations.UserCustomizationsValue = \u0026UserCustomizationsValue\n\t\u0026UserCustomizations.Save()\n\tCommit\nEndIf"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026UserCustomizationsKey,in:\u0026UserCustomizationsValue);\n",
+      "cleanSource": "parm(in:\u0026UserCustomizationsKey,in:\u0026UserCustomizationsValue);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WWPBaseObjects.UserCustomizations"
+    ],
+    "calledBy": [
+      "WWP_AddRecentSearch",
+      "SaveGridState",
+      "SaveColumnsSelectorState"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Session",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "Session"
+    },
+    {
+      "name": "UserCustomizationsKey",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "User Custom Key"
+    },
+    {
+      "name": "UserCustomizationsValue",
+      "elementType": "Parameter",
+      "dataType": "LONGVARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "User Custom Value"
+    },
+    {
+      "name": "UserCustomizations",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "User Customizations"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "uniqueId": "1a4ee719-9597-43d1-99b5-6a4b30cbd3c7",
+  "name": "WWP_GetUserPhone",
+  "type": "Procedure",
+  "module": "WWPBaseObjects",
+  "description": "Get User Phone",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026GAMUser = GAMRepository.GetUserByGUID(\u0026WWPUserExtendedId, \u0026GAMErrorCollection)\n\u0026WWPUserExtendedPhone = \u0026GAMUser.Phone\n",
+      "cleanSource": "\u0026GAMUser = GAMRepository.GetUserByGUID(\u0026WWPUserExtendedId, \u0026GAMErrorCollection)\n\u0026WWPUserExtendedPhone = \u0026GAMUser.Phone"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026WWPUserExtendedId, out:\u0026WWPUserExtendedPhone);\n",
+      "cleanSource": "parm(in:\u0026WWPUserExtendedId, out:\u0026WWPUserExtendedPhone);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "WWP_CreateNotificationToUser",
+      "WWP_UserExtended"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "GAMErrorCollection",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMError Collection"
+    },
+    {
+      "name": "WWPUserExtendedId",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "in",
+      "domain": "",
+      "description": "User Extended Id"
+    },
+    {
+      "name": "GAMUser",
+      "elementType": "Variable",
+      "dataType": "GX_EXTERNAL_OBJECT",
+      "accessor": "",
+      "domain": "",
+      "description": "GAMUser"
+    },
+    {
+      "name": "WWPUserExtendedPhone",
+      "elementType": "Parameter",
+      "dataType": "CHARACTER",
+      "accessor": "out",
+      "domain": "",
+      "description": "WWPUser Extended Phone"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

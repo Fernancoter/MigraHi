@@ -1,0 +1,93 @@
+{
+  "uniqueId": "e9a7263c-58ef-475c-b991-f8b1d07866ac",
+  "name": "SDTExtrusoraMezcladora",
+  "type": "SDT",
+  "module": "Produccion",
+  "description": "SDTExtrusora Mezcladora",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "SDExtrusoraMezcladora"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ExtrusoraMezcladoraId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Mezcladora Id"
+    },
+    {
+      "name": "ExtrusoraId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "ExtrusoraMezcladoraHusilloVirgenMin",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Mezcladora Husillo Virgen Min"
+    },
+    {
+      "name": "ExtrusoraMezcladoraHusilloVirgenMax",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Mezcladora Husillo Virgen Max"
+    },
+    {
+      "name": "ExtrusoraMezcladoraHusilloMolidoMin",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Mezcladora Husillo Molido Min"
+    },
+    {
+      "name": "ExtrusoraMezcladoraHusilloMolidoMax",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Mezcladora Husillo Molido Max"
+    },
+    {
+      "name": "ExtrusoraMezcladoraKgVirgen",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Mezcladora Kg Virgen"
+    },
+    {
+      "name": "ExtrusoraMezcladoraKgMolido",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Mezcladora Kg Molido"
+    }
+  ]
+}

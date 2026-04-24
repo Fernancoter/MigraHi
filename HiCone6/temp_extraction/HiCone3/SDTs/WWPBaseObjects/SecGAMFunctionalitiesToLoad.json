@@ -1,0 +1,45 @@
+{
+  "uniqueId": "e5a770e2-356e-4202-b553-1bee8b33846d",
+  "name": "SecGAMFunctionalitiesToLoad",
+  "type": "SDT",
+  "module": "WWPBaseObjects",
+  "description": "GAM Functionalities To Load",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "SecGAMUpdatePermissions"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SecGAMFunctionalityKey",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Functionality Id"
+    },
+    {
+      "name": "SecGAMFunctionalityDsc",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Functionality Description"
+    }
+  ]
+}

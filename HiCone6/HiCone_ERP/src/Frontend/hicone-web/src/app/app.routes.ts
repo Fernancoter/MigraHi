@@ -13,7 +13,7 @@ import { SilosComponent } from './features/inventario/silos/silos.component';
 import { CatalogosSaeComponent } from './features/catalogos-sae/catalogos-sae.component';
 import { ReportesSaeComponent } from './features/reportes-sae/reportes-sae.component';
 import { SeguridadComponent } from './features/seguridad/seguridad.component';
-import { authGuard } from './core/auth/auth.guard';
+import { authGuard } from './core/guards/auth.guard';
 
 import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
 

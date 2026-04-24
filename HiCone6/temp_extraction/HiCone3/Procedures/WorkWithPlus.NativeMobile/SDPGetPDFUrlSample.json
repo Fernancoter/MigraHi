@@ -1,0 +1,145 @@
+{
+  "uniqueId": "e2d947bc-7314-4db3-bb62-2140448abc89",
+  "name": "SDPGetPDFUrlSample",
+  "type": "Procedure",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "SDPGet PDFUrl Sample",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "/* \nYou should call this procedure from the device and then invoke Interop.OpenInBrowser\ne.g.\nEvent \u0027DownloadPDF\u0027\n\t\u0026ServerUrl = Network.ApplicationServerURL\n\t\u0026PDFUrl = SDPGetPDFUrlSample(\u0026ServerUrl, \u003CPlace your transaction id here\u003E)\n\tInterop.OpenInBrowser(\u0026PDFUrl)\nEndEvent\n*/\n\n/*\nUse your transaction Id load the PDF in the \u0026PDFBlob variable\ne.g.\n\t\u0026TransactionWithBlob.Load(\u0026TransactionWithBlobId)\n\t\u0026PDFBlob = \u0026TransactionWithBlob.TransactionWithBlobPDF\nor\n\tFor Each\n\t\tWhere TransactionWithBlobId = \u0026TransactionWithBlobId\n\t\t\t\u0026PDFBlob = TransactionWithBlobPDF\n\t\t\texit\n\tEndFor\n*/\n\n\u0026file.Open()\n\u0026file.Source = \u0026PDFBlob\n\n\u0026TemporalFileName = \u0026file.GetName()\n\u0026TemporalFileName = \u0026TemporalFileName.Replace(\u0022.tmp\u0022,\u0022.pdf\u0022)\n\n\u0026path = \u0026file.GetAbsoluteName().Replace(\u0022.tmp\u0022,\u0022.pdf\u0022)\n\n\u0026file.Copy(\u0026path)\n\u0026file.Close()\n\n\u0026PDFUrl = \u0026ServerUrl \u002B \u0022PublicTempStorage/\u0022 \u002B \u0026TemporalFileName\n",
+      "cleanSource": "/* \nYou should call this procedure from the device and then invoke Interop.OpenInBrowser\ne.g.\nEvent \u0027DownloadPDF\u0027\n\t\u0026ServerUrl = Network.ApplicationServerURL\n\t\u0026PDFUrl = SDPGetPDFUrlSample(\u0026ServerUrl, \u003CPlace your transaction id here\u003E)\n\tInterop.OpenInBrowser(\u0026PDFUrl)\nEndEvent\n*/\n\n/*\nUse your transaction Id load the PDF in the \u0026PDFBlob variable\ne.g.\n\t\u0026TransactionWithBlob.Load(\u0026TransactionWithBlobId)\n\t\u0026PDFBlob = \u0026TransactionWithBlob.TransactionWithBlobPDF\nor\n\tFor Each\n\t\tWhere TransactionWithBlobId = \u0026TransactionWithBlobId\n\t\t\t\u0026PDFBlob = TransactionWithBlobPDF\n\t\t\texit\n\tEndFor\n*/\n\n\u0026file.Open()\n\u0026file.Source = \u0026PDFBlob\n\n\u0026TemporalFileName = \u0026file.GetName()\n\u0026TemporalFileName = \u0026TemporalFileName.Replace(\u0022.tmp\u0022,\u0022.pdf\u0022)\n\n\u0026path = \u0026file.GetAbsoluteName().Replace(\u0022.tmp\u0022,\u0022.pdf\u0022)\n\n\u0026file.Copy(\u0026path)\n\u0026file.Close()\n\n\u0026PDFUrl = \u0026ServerUrl \u002B \u0022PublicTempStorage/\u0022 \u002B \u0026TemporalFileName"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(in:\u0026ServerUrl, in:\u0026TransactionWithBlobId, out:\u0026PDFUrl);\n",
+      "cleanSource": "Parm(in:\u0026ServerUrl, in:\u0026TransactionWithBlobId, out:\u0026PDFUrl);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "file",
+      "elementType": "Variable",
+      "dataType": "GX_USRDEFTYP",
+      "accessor": "",
+      "domain": "",
+      "description": "file"
+    },
+    {
+      "name": "ServerUrl",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Server Url"
+    },
+    {
+      "name": "path",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "path"
+    },
+    {
+      "name": "PDFBlob",
+      "elementType": "Variable",
+      "dataType": "BINARY",
+      "accessor": "",
+      "domain": "",
+      "description": "PDFBlob"
+    },
+    {
+      "name": "PDFUrl",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "out",
+      "domain": "",
+      "description": "PDFUrl"
+    },
+    {
+      "name": "TemporalFileName",
+      "elementType": "Variable",
+      "dataType": "VARCHAR",
+      "accessor": "",
+      "domain": "",
+      "description": "Temporal File Name"
+    },
+    {
+      "name": "TransactionWithBlobId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Transaction With Blob Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

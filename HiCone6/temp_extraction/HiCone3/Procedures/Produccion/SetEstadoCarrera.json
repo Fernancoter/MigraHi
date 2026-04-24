@@ -1,0 +1,120 @@
+{
+  "uniqueId": "f68c8494-ad1f-4e14-af4c-a43b157681e2",
+  "name": "SetEstadoCarrera",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Set Estado Carrera",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "         \n\t \u0026Carrera.Load(\u0026CarreraId)\n\t \u0026Carrera.CarreraEstado = \u0026CarreraEstado\n\t \n\t if(\u0026CarreraEstado = EstadoCarrera.Validada)\n\t\t \u0026Carrera.CarreraFechaValidacion = Now()\n\t endif\n \n\t \u0026Carrera.Save()\n\t \n\t if(\u0026Carrera.Success())\n\t\t commit\n     endif\n",
+      "cleanSource": "         \n\t \u0026Carrera.Load(\u0026CarreraId)\n\t \u0026Carrera.CarreraEstado = \u0026CarreraEstado\n\t \n\t if(\u0026CarreraEstado = EstadoCarrera.Validada)\n\t\t \u0026Carrera.CarreraFechaValidacion = Now()\n\t endif\n \n\t \u0026Carrera.Save()\n\t \n\t if(\u0026Carrera.Success())\n\t\t commit\n     endif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026CarreraId, in:\u0026CarreraEstado);\n",
+      "cleanSource": "parm(in:\u0026CarreraId, in:\u0026CarreraEstado);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Carrera"
+    ],
+    "calledBy": [
+      "ValidarCarreraCompleta",
+      "TerminarCarrera",
+      "SDTerminarCarreraDB",
+      "SDValidarCarrera"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Carrera",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Carrera"
+    },
+    {
+      "name": "CarreraEstado",
+      "elementType": "Parameter",
+      "dataType": "VARCHAR",
+      "accessor": "in",
+      "domain": "",
+      "description": "Carrera Estado"
+    },
+    {
+      "name": "CarreraId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Carrera Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

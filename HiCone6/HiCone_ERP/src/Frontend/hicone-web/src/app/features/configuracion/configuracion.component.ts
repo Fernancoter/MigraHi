@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from '../../core/auth/auth.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-configuracion',
@@ -106,7 +106,7 @@ export class ConfiguracionComponent {
   user: any;
 
   constructor(private authService: AuthService, private router: Router) {
-    this.user = this.authService.currentUserValue;
+    this.user = this.authService.currentUser();
   }
 
   onLogout() {

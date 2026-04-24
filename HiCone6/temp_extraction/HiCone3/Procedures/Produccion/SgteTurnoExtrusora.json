@@ -1,0 +1,135 @@
+{
+  "uniqueId": "9df17441-fb81-44bf-8a42-6b7edfaff448",
+  "name": "SgteTurnoExtrusora",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Sgte Turno Extrusora",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "   \n   \u0026Extrusion.Load(\u0026ExtrusionId)\n   \u0026ExtrusionFecha = \u0026Extrusion.ExtrusionFecha\n   \u0026ExtrusoraId = \u0026Extrusion.ExtrusionExtrusoraId\n   \n   //Obtener el sgte turno para la Extrusora\n   for each Order ExtrusionFecha\n\t   where ExtrusionId \u003E 0\n\t   where ExtrusionFecha \u003E= \u0026ExtrusionFecha\n\t   where ExtrusionExtrusoraId = \u0026ExtrusoraId\n\t   where ExtrusionEstado = EstadoExtrusion.Programada\n\t   \u0026NextExtId = ExtrusionId\n\t   Exit\n   when none\n\t   \u0026NextExtId = 0\t\n   endfor\n",
+      "cleanSource": "   \n   \u0026Extrusion.Load(\u0026ExtrusionId)\n   \u0026ExtrusionFecha = \u0026Extrusion.ExtrusionFecha\n   \u0026ExtrusoraId = \u0026Extrusion.ExtrusionExtrusoraId\n   \n   //Obtener el sgte turno para la Extrusora\n   for each Order ExtrusionFecha\n\t   where ExtrusionId \u003E 0\n\t   where ExtrusionFecha \u003E= \u0026ExtrusionFecha\n\t   where ExtrusionExtrusoraId = \u0026ExtrusoraId\n\t   where ExtrusionEstado = EstadoExtrusion.Programada\n\t   \u0026NextExtId = ExtrusionId\n\t   Exit\n   when none\n\t   \u0026NextExtId = 0\t\n   endfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ExtrusionId, out:\u0026NextExtId);\n",
+      "cleanSource": "parm(in:\u0026ExtrusionId, out:\u0026NextExtId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.Extrusion"
+    ],
+    "calledBy": [
+      "SDTiempoExtrusion",
+      "FinalizarExtrusion",
+      "SDExtrusionAnticipada"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "Extrusion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion"
+    },
+    {
+      "name": "ExtrusionId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "NextExtId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Next Ext Id"
+    },
+    {
+      "name": "ExtrusionFecha",
+      "elementType": "Variable",
+      "dataType": "DATETIME",
+      "accessor": "",
+      "domain": "",
+      "description": "Fecha"
+    },
+    {
+      "name": "ExtrusoraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

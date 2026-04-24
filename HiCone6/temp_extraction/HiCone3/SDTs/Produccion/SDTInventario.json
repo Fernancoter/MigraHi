@@ -1,0 +1,79 @@
+{
+  "uniqueId": "713461a7-e13c-41ac-acf7-067a9a8fafe5",
+  "name": "SDTInventario",
+  "type": "SDT",
+  "module": "Produccion",
+  "description": "SDTInventario",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "SDT Structure",
+      "blockType": "Structure",
+      "rawSource": "SDT Internal Format",
+      "cleanSource": "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [],
+    "calledBy": [
+      "GenerarPaletNo",
+      "GenerarBobinaNo",
+      "SDInventarioItem"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "InventarioId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Inventario Id"
+    },
+    {
+      "name": "InventarioProductoId",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Inventario Producto Id"
+    },
+    {
+      "name": "InventarioProductoNombre",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Inventario Producto Nombre"
+    },
+    {
+      "name": "InventarioFechaHora",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Inventario Fecha Hora"
+    },
+    {
+      "name": "InventarioInicioConsecutivo",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Inventario Inicio Consecutivo"
+    },
+    {
+      "name": "InventarioCantidad",
+      "elementType": "SDTItem",
+      "dataType": "Dynamic",
+      "accessor": "",
+      "domain": "",
+      "description": "Inventario Cantidad"
+    }
+  ]
+}

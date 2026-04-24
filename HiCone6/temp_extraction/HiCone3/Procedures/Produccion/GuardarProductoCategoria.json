@@ -1,0 +1,127 @@
+{
+  "uniqueId": "706ab5c1-852d-4294-9697-b4604fe720b8",
+  "name": "GuardarProductoCategoria",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Guardar Producto Categoria",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "if(not \u0026SDTProductoCategoriaItem.ProductoCategoriaClaveExterna.IsEmpty())\n\tObtenerProductoCategoriaPorClaveExterna.Call(\u0026SDTProductoCategoriaItem.ProductoCategoriaClaveExterna, \u0026SDTProductoCategoriaItem.ProductoCategoriaId)\nendif\n\n\n\u0026ProductoCategoria.Load(\u0026SDTProductoCategoriaItem.ProductoCategoriaId)\n\u0026ProductoCategoria.ProductoCategoriaNombre = \u0026SDTProductoCategoriaItem.ProductoCategoriaNombre\n\u0026ProductoCategoria.ProductoCategoriaClaveExterna = \u0026SDTProductoCategoriaItem.ProductoCategoriaClaveExterna\n\u0026ProductoCategoria.Save()\n\n\u0026Correcto = \u0026ProductoCategoria.Success()\nif(\u0026Correcto )\n\tcommit\nendif\n",
+      "cleanSource": "if(not \u0026SDTProductoCategoriaItem.ProductoCategoriaClaveExterna.IsEmpty())\n\tObtenerProductoCategoriaPorClaveExterna.Call(\u0026SDTProductoCategoriaItem.ProductoCategoriaClaveExterna, \u0026SDTProductoCategoriaItem.ProductoCategoriaId)\nendif\n\n\n\u0026ProductoCategoria.Load(\u0026SDTProductoCategoriaItem.ProductoCategoriaId)\n\u0026ProductoCategoria.ProductoCategoriaNombre = \u0026SDTProductoCategoriaItem.ProductoCategoriaNombre\n\u0026ProductoCategoria.ProductoCategoriaClaveExterna = \u0026SDTProductoCategoriaItem.ProductoCategoriaClaveExterna\n\u0026ProductoCategoria.Save()\n\n\u0026Correcto = \u0026ProductoCategoria.Success()\nif(\u0026Correcto )\n\tcommit\nendif"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026SDTProductoCategoriaItem, out:\u0026Correcto);\n",
+      "cleanSource": "parm(in:\u0026SDTProductoCategoriaItem, out:\u0026Correcto);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.ObtenerProductoCategoriaPorClaveExterna",
+      "Produccion.SDTProductoCategoria",
+      "DB.Producto",
+      "DB.ProductoCategoria",
+      "ObtenerProductoCategoriaPorClaveExterna"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "SDTProductoCategoriaItem",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "in",
+      "domain": "",
+      "description": "SDTProducto Categoria Item"
+    },
+    {
+      "name": "Correcto",
+      "elementType": "Parameter",
+      "dataType": "Boolean",
+      "accessor": "out",
+      "domain": "",
+      "description": "Correcto"
+    },
+    {
+      "name": "CategoriaProducto",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Categoria Producto"
+    },
+    {
+      "name": "ProductoCategoria",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Producto Categoria"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "uniqueId": "bbcd4742-cfbb-482a-8299-220007b8f485",
+  "name": "SDPCalendarGetSampleData",
+  "type": "Procedure",
+  "module": "WorkWithPlus.NativeMobile",
+  "description": "SDPCalendar Get Sample Data",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\t\u0026SDPlusCalendarInfo = new()\n\t\n\t\u0026CurrentDate = new()\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 20\n\t//\u0026CurrentDate.Status = 1\n\t\u0026CurrentDate.Color = !\u0022#ff3534\u0022\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Sofia\u0027s birthday party\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 2\n\t\u0026CurrentDate.Status = 2\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Work meeting\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 3\n\t\u0026CurrentDate.Status = 3\n\t\u0026CurrentDate.Color = !\u0022#afafaf\u0022\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Veterinary\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 4\n\t//\u0026CurrentDate.Status = 4\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Football match with friends\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 5\n\t//\u0026CurrentDate.Status = 5\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Work party\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 26\n\t\u0026CurrentDate.Status = 6\n\t\u0026CurrentDate.Color = !\u0022#afafaf\u0022\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Calendar Event Number 6\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 11\t\n\t\u0026CurrentDate.Color = !\u0022#0000cc\u0022\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Calendar Event Number 7\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 12\n\t\u0026CurrentDate.Color = !\u0022#000dc0\u0022\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Calendar Event Number 8\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 6\n\t//\u0026CurrentDate.Status = 0\n\t//\u0026CurrentDate.Text = \u0022BD\u0022\n\t//\u0026CurrentDate.Color = !\u0022#00dd00\u0022\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Calendar Event Number 9\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 7\n\t//\u0026CurrentDate.Status = 2\n\t//\u0026CurrentDate.Text = \u0022BD\u0022\n\t//\u0026CurrentDate.Color = !\u0022#00dd00\u0022\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Calendar Event Number 10\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 24\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Calendar Event Number 11\u0022\n\t\u0026SDPlusCalendarInfo.Disabled.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 25\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Calendar Event Number 12\u0022\n\t\u0026SDPlusCalendarInfo.Disabled.Add(\u0026CurrentDate)\n",
+      "cleanSource": "\t\u0026SDPlusCalendarInfo = new()\n\t\n\t\u0026CurrentDate = new()\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 20\n\t//\u0026CurrentDate.Status = 1\n\t\u0026CurrentDate.Color = !\u0022#ff3534\u0022\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Sofia\u0027s birthday party\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 2\n\t\u0026CurrentDate.Status = 2\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Work meeting\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 3\n\t\u0026CurrentDate.Status = 3\n\t\u0026CurrentDate.Color = !\u0022#afafaf\u0022\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Veterinary\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 4\n\t//\u0026CurrentDate.Status = 4\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Football match with friends\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 5\n\t//\u0026CurrentDate.Status = 5\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Work party\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 26\n\t\u0026CurrentDate.Status = 6\n\t\u0026CurrentDate.Color = !\u0022#afafaf\u0022\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Calendar Event Number 6\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 11\t\n\t\u0026CurrentDate.Color = !\u0022#0000cc\u0022\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Calendar Event Number 7\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 12\n\t\u0026CurrentDate.Color = !\u0022#000dc0\u0022\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Calendar Event Number 8\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 6\n\t//\u0026CurrentDate.Status = 0\n\t//\u0026CurrentDate.Text = \u0022BD\u0022\n\t//\u0026CurrentDate.Color = !\u0022#00dd00\u0022\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Calendar Event Number 9\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\t\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 7\n\t//\u0026CurrentDate.Status = 2\n\t//\u0026CurrentDate.Text = \u0022BD\u0022\n\t//\u0026CurrentDate.Color = !\u0022#00dd00\u0022\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Calendar Event Number 10\u0022\n\t\u0026SDPlusCalendarInfo.Events.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 24\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Calendar Event Number 11\u0022\n\t\u0026SDPlusCalendarInfo.Disabled.Add(\u0026CurrentDate)\n\t\n\t\u0026CurrentDate = new()\n\t\u0026CurrentDate.Year = 2019\n\t\u0026CurrentDate.Month = 12\n\t\u0026CurrentDate.Day = 25\n\t\u0026CurrentDate.Time = now()\n\t\u0026CurrentDate.Content = !\u0022Calendar Event Number 12\u0022\n\t\u0026SDPlusCalendarInfo.Disabled.Add(\u0026CurrentDate)"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "Parm(out:\u0026SDPlusCalendarInfo);\n",
+      "cleanSource": "Parm(out:\u0026SDPlusCalendarInfo);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "WorkWithPlus.NativeMobile.SDPlusCalendarEntry",
+      "WorkWithPlus.NativeMobile.SDPlusCalendarInfo"
+    ],
+    "calledBy": [],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "CurrentDate",
+      "elementType": "Variable",
+      "dataType": "GX_SDT",
+      "accessor": "",
+      "domain": "",
+      "description": "Current Date"
+    },
+    {
+      "name": "SDPlusCalendarInfo",
+      "elementType": "Parameter",
+      "dataType": "GX_SDT",
+      "accessor": "out",
+      "domain": "",
+      "description": "SDPlus Calendar Info"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

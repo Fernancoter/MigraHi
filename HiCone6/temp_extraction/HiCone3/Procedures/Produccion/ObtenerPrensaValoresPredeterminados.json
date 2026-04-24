@@ -1,0 +1,141 @@
+{
+  "uniqueId": "a94eea6f-e097-464a-974e-fe04b539acd7",
+  "name": "ObtenerPrensaValoresPredeterminados",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "Obtener Prensa Valores Predeterminados",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "\u0026DefaultProductoId = 0\n\u0026DefaultOperadorId = 0\n\u0026EnumTurno.FromString(\u0026TurnoId.ToString())\n\nFor each DB.PrensaProducto\t\n\tWhere DB.PrensaId = \u0026PrensaId\t\n\tWhere ComercialProductoActivo = true\n\t\u0026DefaultProductoId = ComercialProductoId\n\texit\nendfor\n\nFor each \t\n\tWhere PrensaId = \u0026PrensaId\t\n\tWhere PrensaTurnoId = \u0026EnumTurno\n\t\u0026DefaultOperadorId = PrensaOperadorId\n\texit\nendfor\n\n",
+      "cleanSource": "\u0026DefaultProductoId = 0\n\u0026DefaultOperadorId = 0\n\u0026EnumTurno.FromString(\u0026TurnoId.ToString())\n\nFor each DB.PrensaProducto\t\n\tWhere DB.PrensaId = \u0026PrensaId\t\n\tWhere ComercialProductoActivo = true\n\t\u0026DefaultProductoId = ComercialProductoId\n\texit\nendfor\n\nFor each \t\n\tWhere PrensaId = \u0026PrensaId\t\n\tWhere PrensaTurnoId = \u0026EnumTurno\n\t\u0026DefaultOperadorId = PrensaOperadorId\n\texit\nendfor"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026PrensaId, in:\u0026TurnoId, out:\u0026DefaultProductoId, out:\u0026DefaultOperadorId);\n",
+      "cleanSource": "parm(in:\u0026PrensaId, in:\u0026TurnoId, out:\u0026DefaultProductoId, out:\u0026DefaultOperadorId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "DB.PrensaProducto"
+    ],
+    "calledBy": [
+      "ObtenerTurnoPorSemanaPrensado"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ExtrusoraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "EnumTurno",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Enum Turno"
+    },
+    {
+      "name": "DefaultOperadorId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Operador Id"
+    },
+    {
+      "name": "DefaultProductoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "out",
+      "domain": "",
+      "description": "Producto Id"
+    },
+    {
+      "name": "TurnoId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Turno Id"
+    },
+    {
+      "name": "PrensaId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Prensa Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}

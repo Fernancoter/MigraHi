@@ -1,0 +1,139 @@
+{
+  "uniqueId": "780e6f0a-0837-4923-aeb7-94cdb7f3233c",
+  "name": "SDPausarBobinas",
+  "type": "Procedure",
+  "module": "Produccion",
+  "description": "SDPausar Bobinas",
+  "isGAMObject": false,
+  "interfaceElements": [],
+  "businessLogic": [
+    {
+      "blockName": "Source",
+      "blockType": "Source",
+      "rawSource": "        \n\t\u0026Extrusion.Load(\u0026ExtrusionId)\n\t\u0026ExtrusoraId = \u0026Extrusion.ExtrusionExtrusoraId\n\t\n\tfor each DB.Bobina\n\t\twhere BobinaId \u003E 0\n\t\twhere ExtrusionId = \u0026ExtrusionId\n\t\twhere BobinaEstado = EstadoBobina.EnProceso\n\t\t\u0026BobinaId = BobinaId\n\t        \n\t\tSetEstadoBobina.Call(\u0026BobinaId, EstadoBobina.Pausada)\n\t\t\n\t\tdo \u0027ExtrusoraBobina\u0027\n\tEndfor\n\n        Sub \u0027ExtrusoraBobina\u0027\n\t\t\n\t\t\u0026ExtrusoraBobina = New()\n\t\t\u0026ExtrusoraBobina.BobinaId = \u0026BobinaId\n\t\t\u0026ExtrusoraBobina.ExtrusoraId = \u0026ExtrusoraId\n\t\t\u0026ExtrusoraBobina.Save()\n\t\t\n\t\tif(\u0026ExtrusoraBobina.Success())\n\t\t\tcommit\n\t\tendif\n\tEndSub\n",
+      "cleanSource": "        \n\t\u0026Extrusion.Load(\u0026ExtrusionId)\n\t\u0026ExtrusoraId = \u0026Extrusion.ExtrusionExtrusoraId\n\t\n\tfor each DB.Bobina\n\t\twhere BobinaId \u003E 0\n\t\twhere ExtrusionId = \u0026ExtrusionId\n\t\twhere BobinaEstado = EstadoBobina.EnProceso\n\t\t\u0026BobinaId = BobinaId\n\t        \n\t\tSetEstadoBobina.Call(\u0026BobinaId, EstadoBobina.Pausada)\n\t\t\n\t\tdo \u0027ExtrusoraBobina\u0027\n\tEndfor\n\n        Sub \u0027ExtrusoraBobina\u0027\n\t\t\n\t\t\u0026ExtrusoraBobina = New()\n\t\t\u0026ExtrusoraBobina.BobinaId = \u0026BobinaId\n\t\t\u0026ExtrusoraBobina.ExtrusoraId = \u0026ExtrusoraId\n\t\t\u0026ExtrusoraBobina.Save()\n\t\t\n\t\tif(\u0026ExtrusoraBobina.Success())\n\t\t\tcommit\n\t\tendif\n\tEndSub"
+    },
+    {
+      "blockName": "Rules",
+      "blockType": "Rules",
+      "rawSource": "parm(in:\u0026ExtrusionId);\n",
+      "cleanSource": "parm(in:\u0026ExtrusionId);"
+    }
+  ],
+  "dependencies": {
+    "callsTo": [
+      "Produccion.SetEstadoBobina",
+      "DB.Extrusion",
+      "DB.Bobina",
+      "DB.ExtrusoraBobina",
+      "SetEstadoBobina"
+    ],
+    "calledBy": [
+      "SDCerrarExtrusion",
+      "BobinaWW",
+      "vwAnaliticaBobina"
+    ],
+    "tablesRead": [],
+    "tablesWritten": [],
+    "usesSDTs": [],
+    "usesDataProviders": []
+  },
+  "dataDictionary": [
+    {
+      "name": "ExtrusionId",
+      "elementType": "Parameter",
+      "dataType": "NUMERIC",
+      "accessor": "in",
+      "domain": "",
+      "description": "Extrusion Id"
+    },
+    {
+      "name": "BobinaId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Bobina Id"
+    },
+    {
+      "name": "ExtrusoraBobina",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Bobina"
+    },
+    {
+      "name": "Extrusion",
+      "elementType": "Variable",
+      "dataType": "GX_BUSCOMP",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusion"
+    },
+    {
+      "name": "ExtrusoraId",
+      "elementType": "Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Extrusora Id"
+    },
+    {
+      "name": "Today",
+      "elementType": "Standard Variable",
+      "dataType": "DATE",
+      "accessor": "",
+      "domain": "",
+      "description": "Today"
+    },
+    {
+      "name": "Time",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Time"
+    },
+    {
+      "name": "Pgmname",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmname"
+    },
+    {
+      "name": "Pgmdesc",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Pgmdesc"
+    },
+    {
+      "name": "Page",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Page"
+    },
+    {
+      "name": "Line",
+      "elementType": "Standard Variable",
+      "dataType": "NUMERIC",
+      "accessor": "",
+      "domain": "",
+      "description": "Line"
+    },
+    {
+      "name": "Output",
+      "elementType": "Standard Variable",
+      "dataType": "CHARACTER",
+      "accessor": "",
+      "domain": "",
+      "description": "Output"
+    }
+  ]
+}
