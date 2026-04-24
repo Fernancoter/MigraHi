@@ -1,0 +1,89 @@
+﻿{
+    "uniqueId":  "e02b60e8-f7c4-4ae8-ae5e-f603d27c80c9",
+    "name":  "SDPMenuInfoDP",
+    "type":  "DataProvider",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPMenu Info DP",
+    "filePath":  "DataProviders/WorkWithPlus/NativeMobile/SDPMenuInfoDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDPMenuInfo\n{\n\tTitleInfo = !\"Sample User\"\n\tSecondaryInfo = !\"user@somemail.com\"\n\tImage = SDPResUserAvatar.Link()\n\tInfoField1 = !\"Platinum\"\n\tInfoField2 = !\"2000\"\n\tInfoFieldNumeric1 = 60\n}\n/*\n\tReplace with real information\n*/\n",
+                              "cleanSource":  "SDPMenuInfo\n{\n\tTitleInfo = !\"Sample User\"\n\tSecondaryInfo = !\"user@somemail.com\"\n\tImage = SDPResUserAvatar.Link()\n\tInfoField1 = !\"Platinum\"\n\tInfoField2 = !\"2000\"\n\tInfoFieldNumeric1 = 60\n}\n/*\n\tReplace with real information\n*/"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPMenuInfo",
+                                         "WorkWithPlus.NativeMobile.SDPMenuOptions"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDPMenuInfo"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SDPMenuOptions",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDPMenu Options"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

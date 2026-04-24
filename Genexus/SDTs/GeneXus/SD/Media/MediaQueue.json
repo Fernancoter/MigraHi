@@ -1,0 +1,64 @@
+﻿{
+    "uniqueId":  "2778b7ad-6dbb-47f0-a0ba-8f0ed6f5a404",
+    "name":  "MediaQueue",
+    "type":  "SDT",
+    "module":  "GeneXus.SD.Media",
+    "description":  "Media Queue",
+    "filePath":  "SDTs/GeneXus/SD/Media/MediaQueue.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "GeneXus.SD.Media.MediaItem"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Title",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Title"
+                           },
+                           {
+                               "name":  "Items",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Items"
+                           }
+                       ]
+}

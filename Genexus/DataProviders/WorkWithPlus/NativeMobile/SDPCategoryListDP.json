@@ -1,0 +1,88 @@
+﻿{
+    "uniqueId":  "425ec60a-7686-4ecf-a148-e6fbc9d6a291",
+    "name":  "SDPCategoryListDP",
+    "type":  "DataProvider",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPCategory List DP",
+    "filePath":  "DataProviders/WorkWithPlus/NativeMobile/SDPCategoryListDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDPMultiColumnOptions\n{\n\tSDPMultiColumnOptionsItem\n\t{\n\t\tColumn1 \n\t\t{\n\t\t\tTitleInfo = !\"Common\"\n\t\t}\n\t}\n\tSDPMultiColumnOptionsItem\n\t{\t\n\t\tColumn2\n\t\t{\n\t\t\tTitleInfo = !\"Food\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct1)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?1\"\n\t\t}\n\t\tColumn3\n\t\t{\n\t\t\tTitleInfo = !\"Men\u0027s festival\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct4)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?2\"\n\t\t}\n\t\tColumn4\n\t\t{\n\t\t\tTitleInfo = !\"Women day\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct5)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t\t}\t\t\n\t}\n\tSDPMultiColumnOptionsItem\n\t{\n\t\tColumn1 \n\t\t{\n\t\t\tTitleInfo = !\"Top\"\n\t\t}\n\t}\n\tSDPMultiColumnOptionsItem\n\t{\n\t\tColumn2\n\t\t{\n\t\t\tTitleInfo = !\"Makup\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct3)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?4\"\n\t\t}\n\t\tColumn3\n\t\t{\n\t\t\tTitleInfo = !\"Daily Products\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct10)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?5\"\n\t\t}\n\t\tColumn4\n\t\t{\n\t\t\tTitleInfo = !\"Furniture\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct9)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?6\"\n\t\t}\t\t\n\t}\n\tSDPMultiColumnOptionsItem\n\t{\n\t\tColumn2\n\t\t{\n\t\t\tTitleInfo = !\"Baby products\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct6)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?7\"\n\t\t}\n\t\tColumn3\n\t\t{\n\t\t\tTitleInfo = !\"Women\u0027s bags\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct7)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?7\"\n\t\t}\n\t\tColumn4\n\t\t{\n\t\t\tTitleInfo = !\"Men\u0027s bags\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct8)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?8\"\n\t\t}\t\t\n\t}\n}\n",
+                              "cleanSource":  "SDPMultiColumnOptions\n{\n\tSDPMultiColumnOptionsItem\n\t{\n\t\tColumn1 \n\t\t{\n\t\t\tTitleInfo = !\"Common\"\n\t\t}\n\t}\n\tSDPMultiColumnOptionsItem\n\t{\t\n\t\tColumn2\n\t\t{\n\t\t\tTitleInfo = !\"Food\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct1)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?1\"\n\t\t}\n\t\tColumn3\n\t\t{\n\t\t\tTitleInfo = !\"Men\u0027s festival\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct4)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?2\"\n\t\t}\n\t\tColumn4\n\t\t{\n\t\t\tTitleInfo = !\"Women day\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct5)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t\t}\t\t\n\t}\n\tSDPMultiColumnOptionsItem\n\t{\n\t\tColumn1 \n\t\t{\n\t\t\tTitleInfo = !\"Top\"\n\t\t}\n\t}\n\tSDPMultiColumnOptionsItem\n\t{\n\t\tColumn2\n\t\t{\n\t\t\tTitleInfo = !\"Makup\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct3)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?4\"\n\t\t}\n\t\tColumn3\n\t\t{\n\t\t\tTitleInfo = !\"Daily Products\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct10)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?5\"\n\t\t}\n\t\tColumn4\n\t\t{\n\t\t\tTitleInfo = !\"Furniture\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct9)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?6\"\n\t\t}\t\t\n\t}\n\tSDPMultiColumnOptionsItem\n\t{\n\t\tColumn2\n\t\t{\n\t\t\tTitleInfo = !\"Baby products\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct6)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?7\"\n\t\t}\n\t\tColumn3\n\t\t{\n\t\t\tTitleInfo = !\"Women\u0027s bags\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct7)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?7\"\n\t\t}\n\t\tColumn4\n\t\t{\n\t\t\tTitleInfo = !\"Men\u0027s bags\"\n\t\t\t\u0026Image.FromImage(sdpressampleproduct8)\n\t\t\tImage = \u0026Image\n\t\t\tComponentToCall =  !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?8\"\n\t\t}\t\t\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPMultiColumnOptions"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDPMultiColumnOptions"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Image",
+                               "elementType":  "Variable",
+                               "dataType":  "BITMAP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Image"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

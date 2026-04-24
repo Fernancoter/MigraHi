@@ -1,0 +1,154 @@
+﻿{
+    "uniqueId":  "c26ea5af-f1e7-47cd-bbdc-84a5c0446282",
+    "name":  "ReposoTranscurridoBobina",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Reposo Transcurrido Bobina",
+    "filePath":  "Procedures/Produccion/ReposoTranscurridoBobina.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\t\u0026Bobina.Load(\u0026BobinaId)\n\t\u0026ExtrusionId = \u0026Bobina.ExtrusionId\n\t\u0026TiempoReposo = ObtenerTiempoReposo.Udp(\u0026ExtrusionId)\n\t\t\n\tif(\u0026TiempoReposo \u003e 0 and \u0026Bobina.BobinaEstado in (EstadoBobina.Reposo, EstadoBobina.Disponible))\n\t       BobinaTiempoReposo.Call(\u0026BobinaId, \u0026TiempoReposo)\n\tendif\n\n",
+                              "cleanSource":  "\n\t\u0026Bobina.Load(\u0026BobinaId)\n\t\u0026ExtrusionId = \u0026Bobina.ExtrusionId\n\t\u0026TiempoReposo = ObtenerTiempoReposo.Udp(\u0026ExtrusionId)\n\t\t\n\tif(\u0026TiempoReposo \u003e 0 and \u0026Bobina.BobinaEstado in (EstadoBobina.Reposo, EstadoBobina.Disponible))\n\t       BobinaTiempoReposo.Call(\u0026BobinaId, \u0026TiempoReposo)\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026BobinaId);\n",
+                              "cleanSource":  "parm(in:\u0026BobinaId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.BobinaTiempoReposo",
+                                         "Produccion.ObtenerTiempoReposo",
+                                         "DB.Bobina",
+                                         "BobinaTiempoReposo",
+                                         "ObtenerTiempoReposo"
+                                     ],
+                         "calledBy":  [
+                                          "SDEscanearBobina"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Bobina"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "TiempoReposo",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo Reposo"
+                           },
+                           {
+                               "name":  "BobinaId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Bobina Id"
+                           },
+                           {
+                               "name":  "Bobina",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

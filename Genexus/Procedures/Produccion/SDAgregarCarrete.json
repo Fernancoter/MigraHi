@@ -1,0 +1,170 @@
+﻿{
+    "uniqueId":  "fc8b71db-a959-4fa2-aab5-18b907402680",
+    "name":  "SDAgregarCarrete",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDAgregar Carrete",
+    "filePath":  "Procedures/Produccion/SDAgregarCarrete.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "            \n\t    \u0026Mensajes.Clear()\n\t    \u0026PaletId = ObtenerPalet.Udp(\u0026PrensadoId)\n        \u0026isOK = SDVincularCarrete.Udp(\u0026PrensadoId, \u0026PaletId, \u0026CarreteId,\u0026CantFaltante)\n\t    \n\t\tif(\u0026CantFaltante = 1)\n\t\t\t  \u0026Msj = New()\n\t\t      \u0026Msj.Id = !\u0027CantidadFaltanteUno\u0027\n\t\t      \u0026Msj.Description = \u0027El siguiente carrete cierra el pallet y NO SE PUEDE CANCELAR LA OPERACIÓN\u0027\n\t\t      \u0026Msj.Type = MessageTypes.Info\n\t\t      \u0026Mensajes.Add(\u0026Msj)\n\t\tendif\n\t\n\t\t  \n\t    if(\u0026isOK)\n\t\t      \u0026Msj = New()\n\t\t      \u0026Msj.Id = !\u0027Carrete agregado\u0027\n\t\t      \u0026Msj.Description = \u0027Carrete agregado con éxito\u0027\n\t\t      \u0026Msj.Type = MessageTypes.Info\n\t\t      \u0026Mensajes.Add(\u0026Msj)\n\t    else\n\t\t      \u0026Msj = New()\n\t\t      \u0026Msj.Id = !\u0027Carrete no vinculado\u0027\n\t\t      \u0026Msj.Description = \u0027El carrete no se ha podido agregar al palet\u0027\n\t\t      \u0026Msj.Type = MessageTypes.Error\n\t\t      \u0026Mensajes.Add(\u0026Msj)\n\t    endif\n",
+                              "cleanSource":  "            \n\t    \u0026Mensajes.Clear()\n\t    \u0026PaletId = ObtenerPalet.Udp(\u0026PrensadoId)\n        \u0026isOK = SDVincularCarrete.Udp(\u0026PrensadoId, \u0026PaletId, \u0026CarreteId,\u0026CantFaltante)\n\t    \n\t\tif(\u0026CantFaltante = 1)\n\t\t\t  \u0026Msj = New()\n\t\t      \u0026Msj.Id = !\u0027CantidadFaltanteUno\u0027\n\t\t      \u0026Msj.Description = \u0027El siguiente carrete cierra el pallet y NO SE PUEDE CANCELAR LA OPERACIÓN\u0027\n\t\t      \u0026Msj.Type = MessageTypes.Info\n\t\t      \u0026Mensajes.Add(\u0026Msj)\n\t\tendif\n\t\n\t\t  \n\t    if(\u0026isOK)\n\t\t      \u0026Msj = New()\n\t\t      \u0026Msj.Id = !\u0027Carrete agregado\u0027\n\t\t      \u0026Msj.Description = \u0027Carrete agregado con éxito\u0027\n\t\t      \u0026Msj.Type = MessageTypes.Info\n\t\t      \u0026Mensajes.Add(\u0026Msj)\n\t    else\n\t\t      \u0026Msj = New()\n\t\t      \u0026Msj.Id = !\u0027Carrete no vinculado\u0027\n\t\t      \u0026Msj.Description = \u0027El carrete no se ha podido agregar al palet\u0027\n\t\t      \u0026Msj.Type = MessageTypes.Error\n\t\t      \u0026Mensajes.Add(\u0026Msj)\n\t    endif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId, in:\u0026CarreteId, out:\u0026Mensajes);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId, in:\u0026CarreteId, out:\u0026Mensajes);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.ObtenerPalet",
+                                         "Produccion.SDVincularCarrete",
+                                         "GeneXus.Common.Messages",
+                                         "ObtenerPalet",
+                                         "SDVincularCarrete"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "isOK",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "is OK"
+                           },
+                           {
+                               "name":  "CarreteId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Carrete Id"
+                           },
+                           {
+                               "name":  "Mensajes",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Mensajes"
+                           },
+                           {
+                               "name":  "Msj",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Msj"
+                           },
+                           {
+                               "name":  "PaletId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Id"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "CantFaltante",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Cant Faltante"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

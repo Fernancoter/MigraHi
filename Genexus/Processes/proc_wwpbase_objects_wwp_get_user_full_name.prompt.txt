@@ -1,0 +1,10 @@
+﻿
+=== Procedure: WWPBaseObjects.WWP_GetUserFullName ===
+
+--- Source (Source) ---
+&GAMUser = GAMRepository.GetUserByGUID(&WWPUserExtendedId, &GAMErrorCollection)
+&WWPUserExtendedFullName = iif(&GAMUser.FirstName.IsEmpty(), &GAMUser.Name, &GAMUser.FirstName.Trim() + " " + &GAMUser.LastName.Trim())
+
+--- Rules (Rules) ---
+parm(in:&WWPUserExtendedId, out:&WWPUserExtendedFullName);
+

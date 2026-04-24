@@ -1,0 +1,135 @@
+﻿{
+    "uniqueId":  "8c32dbd5-3448-409b-bf37-1394a42b7ccb",
+    "name":  "SDPrensadoMermaKg",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDPrensado Merma Kg",
+    "filePath":  "Procedures/Produccion/SDPrensadoMermaKg.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\u0026Prensado.PrensadoBobinaMermaKg += 5.9\n\t\u0026Prensado.Save()\n\t\n\tif(\u0026Prensado.Success())\n\t\tcommit\n\tendif\n",
+                              "cleanSource":  "\t\n\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\u0026Prensado.PrensadoBobinaMermaKg += 5.9\n\t\u0026Prensado.Save()\n\t\n\tif(\u0026Prensado.Success())\n\t\tcommit\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Prensado"
+                                     ],
+                         "calledBy":  [
+                                          "SDFinalizarPrensado",
+                                          "SDPrensadoTemporal"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Prensado"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Prensado"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "BobinaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Id"
+                           },
+                           {
+                               "name":  "Prensado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

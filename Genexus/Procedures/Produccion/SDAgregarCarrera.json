@@ -1,0 +1,184 @@
+﻿{
+    "uniqueId":  "569f0ad3-ac6c-499c-8932-ebed555d5908",
+    "name":  "SDAgregarCarrera",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDAgregar Carrera",
+    "filePath":  "Procedures/Produccion/SDAgregarCarrera.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "        //1. Bobina en prensado (validar)\n\t//2. Carreras terminadas y procesadas al mismo tiempo (validar)\n\t//3. Bobina con 3 carreras procesadas (confirmacion)\n\t\n\t\u0026Mensajes.Clear()\n\tdo \u0027BobinaMontada\u0027\n\t\n\tSub \u0027BobinaMontada\u0027\n\t\t\u0026BobinaItem = SDBobinaEnPrensado.Udp(\u0026PrensadoId)\n\t\t\n\t\tif(\u0026BobinaItem.BobinaId \u003e 0)\n\t\t\tdo \u0027CheckeoCarreras\u0027\n\t\telse\n\t\t\t\u0026Msj = New()\n\t\t\t\u0026Msj.Id = !\u0027Bobina requerida\u0027\n\t\t\t\u0026Msj.Description = \u0027Debe montar una bobina en la prensa\u0027\n\t\t\t\u0026Msj.Type = MessageTypes.Warning\n\t\t\t\u0026Mensajes.Add(\u0026Msj)\n\t        endif\n\t\t\n        EndSub\n        \n\t\n\tSub \u0027CheckeoCarreras\u0027\n\t\t\n\t\t\u0026isOK1 = SDCheckeoCarreras.Udp(\u0026PrensadoId, EstadoCarrera.EnProceso)\n\t\t\u0026isOK2 = SDCheckeoCarreras.Udp(\u0026PrensadoId, EstadoCarrera.Terminada)\n\t\t\n\t\tDo case\n\t\t\t//No tiene en proceso\n\t\t\t//Si tiene terminadas\n\t\t\tCase (\u0026isOK1 = true) and (\u0026isOK2 = false)\n\t\t\t\t\u0026agregar = true\n\t\t\t\t\n\t\t\t\t//Si tiene carreras en proceso\n\t\t\t\t//No tiene terminadas\n\t\t\tCase (\u0026isOK1 = false) and (\u0026isOK2 = true)\n\t\t\t\t\u0026agregar = true\n\t\t\t\t\n\t\t\t\t//No tiene en proceso\n\t\t\t\t//No tiene terminadas\n\t\t\tCase (\u0026isOK1 = true) and (\u0026isOK2 = true)\n\t\t\t\t\u0026agregar = true\n\t\t\tOtherwise\n\t\t\t\t\u0026agregar = true\n\t\tEndCase\n\t\t\n\t\tif(\u0026agregar)\n\t\t\tdo \u0027FactorConsumoKg\u0027\n\t\telse\n\t\t\t\u0026Msj = New()\n\t\t        \u0026Msj.Id = !\u0027Prensa ocupada\u0027\n\t\t        \u0026Msj.Description = \u0027La prensa esta ocupada con 2 carreras. Debe validar la carrera terminada\u0027\n\t\t        \u0026Msj.Type = MessageTypes.Warning\n\t\t        \u0026Mensajes.Add(\u0026Msj)\n\t\tendif\n        EndSub\n\n        Sub \u0027FactorConsumoKg\u0027\n\t\t\t\n\t\t\u0026Factor = Produccion.SDFactorConsumoKg.Udp(\u0026BobinaItem.BobinaKg)\n\t\tif(\u0026BobinaItem.BobinaCarreras = \u0026Factor)\n\t\t\t\u0026Msj = New()\n\t\t\t\u0026Msj.Id = !\u0027Bobina consumida\u0027\n\t\t\t\u0026Msj.Description = \u0027La bobina ha alcanzado su límite de carreras producidas. Sustituir.\u0027\n\t\t\t\u0026Msj.Type = MessageTypes.Warning\n\t\t\t\u0026Mensajes.Add(\u0026Msj)\n\t\telse\n\t\t\tif(Not \u0026isOK1)\n\t\t\t\tSDTerminarCarreraDB.Call()\n\t\t\tendif\n\t\t        \n\t\t\tIniciarCarrera.Call(\u0026PrensadoId)\n\t\tendif\t\n\t\t\n\tEndSub\n",
+                              "cleanSource":  "        //1. Bobina en prensado (validar)\n\t//2. Carreras terminadas y procesadas al mismo tiempo (validar)\n\t//3. Bobina con 3 carreras procesadas (confirmacion)\n\t\n\t\u0026Mensajes.Clear()\n\tdo \u0027BobinaMontada\u0027\n\t\n\tSub \u0027BobinaMontada\u0027\n\t\t\u0026BobinaItem = SDBobinaEnPrensado.Udp(\u0026PrensadoId)\n\t\t\n\t\tif(\u0026BobinaItem.BobinaId \u003e 0)\n\t\t\tdo \u0027CheckeoCarreras\u0027\n\t\telse\n\t\t\t\u0026Msj = New()\n\t\t\t\u0026Msj.Id = !\u0027Bobina requerida\u0027\n\t\t\t\u0026Msj.Description = \u0027Debe montar una bobina en la prensa\u0027\n\t\t\t\u0026Msj.Type = MessageTypes.Warning\n\t\t\t\u0026Mensajes.Add(\u0026Msj)\n\t        endif\n\t\t\n        EndSub\n        \n\t\n\tSub \u0027CheckeoCarreras\u0027\n\t\t\n\t\t\u0026isOK1 = SDCheckeoCarreras.Udp(\u0026PrensadoId, EstadoCarrera.EnProceso)\n\t\t\u0026isOK2 = SDCheckeoCarreras.Udp(\u0026PrensadoId, EstadoCarrera.Terminada)\n\t\t\n\t\tDo case\n\t\t\t//No tiene en proceso\n\t\t\t//Si tiene terminadas\n\t\t\tCase (\u0026isOK1 = true) and (\u0026isOK2 = false)\n\t\t\t\t\u0026agregar = true\n\t\t\t\t\n\t\t\t\t//Si tiene carreras en proceso\n\t\t\t\t//No tiene terminadas\n\t\t\tCase (\u0026isOK1 = false) and (\u0026isOK2 = true)\n\t\t\t\t\u0026agregar = true\n\t\t\t\t\n\t\t\t\t//No tiene en proceso\n\t\t\t\t//No tiene terminadas\n\t\t\tCase (\u0026isOK1 = true) and (\u0026isOK2 = true)\n\t\t\t\t\u0026agregar = true\n\t\t\tOtherwise\n\t\t\t\t\u0026agregar = true\n\t\tEndCase\n\t\t\n\t\tif(\u0026agregar)\n\t\t\tdo \u0027FactorConsumoKg\u0027\n\t\telse\n\t\t\t\u0026Msj = New()\n\t\t        \u0026Msj.Id = !\u0027Prensa ocupada\u0027\n\t\t        \u0026Msj.Description = \u0027La prensa esta ocupada con 2 carreras. Debe validar la carrera terminada\u0027\n\t\t        \u0026Msj.Type = MessageTypes.Warning\n\t\t        \u0026Mensajes.Add(\u0026Msj)\n\t\tendif\n        EndSub\n\n        Sub \u0027FactorConsumoKg\u0027\n\t\t\t\n\t\t\u0026Factor = Produccion.SDFactorConsumoKg.Udp(\u0026BobinaItem.BobinaKg)\n\t\tif(\u0026BobinaItem.BobinaCarreras = \u0026Factor)\n\t\t\t\u0026Msj = New()\n\t\t\t\u0026Msj.Id = !\u0027Bobina consumida\u0027\n\t\t\t\u0026Msj.Description = \u0027La bobina ha alcanzado su límite de carreras producidas. Sustituir.\u0027\n\t\t\t\u0026Msj.Type = MessageTypes.Warning\n\t\t\t\u0026Mensajes.Add(\u0026Msj)\n\t\telse\n\t\t\tif(Not \u0026isOK1)\n\t\t\t\tSDTerminarCarreraDB.Call()\n\t\t\tendif\n\t\t        \n\t\t\tIniciarCarrera.Call(\u0026PrensadoId)\n\t\tendif\t\n\t\t\n\tEndSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId, out:\u0026Mensajes);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId, out:\u0026Mensajes);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.IniciarCarrera",
+                                         "Produccion.SDBobinaEnPrensado",
+                                         "Produccion.SDFactorConsumoKg",
+                                         "Produccion.SDCheckeoCarreras",
+                                         "Produccion.SDTerminarCarreraDB",
+                                         "GeneXus.Common.Messages",
+                                         "Produccion.SDTBobina",
+                                         "SDTerminarCarreraDB",
+                                         "IniciarCarrera",
+                                         "SDBobinaEnPrensado",
+                                         "SDCheckeoCarreras"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "agregar",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "agregar"
+                           },
+                           {
+                               "name":  "BobinaItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Item"
+                           },
+                           {
+                               "name":  "Factor",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Factor"
+                           },
+                           {
+                               "name":  "isOK1",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "is OK1"
+                           },
+                           {
+                               "name":  "isOK2",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "is OK2"
+                           },
+                           {
+                               "name":  "Mensajes",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Mensajes"
+                           },
+                           {
+                               "name":  "Msj",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Msj"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

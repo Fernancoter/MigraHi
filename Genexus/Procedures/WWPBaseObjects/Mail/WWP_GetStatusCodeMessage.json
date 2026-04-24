@@ -1,0 +1,134 @@
+﻿{
+    "uniqueId":  "e74a1276-43fb-4fc1-b9d2-a3e5ff2b9117",
+    "name":  "WWP_GetStatusCodeMessage",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects.Mail",
+    "description":  "Get Status Code Message",
+    "filePath":  "Procedures/WWPBaseObjects/Mail/WWP_GetStatusCodeMessage.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "Do Case\n\tCase \u0026StatusCode = 0\n\t\t\u0026Message = !\"OK\"\n\tCase \u0026StatusCode = 1\n\t\t\u0026Message = !\"Already logged in\"\n\tCase \u0026StatusCode = 2\n\t\t\u0026Message = !\"Not logged in\"\n\tCase \u0026StatusCode = 3\n\t\t\u0026Message = !\"Could not complete login\"\n\tCase \u0026StatusCode = 6\n\t\t\u0026Message = !\"Invalid sender name\"\n\tCase \u0026StatusCode = 7\n\t\t\u0026Message = !\"Invalid sender address\"\n\tCase \u0026StatusCode = 8\n\t\t\u0026Message = !\"Invalid user name\"\n\tCase \u0026StatusCode = 9\n\t\t\u0026Message = !\"Invalid password\"\n\tCase \u0026StatusCode = 10\n\t\t\u0026Message = !\"Could not send message\"\n\tCase \u0026StatusCode = 11\n\t\t\u0026Message = !\"No messages to receive\"\n\tCase \u0026StatusCode = 12\n\t\t\u0026Message = !\"Could not delete message\"\t\t\n\tCase \u0026StatusCode = 13\n\t\t\u0026Message = !\"No main recipient specified\"\n\tCase \u0026StatusCode = 14\n\t\t\u0026Message = !\"Invalid recipient\"\n\tCase \u0026StatusCode = 15\n\t\t\u0026Message = !\"Invalid attachment\"\n\tCase \u0026StatusCode = 16\n\t\t\u0026Message = !\"Could not save attachment\"\n\tCase \u0026StatusCode = 17\n\t\t\u0026Message = !\"Invalid Authentication value\"\n\tCase \u0026StatusCode = 18\n\t\t\u0026Message = !\"Not enough memory\"\n\tCase \u0026StatusCode = 19\n\t\t\u0026Message = !\"Connection lost\"\n\tCase \u0026StatusCode = 20\n\t\t\u0026Message = !\"Timeout exceeded\"\n\tCase \u0026StatusCode = 21\n\t\t\u0026Message = !\"Memory allocation error\"\n\tCase \u0026StatusCode = 23\n\t\t\u0026Message = !\"The server does not recognize any of the supported authentication methods\"\n\tCase \u0026StatusCode = 24\n\t\t\u0026Message = !\"Authentication error\"\n\tCase \u0026StatusCode = 25\n\t\t\u0026Message = !\"User or password refused\"\n\tCase \u0026StatusCode = 26\n\t\t\u0026Message = !\"No current message\"\n\tCase \u0026StatusCode = 27\n\t\t\u0026Message = !\"Invalid NewMessages value\"\n\tOtherwise\n\t\t\u0026Message = !\"Unknown error\"\t\nEndCase\n",
+                              "cleanSource":  "Do Case\n\tCase \u0026StatusCode = 0\n\t\t\u0026Message = !\"OK\"\n\tCase \u0026StatusCode = 1\n\t\t\u0026Message = !\"Already logged in\"\n\tCase \u0026StatusCode = 2\n\t\t\u0026Message = !\"Not logged in\"\n\tCase \u0026StatusCode = 3\n\t\t\u0026Message = !\"Could not complete login\"\n\tCase \u0026StatusCode = 6\n\t\t\u0026Message = !\"Invalid sender name\"\n\tCase \u0026StatusCode = 7\n\t\t\u0026Message = !\"Invalid sender address\"\n\tCase \u0026StatusCode = 8\n\t\t\u0026Message = !\"Invalid user name\"\n\tCase \u0026StatusCode = 9\n\t\t\u0026Message = !\"Invalid password\"\n\tCase \u0026StatusCode = 10\n\t\t\u0026Message = !\"Could not send message\"\n\tCase \u0026StatusCode = 11\n\t\t\u0026Message = !\"No messages to receive\"\n\tCase \u0026StatusCode = 12\n\t\t\u0026Message = !\"Could not delete message\"\t\t\n\tCase \u0026StatusCode = 13\n\t\t\u0026Message = !\"No main recipient specified\"\n\tCase \u0026StatusCode = 14\n\t\t\u0026Message = !\"Invalid recipient\"\n\tCase \u0026StatusCode = 15\n\t\t\u0026Message = !\"Invalid attachment\"\n\tCase \u0026StatusCode = 16\n\t\t\u0026Message = !\"Could not save attachment\"\n\tCase \u0026StatusCode = 17\n\t\t\u0026Message = !\"Invalid Authentication value\"\n\tCase \u0026StatusCode = 18\n\t\t\u0026Message = !\"Not enough memory\"\n\tCase \u0026StatusCode = 19\n\t\t\u0026Message = !\"Connection lost\"\n\tCase \u0026StatusCode = 20\n\t\t\u0026Message = !\"Timeout exceeded\"\n\tCase \u0026StatusCode = 21\n\t\t\u0026Message = !\"Memory allocation error\"\n\tCase \u0026StatusCode = 23\n\t\t\u0026Message = !\"The server does not recognize any of the supported authentication methods\"\n\tCase \u0026StatusCode = 24\n\t\t\u0026Message = !\"Authentication error\"\n\tCase \u0026StatusCode = 25\n\t\t\u0026Message = !\"User or password refused\"\n\tCase \u0026StatusCode = 26\n\t\t\u0026Message = !\"No current message\"\n\tCase \u0026StatusCode = 27\n\t\t\u0026Message = !\"Invalid NewMessages value\"\n\tOtherwise\n\t\t\u0026Message = !\"Unknown error\"\t\nEndCase"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026StatusCode, out:\u0026Message);\n",
+                              "cleanSource":  "parm(in:\u0026StatusCode, out:\u0026Message);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "WWP_SendMail"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ErrorCode",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Error Code"
+                           },
+                           {
+                               "name":  "Message",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Message"
+                           },
+                           {
+                               "name":  "StatusCode",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Status Code"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

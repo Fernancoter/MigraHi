@@ -1,0 +1,150 @@
+﻿{
+    "uniqueId":  "f46223de-c759-4eaf-8e02-e8feca97b580",
+    "name":  "SDPGetRangedRadialGaugeFromConfig",
+    "type":  "Procedure",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPGet Ranged Radial Gauge From Config",
+    "filePath":  "Procedures/WorkWithPlus/NativeMobile/SDPGetRangedRadialGaugeFromConfig.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026HTML = !\u0027\u003cmeta name=\"viewport\" content= \"width=device-width, user-scalable=no\"\u003e\u003cstyle\u003etext{font-size:40px;font-family:Arial,Helvetica,sans-serif;fill:black}div{text-align:center}#valuePoint{stroke:white;fill:%valuecolor%;stroke-width:10px}g{stroke-width:15}\u003c/style\u003e\u0027\n\u0026HTML += !\u0027\u003cdiv\u003e\u003csvg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"%width%\" height=\"%height%\" viewBox=\"-20 -20 240 240\"\u003e \u003cdefs\u003e \u003clinearGradient id=\"firstSection\" gradientUnits=\"objectBoundingBox\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"\u003e \u003cstop offset=\"0%\" stop-color=\"%firstColorStart%\"/\u003e \u003cstop offset=\"100%\" stop-color=\"%firstColorEnd%\"/\u003e \u003c/linearGradient\u003e \u003clinearGradient id=\"secondSection\" gradientUnits=\"objectBoundingBox\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"\u003e \u003cstop offset=\"0%\" stop-color=\"%secondColorStart%\"/\u003e \u003cstop offset=\"100%\" stop-color=\"%secondColorEnd%\"/\u003e \u003c/linearGradient\u003e \u003clinearGradient id=\"thirdSection\" gradientUnits=\"objectBoundingBox\" x1=\"1\" y1=\"0\" x2=\"0\" y2=\"1\"\u003e \u003cstop offset=\"0%\" stop-color=\"%thirdColorStart%\"/\u003e \u003cstop offset=\"100%\" stop-color=\"%thirdColorEnd%\"/\u003e \u003c/linearGradient\u003e \u003clinearGradient id=\"fourthSection\" gradientUnits=\"objectBoundingBox\" x1=\"1\" y1=\"1\" x2=\"0\" y2=\"0\"\u003e \u003cstop offset=\"0%\" stop-color=\"%fourthColorStart%\"/\u003e \u003cstop offset=\"100%\" stop-color=\"%fourthColorEnd%\"/\u003e \u003c/linearGradient\u003e \u003clinearGradient id=\"fiveSection\" gradientUnits=\"objectBoundingBox\" x1=\"0\" y1=\"1\" x2=\"0\" y2=\"0\"\u003e \u003cstop offset=\"0%\" stop-color=\"%fiveColorStart%\"/\u003e \u003cstop offset=\"100%\" stop-color=\"%fiveColorEnd%\"/\u003e \u003c/linearGradient\u003e \u003c/defs\u003e\u003cg fill=\"none\" transform=\"translate(100,100), rotate(210)\"\u003e \u003cpath d=\"M 0,-100 A 100,100 0 0,1 86.6,-50\" stroke=\"url(#firstSection)\" style=\"stroke-linecap: round;\"/\u003e \u003cpath d=\"M 86.6,-50 A 100,100 0 0,1 86.6,50\" stroke=\"url(#secondSection)\"/\u003e \u003cpath d=\"M 86.6,50 A 100,100 0 0,1 0,100\" stroke=\"url(#thirdSection)\"/\u003e \u003cpath d=\"M 0,100 A 100,100 0 0,1 -86.6,50\" stroke=\"url(#fourthSection)\"/\u003e \u003cpath d=\"M -86.6,50 A 100,100 0 0,1 -86.6,-50\" stroke=\"url(#fiveSection)\" style=\"stroke-linecap: round;\"/\u003e \u003c/g\u003e \u003ccircle id=\"valuePoint\" cx=\"170\" cy=\"170\" r=\"20\" /\u003e \u003ctext x=\"100\" y=\"100\" dominant-baseline=\"middle\" text-anchor=\"middle\"\u003e%text%\u003c/text\u003e \u003c/svg\u003e\u003c/div\u003e\u0027\n\u0026HTML += !\u0027\u003cscript\u003evar degrees=%degrees%+90;var radians=degrees_to_radians(degrees);var radius=100;var x=Math.cos(radians)*radius+100;var y=Math.sin(radians)*radius+100;setPosition(\"valuePoint\",x,y);function setPosition(id,x,y){var ctrl=document.getElementById(id);ctrl.setAttribute(\"cx\",x);ctrl.setAttribute(\"cy\",y);} function degrees_to_radians(degrees) {var pi=Math.PI;return degrees*(pi/180);}\u003c/script\u003e\u0027\n\n\u0026propertyName = !\"height\"\n\u0026propertyValue = \u0026GaugeConfig.Height.ToString()\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"width\"\n\u0026propertyValue = \u0026GaugeConfig.Width.ToString()\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"degrees\"\n\u0026ValueNumeric = \u0026GaugeConfig.Value * 3 + 30\n\u0026propertyValue = \u0026ValueNumeric.ToString()\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"valuecolor\"\n\u0026propertyValue = !\"blue\"\nIf Not \u0026GaugeConfig.ValueMarkerColor.Trim().IsEmpty()\n\t\u0026propertyValue = \u0026GaugeConfig.ValueMarkerColor\nEndIf\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"text\"\n\u0026propertyValue = \u0026GaugeConfig.Text\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"firstColorStart\"\n\u0026propertyValue = \u0026GaugeConfig.Range1ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"firstColorEnd\"\n\u0026propertyValue = \u0026GaugeConfig.Range1ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"secondColorStart\"\n\u0026propertyValue = \u0026GaugeConfig.Range2ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"secondColorEnd\"\n\u0026propertyValue = \u0026GaugeConfig.Range2ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"thirdColorStart\"\n\u0026propertyValue = \u0026GaugeConfig.Range3ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"thirdColorEnd\"\n\u0026propertyValue = \u0026GaugeConfig.Range3ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"fourthColorStart\"\n\u0026propertyValue = \u0026GaugeConfig.Range4ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"fourthColorEnd\"\n\u0026propertyValue = \u0026GaugeConfig.Range4ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\n\u0026propertyName = !\"fiveColorStart\"\n\u0026propertyValue = \u0026GaugeConfig.Range5ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = \"fiveColorEnd\"\n\u0026propertyValue = \u0026GaugeConfig.Range5ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\nSub \u0027ReplaceTemplate\u0027\n\t\u0026HTML = \u0026HTML.Replace(!\"%\" + \u0026propertyName.Trim() + !\"%\", \u0026propertyValue.Trim())\nendSub\n",
+                              "cleanSource":  "\u0026HTML = !\u0027\u003cmeta name=\"viewport\" content= \"width=device-width, user-scalable=no\"\u003e\u003cstyle\u003etext{font-size:40px;font-family:Arial,Helvetica,sans-serif;fill:black}div{text-align:center}#valuePoint{stroke:white;fill:%valuecolor%;stroke-width:10px}g{stroke-width:15}\u003c/style\u003e\u0027\n\u0026HTML += !\u0027\u003cdiv\u003e\u003csvg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"%width%\" height=\"%height%\" viewBox=\"-20 -20 240 240\"\u003e \u003cdefs\u003e \u003clinearGradient id=\"firstSection\" gradientUnits=\"objectBoundingBox\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"\u003e \u003cstop offset=\"0%\" stop-color=\"%firstColorStart%\"/\u003e \u003cstop offset=\"100%\" stop-color=\"%firstColorEnd%\"/\u003e \u003c/linearGradient\u003e \u003clinearGradient id=\"secondSection\" gradientUnits=\"objectBoundingBox\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"\u003e \u003cstop offset=\"0%\" stop-color=\"%secondColorStart%\"/\u003e \u003cstop offset=\"100%\" stop-color=\"%secondColorEnd%\"/\u003e \u003c/linearGradient\u003e \u003clinearGradient id=\"thirdSection\" gradientUnits=\"objectBoundingBox\" x1=\"1\" y1=\"0\" x2=\"0\" y2=\"1\"\u003e \u003cstop offset=\"0%\" stop-color=\"%thirdColorStart%\"/\u003e \u003cstop offset=\"100%\" stop-color=\"%thirdColorEnd%\"/\u003e \u003c/linearGradient\u003e \u003clinearGradient id=\"fourthSection\" gradientUnits=\"objectBoundingBox\" x1=\"1\" y1=\"1\" x2=\"0\" y2=\"0\"\u003e \u003cstop offset=\"0%\" stop-color=\"%fourthColorStart%\"/\u003e \u003cstop offset=\"100%\" stop-color=\"%fourthColorEnd%\"/\u003e \u003c/linearGradient\u003e \u003clinearGradient id=\"fiveSection\" gradientUnits=\"objectBoundingBox\" x1=\"0\" y1=\"1\" x2=\"0\" y2=\"0\"\u003e \u003cstop offset=\"0%\" stop-color=\"%fiveColorStart%\"/\u003e \u003cstop offset=\"100%\" stop-color=\"%fiveColorEnd%\"/\u003e \u003c/linearGradient\u003e \u003c/defs\u003e\u003cg fill=\"none\" transform=\"translate(100,100), rotate(210)\"\u003e \u003cpath d=\"M 0,-100 A 100,100 0 0,1 86.6,-50\" stroke=\"url(#firstSection)\" style=\"stroke-linecap: round;\"/\u003e \u003cpath d=\"M 86.6,-50 A 100,100 0 0,1 86.6,50\" stroke=\"url(#secondSection)\"/\u003e \u003cpath d=\"M 86.6,50 A 100,100 0 0,1 0,100\" stroke=\"url(#thirdSection)\"/\u003e \u003cpath d=\"M 0,100 A 100,100 0 0,1 -86.6,50\" stroke=\"url(#fourthSection)\"/\u003e \u003cpath d=\"M -86.6,50 A 100,100 0 0,1 -86.6,-50\" stroke=\"url(#fiveSection)\" style=\"stroke-linecap: round;\"/\u003e \u003c/g\u003e \u003ccircle id=\"valuePoint\" cx=\"170\" cy=\"170\" r=\"20\" /\u003e \u003ctext x=\"100\" y=\"100\" dominant-baseline=\"middle\" text-anchor=\"middle\"\u003e%text%\u003c/text\u003e \u003c/svg\u003e\u003c/div\u003e\u0027\n\u0026HTML += !\u0027\u003cscript\u003evar degrees=%degrees%+90;var radians=degrees_to_radians(degrees);var radius=100;var x=Math.cos(radians)*radius+100;var y=Math.sin(radians)*radius+100;setPosition(\"valuePoint\",x,y);function setPosition(id,x,y){var ctrl=document.getElementById(id);ctrl.setAttribute(\"cx\",x);ctrl.setAttribute(\"cy\",y);} function degrees_to_radians(degrees) {var pi=Math.PI;return degrees*(pi/180);}\u003c/script\u003e\u0027\n\n\u0026propertyName = !\"height\"\n\u0026propertyValue = \u0026GaugeConfig.Height.ToString()\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"width\"\n\u0026propertyValue = \u0026GaugeConfig.Width.ToString()\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"degrees\"\n\u0026ValueNumeric = \u0026GaugeConfig.Value * 3 + 30\n\u0026propertyValue = \u0026ValueNumeric.ToString()\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"valuecolor\"\n\u0026propertyValue = !\"blue\"\nIf Not \u0026GaugeConfig.ValueMarkerColor.Trim().IsEmpty()\n\t\u0026propertyValue = \u0026GaugeConfig.ValueMarkerColor\nEndIf\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"text\"\n\u0026propertyValue = \u0026GaugeConfig.Text\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"firstColorStart\"\n\u0026propertyValue = \u0026GaugeConfig.Range1ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"firstColorEnd\"\n\u0026propertyValue = \u0026GaugeConfig.Range1ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"secondColorStart\"\n\u0026propertyValue = \u0026GaugeConfig.Range2ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"secondColorEnd\"\n\u0026propertyValue = \u0026GaugeConfig.Range2ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"thirdColorStart\"\n\u0026propertyValue = \u0026GaugeConfig.Range3ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"thirdColorEnd\"\n\u0026propertyValue = \u0026GaugeConfig.Range3ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"fourthColorStart\"\n\u0026propertyValue = \u0026GaugeConfig.Range4ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"fourthColorEnd\"\n\u0026propertyValue = \u0026GaugeConfig.Range4ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\n\u0026propertyName = !\"fiveColorStart\"\n\u0026propertyValue = \u0026GaugeConfig.Range5ColorStart\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = \"fiveColorEnd\"\n\u0026propertyValue = \u0026GaugeConfig.Range5ColorEnd\ndo \u0027ReplaceTemplate\u0027\n\n\nSub \u0027ReplaceTemplate\u0027\n\t\u0026HTML = \u0026HTML.Replace(!\"%\" + \u0026propertyName.Trim() + !\"%\", \u0026propertyValue.Trim())\nendSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026GaugeConfig, out:\u0026HTML);\n",
+                              "cleanSource":  "Parm(in:\u0026GaugeConfig, out:\u0026HTML);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPRangedRadialGaugeConfig"
+                                     ],
+                         "calledBy":  [
+                                          "SDPGetRangedRadialGauge"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "HTML",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "HTML"
+                           },
+                           {
+                               "name":  "GaugeConfig",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Gauge Config"
+                           },
+                           {
+                               "name":  "propertyName",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "property Name"
+                           },
+                           {
+                               "name":  "propertyValue",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "property Value"
+                           },
+                           {
+                               "name":  "ValueNumeric",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Value Numeric"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

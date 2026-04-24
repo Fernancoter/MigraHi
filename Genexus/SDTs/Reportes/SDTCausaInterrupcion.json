@@ -1,0 +1,81 @@
+﻿{
+    "uniqueId":  "905fbaa1-0903-4d8d-ba7a-6def9833840d",
+    "name":  "SDTCausaInterrupcion",
+    "type":  "SDT",
+    "module":  "Reportes",
+    "description":  "SDTCausa Interrupcion",
+    "filePath":  "SDTs/Reportes/SDTCausaInterrupcion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "CausaPrensaDP",
+                                          "CausaExtrusoraDP"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CausaInterrupcionId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Causa Interrupcion Id"
+                           },
+                           {
+                               "name":  "CausaInterrupcionNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Causa Interrupcion Nombre"
+                           },
+                           {
+                               "name":  "CausaInterrupcionPrensa",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Causa Interrupcion Prensa"
+                           },
+                           {
+                               "name":  "CausaInterrupcionExtrusora",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Causa Interrupcion Extrusora"
+                           }
+                       ]
+}

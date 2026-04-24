@@ -1,0 +1,126 @@
+﻿{
+    "uniqueId":  "01523333-5b92-4957-ab1e-549fedd11844",
+    "name":  "MenuOptionsData",
+    "type":  "DataProvider",
+    "module":  "WWPBaseObjects",
+    "description":  "Menu Options Data",
+    "filePath":  "DataProviders/WWPBaseObjects/MenuOptionsData.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "DVelop_Menu\n{\n\t\n\t\u0026id = 0\n\n\tItem\n\t{ \n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlink =\tHome.Link()\n\t\tlinkTarget =\"\" \n\t\ticonClass = !\"menu-icon fa fa-home\"\n\t\tcaption = \"WWP_HomeTitle\"  \n\t} \n\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlink =\"\"\n\t\tlinkTarget =\"\" \n\t\ticonClass = !\"menu-icon fa fa-tasks\"\n\t\tcaption = !\"Menu Option 1\" \n\t\t\n\t\tsubItems\n\t\t{ \n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = \"\"\n\t\t\t\tlinkTarget =\"\"  \n\t\t\t\tcaption = !\"Menu Option 1.1\" \n\t\t\t\tauthorizationKey = \"\" \n\t\t\t}\n\t\t\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = \"\"\n\t\t\t\tlinkTarget =\"\"  \n\t\t\t\tcaption = !\"Menu Option 1.2\" \n\t\t\t\tauthorizationKey = !\"\" \n\t\t\t}\n\t\t\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = \"\"\n\t\t\t\tlinkTarget =\"\"  \n\t\t\t\tcaption = !\"Menu Option 1.3\" \n\t\t\t\tauthorizationKey = !\"\"\n\t\t\t}\n\t\t}\n\t}\n\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlink = \"\"\n\t\tlinkTarget =\"\" \n\t\ticonClass = !\"menu-icon fa fa-key\"\n\t\tcaption = !\"Menu Option 2\" \n\t\t\n\t\tsubItems\n\t\t{ \n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \"Menu Option 2.1\" \n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{ \n\t\t\t\t\tItem\n\t\t\t\t\t{\n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink = \"\"\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"Menu Option 2.1.1\" \n\t\t\t\t\t\tauthorizationKey = !\"\"\n\t\t\t\t\t}\n\t\t\t\t\tItem\n\t\t\t\t\t{\n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink = \"\"\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"Menu Option 2.1.2\" \n\t\t\t\t\t\tauthorizationKey = !\"\"\n\t\t\t\t\t}\n\t\t\t\t\tItem\n\t\t\t\t\t{\n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink = \"\"\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"Menu Option 2.1.3\" \n\t\t\t\t\t\tauthorizationKey = !\"\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\n\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \"Menu Option 2.2\" \n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{ \n\t\t\t\t\tItem\n\t\t\t\t\t{\n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink = \"\"\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"Menu Option 2.2.1\" \n\t\t\t\t\t\tauthorizationKey = !\"\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t} \n\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlink = !\"\"\n\t\tlinkTarget = !\"\" \n\t\ticonClass = !\"menu-icon fa fa-briefcase\"\n\t\tcaption = !\"Menu Option 3\" \n\t\tauthorizationKey = !\"\" //allow access to everybody\n\t}\n \n    \n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlink =\"\"\n\t\tlinkTarget =\"\" \n\t\ticonClass = !\"menu-icon fa fa-edit\"\n\t\tcaption = !\"Developer Menu\"\n\n\t\t\n\t\tsubItems \n\t\t{ \n\t\t\tItem [Count=20] Input \u0026ProgramName in ListWWPPrograms()\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = \u0026ProgramName.Link\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \u0026ProgramName.Description\t\t\t\t\n\t\t \t}\n\t\t}\n  }\n\n\t\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"WWP_GAM_SecurityOfTheApplication\"\n\t\tlink =\"\"\n\t\tlinkTarget =\"\" \n\t\ticonClass = !\"menu-icon fa fa-key\"\n\t\tcaption = \"WWP_GAM_GAMSecurity\" \n\t\tsubItems\n\t\t{ \n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"WWP_GAM_Users\"\n\t\t\t\tlink =GAMWWUsers.Link()\n\t\t\t\tlinkTarget =\"\"\n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \"WWP_GAM_Users\"\n\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\n\t\t\t}\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"WWP_GAM_Roles\"\n\t\t\t\tlink =GAMWWRoles.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n        caption = \"WWP_GAM_Roles\"\n\t\t\t\ticonClass = !\"\"\n\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\n\t\t\t}\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \"WWP_GAM_Repository\" \n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{ \n\t\t\t\t\t\u0026IsRepoAdministrator = \u0026Repository.IsGAMAdministrator(\u0026Errors)\n\t\t\t\t\tItem\n\t\t\t\t\twhere \u0026IsRepoAdministrator\n\t\t\t\t\t{\n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink = Link(\"GAMWWRepositories\")\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"WWP_GAM_Repositories\" \n\t\t\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"Repository Configuration\"\n\t\t\t\t\t\tlink =  Link(\"GAMRepositoryConfiguration\", 0)\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"WWP_GAM_Configuration\"\n\t\t\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"Repository Connections\"\n\t\t\t\t\t\tlink = Link(\"GAMWWConnections\")\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"WWP_GAM_Connections\" \n\t\t\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"Change Working Repository\"\n\t\t\t\t\t\tlink = Link(\"GAMChangeRepository\")\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"WWP_GAM_WorkingRepository\" \n\t\t\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"WWP_GAM_OtherConfigurations\"\n\t\t\t\tlink =\"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \"WWP_GAM_OtherConfigurations\" \n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{ \n\t\t\t\t\tItem\n\t\t\t\t\t{\n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"WWP_GAM_SecurityPolicies\"\n\t\t\t\t\t\tlink = Link(\"GAMWWSecurityPolicy\")\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"WWP_GAM_SecurityPolicies\" \n\t\t\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"WWP_GAM_AuthenticationTypes\"\n\t\t\t\t\t\tlink =  Link(\"GAMWWAuthTypes\")\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"WWP_GAM_AuthenticationTypes\"\n\t\t\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\t\t\n\t\t\t\t\t}\n          \n          Item\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"WWP_GAM_EventSubscriptions\"\n\t\t\t\t\t\tlink =  Link(\"GAMWWEventSubscriptions\")\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"WWP_GAM_EventSubscriptions\"\n\t\t\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t}\n\t\t\t}\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =GAMChangeYourPassword.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \"WWP_GAM_ChangePassword\" \n\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\n\t\t\t}\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"WWP_GAM_Applications\"\n\t\t\t\tlink =Link(\"GAMWWApplications\")\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \"WWP_GAM_Applications\" \n\t\t\t\tauthorizationKey = \"\"\n\t\t\t}\n\t\t}\n\t}\n\t\n}\n",
+                              "cleanSource":  "DVelop_Menu\n{\n\t\n\t\u0026id = 0\n\n\tItem\n\t{ \n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlink =\tHome.Link()\n\t\tlinkTarget =\"\" \n\t\ticonClass = !\"menu-icon fa fa-home\"\n\t\tcaption = \"WWP_HomeTitle\"  \n\t} \n\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlink =\"\"\n\t\tlinkTarget =\"\" \n\t\ticonClass = !\"menu-icon fa fa-tasks\"\n\t\tcaption = !\"Menu Option 1\" \n\t\t\n\t\tsubItems\n\t\t{ \n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = \"\"\n\t\t\t\tlinkTarget =\"\"  \n\t\t\t\tcaption = !\"Menu Option 1.1\" \n\t\t\t\tauthorizationKey = \"\" \n\t\t\t}\n\t\t\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = \"\"\n\t\t\t\tlinkTarget =\"\"  \n\t\t\t\tcaption = !\"Menu Option 1.2\" \n\t\t\t\tauthorizationKey = !\"\" \n\t\t\t}\n\t\t\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = \"\"\n\t\t\t\tlinkTarget =\"\"  \n\t\t\t\tcaption = !\"Menu Option 1.3\" \n\t\t\t\tauthorizationKey = !\"\"\n\t\t\t}\n\t\t}\n\t}\n\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlink = \"\"\n\t\tlinkTarget =\"\" \n\t\ticonClass = !\"menu-icon fa fa-key\"\n\t\tcaption = !\"Menu Option 2\" \n\t\t\n\t\tsubItems\n\t\t{ \n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \"Menu Option 2.1\" \n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{ \n\t\t\t\t\tItem\n\t\t\t\t\t{\n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink = \"\"\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"Menu Option 2.1.1\" \n\t\t\t\t\t\tauthorizationKey = !\"\"\n\t\t\t\t\t}\n\t\t\t\t\tItem\n\t\t\t\t\t{\n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink = \"\"\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"Menu Option 2.1.2\" \n\t\t\t\t\t\tauthorizationKey = !\"\"\n\t\t\t\t\t}\n\t\t\t\t\tItem\n\t\t\t\t\t{\n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink = \"\"\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"Menu Option 2.1.3\" \n\t\t\t\t\t\tauthorizationKey = !\"\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\n\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \"Menu Option 2.2\" \n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{ \n\t\t\t\t\tItem\n\t\t\t\t\t{\n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink = \"\"\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"Menu Option 2.2.1\" \n\t\t\t\t\t\tauthorizationKey = !\"\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t} \n\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlink = !\"\"\n\t\tlinkTarget = !\"\" \n\t\ticonClass = !\"menu-icon fa fa-briefcase\"\n\t\tcaption = !\"Menu Option 3\" \n\t\tauthorizationKey = !\"\" //allow access to everybody\n\t}\n \n    \n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlink =\"\"\n\t\tlinkTarget =\"\" \n\t\ticonClass = !\"menu-icon fa fa-edit\"\n\t\tcaption = !\"Developer Menu\"\n\n\t\t\n\t\tsubItems \n\t\t{ \n\t\t\tItem [Count=20] Input \u0026ProgramName in ListWWPPrograms()\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = \u0026ProgramName.Link\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \u0026ProgramName.Description\t\t\t\t\n\t\t \t}\n\t\t}\n  }\n\n\t\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"WWP_GAM_SecurityOfTheApplication\"\n\t\tlink =\"\"\n\t\tlinkTarget =\"\" \n\t\ticonClass = !\"menu-icon fa fa-key\"\n\t\tcaption = \"WWP_GAM_GAMSecurity\" \n\t\tsubItems\n\t\t{ \n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"WWP_GAM_Users\"\n\t\t\t\tlink =GAMWWUsers.Link()\n\t\t\t\tlinkTarget =\"\"\n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \"WWP_GAM_Users\"\n\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\n\t\t\t}\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"WWP_GAM_Roles\"\n\t\t\t\tlink =GAMWWRoles.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n        caption = \"WWP_GAM_Roles\"\n\t\t\t\ticonClass = !\"\"\n\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\n\t\t\t}\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \"WWP_GAM_Repository\" \n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{ \n\t\t\t\t\t\u0026IsRepoAdministrator = \u0026Repository.IsGAMAdministrator(\u0026Errors)\n\t\t\t\t\tItem\n\t\t\t\t\twhere \u0026IsRepoAdministrator\n\t\t\t\t\t{\n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink = Link(\"GAMWWRepositories\")\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"WWP_GAM_Repositories\" \n\t\t\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"Repository Configuration\"\n\t\t\t\t\t\tlink =  Link(\"GAMRepositoryConfiguration\", 0)\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"WWP_GAM_Configuration\"\n\t\t\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"Repository Connections\"\n\t\t\t\t\t\tlink = Link(\"GAMWWConnections\")\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"WWP_GAM_Connections\" \n\t\t\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"Change Working Repository\"\n\t\t\t\t\t\tlink = Link(\"GAMChangeRepository\")\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"WWP_GAM_WorkingRepository\" \n\t\t\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"WWP_GAM_OtherConfigurations\"\n\t\t\t\tlink =\"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \"WWP_GAM_OtherConfigurations\" \n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{ \n\t\t\t\t\tItem\n\t\t\t\t\t{\n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"WWP_GAM_SecurityPolicies\"\n\t\t\t\t\t\tlink = Link(\"GAMWWSecurityPolicy\")\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"WWP_GAM_SecurityPolicies\" \n\t\t\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"WWP_GAM_AuthenticationTypes\"\n\t\t\t\t\t\tlink =  Link(\"GAMWWAuthTypes\")\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"WWP_GAM_AuthenticationTypes\"\n\t\t\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\t\t\n\t\t\t\t\t}\n          \n          Item\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"WWP_GAM_EventSubscriptions\"\n\t\t\t\t\t\tlink =  Link(\"GAMWWEventSubscriptions\")\n\t\t\t\t\t\tlinkTarget =\"\"  \n\t\t\t\t\t\tcaption = \"WWP_GAM_EventSubscriptions\"\n\t\t\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t}\n\t\t\t}\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =GAMChangeYourPassword.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \"WWP_GAM_ChangePassword\" \n\t\t\t\tauthorizationKey = \"\"\n\t\t\t\t\n\t\t\t}\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"WWP_GAM_Applications\"\n\t\t\t\tlink =Link(\"GAMWWApplications\")\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"\"\n\t\t\t\tcaption = \"WWP_GAM_Applications\" \n\t\t\t\tauthorizationKey = \"\"\n\t\t\t}\n\t\t}\n\t}\n\t\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.ListWWPPrograms",
+                                         "WWPBaseObjects.ProgramNames",
+                                         "WWPBaseObjects.DVelop_Menu",
+                                         "Home",
+                                         "GAMChangeYourPassword",
+                                         "GAMWWUsers",
+                                         "GAMWWRoles"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_GetSearchWCData"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "DVelop_Menu"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "id",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "id"
+                           },
+                           {
+                               "name":  "ProgramName",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Program Name"
+                           },
+                           {
+                               "name":  "Repository",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Repository"
+                           },
+                           {
+                               "name":  "Errors",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Errors"
+                           },
+                           {
+                               "name":  "IsRepoAdministrator",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Is Repo Administrator"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

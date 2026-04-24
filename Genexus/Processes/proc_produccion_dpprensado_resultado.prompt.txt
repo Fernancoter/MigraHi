@@ -1,0 +1,42 @@
+﻿
+=== DataProvider: Produccion.DPPrensadoResultado ===
+
+--- Source (Source) ---
+SDTPrensadoResultado
+Where Produccion.PrensadoId = &PrensadoId
+{
+	PrensadoResultadoId  = PrensadoResultadoId 
+PrensadoResultadoPiezasBuenas  = PrensadoResultadoPiezasBuenas 
+PrensadoResultadoPiezasMolino  = PrensadoResultadoPiezasMolino 
+PrensadoResultadoMermaKg  = PrensadoResultadoMermaKg 
+PrensadoResultadoNoPalets  = PrensadoResultadoNoPalets 
+PrensadoResultadoCarretesSobrantes  = PrensadoResultadoCarretesSobrantes 
+PrensadoResultadoObservaciones  = PrensadoResultadoObservaciones 
+PrensadoResultadoRPMLinea  = PrensadoResultadoRPMLinea 
+PrensadoResultadoGPMPrensa  = DB.PrensadoResultadoGPMPrensa 
+PrensadoResultadoGPMTotal  = PrensadoResultadoGPMTotal 
+PrensadoResultadoHerramientas  = PrensadoResultadoHerramientas 
+PrensadoId  = PrensadoId 
+PrensadoLevasUnidadMedida  = PrensadoLevasUnidadMedida 
+PrensadoLevasKgEntrada  = PrensadoLevasKgEntrada 
+PrensadoLevasKgSalida  = PrensadoLevasKgSalida 
+PrensadoLevasGradosEntrada  = PrensadoLevasGradosEntrada 
+PrensadoLevasGradosSalida  = PrensadoLevasGradosSalida 
+PrensadoRodillosUnidadMedida  = PrensadoRodillosUnidadMedida 
+PrensadoRodillosKgEntrada  = PrensadoRodillosKgEntrada 
+PrensadoRodillosKgSalida  = PrensadoRodillosKgSalida 
+PrensadoRodillosGradosEntrada  = PrensadoRodillosGradosEntrada 
+PrensadoRodillosGradosSalida  = PrensadoRodillosGradosSalida 
+
+}
+
+--- Rules (Rules) ---
+parm(&PrensadoId);
+
+
+=== SDT: Produccion.SDTPrensadoResultado ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

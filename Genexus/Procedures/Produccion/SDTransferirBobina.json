@@ -1,0 +1,186 @@
+﻿{
+    "uniqueId":  "d99d7cef-df9a-447e-82ae-bf4c91ef4fee",
+    "name":  "SDTransferirBobina",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDTransferir Bobina",
+    "filePath":  "Procedures/Produccion/SDTransferirBobina.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "        \n        //Reasignar Bobinas sgte turno\n\tfor \u0026SDTBobinaItem in \u0026SDTBobinaPendiente\n\t\t\u0026Bobina.Load(\u0026SDTBobinaItem.BobinaId)\n\t\t\u0026Bobina.ExtrusionId = \u0026NextExtId\n\t\t\u0026Bobina.Save()\n\t\tcommit\n\t\t\n\t\tif(\u0026CambioMaterial)\n\t\t\tBobinaNoSerie.Call(\u0026SDTBobinaItem.BobinaId,\u0026NextExtId)\n\t\tendif\n\t\n\tendfor\n",
+                              "cleanSource":  "        \n        //Reasignar Bobinas sgte turno\n\tfor \u0026SDTBobinaItem in \u0026SDTBobinaPendiente\n\t\t\u0026Bobina.Load(\u0026SDTBobinaItem.BobinaId)\n\t\t\u0026Bobina.ExtrusionId = \u0026NextExtId\n\t\t\u0026Bobina.Save()\n\t\tcommit\n\t\t\n\t\tif(\u0026CambioMaterial)\n\t\t\tBobinaNoSerie.Call(\u0026SDTBobinaItem.BobinaId,\u0026NextExtId)\n\t\tendif\n\t\n\tendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026NextExtId, in:\u0026SDTBobinaPendiente, in:\u0026CambioMaterial);\n",
+                              "cleanSource":  "parm(in:\u0026NextExtId, in:\u0026SDTBobinaPendiente, in:\u0026CambioMaterial);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.BobinaNoSerie",
+                                         "Produccion.SDTBobina",
+                                         "DB.Extrusion",
+                                         "DB.Bobina",
+                                         "BobinaNoSerie"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Bobina"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Bobina"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Bobina",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina"
+                           },
+                           {
+                               "name":  "CambioMaterial",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Cambio Material"
+                           },
+                           {
+                               "name":  "Extrusion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion"
+                           },
+                           {
+                               "name":  "ExtrusionFecha",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Fecha"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "ExtrusoraId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusora Id"
+                           },
+                           {
+                               "name":  "NextExtId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Next Ext Id"
+                           },
+                           {
+                               "name":  "SDTBobinaItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDTBobina Item"
+                           },
+                           {
+                               "name":  "SDTBobinaPendiente",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "SDTBobina Pendiente"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,136 @@
+﻿{
+    "uniqueId":  "16382ef3-196e-4757-a382-342a6a854919",
+    "name":  "WWP_GetUnreadWebNotifications",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects.Notifications.Web",
+    "description":  "Get Unread Web Notifications",
+    "filePath":  "Procedures/WWPBaseObjects/Notifications/Web/WWP_GetUnreadWebNotifications.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "WWP_Logger.Debug(\u0026Pgmname, !\"Getting unread notifications\")\n\n\u0026SDTNotificationsData = new()\n\nFor Each WWPBaseObjects.Notifications.Web.WWP_WebNotification \n\tOrder (WWPWebNotificationCreated)\n  \tWhere WWPUserExtendedId = \u0026UserGUID\n\tWhere WWPWebNotificationRead.IsNull() or WWPWebNotificationRead.IsEmpty()\n\t\n\t\u0026SDTNotificationsDataItem = new()\n\t\u0026SDTNotificationsDataItem.NotificationIconClass = WWPWebNotificationIcon\n\t\u0026SDTNotificationsDataItem.NotificationTitle = WWPWebNotificationTitle\n\t\u0026SDTNotificationsDataItem.NotificationDescription = WWPWebNotificationText\n\t\u0026SDTNotificationsDataItem.NotificationDatetime = WWPWebNotificationCreated\n\t\u0026SDTNotificationsData.Add(\u0026SDTNotificationsDataItem)\nwhen none\n\tWWPBaseObjects.WWP_Logger.Debug(\u0026Pgmname, !\"No unread notifications found\")\nEndFor\n",
+                              "cleanSource":  "WWP_Logger.Debug(\u0026Pgmname, !\"Getting unread notifications\")\n\n\u0026SDTNotificationsData = new()\n\nFor Each WWPBaseObjects.Notifications.Web.WWP_WebNotification \n\tOrder (WWPWebNotificationCreated)\n  \tWhere WWPUserExtendedId = \u0026UserGUID\n\tWhere WWPWebNotificationRead.IsNull() or WWPWebNotificationRead.IsEmpty()\n\t\n\t\u0026SDTNotificationsDataItem = new()\n\t\u0026SDTNotificationsDataItem.NotificationIconClass = WWPWebNotificationIcon\n\t\u0026SDTNotificationsDataItem.NotificationTitle = WWPWebNotificationTitle\n\t\u0026SDTNotificationsDataItem.NotificationDescription = WWPWebNotificationText\n\t\u0026SDTNotificationsDataItem.NotificationDatetime = WWPWebNotificationCreated\n\t\u0026SDTNotificationsData.Add(\u0026SDTNotificationsDataItem)\nwhen none\n\tWWPBaseObjects.WWP_Logger.Debug(\u0026Pgmname, !\"No unread notifications found\")\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026UserGUID, out:\u0026SDTNotificationsData);\n",
+                              "cleanSource":  "parm(in:\u0026UserGUID, out:\u0026SDTNotificationsData);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_Logger",
+                                         "WWPBaseObjects.Notifications.Common.WWP_SDTNotificationsData",
+                                         "WWPBaseObjects.Notifications.Web.WWP_WebNotification"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SDTNotificationsData",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "SDTNotifications Data"
+                           },
+                           {
+                               "name":  "SDTNotificationsDataItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDTNotifications Data Item"
+                           },
+                           {
+                               "name":  "UserGUID",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "User GUID"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

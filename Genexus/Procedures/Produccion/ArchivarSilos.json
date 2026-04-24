@@ -1,0 +1,128 @@
+﻿{
+    "uniqueId":  "dcb868e5-b4bc-49cf-922b-99a3fd2e93fb",
+    "name":  "ArchivarSilos",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Archivar Silos",
+    "filePath":  "Procedures/Produccion/ArchivarSilos.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026Silo.Load(\u0026SiloId)\n\u0026Silo.SiloActivo = false\n\u0026Silo.Save()\n\nIf \u0026Silo.Success()\n\tCommit\n\tMsg(\u0027Silo archivado\u0027)\n\tlistarSilos.Call()\nElse\n\tMsg(\u0027No se pudo archivar el silo\u0027)\nEndIf\n",
+                              "cleanSource":  "\u0026Silo.Load(\u0026SiloId)\n\u0026Silo.SiloActivo = false\n\u0026Silo.Save()\n\nIf \u0026Silo.Success()\n\tCommit\n\tMsg(\u0027Silo archivado\u0027)\n\tlistarSilos.Call()\nElse\n\tMsg(\u0027No se pudo archivar el silo\u0027)\nEndIf"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026SiloId);\n",
+                              "cleanSource":  "parm(in:\u0026SiloId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Silo",
+                                         "Produccion.listarSilos",
+                                         "listarSilos"
+                                     ],
+                         "calledBy":  [
+                                          "listarSilos"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Silo"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Silo"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SiloId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Silo Id"
+                           },
+                           {
+                               "name":  "Silo",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Silo"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

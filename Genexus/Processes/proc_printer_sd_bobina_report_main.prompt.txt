@@ -1,0 +1,113 @@
+﻿
+=== Procedure: PrinterSD.BobinaReportMain ===
+
+--- Source (Source) ---
+
+&EtiquetaBobinaSDT = ObtenerSDTEtiquetaBobina.Udp(&BobinaId)
+
+&BobinaNoserie = &EtiquetaBobinaSDT.BobinaNoSerie
+
+//&linkURL='https://sdx.genexus.com/agetqrcode.aspx?'+&EtiquetaBobinaSDT.BobinaNoSerie
+//&linkURL='https://barcode.tec-it.com/barcode.ashx?data='+&EtiquetaBobinaSDT.BobinaNoSerie + '&code=Code128'
+//&QRImage.FromURL(&linkURL)
+
+&QRImage = ObtenerBarCode.Udp(&EtiquetaBobinaSDT.BobinaNoSerie)
+
+print printBlock1
+
+--- Rules (Rules) ---
+Parm(in:&BobinaId,in:&PDFNombre);
+Output_File(&PDFNombre, 'PDF');
+
+
+=== SDT: PrinterSD.EtiquetaBobinaSDT ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== Procedure: PrinterSD.ObtenerBarCode ===
+
+--- Source (Source) ---
+&ImgTxt = &StringLibrary.GetBarCodeBase64(&BarCodeValue,2)
+&ImgBlob.FromBase64String(&ImgTxt)
+GuardarBarCode.Call(&BarCodeValue, &ImgBlob)
+
+For Each
+	Where BarCodeValue = &BarCodeValue
+	&BarCodeImage = BarCodeImage
+	Exit
+EndFor
+
+--- Rules (Rules) ---
+parm(In:&BarCodeValue, Out:&BarCodeImage);
+
+
+=== Procedure: PrinterSD.ObtenerSDTEtiquetaBobina ===
+
+--- Source (Source) ---
+
+
+For each
+	Where BobinaId = &BobinaId
+
+	&EtiquetaBobinaSDT.BobinaId = BobinaId
+	&EtiquetaBobinaSDT.ExtrusionId = ExtrusionId
+	&EtiquetaBobinaSDT.ExtrusionFecha = ExtrusionFecha
+	&EtiquetaBobinaSDT.ExtrusionOperadorNombre = ExtrusionOperadorNombre
+	&EtiquetaBobinaSDT.BobinaNoSerie = BobinaNoSerie
+	&EtiquetaBobinaSDT.BobinaOrigen = BobinaOrigen
+	&EtiquetaBobinaSDT.BobinaHoraInicio = BobinaHoraInicio
+	&EtiquetaBobinaSDT.BobinaHoraSalida = BobinaHoraSalida
+	&EtiquetaBobinaSDT.BobinaNo = BobinaNo
+	&EtiquetaBobinaSDT.BobinaKg = BobinaKg
+	&EtiquetaBobinaSDT.BobinaMermaKg = BobinaMermaKg
+	&EtiquetaBobinaSDT.BobinaEspesor = BobinaEspesor
+	&EtiquetaBobinaSDT.BobinaObservaciones = BobinaObservaciones
+	&EtiquetaBobinaSDT.BobinaEstado = BobinaEstado
+	&EtiquetaBobinaSDT.BobinaCarreras = BobinaCarreras
+	&EtiquetaBobinaSDT.BobinaIniciaReposo = BobinaIniciaReposo
+	&EtiquetaBobinaSDT.BobinaMinutosEnReposo = BobinaMinutosEnReposo
+	&EtiquetaBobinaSDT.BobinaMotivoMolino = BobinaMotivoMolino
+	&EtiquetaBobinaSDT.BobinaProductoId = BobinaProductoId
+	&EtiquetaBobinaSDT.BobinaProductoNombre = BobinaProductoNombre
+	&EtiquetaBobinaSDT.ExtrusionExtrusoraNombre = ExtrusionExtrusoraNombre
+	&EtiquetaBobinaSDT.ExtrusionExtrusoraIdTexto = ExtrusionExtrusoraId.ToString().Trim()
+	&EtiquetaBobinaSDT.ExtrusionLoteSilo = ExtrusionLoteSilo
+	&EtiquetaBobinaSDT.ExtrusionSiloNombre = ExtrusionSiloNombre
+	&EtiquetaBobinaSDT.BobinaDesviacionEstandar = BobinaDesviacionEstandar
+	&EtiquetaBobinaSDT.BobinaColorEstacion = BobinaColorEstacion
+
+	exit
+endfor
+
+--- Rules (Rules) ---
+parm(in:&BobinaId, out:&EtiquetaBobinaSDT);
+
+
+=== Procedure: PrinterSD.GuardarBarCode ===
+
+--- Source (Source) ---
+For Each
+	Where BarCodeValue = &BarCodeValue
+	delete
+EndFor
+&datetime = datetime.Now()
+&datetime = &datetime.AddDays(-1)
+For Each
+	Where BarCodeDateTime < &datetime or BarCodeDateTime.IsNull()
+	delete
+EndFor
+
+
+New
+	BarCodeValue = &BarCodeValue
+	BarCodeImage = &ImgBlob
+	BarCodeDateTime = datetime.Now()
+endnew
+commit
+
+--- Rules (Rules) ---
+parm(In:&BarCodeValue,In: &ImgBlob);
+

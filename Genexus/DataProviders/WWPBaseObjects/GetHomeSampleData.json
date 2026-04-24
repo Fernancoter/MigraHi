@@ -1,0 +1,81 @@
+﻿{
+    "uniqueId":  "d39eea60-4932-4768-a264-9944b5084287",
+    "name":  "GetHomeSampleData",
+    "type":  "DataProvider",
+    "module":  "WWPBaseObjects",
+    "description":  "Get Home Sample Data",
+    "filePath":  "DataProviders/WWPBaseObjects/GetHomeSampleData.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "HomeSampleData\n{\n\nProductName = \"Beer\"\nProductPrice = 1200\nProductVolume = 2000\nProductWeight = 400\nProductDiscount = 10\nProductStatus = HomeSampleDataStatus.Available\n}\n\nHomeSampleData\n{\n\nProductName = \"Wine\"\nProductPrice = 890\nProductVolume = 100\nProductWeight = 3000\nProductDiscount = 12\nProductStatus = HomeSampleDataStatus.Missing\n}\n\nHomeSampleData\n{\n\nProductName = \"Lollipop\"\nProductPrice = 200\nProductVolume = 3098\nProductWeight = 250\nProductDiscount = 20\nProductStatus = HomeSampleDataStatus.Soon\n}\n\nHomeSampleData\n{\n\nProductName = \"Apple\"\nProductPrice = 48\nProductVolume = 879\nProductWeight = 235\nProductDiscount = 42\nProductStatus = HomeSampleDataStatus.Available\n}\n\nHomeSampleData\n{\n\nProductName = \"Cherries\"\nProductPrice = 232\nProductVolume = 6788\nProductWeight = 213\nProductDiscount = 34\nProductStatus = HomeSampleDataStatus.Ordered\n}\n\nHomeSampleData\n{\n\nProductName = \"Steak\"\nProductPrice = 345\nProductVolume = 370\nProductWeight = 230\nProductDiscount = 0\nProductStatus = HomeSampleDataStatus.Available\n}\n\nHomeSampleData\n{\n\nProductName = \"Cupcake\"\nProductPrice = 340\nProductVolume = 1200\nProductWeight = 230\nProductDiscount = 10\nProductStatus = HomeSampleDataStatus.Ordered\n}\n\nHomeSampleData\n{\n\nProductName = \"Strawberry\"\nProductPrice = 120\nProductVolume = 600\nProductWeight = 239\nProductDiscount = 10\nProductStatus = HomeSampleDataStatus.Available\n}\n\nHomeSampleData\n{\n\nProductName = \"Ice cream\"\nProductPrice = 70\nProductVolume = 1200\nProductWeight = 120\nProductDiscount = 8\nProductStatus = HomeSampleDataStatus.Missing\n}\n\nHomeSampleData\n{\n\nProductName = \"Frapuccino\"\nProductPrice = 670\nProductVolume = 124\nProductWeight = 489\nProductDiscount = 5\nProductStatus = HomeSampleDataStatus.Available\n}\n\nHomeSampleData\n{\n\nProductName = \"Candy\"\nProductPrice = 1200\nProductVolume = 2000\nProductWeight = 400\nProductDiscount = 10\nProductStatus = HomeSampleDataStatus.Available\n}\n\nHomeSampleData\n{\n\nProductName = \"Pizza\"\nProductPrice = 3400\nProductVolume = 120\nProductWeight = 320\nProductDiscount = 8\nProductStatus = HomeSampleDataStatus.Ordered\n}\n\n",
+                              "cleanSource":  "HomeSampleData\n{\n\nProductName = \"Beer\"\nProductPrice = 1200\nProductVolume = 2000\nProductWeight = 400\nProductDiscount = 10\nProductStatus = HomeSampleDataStatus.Available\n}\n\nHomeSampleData\n{\n\nProductName = \"Wine\"\nProductPrice = 890\nProductVolume = 100\nProductWeight = 3000\nProductDiscount = 12\nProductStatus = HomeSampleDataStatus.Missing\n}\n\nHomeSampleData\n{\n\nProductName = \"Lollipop\"\nProductPrice = 200\nProductVolume = 3098\nProductWeight = 250\nProductDiscount = 20\nProductStatus = HomeSampleDataStatus.Soon\n}\n\nHomeSampleData\n{\n\nProductName = \"Apple\"\nProductPrice = 48\nProductVolume = 879\nProductWeight = 235\nProductDiscount = 42\nProductStatus = HomeSampleDataStatus.Available\n}\n\nHomeSampleData\n{\n\nProductName = \"Cherries\"\nProductPrice = 232\nProductVolume = 6788\nProductWeight = 213\nProductDiscount = 34\nProductStatus = HomeSampleDataStatus.Ordered\n}\n\nHomeSampleData\n{\n\nProductName = \"Steak\"\nProductPrice = 345\nProductVolume = 370\nProductWeight = 230\nProductDiscount = 0\nProductStatus = HomeSampleDataStatus.Available\n}\n\nHomeSampleData\n{\n\nProductName = \"Cupcake\"\nProductPrice = 340\nProductVolume = 1200\nProductWeight = 230\nProductDiscount = 10\nProductStatus = HomeSampleDataStatus.Ordered\n}\n\nHomeSampleData\n{\n\nProductName = \"Strawberry\"\nProductPrice = 120\nProductVolume = 600\nProductWeight = 239\nProductDiscount = 10\nProductStatus = HomeSampleDataStatus.Available\n}\n\nHomeSampleData\n{\n\nProductName = \"Ice cream\"\nProductPrice = 70\nProductVolume = 1200\nProductWeight = 120\nProductDiscount = 8\nProductStatus = HomeSampleDataStatus.Missing\n}\n\nHomeSampleData\n{\n\nProductName = \"Frapuccino\"\nProductPrice = 670\nProductVolume = 124\nProductWeight = 489\nProductDiscount = 5\nProductStatus = HomeSampleDataStatus.Available\n}\n\nHomeSampleData\n{\n\nProductName = \"Candy\"\nProductPrice = 1200\nProductVolume = 2000\nProductWeight = 400\nProductDiscount = 10\nProductStatus = HomeSampleDataStatus.Available\n}\n\nHomeSampleData\n{\n\nProductName = \"Pizza\"\nProductPrice = 3400\nProductVolume = 120\nProductWeight = 320\nProductDiscount = 8\nProductStatus = HomeSampleDataStatus.Ordered\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.HomeSampleData"
+                                     ],
+                         "calledBy":  [
+                                          "GetHomeSampleNameValueData",
+                                          "GetHomeSampleDataService"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "HomeSampleData"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

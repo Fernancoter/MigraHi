@@ -1,0 +1,34 @@
+﻿
+=== DataProvider: Produccion.DPPrensadoBobinaSDT ===
+
+--- Source (Source) ---
+SDTPrensadoBobina
+Where PrensadoBobinaId = &PrensadoBobinaId
+{
+	SDTPrensadoBobinaItem
+	{
+		PrensadoBobinaId  = PrensadoBobinaId 
+		PrensadoId  = PrensadoId 
+		BobinaId  = BobinaId 
+		BobinaNoSerie  = BobinaNoSerie 
+		BobinaEstado  = BobinaEstado 
+		BobinaNo  = BobinaNo 
+		BobinaOrigen  = BobinaOrigen 
+		BobinaKg  = BobinaKg 
+		BobinaKgTexto  = trim( BobinaKg.ToFormattedString())
+		PrensadoBobinaCantCarrera  = PrensadoBobinaCantCarrera 
+		BobinaHoraSalida = BobinaHoraSalida
+		
+	}
+}
+
+--- Rules (Rules) ---
+parm(&PrensadoBobinaId);
+
+
+=== SDT: Produccion.SDTPrensadoBobina ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

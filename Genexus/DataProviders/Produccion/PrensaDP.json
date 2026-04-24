@@ -1,0 +1,82 @@
+﻿{
+    "uniqueId":  "8a3e36b9-a57b-4e0b-a72f-9c572a2c1988",
+    "name":  "PrensaDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Prensa DP",
+    "filePath":  "DataProviders/Produccion/PrensaDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTPrensa\n{\n\tSDTPrensaItem\n\t{\n\t\tPrensaId = PrensaId\n\t\tPrensaNombre = PrensaNombre\n\t\tPrensaImagen = PrensaImagen\n\t}\n}\n",
+                              "cleanSource":  "SDTPrensa\n{\n\tSDTPrensaItem\n\t{\n\t\tPrensaId = PrensaId\n\t\tPrensaNombre = PrensaNombre\n\t\tPrensaImagen = PrensaImagen\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTPrensa"
+                                     ],
+                         "calledBy":  [
+                                          "gestionarPrensaProducto",
+                                          "PrensadoDelDia",
+                                          "PrensaObservacion"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTPrensa"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

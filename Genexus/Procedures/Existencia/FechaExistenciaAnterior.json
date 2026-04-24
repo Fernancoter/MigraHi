@@ -1,0 +1,134 @@
+﻿{
+    "uniqueId":  "388bd932-61a2-41e2-a0a2-39050b10486f",
+    "name":  "FechaExistenciaAnterior",
+    "type":  "Procedure",
+    "module":  "Existencia",
+    "description":  "Fecha Existencia Anterior",
+    "filePath":  "Procedures/Existencia/FechaExistenciaAnterior.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\tfor each DB.Existencia\n\t\tOrder (ExistenciaFechaHora)\n\t\twhere ExistenciaId \u003e 0\n\t\twhere Not ExistenciaId = \u0026ExistenciaId\n\t\t\u0026FechaHoraAnterior = ExistenciaFechaHora\n\t\tExit\n\twhen none\n\t\t\u0026FechaHoraAnterior.SetEmpty()\n\tendfor\n",
+                              "cleanSource":  "\t\n\tfor each DB.Existencia\n\t\tOrder (ExistenciaFechaHora)\n\t\twhere ExistenciaId \u003e 0\n\t\twhere Not ExistenciaId = \u0026ExistenciaId\n\t\t\u0026FechaHoraAnterior = ExistenciaFechaHora\n\t\tExit\n\twhen none\n\t\t\u0026FechaHoraAnterior.SetEmpty()\n\tendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExistenciaId, out:\u0026FechaHoraAnterior);\n",
+                              "cleanSource":  "parm(in:\u0026ExistenciaId, out:\u0026FechaHoraAnterior);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Existencia"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "RegistroFechaHora",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Registro Fecha Hora"
+                           },
+                           {
+                               "name":  "FechaHoraAnterior",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATETIME",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Fecha Hora Anterior"
+                           },
+                           {
+                               "name":  "ExistenciaId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Existencia Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

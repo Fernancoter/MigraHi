@@ -1,0 +1,135 @@
+﻿{
+    "uniqueId":  "719de579-f46d-4b00-a49a-6232dc75f19c",
+    "name":  "MedirBobinas",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Medir Bobinas",
+    "filePath":  "Procedures/Produccion/MedirBobinas.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "        \n\t//Cambiar estado de las bobinas En Proceso -: En Medición\n\tfor each DB.Bobina\n\t\twhere BobinaId \u003e 0\n\t\twhere ExtrusionId = \u0026ExtrusionId\n\t\twhere BobinaEstado = EstadoBobina.EnProceso\n\t\t\u0026BobinaId = BobinaId\n\t\t\n\t\t\u0026Bobina.Load(\u0026BobinaId)\n\t\t\u0026Bobina.BobinaEstado = EstadoBobina.EnMedicion\n\t\t\u0026Bobina.BobinaIniciaReposo = Now()\n\t\t\u0026Bobina.BobinaHoraSalida = Now()\n\t\t\u0026Bobina.Save()\n\t\t\n\t\tif(\u0026Bobina.Success())\n\t\t\tcommit\n\t\t\t\n\t\t\t//SDPAddNotification(\u0026BobinaId, 1)\n\t\t\tSDPAddNotification(\u0026BobinaId, NotificacionTipo.Bobina)\n\t\tendif\n\tendfor\n",
+                              "cleanSource":  "        \n\t//Cambiar estado de las bobinas En Proceso -: En Medición\n\tfor each DB.Bobina\n\t\twhere BobinaId \u003e 0\n\t\twhere ExtrusionId = \u0026ExtrusionId\n\t\twhere BobinaEstado = EstadoBobina.EnProceso\n\t\t\u0026BobinaId = BobinaId\n\t\t\n\t\t\u0026Bobina.Load(\u0026BobinaId)\n\t\t\u0026Bobina.BobinaEstado = EstadoBobina.EnMedicion\n\t\t\u0026Bobina.BobinaIniciaReposo = Now()\n\t\t\u0026Bobina.BobinaHoraSalida = Now()\n\t\t\u0026Bobina.Save()\n\t\t\n\t\tif(\u0026Bobina.Success())\n\t\t\tcommit\n\t\t\t\n\t\t\t//SDPAddNotification(\u0026BobinaId, 1)\n\t\t\tSDPAddNotification(\u0026BobinaId, NotificacionTipo.Bobina)\n\t\tendif\n\tendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExtrusionId);\n",
+                              "cleanSource":  "parm(in:\u0026ExtrusionId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "SDPAddNotification",
+                                         "DB.Bobina"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Bobina"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Bobina"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "Bobina",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina"
+                           },
+                           {
+                               "name":  "BobinaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

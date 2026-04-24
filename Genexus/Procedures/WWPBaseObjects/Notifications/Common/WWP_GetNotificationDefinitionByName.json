@@ -1,0 +1,134 @@
+﻿{
+    "uniqueId":  "88d7f774-2af4-4adf-b6b8-88bcda14135f",
+    "name":  "WWP_GetNotificationDefinitionByName",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects.Notifications.Common",
+    "description":  "WWP_Get Notification Definition By Name",
+    "filePath":  "Procedures/WWPBaseObjects/Notifications/Common/WWP_GetNotificationDefinitionByName.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026WWPNotificationDefinitionId = 0\nFor Each WWP_NotificationDefinition\n\tWhere WWPNotificationDefinitionName = \u0026WWPNotificationDefinitionName\n\tWhere WWPEntityId = \u0026WWPEntityId\n\t\u0026WWPNotificationDefinitionId = WWPNotificationDefinitionId\n\tExit\nEndFor\n",
+                              "cleanSource":  "\u0026WWPNotificationDefinitionId = 0\nFor Each WWP_NotificationDefinition\n\tWhere WWPNotificationDefinitionName = \u0026WWPNotificationDefinitionName\n\tWhere WWPEntityId = \u0026WWPEntityId\n\t\u0026WWPNotificationDefinitionId = WWPNotificationDefinitionId\n\tExit\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026WWPNotificationDefinitionName, in:\u0026WWPEntityId, out:\u0026WWPNotificationDefinitionId);\n",
+                              "cleanSource":  "Parm(in:\u0026WWPNotificationDefinitionName, in:\u0026WWPEntityId, out:\u0026WWPNotificationDefinitionId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.Notifications.Common.WWP_NotificationDefinition"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_UpdateNotificationDefinitions"
+                                      ],
+                         "tablesRead":  [
+                                            "WWP_NotificationDefinition"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "WWPEntityId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Entity Id"
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Notification Definition Id"
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionName",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Notification Definition Internal Name"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

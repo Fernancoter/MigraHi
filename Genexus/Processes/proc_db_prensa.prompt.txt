@@ -1,0 +1,7 @@
+﻿
+=== Transaction: DB.Prensa ===
+
+--- Start (Event) ---
+
+--- After Trn (Event) ---
+

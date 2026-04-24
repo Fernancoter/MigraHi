@@ -1,0 +1,112 @@
+﻿{
+    "uniqueId":  "21053622-870a-4b8c-a8b2-0405e8acbbfb",
+    "name":  "SecGAMGetAdvancedSecurityWWPFunctionalities",
+    "type":  "DataProvider",
+    "module":  "WWPBaseObjects",
+    "description":  "Get Advanced Security WWP Functionalities",
+    "filePath":  "DataProviders/WWPBaseObjects/SecGAMGetAdvancedSecurityWWPFunctionalities.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "Functionalities\n{\n}\n",
+                              "cleanSource":  "Functionalities\n{\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.SecGAMFunctionalitiesToLoad"
+                                     ],
+                         "calledBy":  [
+                                          "SecGAMUpdatePermissions"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SecGAMFunctionalityKeyUser",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Sec GAMFunctionality Key User"
+                           },
+                           {
+                               "name":  "SecGAMFunctionalityKeys",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Sec GAMFunctionality Keys"
+                           },
+                           {
+                               "name":  "SecGAMFunctionalitiesToLoadUser",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Sec GAMFunctionalities To Load User"
+                           },
+                           {
+                               "name":  "SecGAMFunctionalitiesToLoadUserCollection",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Sec GAMFunctionalities To Load User Collection"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

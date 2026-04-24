@@ -1,0 +1,125 @@
+﻿{
+    "uniqueId":  "1773ca48-c494-450b-b806-06d6cb42ef15",
+    "name":  "MenuInventario",
+    "type":  "DataProvider",
+    "module":  "Web",
+    "description":  "Menu Inventario",
+    "filePath":  "DataProviders/Web/MenuInventario.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "DVelop_Menu\n{\n\t\n\t\u0026id = 0\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlinkTarget =\"\" \n\t\tcaption = !\"Inventarios\"\n\t\t\n\t\tsubItems\n\t\t{\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioInventario.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-home\"\n\t\t\t\tcaption = \"Inicio\"  \n\t\t\t} \n\t\t\n\t\t  Item\n\t\t\t\t{ \n\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\tlink =\tProduccion.listarSilos.Link()\n\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\ticonClass = !\"menu-icon fas fa-database\"\n\t\t\t\t\tcaption = \"Silos\"  \n\t\t\t\t} \n\t\t\t\t\n\t\t\t\t   Item\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tlistarLotes.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-box\"\n\t\t\t\tcaption = \"Lotes\"  \n\t\t\t} \n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tlistarInventario.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-calendar\"\n\t\t\t\tcaption = \"Cierre de Mes\"  \n\t\t\t} \n\t\t\n\t\t        Item\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tExistenciaWW.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-boxes\"\n\t\t\t\tcaption = \"Inventario\"  \n\t\t\t} \n\t\t\t\n        }\n\t}\n}\n\n",
+                              "cleanSource":  "DVelop_Menu\n{\n\t\n\t\u0026id = 0\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlinkTarget =\"\" \n\t\tcaption = !\"Inventarios\"\n\t\t\n\t\tsubItems\n\t\t{\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioInventario.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-home\"\n\t\t\t\tcaption = \"Inicio\"  \n\t\t\t} \n\t\t\n\t\t  Item\n\t\t\t\t{ \n\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\tlink =\tProduccion.listarSilos.Link()\n\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\ticonClass = !\"menu-icon fas fa-database\"\n\t\t\t\t\tcaption = \"Silos\"  \n\t\t\t\t} \n\t\t\t\t\n\t\t\t\t   Item\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tlistarLotes.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-box\"\n\t\t\t\tcaption = \"Lotes\"  \n\t\t\t} \n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tlistarInventario.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-calendar\"\n\t\t\t\tcaption = \"Cierre de Mes\"  \n\t\t\t} \n\t\t\n\t\t        Item\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tExistenciaWW.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-boxes\"\n\t\t\t\tcaption = \"Inventario\"  \n\t\t\t} \n\t\t\t\n        }\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.ProgramNames",
+                                         "WWPBaseObjects.DVelop_Menu",
+                                         "Produccion.listarLotes",
+                                         "Produccion.listarInventario",
+                                         "Produccion.listarSilos",
+                                         "Produccion.InicioInventario"
+                                     ],
+                         "calledBy":  [
+                                          "MenuByModule"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WWPBaseObjects.DVelop_Menu"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "id",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "id"
+                           },
+                           {
+                               "name":  "ProgramName",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Program Name"
+                           },
+                           {
+                               "name":  "Repository",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Repository"
+                           },
+                           {
+                               "name":  "Errors",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Errors"
+                           },
+                           {
+                               "name":  "IsRepoAdministrator",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Is Repo Administrator"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

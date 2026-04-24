@@ -1,0 +1,104 @@
+﻿{
+    "uniqueId":  "03133279-a206-4abf-a2e4-8b87299552f6",
+    "name":  "WWPTabOptions",
+    "type":  "SDT",
+    "module":  "WWPBaseObjects",
+    "description":  "Tab Options",
+    "filePath":  "SDTs/WWPBaseObjects/WWPTabOptions.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Code",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Code"
+                           },
+                           {
+                               "name":  "Description",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Description"
+                           },
+                           {
+                               "name":  "Link",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Link"
+                           },
+                           {
+                               "name":  "WebComponent",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Web Component"
+                           },
+                           {
+                               "name":  "IncludeInPanel",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Include In Panel"
+                           },
+                           {
+                               "name":  "CollapsedByDefault",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Collapsed By Default"
+                           },
+                           {
+                               "name":  "Collapsable",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Collapsable"
+                           }
+                       ]
+}

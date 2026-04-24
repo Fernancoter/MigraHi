@@ -1,0 +1,139 @@
+﻿{
+    "uniqueId":  "7bee6118-d162-48f3-a640-d18f77fa8335",
+    "name":  "ValidarCarreraCompleta",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Validar Carrera Completa",
+    "filePath":  "Procedures/Produccion/ValidarCarreraCompleta.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026ValidacionCompleta = true\n\nFor each DB.Carrete\n\tWhere CarreteCarreraId = \u0026CarreraId\n\t\n\tif(CarreteEstado = EstadoCarrete.EnRevision)\n\t\t\u0026ValidacionCompleta = false\n\t\tExit\n\tendif\nEndfor\n\nIf(\u0026ValidacionCompleta)\n\n\tSetEstadoCarrera.Call(\u0026CarreraId, Produccion.EstadoCarrera.Validada)\n\tSDEliminarNotificacion.Call(\u0026CarreraId,Produccion.NotificacionTipo.Carrera)\nEndif\n",
+                              "cleanSource":  "\u0026ValidacionCompleta = true\n\nFor each DB.Carrete\n\tWhere CarreteCarreraId = \u0026CarreraId\n\t\n\tif(CarreteEstado = EstadoCarrete.EnRevision)\n\t\t\u0026ValidacionCompleta = false\n\t\tExit\n\tendif\nEndfor\n\nIf(\u0026ValidacionCompleta)\n\n\tSetEstadoCarrera.Call(\u0026CarreraId, Produccion.EstadoCarrera.Validada)\n\tSDEliminarNotificacion.Call(\u0026CarreraId,Produccion.NotificacionTipo.Carrera)\nEndif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026CarreraId);\n",
+                              "cleanSource":  "parm(\u0026CarreraId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SetEstadoCarrera",
+                                         "Produccion.SDEliminarNotificacion",
+                                         "DB.Carrete",
+                                         "SetEstadoCarrera",
+                                         "SDEliminarNotificacion"
+                                     ],
+                         "calledBy":  [
+                                          "SDGuardarCarreteAMolino",
+                                          "SDVincularCarrete"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CarreraId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Carrera Id"
+                           },
+                           {
+                               "name":  "AunPorValidar",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Aun Por Validar"
+                           },
+                           {
+                               "name":  "ValidacionCompleta",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Validacion Completa"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

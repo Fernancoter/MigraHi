@@ -1,0 +1,136 @@
+﻿{
+    "uniqueId":  "332f7a44-e3c8-4bea-961c-9e1b71b92f9b",
+    "name":  "TotalPalletPorProductNumber",
+    "type":  "Procedure",
+    "module":  "Informes",
+    "description":  "Total Pallet Por Product Number",
+    "filePath":  "Procedures/Informes/TotalPalletPorProductNumber.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026Count = 0\n\nfor each\n\tWhere ProductNumber = \u0026ProductNumber\n\tif(ProductPiecesPlt\u003e0)\n\t\t\u0026Count = (\u0026ProductExist * 1000)/ProductPiecesPlt\n\telse\n\t\t\u0026Count = 0\n\tendif\n\texit\n\t\nendfor\n\n\n",
+                              "cleanSource":  "\u0026Count = 0\n\nfor each\n\tWhere ProductNumber = \u0026ProductNumber\n\tif(ProductPiecesPlt\u003e0)\n\t\t\u0026Count = (\u0026ProductExist * 1000)/ProductPiecesPlt\n\telse\n\t\t\u0026Count = 0\n\tendif\n\texit\n\t\nendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ProductNumber, in:\u0026ProductExist, out: \u0026Count);\n\t\n\t\n",
+                              "cleanSource":  "parm(in:\u0026ProductNumber, in:\u0026ProductExist, out: \u0026Count);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "CrearEmbarque",
+                                          "InicializarEmbarque",
+                                          "ListadoRemisionesGetFilterData"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ProductNumber",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Product Number"
+                           },
+                           {
+                               "name":  "Count",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Count"
+                           },
+                           {
+                               "name":  "ProductExist",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Product Exist"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

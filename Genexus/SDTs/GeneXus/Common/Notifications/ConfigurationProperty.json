@@ -1,0 +1,65 @@
+﻿{
+    "uniqueId":  "7033e7d2-42ef-455c-b45f-0a55a6a0db88",
+    "name":  "ConfigurationProperty",
+    "type":  "SDT",
+    "module":  "GeneXus.Common.Notifications",
+    "description":  "Configuration Property",
+    "filePath":  "SDTs/GeneXus/Common/Notifications/ConfigurationProperty.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "Configuration",
+                                          "DirectionsRequestParameters"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PropertyName",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Property Name"
+                           },
+                           {
+                               "name":  "PropertyValue",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Property Value"
+                           }
+                       ]
+}

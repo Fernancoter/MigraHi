@@ -1,0 +1,135 @@
+﻿{
+    "uniqueId":  "4d271341-2349-4d27-9fdd-824c445335fe",
+    "name":  "SaveManageFiltersState",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "Save Grid State",
+    "filePath":  "Procedures/WWPBaseObjects/SaveManageFiltersState.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "//This is a procedure in which user has to define how to save the filters created with \u0027ManageFilters\u0027 StandardAction.\n//You can save the filters\u0027s configuration in session, in database or whatever you want\n//By default, it calls to SaveUserKeyValue Procedure in order to have the same mechanism in all the end users configurations\nSaveUserKeyValue(\u0026UserCustomKey, \u0026UserCustomValue)\n\n\n",
+                              "cleanSource":  "//This is a procedure in which user has to define how to save the filters created with \u0027ManageFilters\u0027 StandardAction.\n//You can save the filters\u0027s configuration in session, in database or whatever you want\n//By default, it calls to SaveUserKeyValue Procedure in order to have the same mechanism in all the end users configurations\nSaveUserKeyValue(\u0026UserCustomKey, \u0026UserCustomValue)"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026UserCustomKey,in:\u0026UserCustomValue);\n",
+                              "cleanSource":  "parm(in:\u0026UserCustomKey,in:\u0026UserCustomValue);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.SaveUserKeyValue"
+                                     ],
+                         "calledBy":  [
+                                          "SaveFilterAs",
+                                          "ManageFilters"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Session",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_USRDEFTYP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Session"
+                           },
+                           {
+                               "name":  "UserCustomKey",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "User Custom Key"
+                           },
+                           {
+                               "name":  "UserCustomValue",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "User Custom Value"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

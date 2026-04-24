@@ -1,0 +1,126 @@
+﻿{
+    "uniqueId":  "87ae8f37-6514-4223-9e47-b288b3bc2ff7",
+    "name":  "wzPrensadoDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "wz Prensado DP",
+    "filePath":  "DataProviders/Produccion/wzPrensadoDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTPrensado\n{\n\tSDTPrensadoItem\n\twhere PrensadoId \u003e 0\n\twhere PrensadoPrensaId = \u0026PrensaId\n\twhere PrensadoTurnoId = \u0026TurnoId\n\twhere PrensadoFecha.ToDate() = \u0026Fecha\n\twhere PrensadoEstado = EstadoPrensado.Programado\n\t{\n\n\t\tPrensadoId = PrensadoId\n\t\tPrensadoFecha = PrensadoFecha\n\t\tPrensadoPrensaId = PrensadoPrensaId\n\t\tPrensadoPrensaNombre = PrensadoPrensaNombre\n\t\tPrensadoTurnoId = PrensadoTurnoId\n\t\tPrensadoTurnoNombre = PrensadoTurnoNombre\n\t\tPrensadoProductoId = PrensadoProductoId\n\t\tPrensadoProductoNombre = PrensadoProductoNombre\n\t\tPrensadoEstado = PrensadoEstado\n\t\t\n//\t\tPrensadoOperadorId = PrensadoOperadorId\n//\t\tPrensadoOperadorNombre = PrensadoOperadorNombre\n//\t\tPrensadoTroquelId = PrensadoTroquelId\n\n//\t\tPrensadoTroquelNombre = PrensadoTroquelNombre\n//\t\tPrensadoHoraIniciaProceso = PrensadoHoraIniciaProceso\n//\t\tPrensadoHoraFinProceso = PrensadoHoraFinProceso\n//\t\tPrensadoMeta = PrensadoMeta\n//\t\tPrensadoMotivoAnticipado = PrensadoMotivoAnticipado\n\t\t\n//\t\tPrensadoLevasUnidadMedida = PrensadoLevasUnidadMedida\n//\t\tPrensadoLevasKgEntrada = PrensadoLevasKgEntrada\n//\t\tPrensadoLevasKgSalida = PrensadoLevasKgSalida\n//\t\tPrensadoLevasGradosEntrada = PrensadoLevasGradosEntrada\n//\t\tPrensadoLevasGradosSalida = PrensadoLevasGradosSalida\n//\t\t\n//\t\tPrensadoRodillosUnidadMedida = PrensadoRodillosUnidadMedida\n//\t\tPrensadoRodillosKgEntrada = PrensadoRodillosKgEntrada\n//\t\tPrensadoRodillosKgSalida = PrensadoRodillosKgSalida\n//\t\tPrensadoRodillosGradosEntrada = PrensadoRodillosGradosEntrada\n//\t\tPrensadoRodillosGradosSalida = PrensadoRodillosGradosSalida\n\t}\n}\n",
+                              "cleanSource":  "SDTPrensado\n{\n\tSDTPrensadoItem\n\twhere PrensadoId \u003e 0\n\twhere PrensadoPrensaId = \u0026PrensaId\n\twhere PrensadoTurnoId = \u0026TurnoId\n\twhere PrensadoFecha.ToDate() = \u0026Fecha\n\twhere PrensadoEstado = EstadoPrensado.Programado\n\t{\n\n\t\tPrensadoId = PrensadoId\n\t\tPrensadoFecha = PrensadoFecha\n\t\tPrensadoPrensaId = PrensadoPrensaId\n\t\tPrensadoPrensaNombre = PrensadoPrensaNombre\n\t\tPrensadoTurnoId = PrensadoTurnoId\n\t\tPrensadoTurnoNombre = PrensadoTurnoNombre\n\t\tPrensadoProductoId = PrensadoProductoId\n\t\tPrensadoProductoNombre = PrensadoProductoNombre\n\t\tPrensadoEstado = PrensadoEstado\n\t\t\n//\t\tPrensadoOperadorId = PrensadoOperadorId\n//\t\tPrensadoOperadorNombre = PrensadoOperadorNombre\n//\t\tPrensadoTroquelId = PrensadoTroquelId\n\n//\t\tPrensadoTroquelNombre = PrensadoTroquelNombre\n//\t\tPrensadoHoraIniciaProceso = PrensadoHoraIniciaProceso\n//\t\tPrensadoHoraFinProceso = PrensadoHoraFinProceso\n//\t\tPrensadoMeta = PrensadoMeta\n//\t\tPrensadoMotivoAnticipado = PrensadoMotivoAnticipado\n\t\t\n//\t\tPrensadoLevasUnidadMedida = PrensadoLevasUnidadMedida\n//\t\tPrensadoLevasKgEntrada = PrensadoLevasKgEntrada\n//\t\tPrensadoLevasKgSalida = PrensadoLevasKgSalida\n//\t\tPrensadoLevasGradosEntrada = PrensadoLevasGradosEntrada\n//\t\tPrensadoLevasGradosSalida = PrensadoLevasGradosSalida\n//\t\t\n//\t\tPrensadoRodillosUnidadMedida = PrensadoRodillosUnidadMedida\n//\t\tPrensadoRodillosKgEntrada = PrensadoRodillosKgEntrada\n//\t\tPrensadoRodillosKgSalida = PrensadoRodillosKgSalida\n//\t\tPrensadoRodillosGradosEntrada = PrensadoRodillosGradosEntrada\n//\t\tPrensadoRodillosGradosSalida = PrensadoRodillosGradosSalida\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensaId, in:\u0026TurnoId, in:\u0026Fecha);\n",
+                              "cleanSource":  "parm(in:\u0026PrensaId, in:\u0026TurnoId, in:\u0026Fecha);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTPrensado"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTPrensado"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Asignado",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Asignado"
+                           },
+                           {
+                               "name":  "Fecha",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATE",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Fecha"
+                           },
+                           {
+                               "name":  "OperadorId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Operador Id"
+                           },
+                           {
+                               "name":  "PrensaId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensa Id"
+                           },
+                           {
+                               "name":  "TurnoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Turno Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

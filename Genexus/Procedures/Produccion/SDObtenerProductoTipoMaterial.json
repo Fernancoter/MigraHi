@@ -1,0 +1,158 @@
+﻿{
+    "uniqueId":  "8c9c20f7-e6ce-46b7-a91b-e4c0998a3f6a",
+    "name":  "SDObtenerProductoTipoMaterial",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDObtener Producto Tipo Material",
+    "filePath":  "Procedures/Produccion/SDObtenerProductoTipoMaterial.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "        \n\t\u0026Extrusion.Load(\u0026ExtrusionId)\n\t\u0026ProductoId = \u0026Extrusion.ExtrusionProductoId\n\t\u0026TipoMaterial = \u0026Extrusion.ExtrusionProductoTipoMaterial\n",
+                              "cleanSource":  "        \n\t\u0026Extrusion.Load(\u0026ExtrusionId)\n\t\u0026ProductoId = \u0026Extrusion.ExtrusionProductoId\n\t\u0026TipoMaterial = \u0026Extrusion.ExtrusionProductoTipoMaterial"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExtrusionId, out:\u0026ProductoId, out:\u0026TipoMaterial);\n",
+                              "cleanSource":  "parm(in:\u0026ExtrusionId, out:\u0026ProductoId, out:\u0026TipoMaterial);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Extrusion"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Extrusion"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "Extrusion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion"
+                           },
+                           {
+                               "name":  "TiempoProceso",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo Proceso"
+                           },
+                           {
+                               "name":  "ExtrusoraId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusora Id"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "TipoMaterial",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Tipo Material"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

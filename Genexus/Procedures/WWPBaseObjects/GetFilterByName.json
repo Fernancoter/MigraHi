@@ -1,0 +1,222 @@
+﻿{
+    "uniqueId":  "27f15d8f-2925-4fb9-be17-f6f0167e2955",
+    "name":  "GetFilterByName",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "Get Filter By Name",
+    "filePath":  "Procedures/WWPBaseObjects/GetFilterByName.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026GridStateCollection.FromXml(LoadManageFiltersState(\u0026UserCustomKey))\n\nFor \u0026GridStateCollectionItem in \u0026GridStateCollection\n\tIf \u0026GridStateCollectionItem.Title = \u0026FilterName\n\t\t\u0026FilterXML = \u0026GridStateCollectionItem.GridStateXML\n\t\tExit\n\tEndIf\nEndFor\n",
+                              "cleanSource":  "\u0026GridStateCollection.FromXml(LoadManageFiltersState(\u0026UserCustomKey))\n\nFor \u0026GridStateCollectionItem in \u0026GridStateCollection\n\tIf \u0026GridStateCollectionItem.Title = \u0026FilterName\n\t\t\u0026FilterXML = \u0026GridStateCollectionItem.GridStateXML\n\t\tExit\n\tEndIf\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026UserCustomKey, in:\u0026FilterName, out:\u0026FilterXML);\n",
+                              "cleanSource":  "parm(in:\u0026UserCustomKey, in:\u0026FilterName, out:\u0026FilterXML);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.LoadManageFiltersState",
+                                         "WWPBaseObjects.GridStateCollection"
+                                     ],
+                         "calledBy":  [
+                                          "GAMWWUserPermissions",
+                                          "listarLotes",
+                                          "EtiquetadoOperadorWW",
+                                          "vwTrazabilidad",
+                                          "ProductoTerminadoWW",
+                                          "ListadoEmbarques",
+                                          "PrensaObservacionWW",
+                                          "BobinaWW",
+                                          "listarOperador",
+                                          "ConsolidatedWW",
+                                          "ListadoOrdenes",
+                                          "CompanyWW",
+                                          "ListadoRemisiones",
+                                          "CustomerWW",
+                                          "vwAnaliticaBobina",
+                                          "BudgetWW",
+                                          "ExtrusionInterrupcionWW",
+                                          "GAMWWUsers",
+                                          "GAMRolePermissionSelect",
+                                          "listarPrensaProducto",
+                                          "TroquelWW",
+                                          "PaletWW",
+                                          "listarPrensas",
+                                          "OrdenesWW",
+                                          "vwExtrusionResultado",
+                                          "listarProductoCategoria",
+                                          "vwAnaliticaCarrete",
+                                          "ListarExtrusoraMezcladora",
+                                          "GAMWWRoleRoles",
+                                          "vwPrensadoResultado",
+                                          "FTBWW",
+                                          "listarExtrusoraProducto",
+                                          "listarInventario",
+                                          "ExtrusoraObservacionWW",
+                                          "listarTurnos",
+                                          "ExtrusoraMezcladoraWW",
+                                          "AuditWW",
+                                          "listarProductos",
+                                          "PrensadoWW",
+                                          "listarSilos",
+                                          "GAMWWRolePermissions",
+                                          "RemissionsWW",
+                                          "SalesPersonWW",
+                                          "InterrupcionWW",
+                                          "CarreteEnPallet",
+                                          "PrensadoInterrupcionWW",
+                                          "ExistenciaWW",
+                                          "WWP_MailTemplateWW",
+                                          "CausaInterrupcionWW",
+                                          "CarreraWW",
+                                          "EmbarquePalletWW",
+                                          "ExtrusionWW",
+                                          "ProductsWW",
+                                          "CarreteDefectoWW",
+                                          "vwCarreteCarrera",
+                                          "vwAnaliticaPrensado",
+                                          "listarTroquel",
+                                          "reclamosww",
+                                          "CarreteWW",
+                                          "listarProductoTerminado",
+                                          "PrensadoBobinaWW",
+                                          "vwOrdenEtiquetado",
+                                          "listarExtrusora",
+                                          "GAMWWUserRoles",
+                                          "StatementOfIncomeWW",
+                                          "DownTimeCodeWW",
+                                          "PalletEnEmbarque",
+                                          "GAMWWRoles",
+                                          "GAMUserPermissionSelect",
+                                          "GAMUserRoleSelect",
+                                          "GAMRoleSelect",
+                                          "listarExtrusion"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "GridStateCollection"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "FilterName",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Filter Name"
+                           },
+                           {
+                               "name":  "FilterXML",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Filter XML"
+                           },
+                           {
+                               "name":  "GridStateCollection",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Grid State Collection"
+                           },
+                           {
+                               "name":  "GridStateCollectionItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Grid State Collection Item"
+                           },
+                           {
+                               "name":  "UserCustomKey",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "User Custom Key"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

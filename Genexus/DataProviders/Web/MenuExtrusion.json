@@ -1,0 +1,127 @@
+﻿{
+    "uniqueId":  "9eef9214-2ecf-49e6-a4ad-8d8f7be7f09b",
+    "name":  "MenuExtrusion",
+    "type":  "DataProvider",
+    "module":  "Web",
+    "description":  "Menu Extrusion",
+    "filePath":  "DataProviders/Web/MenuExtrusion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "DVelop_Menu\n{\n\t\n\t\u0026id = 0\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlinkTarget =\"\" \n\t\tcaption = !\"Extrusión\"\n\t\t\n\t\tsubItems\n\t\t{\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioExtrusion.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-home\"\n\t\t\t\tcaption = \"Inicio\"  \n\t\t\t} \n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tTurnosPorSemanaExtrusoras.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-calendar-day\"\n\t\t\t\tcaption = \"Turnos Por Semana\"  \n\t\t\t} \n\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tlistarExtrusora.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fas fa-align-justify\"\n\t\t\t\t\t\tcaption = \"Extrusoras\"  \n\t\t\t\t\t} \n\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tlistarExtrusoraProducto.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fas fa-link\"\n\t\t\t\t\t\tcaption = \"Extrusora Producto\"  \n\t\t\t\t\t}\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\tcaption = !\"Operación\"\n\t\t\t\ticonClass = !\"menu-icon fal fa-draw-circle\"\n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{\n\t\t\t\t\t\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tExtrusionww.Link()\n\t\t\t\t\t\tlinkTarget =\"\"\n\t\t\t\t\t\ticonClass = !\"menu-icon far fa-stop-circle\"\n\t\t\t\t\t\tcaption = \"Extrusiones\"  \n\t\t\t\t\t\t\n\t\t\t\t\t} \n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tvwAnaliticaBobina.Link()\n\t\t\t\t\t\tlinkTarget =\"\"\n\t\t\t\t\t\ticonClass = !\"menu-icon far fa-stop-circle\"\n\t\t\t\t\t\tcaption = \"Bobinas\"  \n\t\t\t\t\t\t\n\t\t\t\t\t} \n\t\t\t\t}\n\t\t\t}\n\t\t\t\n       \t}\n\t}\n}\n",
+                              "cleanSource":  "DVelop_Menu\n{\n\t\n\t\u0026id = 0\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlinkTarget =\"\" \n\t\tcaption = !\"Extrusión\"\n\t\t\n\t\tsubItems\n\t\t{\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioExtrusion.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-home\"\n\t\t\t\tcaption = \"Inicio\"  \n\t\t\t} \n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tTurnosPorSemanaExtrusoras.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-calendar-day\"\n\t\t\t\tcaption = \"Turnos Por Semana\"  \n\t\t\t} \n\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tlistarExtrusora.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fas fa-align-justify\"\n\t\t\t\t\t\tcaption = \"Extrusoras\"  \n\t\t\t\t\t} \n\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tlistarExtrusoraProducto.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fas fa-link\"\n\t\t\t\t\t\tcaption = \"Extrusora Producto\"  \n\t\t\t\t\t}\n\t\t\tItem\n\t\t\t{\n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\tcaption = !\"Operación\"\n\t\t\t\ticonClass = !\"menu-icon fal fa-draw-circle\"\n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{\n\t\t\t\t\t\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tExtrusionww.Link()\n\t\t\t\t\t\tlinkTarget =\"\"\n\t\t\t\t\t\ticonClass = !\"menu-icon far fa-stop-circle\"\n\t\t\t\t\t\tcaption = \"Extrusiones\"  \n\t\t\t\t\t\t\n\t\t\t\t\t} \n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tvwAnaliticaBobina.Link()\n\t\t\t\t\t\tlinkTarget =\"\"\n\t\t\t\t\t\ticonClass = !\"menu-icon far fa-stop-circle\"\n\t\t\t\t\t\tcaption = \"Bobinas\"  \n\t\t\t\t\t\t\n\t\t\t\t\t} \n\t\t\t\t}\n\t\t\t}\n\t\t\t\n       \t}\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.ProgramNames",
+                                         "WWPBaseObjects.DVelop_Menu",
+                                         "DB.ExtrusionWW",
+                                         "Produccion.listarExtrusora",
+                                         "Produccion.listarExtrusoraProducto",
+                                         "Produccion.TurnosPorSemanaExtrusoras",
+                                         "Produccion.InicioExtrusion",
+                                         "Produccion.vwAnaliticaBobina"
+                                     ],
+                         "calledBy":  [
+                                          "MenuByModule"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WWPBaseObjects.DVelop_Menu"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "id",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "id"
+                           },
+                           {
+                               "name":  "ProgramName",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Program Name"
+                           },
+                           {
+                               "name":  "Repository",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Repository"
+                           },
+                           {
+                               "name":  "Errors",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Errors"
+                           },
+                           {
+                               "name":  "IsRepoAdministrator",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Is Repo Administrator"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

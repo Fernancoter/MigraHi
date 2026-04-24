@@ -1,0 +1,94 @@
+﻿{
+    "uniqueId":  "50003803-31fe-4e01-9a8d-d664e18e626c",
+    "name":  "DPSDTProductoPorTroquel",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "DPSDTProducto Por Troquel",
+    "filePath":  "DataProviders/Produccion/DPSDTProductoPorTroquel.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTProducto\nWhere TroquelId = \u0026TroquelId\n{\n\tSDTProductoItem\n\t{\n\t\tProductoId  = ProductoId \nProductoClave  = ProductoClave \nProductoNombre  = ProductoNombre \nProductoDescripcion  = ProductoDescripcion \n//ProductoCategoriaId  = ProductoCategoriaId \nProductoCategoriaNombre  = ProductoCategoriaNombre \n//ProductoPrecioUnitario  = ProductoPrecioUnitario \n//ProductoInventarioActual  = ProductoInventarioActual \n//ProductoActivo  = ProductoActivo \n//ProductoClaveExterna  = ProductoClaveExterna \n//ProductoImagen  = ProductoImagen \n//ProductoTipoMaterial  = ProductoTipoMaterial \n\n\t}\n}\n",
+                              "cleanSource":  "SDTProducto\nWhere TroquelId = \u0026TroquelId\n{\n\tSDTProductoItem\n\t{\n\t\tProductoId  = ProductoId \nProductoClave  = ProductoClave \nProductoNombre  = ProductoNombre \nProductoDescripcion  = ProductoDescripcion \n//ProductoCategoriaId  = ProductoCategoriaId \nProductoCategoriaNombre  = ProductoCategoriaNombre \n//ProductoPrecioUnitario  = ProductoPrecioUnitario \n//ProductoInventarioActual  = ProductoInventarioActual \n//ProductoActivo  = ProductoActivo \n//ProductoClaveExterna  = ProductoClaveExterna \n//ProductoImagen  = ProductoImagen \n//ProductoTipoMaterial  = ProductoTipoMaterial \n\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026TroquelId);\n",
+                              "cleanSource":  "parm(\u0026TroquelId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTProducto"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTProducto"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "TroquelId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Troquel Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

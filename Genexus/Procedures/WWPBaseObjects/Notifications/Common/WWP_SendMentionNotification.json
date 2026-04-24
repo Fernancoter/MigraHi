@@ -1,0 +1,304 @@
+﻿{
+    "uniqueId":  "c2f80ddf-febb-4816-a9b2-e1e5fe0c9805",
+    "name":  "WWP_SendMentionNotification",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects.Notifications.Common",
+    "description":  "WWPSend Mention Notification",
+    "filePath":  "Procedures/WWPBaseObjects/Notifications/Common/WWP_SendMentionNotification.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\nFor Each WWP_NotificationDefinition\n\tWhere WWPNotificationDefinitionName = \u0026WWPNotificationDefinitionName\n\tWhere WWPEntityId = WWP_GetEntityByName(\u0026WWPEntityName)\n\t\n\t\u0026WWPNotificationDefinitionId = WWPNotificationDefinitionId\n\t\n\tIf \u0026pWWPNotificationDefinitionIcon.IsEmpty()\n\t\t\u0026WWPNotificationDefinitionIcon = WWPNotificationDefinitionIcon\n\tElse\n\t\t\u0026WWPNotificationDefinitionIcon = \u0026pWWPNotificationDefinitionIcon\n\tEndIf\n\tIf \u0026pWWPNotificationDefinitionTitle.IsEmpty()\n\t\t\u0026WWPNotificationDefinitionTitle = WWPNotificationDefinitionTitle\n\tElse\n\t\t\u0026WWPNotificationDefinitionTitle = \u0026pWWPNotificationDefinitionTitle\n\tEndIf\n\tIf \u0026pWWPNotificationDefinitionShortDescription.IsEmpty()\n\t\t\u0026WWPNotificationDefinitionShortDescription = WWPNotificationDefinitionShortDescription\n\tElse\n\t\t\u0026WWPNotificationDefinitionShortDescription = \u0026pWWPNotificationDefinitionShortDescription\n\tEndIf\n\tIf \u0026pWWPNotificationDefinitionLongDescription.IsEmpty()\n\t\t\u0026WWPNotificationDefinitionLongDescription = WWPNotificationDefinitionLongDescription\n\tElse\n\t\t\u0026WWPNotificationDefinitionLongDescription = \u0026pWWPNotificationDefinitionLongDescription\n\tEndIf\n\tIf \u0026pWWPNotificationDefinitionLink.IsEmpty()\n\t\t\u0026WWPNotificationDefinitionLink = WWPNotificationDefinitionLink\n\tElse\n\t\t\u0026WWPNotificationDefinitionLink = \u0026pWWPNotificationDefinitionLink\n\tEndIf\n\t\u0026MentionsWWPUserExtendedIdCollection.FromJson(\u0026MentionWWPUserExtendedIdCollectionJson)\n\tFor \u0026WWPUserExtendedId In \u0026MentionsWWPUserExtendedIdCollection\n\t\tWWP_CreateNotificationToUser(\u0026WWPUserExtendedId, \u0026WWPNotificationDefinitionId, \u0026WWPNotificationDefinitionTitle, \u0026WWPNotificationDefinitionShortDescription, \u0026WWPNotificationDefinitionLongDescription, \u0026WWPNotificationDefinitionLink, \u0026WWPNotificationMetadata, \u0026WWPNotificationDefinitionIcon, True)\n\tEndFor\n\t\nEndFor\n",
+                              "cleanSource":  "\nFor Each WWP_NotificationDefinition\n\tWhere WWPNotificationDefinitionName = \u0026WWPNotificationDefinitionName\n\tWhere WWPEntityId = WWP_GetEntityByName(\u0026WWPEntityName)\n\t\n\t\u0026WWPNotificationDefinitionId = WWPNotificationDefinitionId\n\t\n\tIf \u0026pWWPNotificationDefinitionIcon.IsEmpty()\n\t\t\u0026WWPNotificationDefinitionIcon = WWPNotificationDefinitionIcon\n\tElse\n\t\t\u0026WWPNotificationDefinitionIcon = \u0026pWWPNotificationDefinitionIcon\n\tEndIf\n\tIf \u0026pWWPNotificationDefinitionTitle.IsEmpty()\n\t\t\u0026WWPNotificationDefinitionTitle = WWPNotificationDefinitionTitle\n\tElse\n\t\t\u0026WWPNotificationDefinitionTitle = \u0026pWWPNotificationDefinitionTitle\n\tEndIf\n\tIf \u0026pWWPNotificationDefinitionShortDescription.IsEmpty()\n\t\t\u0026WWPNotificationDefinitionShortDescription = WWPNotificationDefinitionShortDescription\n\tElse\n\t\t\u0026WWPNotificationDefinitionShortDescription = \u0026pWWPNotificationDefinitionShortDescription\n\tEndIf\n\tIf \u0026pWWPNotificationDefinitionLongDescription.IsEmpty()\n\t\t\u0026WWPNotificationDefinitionLongDescription = WWPNotificationDefinitionLongDescription\n\tElse\n\t\t\u0026WWPNotificationDefinitionLongDescription = \u0026pWWPNotificationDefinitionLongDescription\n\tEndIf\n\tIf \u0026pWWPNotificationDefinitionLink.IsEmpty()\n\t\t\u0026WWPNotificationDefinitionLink = WWPNotificationDefinitionLink\n\tElse\n\t\t\u0026WWPNotificationDefinitionLink = \u0026pWWPNotificationDefinitionLink\n\tEndIf\n\t\u0026MentionsWWPUserExtendedIdCollection.FromJson(\u0026MentionWWPUserExtendedIdCollectionJson)\n\tFor \u0026WWPUserExtendedId In \u0026MentionsWWPUserExtendedIdCollection\n\t\tWWP_CreateNotificationToUser(\u0026WWPUserExtendedId, \u0026WWPNotificationDefinitionId, \u0026WWPNotificationDefinitionTitle, \u0026WWPNotificationDefinitionShortDescription, \u0026WWPNotificationDefinitionLongDescription, \u0026WWPNotificationDefinitionLink, \u0026WWPNotificationMetadata, \u0026WWPNotificationDefinitionIcon, True)\n\tEndFor\n\t\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026WWPNotificationDefinitionName, in:\u0026WWPEntityName, in:\u0026WWPSubscriptionEntityRecordId, in:\u0026pWWPNotificationDefinitionIcon, in:\u0026pWWPNotificationDefinitionTitle, in:\u0026pWWPNotificationDefinitionShortDescription, in:\u0026pWWPNotificationDefinitionLongDescription, in:\u0026pWWPNotificationDefinitionLink, in:\u0026WWPNotificationMetadata, in:\u0026MentionWWPUserExtendedIdCollectionJson);\n",
+                              "cleanSource":  "parm(in:\u0026WWPNotificationDefinitionName, in:\u0026WWPEntityName, in:\u0026WWPSubscriptionEntityRecordId, in:\u0026pWWPNotificationDefinitionIcon, in:\u0026pWWPNotificationDefinitionTitle, in:\u0026pWWPNotificationDefinitionShortDescription, in:\u0026pWWPNotificationDefinitionLongDescription, in:\u0026pWWPNotificationDefinitionLink, in:\u0026WWPNotificationMetadata, in:\u0026MentionWWPUserExtendedIdCollectionJson);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_GetEntityByName",
+                                         "WWPBaseObjects.Notifications.Common.WWP_CreateNotificationToUser",
+                                         "WWPBaseObjects.Notifications.Common.WWP_NotificationDefinition"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_NotifyDiscussionMessage"
+                                      ],
+                         "tablesRead":  [
+                                            "WWP_NotificationDefinition"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "pWWPNotificationDefinitionIcon",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Notification Definition Default Icon"
+                           },
+                           {
+                               "name":  "pWWPNotificationDefinitionLink",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Notification Definition Default Link"
+                           },
+                           {
+                               "name":  "pWWPNotificationDefinitionLongDescription",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Notification Definition Default Long Description"
+                           },
+                           {
+                               "name":  "pWWPNotificationDefinitionShortDescription",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Notification Definition Default Short Description"
+                           },
+                           {
+                               "name":  "pWWPNotificationDefinitionTitle",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Notification Definition Default Title"
+                           },
+                           {
+                               "name":  "WWPUserExtendedId",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWPUser Extended Id"
+                           },
+                           {
+                               "name":  "ExcludedWWPUserExtendedIdCollection",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWPUser Extended Id"
+                           },
+                           {
+                               "name":  "IncludeNotificationToUser",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Include Notification To User"
+                           },
+                           {
+                               "name":  "IsFirstSMS",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Is First SMS"
+                           },
+                           {
+                               "name":  "MailBody",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Mail Body"
+                           },
+                           {
+                               "name":  "MentionsWWPUserExtendedIdCollection",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWPUser Extended Id"
+                           },
+                           {
+                               "name":  "SMSRecipientNumbers",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SMSRecipient Numbers"
+                           },
+                           {
+                               "name":  "WWPEntityName",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Entity Name"
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionIcon",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWPNotification Definition Icon"
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWPNotification Definition Id"
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionLink",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWPNotification Definition Link"
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionLongDescription",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWPNotification Definition Long Description"
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionName",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Notification Definition Internal Name"
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionShortDescription",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWPNotification Definition Short Description"
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionTitle",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWPNotification Definition Title"
+                           },
+                           {
+                               "name":  "WWPNotificationID",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWPNotification Id"
+                           },
+                           {
+                               "name":  "WWPNotificationMetadata",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "WWPNotification Metadata"
+                           },
+                           {
+                               "name":  "WWPSubscriptionEntityRecordId",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "WWPSubscription Entity Record Id"
+                           },
+                           {
+                               "name":  "MentionWWPUserExtendedIdCollectionJson",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Mention WWPUser Extended Id Collection Json"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

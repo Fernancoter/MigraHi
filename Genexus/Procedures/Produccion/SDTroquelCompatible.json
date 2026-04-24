@@ -1,0 +1,151 @@
+﻿{
+    "uniqueId":  "3e3e9c7f-fb6f-442a-ba2d-7b8b7db8873f",
+    "name":  "SDTroquelCompatible",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDTroquel Compatible",
+    "filePath":  "Procedures/Produccion/SDTroquelCompatible.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "        \u0026Prensado.Load(\u0026PrensadoId)\n\t\u0026TroquelId = \u0026Prensado.PrensadoTroquelId\n\t\n\t\u0026Compatible = false\n\t\t\n\tfor each DB.Troquel.Producto\n\t\twhere TroquelId = \u0026TroquelId\n\t\twhere ProductoId = \u0026ProductoId\n\t\t\u0026Compatible = true\n\t\tExit\n\tendfor\n",
+                              "cleanSource":  "        \u0026Prensado.Load(\u0026PrensadoId)\n\t\u0026TroquelId = \u0026Prensado.PrensadoTroquelId\n\t\n\t\u0026Compatible = false\n\t\t\n\tfor each DB.Troquel.Producto\n\t\twhere TroquelId = \u0026TroquelId\n\t\twhere ProductoId = \u0026ProductoId\n\t\t\u0026Compatible = true\n\t\tExit\n\tendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId, in:\u0026ProductoId, out:\u0026Compatible);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId, in:\u0026ProductoId, out:\u0026Compatible);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Prensado",
+                                         "DB.Troquel"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Prensado"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Compatible",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Compatible"
+                           },
+                           {
+                               "name":  "Prensado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "TroquelId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Troquel Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

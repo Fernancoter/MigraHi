@@ -1,0 +1,20 @@
+﻿
+=== DataProvider: Produccion.TurnoDP ===
+
+--- Source (Source) ---
+SDTTurno
+{
+	SDTTurnoItem
+	{
+		TurnoId = TurnoId
+		TurnoNombre = TurnoNombre
+	}
+}
+
+
+=== SDT: Produccion.SDTTurno ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

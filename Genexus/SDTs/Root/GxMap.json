@@ -1,0 +1,80 @@
+﻿{
+    "uniqueId":  "9595bdbd-5d36-47a3-a65b-e5f3ec45be6b",
+    "name":  "GxMap",
+    "type":  "SDT",
+    "module":  "Root",
+    "description":  "Gx Map",
+    "filePath":  "SDTs/Root/GxMap.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "PromptGeolocation"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "MapType",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Map Type"
+                           },
+                           {
+                               "name":  "MapZoom",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Map Zoom"
+                           },
+                           {
+                               "name":  "MapLatitude",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Map Latitude"
+                           },
+                           {
+                               "name":  "MapLongitude",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Map Longitude"
+                           }
+                       ]
+}

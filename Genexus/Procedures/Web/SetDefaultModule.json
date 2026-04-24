@@ -1,0 +1,212 @@
+﻿{
+    "uniqueId":  "3377c3f4-d864-4266-98f4-2fc9623a7564",
+    "name":  "SetDefaultModule",
+    "type":  "Procedure",
+    "module":  "Web",
+    "description":  "Set Default Module",
+    "filePath":  "Procedures/Web/SetDefaultModule.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026DVelop_Menu = Modules.Udp()\nGetMenuAuthorizedOptions.Call(\u0026DVelop_Menu)\n\u0026GamUser = GamUser.Get()\n\n\nFor \u0026DVelop_MenuItem in \u0026DVelop_Menu\n\t\n\t\u0026OptionLink = \u0026DVelop_MenuItem.link\n\t\u0026ModuleId = \u0026DVelop_MenuItem.id.ToNumeric()\n\t\u0026ImageModuleUrl = \u0026DVelop_MenuItem.linkTarget\n\t\u0026OptionTitle = \u0026DVelop_MenuItem.caption\n\t\u0026OptionDescription = \u0026DVelop_MenuItem.additionalData\n\t\n\t\n\t\u0026GAMUserAttribute.Id = \"ModuleId\"\n\t\u0026GAMUserAttribute.Value = \u0026ModuleId.ToFormattedString()\n\t\u0026Att_isOK = \u0026GamUser.SetAttribute(\u0026GAMUserAttribute,\u0026Errors)\n\t\n\t\u0026GAMUserAttribute.Id = \"ImageModuleUrl\"\n\t\u0026GAMUserAttribute.Value = \u0026HttpRequest.BaseUrl +  \u0026ImageModuleUrl.Trim()\n\t\u0026Att_isOK = \u0026GamUser.SetAttribute(\u0026GAMUserAttribute,\u0026Errors)\n\t\n\t\u0026GAMUserAttribute.Id = \"ModuleOptionTitle\"\n\t\u0026GAMUserAttribute.Value = \u0026OptionTitle\n\t\u0026Att_isOK = \u0026GamUser.SetAttribute(\u0026GAMUserAttribute,\u0026Errors)\n\t\n\t\n\t\u0026GAMUserAttribute.Id = \"ModuleOptionDescription\"\n\t\u0026GAMUserAttribute.Value = \u0026OptionDescription\n\t\u0026Att_isOK = \u0026GamUser.SetAttribute(\u0026GAMUserAttribute,\u0026Errors)\n\tif(\u0026Att_isOK )\n\t\tcommit\n\t\t\u0026WebSession.Set(!\"isSessionLoaded\",\u0027false\u0027)\n\tendif\n\t\n\texit \n\t\n\t\t\nEndfor\n\t\n\n",
+                              "cleanSource":  "\n\u0026DVelop_Menu = Modules.Udp()\nGetMenuAuthorizedOptions.Call(\u0026DVelop_Menu)\n\u0026GamUser = GamUser.Get()\n\n\nFor \u0026DVelop_MenuItem in \u0026DVelop_Menu\n\t\n\t\u0026OptionLink = \u0026DVelop_MenuItem.link\n\t\u0026ModuleId = \u0026DVelop_MenuItem.id.ToNumeric()\n\t\u0026ImageModuleUrl = \u0026DVelop_MenuItem.linkTarget\n\t\u0026OptionTitle = \u0026DVelop_MenuItem.caption\n\t\u0026OptionDescription = \u0026DVelop_MenuItem.additionalData\n\t\n\t\n\t\u0026GAMUserAttribute.Id = \"ModuleId\"\n\t\u0026GAMUserAttribute.Value = \u0026ModuleId.ToFormattedString()\n\t\u0026Att_isOK = \u0026GamUser.SetAttribute(\u0026GAMUserAttribute,\u0026Errors)\n\t\n\t\u0026GAMUserAttribute.Id = \"ImageModuleUrl\"\n\t\u0026GAMUserAttribute.Value = \u0026HttpRequest.BaseUrl +  \u0026ImageModuleUrl.Trim()\n\t\u0026Att_isOK = \u0026GamUser.SetAttribute(\u0026GAMUserAttribute,\u0026Errors)\n\t\n\t\u0026GAMUserAttribute.Id = \"ModuleOptionTitle\"\n\t\u0026GAMUserAttribute.Value = \u0026OptionTitle\n\t\u0026Att_isOK = \u0026GamUser.SetAttribute(\u0026GAMUserAttribute,\u0026Errors)\n\t\n\t\n\t\u0026GAMUserAttribute.Id = \"ModuleOptionDescription\"\n\t\u0026GAMUserAttribute.Value = \u0026OptionDescription\n\t\u0026Att_isOK = \u0026GamUser.SetAttribute(\u0026GAMUserAttribute,\u0026Errors)\n\tif(\u0026Att_isOK )\n\t\tcommit\n\t\t\u0026WebSession.Set(!\"isSessionLoaded\",\u0027false\u0027)\n\tendif\n\t\n\texit \n\t\n\t\t\nEndfor"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Web.Modules",
+                                         "WWPBaseObjects.GetMenuAuthorizedOptions",
+                                         "WWPBaseObjects.DVelop_Menu",
+                                         "GetMenuAuthorizedOptions",
+                                         "Modules"
+                                     ],
+                         "calledBy":  [
+                                          "SessionLoad"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WWPBaseObjects.DVelop_Menu"
+                                      ],
+                         "usesDataProviders":  [
+                                                   "Modules"
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "GamUser",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Gam User"
+                           },
+                           {
+                               "name":  "GAMUserAttribute",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "GAMUser Attribute"
+                           },
+                           {
+                               "name":  "ModuleId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Module Id"
+                           },
+                           {
+                               "name":  "HttpRequest",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_USRDEFTYP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Http Request"
+                           },
+                           {
+                               "name":  "ImageModuleUrl",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Image Module Url"
+                           },
+                           {
+                               "name":  "OptionTitle",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option Title"
+                           },
+                           {
+                               "name":  "Att_isOK",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Att_is OK"
+                           },
+                           {
+                               "name":  "Errors",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Errors"
+                           },
+                           {
+                               "name":  "WebSession",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_USRDEFTYP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Web Session"
+                           },
+                           {
+                               "name":  "DVelop_Menu",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "DVelop_Menu"
+                           },
+                           {
+                               "name":  "DVelop_MenuItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "DVelop_Menu Item"
+                           },
+                           {
+                               "name":  "OptionLink",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option Link"
+                           },
+                           {
+                               "name":  "OptionDescription",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option Description"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

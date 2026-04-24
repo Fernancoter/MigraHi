@@ -1,0 +1,80 @@
+﻿{
+    "uniqueId":  "22bd51a3-66d2-4431-922e-04ed481ff21a",
+    "name":  "SDPHomeMapLocationsFilterDP",
+    "type":  "DataProvider",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPHome Map Locations Filter DP",
+    "filePath":  "DataProviders/WorkWithPlus/NativeMobile/SDPHomeMapLocationsFilterDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDPMenuOptions\n{\n\tSDPMenuOptionsItem\n\t{\n\t\tTitle = !\"Carrasco\"\n\t\tIdNum = 1\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tTitle = !\"Malvin\"\n\t\tIdNum = 2\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tTitle = !\"Portones\"\n\t\tIdNum = 3\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tTitle = !\"Pocitos\"\n\t\tIdNum = 4\n\t}\n}\n",
+                              "cleanSource":  "SDPMenuOptions\n{\n\tSDPMenuOptionsItem\n\t{\n\t\tTitle = !\"Carrasco\"\n\t\tIdNum = 1\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tTitle = !\"Malvin\"\n\t\tIdNum = 2\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tTitle = !\"Portones\"\n\t\tIdNum = 3\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tTitle = !\"Pocitos\"\n\t\tIdNum = 4\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPMenuOptions"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDPMenuOptions"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

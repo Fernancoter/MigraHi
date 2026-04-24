@@ -1,0 +1,96 @@
+﻿{
+    "uniqueId":  "6aa37a68-c09c-4da5-b1a5-efeec846bd66",
+    "name":  "SDPHomeCarouselOptionsDP",
+    "type":  "DataProvider",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPHome Carousel Options DP",
+    "filePath":  "DataProviders/WorkWithPlus/NativeMobile/SDPHomeCarouselOptionsDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDPMenuOptions\n{\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpressampleactivity1)\n\t\tIcon = \u0026Image\n\t\tTitle = !\"Run\"\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpressampleactivity2)\n\t\tIcon = \u0026Image\n\t\tTitle = !\"Pose\"\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpressampleactivity3)\n\t\tIcon = \u0026Image\n\t\tTitle = !\"Photo\"\n\t\t//Add ComponentToCall to allow banner tap\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpressampleproduct6)\n\t\tIcon = \u0026Image\n\t\tTitle = !\"Play\"\n\t\t//Add ComponentToCall to allow banner tap\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t}\n\tSDPMenuOptionsItem\n\t{\t\t\n\t\tTitle = !\"More\"\n\t\tId = !\"more\"\t\t\n\t}\n}\n",
+                              "cleanSource":  "SDPMenuOptions\n{\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpressampleactivity1)\n\t\tIcon = \u0026Image\n\t\tTitle = !\"Run\"\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpressampleactivity2)\n\t\tIcon = \u0026Image\n\t\tTitle = !\"Pose\"\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpressampleactivity3)\n\t\tIcon = \u0026Image\n\t\tTitle = !\"Photo\"\n\t\t//Add ComponentToCall to allow banner tap\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpressampleproduct6)\n\t\tIcon = \u0026Image\n\t\tTitle = !\"Play\"\n\t\t//Add ComponentToCall to allow banner tap\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t}\n\tSDPMenuOptionsItem\n\t{\t\t\n\t\tTitle = !\"More\"\n\t\tId = !\"more\"\t\t\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPMenuOptions"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDPMenuOptions"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SDPMenuOptions",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDPMenu Options"
+                           },
+                           {
+                               "name":  "Image",
+                               "elementType":  "Variable",
+                               "dataType":  "BITMAP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Image"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

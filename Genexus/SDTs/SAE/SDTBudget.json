@@ -1,0 +1,226 @@
+﻿{
+    "uniqueId":  "06316840-6cf4-423d-93b1-a6aac8168f55",
+    "name":  "SDTBudget",
+    "type":  "SDT",
+    "module":  "SAE",
+    "description":  "SDTBudget",
+    "filePath":  "SDTs/SAE/SDTBudget.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "EditBudget",
+                                          "outlookww",
+                                          "priceww"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ConsolidatedName",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Consolidated Name"
+                           },
+                           {
+                               "name":  "Customer",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Customer"
+                           },
+                           {
+                               "name":  "CustomerName",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Customer Name"
+                           },
+                           {
+                               "name":  "CustomerShipping",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Customer Shipping"
+                           },
+                           {
+                               "name":  "ProductNumber",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Product Number"
+                           },
+                           {
+                               "name":  "ProductDesc",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Product Desc"
+                           },
+                           {
+                               "name":  "BudgetYear",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Budget Year"
+                           },
+                           {
+                               "name":  "BudgetMonth",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Budget Month"
+                           },
+                           {
+                               "name":  "BudgetEstimated",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Budget Estimated"
+                           },
+                           {
+                               "name":  "BudgetOutlook",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Budget Outlook"
+                           },
+                           {
+                               "name":  "BudgetMonth1",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Jan"
+                           },
+                           {
+                               "name":  "BudgetMonth2",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Feb"
+                           },
+                           {
+                               "name":  "BudgetMonth3",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Mar"
+                           },
+                           {
+                               "name":  "BudgetMonth4",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Apr"
+                           },
+                           {
+                               "name":  "BudgetMonth5",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "May"
+                           },
+                           {
+                               "name":  "BudgetMonth6",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Jun"
+                           },
+                           {
+                               "name":  "BudgetMonth7",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Jul"
+                           },
+                           {
+                               "name":  "BudgetMonth8",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Aug"
+                           },
+                           {
+                               "name":  "BudgetMonth9",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Sep"
+                           },
+                           {
+                               "name":  "BudgetMonth10",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Oct"
+                           },
+                           {
+                               "name":  "BudgetMonth11",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Nov"
+                           },
+                           {
+                               "name":  "BudgetMonth12",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Dec"
+                           }
+                       ]
+}

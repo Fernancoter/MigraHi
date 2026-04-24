@@ -1,0 +1,52 @@
+# Phase 2: Extraction & Parsing
+
+El objetivo de la Fase 2 es pasar de la simple enumeración de objetos (lograda en la Fase 1) a la extracción profunda de su lógica de negocio y su formateo final en archivos. Nos concentraremos primero en los objetos más importantes y complejos: **Procedures** y **WebPanels**.
+
+## User Review Required
+
+> [!IMPORTANT]
+> El SDK de GeneXus guarda internamente el código fuente (Rules, Source, Events) en formato **RTF**. La implementación requerirá un filtro agresivo (`RtfStripper`) para extraer solo texto plano.
+
+## Proposed Changes
+
+Separaremos el trabajo siguiendo la arquitectura de capas establecida en el documento técnico.
+
+### Core Utilities
+#### [NEW] [RtfStripper.cs](file:///C:/Users/GERARDO/Desktop/Genexus code/GXKBScanner/GXKBScanner/Utils/RtfStripper.cs)
+- Implementará lógica nativa en C# para quitar todas las etiquetas `{\rtf1...}` de las cadenas que entrega la API de GeneXus, devolviendo texto plano legible.
+
+### Layer 2 - Parsers
+#### [NEW] [IObjectParser.cs](file:///C:/Users/GERARDO/Desktop/Genexus code/GXKBScanner/GXKBScanner/Parsers/IObjectParser.cs)
+- Interfaz común: `bool CanParse(string type)` y `void Parse(KBObject source, GXObjectModel target)`.
+#### [NEW] [ProcedureParser.cs](file:///C:/Users/GERARDO/Desktop/Genexus code/GXKBScanner/GXKBScanner/Parsers/ProcedureParser.cs)
+- Extraerá el `ProcedurePart` interno (Source).
+- Extraerá el `RulesPart`.
+- Extraerá las variables.
+#### [NEW] [WebPanelParser.cs](file:///C:/Users/GERARDO/Desktop/Genexus code/GXKBScanner/GXKBScanner/Parsers/WebPanelParser.cs)
+- Extraerá el `EventsPart` (código de los eventos Start, Load, Enter, etc.).
+- Extraerá el `RulesPart` y Variables.
+
+### Layer 4 - Output Writers
+#### [NEW] [JsonWriter.cs](file:///C:/Users/GERARDO/Desktop/Genexus code/GXKBScanner/GXKBScanner/Writers/JsonWriter.cs)
+- Serializará la instancia de `GXObjectModel` a JSON usando `System.Text.Json` puro, para construir los archivos dataset RAG.
+#### [NEW] [MarkdownWriter.cs](file:///C:/Users/GERARDO/Desktop/Genexus code/GXKBScanner/GXKBScanner/Writers/MarkdownWriter.cs)
+- Formateará internamente el modelo a Markdown aplicando el estándar de la Sección 9.1 de la especificación técnica.
+
+### Orchestration
+#### [MODIFY] ScannerTask.cs
+- Instanciará los Parsers y Writers.
+- Por cada objeto enumerado se lo pasará al Parser correspondiente.
+- Enviará el `GXObjectModel` a los Writers para generar físicamente el archivo en el `OutputPath`.
+
+## Open Questions
+
+> [!WARNING]
+> La extracción de controles UI y dependencias profundas (como qué tablas lee o escribe) la abordaremos una vez probada la extracción básica de código fuente. En esta sub-fase inicial priorizaremos sacar limpio el **SourceCode** de Procedures y los **Events/Reglas** de WebPanels. ¿Te parece correcto avanzar sub-dividiendo la Fase 2 así?
+
+## Verification Plan
+
+### Manual Verification
+1. Compilar el proyecto modificado (`dotnet build`).
+2. Ejecutar MSBuild contra la KB HiCone3.
+3. Verificar si en la ruta del Output existen los directorios `/Procedures/` y `/WebPanels/`.
+4. Abrir un archivo `.md` y comprobar visualmente que el código fuente es texto legible, sin basura RTF.

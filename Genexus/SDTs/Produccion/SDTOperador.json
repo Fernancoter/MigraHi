@@ -1,0 +1,74 @@
+﻿{
+    "uniqueId":  "e0a44eb0-e839-434b-9c72-a6bb8397fcf6",
+    "name":  "SDTOperador",
+    "type":  "SDT",
+    "module":  "Produccion",
+    "description":  "SDTOperador",
+    "filePath":  "SDTs/Produccion/SDTOperador.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "SDOperadorDP",
+                                          "OperadorOrdenEtiquetadoDP",
+                                          "OperadorDP"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "OperadorId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Operador Id"
+                           },
+                           {
+                               "name":  "OperadorNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Operador Nombre"
+                           },
+                           {
+                               "name":  "OperadorFotografia",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Operador Fotografia"
+                           }
+                       ]
+}

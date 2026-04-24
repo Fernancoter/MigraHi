@@ -1,0 +1,141 @@
+﻿{
+    "uniqueId":  "df19c4d0-6cd2-46eb-b918-0169e38884b8",
+    "name":  "InformesTelerik",
+    "type":  "Procedure",
+    "module":  "Informes",
+    "description":  "Informes Telerik",
+    "filePath":  "Procedures/Informes/InformesTelerik.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\ndo \u0027FillHeaderCaption\u0027\n\ndo case\n\tCase \u0026SDTTelerik.ReportName = !\u0027CertificadoCalidad\u0027\n\t\tdo \u0027CertificadoCalidad\u0027\n\tCase \u0026SDTTelerik.ReportName = !\u0027ValeSalida\u0027\n\t\tdo \u0027ValeSalida\u0027\n\t\t\n\tOtherwise\n\t\tdo \u0027Report\u0027\nEndcase\n\nSub \u0027Report\u0027\n\t\t\t\n\t\u0026Caption += \u0027                reportSource: {report: \"\u0027 + \u0026SDTTelerik.ReportName.ToString().Trim() + \u0027.trdp\", \u0027                \n\t\u0026Caption += \u0027                    parameters: {\u0027\n\t\u0026Caption += \u0027 \t\t\t\t\t  }\u0027\n    \u0026Caption += \u0027                },\u0027\n    \u0026Caption += \u0027                viewMode: telerikReportViewer.ViewModes.INTERACTIVE,\u0027\n    \u0026Caption += \u0027                scaleMode: telerikReportViewer.ScaleModes.SPECIFIC,\u0027\n\t\u0026Caption += \u0027                pageMode: telerikReportViewer.PageModes.SINGLE_PAGE,\u0027\n\t\u0026Caption += \u0027\t\t\t\tscale: 1.0,\u0027\n    \u0026Caption += \u0027                enableAccessibility: false,\u0027\n    \u0026Caption += \u0027                sendEmail: { enabled: true }\u0027\n    \u0026Caption += \u0027            });\u0027\n    \u0026Caption += \u0027    });\u0027\n    \u0026Caption += \u0027\u003c/script\u003e\u0027\n\t\nEndSub\n\n\n\nSub \u0027ValeSalida\u0027\n\t\t\t\n\t\u0026Caption += \u0027                reportSource: {report: \"ValeSalida.trdp\", \u0027                \n\t\u0026Caption += \u0027                    parameters: {\u0027\n\t\u0026Caption += \u0027 \t\t\t\t\t\tEmbarqueId: \"\u0027 + \u0026SDTInformeFilter.Id.ToString().Trim() + \u0027\",\u0027\n\t\u0026Caption += \u0027 \t\t\t\t\t\tFila: \"\u0027 + \u0026SDTInformeFilter.Fila.ToString().Trim() + \u0027\"\u0027\n\t\u0026Caption += \u0027 \t\t\t\t\t  }\u0027\n    \u0026Caption += \u0027                },\u0027\n    \u0026Caption += \u0027                viewMode: telerikReportViewer.ViewModes.INTERACTIVE,\u0027\n    \u0026Caption += \u0027                scaleMode: telerikReportViewer.ScaleModes.SPECIFIC,\u0027\n\t\u0026Caption += \u0027                pageMode: telerikReportViewer.PageModes.SINGLE_PAGE,\u0027\n\t\u0026Caption += \u0027\t\t\t\tscale: 1.0,\u0027\n    \u0026Caption += \u0027                enableAccessibility: false,\u0027\n    \u0026Caption += \u0027                sendEmail: { enabled: true }\u0027\n    \u0026Caption += \u0027            });\u0027\n    \u0026Caption += \u0027    });\u0027\n    \u0026Caption += \u0027\u003c/script\u003e\u0027\n\t\nEndSub\n\nSub \u0027CertificadoCalidad\u0027\n\t\t\t\n\t\u0026Caption += \u0027                reportSource: {report: \"CertificadoCalidad.trdp\", \u0027                \n\t\u0026Caption += \u0027                    parameters: {\u0027\n\t\u0026Caption += \u0027 \t\t\t\t\t\tEmbarqueId: \"\u0027 + \u0026SDTInformeFilter.Id.ToString().Trim() + \u0027\",\u0027\n\t\u0026Caption += \u0027 \t\t\t\t\t\tFila: \"\u0027 + \u0026SDTInformeFilter.Fila.ToString().Trim() + \u0027\"\u0027\n\t\u0026Caption += \u0027 \t\t\t\t\t  }\u0027\n    \u0026Caption += \u0027                },\u0027\n    \u0026Caption += \u0027                viewMode: telerikReportViewer.ViewModes.INTERACTIVE,\u0027\n    \u0026Caption += \u0027                scaleMode: telerikReportViewer.ScaleModes.SPECIFIC,\u0027\n\t\u0026Caption += \u0027                pageMode: telerikReportViewer.PageModes.SINGLE_PAGE,\u0027\n\t\u0026Caption += \u0027\t\t\t\tscale: 1.0,\u0027\n    \u0026Caption += \u0027                enableAccessibility: false,\u0027\n    \u0026Caption += \u0027                sendEmail: { enabled: true }\u0027\n    \u0026Caption += \u0027            });\u0027\n    \u0026Caption += \u0027    });\u0027\n    \u0026Caption += \u0027\u003c/script\u003e\u0027\n\t\nEndSub\n\nsub \u0027FillHeaderCaption\u0027\n\t\n\t\u0026Caption  = \u0027\u0027\n    \u0026Caption += \u0027\u003cstyle\u003e\u0027\n    \u0026Caption += \u0027    body {\u0027\n    \u0026Caption += \u0027        font-family: Verdana, Arial, sans-serif;\u0027\n    \u0026Caption += \u0027    }\u0027\n    \u0026Caption += \u0027    #reportViewer1 {\u0027\n    \u0026Caption += \u0027        position: absolute;\u0027\n    \u0026Caption += \u0027        left: 5px;\u0027\n    \u0026Caption += \u0027        right: 5px;\u0027\n    \u0026Caption += \u0027        top: 0px;\u0027\n    \u0026Caption += \u0027        bottom: 5px;\u0027\n    \u0026Caption += \u0027        overflow: hidden;\u0027\n    \u0026Caption += \u0027        clear: both;\u0027\n    \u0026Caption += \u0027    }\u0027\n    \u0026Caption += \u0027\u003c/style\u003e\u0027\t\n\t\u0026Caption += \u0027\u003cdiv id=\"reportViewer1\"\u003e\u0027\n    \u0026Caption += \u0027    loading...\u0027\n    \u0026Caption += \u0027\u003c/div\u003e\u0027\n    \u0026Caption += \u0027\u003cscript type=\"text/javascript\"\u003e\u0027\n    \u0026Caption += \u0027    $(document).ready(function () {\u0027\n    \u0026Caption += \u0027           $(\"#reportViewer1\")\u0027\n    \u0026Caption += \u0027            .telerik_ReportViewer({ \u0027\n    \u0026Caption += \u0027                serviceUrl: \"../reporteserp/api/reports\", \u0027    \n\t\nendsub\n",
+                              "cleanSource":  "\ndo \u0027FillHeaderCaption\u0027\n\ndo case\n\tCase \u0026SDTTelerik.ReportName = !\u0027CertificadoCalidad\u0027\n\t\tdo \u0027CertificadoCalidad\u0027\n\tCase \u0026SDTTelerik.ReportName = !\u0027ValeSalida\u0027\n\t\tdo \u0027ValeSalida\u0027\n\t\t\n\tOtherwise\n\t\tdo \u0027Report\u0027\nEndcase\n\nSub \u0027Report\u0027\n\t\t\t\n\t\u0026Caption += \u0027                reportSource: {report: \"\u0027 + \u0026SDTTelerik.ReportName.ToString().Trim() + \u0027.trdp\", \u0027                \n\t\u0026Caption += \u0027                    parameters: {\u0027\n\t\u0026Caption += \u0027 \t\t\t\t\t  }\u0027\n    \u0026Caption += \u0027                },\u0027\n    \u0026Caption += \u0027                viewMode: telerikReportViewer.ViewModes.INTERACTIVE,\u0027\n    \u0026Caption += \u0027                scaleMode: telerikReportViewer.ScaleModes.SPECIFIC,\u0027\n\t\u0026Caption += \u0027                pageMode: telerikReportViewer.PageModes.SINGLE_PAGE,\u0027\n\t\u0026Caption += \u0027\t\t\t\tscale: 1.0,\u0027\n    \u0026Caption += \u0027                enableAccessibility: false,\u0027\n    \u0026Caption += \u0027                sendEmail: { enabled: true }\u0027\n    \u0026Caption += \u0027            });\u0027\n    \u0026Caption += \u0027    });\u0027\n    \u0026Caption += \u0027\u003c/script\u003e\u0027\n\t\nEndSub\n\n\n\nSub \u0027ValeSalida\u0027\n\t\t\t\n\t\u0026Caption += \u0027                reportSource: {report: \"ValeSalida.trdp\", \u0027                \n\t\u0026Caption += \u0027                    parameters: {\u0027\n\t\u0026Caption += \u0027 \t\t\t\t\t\tEmbarqueId: \"\u0027 + \u0026SDTInformeFilter.Id.ToString().Trim() + \u0027\",\u0027\n\t\u0026Caption += \u0027 \t\t\t\t\t\tFila: \"\u0027 + \u0026SDTInformeFilter.Fila.ToString().Trim() + \u0027\"\u0027\n\t\u0026Caption += \u0027 \t\t\t\t\t  }\u0027\n    \u0026Caption += \u0027                },\u0027\n    \u0026Caption += \u0027                viewMode: telerikReportViewer.ViewModes.INTERACTIVE,\u0027\n    \u0026Caption += \u0027                scaleMode: telerikReportViewer.ScaleModes.SPECIFIC,\u0027\n\t\u0026Caption += \u0027                pageMode: telerikReportViewer.PageModes.SINGLE_PAGE,\u0027\n\t\u0026Caption += \u0027\t\t\t\tscale: 1.0,\u0027\n    \u0026Caption += \u0027                enableAccessibility: false,\u0027\n    \u0026Caption += \u0027                sendEmail: { enabled: true }\u0027\n    \u0026Caption += \u0027            });\u0027\n    \u0026Caption += \u0027    });\u0027\n    \u0026Caption += \u0027\u003c/script\u003e\u0027\n\t\nEndSub\n\nSub \u0027CertificadoCalidad\u0027\n\t\t\t\n\t\u0026Caption += \u0027                reportSource: {report: \"CertificadoCalidad.trdp\", \u0027                \n\t\u0026Caption += \u0027                    parameters: {\u0027\n\t\u0026Caption += \u0027 \t\t\t\t\t\tEmbarqueId: \"\u0027 + \u0026SDTInformeFilter.Id.ToString().Trim() + \u0027\",\u0027\n\t\u0026Caption += \u0027 \t\t\t\t\t\tFila: \"\u0027 + \u0026SDTInformeFilter.Fila.ToString().Trim() + \u0027\"\u0027\n\t\u0026Caption += \u0027 \t\t\t\t\t  }\u0027\n    \u0026Caption += \u0027                },\u0027\n    \u0026Caption += \u0027                viewMode: telerikReportViewer.ViewModes.INTERACTIVE,\u0027\n    \u0026Caption += \u0027                scaleMode: telerikReportViewer.ScaleModes.SPECIFIC,\u0027\n\t\u0026Caption += \u0027                pageMode: telerikReportViewer.PageModes.SINGLE_PAGE,\u0027\n\t\u0026Caption += \u0027\t\t\t\tscale: 1.0,\u0027\n    \u0026Caption += \u0027                enableAccessibility: false,\u0027\n    \u0026Caption += \u0027                sendEmail: { enabled: true }\u0027\n    \u0026Caption += \u0027            });\u0027\n    \u0026Caption += \u0027    });\u0027\n    \u0026Caption += \u0027\u003c/script\u003e\u0027\n\t\nEndSub\n\nsub \u0027FillHeaderCaption\u0027\n\t\n\t\u0026Caption  = \u0027\u0027\n    \u0026Caption += \u0027\u003cstyle\u003e\u0027\n    \u0026Caption += \u0027    body {\u0027\n    \u0026Caption += \u0027        font-family: Verdana, Arial, sans-serif;\u0027\n    \u0026Caption += \u0027    }\u0027\n    \u0026Caption += \u0027    #reportViewer1 {\u0027\n    \u0026Caption += \u0027        position: absolute;\u0027\n    \u0026Caption += \u0027        left: 5px;\u0027\n    \u0026Caption += \u0027        right: 5px;\u0027\n    \u0026Caption += \u0027        top: 0px;\u0027\n    \u0026Caption += \u0027        bottom: 5px;\u0027\n    \u0026Caption += \u0027        overflow: hidden;\u0027\n    \u0026Caption += \u0027        clear: both;\u0027\n    \u0026Caption += \u0027    }\u0027\n    \u0026Caption += \u0027\u003c/style\u003e\u0027\t\n\t\u0026Caption += \u0027\u003cdiv id=\"reportViewer1\"\u003e\u0027\n    \u0026Caption += \u0027    loading...\u0027\n    \u0026Caption += \u0027\u003c/div\u003e\u0027\n    \u0026Caption += \u0027\u003cscript type=\"text/javascript\"\u003e\u0027\n    \u0026Caption += \u0027    $(document).ready(function () {\u0027\n    \u0026Caption += \u0027           $(\"#reportViewer1\")\u0027\n    \u0026Caption += \u0027            .telerik_ReportViewer({ \u0027\n    \u0026Caption += \u0027                serviceUrl: \"../reporteserp/api/reports\", \u0027    \n\t\nendsub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026SDTTelerik,In: \u0026SDTInformeFilter, out:\u0026Caption);\n",
+                              "cleanSource":  "parm(in:\u0026SDTTelerik,In: \u0026SDTInformeFilter, out:\u0026Caption);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Informes.SDTTelerik",
+                                         "Informes.SDTInformeFilter"
+                                     ],
+                         "calledBy":  [
+                                          "Orders",
+                                          "FTBYTD",
+                                          "RealtimeInventory",
+                                          "EmbarqueFormato",
+                                          "OrdersMoney",
+                                          "UnitPlan2"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTInformeFilter",
+                                          "SDTTelerik"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SDTTelerik",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "SDTTelerik"
+                           },
+                           {
+                               "name":  "SDTInformeFilter",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "SDTInforme Filter"
+                           },
+                           {
+                               "name":  "Caption",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Caption"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

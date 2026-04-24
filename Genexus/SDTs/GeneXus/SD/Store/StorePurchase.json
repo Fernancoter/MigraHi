@@ -1,0 +1,88 @@
+﻿{
+    "uniqueId":  "7a6745ee-1595-4d4e-8d11-0bf238191568",
+    "name":  "StorePurchase",
+    "type":  "SDT",
+    "module":  "GeneXus.SD.Store",
+    "description":  "Store Purchase",
+    "filePath":  "SDTs/GeneXus/SD/Store/StorePurchase.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "GeneXus.SD.Store.PurchaseResult"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PurchaseId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Purchase Id"
+                           },
+                           {
+                               "name":  "ProductIdentifier",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Product Identifier"
+                           },
+                           {
+                               "name":  "PurchaseDate",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Purchase Date"
+                           },
+                           {
+                               "name":  "ProductType",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Product Type"
+                           },
+                           {
+                               "name":  "Status",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Status"
+                           }
+                       ]
+}

@@ -1,0 +1,131 @@
+﻿{
+    "uniqueId":  "21f59a76-c76c-46ce-97b2-b6aab62f8492",
+    "name":  "MenuPrensado",
+    "type":  "DataProvider",
+    "module":  "Web",
+    "description":  "Menu Prensado",
+    "filePath":  "DataProviders/Web/MenuPrensado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "DVelop_Menu\n{\n\t\n\t\u0026id = 0\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlinkTarget =\"\" \n\t\tcaption = !\"Prensado\"\n\t\t\n\t\tsubItems\n\t\t{\n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioPrensado.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-home\"\n\t\t\t\tcaption = \"Inicio\"  \n\t\t\t} \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tTurnosPorSemanaPrensas.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-calendar-day\"\n\t\t\t\tcaption = \"Turnos Por Semana\"  \n\t\t\t} \n\t\t\n//\t\t\tItem\n//\t\t\t{ \n//\t\t\t\t\u0026id = \u0026id + 1\n//\t\t\t\tid = \u0026id.ToString()\n//\t\t\t\ttooltip = \"\"\n//\t\t\t\tlink =\tvwTrazabilidad.Link()\n//\t\t\t\tlinkTarget =\"\" \n//\t\t\t\ticonClass = !\"menu-icon fas fa-thumbtack\"\n//\t\t\t\tcaption = \"Trazabilidad\"  \n//\t\t\t} \n\t\t\t\n\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tDB.TroquelWW.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fas fa-border-none\"\n\t\t\t\t\t\tcaption = \"Troqueles\"  \n\t\t\t\t\t} \n\t\t\t\t\n\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tlistarPrensas.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fas fa-align-center\"\n\t\t\t\t\t\tcaption = \"Prensas\"  \n\t\t\t\t\t} \n\t\t\t\t  Item\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink = listarPrensaProducto.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fas fa-link\"\n\t\t\t\t\t\tcaption = \"Prensa Producto\"  \n\t\t\t\t\t}\n\t\t\t\t\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink = listarProductoTerminado.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fas fa-link\"\n\t\t\t\t\t\tcaption = \"Producto Terminado\"  \n\t\t\t\t\t}\n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-vector-square\"\n\t\t\t\tcaption = \"Operación\"  \n\t\t\t\tsubItems\n\t\t\t\t{\n\t\t\t\t\t\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tProduccion.vwAnaliticaPrensado.Link()\n\t\t\t\t\t\tlinkTarget =\"\"\n\t\t\t\t\t\ticonClass = !\"menu-icon far fa-stop-circle\"\n\t\t\t\t\t\tcaption = \"Prensados\"  \n\t\t\t\t\t\t\n\t\t\t\t\t} \n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tcarreraww.Link()\n\t\t\t\t\t\tlinkTarget =\"\"\n\t\t\t\t\t\ticonClass = !\"menu-icon far fa-stop-circle\"\n\t\t\t\t\t\tcaption = \"Carreras\"  \n\t\t\t\t\t\t\n\t\t\t\t\t} \n\t\t\t\t\t/*Item\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tcarreteww.Link()\n\t\t\t\t\t\tlinkTarget =\"\"\n\t\t\t\t\t\ticonClass = !\"menu-icon far fa-stop-circle\"\n\t\t\t\t\t\tcaption = \"Carretes\"  \n\t\t\t\t\t\t\n\t\t\t\t\t}*/ \n\t\t\t\t\t\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tvwAnaliticaCarrete.Link()\n\t\t\t\t\t\tlinkTarget =\"\"\n\t\t\t\t\t\ticonClass = !\"menu-icon far fa-stop-circle\"\n\t\t\t\t\t\tcaption = \"Carretes\"  \n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tDB.PaletWW.Link()\n\t\t\t\t\t\tlinkTarget =\"\"\n\t\t\t\t\t\ticonClass = !\"menu-icon far fa-stop-circle\"\n\t\t\t\t\t\tcaption = \"Palets\"  \n\t\t\t\t\t\t\n\t\t\t\t\t} \n\t\t\t\t\t\n\t\t\t\t} \t\n\t\t\t} \n\t\t}\n\t}\n}\n",
+                              "cleanSource":  "DVelop_Menu\n{\n\t\n\t\u0026id = 0\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlinkTarget =\"\" \n\t\tcaption = !\"Prensado\"\n\t\t\n\t\tsubItems\n\t\t{\n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioPrensado.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-home\"\n\t\t\t\tcaption = \"Inicio\"  \n\t\t\t} \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tTurnosPorSemanaPrensas.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-calendar-day\"\n\t\t\t\tcaption = \"Turnos Por Semana\"  \n\t\t\t} \n\t\t\n//\t\t\tItem\n//\t\t\t{ \n//\t\t\t\t\u0026id = \u0026id + 1\n//\t\t\t\tid = \u0026id.ToString()\n//\t\t\t\ttooltip = \"\"\n//\t\t\t\tlink =\tvwTrazabilidad.Link()\n//\t\t\t\tlinkTarget =\"\" \n//\t\t\t\ticonClass = !\"menu-icon fas fa-thumbtack\"\n//\t\t\t\tcaption = \"Trazabilidad\"  \n//\t\t\t} \n\t\t\t\n\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tDB.TroquelWW.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fas fa-border-none\"\n\t\t\t\t\t\tcaption = \"Troqueles\"  \n\t\t\t\t\t} \n\t\t\t\t\n\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tlistarPrensas.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fas fa-align-center\"\n\t\t\t\t\t\tcaption = \"Prensas\"  \n\t\t\t\t\t} \n\t\t\t\t  Item\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink = listarPrensaProducto.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fas fa-link\"\n\t\t\t\t\t\tcaption = \"Prensa Producto\"  \n\t\t\t\t\t}\n\t\t\t\t\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink = listarProductoTerminado.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fas fa-link\"\n\t\t\t\t\t\tcaption = \"Producto Terminado\"  \n\t\t\t\t\t}\n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-vector-square\"\n\t\t\t\tcaption = \"Operación\"  \n\t\t\t\tsubItems\n\t\t\t\t{\n\t\t\t\t\t\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tProduccion.vwAnaliticaPrensado.Link()\n\t\t\t\t\t\tlinkTarget =\"\"\n\t\t\t\t\t\ticonClass = !\"menu-icon far fa-stop-circle\"\n\t\t\t\t\t\tcaption = \"Prensados\"  \n\t\t\t\t\t\t\n\t\t\t\t\t} \n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tcarreraww.Link()\n\t\t\t\t\t\tlinkTarget =\"\"\n\t\t\t\t\t\ticonClass = !\"menu-icon far fa-stop-circle\"\n\t\t\t\t\t\tcaption = \"Carreras\"  \n\t\t\t\t\t\t\n\t\t\t\t\t} \n\t\t\t\t\t/*Item\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tcarreteww.Link()\n\t\t\t\t\t\tlinkTarget =\"\"\n\t\t\t\t\t\ticonClass = !\"menu-icon far fa-stop-circle\"\n\t\t\t\t\t\tcaption = \"Carretes\"  \n\t\t\t\t\t\t\n\t\t\t\t\t}*/ \n\t\t\t\t\t\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tvwAnaliticaCarrete.Link()\n\t\t\t\t\t\tlinkTarget =\"\"\n\t\t\t\t\t\ticonClass = !\"menu-icon far fa-stop-circle\"\n\t\t\t\t\t\tcaption = \"Carretes\"  \n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tDB.PaletWW.Link()\n\t\t\t\t\t\tlinkTarget =\"\"\n\t\t\t\t\t\ticonClass = !\"menu-icon far fa-stop-circle\"\n\t\t\t\t\t\tcaption = \"Palets\"  \n\t\t\t\t\t\t\n\t\t\t\t\t} \n\t\t\t\t\t\n\t\t\t\t} \t\n\t\t\t} \n\t\t}\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.ProgramNames",
+                                         "WWPBaseObjects.DVelop_Menu",
+                                         "DB.PaletWW",
+                                         "DB.CarreraWW",
+                                         "DB.TroquelWW",
+                                         "Produccion.listarPrensas",
+                                         "Produccion.listarPrensaProducto",
+                                         "Produccion.listarProductoTerminado",
+                                         "Produccion.TurnosPorSemanaPrensas",
+                                         "Produccion.InicioPrensado",
+                                         "Produccion.vwAnaliticaCarrete",
+                                         "Produccion.vwAnaliticaPrensado"
+                                     ],
+                         "calledBy":  [
+                                          "MenuByModule"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WWPBaseObjects.DVelop_Menu"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "id",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "id"
+                           },
+                           {
+                               "name":  "ProgramName",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Program Name"
+                           },
+                           {
+                               "name":  "Repository",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Repository"
+                           },
+                           {
+                               "name":  "Errors",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Errors"
+                           },
+                           {
+                               "name":  "IsRepoAdministrator",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Is Repo Administrator"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

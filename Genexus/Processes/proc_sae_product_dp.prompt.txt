@@ -1,0 +1,21 @@
+﻿
+=== DataProvider: SAE.ProductDP ===
+
+--- Source (Source) ---
+DVB_SDTComboData
+{
+	Item
+	{
+		ID = WWPBaseObjects.Notifications.ProductNumber
+		Title = ProductNumber
+		
+	}
+}
+
+
+=== SDT: WWPBaseObjects.DVB_SDTComboData ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

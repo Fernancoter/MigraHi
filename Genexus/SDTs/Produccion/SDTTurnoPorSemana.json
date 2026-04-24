@@ -1,0 +1,158 @@
+﻿{
+    "uniqueId":  "9d8de714-9d7e-4bce-9b44-eec39ded191d",
+    "name":  "SDTTurnoPorSemana",
+    "type":  "SDT",
+    "module":  "Produccion",
+    "description":  "SDTTurno Por Semana",
+    "filePath":  "SDTs/Produccion/SDTTurnoPorSemana.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "TurnosPorSemanaExtrusoras",
+                                          "ObtenerTurnoPorSemanaPrensado",
+                                          "TurnosPorSemana",
+                                          "ProgramarExtrusion",
+                                          "ObtenerTurnoPorSemanaExtrusion",
+                                          "ProgramarPrensado",
+                                          "TurnosPorSemanaPrensas"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Fecha",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Fecha"
+                           },
+                           {
+                               "name":  "Hora",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Hora"
+                           },
+                           {
+                               "name":  "Dia",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Dia"
+                           },
+                           {
+                               "name":  "ExtrusoraId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusora Id"
+                           },
+                           {
+                               "name":  "PrensaId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensa Id"
+                           },
+                           {
+                               "name":  "Meta1",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Meta1"
+                           },
+                           {
+                               "name":  "Producido1",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producido1"
+                           },
+                           {
+                               "name":  "ExtrusionId1",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id1"
+                           },
+                           {
+                               "name":  "PrensadoId1",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "OperadorId1",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Operador Id"
+                           },
+                           {
+                               "name":  "ProductoId1",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "ExtrusionEstado1",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Estado"
+                           },
+                           {
+                               "name":  "PrensadoEstado1",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Estado1"
+                           }
+                       ]
+}

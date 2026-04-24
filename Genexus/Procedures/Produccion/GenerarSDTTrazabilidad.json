@@ -1,0 +1,128 @@
+﻿{
+    "uniqueId":  "092a6516-8c7d-45a4-ba67-4e6f5d8f23bf",
+    "name":  "GenerarSDTTrazabilidad",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Generar SDTTrazabilidad",
+    "filePath":  "Procedures/Produccion/GenerarSDTTrazabilidad.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026SDTTrazabilidad = DPSDTTrazabilidad.Udp()\nFor \u0026SDTTrazabilidadItem In \u0026SDTTrazabilidad\n\t\n\tFor each\n\t\tWhere CarreteId = \u0026SDTTrazabilidadItem.CarreteId\n\t\t\u0026SDTTrazabilidadItem.PaletNoSerie = PaletNoSerie\n\t\t\u0026SDTTrazabilidadItem.PaletNo = PaletNo\n\t\t\u0026SDTTrazabilidadItem.PaletHoraInicioEnsamble = PaletHoraInicioEnsamble\n\t\t\u0026SDTTrazabilidadItem.PaletHoraFinEnsamble = PaletHoraFinEnsamble\n\t\t\u0026SDTTrazabilidadItem.PaletEstatus = PaletEstatus\n\tEndFor\n\n\t\nEndFor\n",
+                              "cleanSource":  "\u0026SDTTrazabilidad = DPSDTTrazabilidad.Udp()\nFor \u0026SDTTrazabilidadItem In \u0026SDTTrazabilidad\n\t\n\tFor each\n\t\tWhere CarreteId = \u0026SDTTrazabilidadItem.CarreteId\n\t\t\u0026SDTTrazabilidadItem.PaletNoSerie = PaletNoSerie\n\t\t\u0026SDTTrazabilidadItem.PaletNo = PaletNo\n\t\t\u0026SDTTrazabilidadItem.PaletHoraInicioEnsamble = PaletHoraInicioEnsamble\n\t\t\u0026SDTTrazabilidadItem.PaletHoraFinEnsamble = PaletHoraFinEnsamble\n\t\t\u0026SDTTrazabilidadItem.PaletEstatus = PaletEstatus\n\tEndFor\n\n\t\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(Out:\u0026SDTTrazabilidad);\n",
+                              "cleanSource":  "parm(Out:\u0026SDTTrazabilidad);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.DPSDTTrazabilidad",
+                                         "Produccion.SDTTrazabilidad",
+                                         "DPSDTTrazabilidad"
+                                     ],
+                         "calledBy":  [
+                                          "vwTrazabilidad"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTTrazabilidad"
+                                      ],
+                         "usesDataProviders":  [
+                                                   "DPSDTTrazabilidad"
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SDTTrazabilidad",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "SDTTrazabilidad"
+                           },
+                           {
+                               "name":  "SDTTrazabilidadItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDTTrazabilidad Item"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

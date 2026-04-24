@@ -1,0 +1,180 @@
+﻿{
+    "uniqueId":  "eaecf967-b229-4385-908e-1303d4823b90",
+    "name":  "SDInitExtrusion",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDInit Extrusion",
+    "filePath":  "Procedures/Produccion/SDInitExtrusion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\t\u0026Mensajes.Clear()\n\t\u0026isOK = GuardarExtrusion.Udp(\u0026CurrentItem)\n\t\n\tif(\u0026isOK)\n\t\t\n\t\tif(\u0026ExtrusionEstado = EstadoExtrusion.Programada)\n\t\t\tProduccion.SDExtrusoraBobina.Call(\u0026ExtrusionId)\n\t\tendif\n\n\t\tSetGAMAttribute.Call(\u0027ExtrusionID\u0027, \u0026ExtrusionId.ToString())\n\telse\n\t\t\u0026Msj = New()\n\t\t\u0026Msj.Id = !\u0027GuardarExtrusionFallida\u0027\n\t\t\u0026Msj.Description = \u0027No se ha podido realizar el guardado de la Extrusion (\u0027 +  \u0026ExtrusionEstado.ToUpper().ToString() +\u0027)\u0027\n\t\t\u0026Msj.Type = MessageTypes.Error\n\t\t\u0026Mensajes.Add(\u0026Msj)\n\tendif\n",
+                              "cleanSource":  "\t\n\t\u0026Mensajes.Clear()\n\t\u0026isOK = GuardarExtrusion.Udp(\u0026CurrentItem)\n\t\n\tif(\u0026isOK)\n\t\t\n\t\tif(\u0026ExtrusionEstado = EstadoExtrusion.Programada)\n\t\t\tProduccion.SDExtrusoraBobina.Call(\u0026ExtrusionId)\n\t\tendif\n\n\t\tSetGAMAttribute.Call(\u0027ExtrusionID\u0027, \u0026ExtrusionId.ToString())\n\telse\n\t\t\u0026Msj = New()\n\t\t\u0026Msj.Id = !\u0027GuardarExtrusionFallida\u0027\n\t\t\u0026Msj.Description = \u0027No se ha podido realizar el guardado de la Extrusion (\u0027 +  \u0026ExtrusionEstado.ToUpper().ToString() +\u0027)\u0027\n\t\t\u0026Msj.Type = MessageTypes.Error\n\t\t\u0026Mensajes.Add(\u0026Msj)\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026CurrentItem, in:\u0026ExtrusionId, in:\u0026ExtrusionEstado, out:\u0026Mensajes);\n",
+                              "cleanSource":  "parm(in:\u0026CurrentItem, in:\u0026ExtrusionId, in:\u0026ExtrusionEstado, out:\u0026Mensajes);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.GuardarExtrusion",
+                                         "Produccion.SetGAMAttribute",
+                                         "Produccion.SDExtrusoraBobina",
+                                         "GeneXus.Common.Messages",
+                                         "Produccion.SDTExtrusion",
+                                         "SetGAMAttribute",
+                                         "GuardarExtrusion"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PrensadoEstado",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Estado"
+                           },
+                           {
+                               "name":  "CurrentItem",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Current Item"
+                           },
+                           {
+                               "name":  "ExtrusionEstado",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Estado"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "isOK",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "is OK"
+                           },
+                           {
+                               "name":  "Mensajes",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Mensajes"
+                           },
+                           {
+                               "name":  "Msj",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Msj"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

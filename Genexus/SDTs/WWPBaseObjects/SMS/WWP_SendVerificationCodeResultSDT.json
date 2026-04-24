@@ -1,0 +1,56 @@
+﻿{
+    "uniqueId":  "d2f96848-5b52-4cb6-a4a3-9d04e9a8d044",
+    "name":  "WWP_SendVerificationCodeResultSDT",
+    "type":  "SDT",
+    "module":  "WWPBaseObjects.SMS",
+    "description":  "Send Verification Code Result SDT",
+    "filePath":  "SDTs/WWPBaseObjects/SMS/WWP_SendVerificationCodeResultSDT.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "WWP_SendVerificationCode"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "id",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "id"
+                           }
+                       ]
+}

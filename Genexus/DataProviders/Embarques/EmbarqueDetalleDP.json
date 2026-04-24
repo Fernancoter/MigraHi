@@ -1,0 +1,94 @@
+﻿{
+    "uniqueId":  "70997186-1f52-494d-b56c-46ba97fcd182",
+    "name":  "EmbarqueDetalleDP",
+    "type":  "DataProvider",
+    "module":  "Embarques",
+    "description":  "Embarque Detalle DP",
+    "filePath":  "DataProviders/Embarques/EmbarqueDetalleDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "EmbarqueDetalleSDT\n{\n\tEmbarqueDetalleSDTItem\n\tWhere EmbarqueId = \u0026EmbarqueId\n\t{\n\t\tEmbarqueDetalleId = EmbarqueDetalleId\n\t\tEmbarqueId = EmbarqueId\n\t\tEmbarqueDetalleProducto = EmbarqueDetalleProducto\n\t\tEmbarqueDetalleCantidadPallets = EmbarqueDetalleCantidadPallets\n\t\tEmbarqueProductoId = EmbarqueProductoId\n\t\tEmbarqueProductoNombre = EmbarqueProductoNombre\n\t}\n}\n",
+                              "cleanSource":  "EmbarqueDetalleSDT\n{\n\tEmbarqueDetalleSDTItem\n\tWhere EmbarqueId = \u0026EmbarqueId\n\t{\n\t\tEmbarqueDetalleId = EmbarqueDetalleId\n\t\tEmbarqueId = EmbarqueId\n\t\tEmbarqueDetalleProducto = EmbarqueDetalleProducto\n\t\tEmbarqueDetalleCantidadPallets = EmbarqueDetalleCantidadPallets\n\t\tEmbarqueProductoId = EmbarqueProductoId\n\t\tEmbarqueProductoNombre = EmbarqueProductoNombre\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026EmbarqueId);\n",
+                              "cleanSource":  "parm(\u0026EmbarqueId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Embarques.EmbarqueDetalleSDT"
+                                     ],
+                         "calledBy":  [
+                                          "EmbarqueWP"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "EmbarqueDetalleSDT"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "EmbarqueId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Embarque Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

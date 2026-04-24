@@ -1,0 +1,96 @@
+﻿{
+    "uniqueId":  "8b9b9017-c768-4528-a815-ea6e7c9f946f",
+    "name":  "TipoBobinasDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Tipo Bobinas DP",
+    "filePath":  "DataProviders/Produccion/TipoBobinasDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTProducto\n{\n\tSDTProductoItem\n\twhere DB.ExtrusoraProductoId \u003e 0\n\tWhere ExtrusoraId = \u0026ExtrusoraId\n\twhere ProductoId \u003e 0\n\twhere ProductoActivo = true\n\twhere ProductoCategoriaNombre = ObtenerConfiguracion.Udp(!\u0027CategoriaBobina\u0027)\n\t{\n\t\tProductoId = ProductoId\n\t\tProductoClave = ProductoClave\n\t\tProductoNombre = ProductoNombre\n\t\tProductoDescripcion = ProductoDescripcion\n\t\tProductoCategoriaId = ProductoCategoriaId\n\t\tProductoCategoriaNombre = ProductoCategoriaNombre\n\t\tProductoPrecioUnitario = ProductoPrecioUnitario\n\t\tProductoInventarioActual = ProductoInventarioActual\n\t\tProductoActivo = ProductoActivo\n\t\tProductoClaveExterna = ProductoClaveExterna\n\t\tProductoImagen = ProductoImagen\n\t}\n}\n",
+                              "cleanSource":  "SDTProducto\n{\n\tSDTProductoItem\n\twhere DB.ExtrusoraProductoId \u003e 0\n\tWhere ExtrusoraId = \u0026ExtrusoraId\n\twhere ProductoId \u003e 0\n\twhere ProductoActivo = true\n\twhere ProductoCategoriaNombre = ObtenerConfiguracion.Udp(!\u0027CategoriaBobina\u0027)\n\t{\n\t\tProductoId = ProductoId\n\t\tProductoClave = ProductoClave\n\t\tProductoNombre = ProductoNombre\n\t\tProductoDescripcion = ProductoDescripcion\n\t\tProductoCategoriaId = ProductoCategoriaId\n\t\tProductoCategoriaNombre = ProductoCategoriaNombre\n\t\tProductoPrecioUnitario = ProductoPrecioUnitario\n\t\tProductoInventarioActual = ProductoInventarioActual\n\t\tProductoActivo = ProductoActivo\n\t\tProductoClaveExterna = ProductoClaveExterna\n\t\tProductoImagen = ProductoImagen\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026ExtrusoraId);\n",
+                              "cleanSource":  "parm(\u0026ExtrusoraId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.ObtenerConfiguracion",
+                                         "Produccion.SDTProducto",
+                                         "ObtenerConfiguracion"
+                                     ],
+                         "calledBy":  [
+                                          "ExclusionDelDia"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTProducto"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ExtrusoraId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Extrusora Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

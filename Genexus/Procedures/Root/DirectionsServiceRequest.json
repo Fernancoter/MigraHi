@@ -1,0 +1,154 @@
+﻿{
+    "uniqueId":  "fb13278a-3ac0-4fbc-bca1-614dee3277cb",
+    "name":  "DirectionsServiceRequest",
+    "type":  "Procedure",
+    "module":  "Root",
+    "description":  "Directions Service Request",
+    "filePath":  "Procedures/Root/DirectionsServiceRequest.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\nDo Case\n\tCase \u0026DirectionsServiceProvider = DirectionsServiceProviders.Google\n\t\tGoogleDirectionsServiceRequest.Call(\u0026DirectionsRequestParameters, \u0026Routes, \u0026errorMessages)\n\t\n\tOtherwise\n\t\u0026errorMessage.Description = \"Unknown Error\"\n\t\u0026errorMessage.Type = GeneXus.MessageTypes.Error\n\t\u0026errorMessages.Add(\u0026errorMessage)\nEndcase\n",
+                              "cleanSource":  "\nDo Case\n\tCase \u0026DirectionsServiceProvider = DirectionsServiceProviders.Google\n\t\tGoogleDirectionsServiceRequest.Call(\u0026DirectionsRequestParameters, \u0026Routes, \u0026errorMessages)\n\t\n\tOtherwise\n\t\u0026errorMessage.Description = \"Unknown Error\"\n\t\u0026errorMessage.Type = GeneXus.MessageTypes.Error\n\t\u0026errorMessages.Add(\u0026errorMessage)\nEndcase"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in: \u0026DirectionsServiceProvider,\n\t in: \u0026DirectionsRequestParameters,\n\t out: \u0026Routes, out: \u0026errorMessages);\n",
+                              "cleanSource":  "Parm(in: \u0026DirectionsServiceProvider,\n\t in: \u0026DirectionsRequestParameters,\n\t out: \u0026Routes, out: \u0026errorMessages);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "GeneXus.Common.GoogleDirectionsServiceRequest",
+                                         "GeneXus.Common.Route",
+                                         "GeneXus.Common.DirectionsRequestParameters",
+                                         "GeneXus.Common.Messages",
+                                         "GoogleDirectionsServiceRequest"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "GeneXus.Common.DirectionsRequestParameters"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "DirectionsRequestParameters",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Directions Request Parameters"
+                           },
+                           {
+                               "name":  "DirectionsServiceProvider",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Directions Service Provider"
+                           },
+                           {
+                               "name":  "errorMessage",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "error Message"
+                           },
+                           {
+                               "name":  "errorMessages",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "error Messages"
+                           },
+                           {
+                               "name":  "Routes",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Routes"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

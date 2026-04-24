@@ -1,0 +1,128 @@
+﻿{
+    "uniqueId":  "86a673f6-b448-4a5b-802f-fb8caa7d4309",
+    "name":  "MediaItem",
+    "type":  "SDT",
+    "module":  "GeneXus.SD.Media",
+    "description":  "Media Item",
+    "filePath":  "SDTs/GeneXus/SD/Media/MediaItem.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "MediaQueue"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Id",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Id"
+                           },
+                           {
+                               "name":  "Uri",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Uri"
+                           },
+                           {
+                               "name":  "ContentType",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Content type for the media (such as \"audio/mpeg\")"
+                           },
+                           {
+                               "name":  "StreamType",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Stream type (none, buffered, or live)"
+                           },
+                           {
+                               "name":  "Title",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Title"
+                           },
+                           {
+                               "name":  "Subtitle",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Subtitle"
+                           },
+                           {
+                               "name":  "Description",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Description"
+                           },
+                           {
+                               "name":  "Image",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Image"
+                           },
+                           {
+                               "name":  "Duration",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Duration in milliseconds (0 for \"infinite\" or \"unknown\")."
+                           },
+                           {
+                               "name":  "IsFavorite",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Is Favorite"
+                           }
+                       ]
+}

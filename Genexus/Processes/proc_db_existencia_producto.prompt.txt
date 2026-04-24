@@ -1,0 +1,4 @@
+﻿
+=== Transaction: DB.ExistenciaProducto ===
+
+(sin businessLogic extraído)

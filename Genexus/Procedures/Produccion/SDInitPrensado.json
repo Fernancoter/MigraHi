@@ -1,0 +1,166 @@
+﻿{
+    "uniqueId":  "6fb5fe21-c674-40a6-8b71-2ee9165ce059",
+    "name":  "SDInitPrensado",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDInit Prensado",
+    "filePath":  "Procedures/Produccion/SDInitPrensado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\t\u0026Mensajes.Clear()\n\t\u0026isOK = Produccion.GuardarPrensado.Udp(\u0026CurrentItem)\n\t\n\tif(\u0026isOK)\n\t\t\n\t\tif(\u0026PrensadoEstado = EstadoPrensado.Programado)\n\t\t\tSDPrensaCarrera.Call(\u0026PrensadoId)\n\t\tendif\n\t\n\t\tObtenerPalet.Call(\u0026PrensadoId, 0)\n\t\tSetGAMAttribute.Call(\u0027PrensadoID\u0027, \u0026PrensadoId.ToString())\n\telse\n\t\t\u0026Msj = New()\n\t\t\u0026Msj.Id = !\u0027GuardarPrensadoFallido\u0027\n\t\t\u0026Msj.Description = \u0027No se ha podido realizar el guardado del Prensado (\u0027 +  \u0026PrensadoEstado.ToUpper().ToString() +\u0027)\u0027\n\t\t\u0026Msj.Type = MessageTypes.Error\n\t\t\u0026Mensajes.Add(\u0026Msj)\n\tendif\n",
+                              "cleanSource":  "\t\n\t\u0026Mensajes.Clear()\n\t\u0026isOK = Produccion.GuardarPrensado.Udp(\u0026CurrentItem)\n\t\n\tif(\u0026isOK)\n\t\t\n\t\tif(\u0026PrensadoEstado = EstadoPrensado.Programado)\n\t\t\tSDPrensaCarrera.Call(\u0026PrensadoId)\n\t\tendif\n\t\n\t\tObtenerPalet.Call(\u0026PrensadoId, 0)\n\t\tSetGAMAttribute.Call(\u0027PrensadoID\u0027, \u0026PrensadoId.ToString())\n\telse\n\t\t\u0026Msj = New()\n\t\t\u0026Msj.Id = !\u0027GuardarPrensadoFallido\u0027\n\t\t\u0026Msj.Description = \u0027No se ha podido realizar el guardado del Prensado (\u0027 +  \u0026PrensadoEstado.ToUpper().ToString() +\u0027)\u0027\n\t\t\u0026Msj.Type = MessageTypes.Error\n\t\t\u0026Mensajes.Add(\u0026Msj)\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026CurrentItem, in:\u0026PrensadoId, in:\u0026PrensadoEstado, out:\u0026Mensajes);\n",
+                              "cleanSource":  "parm(in:\u0026CurrentItem, in:\u0026PrensadoId, in:\u0026PrensadoEstado, out:\u0026Mensajes);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.GuardarPrensado",
+                                         "Produccion.ObtenerPalet",
+                                         "Produccion.SetGAMAttribute",
+                                         "Produccion.SDPrensaCarrera",
+                                         "GeneXus.Common.Messages",
+                                         "Produccion.SDTPrensado",
+                                         "SDPrensaCarrera",
+                                         "ObtenerPalet",
+                                         "SetGAMAttribute"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CurrentItem",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Current Item"
+                           },
+                           {
+                               "name":  "isOK",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "is OK"
+                           },
+                           {
+                               "name":  "Mensajes",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Mensajes"
+                           },
+                           {
+                               "name":  "Msj",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Msj"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensadoEstado",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Estado"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

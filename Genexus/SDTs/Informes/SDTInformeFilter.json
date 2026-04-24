@@ -1,0 +1,70 @@
+﻿{
+    "uniqueId":  "2e51f727-6c47-4139-aba9-74c395f9d90a",
+    "name":  "SDTInformeFilter",
+    "type":  "SDT",
+    "module":  "Informes",
+    "description":  "SDTInforme Filter",
+    "filePath":  "SDTs/Informes/SDTInformeFilter.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "Orders",
+                                          "FTBYTD",
+                                          "RealtimeInventory",
+                                          "EmbarqueFormato",
+                                          "OrdersMoney",
+                                          "InformesTelerik",
+                                          "UnitPlan2"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Id",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Id"
+                           },
+                           {
+                               "name":  "Fila",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Fila"
+                           }
+                       ]
+}

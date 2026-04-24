@@ -1,0 +1,169 @@
+﻿{
+    "uniqueId":  "948748f3-5d0a-4aa4-9f20-b044db04c94e",
+    "name":  "SDPDoubleMenuOptions",
+    "type":  "SDT",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPDouble Menu Options",
+    "filePath":  "SDTs/WorkWithPlus/NativeMobile/SDPDoubleMenuOptions.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "SDPProductsListToDoubleOptionsSDT",
+                                          "SDPDoubleMenuFromLaunchpad"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Type",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Type"
+                           },
+                           {
+                               "name":  "Option1Title",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option1 Title"
+                           },
+                           {
+                               "name":  "Option1Image",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option1 Image"
+                           },
+                           {
+                               "name":  "Option1Subtitle",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option1 Subtitle"
+                           },
+                           {
+                               "name":  "Option1Information1",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option1 Information1"
+                           },
+                           {
+                               "name":  "Option1Information2",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option1 Information2"
+                           },
+                           {
+                               "name":  "Option1Id",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option1 Id"
+                           },
+                           {
+                               "name":  "Option1ComponentToCall",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option1 Component To Call"
+                           },
+                           {
+                               "name":  "Option2Title",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option2 Title"
+                           },
+                           {
+                               "name":  "Option2Image",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option2 Image"
+                           },
+                           {
+                               "name":  "Option2Subtitle",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option2 Subtitle"
+                           },
+                           {
+                               "name":  "Option2Id",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option2 Id"
+                           },
+                           {
+                               "name":  "Option2ComponentToCall",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option2 Component To Call"
+                           },
+                           {
+                               "name":  "Option2Information1",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option2 Information1"
+                           },
+                           {
+                               "name":  "Option2Information2",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option2 Information2"
+                           }
+                       ]
+}

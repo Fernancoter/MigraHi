@@ -1,0 +1,4 @@
+﻿
+=== WebPanel: Reportes.InicioReportesHC ===
+
+(sin businessLogic extraído)

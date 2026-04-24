@@ -1,0 +1,162 @@
+﻿{
+    "uniqueId":  "92fa7871-1aa1-45a8-a64c-64158904d7dc",
+    "name":  "SDTCarreraSD",
+    "type":  "SDT",
+    "module":  "Produccion",
+    "description":  "SDTCarrera SD",
+    "filePath":  "SDTs/Produccion/SDTCarreraSD.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "SDTerminarCarreraDB",
+                                          "SDValidarCarrera",
+                                          "SDCarreraDP"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CarreraId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Id"
+                           },
+                           {
+                               "name":  "CarreraNo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera No"
+                           },
+                           {
+                               "name":  "CarreraEstado",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Estado"
+                           },
+                           {
+                               "name":  "CarreraPaletTerminado",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Palet Terminado"
+                           },
+                           {
+                               "name":  "CarreteTerminal",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Terminal"
+                           },
+                           {
+                               "name":  "InicioPrensadoBobinaId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Inicio Prensado Bobina Id"
+                           },
+                           {
+                               "name":  "InicioPBPrensadoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Inicio PBPrensado Id"
+                           },
+                           {
+                               "name":  "CarreteL1",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "L1"
+                           },
+                           {
+                               "name":  "CarreteL2",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "L2"
+                           },
+                           {
+                               "name":  "CarreteL3",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "L3"
+                           },
+                           {
+                               "name":  "CarreteL4",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "L4"
+                           },
+                           {
+                               "name":  "CarreteL5",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "L5"
+                           },
+                           {
+                               "name":  "CarreteL6",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "L6"
+                           },
+                           {
+                               "name":  "EtiquetaCarrera",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Etiqueta Carrera"
+                           }
+                       ]
+}

@@ -1,0 +1,142 @@
+﻿{
+    "uniqueId":  "78a0a4c0-adf4-41c3-9006-193f45c5bcb0",
+    "name":  "WWP_StorageProvider_GetFilePath",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "Storage Provider - Get File Path",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_StorageProvider_GetFilePath.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\nIf \u0026FilePath.Trim() \u003c\u003e \u0027\u0027 AND \u0026StorageProvider.GetPrivate(\u0026FilePath, \u0026File, 5, \u0026Messages)\n\t\u0026FilePath = \u0026File.GetURI()\nEndIf\n",
+                              "cleanSource":  "\nIf \u0026FilePath.Trim() \u003c\u003e \u0027\u0027 AND \u0026StorageProvider.GetPrivate(\u0026FilePath, \u0026File, 5, \u0026Messages)\n\t\u0026FilePath = \u0026File.GetURI()\nEndIf"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "\nparm(inout:\u0026FilePath);\n",
+                              "cleanSource":  "\nparm(inout:\u0026FilePath);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "GeneXus.Common.Messages"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "GeneXus.Common.Messages"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "FilePath",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "File Path"
+                           },
+                           {
+                               "name":  "StorageProvider",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_USRDEFTYP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Storage Provider"
+                           },
+                           {
+                               "name":  "File",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_USRDEFTYP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "File"
+                           },
+                           {
+                               "name":  "Messages",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Messages"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

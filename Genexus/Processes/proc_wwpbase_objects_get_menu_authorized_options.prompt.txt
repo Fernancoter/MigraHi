@@ -1,0 +1,147 @@
+﻿
+=== Procedure: WWPBaseObjects.GetMenuAuthorizedOptions ===
+
+--- Source (Source) ---
+/*
+This procedure returns only authorized options. 
+
+SDT DVExtUC_SDTSidebarMenuOptionsData's Item has an "authorizationKey" property.
+Possible values:
+ - If it is empty, the item will be checked automatically based on its url
+ - If it has the "public" value, the item will be authorized.
+ - If it has aNother value, it will be used as the authorization key.
+*/ 
+
+For &DVelop_Menu_Item In &DVelop_Menu
+ 	//with subitems
+	If &DVelop_Menu_Item.subItems.Count > 0
+ 		GetMenuAuthorizedOptionsRecursive.Call(&DVelop_Menu_Item.ToJson(),&ResultJson) 
+		&Aux_DVelop_Menu_Item.FromJson(&ResultJson)
+		If &Aux_DVelop_Menu_Item.subItems.Count = 0 
+			&RemoveIds.Add(&DVelop_Menu_Item.id)
+		else
+			&DVelop_Menu_Item.FromJson(&ResultJson) 
+		EndIf
+	else   
+		//main level item
+		&IsAuthorized = IsMenuAuthorizedOption(&DVelop_Menu_Item)
+		If Not &IsAuthorized 
+			&RemoveIds.Add(&DVelop_Menu_Item.id) 
+		EndIf
+	EndIf
+EndFor
+ 
+For &i = 1 To &RemoveIds.Count
+	For &j = 1 To &DVelop_Menu.Count
+		If &DVelop_Menu.Item(&j).id.Trim() = &RemoveIds.Item(&i).Trim()
+			&DVelop_Menu.Remove(&j)
+			exit
+		EndIf
+	EndFor
+EndFor
+
+--- Rules (Rules) ---
+parm(inout:&DVelop_Menu);
+
+
+=== Procedure: WWPBaseObjects.GetMenuAuthorizedOptionsRecursive ===
+
+--- Source (Source) ---
+&RemoveIds.Clear()
+&DVelop_Menu_Item.FromJson(&ParentItemJson)
+
+For &AuxDVelop_Menu_Item in &DVelop_Menu_Item.subItems
+	
+	//Has subitems?
+	If &AuxDVelop_Menu_Item.subItems.Count > 0
+ 		WWPBaseObjects.GetMenuAuthorizedOptionsRecursive.Call(&AuxDVelop_Menu_Item.ToJson(),&Result2Json)  
+		&AuxDVelop_Menu_Item.FromJson(&Result2Json)
+		If &AuxDVelop_Menu_Item.SubItems.Count = 0
+			&RemoveIds.Add(&AuxDVelop_Menu_Item.id)
+		EndIf
+	else   
+		&IsAuthorized = WWPBaseObjects.IsMenuAuthorizedOption(&AuxDVelop_Menu_Item)
+		If Not &IsAuthorized  
+			&RemoveIds.Add(&AuxDVelop_Menu_Item.id)
+		EndIf
+		
+	EndIf
+	
+EndFor
+
+For &i = 1 to &RemoveIds.Count
+	//Workaround For gx
+	&j = 0
+	For &AuxDVelop_Menu_Item in &DVelop_Menu_Item.subItems
+		&j += 1
+		If &AuxDVelop_Menu_Item.id.Trim() = &RemoveIds.Item(&i).Trim()
+			&DVelop_Menu_Item.subItems.Remove(&j)
+			Exit
+		EndIf
+	EndFor
+EndFor
+
+&ResultJson = &DVelop_Menu_Item.ToJson()
+
+--- Rules (Rules) ---
+parm(in:&ParentItemJson, out:&ResultJson);
+
+
+=== Procedure: WWPBaseObjects.IsMenuAuthorizedOption ===
+
+--- Source (Source) ---
+/* 
+
+SDT DVExtUC_SDTSidebarMenuOptionsData's Item has an "authorizationKey" property.
+Possible values:
+ - If it is empty, the item will be checked automatically based on its url
+ - If it has the "public" value, the item will be authorized.
+ - If it has aNother value, it will be used as the authorization key.
+*/
+ 
+//resolve access for this item
+Do Case
+		//Public
+	Case &DVelop_Menu_Item.authorizationKey.ToLower() = !"public"
+		&IsAuthorized = true
+	Case Not &DVelop_Menu_Item.authorizationKey.IsEmpty()
+		//Check with this key 
+		&IsAuthorized = WWPBaseObjects.SecGAMIsAuthByFunctionalityKey(&DVelop_Menu_Item.AuthorizationKey)
+	Otherwise
+		//Check by url 
+		&Url = &DVelop_Menu_Item.link
+		If Not &Url.IsEmpty()		
+			do 'Get Authorization Key From Url'
+		&IsAuthorized = SecGAMIsAuthByFunctionalityKey.Udp(&AuthorizationKey)
+		Else
+			&IsAuthorized = True
+		EndIf
+EndCase
+
+
+Sub 'Get Authorization Key From Url'
+	&AuthorizationKey.SetEmpty()
+	&UrlResourceName.setEmpty() 
+	
+	&Url = &Url.Replace(".aspx", "")
+	
+	//remove base url string
+	&i = &Url.LastIndexOf(!"/")
+	If &i > 0
+		&Url = &Url.Substring(&i+1, &Url.Trim().Length() - &i ) 
+	else
+		&Url = &Url.Trim()
+	endIf
+	
+	If &Url.LastIndexOf("?") > 0 //Remove Parameters
+		&Url = &Url.Substring(1, &Url.LastIndexOf("?") - 1) 
+	EndIf
+	
+	&i = &Url.LastIndexOf(!".") //last .
+	&UrlResourceName = &Url.Substring(&i + 1, &Url.Length() - &i)
+	&AuthorizationKey = &UrlResourceName.Trim().ToLower() + !"_Execute"		
+EndSub
+
+--- Rules (Rules) ---
+parm(in:&DVelop_Menu_Item, out:&IsAuthorized);
+

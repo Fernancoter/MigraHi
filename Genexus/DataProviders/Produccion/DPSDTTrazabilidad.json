@@ -1,0 +1,80 @@
+﻿{
+    "uniqueId":  "57d7bafb-56d6-4385-924e-8a003225e56b",
+    "name":  "DPSDTTrazabilidad",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "DPSDTTrazabilidad",
+    "filePath":  "DataProviders/Produccion/DPSDTTrazabilidad.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTTrazabilidad\n{\n\tSDTTrazabilidadItem\n\t{\n\t\tPrensaNombre = InicioPBPrensaNombre\n\t\tProdcutoNombre = PrensadoProductoNombre\n\t\tCarreraNo = CarreraNo\n\t\tCarreteNoLinea = CarreteNoLinea\n\t\tCarreteId = CarreteId\n//\t\tPaletNoSerie = PaletNoSerie\n//\t\tPaletNo = /*No Pallet value*/\n//\t\tPaletHoraInicioEnsamble = /*Hr de Ini. de Ensamble del Pallet value*/\n//\t\tPaletHoraFinEnsamble = /*Hr de Fin. de Ensamble del Pallet value*/\n\t\tOperadorPrensado = PrensadoOperadorNombre\n//\t\tPaletEstatus = /*Estatus del Pallet value*/\n\t\tCarreteNoSerie = CarreteNoSerie\n\t\tBobinaNoSerie = InicioPrensadoBobinaNoSerie\n\t\tBobinaNo = WWPBaseObjects.InicioPrensadoBobinaNo\n\t\tExtrusoraNombre = DB.ExtrusionExtrusoraNombre\n\t\tOperadorExtrusion = ExtrusionOperadorNombre\n\t\tBobinaHoraInicio = ExtrusionHoraIniciaProceso\n\t\tBobinaHoraSalida = DB.Notifications.ExtrusionHoraFinProceso\n\t}\n}\n",
+                              "cleanSource":  "SDTTrazabilidad\n{\n\tSDTTrazabilidadItem\n\t{\n\t\tPrensaNombre = InicioPBPrensaNombre\n\t\tProdcutoNombre = PrensadoProductoNombre\n\t\tCarreraNo = CarreraNo\n\t\tCarreteNoLinea = CarreteNoLinea\n\t\tCarreteId = CarreteId\n//\t\tPaletNoSerie = PaletNoSerie\n//\t\tPaletNo = /*No Pallet value*/\n//\t\tPaletHoraInicioEnsamble = /*Hr de Ini. de Ensamble del Pallet value*/\n//\t\tPaletHoraFinEnsamble = /*Hr de Fin. de Ensamble del Pallet value*/\n\t\tOperadorPrensado = PrensadoOperadorNombre\n//\t\tPaletEstatus = /*Estatus del Pallet value*/\n\t\tCarreteNoSerie = CarreteNoSerie\n\t\tBobinaNoSerie = InicioPrensadoBobinaNoSerie\n\t\tBobinaNo = WWPBaseObjects.InicioPrensadoBobinaNo\n\t\tExtrusoraNombre = DB.ExtrusionExtrusoraNombre\n\t\tOperadorExtrusion = ExtrusionOperadorNombre\n\t\tBobinaHoraInicio = ExtrusionHoraIniciaProceso\n\t\tBobinaHoraSalida = DB.Notifications.ExtrusionHoraFinProceso\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTTrazabilidad"
+                                     ],
+                         "calledBy":  [
+                                          "GenerarSDTTrazabilidad"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTTrazabilidad"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

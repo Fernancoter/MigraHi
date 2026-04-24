@@ -1,0 +1,192 @@
+﻿{
+    "uniqueId":  "2637270b-67e5-4c81-b742-e9282ca8ba5a",
+    "name":  "SDInterrupcionEnCurso",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDInterrupcion En Curso",
+    "filePath":  "Procedures/Produccion/SDInterrupcionEnCurso.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\t\u0026IntEnCurso = 0\n\tDo Case\n\t\tCase \u0026Maquina = AreaMaquina.Extrusora\n\t\t\tFor each DB.ExtrusionInterrupcion order (ExtrusionId)\n\t\t\t\twhere ExtrusionId \u003e 0\n\t\t\t\twhere ExtrusionId = \u0026ProcesoId\n\t\t\t\twhere InterrupcionId \u003e 0\n\t\t\t\twhere InterrupcionConcluida = False\n\t\t\t\t\u0026HoraInicio = InterrupcionHoraInicio\n\t\t\t\t\u0026IntEnCurso = InterrupcionId\n\t\t\t\tExit\n\t\t\tEndFor\n\n\t\tCase \u0026Maquina = AreaMaquina.Prensa\n\t\t\tFor each DB.PrensadoInterrupcion order (PrensadoId)\n\t\t\t\twhere PrensadoId \u003e 0\n\t\t\t\twhere PrensadoId = \u0026ProcesoId\n\t\t\t\twhere InterrupcionId \u003e 0\n\t\t\t\twhere InterrupcionConcluida = False\n\t\t\t\t\u0026HoraInicio = InterrupcionHoraInicio\n\t\t\t\t\u0026IntEnCurso = InterrupcionId\n\t\t\t\tExit\n\t\t\tEndFor\n\tEndCase\n",
+                              "cleanSource":  "\n\t\u0026IntEnCurso = 0\n\tDo Case\n\t\tCase \u0026Maquina = AreaMaquina.Extrusora\n\t\t\tFor each DB.ExtrusionInterrupcion order (ExtrusionId)\n\t\t\t\twhere ExtrusionId \u003e 0\n\t\t\t\twhere ExtrusionId = \u0026ProcesoId\n\t\t\t\twhere InterrupcionId \u003e 0\n\t\t\t\twhere InterrupcionConcluida = False\n\t\t\t\t\u0026HoraInicio = InterrupcionHoraInicio\n\t\t\t\t\u0026IntEnCurso = InterrupcionId\n\t\t\t\tExit\n\t\t\tEndFor\n\n\t\tCase \u0026Maquina = AreaMaquina.Prensa\n\t\t\tFor each DB.PrensadoInterrupcion order (PrensadoId)\n\t\t\t\twhere PrensadoId \u003e 0\n\t\t\t\twhere PrensadoId = \u0026ProcesoId\n\t\t\t\twhere InterrupcionId \u003e 0\n\t\t\t\twhere InterrupcionConcluida = False\n\t\t\t\t\u0026HoraInicio = InterrupcionHoraInicio\n\t\t\t\t\u0026IntEnCurso = InterrupcionId\n\t\t\t\tExit\n\t\t\tEndFor\n\tEndCase"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026Maquina, in:\u0026ProcesoId, out:\u0026IntEnCurso);\n",
+                              "cleanSource":  "parm(in:\u0026Maquina, in:\u0026ProcesoId, out:\u0026IntEnCurso);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Interrupcion",
+                                         "DB.PrensadoInterrupcion",
+                                         "DB.ExtrusionInterrupcion"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Interrupcion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion"
+                           },
+                           {
+                               "name":  "Temporizador",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Temporizador"
+                           },
+                           {
+                               "name":  "Id",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Id"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "IntEnCurso",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Int En Curso"
+                           },
+                           {
+                               "name":  "Now",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Now"
+                           },
+                           {
+                               "name":  "HoraInicio",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Hora Inicio"
+                           },
+                           {
+                               "name":  "Maquina",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Maquina"
+                           },
+                           {
+                               "name":  "MaquinaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Maquina Id"
+                           },
+                           {
+                               "name":  "ProcesoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Proceso Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,115 @@
+﻿{
+    "uniqueId":  "f439a9ad-2814-4696-a935-81ed070ab204",
+    "name":  "PaletEtiquetaImpresa",
+    "type":  "Transaction",
+    "module":  "Root",
+    "description":  "Palet Etiqueta Impresa",
+    "filePath":  "Transactions/Root/PaletEtiquetaImpresa.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "ProcedureNotificarReimpresionEtiquetaPalet"
+                                      ],
+                         "tablesRead":  [
+                                            "PaletEtiquetaImpresa"
+                                        ],
+                         "tablesWritten":  [
+                                               "PaletEtiquetaImpresa"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "GxRemove",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Gx Remove"
+                           },
+                           {
+                               "name":  "Mode",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Mode"
+                           },
+                           {
+                               "name":  "PaletEtiquetaImpresaId",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "PaletId",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "PaletEtiquetaImpresaFechaHora",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           }
+                       ]
+}

@@ -1,0 +1,83 @@
+﻿
+=== Procedure: WWPBaseObjects.Notifications.Web.WWP_SendWebNotification ===
+
+--- Source (Source) ---
+&SendStatus = -1
+&WebNotification.Load(&WebNotificationId)
+
+If &WebNotification.Fail()
+	WWP_Logger.Error(&Pgmname, !"Web Notification not found with id: " + &WebNotificationId.ToString().Trim())
+	return
+EndIf
+
+If &WebNotification.WWPWebNotificationTitle.IsEmpty() or &WebNotification.WWPWebNotificationText.IsEmpty()
+	WWP_Logger.Error(&Pgmname, !"Title/Text cannot be empty: " + &WebNotificationId.ToString().Trim())
+	WWP_UpdateWebNotificationStatus(&WebNotificationId, WWP_StatusWebNotification.Error, !"Title/Text cannot be empty")
+	return
+EndIf
+
+If &WebNotification.WWPWebNotificationClientId.IsEmpty()
+	WWP_Logger.Error(&Pgmname, !"Client Id cannot be empty: " + &WebNotificationId.ToString().Trim())
+	Web.WWP_UpdateWebNotificationStatus(&WebNotificationId, WWP_StatusWebNotification.Error, !"Client Id cannot be empty")
+	return
+EndIf
+
+&NotificationInfo.Id = !"WebNotification#" + &WebNotificationId.ToString().Trim()
+&NotificationInfo.Message = &WebNotification.ToJson()
+
+&ClientId = &WebNotification.WWPWebNotificationClientId
+
+&SendStatus = &ServerSocket.NotifyClient(&ClientId, &NotificationInfo)
+
+If &SendStatus > 0
+	WWP_Logger.Error(&Pgmname, Format(!"Error sending web notification with id: %1 - %2 - %3 - %4", &WebNotificationId.ToString().Trim(), &SendStatus, &ServerSocket.ErrCode.ToString().Trim(), &ServerSocket.ErrDescription))
+	WWPBaseObjects.Notifications.Web.WWP_UpdateWebNotificationStatus(&WebNotificationId, WWP_StatusWebNotification.Error, Format(!"%1 - %2 - %3", &SendStatus, &ServerSocket.ErrCode.ToString().Trim(), &ServerSocket.ErrDescription))
+	return
+EndIf
+
+WWP_UpdateWebNotificationStatus(&WebNotificationId, WWP_StatusWebNotification.Sent, !"OK")
+
+commit
+
+--- Rules (Rules) ---
+parm(in:&WebNotificationId, out:&SendStatus);
+
+
+=== SDT: GeneXus.Server.NotificationInfo ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== Procedure: WWPBaseObjects.Notifications.Web.WWP_UpdateWebNotificationStatus ===
+
+--- Source (Source) ---
+&WebNotification.Load(&WebNotificationId)
+
+If &WebNotification.Fail()
+	WWP_Logger.Error(&Pgmname, !"Web notificaiton not found with id: " + &WebNotificationId.ToString())
+	return
+EndIf
+
+&WebNotification.WWPWebNotificationProcessed = ServerNow()
+&WebNotification.WWPWebNotificationStatus = &WebNotificationStatus
+&WebNotification.WWPWebNotificationDetail = &WebNotificationDetail
+&WebNotification.Save()
+
+If &WebNotification.Fail()
+	WWP_Logger.Error(&Pgmname, !"Error updating web notification status with id: " + &WebNotificationId.ToString())
+	return
+EndIf
+
+--- Rules (Rules) ---
+parm(in:&WebNotificationId, in:&WebNotificationStatus, in:&WebNotificationDetail);
+
+
+=== Transaction: WWPBaseObjects.Notifications.Web.WWP_WebNotification ===
+
+--- Rules (Rules) ---
+default(WWPWebNotificationStatus, WWP_StatusWebNotification.Pending);
+default(WWPWebNotificationCreated, ServerNow());
+default(WWPWebNotificationScheduled, ServerNow());
+

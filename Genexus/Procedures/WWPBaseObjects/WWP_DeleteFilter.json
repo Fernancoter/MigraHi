@@ -1,0 +1,167 @@
+﻿{
+    "uniqueId":  "c9ed0cc7-a8d0-47c8-8948-1fb2683d6efc",
+    "name":  "WWP_DeleteFilter",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Delete Filter",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_DeleteFilter.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026FilterDeleted = False\n\u0026Index = 1\nIf \u0026IsDynamic\n\tFor \u0026DynamicFilter in \u0026GridState.DynamicFilters\n\t\tIf \u0026DynamicFilter.Selected = \u0026FilterName\n\t\t\t\u0026FilterDeleted = True\n\t\t\tExit\n\t\tEndIf\n\t\t\u0026Index += 1\n\tEndFor\n\n\tIf \u0026FilterDeleted\n\t\t\u0026GridState.DynamicFilters.Remove(\u0026Index)\n\tEndIf\nElse\n\tFor \u0026GridStateFilterValue in \u0026GridState.FilterValues\n\t\tIf \u0026GridStateFilterValue.Name = \u0026FilterName\n\t\t\t\u0026FilterDeleted = True\n\t\t\tExit\n\t\tEndIf\n\t\t\u0026Index += 1\n\tEndFor\n\n\tIf \u0026FilterDeleted\n\t\t\u0026GridState.FilterValues.Remove(\u0026Index)\n\tEndIf\n\tIf \u0026FilterName.StartsWith(!\u0027TF\u0027) AND Not \u0026FilterName.EndsWith(!\u0027_SEL\u0027)\n\t\tIf WWP_DeleteFilter(\u0026GridState, \u0026FilterName + !\u0027_SEL\u0027, False)\n\t\t\t\u0026FilterDeleted = True\n\t\tEndIf\n\tEndIf\nEndIf\n",
+                              "cleanSource":  "\n\u0026FilterDeleted = False\n\u0026Index = 1\nIf \u0026IsDynamic\n\tFor \u0026DynamicFilter in \u0026GridState.DynamicFilters\n\t\tIf \u0026DynamicFilter.Selected = \u0026FilterName\n\t\t\t\u0026FilterDeleted = True\n\t\t\tExit\n\t\tEndIf\n\t\t\u0026Index += 1\n\tEndFor\n\n\tIf \u0026FilterDeleted\n\t\t\u0026GridState.DynamicFilters.Remove(\u0026Index)\n\tEndIf\nElse\n\tFor \u0026GridStateFilterValue in \u0026GridState.FilterValues\n\t\tIf \u0026GridStateFilterValue.Name = \u0026FilterName\n\t\t\t\u0026FilterDeleted = True\n\t\t\tExit\n\t\tEndIf\n\t\t\u0026Index += 1\n\tEndFor\n\n\tIf \u0026FilterDeleted\n\t\t\u0026GridState.FilterValues.Remove(\u0026Index)\n\tEndIf\n\tIf \u0026FilterName.StartsWith(!\u0027TF\u0027) AND Not \u0026FilterName.EndsWith(!\u0027_SEL\u0027)\n\t\tIf WWP_DeleteFilter(\u0026GridState, \u0026FilterName + !\u0027_SEL\u0027, False)\n\t\t\t\u0026FilterDeleted = True\n\t\tEndIf\n\tEndIf\nEndIf"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "\nparm(inout:\u0026GridState, in:\u0026FilterName, in:\u0026IsDynamic, out:\u0026FilterDeleted);\n \n",
+                              "cleanSource":  "\nparm(inout:\u0026GridState, in:\u0026FilterName, in:\u0026IsDynamic, out:\u0026FilterDeleted);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_DeleteFilter",
+                                         "WWPBaseObjects.WWPGridState"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_DeleteFilter"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "GeneXus.Common.GridState"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "DynamicFilter",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Dynamic Filter"
+                           },
+                           {
+                               "name":  "FilterDeleted",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Filter Deleted"
+                           },
+                           {
+                               "name":  "FilterName",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Filter Name"
+                           },
+                           {
+                               "name":  "GridState",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Grid State"
+                           },
+                           {
+                               "name":  "GridStateFilterValue",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Grid State Filter Value"
+                           },
+                           {
+                               "name":  "Index",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Index"
+                           },
+                           {
+                               "name":  "IsDynamic",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Is Dynamic"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,216 @@
+﻿{
+    "uniqueId":  "5317b271-802a-4c31-b134-7df75ceba3a9",
+    "name":  "CarreteCarrera",
+    "type":  "SDT",
+    "module":  "Produccion",
+    "description":  "Carrete Carrera",
+    "filePath":  "SDTs/Produccion/CarreteCarrera.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "vwCarreteCarrera"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CarreteId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Id"
+                           },
+                           {
+                               "name":  "CarreteNoLinea",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete No Linea"
+                           },
+                           {
+                               "name":  "CarreteNoSerie",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete No Serie"
+                           },
+                           {
+                               "name":  "CarreteEstado",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Estado"
+                           },
+                           {
+                               "name":  "CarreteEnMolino",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete En Molino"
+                           },
+                           {
+                               "name":  "CarreteMolino",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Molino"
+                           },
+                           {
+                               "name":  "CarreteMermaMolino",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Merma Molino"
+                           },
+                           {
+                               "name":  "CarreteMermaKg",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Merma Kg"
+                           },
+                           {
+                               "name":  "CarreteObservacion",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Observacion"
+                           },
+                           {
+                               "name":  "CarreteTerminaPalet",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Termina Palet"
+                           },
+                           {
+                               "name":  "CarreteCarreraId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Carrera Id"
+                           },
+                           {
+                               "name":  "CarreraId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Id"
+                           },
+                           {
+                               "name":  "CarreraNo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera No"
+                           },
+                           {
+                               "name":  "CarreraEstado",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Estado"
+                           },
+                           {
+                               "name":  "CarreraPaletTerminado",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Palet Terminado"
+                           },
+                           {
+                               "name":  "InicioPrensadoBobinaId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Inicio Prensado Bobina Id"
+                           },
+                           {
+                               "name":  "InicioPBPrensadoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Inicio PBPrensado Id"
+                           },
+                           {
+                               "name":  "InicioPrensadoBobinaBoninaId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Inicio Prensado Bobina Bonina Id"
+                           },
+                           {
+                               "name":  "InicioPrensadoBobinaNoSerie",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Inicio Prensado Bobina No Serie"
+                           },
+                           {
+                               "name":  "InicioPrensadoBobinaEspesor",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Inicio Prensado Bobina Espesor"
+                           },
+                           {
+                               "name":  "InicioPrensadoBobinaEstado",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Inicio Prensado Bobina Estado"
+                           }
+                       ]
+}

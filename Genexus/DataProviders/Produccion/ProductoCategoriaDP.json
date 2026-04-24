@@ -1,0 +1,94 @@
+﻿{
+    "uniqueId":  "0d40cb4f-4be7-4c01-b83c-bf2eead88f6d",
+    "name":  "ProductoCategoriaDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Producto Categoria DP",
+    "filePath":  "DataProviders/Produccion/ProductoCategoriaDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTProductoCategoria\nWhere ProductoCategoriaNombre = \u0026ProductoCategoriaNombre\n{\n\tSDTProductoCategoriaItem\n\t{\n\t\tProductoCategoriaId = ProductoCategoriaId\n\t\tProductoCategoriaNombre = ProductoCategoriaNombre\n\t\tProductoCategoriaClaveExterna = ProductoCategoriaClaveExterna \n\t}\n}\n",
+                              "cleanSource":  "SDTProductoCategoria\nWhere ProductoCategoriaNombre = \u0026ProductoCategoriaNombre\n{\n\tSDTProductoCategoriaItem\n\t{\n\t\tProductoCategoriaId = ProductoCategoriaId\n\t\tProductoCategoriaNombre = ProductoCategoriaNombre\n\t\tProductoCategoriaClaveExterna = ProductoCategoriaClaveExterna \n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026ProductoCategoriaNombre);\n",
+                              "cleanSource":  "parm(\u0026ProductoCategoriaNombre);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTProductoCategoria"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTProductoCategoria"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ProductoCategoriaNombre",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Nombre"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

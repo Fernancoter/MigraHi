@@ -1,0 +1,80 @@
+﻿{
+    "uniqueId":  "92299b64-9592-4d65-a846-2313aa45b9d3",
+    "name":  "InventarioDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Inventario DP",
+    "filePath":  "DataProviders/Produccion/InventarioDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTInventario\n{\n   SDTInventarioItem\n   {\n\tInventarioId = InventarioId\n\tInventarioProductoId = InventarioProductoId\n\tInventarioFechaHora = InventarioFechaHora\n\tInventarioCantidad = InventarioCantidad\n   }\n\n}\n",
+                              "cleanSource":  "SDTInventario\n{\n   SDTInventarioItem\n   {\n\tInventarioId = InventarioId\n\tInventarioProductoId = InventarioProductoId\n\tInventarioFechaHora = InventarioFechaHora\n\tInventarioCantidad = InventarioCantidad\n   }\n\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTInventario"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTInventario"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

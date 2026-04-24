@@ -1,0 +1,168 @@
+﻿{
+    "uniqueId":  "0cf38c82-503e-444e-9746-69fd69516408",
+    "name":  "ViewExtrusora",
+    "type":  "WebPanel",
+    "module":  "DB",
+    "description":  "View Extrusora",
+    "filePath":  "WebPanels/DB/ViewExtrusora.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Start",
+                              "blockType":  "Event",
+                              "rawSource":  "(Extracted from full RTF)",
+                              "cleanSource":  "If not IsAuthorized(\u0026PgmName)\n\t\tNotAuthorized(\u0026PgmName)\n\tEndif\n\tFor each\n\t\tWhere ExtrusoraId = \u0026ExtrusoraId\n\t\tForm.Caption = ExtrusoraNombre.ToString()\n\t\tViewAll.Link = WWExtrusora.Link()\n\t\t\u0026Exists = True\n\tWhen none\n\t\tForm.Caption = \"Record not found\"\n\t\tViewAll.Visible = false\n\t\t\u0026Exists = False\n\tEndfor\n\t\u0026LoadAllTabs = false\n\tIf \u0026Exists\n\t\t\u0026SelectedTabCode = \u0026TabCode\n\t\tTab.ActivePageControlName = \u0026SelectedTabCode\n\t\tDo \u0027Load Tab\u0027\n\tEndif"
+                          },
+                          {
+                              "blockName":  "Tab.TabChanged",
+                              "blockType":  "Event",
+                              "rawSource":  "(Extracted from full RTF)",
+                              "cleanSource":  "\u0026SelectedTabCode = Tab.ActivePageControlName\n\t\u0026LoadAllTabs = false\n\tDo \u0027Load Tab\u0027"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExtrusoraId, in:\u0026TabCode);\n",
+                              "cleanSource":  "parm(in:\u0026ExtrusoraId, in:\u0026TabCode);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.IsAuthorized",
+                                         "TabOptions",
+                                         "DB.WWExtrusora",
+                                         "DB.ExtrusoraGeneral",
+                                         "DB.ExtrusoraExtrusionWC",
+                                         "DB.ExtrusoraExtrusoraProductoWC",
+                                         "DB.ExtrusoraTurnoWC",
+                                         "DB.ExtrusoraExtrusoraMezcladoraWC",
+                                         "DB.ExtrusoraExtrusoraBobinaWC",
+                                         "WWPBaseObjects.NotAuthorized",
+                                         "DB.ExtrusoraExtrusoraObservacionWC"
+                                     ],
+                         "calledBy":  [
+                                          "Extrusora",
+                                          "WWExtrusora",
+                                          "WWExtrusoraProducto"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "IsAuthorized",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Is Authorized"
+                           },
+                           {
+                               "name":  "TabCode",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tab Code"
+                           },
+                           {
+                               "name":  "SelectedTabCode",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Selected Tab Code"
+                           },
+                           {
+                               "name":  "Tabs",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tabs"
+                           },
+                           {
+                               "name":  "Tab",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tab"
+                           },
+                           {
+                               "name":  "Exists",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Exists"
+                           },
+                           {
+                               "name":  "LoadAllTabs",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "LoadAllTabs"
+                           },
+                           {
+                               "name":  "ExtrusoraId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusora Id"
+                           }
+                       ]
+}

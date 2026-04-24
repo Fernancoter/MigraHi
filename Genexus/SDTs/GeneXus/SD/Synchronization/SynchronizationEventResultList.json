@@ -1,0 +1,82 @@
+﻿{
+    "uniqueId":  "0f71d162-8562-4925-b954-2e9058ac682f",
+    "name":  "SynchronizationEventResultList",
+    "type":  "SDT",
+    "module":  "GeneXus.SD.Synchronization",
+    "description":  "Synchronization Event Result List",
+    "filePath":  "SDTs/GeneXus/SD/Synchronization/SynchronizationEventResultList.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "GxAfterEventReplicator",
+                                          "GxBeforeEventReplicator",
+                                          "GxOnPendingEventFailed"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "EventId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pending Event Id"
+                           },
+                           {
+                               "name":  "EventTimestamp",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pending Event Timestamp"
+                           },
+                           {
+                               "name":  "EventStatus",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pending Event Status"
+                           },
+                           {
+                               "name":  "EventErrors",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pending Event Errors"
+                           }
+                       ]
+}

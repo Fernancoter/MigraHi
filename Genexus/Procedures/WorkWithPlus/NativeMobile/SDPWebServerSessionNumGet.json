@@ -1,0 +1,142 @@
+﻿{
+    "uniqueId":  "61449f48-eeac-4320-8f09-6ef84f83949e",
+    "name":  "SDPWebServerSessionNumGet",
+    "type":  "Procedure",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPWeb Server Session Num Get",
+    "filePath":  "Procedures/WorkWithPlus/NativeMobile/SDPWebServerSessionNumGet.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026ParameterValue = \u0026WebSession.Get(\u0026ParameterKey)\n\u0026ParameterNumValue.FromString(\u0026ParameterValue.Trim())\n",
+                              "cleanSource":  "\u0026ParameterValue = \u0026WebSession.Get(\u0026ParameterKey)\n\u0026ParameterNumValue.FromString(\u0026ParameterValue.Trim())"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026ParameterKey, out:\u0026ParameterNumValue);\n",
+                              "cleanSource":  "Parm(in:\u0026ParameterKey, out:\u0026ParameterNumValue);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ParameterKey",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Parameter Key"
+                           },
+                           {
+                               "name":  "ParameterValue",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Parameter Value"
+                           },
+                           {
+                               "name":  "WebSession",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_USRDEFTYP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Web Session"
+                           },
+                           {
+                               "name":  "ParameterNumValue",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Parameter Num Value"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

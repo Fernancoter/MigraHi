@@ -1,0 +1,143 @@
+﻿{
+    "uniqueId":  "f3f27a32-8ee0-4c5a-9fd5-72c8af68e8ed",
+    "name":  "WWP_UpdateUserExtendedPhoto",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Update User Extended Photo",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_UpdateUserExtendedPhoto.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\nIf Not \u0026PhotoUrl.IsEmpty()\n\t\u0026WWPUserExtended.Load(\u0026WWPUserExtendedId)\n\tIf \u0026WWPUserExtended.Success()\n\t\t\u0026WWPUserExtended.WWPUserExtendedPhoto.FromURL(\u0026PhotoUrl)\n\t\t\u0026WWPUserExtended.Save()\n\t\tIf \u0026WWPUserExtended.Success()\n\t\t\tCommit\n\t\tElse\n\t\t\tWWP_Logger.Error(\u0026pgmname, !\"Update User Extended: \" + \u0026WWPUserExtended.GetMessages().ToJson())\n\t\tEndIf\n\tEndIf\nEndIf\n\n\n",
+                              "cleanSource":  "\nIf Not \u0026PhotoUrl.IsEmpty()\n\t\u0026WWPUserExtended.Load(\u0026WWPUserExtendedId)\n\tIf \u0026WWPUserExtended.Success()\n\t\t\u0026WWPUserExtended.WWPUserExtendedPhoto.FromURL(\u0026PhotoUrl)\n\t\t\u0026WWPUserExtended.Save()\n\t\tIf \u0026WWPUserExtended.Success()\n\t\t\tCommit\n\t\tElse\n\t\t\tWWP_Logger.Error(\u0026pgmname, !\"Update User Extended: \" + \u0026WWPUserExtended.GetMessages().ToJson())\n\t\tEndIf\n\tEndIf\nEndIf"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026WWPUserExtendedId, in:\u0026PhotoUrl);\n",
+                              "cleanSource":  "parm(in:\u0026WWPUserExtendedId, in:\u0026PhotoUrl);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_Logger",
+                                         "WWPBaseObjects.WWP_UserExtended"
+                                     ],
+                         "calledBy":  [
+                                          "GAMUserEntry"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "WWPUserExtended",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWPUser Extended"
+                           },
+                           {
+                               "name":  "WWPUserExtendedId",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "User Id"
+                           },
+                           {
+                               "name":  "PhotoUrl",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Photo Url"
+                           },
+                           {
+                               "name":  "PhotURL",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Phot URL"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,229 @@
+﻿{
+    "uniqueId":  "ab6fc1a2-4f95-46d2-94db-d145846b53e0",
+    "name":  "SDTPrensadoResultado",
+    "type":  "SDT",
+    "module":  "Produccion",
+    "description":  "SDTPrensado Resultado",
+    "filePath":  "SDTs/Produccion/SDTPrensadoResultado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "RptExtrusion",
+                                          "DPPrensadoResultado",
+                                          "GuardarPrensadoResultado",
+                                          "GuardarOrdenEtiquetado",
+                                          "SDPrensadoResultado",
+                                          "RptPrensado"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PrensadoResultadoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado Id"
+                           },
+                           {
+                               "name":  "PrensadoResultadoPiezasBuenas",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado Piezas Buenas"
+                           },
+                           {
+                               "name":  "PrensadoResultadoPiezasMolino",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado Piezas Molino"
+                           },
+                           {
+                               "name":  "PrensadoResultadoMermaKg",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado Merma Kg"
+                           },
+                           {
+                               "name":  "PrensadoResultadoNoPalets",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado No Palets"
+                           },
+                           {
+                               "name":  "PrensadoResultadoCarretesSobrantes",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado Carretes Sobrantes"
+                           },
+                           {
+                               "name":  "PrensadoResultadoObservaciones",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado Observaciones"
+                           },
+                           {
+                               "name":  "PrensadoResultadoRPMLinea",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado RPMLinea"
+                           },
+                           {
+                               "name":  "PrensadoResultadoGPMPrensa",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado GPMPrensa"
+                           },
+                           {
+                               "name":  "PrensadoResultadoGPMTotal",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado GPMTotal"
+                           },
+                           {
+                               "name":  "PrensadoResultadoHerramientas",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado Herramientas"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensadoLevasUnidadMedida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Levas Unidad Medida"
+                           },
+                           {
+                               "name":  "PrensadoLevasKgEntrada",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Levas Kg Entrada"
+                           },
+                           {
+                               "name":  "PrensadoLevasKgSalida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Levas Kg Salida"
+                           },
+                           {
+                               "name":  "PrensadoLevasGradosEntrada",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Levas Grados Entrada"
+                           },
+                           {
+                               "name":  "PrensadoLevasGradosSalida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Levas Grados Salida"
+                           },
+                           {
+                               "name":  "PrensadoRodillosUnidadMedida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Rodillos Unidad Medida"
+                           },
+                           {
+                               "name":  "PrensadoRodillosKgEntrada",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Rodillos Kg Entrada"
+                           },
+                           {
+                               "name":  "PrensadoRodillosKgSalida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Rodillos Kg Salida"
+                           },
+                           {
+                               "name":  "PrensadoRodillosGradosEntrada",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Rodillos Grados Entrada"
+                           },
+                           {
+                               "name":  "PrensadoRodillosGradosSalida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Rodillos Grados Salida"
+                           }
+                       ]
+}

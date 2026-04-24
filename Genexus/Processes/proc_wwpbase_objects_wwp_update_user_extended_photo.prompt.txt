@@ -1,0 +1,55 @@
+﻿
+=== Procedure: WWPBaseObjects.WWP_UpdateUserExtendedPhoto ===
+
+--- Source (Source) ---
+
+If Not &PhotoUrl.IsEmpty()
+	&WWPUserExtended.Load(&WWPUserExtendedId)
+	If &WWPUserExtended.Success()
+		&WWPUserExtended.WWPUserExtendedPhoto.FromURL(&PhotoUrl)
+		&WWPUserExtended.Save()
+		If &WWPUserExtended.Success()
+			Commit
+		Else
+			WWP_Logger.Error(&pgmname, !"Update User Extended: " + &WWPUserExtended.GetMessages().ToJson())
+		EndIf
+	EndIf
+EndIf
+
+--- Rules (Rules) ---
+parm(in:&WWPUserExtendedId, in:&PhotoUrl);
+
+
+=== Transaction: WWPBaseObjects.WWP_UserExtended ===
+
+(sin businessLogic extraído)
+
+=== Procedure: WWPBaseObjects.WWP_GetUserEmail ===
+
+--- Source (Source) ---
+&GAMUser = GAMRepository.GetUserByGUID(&WWPUserExtendedId, &GAMErrorCollection)
+&WWPUserExtendedEmail = &GAMUser.EMail
+
+--- Rules (Rules) ---
+parm(in:&WWPUserExtendedId, out:&WWPUserExtendedEmail);
+
+
+=== Procedure: WWPBaseObjects.WWP_GetUserFullName ===
+
+--- Source (Source) ---
+&GAMUser = GAMRepository.GetUserByGUID(&WWPUserExtendedId, &GAMErrorCollection)
+&WWPUserExtendedFullName = iif(&GAMUser.FirstName.IsEmpty(), &GAMUser.Name, &GAMUser.FirstName.Trim() + " " + &GAMUser.LastName.Trim())
+
+--- Rules (Rules) ---
+parm(in:&WWPUserExtendedId, out:&WWPUserExtendedFullName);
+
+
+=== Procedure: WWPBaseObjects.WWP_GetUserPhone ===
+
+--- Source (Source) ---
+&GAMUser = GAMRepository.GetUserByGUID(&WWPUserExtendedId, &GAMErrorCollection)
+&WWPUserExtendedPhone = &GAMUser.Phone
+
+--- Rules (Rules) ---
+parm(in:&WWPUserExtendedId, out:&WWPUserExtendedPhone);
+

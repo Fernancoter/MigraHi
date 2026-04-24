@@ -1,0 +1,136 @@
+﻿{
+    "uniqueId":  "1ab44b9c-8981-4208-b32a-af317da57d19",
+    "name":  "CrearOrdenEtiquetado",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Crear Orden Etiquetado",
+    "filePath":  "Procedures/Produccion/CrearOrdenEtiquetado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\t\u0026OrdenEtiquetado = New()\n\t\u0026OrdenEtiquetado.OrdenEtiquetadoFechaInicio = Now()\n\t\u0026OrdenEtiquetado.OrdenEtiquetadoFechaTermina = Now()\n\t\u0026OrdenEtiquetado.OrdenEtiquetadoEstado = EstadoOrdenEtiquetado.Abierta\n\t\u0026OrdenEtiquetado.OperadorEtiquetadoId = \u0026OperadorId\n\t\u0026OrdenEtiquetado.TurnoEtiquetadoId = SDTurnoActual.Udp()\n\t\u0026OrdenEtiquetado.Save()\n\t\n\tif(\u0026OrdenEtiquetado.Success())\n\t\t\u0026OEId = \u0026OrdenEtiquetado.OrdenEtiquetadoId\n\t\tcommit\n\tendif\n\n",
+                              "cleanSource":  "\n\t\u0026OrdenEtiquetado = New()\n\t\u0026OrdenEtiquetado.OrdenEtiquetadoFechaInicio = Now()\n\t\u0026OrdenEtiquetado.OrdenEtiquetadoFechaTermina = Now()\n\t\u0026OrdenEtiquetado.OrdenEtiquetadoEstado = EstadoOrdenEtiquetado.Abierta\n\t\u0026OrdenEtiquetado.OperadorEtiquetadoId = \u0026OperadorId\n\t\u0026OrdenEtiquetado.TurnoEtiquetadoId = SDTurnoActual.Udp()\n\t\u0026OrdenEtiquetado.Save()\n\t\n\tif(\u0026OrdenEtiquetado.Success())\n\t\t\u0026OEId = \u0026OrdenEtiquetado.OrdenEtiquetadoId\n\t\tcommit\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026OperadorId, out:\u0026OEId);\n",
+                              "cleanSource":  "parm(in:\u0026OperadorId, out:\u0026OEId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTurnoActual",
+                                         "DB.OrdenEtiquetado",
+                                         "SDTurnoActual"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.OrdenEtiquetado"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "OEId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "OEId"
+                           },
+                           {
+                               "name":  "OperadorId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Operador Id"
+                           },
+                           {
+                               "name":  "OrdenEtiquetado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Orden Etiquetado"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

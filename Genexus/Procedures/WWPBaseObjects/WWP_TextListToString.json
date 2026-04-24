@@ -1,0 +1,150 @@
+﻿{
+    "uniqueId":  "d48c5824-5b3d-44c0-bf67-1050ba6a217c",
+    "name":  "WWP_TextListToString",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Text List To String",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_TextListToString.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\nFor \u0026SelectedText in \u0026SelectedTextCol\n\t\u0026ListString += iif(\u0026ListString.IsEmpty(), \u0027\u0027, \u0027, \u0027)\n\tIf \u0026HasMultipleDscs\n\t\t\u0026MultipleStr.FromJson(\u0026SelectedText)\n\t\tIf \u0026MultipleStr.Count \u003e 0\n\t\t\t\u0026ListString += \u0026MultipleStr.Item(1).Trim()\n\t\tEndIf\n\tElse\n\t\t\u0026ListString += \u0026SelectedText.Trim()\n\tEndIf\nEndFor\n",
+                              "cleanSource":  "\nFor \u0026SelectedText in \u0026SelectedTextCol\n\t\u0026ListString += iif(\u0026ListString.IsEmpty(), \u0027\u0027, \u0027, \u0027)\n\tIf \u0026HasMultipleDscs\n\t\t\u0026MultipleStr.FromJson(\u0026SelectedText)\n\t\tIf \u0026MultipleStr.Count \u003e 0\n\t\t\t\u0026ListString += \u0026MultipleStr.Item(1).Trim()\n\t\tEndIf\n\tElse\n\t\t\u0026ListString += \u0026SelectedText.Trim()\n\tEndIf\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "\nparm(inout:\u0026SelectedTextCol, in:\u0026HasMultipleDscs, out:\u0026ListString);\n",
+                              "cleanSource":  "\nparm(inout:\u0026SelectedTextCol, in:\u0026HasMultipleDscs, out:\u0026ListString);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "HasMultipleDscs",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Has Multiple Dscs"
+                           },
+                           {
+                               "name":  "ListString",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "List String"
+                           },
+                           {
+                               "name":  "SelectedTextCol",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Selected Text Col"
+                           },
+                           {
+                               "name":  "MultipleStr",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Multiple Str"
+                           },
+                           {
+                               "name":  "SelectedText",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Selected Text"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

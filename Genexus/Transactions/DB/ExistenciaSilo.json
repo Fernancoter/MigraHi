@@ -1,0 +1,156 @@
+﻿{
+    "uniqueId":  "1e8b3028-5a71-4780-9656-b3502944787d",
+    "name":  "ExistenciaSilo",
+    "type":  "Transaction",
+    "module":  "DB",
+    "description":  "Existencia Silo",
+    "filePath":  "Transactions/DB/ExistenciaSilo.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "GuardarExistenciaSilo",
+                                          "ObtenerExistenciaSilo"
+                                      ],
+                         "tablesRead":  [
+                                            "ExistenciaSilo"
+                                        ],
+                         "tablesWritten":  [
+                                               "ExistenciaSilo"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "GxRemove",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Gx Remove"
+                           },
+                           {
+                               "name":  "Mode",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Mode"
+                           },
+                           {
+                               "name":  "ExistenciaSiloId",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "SiloId",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "SiloNombre",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "SiloTipoMaterial",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "SiloEstadoMaterial",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "ExistenciaId",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "ExistenciaSiloCantidad",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "ExistenciaSiloVirgenLote",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           }
+                       ]
+}

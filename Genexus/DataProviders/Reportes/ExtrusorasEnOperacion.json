@@ -1,0 +1,115 @@
+﻿{
+    "uniqueId":  "2706d08f-e423-43d1-ab67-0baefdb46b54",
+    "name":  "ExtrusorasEnOperacion",
+    "type":  "DataProvider",
+    "module":  "Reportes",
+    "description":  "Extrusoras En Operacion",
+    "filePath":  "DataProviders/Reportes/ExtrusorasEnOperacion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTExtrusoraEnOperacion\n{\n\t\u0026ColeccionExtrusion = ExtrusionesEnOperacion()\n\tSDTExtrusoraEnOperacionItem Input \u0026Extrusion in \u0026ColeccionExtrusion\n\t{\n\t\tExtrusoraId = \u0026Extrusion.ExtrusionExtrusoraId\n\t\tExtrusoraNombre = \u0026Extrusion.ExtrusionExtrusoraNombre\n\t\tOperadorNombre = \u0026Extrusion.ExtrusionOperadorNombre\n\t\tExtrusionFecha =\u0026Extrusion.ExtrusionFecha\n\t\tExtrusionEstado = \u0026Extrusion.ExtrusionEstado\n\t}\n}\n",
+                              "cleanSource":  "SDTExtrusoraEnOperacion\n{\n\t\u0026ColeccionExtrusion = ExtrusionesEnOperacion()\n\tSDTExtrusoraEnOperacionItem Input \u0026Extrusion in \u0026ColeccionExtrusion\n\t{\n\t\tExtrusoraId = \u0026Extrusion.ExtrusionExtrusoraId\n\t\tExtrusoraNombre = \u0026Extrusion.ExtrusionExtrusoraNombre\n\t\tOperadorNombre = \u0026Extrusion.ExtrusionOperadorNombre\n\t\tExtrusionFecha =\u0026Extrusion.ExtrusionFecha\n\t\tExtrusionEstado = \u0026Extrusion.ExtrusionEstado\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Reportes.ExtrusionesEnOperacion",
+                                         "Reportes.SDTExtrusoraEnOperacion",
+                                         "DB.Extrusion",
+                                         "DB.Extrusora"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTExtrusoraEnOperacion"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ColeccionExtrusora",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Coleccion Extrusora"
+                           },
+                           {
+                               "name":  "Extrusora",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusora"
+                           },
+                           {
+                               "name":  "ColeccionExtrusion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Coleccion Extrusion"
+                           },
+                           {
+                               "name":  "Extrusion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

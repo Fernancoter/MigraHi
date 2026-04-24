@@ -1,0 +1,188 @@
+﻿{
+    "uniqueId":  "3ce4175b-4928-4e8c-9479-880e47e6198b",
+    "name":  "SDTPrensadoBobina",
+    "type":  "SDT",
+    "module":  "Produccion",
+    "description":  "SDTPrensado Bobina",
+    "filePath":  "SDTs/Produccion/SDTPrensadoBobina.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "DPSDTPrensadoBobina",
+                                          "RptPrensado",
+                                          "PrensadoDelDiaCarrera",
+                                          "DPPrensadoBobinaSDT",
+                                          "PrensadoBobinaDP"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PrensadoBobinaId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Bobina Id"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "BobinaId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Id"
+                           },
+                           {
+                               "name":  "BobinaNoSerie",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina No Serie"
+                           },
+                           {
+                               "name":  "BobinaEstado",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Estado"
+                           },
+                           {
+                               "name":  "BobinaNo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina No"
+                           },
+                           {
+                               "name":  "BobinaOrigen",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Origen"
+                           },
+                           {
+                               "name":  "BobinaKg",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Kg"
+                           },
+                           {
+                               "name":  "BobinaKgTexto",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Kg Texto"
+                           },
+                           {
+                               "name":  "BobinaReposoEnHoras",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo Reposo (Hr)"
+                           },
+                           {
+                               "name":  "PrensadoBobinaCantCarrera",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Bobina Cant Carrera"
+                           },
+                           {
+                               "name":  "BobinaHoraSalida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Hora Salida"
+                           },
+                           {
+                               "name":  "CarrerasEnProceso",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carreras En Proceso"
+                           },
+                           {
+                               "name":  "CarrerasTerminadas",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carreras Terminadas"
+                           },
+                           {
+                               "name":  "CarrerasValidadas",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carreras Validadas"
+                           },
+                           {
+                               "name":  "CantidadDeCarretes",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Cantidad De Carretes"
+                           },
+                           {
+                               "name":  "BobinaCarreras",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Carreras"
+                           }
+                       ]
+}

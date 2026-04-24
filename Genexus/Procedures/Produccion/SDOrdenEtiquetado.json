@@ -1,0 +1,203 @@
+﻿{
+    "uniqueId":  "63746b67-b053-4fd7-90b6-b63f3597dba1",
+    "name":  "SDOrdenEtiquetado",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDOrden Etiquetado",
+    "filePath":  "Procedures/Produccion/SDOrdenEtiquetado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\t\tdo \u0027CarretesRegistrados\u0027\n\t\t\n\t\t\u0026OrdenEtiquetado.Load(\u0026OrdenEtiquetadoId)\n\t\t\n\t\t\u0026SDTOrdenEtiquetado = New()\n\t\t\u0026SDTOrdenEtiquetado.OrdenEtiquetadoId = \u0026OrdenEtiquetadoId\n\t\t\u0026SDTOrdenEtiquetado.OrdenEtiquetadoFechaInicio = \u0026OrdenEtiquetado.OrdenEtiquetadoFechaInicio\n\t\t\u0026SDTOrdenEtiquetado.OrdenEtiquetadoFechaTermina = \u0026OrdenEtiquetado.OrdenEtiquetadoFechaTermina\n\t\t\u0026SDTOrdenEtiquetado.OrdenEtiquetadoPiezasBuenas = \u0026CarretesEtiquetado\n\t\t\u0026SDTOrdenEtiquetado.OrdenEtiquetadoPiezasMolino = \u0026CarretesMolino\n\t\t\u0026SDTOrdenEtiquetado.OrdenEtiquetadoEstado = \u0026OrdenEtiquetado.OrdenEtiquetadoEstado\n\t\t\u0026SDTOrdenEtiquetado.TurnoEtiquetadoId =  \u0026OrdenEtiquetado.TurnoEtiquetadoId\n\t\t\u0026SDTOrdenEtiquetado.TurnoEtiquetadoNombre = \u0026OrdenEtiquetado.TurnoEtiquetadoNombre\n\t\t\u0026SDTOrdenEtiquetado.OperadorEtiquetadoId = \u0026OrdenEtiquetado.OperadorEtiquetadoId\n\n\t\tSub \u0027CarretesRegistrados\u0027\n\n                        \u0026PaletId = 0\n\t\t\t\u0026CarretesMolino = 0\n\t\t\t\u0026CarretesEtiquetado = 0\n\t\t\t\n\t\t\tfor each DB.EtiquetadoOperador\n\t\t\t\tOrder PalletEtiquetadoId\n\t\t\t\twhere EtiquetadoOperadorId \u003e 0\n\t\t\t\twhere OrdenEtiquetadoId = \u0026OrdenEtiquetadoId\n\t\t\t\t\u0026AuxPaletId = PalletEtiquetadoId\n\t\t\t\t\n\t\t\t\tif(\u0026AuxPaletId \u003c\u003e \u0026PaletId)\n\t\t\t\t\t\u0026PaletId = \u0026AuxPaletId\n\t\t\t\t\tdo \u0027ProductoTerminado\u0027\n\t\t\t\tendif\n\t\t\t\n\t\t\t\tif(EtiquetadoOperadorVoBoCarrete)\n\t\t\t\t\t\u0026CarretesEtiquetado += \u0026CarreteMillar\n\t\t\t\telse\n\t\t\t\t\t\u0026CarretesMolino += \u0026CarreteMillar\n\t\t\t\tendif\n\t\t\tendfor\n\t\t\t\n\t\tEndSub\n\t\t\n\t\tSub \u0027ProductoTerminado\u0027\n\t\t\t\n\t\t\t\u0026Palet.Load(\u0026PaletId)\n\t\t\t\u0026ProductoId = \u0026Palet.PaletProductoId\n\t\t\t\u0026CarreteMillar = 0\n\t\t\t\n\t\t\tfor each DB.ProductoTerminado\n\t\t\t\twhere ProductoTerminadoId \u003e 0\n\t\t\t\twhere ProductoTerminadoConEtiqueta = true\n\t\t\t\twhere TerminadoProductoId = \u0026ProductoId\n\t                        \u0026CarreteMillar = ProductoTerminadoCarreteMillar\n\t\t\t\tExit\n\t\t\tendfor\n\t\tEndSub\n",
+                              "cleanSource":  "\t\n\t\tdo \u0027CarretesRegistrados\u0027\n\t\t\n\t\t\u0026OrdenEtiquetado.Load(\u0026OrdenEtiquetadoId)\n\t\t\n\t\t\u0026SDTOrdenEtiquetado = New()\n\t\t\u0026SDTOrdenEtiquetado.OrdenEtiquetadoId = \u0026OrdenEtiquetadoId\n\t\t\u0026SDTOrdenEtiquetado.OrdenEtiquetadoFechaInicio = \u0026OrdenEtiquetado.OrdenEtiquetadoFechaInicio\n\t\t\u0026SDTOrdenEtiquetado.OrdenEtiquetadoFechaTermina = \u0026OrdenEtiquetado.OrdenEtiquetadoFechaTermina\n\t\t\u0026SDTOrdenEtiquetado.OrdenEtiquetadoPiezasBuenas = \u0026CarretesEtiquetado\n\t\t\u0026SDTOrdenEtiquetado.OrdenEtiquetadoPiezasMolino = \u0026CarretesMolino\n\t\t\u0026SDTOrdenEtiquetado.OrdenEtiquetadoEstado = \u0026OrdenEtiquetado.OrdenEtiquetadoEstado\n\t\t\u0026SDTOrdenEtiquetado.TurnoEtiquetadoId =  \u0026OrdenEtiquetado.TurnoEtiquetadoId\n\t\t\u0026SDTOrdenEtiquetado.TurnoEtiquetadoNombre = \u0026OrdenEtiquetado.TurnoEtiquetadoNombre\n\t\t\u0026SDTOrdenEtiquetado.OperadorEtiquetadoId = \u0026OrdenEtiquetado.OperadorEtiquetadoId\n\n\t\tSub \u0027CarretesRegistrados\u0027\n\n                        \u0026PaletId = 0\n\t\t\t\u0026CarretesMolino = 0\n\t\t\t\u0026CarretesEtiquetado = 0\n\t\t\t\n\t\t\tfor each DB.EtiquetadoOperador\n\t\t\t\tOrder PalletEtiquetadoId\n\t\t\t\twhere EtiquetadoOperadorId \u003e 0\n\t\t\t\twhere OrdenEtiquetadoId = \u0026OrdenEtiquetadoId\n\t\t\t\t\u0026AuxPaletId = PalletEtiquetadoId\n\t\t\t\t\n\t\t\t\tif(\u0026AuxPaletId \u003c\u003e \u0026PaletId)\n\t\t\t\t\t\u0026PaletId = \u0026AuxPaletId\n\t\t\t\t\tdo \u0027ProductoTerminado\u0027\n\t\t\t\tendif\n\t\t\t\n\t\t\t\tif(EtiquetadoOperadorVoBoCarrete)\n\t\t\t\t\t\u0026CarretesEtiquetado += \u0026CarreteMillar\n\t\t\t\telse\n\t\t\t\t\t\u0026CarretesMolino += \u0026CarreteMillar\n\t\t\t\tendif\n\t\t\tendfor\n\t\t\t\n\t\tEndSub\n\t\t\n\t\tSub \u0027ProductoTerminado\u0027\n\t\t\t\n\t\t\t\u0026Palet.Load(\u0026PaletId)\n\t\t\t\u0026ProductoId = \u0026Palet.PaletProductoId\n\t\t\t\u0026CarreteMillar = 0\n\t\t\t\n\t\t\tfor each DB.ProductoTerminado\n\t\t\t\twhere ProductoTerminadoId \u003e 0\n\t\t\t\twhere ProductoTerminadoConEtiqueta = true\n\t\t\t\twhere TerminadoProductoId = \u0026ProductoId\n\t                        \u0026CarreteMillar = ProductoTerminadoCarreteMillar\n\t\t\t\tExit\n\t\t\tendfor\n\t\tEndSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026OrdenEtiquetadoId, out:\u0026SDTOrdenEtiquetado);\n",
+                              "cleanSource":  "parm(in:\u0026OrdenEtiquetadoId, out:\u0026SDTOrdenEtiquetado);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTOrdenEtiquetado",
+                                         "DB.Palet",
+                                         "DB.ProductoTerminado",
+                                         "DB.EtiquetadoOperador",
+                                         "DB.OrdenEtiquetado"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.OrdenEtiquetado",
+                                            "DB.Palet"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTOrdenEtiquetado"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "AuxPaletId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Id"
+                           },
+                           {
+                               "name":  "CarreteMillar",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Millar"
+                           },
+                           {
+                               "name":  "CarretesEtiquetado",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carretes Etiquetado"
+                           },
+                           {
+                               "name":  "CarretesMolino",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carretes Molino"
+                           },
+                           {
+                               "name":  "OrdenEtiquetado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Orden Etiquetado"
+                           },
+                           {
+                               "name":  "OrdenEtiquetadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Orden Etiquetado Id"
+                           },
+                           {
+                               "name":  "Palet",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet"
+                           },
+                           {
+                               "name":  "PaletId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Id"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "ProductoTerminado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Terminado"
+                           },
+                           {
+                               "name":  "SDTOrdenEtiquetado",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "SDTOrden Etiquetado"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,143 @@
+﻿{
+    "uniqueId":  "860c8b6f-2932-49e9-8a61-847298764444",
+    "name":  "SDEscanearCarrete",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDEscanear Carrete",
+    "filePath":  "Procedures/Produccion/SDEscanearCarrete.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\tfor each DB.Carrete\n\t\twhere CarreteId \u003e 0\n\t\twhere CarreteNoSerie.Trim() = \u0026CarreteNoSerie.Trim()\n\t\t\u0026CarreteId = CarreteId\n\t\t\u0026Carrete.Load(\u0026CarreteId)\n\t\t\n\t\t\u0026CarreteItem = New()\n\t\t\u0026CarreteItem.FromJson(\u0026Carrete.ToJson())\n\t\tExit\n\tendfor\n",
+                              "cleanSource":  "\t\n\tfor each DB.Carrete\n\t\twhere CarreteId \u003e 0\n\t\twhere CarreteNoSerie.Trim() = \u0026CarreteNoSerie.Trim()\n\t\t\u0026CarreteId = CarreteId\n\t\t\u0026Carrete.Load(\u0026CarreteId)\n\t\t\n\t\t\u0026CarreteItem = New()\n\t\t\u0026CarreteItem.FromJson(\u0026Carrete.ToJson())\n\t\tExit\n\tendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026CarreteNoSerie, out:\u0026CarreteItem);\n",
+                              "cleanSource":  "parm(in:\u0026CarreteNoSerie, out:\u0026CarreteItem);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTCarrete",
+                                         "DB.Carrete"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Carrete"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CarreteId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Id"
+                           },
+                           {
+                               "name":  "Carrete",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete"
+                           },
+                           {
+                               "name":  "CarreteItem",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Carrete Item"
+                           },
+                           {
+                               "name":  "CarreteNoSerie",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Carrete No Serie"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

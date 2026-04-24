@@ -1,0 +1,33 @@
+﻿
+=== DataProvider: Produccion.CarreteDP ===
+
+--- Source (Source) ---
+SDTCarrete
+{
+	SDTCarreteItem
+	Order (CarreteNoLinea) when &Orden = Orden.Descendente
+	Order CarreteNoLinea when &Orden = Orden.Ascendente
+	where CarreteCarreraId = &CarreraId when &CarreraId > 0
+	{
+		CarreteId = CarreteId
+		CarreteNoLinea = CarreteNoLinea
+		CarreteNoSerie = CarreteNoSerie
+		CarreteEstado = CarreteEstado
+		CarreteObservacion = DB.CarreteObservacion
+		CarreteCarreraId = CarreteCarreraId
+		CarreteTerminaPalet = CarreteTerminaPalet
+		CarretePaletSerie = CarretePaletSerie
+		selected = CarreteEnMolino
+	}
+}
+
+--- Rules (Rules) ---
+parm(in:&CarreraId, in:&Orden);
+
+
+=== SDT: Produccion.SDTCarrete ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

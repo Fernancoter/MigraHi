@@ -1,0 +1,221 @@
+﻿{
+    "uniqueId":  "93df92d0-f298-429c-9682-b12aabafc6ee",
+    "name":  "CrearExtrusion",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Crear Extrusion",
+    "filePath":  "Procedures/Produccion/CrearExtrusion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026ExtrusionCalibre.SetEmpty()\n\u0026ExtrusionAncho.SetEmpty()\n\u0026ExtrusionLongitud.SetEmpty()\n\ndo \u0027CalibrarExtrusion\u0027\n\n\u0026Extrusion = New()\n\u0026Extrusion.ExtrusionExtrusoraId = \u0026ExtrusoraId \n\u0026Extrusion.ExtrusionTurnoId = \u0026TurnoId\n\n\u0026Extrusion.ExtrusionFecha = \u0026ExtrusionFecha\n\u0026Extrusion.ExtrusionProductoId = \u0026ProductoId\nif(\u0026OperadorId\u003e0)\n\t\u0026Extrusion.ExtrusionOperadorId = \u0026OperadorId\nelse\n\t\u0026Extrusion.ExtrusionOperadorId.SetNull()\nendif\n\n\u0026Extrusion.ExtrusionEstado = EstadoExtrusion.PorProgramar\n\u0026Extrusion.ExtrusionSiloId.SetNull()\n\u0026Extrusion.ExtrusionSiloMolidoId.SetNull()\n\n\u0026Extrusion.ExtrusionCalibre = \u0026ExtrusionCalibre\n\u0026Extrusion.ExtrusionAncho = \u0026ExtrusionAncho\n\u0026Extrusion.ExtrusionLongitud = \u0026ExtrusionLongitud\n\n\u0026Extrusion.Save()\nif(\u0026Extrusion.Success())\n\tcommit\n\t\u0026ExtrusionId = \u0026Extrusion.ExtrusionId\nElse\n\tdebugger.Call(niveldebug.Informativo, \u0026Pgmname, \u0026Extrusion.ToJson())\n\tsetnotSuccessMessagesLog.Call(\u0026Extrusion.GetMessages(), \u0026Pgmname)\n\t\u0026ExtrusionId = 0\nendif\n\n\nSub \u0027CalibrarExtrusion\u0027\n\tfor each DB.ExtrusoraProducto\n\t\twhere ExtrusoraProductoId \u003e 0\n\t\twhere ExtrusoraId = \u0026ExtrusoraId\n\t\twhere ProductoId = \u0026ProductoId\n\t\t\n\t\t\u0026ExtrusionCalibre = ExtrusoraProductoCalibre\n                \u0026ExtrusionAncho = ExtrusoraProductoAncho\n                \u0026ExtrusionLongitud = ExtrusoraProductoLongitud\n\t\tExit\n\tendfor\nEndSub\n\n",
+                              "cleanSource":  "\u0026ExtrusionCalibre.SetEmpty()\n\u0026ExtrusionAncho.SetEmpty()\n\u0026ExtrusionLongitud.SetEmpty()\n\ndo \u0027CalibrarExtrusion\u0027\n\n\u0026Extrusion = New()\n\u0026Extrusion.ExtrusionExtrusoraId = \u0026ExtrusoraId \n\u0026Extrusion.ExtrusionTurnoId = \u0026TurnoId\n\n\u0026Extrusion.ExtrusionFecha = \u0026ExtrusionFecha\n\u0026Extrusion.ExtrusionProductoId = \u0026ProductoId\nif(\u0026OperadorId\u003e0)\n\t\u0026Extrusion.ExtrusionOperadorId = \u0026OperadorId\nelse\n\t\u0026Extrusion.ExtrusionOperadorId.SetNull()\nendif\n\n\u0026Extrusion.ExtrusionEstado = EstadoExtrusion.PorProgramar\n\u0026Extrusion.ExtrusionSiloId.SetNull()\n\u0026Extrusion.ExtrusionSiloMolidoId.SetNull()\n\n\u0026Extrusion.ExtrusionCalibre = \u0026ExtrusionCalibre\n\u0026Extrusion.ExtrusionAncho = \u0026ExtrusionAncho\n\u0026Extrusion.ExtrusionLongitud = \u0026ExtrusionLongitud\n\n\u0026Extrusion.Save()\nif(\u0026Extrusion.Success())\n\tcommit\n\t\u0026ExtrusionId = \u0026Extrusion.ExtrusionId\nElse\n\tdebugger.Call(niveldebug.Informativo, \u0026Pgmname, \u0026Extrusion.ToJson())\n\tsetnotSuccessMessagesLog.Call(\u0026Extrusion.GetMessages(), \u0026Pgmname)\n\t\u0026ExtrusionId = 0\nendif\n\n\nSub \u0027CalibrarExtrusion\u0027\n\tfor each DB.ExtrusoraProducto\n\t\twhere ExtrusoraProductoId \u003e 0\n\t\twhere ExtrusoraId = \u0026ExtrusoraId\n\t\twhere ProductoId = \u0026ProductoId\n\t\t\n\t\t\u0026ExtrusionCalibre = ExtrusoraProductoCalibre\n                \u0026ExtrusionAncho = ExtrusoraProductoAncho\n                \u0026ExtrusionLongitud = ExtrusoraProductoLongitud\n\t\tExit\n\tendfor\nEndSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026TurnoId, in:\u0026ExtrusoraId, in:\u0026ExtrusionFecha,in:\u0026ProductoId,in:\u0026OperadorId,out:\u0026ExtrusionId);\n",
+                              "cleanSource":  "parm(in:\u0026TurnoId, in:\u0026ExtrusoraId, in:\u0026ExtrusionFecha,in:\u0026ProductoId,in:\u0026OperadorId,out:\u0026ExtrusionId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Web.SetNotSuccessMessagesLog",
+                                         "Web.Debugger",
+                                         "DB.ExtrusoraProducto",
+                                         "DB.Extrusion",
+                                         "DB.Turno",
+                                         "debugger",
+                                         "setnotSuccessMessagesLog"
+                                     ],
+                         "calledBy":  [
+                                          "ProgramarExtrusion",
+                                          "ExclusionDelDia"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Extrusion"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Extrusion"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ExtrusoraId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusora Id"
+                           },
+                           {
+                               "name":  "ExtrusionFecha",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATETIME",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Fecha"
+                           },
+                           {
+                               "name":  "TurnoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Turno Id"
+                           },
+                           {
+                               "name":  "Extrusion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion"
+                           },
+                           {
+                               "name":  "Result",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Result"
+                           },
+                           {
+                               "name":  "Exito",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Exito"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "OperadorId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Operador Id"
+                           },
+                           {
+                               "name":  "ExtrusionCalibre",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Calibre"
+                           },
+                           {
+                               "name":  "ExtrusionAncho",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Ancho"
+                           },
+                           {
+                               "name":  "ExtrusionLongitud",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Longitud"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "Turno",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Turno"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

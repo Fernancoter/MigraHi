@@ -1,0 +1,13 @@
+﻿
+=== Transaction: WWPBaseObjects.Mail.WWP_Mail ===
+
+--- Start (Event) ---
+
+--- After Trn (Event) ---
+
+--- Rules (Rules) ---
+
+default(WWPMailStatus, WWPBaseObjects.Mail.WWP_StatusMail.Pending);
+default(WWPMailCreated, ServerNow());
+default(WWPMailScheduled, ServerNow());
+

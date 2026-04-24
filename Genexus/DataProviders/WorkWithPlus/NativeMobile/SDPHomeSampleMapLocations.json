@@ -1,0 +1,88 @@
+﻿{
+    "uniqueId":  "c84ace06-94e8-476a-bb65-f4fa087cbdb5",
+    "name":  "SDPHomeSampleMapLocations",
+    "type":  "DataProvider",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPHome Sample Map Locations",
+    "filePath":  "DataProviders/WorkWithPlus/NativeMobile/SDPHomeSampleMapLocations.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDPHomeSampleMapLocations\n{\n\tSDPMapLocationData\n\t{\n\t\tId = 1\n\t\tTitle = !\"Music\"\n\t\tDescription = !\"Music school\"\t\t\n\t\t\u0026Image.FromImage(sdpressampleproduct1)\n\t\tImage = \u0026Image\n\t\t//\u0026Image.FromImage(SDPResMapPin)\n\t\t\u0026Image.FromImage(sdpressampleproduct7)\n\t\tPinImage = \u0026Image\n\t\tLocation = !\"-34.878997, -56.085912\"\n\t\tInfoField1 = !\"$ 4.99 per class\"\n\t}\n\tSDPMapLocationData\n\t{\n\t\tId = 2\n\t\tTitle = !\"Dance\"\n\t\tDescription = !\"Modern dance school\"\t\t\n\t\t\u0026Image.FromImage(sdpressampleproduct2)\n\t\tImage = \u0026Image\n\t\t\u0026Image.FromImage(sdpressampleproduct7)\n\t\tPinImage = \u0026Image\n\t\tLocation = !\"-34.881248, -56.068440\"\n\t\tInfoField1 = !\"$ 100 per month\"\n\t}\n\tSDPMapLocationData\n\t{\n\t\tId = 3\n\t\tTitle = !\"Makeup\"\n\t\tDescription = !\"Modern makeup school\"\n\t\t\u0026Image.FromImage(sdpressampleproduct3)\n\t\tImage = \u0026Image\n\t\t\u0026Image.FromImage(sdpressampleproduct3)\n\t\tPinImage = \u0026Image\n\t\tLocation = !\"-34.883343, -56.084748\"\n\t\tInfoField1 = !\"$ 49.9 per month\"\n\t}\n\tSDPMapLocationData\n\t{\n\t\tId = 4\n\t\tTitle = !\"Driving\"\n\t\tDescription = !\"Stunts driver school\"\n\t\t\u0026Image.FromImage(sdpressampleproduct4)\n\t\tImage = \u0026Image\n\t\t//\u0026Image.FromImage(SDPResMapPin)\n\t\t\u0026Image.FromImage(sdpressampleproduct8)\n\t\tPinImage = \u0026Image\n\t\tLocation = !\"-34.880055, -56.078902\"\n\t\tInfoField1 = !\"$ 4.99 per class\"\n\t}\n\tSDPMapLocationData\n\t{\n\t\tId = 5\n\t\tTitle = !\"Football\"\n\t\tDescription = !\"Football school\"\n\t\t\u0026Image.FromImage(sdpressampleproduct5)\n\t\tImage = \u0026Image\n\t\t\u0026Image.FromImage(sdpressampleproduct7)\n\t\tPinImage = \u0026Image\n\t\tLocation = !\"-34.880777, -56.088051\"\n\t\tInfoField1 = !\"$ 4.99 per class\"\n\t}\n\tSDPMapLocationData\n\t{\n\t\tId = 6\n\t\tTitle = !\"History\"\n\t\tDescription = !\"History teachers\"\n\t\t\u0026Image.FromImage(sdpressampleproduct6)\n\t\tImage = \u0026Image\n\t\t\u0026Image.FromImage(sdpressampleproduct8)\n\t\tPinImage = \u0026Image\n\t\tLocation = !\"-34.895053, -56.085141\"\n\t\tInfoField1 = !\"$ 4.99 per class\"\n\t}\n}\n",
+                              "cleanSource":  "SDPHomeSampleMapLocations\n{\n\tSDPMapLocationData\n\t{\n\t\tId = 1\n\t\tTitle = !\"Music\"\n\t\tDescription = !\"Music school\"\t\t\n\t\t\u0026Image.FromImage(sdpressampleproduct1)\n\t\tImage = \u0026Image\n\t\t//\u0026Image.FromImage(SDPResMapPin)\n\t\t\u0026Image.FromImage(sdpressampleproduct7)\n\t\tPinImage = \u0026Image\n\t\tLocation = !\"-34.878997, -56.085912\"\n\t\tInfoField1 = !\"$ 4.99 per class\"\n\t}\n\tSDPMapLocationData\n\t{\n\t\tId = 2\n\t\tTitle = !\"Dance\"\n\t\tDescription = !\"Modern dance school\"\t\t\n\t\t\u0026Image.FromImage(sdpressampleproduct2)\n\t\tImage = \u0026Image\n\t\t\u0026Image.FromImage(sdpressampleproduct7)\n\t\tPinImage = \u0026Image\n\t\tLocation = !\"-34.881248, -56.068440\"\n\t\tInfoField1 = !\"$ 100 per month\"\n\t}\n\tSDPMapLocationData\n\t{\n\t\tId = 3\n\t\tTitle = !\"Makeup\"\n\t\tDescription = !\"Modern makeup school\"\n\t\t\u0026Image.FromImage(sdpressampleproduct3)\n\t\tImage = \u0026Image\n\t\t\u0026Image.FromImage(sdpressampleproduct3)\n\t\tPinImage = \u0026Image\n\t\tLocation = !\"-34.883343, -56.084748\"\n\t\tInfoField1 = !\"$ 49.9 per month\"\n\t}\n\tSDPMapLocationData\n\t{\n\t\tId = 4\n\t\tTitle = !\"Driving\"\n\t\tDescription = !\"Stunts driver school\"\n\t\t\u0026Image.FromImage(sdpressampleproduct4)\n\t\tImage = \u0026Image\n\t\t//\u0026Image.FromImage(SDPResMapPin)\n\t\t\u0026Image.FromImage(sdpressampleproduct8)\n\t\tPinImage = \u0026Image\n\t\tLocation = !\"-34.880055, -56.078902\"\n\t\tInfoField1 = !\"$ 4.99 per class\"\n\t}\n\tSDPMapLocationData\n\t{\n\t\tId = 5\n\t\tTitle = !\"Football\"\n\t\tDescription = !\"Football school\"\n\t\t\u0026Image.FromImage(sdpressampleproduct5)\n\t\tImage = \u0026Image\n\t\t\u0026Image.FromImage(sdpressampleproduct7)\n\t\tPinImage = \u0026Image\n\t\tLocation = !\"-34.880777, -56.088051\"\n\t\tInfoField1 = !\"$ 4.99 per class\"\n\t}\n\tSDPMapLocationData\n\t{\n\t\tId = 6\n\t\tTitle = !\"History\"\n\t\tDescription = !\"History teachers\"\n\t\t\u0026Image.FromImage(sdpressampleproduct6)\n\t\tImage = \u0026Image\n\t\t\u0026Image.FromImage(sdpressampleproduct8)\n\t\tPinImage = \u0026Image\n\t\tLocation = !\"-34.895053, -56.085141\"\n\t\tInfoField1 = !\"$ 4.99 per class\"\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPMapLocationData"
+                                     ],
+                         "calledBy":  [
+                                          "SDPHomeSampleMapLocationsFiltered"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDPMapLocationData"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Image",
+                               "elementType":  "Variable",
+                               "dataType":  "BITMAP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Image"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

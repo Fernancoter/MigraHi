@@ -1,0 +1,120 @@
+﻿{
+    "uniqueId":  "6ad7e1d4-aad8-45ea-a023-cc8ddc4bcb73",
+    "name":  "SDTInterrupciones",
+    "type":  "SDT",
+    "module":  "Produccion",
+    "description":  "SDTInterrupciones",
+    "filePath":  "SDTs/Produccion/SDTInterrupciones.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "DPInterrupcionesPorExtrusion"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "InterrupcionId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion Id"
+                           },
+                           {
+                               "name":  "InterrupcionMotivo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion Motivo"
+                           },
+                           {
+                               "name":  "DownTimeCodeId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Down Time Code Id"
+                           },
+                           {
+                               "name":  "DownTimeCodeName",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Down Time Code Name"
+                           },
+                           {
+                               "name":  "InterrupcionHoraInicio",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion Hora Inicio"
+                           },
+                           {
+                               "name":  "InterrupcionHoraFin",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion Hora Fin"
+                           },
+                           {
+                               "name":  "InterrupcionConcluida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion Concluida"
+                           },
+                           {
+                               "name":  "InterrupcionTiempo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion Tiempo"
+                           }
+                       ]
+}

@@ -1,0 +1,295 @@
+﻿
+=== Procedure: PrinterSD.RptExtrusion ===
+
+--- Source (Source) ---
+&SDTRptExtrusion = DPSDTRptExtrusion.Udp(&ExtrusionId)
+&SDTExtrusionResultado = DPExtrusionResultado.Udp(&ExtrusionId)
+//debugger.Call(niveldebug.Informativo, &Pgmname, &SDTRptExtrusion.ToJson())
+header
+	
+	print pb_header
+	
+end
+
+&SDTBobina = BobinaDP.Udp(&ExtrusionId, '', 0)
+//debugger.Call(niveldebug.Informativo, &Pgmname, &SDTBobina.ToJson())
+
+print pb_header_bobina_a
+
+For &SDTBobinaItem In &SDTBobina
+	
+	Do Case
+		
+		Case &SDTBobinaItem.BobinaOrigen = OrigenBobina.A
+			print If detail
+			print pb_body_bobina_a
+			&ABobinaKg += &SDTBobinaItem.BobinaKg
+			&ABobinaMermaKg += &SDTBobinaItem.BobinaMermaKg
+	EndCase
+	
+EndFor
+
+&SDTRptExtrusion.ABobinaTotalKgTexto = &ABobinaKg.ToString().Trim()
+
+print pb_foot_bobina_a
+
+print pb_header_bobina_b
+
+For &SDTBobinaItem In &SDTBobina
+	
+	Do Case
+		
+		Case &SDTBobinaItem.BobinaOrigen = OrigenBobina.B
+			print If detail
+			print pb_body_bobina_b
+			&BBobinaKg += &SDTBobinaItem.BobinaKg
+			&BBobinaMermaKg += &SDTBobinaItem.BobinaMermaKg
+	EndCase
+	
+EndFor
+
+&SDTRptExtrusion.BBobinaTotalKgTexto = &BBobinaKg.ToString().Trim()
+
+print pb_foot_bobina_b
+
+
+print Interrupcion_header
+for each 
+	where ExtrusionId = &ExtrusionId
+	&InterrupcionHoraInicio  = InterrupcionHoraInicio
+	&InterrupcionHoraFin = InterrupcionHoraFin
+	&InterrupcionMotivo = InterrupcionMotivo
+	
+	print Interrupcion_Body
+	
+when none
+
+endfor
+
+	
+	
+
+
+
+
+&BobinaKg = &ABobinaKg + &BBobinaKg
+&BobinaMermaKg = &ABobinaMermaKg + &BBobinaMermaKg
+
+&SDTRptExtrusion.KgUtilesTexto = &BobinaKg.ToFormattedString()
+&SDTRptExtrusion.kgMermaTexto = &BobinaMermaKg.ToFormattedString()
+
+print pb_footer
+
+--- Rules (Rules) ---
+Parm(in:&ExtrusionId,in:&PDFNombre);
+Output_File(&PDFNombre, 'PDF');
+
+
+=== DataProvider: PrinterSD.DPSDTRptExtrusion ===
+
+--- Source (Source) ---
+SDTRptExtrusion
+Where ExtrusionId = &ExtrusionId
+{
+	ExtrusionId  = ExtrusionId 
+	ExtrusionExtrusoraId  = ExtrusionExtrusoraId 
+	ExtrusionExtrusoraNombre  = ExtrusionExtrusoraNombre 
+	ExtrusionTurnoId  = ExtrusionTurnoId 
+	ExtrusionTurnoNombre  = ExtrusionTurnoNombre 
+	ExtrusionProductoId  = ExtrusionProductoId 
+	ExtrusionProductoNombre  = WWPBaseObjects.Notifications.ExtrusionProductoNombre 
+	ExtrusionProductoTipoMaterial  = ExtrusionProductoTipoMaterial 
+	ExtrusionFecha  = ExtrusionFecha 
+	ExtrusionCalibre  = ExtrusionCalibre 
+	ExtrusionAncho  = ExtrusionAncho 
+	ExtrusionLongitud  = ExtrusionLongitud 
+	ExtrusionVirgenKg  = ExtrusionVirgenKg 
+	ExtrusionMeta  = ExtrusionMeta 
+	ExtrusionMolidoKg  = ExtrusionMolidoKg 
+	ExtrusionRevHusilloVirgen  = ExtrusionRevHusilloVirgen 
+	ExtrusionRevHusilloMolido  = ExtrusionRevHusilloMolido 
+	ExtrusionEstado  = ExtrusionEstado 
+	ExtrusionOperadorId  = ExtrusionOperadorId 
+	ExtrusionOperadorNombre  = ExtrusionOperadorNombre 
+	ExtrusionHoraIniciaProceso  = ExtrusionHoraIniciaProceso 
+	ExtrusionHoraFinProceso  = ExtrusionHoraFinProceso 
+	ExtrusionLoteSilo  = ExtrusionLoteSilo 
+	ExtrusionMotivoAnticipado  = ExtrusionMotivoAnticipado 
+	ExtrusionResultadoBobinasReposoTotales  = ExtrusionResultadoBobinasReposoTotales 
+	ExtrusionSiloId  = ExtrusionSiloId 
+	ExtrusionSiloNombre  = ExtrusionSiloNombre 
+	ExtrusionSiloMolidoId  = ExtrusionSiloMolidoId 
+	ExtrusionSiloMolidoNombre  = ExtrusionSiloMolidoNombre 
+	ExtrusionBobinas  = ExtrusionBobinas 
+
+}
+
+--- Rules (Rules) ---
+parm(&ExtrusionId);
+
+
+=== SDT: PrinterSD.SDTRptExtrusion ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== DataProvider: Produccion.BobinaDP ===
+
+--- Source (Source) ---
+SDTBobina
+{
+	SDTBobinaItem
+	where ExtrusionId = &ExtrusionId when &ExtrusionId > 0
+	where BobinaEstado = &BobinaEstado when Not &BobinaEstado.IsEmpty()
+	where BobinaProductoId = &ProductoId when &ProductoId > 0
+	{
+		BobinaId = BobinaId
+		ExtrusionId = ExtrusionId
+		BobinaOrigen = BobinaOrigen
+		BobinaHoraInicio = BobinaHoraInicio
+		HoraInicio = BobinaHoraInicio
+		BobinaHoraSalida = BobinaHoraSalida
+		HoraSalida = BobinaHoraSalida
+		BobinaNo = BobinaNo
+		BobinaDesviacionEstandar = BobinaDesviacionEstandar
+		BobinaColorEstacion = BobinaColorEstacion
+		BobinaKg = BobinaKg
+		BobinaKgTexto = trim(BobinaKg.ToString())
+		BobinaMermaKg = BobinaMermaKg
+		BobinaMermaKgTexto = trim(BobinaMermaKg.ToString())
+		BobinaEspesor = BobinaEspesor
+		BobinaObservaciones = BobinaObservaciones
+		BobinaNoSerie = BobinaNoSerie
+		BobinaEstado = BobinaEstado
+		BobinaMotivoMolino = BobinaMotivoMolino
+		MotivoObservaciones = iif(BobinaMotivoMolino = MotivoMolino.NoAplica,'',BobinaMotivoMolino) + ' ' + BobinaObservaciones
+		BobinaProductoId = BobinaProductoId
+		BobinaProductoNombre = BobinaProductoNombre
+		BobinaCarreras = BobinaCarreras
+		BobinaIniciaReposo = BobinaIniciaReposo
+		BobinaMinutosEnReposo = BobinaMinutosEnReposo
+		BobinaEtiqueta = '<b>' + BobinaNo.ToFormattedString() + BobinaOrigen.Trim() + '</b>'
+	}
+}
+
+--- Rules (Rules) ---
+parm(in:&ExtrusionId, in:&BobinaEstado, in:&ProductoId);
+
+
+=== DataProvider: Produccion.DPExtrusionResultado ===
+
+--- Source (Source) ---
+SDTExtrusionResultado
+Where ExtrusionId = &ExtrusionId
+{
+	ExtrusionResultadoId  = WWPBaseObjects.ExtrusionResultadoId 
+ExtrusionResultadoVelLaminadora  = ExtrusionResultadoVelLaminadora 
+ExtrusionResultadoVelHusillo  = ExtrusionResultadoVelHusillo 
+ExtrusionResultadoBobinasMolino  = DB.ExtrusionResultadoBobinasMolino 
+ExtrusionResultadoBobinasReposo  = ExtrusionResultadoBobinasReposo 
+ExtrusionResultadoTotalKg  = ExtrusionResultadoTotalKg 
+ExtrusionResultadoTotalMermaKg  = ExtrusionResultadoTotalMermaKg 
+ExtrusionResultadoCOMBA  = ExtrusionResultadoCOMBA 
+ExtrusionResultadoObservaciones  = WWPBaseObjects.ExtrusionResultadoObservaciones 
+ExtrusionId  = Notifications.ExtrusionId 
+ExtrusionLoteSilo  = ExtrusionLoteSilo 
+ExtrusionSiloId  = ExtrusionSiloId 
+ExtrusionSiloNombre  = ExtrusionSiloNombre 
+ExtrusionRevHusilloVirgen  = ExtrusionRevHusilloVirgen 
+ExtrusionRevHusilloMolido  = ExtrusionRevHusilloMolido 
+ExtrusionVirgenKg  = ExtrusionVirgenKg 
+ExtrusionMolidoKg  = ExtrusionMolidoKg 
+
+}
+
+--- Rules (Rules) ---
+parm(&ExtrusionId);
+
+
+=== SDT: Produccion.SDTExtrusionResultado ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== SDT: Produccion.SDTPrensadoResultado ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== Procedure: Web.Debugger ===
+
+--- Source (Source) ---
+/*
+ Niveles de debug:
+0 - Apagado
+1 - Informativo
+2 - Advertencia
+3 - Debug
+4 - Error
+5 - Critico
+El Nivel de debug detallará a partir de que nivel se desea informar:
+	Si por ejemplo el parámetro indica 0(Apagado) -> no se generan logs
+	Si por ejemplo el parámetro indica 1(Critico) -> se muestran solo los críticos
+	Si por ejemplo el parámetro indica 2(Error) -> se muestran los de tipo error y críticos
+	Si por ejemplo el parámetro indica 3(Degub) -> se muestran los de tipo error, degub y críticos
+	Si por ejemplo el parámetro indica 3(Advertencia) -> se muestran los de tipo error, degub, advertencia y críticos
+	Si por ejemplo el parámetro indica 5(Informativo) -> se muestran los de tipo error, degub, advertencia, informativos y críticos
+	
+*/
+
+//call("CargarContexto", &Contexto)
+&Usuario = &WebSession.Get('UserName').ToString()
+
+
+&HTTP_HOST= &HttpRequest.BaseUrl.Replace('/','')
+&HTTP_HOST= &HTTP_HOST.Replace(':','')
+&FechaArchivo = Now()
+//Se carga el nivel del debug configurado en base de datos
+&NivelDebugConfigurado = NivelDebug.Informativo
+//Se carga el tipo de debugg base de datos o archivo
+&TipoDebug = TipoDebug.Archivo
+&NivelDebugDescripcion = &NivelDebug.EnumerationDescription()
+
+//valida si el debug esta prendido o esta dentro del rango
+if &NivelDebugConfigurado  >= &NivelDebug
+	do case
+		case &TipoDebug = TipoDebug.BaseDatos
+			//guardar en base de datos
+		case &TipoDebug = TipoDebug.Archivo
+			//guardad en archivo
+			Do 'GuardarArchivo'
+	endcase
+else
+	return
+endif
+
+
+sub 'GuardarArchivo'
+	&NombreArchivo =  &HTTP_HOST.Trim() + "_" + &FechaArchivo.Year().ToString().Trim()+&FechaArchivo.Month().ToString().Trim()+&FechaArchivo.Day().ToString().Trim() + ".log"
+	
+	&MensajeDebug =  "-> Usuario: "+ &Usuario.ToString() +" | "+&Time.ToString().Trim()+" ("+&NivelDebugDescripcion.Trim()+") "+"["+&Programa.ToString().Trim()+"] -> "
+	&MensajeDebug = &MensajeDebug + &Log
+	&ResultFile = DFWOpen(&NombreArchivo,"","",1)
+	&ResultFile = DFWPTxt(&MensajeDebug)
+	&ResultFile = DFWNext()
+	&ResultFile = DFWClose()
+endsub
+
+--- Rules (Rules) ---
+parm(in:&NivelDebug,&Programa,&Log);
+
+
+=== Procedure: Produccion.ObtenerCantidadBobinasPorExtrusion ===
+
+--- Source (Source) ---
+&ExtrusionBobinas = count(BobinaId, ExtrusionId = &ExtrusionId)
+
+--- Rules (Rules) ---
+parm(In:&ExtrusionId, Out:&ExtrusionBobinas);
+

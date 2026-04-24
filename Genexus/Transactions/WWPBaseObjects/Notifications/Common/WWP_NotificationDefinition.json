@@ -1,0 +1,210 @@
+﻿{
+    "uniqueId":  "f5a4f942-adcc-484b-a97b-e53ad8dd11ea",
+    "name":  "WWP_NotificationDefinition",
+    "type":  "Transaction",
+    "module":  "WWPBaseObjects.Notifications.Common",
+    "description":  "Notification Definition",
+    "filePath":  "Transactions/WWPBaseObjects/Notifications/Common/WWP_NotificationDefinition.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.SecGAMIsAuthByFunctionalityKey"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_SendNotification",
+                                          "WWP_HasSubscriptionsToDisplay",
+                                          "WWP_SubscribeLoggedUserToDiscussion",
+                                          "WWP_AutomaticNotificationDefinitionsToLoad",
+                                          "WWP_UpdateNotificationDefinitions",
+                                          "WWP_SubscribeMentionedUsersToDiscussion",
+                                          "WWP_GetNotificationDefinitionByName",
+                                          "WWP_SendMentionNotification"
+                                      ],
+                         "tablesRead":  [
+                                            "WWP_NotificationDefinition"
+                                        ],
+                         "tablesWritten":  [
+                                               "WWP_NotificationDefinition"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "GxRemove",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Gx Remove"
+                           },
+                           {
+                               "name":  "Mode",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Mode"
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionId",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionName",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionAppliesTo",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionAllowUserSubscription",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionDescription",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionIcon",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionTitle",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionShortDescription",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionLongDescription",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionLink",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "WWPEntityId",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "WWPEntityName",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionSecFuncionality",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionIsAuthorized",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           }
+                       ]
+}

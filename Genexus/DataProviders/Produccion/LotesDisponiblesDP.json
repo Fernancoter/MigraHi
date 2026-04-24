@@ -1,0 +1,80 @@
+﻿{
+    "uniqueId":  "f07e3c8c-a0b0-4049-ad97-35597f403c80",
+    "name":  "LotesDisponiblesDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Lotes Disponibles DP",
+    "filePath":  "DataProviders/Produccion/LotesDisponiblesDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTLotes\n{\n\tSDTLotesItem\n\tOrder LoteFechaRegistro\n\tWhere LoteId \u003e 0\n\tWhere LoteConsumido = False\n\t\n\t\n\t{\n\t\tLoteId = LoteId\n\t\tLoteEmbarque = LoteEmbarque\n\t\t}\n}\n",
+                              "cleanSource":  "SDTLotes\n{\n\tSDTLotesItem\n\tOrder LoteFechaRegistro\n\tWhere LoteId \u003e 0\n\tWhere LoteConsumido = False\n\t\n\t\n\t{\n\t\tLoteId = LoteId\n\t\tLoteEmbarque = LoteEmbarque\n\t\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTLotes"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTLotes"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

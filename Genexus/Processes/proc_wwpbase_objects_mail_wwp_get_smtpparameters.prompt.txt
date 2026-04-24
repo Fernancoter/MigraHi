@@ -1,0 +1,125 @@
+﻿
+=== Procedure: WWPBaseObjects.Mail.WWP_GetSMTPParameters ===
+
+--- Source (Source) ---
+WWP_Logger.Debug(&Pgmname, !"Getting SMTP Parameters")
+&SMTPParametersSDT = new()
+
+WWPBaseObjects.WWP_GetParameter.Text(!"SMTP_Host", &TextParameter)
+&SMTPParametersSDT.Host = &TextParameter
+
+WWP_GetParameter.Integer(!"SMTP_Port", &IntegerParameter)
+&SMTPParametersSDT.Port = &IntegerParameter
+
+WWP_GetParameter.Text(!"SMTP_Username", &TextParameter)
+&SMTPParametersSDT.Username = &TextParameter
+
+WWP_GetParameter.Text(!"SMTP_Password", &TextParameter)
+&SMTPParametersSDT.Password = &TextParameter
+
+WWPBaseObjects.WWP_GetParameter.Boolean(!"SMTP_Authentication", &BooleanParameter)
+If &BooleanParameter
+	&SMTPParametersSDT.Authentication = 1
+Else	
+	&SMTPParametersSDT.Authentication = 0
+EndIf
+
+WWP_GetParameter.Boolean(!"SMTP_Secure", &BooleanParameter)
+If &BooleanParameter
+	&SMTPParametersSDT.Secure = 1
+Else	
+	&SMTPParametersSDT.Secure = 0
+EndIf
+
+WWPBaseObjects.WWP_GetParameter.Integer(!"SMTP_Timeout", &IntegerParameter)
+&SMTPParametersSDT.Timeout = &IntegerParameter
+
+WWP_Logger.Debug(&Pgmname, !"SMTP Parameters: " + &SMTPParametersSDT.ToJson())
+
+--- Rules (Rules) ---
+Parm(out:&SMTPParametersSDT);
+
+
+=== SDT: WWPBaseObjects.Mail.WWP_SMTPParametersSDT ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== Procedure: WWPBaseObjects.WWP_GetParameter ===
+
+--- Source (Source) ---
+
+
+Stub Text(in:&ParameterName, inout:&TextParameter)
+	Do Case
+		
+		//SMPT Parameters (Sample SMTP Parameters for a GMAIL email account)
+		Case &ParameterName = !"SMTP_Host"
+			&TextParameter = !"smtp.ionos.mx" 
+		Case &ParameterName = !"SMTP_Username"
+			&TextParameter = !"contact@erphi-cone.com" //Your GMAIL account
+		Case &ParameterName = !"SMTP_Password"
+			&TextParameter = !"wMV13ZBrkU@" //Your GMAIL account password
+			
+		//SMS Parameters (From Sinch Account)
+		Case &ParameterName = !"SMS_ServicePlanId"
+			&TextParameter = !'9361a7469c1344ee8f4c957e36226d93'
+		Case &ParameterName = !"SMS_Token"
+			&TextParameter = !'fcd01c5592574e2d9b07248b2a6b9ab4'
+		Case &ParameterName = !"SMS_ApplicationKey"
+			&TextParameter = !"dddddddd-dddd-dddd-dddd-dddddddddddd"
+		Case &ParameterName = !"SMS_ApplicationSecret"
+			&TextParameter = !"dddddddddddddddddddddd=="
+		Case &ParameterName = !"SMS_DefaultSender"
+			&TextParameter = !'+447537455299'
+
+		//Mail Sender Parameters
+		Case &ParameterName = !"Sender_Name"
+			&TextParameter = !"Hi-Cone" 
+		Case &ParameterName = !"Sender_Address"
+			&TextParameter = !"contact@erphi-cone.com" //Your GMAIL account
+      
+		//Notification Parameters
+		Case &ParameterName = !"Notification_BaseURL"
+			//This should be replaced with your fixed BaseURL if you will send Notifications by an scheduled process 
+			&TextParameter = &HTTPRequest.BaseUrl 
+	EndCase
+EndStub
+
+
+Stub Integer(in:&ParameterName, inout:&IntegerParameter)
+	Do Case
+		//SMPT Parameters (Sample SMTP Parameters for a GMAIL email account)
+		Case &ParameterName = !"SMTP_Port"
+			&IntegerParameter = 587
+			
+		Case &ParameterName = !"SMTP_Timeout"
+			&IntegerParameter = 30
+	EndCase
+EndStub
+
+Stub Decimal(in:&ParameterName, inout:&DecimalParameter)
+
+EndStub
+
+Stub Boolean(in:&ParameterName, inout:&BooleanParameter)
+	Do Case
+		//SMPT Parameters (Sample SMTP Parameters for a GMAIL email account)
+		Case &ParameterName = !"SMTP_Authentication"
+		&BooleanParameter = True
+		Case &ParameterName = !"SMTP_Secure"
+			csharp [!&BooleanParameter!] = true;
+			java [!&BooleanParameter!] = false;
+	EndCase
+EndStub
+
+Stub Date(in:&ParameterName, inout:&DateParameter)
+
+EndStub
+
+Stub DateTime(in:&ParameterName, inout:&DateTimeParameter)
+
+EndStub
+

@@ -1,0 +1,21 @@
+﻿
+=== DataProvider: Produccion.PrensaDP ===
+
+--- Source (Source) ---
+SDTPrensa
+{
+	SDTPrensaItem
+	{
+		PrensaId = PrensaId
+		PrensaNombre = PrensaNombre
+		PrensaImagen = PrensaImagen
+	}
+}
+
+
+=== SDT: Produccion.SDTPrensa ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

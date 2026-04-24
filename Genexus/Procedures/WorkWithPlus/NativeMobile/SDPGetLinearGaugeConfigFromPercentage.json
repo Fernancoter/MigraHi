@@ -1,0 +1,126 @@
+﻿{
+    "uniqueId":  "df40cc78-c077-459c-bde6-cd82ad389b9c",
+    "name":  "SDPGetLinearGaugeConfigFromPercentage",
+    "type":  "Procedure",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPGet Linear Gauge Config From Percentage",
+    "filePath":  "Procedures/WorkWithPlus/NativeMobile/SDPGetLinearGaugeConfigFromPercentage.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t/*\n\t\u0026GaugeSDT.Height = 12\n\t\u0026GaugeSDT.MaxValue = 100\n\t\u0026GaugeSDT.MinValue = 0\n\t\u0026GaugeSDT.Value = \u0026Percentage\n\t\u0026GaugeSDT.ShowValue = false\n\t\u0026GaugeSDT.ShowMinMax = false\n\t\n\t\u0026GaugeSDTRange = new()\n\t\u0026GaugeSDTRange.Color = !\"#9a9a9a\"\n\t\u0026GaugeSDTRange.Length = \u0026Percentage\n\t\u0026GaugeSDT.Ranges.Add(\u0026GaugeSDTRange)\n\t\n\t\u0026GaugeSDTRange = new()\n\t\u0026GaugeSDTRange.Color = !\"#e4e4e4\"\n\t\u0026GaugeSDTRange.Length = 100 - \u0026Percentage\n\t\u0026GaugeSDT.Ranges.Add(\u0026GaugeSDTRange)\n\t\n\t\u0026GaugeData = \u0026GaugeSDT.ToJson()\t\n\t*/\n\n\t\u0026GaugeData = format(!\u0027{\"Type\":\"\",\"Title\":\"\",\"Height\":12,\"Width\":0,\"MaxValue\":100,\"MinValue\":0,\"Value\":%1,\"Thickness\":0,\"ShowMinMax\":false,\"ShowValue\":false,\"Ranges\":[{\"Color\":\"#9a9a9a\",\"Name\":\"\",\"Length\":%1},{\"Color\":\"#e4e4e4\",\"Name\":\"\",\"Length\":%2}]}\u0027, \u0026Percentage, 100-\u0026Percentage)\n",
+                              "cleanSource":  "\t/*\n\t\u0026GaugeSDT.Height = 12\n\t\u0026GaugeSDT.MaxValue = 100\n\t\u0026GaugeSDT.MinValue = 0\n\t\u0026GaugeSDT.Value = \u0026Percentage\n\t\u0026GaugeSDT.ShowValue = false\n\t\u0026GaugeSDT.ShowMinMax = false\n\t\n\t\u0026GaugeSDTRange = new()\n\t\u0026GaugeSDTRange.Color = !\"#9a9a9a\"\n\t\u0026GaugeSDTRange.Length = \u0026Percentage\n\t\u0026GaugeSDT.Ranges.Add(\u0026GaugeSDTRange)\n\t\n\t\u0026GaugeSDTRange = new()\n\t\u0026GaugeSDTRange.Color = !\"#e4e4e4\"\n\t\u0026GaugeSDTRange.Length = 100 - \u0026Percentage\n\t\u0026GaugeSDT.Ranges.Add(\u0026GaugeSDTRange)\n\t\n\t\u0026GaugeData = \u0026GaugeSDT.ToJson()\t\n\t*/\n\n\t\u0026GaugeData = format(!\u0027{\"Type\":\"\",\"Title\":\"\",\"Height\":12,\"Width\":0,\"MaxValue\":100,\"MinValue\":0,\"Value\":%1,\"Thickness\":0,\"ShowMinMax\":false,\"ShowValue\":false,\"Ranges\":[{\"Color\":\"#9a9a9a\",\"Name\":\"\",\"Length\":%1},{\"Color\":\"#e4e4e4\",\"Name\":\"\",\"Length\":%2}]}\u0027, \u0026Percentage, 100-\u0026Percentage)"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026Percentage, out:\u0026GaugeData);\n",
+                              "cleanSource":  "Parm(in:\u0026Percentage, out:\u0026GaugeData);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "GaugeData",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Gauge Data"
+                           },
+                           {
+                               "name":  "Percentage",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Percentage"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

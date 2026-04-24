@@ -1,0 +1,147 @@
+﻿{
+    "uniqueId":  "3abfb4a2-c787-46db-a9d3-3735a91f9a03",
+    "name":  "PaletReport",
+    "type":  "Procedure",
+    "module":  "PrinterSD",
+    "description":  "Palet Report",
+    "filePath":  "Procedures/PrinterSD/PaletReport.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026Palet.Load(\u0026PaletId)\n\u0026PaletProductoId = \u0026Palet.PaletProductoId\n\ndo \u0027ProductoTerminado\u0027\n\nSub \u0027ProductoTerminado\u0027\n\tFor Each DB.ProductoTerminado\n\t\twhere ProductoTerminadoId \u003e 0\n\t\twhere TerminadoProductoId \u003e 0\n\t\twhere TerminadoProductoId = \u0026PaletProductoId\n\n                if(ProductoTerminadoConEtiqueta or ProductoTerminadoEtiquetable)\n\t\t\tif(ProductoTerminadoCodigoSAP.IsEmpty())\n\t\t\t\tPaletReportMain.Call(\u0026PaletId, \u0026PDFNombre)\n\t\t\telse\n\t\t\t\tPaletReportSAP.Call(\u0026PaletId, \u0026PDFNombre)\n\t\t\tendif\n\t        else\n\t\t\tPaletReportMain.Call(\u0026PaletId, \u0026PDFNombre)\n\t\tendif\n\tEndFor\nEndSub\n",
+                              "cleanSource":  "\n\u0026Palet.Load(\u0026PaletId)\n\u0026PaletProductoId = \u0026Palet.PaletProductoId\n\ndo \u0027ProductoTerminado\u0027\n\nSub \u0027ProductoTerminado\u0027\n\tFor Each DB.ProductoTerminado\n\t\twhere ProductoTerminadoId \u003e 0\n\t\twhere TerminadoProductoId \u003e 0\n\t\twhere TerminadoProductoId = \u0026PaletProductoId\n\n                if(ProductoTerminadoConEtiqueta or ProductoTerminadoEtiquetable)\n\t\t\tif(ProductoTerminadoCodigoSAP.IsEmpty())\n\t\t\t\tPaletReportMain.Call(\u0026PaletId, \u0026PDFNombre)\n\t\t\telse\n\t\t\t\tPaletReportSAP.Call(\u0026PaletId, \u0026PDFNombre)\n\t\t\tendif\n\t        else\n\t\t\tPaletReportMain.Call(\u0026PaletId, \u0026PDFNombre)\n\t\tendif\n\tEndFor\nEndSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026PaletId, in:\u0026PDFNombre);\n",
+                              "cleanSource":  "Parm(in:\u0026PaletId, in:\u0026PDFNombre);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "PrinterSD.PaletReportMain",
+                                         "PrinterSD.PaletReportSAP",
+                                         "DB.Palet",
+                                         "DB.ProductoTerminado",
+                                         "PaletReportMain",
+                                         "PaletReportSAP"
+                                     ],
+                         "calledBy":  [
+                                          "PaletWW"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Palet"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PaletId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Palet Id"
+                           },
+                           {
+                               "name":  "Palet",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet"
+                           },
+                           {
+                               "name":  "PaletProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Producto Id"
+                           },
+                           {
+                               "name":  "PDFNombre",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "PDFNombre"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

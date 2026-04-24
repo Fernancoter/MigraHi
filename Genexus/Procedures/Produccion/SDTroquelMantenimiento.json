@@ -1,0 +1,144 @@
+﻿{
+    "uniqueId":  "ab74361b-3bb0-4c17-9c40-2f76d5bfde0f",
+    "name":  "SDTroquelMantenimiento",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDTroquel Mantenimiento",
+    "filePath":  "Procedures/Produccion/SDTroquelMantenimiento.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n        \u0026PTId = 0\n\tfor each DB.PrensaTroquel\n\t\twhere PrensaTroquelId \u003e 0\n\t\twhere TroquelId \u003e 0\n\t\twhere PrensaId = \u0026PrensaId\n\t\t\u0026PTId = GeneXusSecurity.PrensaTroquelId\n\t\t\u0026TroquelId = TroquelId\n\t\tExit\n\tendfor\n\n        if(\u0026PTId \u003e 0)\n\t\t\n\t        //Eliminar referencia del troquel desmontado\n\t\t\u0026EliminarPrensaTroquel.Load(\u0026PTId)\n\t\t\u0026EliminarPrensaTroquel.Delete()\n\t\tcommit\n\t\t\n\t\t//Habilitar el troquel desmontado a estado de registrado\n\t\tSetEstadoTroquel.Call(\u0026TroquelId,EstadoTroquel.Registrado)\n\tendif\n",
+                              "cleanSource":  "\n        \u0026PTId = 0\n\tfor each DB.PrensaTroquel\n\t\twhere PrensaTroquelId \u003e 0\n\t\twhere TroquelId \u003e 0\n\t\twhere PrensaId = \u0026PrensaId\n\t\t\u0026PTId = GeneXusSecurity.PrensaTroquelId\n\t\t\u0026TroquelId = TroquelId\n\t\tExit\n\tendfor\n\n        if(\u0026PTId \u003e 0)\n\t\t\n\t        //Eliminar referencia del troquel desmontado\n\t\t\u0026EliminarPrensaTroquel.Load(\u0026PTId)\n\t\t\u0026EliminarPrensaTroquel.Delete()\n\t\tcommit\n\t\t\n\t\t//Habilitar el troquel desmontado a estado de registrado\n\t\tSetEstadoTroquel.Call(\u0026TroquelId,EstadoTroquel.Registrado)\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensaId);\n",
+                              "cleanSource":  "parm(in:\u0026PrensaId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SetEstadoTroquel",
+                                         "DB.PrensaTroquel",
+                                         "SetEstadoTroquel"
+                                     ],
+                         "calledBy":  [
+                                          "SDCrearPrensaTroquel"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PrensaId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensa Id"
+                           },
+                           {
+                               "name":  "TroquelId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Troquel Id"
+                           },
+                           {
+                               "name":  "PTId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "PTId"
+                           },
+                           {
+                               "name":  "EliminarPrensaTroquel",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Eliminar Prensa Troquel"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

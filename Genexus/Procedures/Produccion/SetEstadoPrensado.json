@@ -1,0 +1,143 @@
+﻿{
+    "uniqueId":  "9d90d9d2-5aff-415f-ba3b-b7465824655b",
+    "name":  "SetEstadoPrensado",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Set Estado Prensado",
+    "filePath":  "Procedures/Produccion/SetEstadoPrensado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "         \n\t \u0026Prensado.Load(\u0026PrensadoId)\n\t \u0026Prensado.PrensadoEstado = \u0026EstadoPrensado\n\t \n \t Do Case\n\t\t Case \u0026EstadoPrensado = EstadoPrensado.EnProceso\n\t\t         \u0026Prensado.PrensadoHoraIniciaProceso = Now()\n\t\t Case \u0026EstadoPrensado = EstadoPrensado.Terminado\n\t\t         \u0026Prensado.PrensadoHoraFinProceso = Now()\n\t EndCase\n\t \n\t \u0026Prensado.Save()\n\t \n\t if(\u0026Prensado.Success())\n\t\t commit\n         endif\n",
+                              "cleanSource":  "         \n\t \u0026Prensado.Load(\u0026PrensadoId)\n\t \u0026Prensado.PrensadoEstado = \u0026EstadoPrensado\n\t \n \t Do Case\n\t\t Case \u0026EstadoPrensado = EstadoPrensado.EnProceso\n\t\t         \u0026Prensado.PrensadoHoraIniciaProceso = Now()\n\t\t Case \u0026EstadoPrensado = EstadoPrensado.Terminado\n\t\t         \u0026Prensado.PrensadoHoraFinProceso = Now()\n\t EndCase\n\t \n\t \u0026Prensado.Save()\n\t \n\t if(\u0026Prensado.Success())\n\t\t commit\n         endif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId, in:\u0026EstadoPrensado);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId, in:\u0026EstadoPrensado);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Prensado"
+                                     ],
+                         "calledBy":  [
+                                          "SDFinalizarPrensado",
+                                          "SDCerrarPrensado"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Prensado"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Prensado"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "EstadoPrensado",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Estado Prensado"
+                           },
+                           {
+                               "name":  "Prensado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "ExtrusionEstado",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Estado"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

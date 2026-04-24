@@ -1,0 +1,125 @@
+﻿{
+    "uniqueId":  "d5b21314-6b98-43e0-afc8-310de88b510f",
+    "name":  "MenuCalidad",
+    "type":  "DataProvider",
+    "module":  "Web",
+    "description":  "Menu Embarques",
+    "filePath":  "DataProviders/Web/MenuCalidad.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "DVelop_Menu\n{\n\t\n\t\u0026id = 0\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlinkTarget =\"\" \n\t\tcaption = !\"Calidad\"\n\t\t\n\t\tsubItems\n\t\t{\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tCalidad.InicioCalidad.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-home\"\n\t\t\t\tcaption = \"Inicio\"  \n\t\t\t} \n\t\t        \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tCarreteDefectoWW.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-cog\"\n\t\t\t\tcaption = \"Defectos\"  \n\t\t\t} \n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tCalidad.reclamosww.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-building\"\n\t\t\t\tcaption = \"Reclamos\"  \n\t\t\t} \n\t\t\n\t\t        Item\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tConsultarCarrete.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-search\"\n\t\t\t\tcaption = \"Consultar\"  \n\t\t\t} \n\t\t\t\n\t\t}\t\n\t}\n}\n",
+                              "cleanSource":  "DVelop_Menu\n{\n\t\n\t\u0026id = 0\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlinkTarget =\"\" \n\t\tcaption = !\"Calidad\"\n\t\t\n\t\tsubItems\n\t\t{\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tCalidad.InicioCalidad.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-home\"\n\t\t\t\tcaption = \"Inicio\"  \n\t\t\t} \n\t\t        \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tCarreteDefectoWW.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-cog\"\n\t\t\t\tcaption = \"Defectos\"  \n\t\t\t} \n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tCalidad.reclamosww.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-building\"\n\t\t\t\tcaption = \"Reclamos\"  \n\t\t\t} \n\t\t\n\t\t        Item\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tConsultarCarrete.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-search\"\n\t\t\t\tcaption = \"Consultar\"  \n\t\t\t} \n\t\t\t\n\t\t}\t\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.ProgramNames",
+                                         "WWPBaseObjects.DVelop_Menu",
+                                         "Calidad.reclamosww",
+                                         "Calidad.InicioCalidad",
+                                         "Calidad.CarreteDefectoWW",
+                                         "Calidad.ConsultarCarrete"
+                                     ],
+                         "calledBy":  [
+                                          "MenuByModule"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WWPBaseObjects.DVelop_Menu"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "id",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "id"
+                           },
+                           {
+                               "name":  "ProgramName",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Program Name"
+                           },
+                           {
+                               "name":  "Repository",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Repository"
+                           },
+                           {
+                               "name":  "Errors",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Errors"
+                           },
+                           {
+                               "name":  "IsRepoAdministrator",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Is Repo Administrator"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

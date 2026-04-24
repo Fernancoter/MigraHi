@@ -1,0 +1,110 @@
+﻿{
+    "uniqueId":  "8f66a21b-5b4c-4d61-94c5-f2e2a673082b",
+    "name":  "DPCBProductoBase",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "DP Dynamic Combo Box Producto",
+    "filePath":  "DataProviders/Produccion/DPCBProductoBase.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "DVB_SDTComboData\nWhere ProductoCategoriaNombre = \u0026ProductoCategoriaNombre when Not \u0026ProductoCategoriaNombre.IsEmpty()\nWhere ProductoBaseProductoId = \u0026ProductoBaseProductoId when Not \u0026ProductoBaseProductoId.IsEmpty() And \u0026IsWithFilter\n{\n\tItem \n\t{\n\t\tID = ProductoId.ToString()\n\t\tTitle = ProductoClave\n\t}\n}\n",
+                              "cleanSource":  "DVB_SDTComboData\nWhere ProductoCategoriaNombre = \u0026ProductoCategoriaNombre when Not \u0026ProductoCategoriaNombre.IsEmpty()\nWhere ProductoBaseProductoId = \u0026ProductoBaseProductoId when Not \u0026ProductoBaseProductoId.IsEmpty() And \u0026IsWithFilter\n{\n\tItem \n\t{\n\t\tID = ProductoId.ToString()\n\t\tTitle = ProductoClave\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026ProductoBaseProductoId, \u0026ProductoCategoriaNombre, \u0026IsWithFilter);\n",
+                              "cleanSource":  "parm(\u0026ProductoBaseProductoId, \u0026ProductoCategoriaNombre, \u0026IsWithFilter);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.DVB_SDTComboData"
+                                     ],
+                         "calledBy":  [
+                                          "gestionarPrensaProducto"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WWPBaseObjects.DVB_SDTComboData"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ProductoBaseProductoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Producto Base Producto Id"
+                           },
+                           {
+                               "name":  "ProductoCategoriaNombre",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Nombre"
+                           },
+                           {
+                               "name":  "IsWithFilter",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Is With Filter"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

@@ -1,0 +1,224 @@
+﻿
+=== Procedure: PrinterSD.PaletReport ===
+
+--- Source (Source) ---
+
+&Palet.Load(&PaletId)
+&PaletProductoId = &Palet.PaletProductoId
+
+do 'ProductoTerminado'
+
+Sub 'ProductoTerminado'
+	For Each DB.ProductoTerminado
+		where ProductoTerminadoId > 0
+		where TerminadoProductoId > 0
+		where TerminadoProductoId = &PaletProductoId
+
+                if(ProductoTerminadoConEtiqueta or ProductoTerminadoEtiquetable)
+			if(ProductoTerminadoCodigoSAP.IsEmpty())
+				PaletReportMain.Call(&PaletId, &PDFNombre)
+			else
+				PaletReportSAP.Call(&PaletId, &PDFNombre)
+			endif
+	        else
+			PaletReportMain.Call(&PaletId, &PDFNombre)
+		endif
+	EndFor
+EndSub
+
+--- Rules (Rules) ---
+Parm(in:&PaletId, in:&PDFNombre);
+
+
+=== Procedure: PrinterSD.PaletReportMain ===
+
+--- Source (Source) ---
+&EtiquetaPaletSDT = ObtenerSDTEtiquetaPalet.Udp(&PaletId)
+
+//&linkURL='https://barcode.tec-it.com/barcode.ashx?data='+&EtiquetaPaletSDT.PaletNoSerie+ '&code=Code128'
+//&QRImage.FromURL(&linkURL)
+debugger.Call(niveldebug.Informativo, &Pgmname, &EtiquetaPaletSDT.ToJson())
+&QRImage = ObtenerBarCode.Udp(&EtiquetaPaletSDT.PaletNoSerie)
+
+print printBlock1
+print printBlock1
+print printBlock1
+print printBlock1
+
+--- Rules (Rules) ---
+Output_File(&PDFNombre, 'PDF');
+Parm(in:&PaletId,in:&PDFNombre);
+
+
+=== Procedure: PrinterSD.PaletReportSAP ===
+
+--- Source (Source) ---
+&EtiquetaPaletSDT = ObtenerSDTEtiquetaPalet.Udp(&PaletId)
+
+//&linkURL='https://barcode.tec-it.com/barcode.ashx?data='+&EtiquetaPaletSDT.PaletNoSerie+ '&code=Code128'
+//&QRImage.FromURL(&linkURL)
+debugger.Call(niveldebug.Informativo, &Pgmname, &EtiquetaPaletSDT.ToJson())
+&QRImage = ObtenerBarCode.Udp(&EtiquetaPaletSDT.PaletNoSerie)
+
+print printBlock1
+print printBlock1
+print printBlock1
+print printBlock1
+
+--- Rules (Rules) ---
+Output_File(&PDFNombre, 'PDF');
+Parm(in:&PaletId,in:&PDFNombre);
+
+
+=== SDT: PrinterSD.EtiquetaPaletSDT ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== Procedure: PrinterSD.ObtenerBarCode ===
+
+--- Source (Source) ---
+&ImgTxt = &StringLibrary.GetBarCodeBase64(&BarCodeValue,2)
+&ImgBlob.FromBase64String(&ImgTxt)
+GuardarBarCode.Call(&BarCodeValue, &ImgBlob)
+
+For Each
+	Where BarCodeValue = &BarCodeValue
+	&BarCodeImage = BarCodeImage
+	Exit
+EndFor
+
+--- Rules (Rules) ---
+parm(In:&BarCodeValue, Out:&BarCodeImage);
+
+
+=== Procedure: PrinterSD.ObtenerSDTEtiquetaPalet ===
+
+--- Source (Source) ---
+
+
+For each	
+	Where PaletId = &PaletId
+	
+	&EtiquetaPaletSDT.PaletProductoNombre = PaletProductoNombre
+	&EtiquetaPaletSDT.PaletNoSerie = PaletNoSerie
+	&EtiquetaPaletSDT.PaletNo = PaletNo
+	&EtiquetaPaletSDT.PaletNoCarretes = DB.DB.PaletNoCarretes
+	&EtiquetaPaletSDT.PaletProductoDescripcion = PaletProductoDescripcion
+	&EtiquetaPaletSDT.PaletHoraFinEnsamble = PaletHoraFinEnsamble
+	&EtiquetaPaletSDT.PaletPrensaNombre = PaletPrensaNombre
+	
+	&PaletProductoId = PaletProductoId
+	Do 'ObtenerDatosProductoTerminado'	
+EndFor
+
+Sub 'ObtenerDatosProductoTerminado'
+	For Each
+		Where TerminadoProductoId = &PaletProductoId
+		&EtiquetaPaletSDT.ProductoTerminadoPaletMillar = ProductoTerminadoPaletMillar
+		
+		if(ProductoTerminadoCodigoSAP.IsEmpty())
+			&EtiquetaPaletSDT.ProductoTerminadoCodigoSAP = 'N/A'
+		else
+			&EtiquetaPaletSDT.ProductoTerminadoCodigoSAP = ProductoTerminadoCodigoSAP
+		endif
+	When None
+		&EtiquetaPaletSDT.ProductoTerminadoPaletMillar = 0
+		&EtiquetaPaletSDT.ProductoTerminadoCodigoSAP = 'N/A'
+	EndFor
+EndSub
+
+--- Rules (Rules) ---
+parm(in:&PaletId, out:&EtiquetaPaletSDT);
+
+
+=== Procedure: Web.Debugger ===
+
+--- Source (Source) ---
+/*
+ Niveles de debug:
+0 - Apagado
+1 - Informativo
+2 - Advertencia
+3 - Debug
+4 - Error
+5 - Critico
+El Nivel de debug detallará a partir de que nivel se desea informar:
+	Si por ejemplo el parámetro indica 0(Apagado) -> no se generan logs
+	Si por ejemplo el parámetro indica 1(Critico) -> se muestran solo los críticos
+	Si por ejemplo el parámetro indica 2(Error) -> se muestran los de tipo error y críticos
+	Si por ejemplo el parámetro indica 3(Degub) -> se muestran los de tipo error, degub y críticos
+	Si por ejemplo el parámetro indica 3(Advertencia) -> se muestran los de tipo error, degub, advertencia y críticos
+	Si por ejemplo el parámetro indica 5(Informativo) -> se muestran los de tipo error, degub, advertencia, informativos y críticos
+	
+*/
+
+//call("CargarContexto", &Contexto)
+&Usuario = &WebSession.Get('UserName').ToString()
+
+
+&HTTP_HOST= &HttpRequest.BaseUrl.Replace('/','')
+&HTTP_HOST= &HTTP_HOST.Replace(':','')
+&FechaArchivo = Now()
+//Se carga el nivel del debug configurado en base de datos
+&NivelDebugConfigurado = NivelDebug.Informativo
+//Se carga el tipo de debugg base de datos o archivo
+&TipoDebug = TipoDebug.Archivo
+&NivelDebugDescripcion = &NivelDebug.EnumerationDescription()
+
+//valida si el debug esta prendido o esta dentro del rango
+if &NivelDebugConfigurado  >= &NivelDebug
+	do case
+		case &TipoDebug = TipoDebug.BaseDatos
+			//guardar en base de datos
+		case &TipoDebug = TipoDebug.Archivo
+			//guardad en archivo
+			Do 'GuardarArchivo'
+	endcase
+else
+	return
+endif
+
+
+sub 'GuardarArchivo'
+	&NombreArchivo =  &HTTP_HOST.Trim() + "_" + &FechaArchivo.Year().ToString().Trim()+&FechaArchivo.Month().ToString().Trim()+&FechaArchivo.Day().ToString().Trim() + ".log"
+	
+	&MensajeDebug =  "-> Usuario: "+ &Usuario.ToString() +" | "+&Time.ToString().Trim()+" ("+&NivelDebugDescripcion.Trim()+") "+"["+&Programa.ToString().Trim()+"] -> "
+	&MensajeDebug = &MensajeDebug + &Log
+	&ResultFile = DFWOpen(&NombreArchivo,"","",1)
+	&ResultFile = DFWPTxt(&MensajeDebug)
+	&ResultFile = DFWNext()
+	&ResultFile = DFWClose()
+endsub
+
+--- Rules (Rules) ---
+parm(in:&NivelDebug,&Programa,&Log);
+
+
+=== Procedure: PrinterSD.GuardarBarCode ===
+
+--- Source (Source) ---
+For Each
+	Where BarCodeValue = &BarCodeValue
+	delete
+EndFor
+&datetime = datetime.Now()
+&datetime = &datetime.AddDays(-1)
+For Each
+	Where BarCodeDateTime < &datetime or BarCodeDateTime.IsNull()
+	delete
+EndFor
+
+
+New
+	BarCodeValue = &BarCodeValue
+	BarCodeImage = &ImgBlob
+	BarCodeDateTime = datetime.Now()
+endnew
+commit
+
+--- Rules (Rules) ---
+parm(In:&BarCodeValue,In: &ImgBlob);
+

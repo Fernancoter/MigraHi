@@ -1,0 +1,147 @@
+﻿{
+    "uniqueId":  "6ecf2c89-cfc0-4f5c-a3a6-6114d0bbad17",
+    "name":  "ValidarBobina",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Validar Bobina",
+    "filePath":  "Procedures/Produccion/ValidarBobina.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\t\u0026BobinaItem.FromJson(\u0026SDTBobinaItem.ToJson())\n\t\u0026BobinaItem.BobinaEstado = EstadoBobina.Molino\n\t\t\t\n\tif(\u0026BobinaItem.BobinaMotivoMolino = MotivoMolino.NoAplica)\n\t\t\u0026BobinaItem.BobinaEstado = EstadoBobina.Reposo\n\tendif\n\t\n        GuardarBobina.Call(\u0026BobinaItem)\n        SDEliminarNotificacion.Call(\u0026SDTBobinaItem.BobinaId, NotificacionTipo.Bobina)\n",
+                              "cleanSource":  "\n\t\u0026BobinaItem.FromJson(\u0026SDTBobinaItem.ToJson())\n\t\u0026BobinaItem.BobinaEstado = EstadoBobina.Molino\n\t\t\t\n\tif(\u0026BobinaItem.BobinaMotivoMolino = MotivoMolino.NoAplica)\n\t\t\u0026BobinaItem.BobinaEstado = EstadoBobina.Reposo\n\tendif\n\t\n        GuardarBobina.Call(\u0026BobinaItem)\n        SDEliminarNotificacion.Call(\u0026SDTBobinaItem.BobinaId, NotificacionTipo.Bobina)"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026SDTBobinaItem);\n",
+                              "cleanSource":  "parm(in:\u0026SDTBobinaItem);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.GuardarBobina",
+                                         "Produccion.SDEliminarNotificacion",
+                                         "Produccion.SDTBobina",
+                                         "DB.Bobina",
+                                         "GuardarBobina",
+                                         "SDEliminarNotificacion"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Bobina",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina"
+                           },
+                           {
+                               "name":  "BobinaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Id"
+                           },
+                           {
+                               "name":  "BobinaItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Item"
+                           },
+                           {
+                               "name":  "SDTBobinaItem",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "SDTBobina Item"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

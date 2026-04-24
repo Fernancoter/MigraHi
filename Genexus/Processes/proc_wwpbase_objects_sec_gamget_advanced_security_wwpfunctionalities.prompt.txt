@@ -1,0 +1,15 @@
+﻿
+=== DataProvider: WWPBaseObjects.SecGAMGetAdvancedSecurityWWPFunctionalities ===
+
+--- Source (Source) ---
+Functionalities
+{
+}
+
+
+=== SDT: WWPBaseObjects.SecGAMFunctionalitiesToLoad ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

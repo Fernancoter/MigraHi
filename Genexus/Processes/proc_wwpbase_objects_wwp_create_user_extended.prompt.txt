@@ -1,0 +1,57 @@
+﻿
+=== Procedure: WWPBaseObjects.WWP_CreateUserExtended ===
+
+--- Source (Source) ---
+&WWPUserExtended = New()
+&WWPUserExtended.WWPUserExtendedId = &WWPUserExtendedId
+If Not &PhotURL.IsEmpty()
+	&WWPUserExtended.WWPUserExtendedPhoto.FromURL(&PhotURL)
+EndIf
+&WWPUserExtended.Notifications.Web.WWPUserExtendedDesktopNotif = True
+&WWPUserExtended.WWPUserExtendedEmaiNotif = True
+&WWPUserExtended.WWPUserExtendedSMSNotif = True
+&WWPUserExtended.WWPUserExtendedMobileNotif = True
+&WWPUserExtended.Save()
+If &WWPUserExtended.Success()
+	Commit
+Else
+	WWP_Logger.Error(&pgmname, !"Create Extended User: " + &WWPUserExtended.GetMessages().ToJson())
+EndIf
+
+--- Rules (Rules) ---
+parm(in:&WWPUserExtendedId, in:&PhotURL);
+
+
+=== Transaction: WWPBaseObjects.WWP_UserExtended ===
+
+(sin businessLogic extraído)
+
+=== Procedure: WWPBaseObjects.WWP_GetUserEmail ===
+
+--- Source (Source) ---
+&GAMUser = GAMRepository.GetUserByGUID(&WWPUserExtendedId, &GAMErrorCollection)
+&WWPUserExtendedEmail = &GAMUser.EMail
+
+--- Rules (Rules) ---
+parm(in:&WWPUserExtendedId, out:&WWPUserExtendedEmail);
+
+
+=== Procedure: WWPBaseObjects.WWP_GetUserFullName ===
+
+--- Source (Source) ---
+&GAMUser = GAMRepository.GetUserByGUID(&WWPUserExtendedId, &GAMErrorCollection)
+&WWPUserExtendedFullName = iif(&GAMUser.FirstName.IsEmpty(), &GAMUser.Name, &GAMUser.FirstName.Trim() + " " + &GAMUser.LastName.Trim())
+
+--- Rules (Rules) ---
+parm(in:&WWPUserExtendedId, out:&WWPUserExtendedFullName);
+
+
+=== Procedure: WWPBaseObjects.WWP_GetUserPhone ===
+
+--- Source (Source) ---
+&GAMUser = GAMRepository.GetUserByGUID(&WWPUserExtendedId, &GAMErrorCollection)
+&WWPUserExtendedPhone = &GAMUser.Phone
+
+--- Rules (Rules) ---
+parm(in:&WWPUserExtendedId, out:&WWPUserExtendedPhone);
+

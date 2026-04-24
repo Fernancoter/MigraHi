@@ -1,0 +1,236 @@
+﻿{
+    "uniqueId":  "544d92f3-d35e-4d37-b10f-3bdd410e9a6e",
+    "name":  "SDExtrusionAnticipada",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDExtrusion Anticipada",
+    "filePath":  "Procedures/Produccion/SDExtrusionAnticipada.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\u0026Anticipada = true\n\t\n\t//Tiempo en Proceso\n\t\u0026Now = Now()\n\t\u0026TiempoProceso = \u0026Now.Difference(\u0026IniciaProceso)\n\t\u0026MinutosProceso = (\u0026TiempoProceso/60)\n\t\n\t//Variables de config\n\t\u0026ToleranciaTurno = SDToleranciaTurno.Udp()\n\t\u0026TiempoLaboral = SDTiempoLaboral.Udp()\n\t\n\t//Sgte Turno calendarizado\n\t\u0026SgteExtrusionId = SgteTurnoExtrusora.Udp(\u0026ExtrusionId)\n\t\n\tif(\u0026SgteExtrusionId \u003e 0)\n\t\t\u0026SgteExtrusion.Load(\u0026SgteExtrusionId)\n\t\t\u0026SgteExtrusionFecha = \u0026SgteExtrusion.ExtrusionFecha\n\t\t\n\t\t\u0026DiffTiempo = \u0026SgteExtrusionFecha.Difference(\u0026Now)\n\t\t\u0026DiffTiempoMinutos = (\u0026DiffTiempo/60)\n\t\n\t\tif(\u0026ToleranciaTurno \u003e=  \u0026DiffTiempoMinutos)\n\t\t\t\u0026Anticipada = false\n\t\telse\n\t\t\tif(\u0026MinutosProceso \u003e= \u0026TiempoLaboral)\n\t\t\t     \u0026Anticipada = false\n\t\t\tendif\n\t\tendif \n\telse\n\t\tif(\u0026MinutosProceso \u003e= \u0026TiempoLaboral)\n\t\t\t\u0026Anticipada = false\n\t\tendif\n\tendif\n\n\n\n",
+                              "cleanSource":  "\t\u0026Anticipada = true\n\t\n\t//Tiempo en Proceso\n\t\u0026Now = Now()\n\t\u0026TiempoProceso = \u0026Now.Difference(\u0026IniciaProceso)\n\t\u0026MinutosProceso = (\u0026TiempoProceso/60)\n\t\n\t//Variables de config\n\t\u0026ToleranciaTurno = SDToleranciaTurno.Udp()\n\t\u0026TiempoLaboral = SDTiempoLaboral.Udp()\n\t\n\t//Sgte Turno calendarizado\n\t\u0026SgteExtrusionId = SgteTurnoExtrusora.Udp(\u0026ExtrusionId)\n\t\n\tif(\u0026SgteExtrusionId \u003e 0)\n\t\t\u0026SgteExtrusion.Load(\u0026SgteExtrusionId)\n\t\t\u0026SgteExtrusionFecha = \u0026SgteExtrusion.ExtrusionFecha\n\t\t\n\t\t\u0026DiffTiempo = \u0026SgteExtrusionFecha.Difference(\u0026Now)\n\t\t\u0026DiffTiempoMinutos = (\u0026DiffTiempo/60)\n\t\n\t\tif(\u0026ToleranciaTurno \u003e=  \u0026DiffTiempoMinutos)\n\t\t\t\u0026Anticipada = false\n\t\telse\n\t\t\tif(\u0026MinutosProceso \u003e= \u0026TiempoLaboral)\n\t\t\t     \u0026Anticipada = false\n\t\t\tendif\n\t\tendif \n\telse\n\t\tif(\u0026MinutosProceso \u003e= \u0026TiempoLaboral)\n\t\t\t\u0026Anticipada = false\n\t\tendif\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExtrusionId, in:\u0026IniciaProceso, out:\u0026Anticipada);\n",
+                              "cleanSource":  "parm(in:\u0026ExtrusionId, in:\u0026IniciaProceso, out:\u0026Anticipada);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SgteTurnoExtrusora",
+                                         "Produccion.SDTiempoLaboral",
+                                         "Produccion.SDToleranciaTurno",
+                                         "DB.Extrusion",
+                                         "SDToleranciaTurno",
+                                         "SDTiempoLaboral",
+                                         "SgteTurnoExtrusora"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Anticipada",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Anticipada"
+                           },
+                           {
+                               "name":  "DiffTiempoMinutos",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Diff Tiempo Minutos"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "IniciaProceso",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATETIME",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Inicia Proceso"
+                           },
+                           {
+                               "name":  "MinutosProceso",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Minutos Proceso"
+                           },
+                           {
+                               "name":  "Now",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Now"
+                           },
+                           {
+                               "name":  "SgteExtrusion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Sgte Extrusion"
+                           },
+                           {
+                               "name":  "SgteExtrusionFecha",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Fecha"
+                           },
+                           {
+                               "name":  "SgteExtrusionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "Tiempo",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo"
+                           },
+                           {
+                               "name":  "TiempoLaboral",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo Laboral"
+                           },
+                           {
+                               "name":  "TiempoMin",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo Min"
+                           },
+                           {
+                               "name":  "TiempoProceso",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo Proceso"
+                           },
+                           {
+                               "name":  "ToleranciaTurno",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tolerancia Turno"
+                           },
+                           {
+                               "name":  "DiffTiempo",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Diff Tiempo"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

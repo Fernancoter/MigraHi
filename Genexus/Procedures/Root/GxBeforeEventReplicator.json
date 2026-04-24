@@ -1,0 +1,136 @@
+﻿{
+    "uniqueId":  "c3c7d937-9899-4384-a1fc-acce7095a9a0",
+    "name":  "GxBeforeEventReplicator",
+    "type":  "Procedure",
+    "module":  "Root",
+    "description":  "Gx Before Event Replicator",
+    "filePath":  "Procedures/Root/GxBeforeEventReplicator.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "",
+                              "cleanSource":  ""
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(inout:\u0026GxPendingEvents, in:\u0026GxSyncroInfo, inout:\u0026EventResults);\n",
+                              "cleanSource":  "parm(inout:\u0026GxPendingEvents, in:\u0026GxSyncroInfo, inout:\u0026EventResults);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "GeneXus.SD.Synchronization.SynchronizationInfo",
+                                         "GeneXus.SD.Synchronization.SynchronizationEventList",
+                                         "GeneXus.SD.Synchronization.SynchronizationEventResultList"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "EventResults",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Event Results"
+                           },
+                           {
+                               "name":  "GxPendingEvents",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Gx Pending Events"
+                           },
+                           {
+                               "name":  "GxSyncroInfo",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Gx Syncro Info"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

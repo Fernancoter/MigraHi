@@ -1,0 +1,354 @@
+﻿
+=== Procedure: PrinterSD.RptPrensado ===
+
+--- Source (Source) ---
+&SDTRptPrensado = DPSDTRptPrensado.Udp(&PrensadoId)
+&SDTPrensadoResultado = DPPrensadoResultado.Udp(&PrensadoId)
+&SDTProductoTerminado = DPProductoTerminado.Udp(&SDTRptPrensado.PrensadoProductoId)
+
+header
+	print pb_header
+end
+
+&SDTCarrera = CarreraDP.Udp(&PrensadoId)
+
+For &SDTCarreraItem In &SDTCarrera
+	
+	&SDTPrensadoBobina = DPPrensadoBobinaSDT.Udp(&SDTCarreraItem.InicioPrensadoBobinaId)
+	&SDTPrensadoBobinaItem = &SDTPrensadoBobina.Item(1)
+	
+	&EtiquetaBobinaSDT = ObtenerSDTEtiquetaBobina.Udp(&SDTPrensadoBobinaItem.BobinaId)
+	
+	&SDTCarrete = CarreteDP.Udp(&SDTCarreraItem.CarreraId, Orden.Ascendente)
+	
+	&FajillasAlMolino = 0
+	
+	For &SDTCarreteItem In &SDTCarrete
+		&IsInMolino = &SDTCarreteItem.CarreteEstado = EstadoCarrete.Molino
+		If &IsInMolino
+			&FajillasAlMolino += &SDTProductoTerminado.ProductoTerminadoCarreteMillar
+		EndIf
+		
+		Do Case
+			Case &SDTCarreteItem.CarreteNoLinea = 1
+				&SDTCarreteCalidad.SDTCarreteCalidad1 = iif(&IsInMolino,"X",chr(10003))
+			Case &SDTCarreteItem.CarreteNoLinea = 2
+				&SDTCarreteCalidad.SDTCarreteCalidad2 = iif(&IsInMolino,"X",chr(10003))
+			Case &SDTCarreteItem.CarreteNoLinea = 3
+				&SDTCarreteCalidad.SDTCarreteCalidad3 = iif(&IsInMolino,"X",chr(10003))
+			Case &SDTCarreteItem.CarreteNoLinea = 4
+				&SDTCarreteCalidad.SDTCarreteCalidad4 = iif(&IsInMolino,"X",chr(10003))
+			Case &SDTCarreteItem.CarreteNoLinea = 5
+				&SDTCarreteCalidad.SDTCarreteCalidad5 = iif(&IsInMolino,"X",chr(10003))
+			Case &SDTCarreteItem.CarreteNoLinea = 6
+				&SDTCarreteCalidad.SDTCarreteCalidad6 = iif(&IsInMolino,"X",chr(10003))
+		EndCase
+		
+	EndFor
+	
+	&SDTCarreteCalidad.CarretePaletSerie = &SDTCarreteItem.CarretePaletSerie
+	
+	&SDTCarreteCalidad.SDTCarreteCalidadFajillasMolino = &FajillasAlMolino
+	
+	print pb_prensado_body
+	
+EndFor
+
+print Interrupcion_header
+for each 
+	where PrensadoId = &PrensadoId
+	&InterrupcionHoraInicio  = InterrupcionHoraInicio
+	&InterrupcionHoraFin = InterrupcionHoraFin
+	&InterrupcionMotivo = InterrupcionMotivo
+	
+	print Interrupcion_Body
+	
+when none
+	
+endfor
+
+
+print pb_footer
+
+--- Rules (Rules) ---
+Parm(in:&PrensadoId,in:&PDFNombre);
+Output_File(&PDFNombre, 'PDF');
+
+
+=== DataProvider: PrinterSD.DPSDTRptPrensado ===
+
+--- Source (Source) ---
+SDTRptPrensado
+Where PrensadoId = &PrensadoId
+{
+	PrensadoId  = PrensadoId 
+	PrensadoFecha  = PrensadoFecha 
+	PrensadoPrensaId  = PrensadoPrensaId 
+	PrensadoPrensaNombre  = PrensadoPrensaNombre 
+	PrensadoTurnoId  = PrensadoTurnoId 
+	PrensadoTurnoNombre  = PrensadoTurnoNombre 
+	PrensadoProductoId  = PrensadoProductoId 
+	PrensadoProductoNombre  = PrensadoProductoNombre 
+	PrensadoProductoTipoMaterial  = PrensadoProductoTipoMaterial 
+	PrensadoOperadorId  = PrensadoOperadorId 
+	PrensadoOperadorNombre  = PrensadoOperadorNombre 
+	PrensadoBobinaMermaKg  = PrensadoBobinaMermaKg 
+	PrensadoEstado  = PrensadoEstado 
+	PrensadoLevasUnidadMedida  = PrensadoLevasUnidadMedida 
+	PrensadoRodillosUnidadMedida  = PrensadoRodillosUnidadMedida 
+	PrensadoLevasKgEntrada  = PrensadoLevasKgEntrada 
+	PrensadoLevasKgSalida  = PrensadoLevasKgSalida 
+	PrensadoLevasGradosEntrada  = PrensadoLevasGradosEntrada 
+	PrensadoLevasGradosSalida  = PrensadoLevasGradosSalida 
+	PrensadoRodillosKgEntrada  = PrensadoRodillosKgEntrada 
+	PrensadoRodillosKgSalida  = PrensadoRodillosKgSalida 
+	PrensadoRodillosGradosEntrada  = PrensadoRodillosGradosEntrada 
+	PrensadoRodillosGradosSalida  = PrensadoRodillosGradosSalida 
+	PrensadoMotivoAnticipado  = WWPBaseObjects.Notifications.PrensadoMotivoAnticipado 
+	PrensadoTroquelId  = PrensadoTroquelId 
+	PrensadoTroquelNombre  = PrensadoTroquelNombre 
+	PrensadoHoraIniciaProceso  = PrensadoHoraIniciaProceso 
+	PrensadoHoraFinProceso  = PrensadoHoraFinProceso 
+	PrensadoProductoDescripcion  = PrensadoProductoDescripcion 
+	PrensadoMeta  = PrensadoMeta 
+
+}
+
+--- Rules (Rules) ---
+parm(&PrensadoId);
+
+
+=== SDT: PrinterSD.EtiquetaBobinaSDT ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== Procedure: PrinterSD.ObtenerSDTEtiquetaBobina ===
+
+--- Source (Source) ---
+
+
+For each
+	Where BobinaId = &BobinaId
+
+	&EtiquetaBobinaSDT.BobinaId = BobinaId
+	&EtiquetaBobinaSDT.ExtrusionId = ExtrusionId
+	&EtiquetaBobinaSDT.ExtrusionFecha = ExtrusionFecha
+	&EtiquetaBobinaSDT.ExtrusionOperadorNombre = ExtrusionOperadorNombre
+	&EtiquetaBobinaSDT.BobinaNoSerie = BobinaNoSerie
+	&EtiquetaBobinaSDT.BobinaOrigen = BobinaOrigen
+	&EtiquetaBobinaSDT.BobinaHoraInicio = BobinaHoraInicio
+	&EtiquetaBobinaSDT.BobinaHoraSalida = BobinaHoraSalida
+	&EtiquetaBobinaSDT.BobinaNo = BobinaNo
+	&EtiquetaBobinaSDT.BobinaKg = BobinaKg
+	&EtiquetaBobinaSDT.BobinaMermaKg = BobinaMermaKg
+	&EtiquetaBobinaSDT.BobinaEspesor = BobinaEspesor
+	&EtiquetaBobinaSDT.BobinaObservaciones = BobinaObservaciones
+	&EtiquetaBobinaSDT.BobinaEstado = BobinaEstado
+	&EtiquetaBobinaSDT.BobinaCarreras = BobinaCarreras
+	&EtiquetaBobinaSDT.BobinaIniciaReposo = BobinaIniciaReposo
+	&EtiquetaBobinaSDT.BobinaMinutosEnReposo = BobinaMinutosEnReposo
+	&EtiquetaBobinaSDT.BobinaMotivoMolino = BobinaMotivoMolino
+	&EtiquetaBobinaSDT.BobinaProductoId = BobinaProductoId
+	&EtiquetaBobinaSDT.BobinaProductoNombre = BobinaProductoNombre
+	&EtiquetaBobinaSDT.ExtrusionExtrusoraNombre = ExtrusionExtrusoraNombre
+	&EtiquetaBobinaSDT.ExtrusionExtrusoraIdTexto = ExtrusionExtrusoraId.ToString().Trim()
+	&EtiquetaBobinaSDT.ExtrusionLoteSilo = ExtrusionLoteSilo
+	&EtiquetaBobinaSDT.ExtrusionSiloNombre = ExtrusionSiloNombre
+	&EtiquetaBobinaSDT.BobinaDesviacionEstandar = BobinaDesviacionEstandar
+	&EtiquetaBobinaSDT.BobinaColorEstacion = BobinaColorEstacion
+
+	exit
+endfor
+
+--- Rules (Rules) ---
+parm(in:&BobinaId, out:&EtiquetaBobinaSDT);
+
+
+=== SDT: PrinterSD.SDTCarreteCalidad ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== SDT: PrinterSD.SDTRptPrensado ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== DataProvider: Produccion.CarreraDP ===
+
+--- Source (Source) ---
+SDTCarrera
+{
+   SDTCarreraItem
+   where CarreraId > 0
+   where InicioPrensadoBobinaId > 0
+   where InicioPBPrensadoId = &PrensadoId when &PrensadoId > 0
+   {
+
+	CarreraId = CarreraId
+	CarreraNo = CarreraNo
+	CarreraEstado = CarreraEstado
+	CarreraPaletTerminado = CarreraPaletTerminado
+	CarreraFechaRegistro = CarreraFechaRegistro
+	CarreraFechaValidacion = WWPBaseObjects.CarreraFechaValidacion
+	CarreraTroquel = Notifications.CarreraTroquel
+	InicioPrensadoBobinaId = InicioPrensadoBobinaId
+	InicioPBPrensadoId = InicioPBPrensadoId
+   }	
+}
+
+--- Rules (Rules) ---
+parm(in:&PrensadoId);
+
+
+=== DataProvider: Produccion.CarreteDP ===
+
+--- Source (Source) ---
+SDTCarrete
+{
+	SDTCarreteItem
+	Order (CarreteNoLinea) when &Orden = Orden.Descendente
+	Order CarreteNoLinea when &Orden = Orden.Ascendente
+	where CarreteCarreraId = &CarreraId when &CarreraId > 0
+	{
+		CarreteId = CarreteId
+		CarreteNoLinea = CarreteNoLinea
+		CarreteNoSerie = CarreteNoSerie
+		CarreteEstado = CarreteEstado
+		CarreteObservacion = DB.CarreteObservacion
+		CarreteCarreraId = CarreteCarreraId
+		CarreteTerminaPalet = CarreteTerminaPalet
+		CarretePaletSerie = CarretePaletSerie
+		selected = CarreteEnMolino
+	}
+}
+
+--- Rules (Rules) ---
+parm(in:&CarreraId, in:&Orden);
+
+
+=== DataProvider: Produccion.DPPrensadoBobinaSDT ===
+
+--- Source (Source) ---
+SDTPrensadoBobina
+Where PrensadoBobinaId = &PrensadoBobinaId
+{
+	SDTPrensadoBobinaItem
+	{
+		PrensadoBobinaId  = PrensadoBobinaId 
+		PrensadoId  = PrensadoId 
+		BobinaId  = BobinaId 
+		BobinaNoSerie  = BobinaNoSerie 
+		BobinaEstado  = BobinaEstado 
+		BobinaNo  = BobinaNo 
+		BobinaOrigen  = BobinaOrigen 
+		BobinaKg  = BobinaKg 
+		BobinaKgTexto  = trim( BobinaKg.ToFormattedString())
+		PrensadoBobinaCantCarrera  = PrensadoBobinaCantCarrera 
+		BobinaHoraSalida = BobinaHoraSalida
+		
+	}
+}
+
+--- Rules (Rules) ---
+parm(&PrensadoBobinaId);
+
+
+=== DataProvider: Produccion.DPPrensadoResultado ===
+
+--- Source (Source) ---
+SDTPrensadoResultado
+Where Produccion.PrensadoId = &PrensadoId
+{
+	PrensadoResultadoId  = PrensadoResultadoId 
+PrensadoResultadoPiezasBuenas  = PrensadoResultadoPiezasBuenas 
+PrensadoResultadoPiezasMolino  = PrensadoResultadoPiezasMolino 
+PrensadoResultadoMermaKg  = PrensadoResultadoMermaKg 
+PrensadoResultadoNoPalets  = PrensadoResultadoNoPalets 
+PrensadoResultadoCarretesSobrantes  = PrensadoResultadoCarretesSobrantes 
+PrensadoResultadoObservaciones  = PrensadoResultadoObservaciones 
+PrensadoResultadoRPMLinea  = PrensadoResultadoRPMLinea 
+PrensadoResultadoGPMPrensa  = DB.PrensadoResultadoGPMPrensa 
+PrensadoResultadoGPMTotal  = PrensadoResultadoGPMTotal 
+PrensadoResultadoHerramientas  = PrensadoResultadoHerramientas 
+PrensadoId  = PrensadoId 
+PrensadoLevasUnidadMedida  = PrensadoLevasUnidadMedida 
+PrensadoLevasKgEntrada  = PrensadoLevasKgEntrada 
+PrensadoLevasKgSalida  = PrensadoLevasKgSalida 
+PrensadoLevasGradosEntrada  = PrensadoLevasGradosEntrada 
+PrensadoLevasGradosSalida  = PrensadoLevasGradosSalida 
+PrensadoRodillosUnidadMedida  = PrensadoRodillosUnidadMedida 
+PrensadoRodillosKgEntrada  = PrensadoRodillosKgEntrada 
+PrensadoRodillosKgSalida  = PrensadoRodillosKgSalida 
+PrensadoRodillosGradosEntrada  = PrensadoRodillosGradosEntrada 
+PrensadoRodillosGradosSalida  = PrensadoRodillosGradosSalida 
+
+}
+
+--- Rules (Rules) ---
+parm(&PrensadoId);
+
+
+=== DataProvider: Produccion.DPProductoTerminado ===
+
+--- Source (Source) ---
+SDTProductoTerminado
+Where TerminadoProductoId = &TerminadoProductoId
+{
+	ProductoTerminadoId  = ProductoTerminadoId 
+	ProductoTerminadoPalets  = ProductoTerminadoPalets 
+	ProductoTerminadoCarreteMillar  = ProductoTerminadoCarreteMillar 
+	ProductoTerminadoPaletMillar  = ProductoTerminadoPaletMillar 
+	ProductoTerminadoPeso  = ProductoTerminadoPeso 
+	ProductoTerminadoPesoCarrete  = ProductoTerminadoPesoCarrete 
+	ProductoTerminadoPesoPalet  = ProductoTerminadoPesoPalet 
+	TerminadoProductoId  = TerminadoProductoId 
+	TerminadoProductoNombre  = TerminadoProductoNombre 
+
+}
+
+--- Rules (Rules) ---
+parm(&TerminadoProductoId);
+
+
+=== SDT: Produccion.SDTCarrera ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== SDT: Produccion.SDTCarrete ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== SDT: Produccion.SDTPrensadoBobina ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== SDT: Produccion.SDTPrensadoResultado ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== SDT: Produccion.SDTProductoTerminado ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

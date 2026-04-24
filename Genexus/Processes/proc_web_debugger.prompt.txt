@@ -1,0 +1,63 @@
+﻿
+=== Procedure: Web.Debugger ===
+
+--- Source (Source) ---
+/*
+ Niveles de debug:
+0 - Apagado
+1 - Informativo
+2 - Advertencia
+3 - Debug
+4 - Error
+5 - Critico
+El Nivel de debug detallará a partir de que nivel se desea informar:
+	Si por ejemplo el parámetro indica 0(Apagado) -> no se generan logs
+	Si por ejemplo el parámetro indica 1(Critico) -> se muestran solo los críticos
+	Si por ejemplo el parámetro indica 2(Error) -> se muestran los de tipo error y críticos
+	Si por ejemplo el parámetro indica 3(Degub) -> se muestran los de tipo error, degub y críticos
+	Si por ejemplo el parámetro indica 3(Advertencia) -> se muestran los de tipo error, degub, advertencia y críticos
+	Si por ejemplo el parámetro indica 5(Informativo) -> se muestran los de tipo error, degub, advertencia, informativos y críticos
+	
+*/
+
+//call("CargarContexto", &Contexto)
+&Usuario = &WebSession.Get('UserName').ToString()
+
+
+&HTTP_HOST= &HttpRequest.BaseUrl.Replace('/','')
+&HTTP_HOST= &HTTP_HOST.Replace(':','')
+&FechaArchivo = Now()
+//Se carga el nivel del debug configurado en base de datos
+&NivelDebugConfigurado = NivelDebug.Informativo
+//Se carga el tipo de debugg base de datos o archivo
+&TipoDebug = TipoDebug.Archivo
+&NivelDebugDescripcion = &NivelDebug.EnumerationDescription()
+
+//valida si el debug esta prendido o esta dentro del rango
+if &NivelDebugConfigurado  >= &NivelDebug
+	do case
+		case &TipoDebug = TipoDebug.BaseDatos
+			//guardar en base de datos
+		case &TipoDebug = TipoDebug.Archivo
+			//guardad en archivo
+			Do 'GuardarArchivo'
+	endcase
+else
+	return
+endif
+
+
+sub 'GuardarArchivo'
+	&NombreArchivo =  &HTTP_HOST.Trim() + "_" + &FechaArchivo.Year().ToString().Trim()+&FechaArchivo.Month().ToString().Trim()+&FechaArchivo.Day().ToString().Trim() + ".log"
+	
+	&MensajeDebug =  "-> Usuario: "+ &Usuario.ToString() +" | "+&Time.ToString().Trim()+" ("+&NivelDebugDescripcion.Trim()+") "+"["+&Programa.ToString().Trim()+"] -> "
+	&MensajeDebug = &MensajeDebug + &Log
+	&ResultFile = DFWOpen(&NombreArchivo,"","",1)
+	&ResultFile = DFWPTxt(&MensajeDebug)
+	&ResultFile = DFWNext()
+	&ResultFile = DFWClose()
+endsub
+
+--- Rules (Rules) ---
+parm(in:&NivelDebug,&Programa,&Log);
+

@@ -1,0 +1,74 @@
+﻿{
+    "uniqueId":  "a127e1dd-f9f0-4bcb-8d40-1f36fa46f811",
+    "name":  "WWP_SDTNotificationMetadata",
+    "type":  "SDT",
+    "module":  "WWPBaseObjects.Notifications.Common",
+    "description":  "SDT Notification Metadata",
+    "filePath":  "SDTs/WWPBaseObjects/Notifications/Common/WWP_SDTNotificationMetadata.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "WWP_VisualizeNotification",
+                                          "WWP_VisualizeAllNotifications",
+                                          "WWP_NotifyDiscussionMessage"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Timeout",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Timeout"
+                           },
+                           {
+                               "name":  "SessionKey",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Session Key"
+                           },
+                           {
+                               "name":  "SessionValue",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Session Value"
+                           }
+                       ]
+}

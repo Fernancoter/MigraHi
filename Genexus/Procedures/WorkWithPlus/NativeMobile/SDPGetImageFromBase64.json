@@ -1,0 +1,150 @@
+﻿{
+    "uniqueId":  "05adfadc-87f4-4dbf-85f1-adaf258d76d5",
+    "name":  "SDPGetImageFromBase64",
+    "type":  "Procedure",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPGet Image From Base64",
+    "filePath":  "Procedures/WorkWithPlus/NativeMobile/SDPGetImageFromBase64.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "//\u0026BlobImage.FromBase64String(\u0026ImageBase64)\n//ImageBase64 includes linebreaks and java does not support them\n\n\u0026NewLine = CHR(10)\n\u0026ImageBase64NoLines = StrReplace(\u0026ImageBase64, \u0026NewLine, \"\")\n\u0026BlobImage.FromBase64String(\u0026ImageBase64NoLines) \n\n\u0026CaptureImage = \u0026BlobImage\n\n// You can use \u0026CaptureImage to store the signature in the transaction\n// e.g\n// \u0026Client = new()\n// \u0026Client.ClientSignatureImage = \u0026CaptureImage\n// \u0026Client.Save()\n",
+                              "cleanSource":  "//\u0026BlobImage.FromBase64String(\u0026ImageBase64)\n//ImageBase64 includes linebreaks and java does not support them\n\n\u0026NewLine = CHR(10)\n\u0026ImageBase64NoLines = StrReplace(\u0026ImageBase64, \u0026NewLine, \"\")\n\u0026BlobImage.FromBase64String(\u0026ImageBase64NoLines) \n\n\u0026CaptureImage = \u0026BlobImage\n\n// You can use \u0026CaptureImage to store the signature in the transaction\n// e.g\n// \u0026Client = new()\n// \u0026Client.ClientSignatureImage = \u0026CaptureImage\n// \u0026Client.Save()"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026ImageBase64);\n",
+                              "cleanSource":  "Parm(in:\u0026ImageBase64);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "BlobImage",
+                               "elementType":  "Variable",
+                               "dataType":  "BINARY",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Blob Image"
+                           },
+                           {
+                               "name":  "CaptureImage",
+                               "elementType":  "Variable",
+                               "dataType":  "BITMAP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Capture Image"
+                           },
+                           {
+                               "name":  "ImageBase64",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Image Base64"
+                           },
+                           {
+                               "name":  "ImageBase64NoLines",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Image Base64 No Lines"
+                           },
+                           {
+                               "name":  "NewLine",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "New Line"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

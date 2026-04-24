@@ -1,0 +1,143 @@
+﻿{
+    "uniqueId":  "73016c08-0313-45dc-9ff0-ad66547c3cf0",
+    "name":  "WWP_AddImportErrorMessages",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Add Import Error Messages",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_AddImportErrorMessages.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\nIf not \u0026LineId.IsEmpty()\n\tWWPBaseObjects.WWP_AddMessage(!\u0027WWP_LineId\u0027, MessageTypes.Info, format(\u0027File line: %1\u0027, \u0026LineId), \u0026Messages)\nEndIf\n\nFor \u0026Message in \u0026ErrorsToAdd\n\tIf \u0026Message.Type = MessageTypes.Error\n\t\t\u0026Messages.Add(\u0026Message)\n\tEndIf\nEndFor\n",
+                              "cleanSource":  "\nIf not \u0026LineId.IsEmpty()\n\tWWPBaseObjects.WWP_AddMessage(!\u0027WWP_LineId\u0027, MessageTypes.Info, format(\u0027File line: %1\u0027, \u0026LineId), \u0026Messages)\nEndIf\n\nFor \u0026Message in \u0026ErrorsToAdd\n\tIf \u0026Message.Type = MessageTypes.Error\n\t\t\u0026Messages.Add(\u0026Message)\n\tEndIf\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "\nparm(inout:\u0026Messages, in:\u0026LineId, in:\u0026ErrorsToAdd);\n",
+                              "cleanSource":  "\nparm(inout:\u0026Messages, in:\u0026LineId, in:\u0026ErrorsToAdd);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_AddMessage",
+                                         "GeneXus.Common.Messages"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "GeneXus.Common.Messages"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ErrorsToAdd",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Errors To Add"
+                           },
+                           {
+                               "name":  "LineId",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Line Id"
+                           },
+                           {
+                               "name":  "Message",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Message"
+                           },
+                           {
+                               "name":  "Messages",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Messages"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

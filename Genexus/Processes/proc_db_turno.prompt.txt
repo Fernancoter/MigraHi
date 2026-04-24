@@ -1,0 +1,7 @@
+﻿
+=== Transaction: DB.Turno ===
+
+--- Start (Event) ---
+
+--- After Trn (Event) ---
+

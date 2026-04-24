@@ -1,0 +1,9 @@
+﻿
+=== Transaction: WWPBaseObjects.SMS.WWP_SMS ===
+
+--- Rules (Rules) ---
+
+default(WWPSMSStatus, WWPBaseObjects.SMS.WWP_StatusSMS.Pending);
+default(DB.WWPSMSCreated, ServerNow());
+default(WWPSMSScheduled, ServerNow());
+

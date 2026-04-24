@@ -1,0 +1,158 @@
+﻿{
+    "uniqueId":  "e2383522-c8c5-4169-a190-23754f212a63",
+    "name":  "SDConcluirInterrupcion",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDConcluir Interrupcion",
+    "filePath":  "Procedures/Produccion/SDConcluirInterrupcion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "    \n\t\u0026Now = Now()\n\t\n\t//Concluir Interrupcion\n\t\u0026Interrupcion.Load(\u0026Id)\n\t\u0026HoraInicio = \u0026Interrupcion.InterrupcionHoraInicio\n\t\u0026Temporizador = \u0026Now.Difference(\u0026HoraInicio)\n\t\u0026Interrupcion.InterrupcionHoraFin = \u0026Now\n\t\u0026Interrupcion.InterrupcionTiempo = \u0026Temporizador\n\t\u0026Interrupcion.InterrupcionConcluida = true\n\t\u0026Interrupcion.DownTimeCodeId = \u0026DownTimeCodeId\n\t\u0026Interrupcion.Save()\n\t\n\tif(\u0026Interrupcion.Success())\n\t\tcommit\n\tendif\n",
+                              "cleanSource":  "    \n\t\u0026Now = Now()\n\t\n\t//Concluir Interrupcion\n\t\u0026Interrupcion.Load(\u0026Id)\n\t\u0026HoraInicio = \u0026Interrupcion.InterrupcionHoraInicio\n\t\u0026Temporizador = \u0026Now.Difference(\u0026HoraInicio)\n\t\u0026Interrupcion.InterrupcionHoraFin = \u0026Now\n\t\u0026Interrupcion.InterrupcionTiempo = \u0026Temporizador\n\t\u0026Interrupcion.InterrupcionConcluida = true\n\t\u0026Interrupcion.DownTimeCodeId = \u0026DownTimeCodeId\n\t\u0026Interrupcion.Save()\n\t\n\tif(\u0026Interrupcion.Success())\n\t\tcommit\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026Id,\u0026DownTimeCodeId);\n",
+                              "cleanSource":  "parm(in:\u0026Id,\u0026DownTimeCodeId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Interrupcion"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Interrupcion"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Interrupcion"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Interrupcion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion"
+                           },
+                           {
+                               "name":  "Temporizador",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Temporizador"
+                           },
+                           {
+                               "name":  "Id",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Id"
+                           },
+                           {
+                               "name":  "Now",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Now"
+                           },
+                           {
+                               "name":  "HoraInicio",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Hora Inicio"
+                           },
+                           {
+                               "name":  "DownTimeCodeId",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Down Time Code Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

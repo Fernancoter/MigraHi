@@ -1,0 +1,280 @@
+﻿{
+    "uniqueId":  "00571585-a54c-40e9-b8ab-ffd7c2f376a6",
+    "name":  "ObtenerExtrusionResultado",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Obtener Extrusion Resultado",
+    "filePath":  "Procedures/Produccion/ObtenerExtrusionResultado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\t\n\tfor each DB.ExtrusionResultado\n\t\twhere ExtrusionResultadoId \u003e 0\n\t\twhere ExtrusionId = \u0026ExtrusionId\n\t\t\u0026ERId = ExtrusionResultadoId\n\t\tExit\n\twhen none\n\t\t\n\t\tdo \u0027ResumenBobinas\u0027\n\t\t\n\t\t\u0026ExtrusionResultado = New()\n\t\t\u0026ExtrusionResultado.ExtrusionId = \u0026ExtrusionId\n\t\t\u0026ExtrusionResultado.ExtrusionResultadoBobinasMolino = \u0026BobinasMolino\n\t\t\u0026ExtrusionResultado.ExtrusionResultadoBobinasReposo = \u0026BobinasReposo\n\t\t\u0026ExtrusionResultado.ExtrusionResultadoTotalKg = \u0026TotalKg\n\t\t\u0026ExtrusionResultado.ExtrusionResultadoTotalMermaKg = \u0026TotalMermaKg\n\t\t\u0026ExtrusionResultado.Save()\n\t\t\n\t\tif(\u0026ExtrusionResultado.Success())\n\t\t\t\u0026ERId = \u0026ExtrusionResultado.ExtrusionResultadoId\n\t\t\tcommit\n\t\tendif\n\t\t\n\tendfor\n\n\tSub \u0027ResumenBobinas\u0027\n\t\t\n\t\t\u0026BobinasMolino = 0\n\t\t\u0026BobinasReposo = 0\n\t\t\u0026TotalKg = 0\n\t\t\u0026TotalMermaKg = 0\n\t\t\n\t\tfor each DB.Bobina\n\t\t\twhere BobinaId \u003e 0\n\t\t\twhere DB.ExtrusionId = \u0026ExtrusionId\n\t\t\t\u0026BobinaEstado = BobinaEstado\n\t\t\t\u0026BobinaKg = BobinaKg\n\t\t\t\u0026BobinaMermaKg = BobinaMermaKg\n\t\t\t\n\t\t\tDo Case \n\t\t\t\tCase \u0026BobinaEstado = EstadoBobina.Molino\n\t\t\t\t\t\u0026BobinasMolino += 1\n\t\t\t\t\t\u0026TotalMermaKg += \u0026BobinaMermaKg\n\t\t\t\tCase \u0026BobinaEstado = EstadoBobina.Reposo\n\t\t\t\t\t\u0026BobinasReposo += 1\n\t\t\t\t\t\u0026TotalKg += \u0026BobinaKg\n\t\t\tEndCase\n\t\tendfor\n\t\n\tEndSub\n",
+                              "cleanSource":  "\t\n\t\n\tfor each DB.ExtrusionResultado\n\t\twhere ExtrusionResultadoId \u003e 0\n\t\twhere ExtrusionId = \u0026ExtrusionId\n\t\t\u0026ERId = ExtrusionResultadoId\n\t\tExit\n\twhen none\n\t\t\n\t\tdo \u0027ResumenBobinas\u0027\n\t\t\n\t\t\u0026ExtrusionResultado = New()\n\t\t\u0026ExtrusionResultado.ExtrusionId = \u0026ExtrusionId\n\t\t\u0026ExtrusionResultado.ExtrusionResultadoBobinasMolino = \u0026BobinasMolino\n\t\t\u0026ExtrusionResultado.ExtrusionResultadoBobinasReposo = \u0026BobinasReposo\n\t\t\u0026ExtrusionResultado.ExtrusionResultadoTotalKg = \u0026TotalKg\n\t\t\u0026ExtrusionResultado.ExtrusionResultadoTotalMermaKg = \u0026TotalMermaKg\n\t\t\u0026ExtrusionResultado.Save()\n\t\t\n\t\tif(\u0026ExtrusionResultado.Success())\n\t\t\t\u0026ERId = \u0026ExtrusionResultado.ExtrusionResultadoId\n\t\t\tcommit\n\t\tendif\n\t\t\n\tendfor\n\n\tSub \u0027ResumenBobinas\u0027\n\t\t\n\t\t\u0026BobinasMolino = 0\n\t\t\u0026BobinasReposo = 0\n\t\t\u0026TotalKg = 0\n\t\t\u0026TotalMermaKg = 0\n\t\t\n\t\tfor each DB.Bobina\n\t\t\twhere BobinaId \u003e 0\n\t\t\twhere DB.ExtrusionId = \u0026ExtrusionId\n\t\t\t\u0026BobinaEstado = BobinaEstado\n\t\t\t\u0026BobinaKg = BobinaKg\n\t\t\t\u0026BobinaMermaKg = BobinaMermaKg\n\t\t\t\n\t\t\tDo Case \n\t\t\t\tCase \u0026BobinaEstado = EstadoBobina.Molino\n\t\t\t\t\t\u0026BobinasMolino += 1\n\t\t\t\t\t\u0026TotalMermaKg += \u0026BobinaMermaKg\n\t\t\t\tCase \u0026BobinaEstado = EstadoBobina.Reposo\n\t\t\t\t\t\u0026BobinasReposo += 1\n\t\t\t\t\t\u0026TotalKg += \u0026BobinaKg\n\t\t\tEndCase\n\t\tendfor\n\t\n\tEndSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExtrusionId, out:\u0026ERId);\n",
+                              "cleanSource":  "parm(in:\u0026ExtrusionId, out:\u0026ERId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Bobina",
+                                         "DB.PrensadoResultado",
+                                         "DB.ExtrusionResultado"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.ExtrusionResultado"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PaletEstatus",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Estatus"
+                           },
+                           {
+                               "name":  "CantidadPalets",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Cantidad Palets"
+                           },
+                           {
+                               "name":  "CarreraId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Id"
+                           },
+                           {
+                               "name":  "CarreteEstado",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Estado"
+                           },
+                           {
+                               "name":  "CarretesEnPalet",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carretes En Palet"
+                           },
+                           {
+                               "name":  "CarretesMolino",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carretes Molino"
+                           },
+                           {
+                               "name":  "CarretesSobrantes",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carretes Sobrantes"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensadoResultado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado"
+                           },
+                           {
+                               "name":  "PRId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "PRId"
+                           },
+                           {
+                               "name":  "CarreteMillar",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Millar"
+                           },
+                           {
+                               "name":  "ERId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "ERId"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "TotalKg",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Total Kg"
+                           },
+                           {
+                               "name":  "TotalMermaKg",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Total Merma Kg"
+                           },
+                           {
+                               "name":  "BobinaEstado",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Estado"
+                           },
+                           {
+                               "name":  "BobinaMermakg",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Merma Kg"
+                           },
+                           {
+                               "name":  "BobinaKg",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Kg"
+                           },
+                           {
+                               "name":  "ExtrusionResultado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Resultado"
+                           },
+                           {
+                               "name":  "BobinasReposo",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobinas Reposo"
+                           },
+                           {
+                               "name":  "BobinasMolino",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobinas Molino"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

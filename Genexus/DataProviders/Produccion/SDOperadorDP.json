@@ -1,0 +1,94 @@
+﻿{
+    "uniqueId":  "87fc4240-d224-4b45-831b-82cacf4e7610",
+    "name":  "SDOperadorDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "SDOperador DP",
+    "filePath":  "DataProviders/Produccion/SDOperadorDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTOperador\n{\n\tSDTOperadorItem\n\twhere OperadorId = \u0026OperadorId when \u0026OperadorId \u003e 0\n\tWhere OperadorActivo = True \n\t{\n\t\tOperadorId = DB.WWPBaseObjects.Notifications.OperadorId\n\t\tOperadorNombre = WWPBaseObjects.OperadorNombre\n\t\tOperadorFotografia = OperadorFotografia\n\t}\n}\n",
+                              "cleanSource":  "SDTOperador\n{\n\tSDTOperadorItem\n\twhere OperadorId = \u0026OperadorId when \u0026OperadorId \u003e 0\n\tWhere OperadorActivo = True \n\t{\n\t\tOperadorId = DB.WWPBaseObjects.Notifications.OperadorId\n\t\tOperadorNombre = WWPBaseObjects.OperadorNombre\n\t\tOperadorFotografia = OperadorFotografia\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026OperadorId);\n",
+                              "cleanSource":  "parm(in:\u0026OperadorId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTOperador"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTOperador"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "OperadorId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Operador Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

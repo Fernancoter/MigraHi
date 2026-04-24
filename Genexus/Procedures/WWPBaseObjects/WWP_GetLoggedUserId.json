@@ -1,0 +1,129 @@
+﻿{
+    "uniqueId":  "ed345ca8-753f-4936-95b8-c77c0ff165ce",
+    "name":  "WWP_GetLoggedUserId",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Get Logged User Id",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_GetLoggedUserId.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026WWPUserExtendedId = GAMUser.GetId()\n",
+                              "cleanSource":  "\u0026WWPUserExtendedId = GAMUser.GetId()"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(out:\u0026WWPUserExtendedId);\n",
+                              "cleanSource":  "parm(out:\u0026WWPUserExtendedId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "WWP_VisualizeNotification",
+                                          "WWP_ChangeNotificationStatus",
+                                          "WWP_GetNotificationsForUser",
+                                          "WWP_SendNotification",
+                                          "WWP_VisualizeAllNotifications",
+                                          "WWP_CheckUserIsNotUnsubscribed",
+                                          "WWP_SubscribeLoggedUserToDiscussion",
+                                          "WWP_Logger",
+                                          "WWP_SubscriptionsSettings",
+                                          "WWP_DiscussionMessage",
+                                          "WWP_UserUpdateSubscription",
+                                          "Embarque"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "WWPUserExtendedId",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "WWPUser Extended Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

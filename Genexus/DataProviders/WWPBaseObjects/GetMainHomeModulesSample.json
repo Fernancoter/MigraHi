@@ -1,0 +1,97 @@
+﻿{
+    "uniqueId":  "21d54640-528e-445a-8469-371d2e0d41b9",
+    "name":  "GetMainHomeModulesSample",
+    "type":  "DataProvider",
+    "module":  "WWPBaseObjects",
+    "description":  "Get Main Home Modules Sample",
+    "filePath":  "DataProviders/WWPBaseObjects/GetMainHomeModulesSample.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "HomeModulesSDT\n{\n\t\u0026HomeModulesSDT = GetHomeModulesSample()\n\tHomeModulesSDTItem [Count=3] Input \u0026HomeModulesSDTItem in \u0026HomeModulesSDT\n\t{\n\t\tOptionTitle = \u0026HomeModulesSDTItem.OptionTitle\n\t\tOptionIconThemeClass = \u0026HomeModulesSDTItem.OptionIconThemeClass\n\t\tOptionDescription = \u0026HomeModulesSDTItem.OptionDescription\n\t\tOptionWCLink = \u0026HomeModulesSDTItem.OptionWCLink\n\t}\n}\n",
+                              "cleanSource":  "HomeModulesSDT\n{\n\t\u0026HomeModulesSDT = GetHomeModulesSample()\n\tHomeModulesSDTItem [Count=3] Input \u0026HomeModulesSDTItem in \u0026HomeModulesSDT\n\t{\n\t\tOptionTitle = \u0026HomeModulesSDTItem.OptionTitle\n\t\tOptionIconThemeClass = \u0026HomeModulesSDTItem.OptionIconThemeClass\n\t\tOptionDescription = \u0026HomeModulesSDTItem.OptionDescription\n\t\tOptionWCLink = \u0026HomeModulesSDTItem.OptionWCLink\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.GetHomeModulesSample",
+                                         "WWPBaseObjects.HomeModulesSDT"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "HomeModulesSDT"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "HomeModulesSDT",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Home Modules SDT"
+                           },
+                           {
+                               "name":  "HomeModulesSDTItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Home Modules SDTItem"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

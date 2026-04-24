@@ -1,0 +1,277 @@
+﻿{
+    "uniqueId":  "d562ef30-e467-4676-848f-d122819629e0",
+    "name":  "SDPrensadoAnticipado",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDPrensado Anticipado",
+    "filePath":  "Procedures/Produccion/SDPrensadoAnticipado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\u0026Anticipado = true\n\t\n\t//Tiempo en Proceso\n\t\u0026Now = Now()\n\t\u0026TiempoProceso = \u0026Now.Difference(\u0026IniciaProceso)\n\t\u0026MinutosProceso = (\u0026TiempoProceso/60)\n\t\n\t//Variables de config\n\t\u0026ToleranciaTurno = Produccion.SDToleranciaTurno.Udp()\n\t\u0026TiempoLaboral = SDTiempoLaboral.Udp()\n\t\n\t//Sgte Turno calendarizado\n\t\u0026SgtePrensadoId = SgteTurnoPrensado.Udp(\u0026PrensadoId)\n\t\n\tif(\u0026SgtePrensadoId \u003e 0)\n\t\t\u0026SgtePrensado.Load(\u0026SgtePrensadoId)\n\t\t\u0026SgtePrensadoFecha = \u0026SgtePrensado.PrensadoFecha\n\t\t\n\t\t\u0026DiffTiempo = \u0026SgtePrensadoFecha.Difference(\u0026Now)\n\t\t\u0026DiffTiempoMinutos = (\u0026DiffTiempo/60)\n\t\n\t\tif(\u0026ToleranciaTurno \u003e=  \u0026DiffTiempoMinutos)\n\t\t\t\u0026Anticipado = false\n\t\telse\n\t\t\tif(\u0026MinutosProceso \u003e= \u0026TiempoLaboral)\n\t\t\t     \u0026Anticipado = false\n\t\t\tendif\n\t\tendif \n\telse\n\t\tif(\u0026MinutosProceso \u003e= \u0026TiempoLaboral)\n\t\t\t\u0026Anticipado = false\n\t\tendif\n\tendif\n\n\n\n",
+                              "cleanSource":  "\t\u0026Anticipado = true\n\t\n\t//Tiempo en Proceso\n\t\u0026Now = Now()\n\t\u0026TiempoProceso = \u0026Now.Difference(\u0026IniciaProceso)\n\t\u0026MinutosProceso = (\u0026TiempoProceso/60)\n\t\n\t//Variables de config\n\t\u0026ToleranciaTurno = Produccion.SDToleranciaTurno.Udp()\n\t\u0026TiempoLaboral = SDTiempoLaboral.Udp()\n\t\n\t//Sgte Turno calendarizado\n\t\u0026SgtePrensadoId = SgteTurnoPrensado.Udp(\u0026PrensadoId)\n\t\n\tif(\u0026SgtePrensadoId \u003e 0)\n\t\t\u0026SgtePrensado.Load(\u0026SgtePrensadoId)\n\t\t\u0026SgtePrensadoFecha = \u0026SgtePrensado.PrensadoFecha\n\t\t\n\t\t\u0026DiffTiempo = \u0026SgtePrensadoFecha.Difference(\u0026Now)\n\t\t\u0026DiffTiempoMinutos = (\u0026DiffTiempo/60)\n\t\n\t\tif(\u0026ToleranciaTurno \u003e=  \u0026DiffTiempoMinutos)\n\t\t\t\u0026Anticipado = false\n\t\telse\n\t\t\tif(\u0026MinutosProceso \u003e= \u0026TiempoLaboral)\n\t\t\t     \u0026Anticipado = false\n\t\t\tendif\n\t\tendif \n\telse\n\t\tif(\u0026MinutosProceso \u003e= \u0026TiempoLaboral)\n\t\t\t\u0026Anticipado = false\n\t\tendif\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId, in:\u0026IniciaProceso, out:\u0026Anticipado);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId, in:\u0026IniciaProceso, out:\u0026Anticipado);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SgteTurnoPrensado",
+                                         "Produccion.SDTiempoLaboral",
+                                         "Produccion.SDToleranciaTurno",
+                                         "GeneXus.Common.Messages",
+                                         "DB.Prensado",
+                                         "DB.Turno",
+                                         "SDTiempoLaboral",
+                                         "SgteTurnoPrensado"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Anticipado",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Anticipado"
+                           },
+                           {
+                               "name":  "DiffTiempo",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Diff Tiempo"
+                           },
+                           {
+                               "name":  "DiffTiempoMinutos",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Diff Tiempo Minutos"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "IniciaProceso",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATETIME",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Inicia Proceso"
+                           },
+                           {
+                               "name":  "Mensajes",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Mensajes"
+                           },
+                           {
+                               "name":  "MinutosProceso",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Minutos Proceso"
+                           },
+                           {
+                               "name":  "MinutosSgteTurno",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Minutos Sgte Turno"
+                           },
+                           {
+                               "name":  "Msj",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Msj"
+                           },
+                           {
+                               "name":  "Now",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Now"
+                           },
+                           {
+                               "name":  "Numero",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Numero"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "SgtePrensado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Sgte Prensado"
+                           },
+                           {
+                               "name":  "SgtePrensadoFecha",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Fecha"
+                           },
+                           {
+                               "name":  "SgtePrensadoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "Tiempo",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo"
+                           },
+                           {
+                               "name":  "TiempoLaboral",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo Laboral"
+                           },
+                           {
+                               "name":  "TiempoMin",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo Min"
+                           },
+                           {
+                               "name":  "TiempoProceso",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo Proceso"
+                           },
+                           {
+                               "name":  "ToleranciaTurno",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tolerancia Turno"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

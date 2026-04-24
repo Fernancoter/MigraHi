@@ -1,0 +1,158 @@
+﻿{
+    "uniqueId":  "291de3b7-bb57-47b1-acd1-0cb835d74266",
+    "name":  "CrearInterrupcion",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Crear Interrupcion",
+    "filePath":  "Procedures/Produccion/CrearInterrupcion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\t\u0026Now = Now()\n\t\u0026FechaRegistro = \u0026Now.ToDate()\n\n\t//Guardar Interrupcion\n    \u0026Interrupcion = New()\n\t\u0026Interrupcion.InterrupcionHoraInicio = \u0026Now\n\t\u0026Interrupcion.InterrupcionHoraFin = \u0026Now\n\t\u0026Interrupcion.InterrupcionMotivo = \u0026Motivo\n\t\u0026Interrupcion.DownTimeCodeId.SetNull()\n\t\u0026Interrupcion.Save()\n\n\tif(\u0026Interrupcion.Success())\n\t\t\u0026InterrupcionId = \u0026Interrupcion.InterrupcionId\n\t\tcommit\n\tendif\n",
+                              "cleanSource":  "\n\t\u0026Now = Now()\n\t\u0026FechaRegistro = \u0026Now.ToDate()\n\n\t//Guardar Interrupcion\n    \u0026Interrupcion = New()\n\t\u0026Interrupcion.InterrupcionHoraInicio = \u0026Now\n\t\u0026Interrupcion.InterrupcionHoraFin = \u0026Now\n\t\u0026Interrupcion.InterrupcionMotivo = \u0026Motivo\n\t\u0026Interrupcion.DownTimeCodeId.SetNull()\n\t\u0026Interrupcion.Save()\n\n\tif(\u0026Interrupcion.Success())\n\t\t\u0026InterrupcionId = \u0026Interrupcion.InterrupcionId\n\t\tcommit\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026Motivo, out:\u0026InterrupcionId, out:\u0026FechaRegistro);\n",
+                              "cleanSource":  "parm(in:\u0026Motivo, out:\u0026InterrupcionId, out:\u0026FechaRegistro);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Interrupcion"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Interrupcion"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Interrupcion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion"
+                           },
+                           {
+                               "name":  "InterrupcionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Interrupcion Id"
+                           },
+                           {
+                               "name":  "Motivo",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Motivo"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "FechaRegistro",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATE",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Fecha Registro"
+                           },
+                           {
+                               "name":  "Now",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Now"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

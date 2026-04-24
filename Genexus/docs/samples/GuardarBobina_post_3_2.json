@@ -1,0 +1,183 @@
+﻿{
+    "uniqueId":  "7343ccc5-cf13-49af-a950-87f930aae073",
+    "name":  "GuardarBobina",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Guardar Bobina",
+    "filePath":  "Procedures/Produccion/GuardarBobina.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\u0026Id = \u0026SDTBobinaItem.BobinaId\n\t\u0026ExtrusionId = \u0026SDTBobinaItem.ExtrusionId\n\t\u0026Extrusion.Load(\u0026ExtrusionId)\n\n\tif(\u0026Id \u003e 0)\n\t\t\u0026Bobina.Load(\u0026SDTBobinaItem.BobinaId)\n\t\t\u0026Bobina.BobinaMotivoMolino = \u0026SDTBobinaItem.BobinaMotivoMolino\n\t\t\u0026IsNew = false\n\telse\n\t\t\u0026Bobina = New()\n\t\t\u0026Bobina.BobinaMotivoMolino = MotivoMolino.NoAplica\n\t\t\u0026Bobina.BobinaProductoId = \u0026Extrusion.ExtrusionProductoId\n\t\t\u0026Bobina.BobinaSiloVirgenId = \u0026SDTBobinaItem.BobinaSiloVirgenId\n\t        \u0026Bobina.BobinaLoteVirgen = \u0026SDTBobinaItem.BobinaLoteVirgen\n\t        \u0026Bobina.BobinaSiloMolidoId = \u0026SDTBobinaItem.BobinaSiloMolidoId\n\t\t\u0026Bobina.BobinaColorEstacion = ColorEstacion.SinAsignar\n\t\t\u0026IsNew = true\n\tendif\n\n\t\u0026Bobina.ExtrusionId = \u0026SDTBobinaItem.ExtrusionId\n\t\u0026Bobina.BobinaOrigen = \u0026SDTBobinaItem.BobinaOrigen\n\t\u0026Bobina.BobinaHoraInicio = \u0026SDTBobinaItem.BobinaHoraInicio\n\t\u0026Bobina.BobinaHoraSalida = \u0026SDTBobinaItem.BobinaHoraSalida\n\t\u0026Bobina.BobinaNo = \u0026SDTBobinaItem.BobinaNo\n\t\u0026Bobina.BobinaKg = \u0026SDTBobinaItem.BobinaKg\n\t\u0026Bobina.BobinaMermaKg = \u0026SDTBobinaItem.BobinaMermaKg\n\t\u0026Bobina.BobinaEspesor = \u0026SDTBobinaItem.BobinaEspesor\n\t\u0026Bobina.BobinaColorEstacion = \u0026SDTBobinaItem.BobinaColorEstacion\n\t\u0026Bobina.BobinaDesviacionEstandar = \u0026SDTBobinaItem.BobinaDesviacionEstandar\n\t\u0026Bobina.BobinaObservaciones = \u0026SDTBobinaItem.BobinaObservaciones\n\t\u0026Bobina.BobinaEstado = \u0026SDTBobinaItem.BobinaEstado\n\t\u0026Bobina.BobinaCarreras = \u0026SDTBobinaItem.BobinaCarreras\n\t\u0026Bobina.BobinaIniciaReposo = \u0026SDTBobinaItem.BobinaIniciaReposo\n\t\u0026Bobina.BobinaMinutosEnReposo = \u0026SDTBobinaItem.BobinaMinutosEnReposo\n\t\u0026Bobina.Save()\n\n\tif(\u0026Bobina.Success())\n\t\t\u0026BobinaId = \u0026Bobina.BobinaId\n\t\tcommit\n\n\t\t//Generar NoSerie de la Bobina\n\t\tif(\u0026IsNew)\n\t\t\tBobinaNoSerie.Call(\u0026BobinaId, \u0026ExtrusionId)\n\t\tendif\n\n\t\t\u0026Correcto = true\n\tendif\n",
+                              "cleanSource":  "\t\u0026Id = \u0026SDTBobinaItem.BobinaId\n\t\u0026ExtrusionId = \u0026SDTBobinaItem.ExtrusionId\n\t\u0026Extrusion.Load(\u0026ExtrusionId)\n\n\tif(\u0026Id \u003e 0)\n\t\t\u0026Bobina.Load(\u0026SDTBobinaItem.BobinaId)\n\t\t\u0026Bobina.BobinaMotivoMolino = \u0026SDTBobinaItem.BobinaMotivoMolino\n\t\t\u0026IsNew = false\n\telse\n\t\t\u0026Bobina = New()\n\t\t\u0026Bobina.BobinaMotivoMolino = MotivoMolino.NoAplica\n\t\t\u0026Bobina.BobinaProductoId = \u0026Extrusion.ExtrusionProductoId\n\t\t\u0026Bobina.BobinaSiloVirgenId = \u0026SDTBobinaItem.BobinaSiloVirgenId\n\t        \u0026Bobina.BobinaLoteVirgen = \u0026SDTBobinaItem.BobinaLoteVirgen\n\t        \u0026Bobina.BobinaSiloMolidoId = \u0026SDTBobinaItem.BobinaSiloMolidoId\n\t\t\u0026Bobina.BobinaColorEstacion = ColorEstacion.SinAsignar\n\t\t\u0026IsNew = true\n\tendif\n\n\t\u0026Bobina.ExtrusionId = \u0026SDTBobinaItem.ExtrusionId\n\t\u0026Bobina.BobinaOrigen = \u0026SDTBobinaItem.BobinaOrigen\n\t\u0026Bobina.BobinaHoraInicio = \u0026SDTBobinaItem.BobinaHoraInicio\n\t\u0026Bobina.BobinaHoraSalida = \u0026SDTBobinaItem.BobinaHoraSalida\n\t\u0026Bobina.BobinaNo = \u0026SDTBobinaItem.BobinaNo\n\t\u0026Bobina.BobinaKg = \u0026SDTBobinaItem.BobinaKg\n\t\u0026Bobina.BobinaMermaKg = \u0026SDTBobinaItem.BobinaMermaKg\n\t\u0026Bobina.BobinaEspesor = \u0026SDTBobinaItem.BobinaEspesor\n\t\u0026Bobina.BobinaColorEstacion = \u0026SDTBobinaItem.BobinaColorEstacion\n\t\u0026Bobina.BobinaDesviacionEstandar = \u0026SDTBobinaItem.BobinaDesviacionEstandar\n\t\u0026Bobina.BobinaObservaciones = \u0026SDTBobinaItem.BobinaObservaciones\n\t\u0026Bobina.BobinaEstado = \u0026SDTBobinaItem.BobinaEstado\n\t\u0026Bobina.BobinaCarreras = \u0026SDTBobinaItem.BobinaCarreras\n\t\u0026Bobina.BobinaIniciaReposo = \u0026SDTBobinaItem.BobinaIniciaReposo\n\t\u0026Bobina.BobinaMinutosEnReposo = \u0026SDTBobinaItem.BobinaMinutosEnReposo\n\t\u0026Bobina.Save()\n\n\tif(\u0026Bobina.Success())\n\t\t\u0026BobinaId = \u0026Bobina.BobinaId\n\t\tcommit\n\n\t\t//Generar NoSerie de la Bobina\n\t\tif(\u0026IsNew)\n\t\t\tBobinaNoSerie.Call(\u0026BobinaId, \u0026ExtrusionId)\n\t\tendif\n\n\t\t\u0026Correcto = true\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026SDTBobinaItem,out:\u0026Correcto);\n",
+                              "cleanSource":  "parm(in:\u0026SDTBobinaItem,out:\u0026Correcto);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.BobinaNoSerie",
+                                         "Produccion.SDTBobina",
+                                         "DB.Extrusion",
+                                         "DB.Bobina",
+                                         "BobinaNoSerie"
+                                     ],
+                         "calledBy":  [
+                                          "ValidarBobina",
+                                          "InsertarManualenteBobinas",
+                                          "IniciarBobinas",
+                                          "ValidarMedicion",
+                                          "MedirBobinasEnProceso"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Bobina",
+                                            "DB.Extrusion"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Bobina"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SDTBobinaItem",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "SDTBobina Item"
+                           },
+                           {
+                               "name":  "Correcto",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Correcto"
+                           },
+                           {
+                               "name":  "Bobina",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina"
+                           },
+                           {
+                               "name":  "Id",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Id"
+                           },
+                           {
+                               "name":  "BobinaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Id"
+                           },
+                           {
+                               "name":  "IsNew",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Is New"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "Extrusion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,136 @@
+﻿{
+    "uniqueId":  "7bee8577-d62f-42a1-9c70-eb939dead3e3",
+    "name":  "GuardarExtrusion",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Guardar Extrusion",
+    "filePath":  "Procedures/Produccion/GuardarExtrusion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026Extrusion.Load(\u0026SDTExtrusionItem.ExtrusionId)\n\u0026Extrusion.FromJson(\u0026SDTExtrusionItem.ToJson())\n\u0026Extrusion.Save()\n\u0026Correcto = \u0026Extrusion.Success()\n\nif(\u0026Correcto)\n\tcommit\nelse\n\tmsg(\u0027Extrusion guardado: \u0027 + \u0026Extrusion.GetMessages().ToJson())\nendif\n",
+                              "cleanSource":  "\n\u0026Extrusion.Load(\u0026SDTExtrusionItem.ExtrusionId)\n\u0026Extrusion.FromJson(\u0026SDTExtrusionItem.ToJson())\n\u0026Extrusion.Save()\n\u0026Correcto = \u0026Extrusion.Success()\n\nif(\u0026Correcto)\n\tcommit\nelse\n\tmsg(\u0027Extrusion guardado: \u0027 + \u0026Extrusion.GetMessages().ToJson())\nendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026SDTExtrusionItem,out:\u0026Correcto);\n",
+                              "cleanSource":  "parm(in:\u0026SDTExtrusionItem,out:\u0026Correcto);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTExtrusion",
+                                         "DB.Extrusion"
+                                     ],
+                         "calledBy":  [
+                                          "ExclusionDelDia",
+                                          "SDInitExtrusion"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Extrusion"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Extrusion"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SDTExtrusionItem",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "SDTExtrusion Item"
+                           },
+                           {
+                               "name":  "Correcto",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Correcto"
+                           },
+                           {
+                               "name":  "Extrusion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

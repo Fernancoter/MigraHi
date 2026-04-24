@@ -1,0 +1,143 @@
+﻿{
+    "uniqueId":  "f0cb4358-7e71-4a38-9184-14eb1a178b53",
+    "name":  "SDPGetRangedRadialGauge",
+    "type":  "Procedure",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPGet Ranged Radial Gauge",
+    "filePath":  "Procedures/WorkWithPlus/NativeMobile/SDPGetRangedRadialGauge.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\u0026SDPGaugeConfig = new()\n\t\u0026SDPGaugeConfig.Value = \u0026Value\n\tIf \u0026Text.Length() \u003e 0\n\t\t\u0026SDPGaugeConfig.Text = \u0026Text\n\tElse\n\t\t\u0026SDPGaugeConfig.Text = \u0026Value.ToString().Trim() + !\"%\"\n\tEndIf\n\t\n\t\u0026SDPGaugeConfig.Width = 200\n\t\u0026SDPGaugeConfig.Height = 200\n\t\u0026SDPGaugeConfig.Range1ColorStart = !\"#007700\" \n\t\u0026SDPGaugeConfig.Range1ColorEnd = !\"#009900\" \n\t\u0026SDPGaugeConfig.Range2ColorStart = !\"#009900\" \n\t\u0026SDPGaugeConfig.Range2ColorEnd = !\"#00ff00\" \n\t\u0026SDPGaugeConfig.Range3ColorStart = !\"#00ff00\" \n\t\u0026SDPGaugeConfig.Range3ColorEnd = !\"#ffff00\" \n\t\u0026SDPGaugeConfig.Range4ColorStart = !\"#ffff00\" \n\t\u0026SDPGaugeConfig.Range4ColorEnd = !\"#ff0000\" \n\t\u0026SDPGaugeConfig.Range5ColorStart = !\"#ff0000\" \n\t\u0026SDPGaugeConfig.Range5ColorEnd = !\"#aa0000\" \n\t\u0026GaugeRegions = SDPGetRangedRadialGaugeFromConfig(\u0026SDPGaugeConfig)\n",
+                              "cleanSource":  "\t\u0026SDPGaugeConfig = new()\n\t\u0026SDPGaugeConfig.Value = \u0026Value\n\tIf \u0026Text.Length() \u003e 0\n\t\t\u0026SDPGaugeConfig.Text = \u0026Text\n\tElse\n\t\t\u0026SDPGaugeConfig.Text = \u0026Value.ToString().Trim() + !\"%\"\n\tEndIf\n\t\n\t\u0026SDPGaugeConfig.Width = 200\n\t\u0026SDPGaugeConfig.Height = 200\n\t\u0026SDPGaugeConfig.Range1ColorStart = !\"#007700\" \n\t\u0026SDPGaugeConfig.Range1ColorEnd = !\"#009900\" \n\t\u0026SDPGaugeConfig.Range2ColorStart = !\"#009900\" \n\t\u0026SDPGaugeConfig.Range2ColorEnd = !\"#00ff00\" \n\t\u0026SDPGaugeConfig.Range3ColorStart = !\"#00ff00\" \n\t\u0026SDPGaugeConfig.Range3ColorEnd = !\"#ffff00\" \n\t\u0026SDPGaugeConfig.Range4ColorStart = !\"#ffff00\" \n\t\u0026SDPGaugeConfig.Range4ColorEnd = !\"#ff0000\" \n\t\u0026SDPGaugeConfig.Range5ColorStart = !\"#ff0000\" \n\t\u0026SDPGaugeConfig.Range5ColorEnd = !\"#aa0000\" \n\t\u0026GaugeRegions = SDPGetRangedRadialGaugeFromConfig(\u0026SDPGaugeConfig)"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026Value, in:\u0026Text, out:\u0026GaugeRegions);\n",
+                              "cleanSource":  "Parm(in:\u0026Value, in:\u0026Text, out:\u0026GaugeRegions);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPGetRangedRadialGaugeFromConfig",
+                                         "WorkWithPlus.NativeMobile.SDPRangedRadialGaugeConfig"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "GaugeRegions",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Gauge Regions"
+                           },
+                           {
+                               "name":  "SDPGaugeConfig",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDPGauge Config"
+                           },
+                           {
+                               "name":  "Value",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Value"
+                           },
+                           {
+                               "name":  "Text",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Text"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,36 @@
+﻿
+=== Procedure: Produccion.JornadaLaboral ===
+
+--- Source (Source) ---
+	&Now = Now()
+	&Today = Today()
+	&Hora = &Now.Hour()
+	
+	&FechaLaboral = &Today
+	if(&Hora < 6)
+		&FechaLaboral = &Today - 1
+	endif
+
+//	do 'JornadaInicioHora'
+//	do 'FechaLaboral'
+//	
+//	Sub 'FechaLaboral'
+//		if(&Now.Hour() >= &HoraInicio.Hour())
+//			&FechaLaboral = &Today
+//		else
+//		        &FechaLaboral = &Today - 1
+//		endif
+//        EndSub
+//	
+//	Sub 'JornadaInicioHora'
+//		for each DB.Turno
+//			where TurnoId > 0
+//			where TurnoEnum = EnumTurno.UNO
+//			&HoraInicio = TurnoHoraInicio
+//			Exit
+//		endfor
+//	endsub
+
+--- Rules (Rules) ---
+parm(out:&FechaLaboral);
+

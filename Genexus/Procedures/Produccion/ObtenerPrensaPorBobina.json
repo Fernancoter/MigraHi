@@ -1,0 +1,126 @@
+﻿{
+    "uniqueId":  "99350297-fb0a-49bf-b93b-29b6fab70935",
+    "name":  "ObtenerPrensaPorBobina",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Obtener Prensa Por Bobina",
+    "filePath":  "Procedures/Produccion/ObtenerPrensaPorBobina.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "For Each\n\tWhere PrensadoBobinaId\u003e0\n\tWhere BobinaId = \u0026BobinaId\n\t\u0026PrensadoPrensaNombre = PrensadoPrensaNombre\nWhen None\n\t\u0026PrensadoPrensaNombre.SetEmpty()\nEndFor\n",
+                              "cleanSource":  "For Each\n\tWhere PrensadoBobinaId\u003e0\n\tWhere BobinaId = \u0026BobinaId\n\t\u0026PrensadoPrensaNombre = PrensadoPrensaNombre\nWhen None\n\t\u0026PrensadoPrensaNombre.SetEmpty()\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(In:\u0026BobinaId, Out:\u0026PrensadoPrensaNombre);\n",
+                              "cleanSource":  "parm(In:\u0026BobinaId, Out:\u0026PrensadoPrensaNombre);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "BobinaId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Bobina Id"
+                           },
+                           {
+                               "name":  "PrensadoPrensaNombre",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Prensa Nombre"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

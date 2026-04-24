@@ -1,0 +1,161 @@
+﻿{
+    "uniqueId":  "03867be4-ff26-4c3e-9ab4-f60c3cd7bb83",
+    "name":  "WWP_SendWebNotification",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects.Notifications.Web",
+    "description":  "Send Web Notification",
+    "filePath":  "Procedures/WWPBaseObjects/Notifications/Web/WWP_SendWebNotification.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026SendStatus = -1\n\u0026WebNotification.Load(\u0026WebNotificationId)\n\nIf \u0026WebNotification.Fail()\n\tWWP_Logger.Error(\u0026Pgmname, !\"Web Notification not found with id: \" + \u0026WebNotificationId.ToString().Trim())\n\treturn\nEndIf\n\nIf \u0026WebNotification.WWPWebNotificationTitle.IsEmpty() or \u0026WebNotification.WWPWebNotificationText.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\"Title/Text cannot be empty: \" + \u0026WebNotificationId.ToString().Trim())\n\tWWP_UpdateWebNotificationStatus(\u0026WebNotificationId, WWP_StatusWebNotification.Error, !\"Title/Text cannot be empty\")\n\treturn\nEndIf\n\nIf \u0026WebNotification.WWPWebNotificationClientId.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\"Client Id cannot be empty: \" + \u0026WebNotificationId.ToString().Trim())\n\tWeb.WWP_UpdateWebNotificationStatus(\u0026WebNotificationId, WWP_StatusWebNotification.Error, !\"Client Id cannot be empty\")\n\treturn\nEndIf\n\n\u0026NotificationInfo.Id = !\"WebNotification#\" + \u0026WebNotificationId.ToString().Trim()\n\u0026NotificationInfo.Message = \u0026WebNotification.ToJson()\n\n\u0026ClientId = \u0026WebNotification.WWPWebNotificationClientId\n\n\u0026SendStatus = \u0026ServerSocket.NotifyClient(\u0026ClientId, \u0026NotificationInfo)\n\nIf \u0026SendStatus \u003e 0\n\tWWP_Logger.Error(\u0026Pgmname, Format(!\"Error sending web notification with id: %1 - %2 - %3 - %4\", \u0026WebNotificationId.ToString().Trim(), \u0026SendStatus, \u0026ServerSocket.ErrCode.ToString().Trim(), \u0026ServerSocket.ErrDescription))\n\tWWPBaseObjects.Notifications.Web.WWP_UpdateWebNotificationStatus(\u0026WebNotificationId, WWP_StatusWebNotification.Error, Format(!\"%1 - %2 - %3\", \u0026SendStatus, \u0026ServerSocket.ErrCode.ToString().Trim(), \u0026ServerSocket.ErrDescription))\n\treturn\nEndIf\n\nWWP_UpdateWebNotificationStatus(\u0026WebNotificationId, WWP_StatusWebNotification.Sent, !\"OK\")\n\ncommit\n",
+                              "cleanSource":  "\u0026SendStatus = -1\n\u0026WebNotification.Load(\u0026WebNotificationId)\n\nIf \u0026WebNotification.Fail()\n\tWWP_Logger.Error(\u0026Pgmname, !\"Web Notification not found with id: \" + \u0026WebNotificationId.ToString().Trim())\n\treturn\nEndIf\n\nIf \u0026WebNotification.WWPWebNotificationTitle.IsEmpty() or \u0026WebNotification.WWPWebNotificationText.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\"Title/Text cannot be empty: \" + \u0026WebNotificationId.ToString().Trim())\n\tWWP_UpdateWebNotificationStatus(\u0026WebNotificationId, WWP_StatusWebNotification.Error, !\"Title/Text cannot be empty\")\n\treturn\nEndIf\n\nIf \u0026WebNotification.WWPWebNotificationClientId.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\"Client Id cannot be empty: \" + \u0026WebNotificationId.ToString().Trim())\n\tWeb.WWP_UpdateWebNotificationStatus(\u0026WebNotificationId, WWP_StatusWebNotification.Error, !\"Client Id cannot be empty\")\n\treturn\nEndIf\n\n\u0026NotificationInfo.Id = !\"WebNotification#\" + \u0026WebNotificationId.ToString().Trim()\n\u0026NotificationInfo.Message = \u0026WebNotification.ToJson()\n\n\u0026ClientId = \u0026WebNotification.WWPWebNotificationClientId\n\n\u0026SendStatus = \u0026ServerSocket.NotifyClient(\u0026ClientId, \u0026NotificationInfo)\n\nIf \u0026SendStatus \u003e 0\n\tWWP_Logger.Error(\u0026Pgmname, Format(!\"Error sending web notification with id: %1 - %2 - %3 - %4\", \u0026WebNotificationId.ToString().Trim(), \u0026SendStatus, \u0026ServerSocket.ErrCode.ToString().Trim(), \u0026ServerSocket.ErrDescription))\n\tWWPBaseObjects.Notifications.Web.WWP_UpdateWebNotificationStatus(\u0026WebNotificationId, WWP_StatusWebNotification.Error, Format(!\"%1 - %2 - %3\", \u0026SendStatus, \u0026ServerSocket.ErrCode.ToString().Trim(), \u0026ServerSocket.ErrDescription))\n\treturn\nEndIf\n\nWWP_UpdateWebNotificationStatus(\u0026WebNotificationId, WWP_StatusWebNotification.Sent, !\"OK\")\n\ncommit"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026WebNotificationId, out:\u0026SendStatus);\n",
+                              "cleanSource":  "parm(in:\u0026WebNotificationId, out:\u0026SendStatus);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_Logger",
+                                         "WWPBaseObjects.Notifications.Web.WWP_UpdateWebNotificationStatus",
+                                         "GeneXus.Server.NotificationInfo",
+                                         "WWPBaseObjects.Notifications.Web.WWP_WebNotification"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_SendPendingNotifications"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "GeneXus.Server.NotificationInfo"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ServerSocket",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Server Socket"
+                           },
+                           {
+                               "name":  "webnotification",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "webnotification"
+                           },
+                           {
+                               "name":  "WebNotificationId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Web Notification Id"
+                           },
+                           {
+                               "name":  "SendStatus",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Send Status"
+                           },
+                           {
+                               "name":  "ClientId",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Client Id"
+                           },
+                           {
+                               "name":  "NotificationInfo",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Notification Info"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

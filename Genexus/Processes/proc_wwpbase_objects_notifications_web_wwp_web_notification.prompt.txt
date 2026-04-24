@@ -1,0 +1,8 @@
+﻿
+=== Transaction: WWPBaseObjects.Notifications.Web.WWP_WebNotification ===
+
+--- Rules (Rules) ---
+default(WWPWebNotificationStatus, WWP_StatusWebNotification.Pending);
+default(WWPWebNotificationCreated, ServerNow());
+default(WWPWebNotificationScheduled, ServerNow());
+

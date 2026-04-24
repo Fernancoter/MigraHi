@@ -1,0 +1,142 @@
+﻿{
+    "uniqueId":  "b5e04dcf-59b4-4035-898d-47e36cefd468",
+    "name":  "ContarEmbarqueLineasValidadas",
+    "type":  "Procedure",
+    "module":  "Embarques",
+    "description":  "Contar Embarque Lineas Validadas",
+    "filePath":  "Procedures/Embarques/ContarEmbarqueLineasValidadas.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "for each DB.EmbarqueDetalle\n\t\twhere EmbarqueId = \u0026EmbarqueId\n\t\t\n\t\t\u0026TotalCard = \u0026TotalCard + 1\n\n\t\t\n\t\t\n\t\t\u0026EmbarqueDetalleConfirmadoPorAdministracion = EmbarqueDetalleConfirmadoPorAdministracion\n\t\tif(\u0026EmbarqueDetalleConfirmadoPorAdministracion)\n\t\t\t\u0026ValueCard = \u0026ValueCard +1\n\t\tendif\n\t\n\t\t\n\tendfor\n",
+                              "cleanSource":  "for each DB.EmbarqueDetalle\n\t\twhere EmbarqueId = \u0026EmbarqueId\n\t\t\n\t\t\u0026TotalCard = \u0026TotalCard + 1\n\n\t\t\n\t\t\n\t\t\u0026EmbarqueDetalleConfirmadoPorAdministracion = EmbarqueDetalleConfirmadoPorAdministracion\n\t\tif(\u0026EmbarqueDetalleConfirmadoPorAdministracion)\n\t\t\t\u0026ValueCard = \u0026ValueCard +1\n\t\tendif\n\t\n\t\t\n\tendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026EmbarqueId, out:\u0026TotalCard, out:\u0026ValueCard);\n",
+                              "cleanSource":  "parm(in:\u0026EmbarqueId, out:\u0026TotalCard, out:\u0026ValueCard);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.EmbarqueDetalle"
+                                     ],
+                         "calledBy":  [
+                                          "EmbarqueWP"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "EmbarqueId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Embarque Id"
+                           },
+                           {
+                               "name":  "TotalCard",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Total Card"
+                           },
+                           {
+                               "name":  "EmbarqueDetalleConfirmadoPorAdministracion",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Confirmado"
+                           },
+                           {
+                               "name":  "ValueCard",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Value Card"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

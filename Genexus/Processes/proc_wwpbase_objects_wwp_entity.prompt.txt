@@ -1,0 +1,4 @@
+﻿
+=== Transaction: WWPBaseObjects.WWP_Entity ===
+
+(sin businessLogic extraído)

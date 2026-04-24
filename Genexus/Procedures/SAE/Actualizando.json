@@ -1,0 +1,192 @@
+﻿{
+    "uniqueId":  "0d92320d-0036-491a-ada4-487639297111",
+    "name":  "Actualizando",
+    "type":  "Procedure",
+    "module":  "SAE",
+    "description":  "Actualizando",
+    "filePath":  "Procedures/SAE/Actualizando.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\t\n\n\t\u0026ProgressIndicator.Value = 0\n\t\u0026ProgressIndicator.MaxValue = 99\n\t\u0026ProgressIndicator.Type = ProgressIndicatorType.Determinate\n\t\u0026ProgressIndicator.ShowWithTitle(\"Updating...\")\n\t\u0026total = 0\n\t\u0026i = 0\n\tFor each\n\t\t\u0026Customer = Customer\n\t\t\u0026ProductNumber = ProductNumber\n\t\t\u0026BudgetYear =  BudgetYear\n\t\t\u0026BudgetMonth = BudgetMonth\n\t\t\u0026i = \u0026i + 1\n\tendfor\n\t\u0026total = \u0026i\n\t\n\t\n\t\u0026i = 0\n\tFor each\n\t\t\u0026porcentaje = (\u0026i/\u0026total) * 100\n\t\t\u0026Budget.Load(Customer,ProductNumber,BudgetYear,\tBudgetMonth)\n\t\t\u0026Budget.Check()\n\t\t\u0026Budget.Update()\n\t\t\u0026i = \u0026i + 1\n\t\t\u0026porcentaje = \u0026porcentaje +1\n\t\t\u0026ProgressIndicator.Value = \u0026porcentaje\n\t\tcommit\n\tendfor\n\t\n\t\u0026ProgressIndicator.ShowWithTitle(\"Updated\")\n\t\n",
+                              "cleanSource":  "\n\t\n\n\t\u0026ProgressIndicator.Value = 0\n\t\u0026ProgressIndicator.MaxValue = 99\n\t\u0026ProgressIndicator.Type = ProgressIndicatorType.Determinate\n\t\u0026ProgressIndicator.ShowWithTitle(\"Updating...\")\n\t\u0026total = 0\n\t\u0026i = 0\n\tFor each\n\t\t\u0026Customer = Customer\n\t\t\u0026ProductNumber = ProductNumber\n\t\t\u0026BudgetYear =  BudgetYear\n\t\t\u0026BudgetMonth = BudgetMonth\n\t\t\u0026i = \u0026i + 1\n\tendfor\n\t\u0026total = \u0026i\n\t\n\t\n\t\u0026i = 0\n\tFor each\n\t\t\u0026porcentaje = (\u0026i/\u0026total) * 100\n\t\t\u0026Budget.Load(Customer,ProductNumber,BudgetYear,\tBudgetMonth)\n\t\t\u0026Budget.Check()\n\t\t\u0026Budget.Update()\n\t\t\u0026i = \u0026i + 1\n\t\t\u0026porcentaje = \u0026porcentaje +1\n\t\t\u0026ProgressIndicator.Value = \u0026porcentaje\n\t\tcommit\n\tendfor\n\t\n\t\u0026ProgressIndicator.ShowWithTitle(\"Updated\")"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Budget"
+                                     ],
+                         "calledBy":  [
+                                          "SyncSAE"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Budget"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Budget"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Budget",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Budget"
+                           },
+                           {
+                               "name":  "BudgetMonth",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Budget Month"
+                           },
+                           {
+                               "name":  "BudgetYear",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Budget Year"
+                           },
+                           {
+                               "name":  "Customer",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Customer"
+                           },
+                           {
+                               "name":  "i",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "i"
+                           },
+                           {
+                               "name":  "ProductNumber",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Product Number"
+                           },
+                           {
+                               "name":  "ProgressIndicator",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Progress Indicator"
+                           },
+                           {
+                               "name":  "total",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "total"
+                           },
+                           {
+                               "name":  "porcentaje",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "porcentaje"
+                           },
+                           {
+                               "name":  "WebSession",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_USRDEFTYP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Web Session"
+                           },
+                           {
+                               "name":  "Updating",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Updating"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

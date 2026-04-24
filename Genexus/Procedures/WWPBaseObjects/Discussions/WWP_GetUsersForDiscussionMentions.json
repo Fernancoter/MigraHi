@@ -1,0 +1,207 @@
+﻿{
+    "uniqueId":  "c26d17b9-ef97-4f8e-8aa3-1ed0926c2107",
+    "name":  "WWP_GetUsersForDiscussionMentions",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects.Discussions",
+    "description":  "WWP_Get Users For Discussion Mentions",
+    "filePath":  "Procedures/WWPBaseObjects/Discussions/WWP_GetUsersForDiscussionMentions.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026Options = new()\n\n\u0026MaxOptions = 5\n\n\u0026GAMUserFilter.Names = \u0027%\u0027 + \u0026SearchTxt\n\u0026GAMUserCollection = GAMRepository.GetUsers(\u0026GAMUserFilter, \u0026GAMErrorCollection)\n\u0026CheckDuplicated = False\nDo \u0027Search Users\u0027\n\nIf \u0026Options.Count \u003c \u0026MaxOptions\n\t\u0026GAMUserFilter = new()\n\t\u0026GAMUserFilter.EMail = \u0027%\u0027 + \u0026SearchTxt\n\t\u0026CheckDuplicated = True\n\tDo \u0027Search Users\u0027\nEndIf\n\n\u0026OptionsJson = \u0026Options.ToJson()\n\nSub \u0027Search Users\u0027\n\t\u0026GAMUserCollection = GAMRepository.GetUsers(\u0026GAMUserFilter, \u0026GAMErrorCollection)\n\n\tFor \u0026GAMUser In \u0026GAMUserCollection\n\t\t\u0026WWPUserExtended.Load(\u0026GAMUser.GUID)\n\t\t\u0026WWPUserExtendedFullName = iif(\u0026GAMUser.FirstName.Trim().IsEmpty(), \u0026GAMUser.Name, \u0026GAMUser.FirstName.Trim() + \" \" + \u0026GAMUser.LastName.Trim())\n\t\n\t\t\u0026Option = new()\n\t\t\u0026Option.Id = \u0026WWPUserExtended.WWPBaseObjects.Produccion.Notifications.WWPUserExtendedId\n\t\t\u0026Option.DisplayName = \u0026WWPUserExtendedFullName\n\t\t\n\t\t\u0026Option.Text.Add(\u0026WWPUserExtendedFullName)\n\t\t\u0026Option.Text.Add(\u0026GAMUser.EMail)\n\t\t\u0026Option.Text.Add(\u0026WWPUserExtended.WWPUserExtendedPhoto.ImageURI)\n\t\t\n\t\tIf not \u0026CheckDuplicated OR not \u0026Options.ToJson().Contains(\u0026Option.ToJson())\n\t\t\t\u0026Options.Add(\u0026Option)\n\t\tEndIf\n\t\t\n\t\tIf \u0026Options.Count \u003e \u0026MaxOptions\n\t\t\tExit\n\t\tEndIf\n\tEndFor\nEndSub\n",
+                              "cleanSource":  "\u0026Options = new()\n\n\u0026MaxOptions = 5\n\n\u0026GAMUserFilter.Names = \u0027%\u0027 + \u0026SearchTxt\n\u0026GAMUserCollection = GAMRepository.GetUsers(\u0026GAMUserFilter, \u0026GAMErrorCollection)\n\u0026CheckDuplicated = False\nDo \u0027Search Users\u0027\n\nIf \u0026Options.Count \u003c \u0026MaxOptions\n\t\u0026GAMUserFilter = new()\n\t\u0026GAMUserFilter.EMail = \u0027%\u0027 + \u0026SearchTxt\n\t\u0026CheckDuplicated = True\n\tDo \u0027Search Users\u0027\nEndIf\n\n\u0026OptionsJson = \u0026Options.ToJson()\n\nSub \u0027Search Users\u0027\n\t\u0026GAMUserCollection = GAMRepository.GetUsers(\u0026GAMUserFilter, \u0026GAMErrorCollection)\n\n\tFor \u0026GAMUser In \u0026GAMUserCollection\n\t\t\u0026WWPUserExtended.Load(\u0026GAMUser.GUID)\n\t\t\u0026WWPUserExtendedFullName = iif(\u0026GAMUser.FirstName.Trim().IsEmpty(), \u0026GAMUser.Name, \u0026GAMUser.FirstName.Trim() + \" \" + \u0026GAMUser.LastName.Trim())\n\t\n\t\t\u0026Option = new()\n\t\t\u0026Option.Id = \u0026WWPUserExtended.WWPBaseObjects.Produccion.Notifications.WWPUserExtendedId\n\t\t\u0026Option.DisplayName = \u0026WWPUserExtendedFullName\n\t\t\n\t\t\u0026Option.Text.Add(\u0026WWPUserExtendedFullName)\n\t\t\u0026Option.Text.Add(\u0026GAMUser.EMail)\n\t\t\u0026Option.Text.Add(\u0026WWPUserExtended.WWPUserExtendedPhoto.ImageURI)\n\t\t\n\t\tIf not \u0026CheckDuplicated OR not \u0026Options.ToJson().Contains(\u0026Option.ToJson())\n\t\t\t\u0026Options.Add(\u0026Option)\n\t\tEndIf\n\t\t\n\t\tIf \u0026Options.Count \u003e \u0026MaxOptions\n\t\t\tExit\n\t\tEndIf\n\tEndFor\nEndSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "\nparm(in:\u0026SearchTxt, out:\u0026OptionsJson);\n",
+                              "cleanSource":  "\nparm(in:\u0026SearchTxt, out:\u0026OptionsJson);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWPSuggestDataItem",
+                                         "WWPBaseObjects.WWP_UserExtended"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Option",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Option"
+                           },
+                           {
+                               "name":  "Options",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Options"
+                           },
+                           {
+                               "name":  "OptionsJson",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Options Json"
+                           },
+                           {
+                               "name":  "SearchTxt",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Search Txt"
+                           },
+                           {
+                               "name":  "GAMUserFilter",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "GAMUser Filter"
+                           },
+                           {
+                               "name":  "GAMErrorCollection",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "GAMError Collection"
+                           },
+                           {
+                               "name":  "GAMUserCollection",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "GAMUser Collection"
+                           },
+                           {
+                               "name":  "GAMUser",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "GAMUser"
+                           },
+                           {
+                               "name":  "WWPUserExtended",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWPUser Extended"
+                           },
+                           {
+                               "name":  "WWPUserExtendedFullName",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "User Full Name"
+                           },
+                           {
+                               "name":  "MaxOptions",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Max Options"
+                           },
+                           {
+                               "name":  "CheckDuplicated",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Check Duplicated"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

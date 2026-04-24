@@ -1,0 +1,10 @@
+﻿
+=== Procedure: WWPBaseObjects.WWP_GetUserEmail ===
+
+--- Source (Source) ---
+&GAMUser = GAMRepository.GetUserByGUID(&WWPUserExtendedId, &GAMErrorCollection)
+&WWPUserExtendedEmail = &GAMUser.EMail
+
+--- Rules (Rules) ---
+parm(in:&WWPUserExtendedId, out:&WWPUserExtendedEmail);
+

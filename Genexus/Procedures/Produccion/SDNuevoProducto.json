@@ -1,0 +1,308 @@
+﻿{
+    "uniqueId":  "e20c57ba-a2e7-4652-8784-acc91e12dc07",
+    "name":  "SDNuevoProducto",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDNuevo Producto",
+    "filePath":  "Procedures/Produccion/SDNuevoProducto.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\t\u0026NuevoProducto.Load(\u0026ProductoId)\n\t\u0026NPTipoMaterial = \u0026NuevoProducto.ProductoTipoMaterial\n\t\n\t//Sgte Extrusion\n        \u0026SgteExtrusion.Load(\u0026SgteExtrusionId)\n\t\u0026SgteExtrusoraId = \u0026SgteExtrusion.ExtrusionExtrusoraId\n\t\u0026SgteProductoId = \u0026SgteExtrusion.ExtrusionProductoId\n\t\n\tif(\u0026ProductoId \u003c\u003e \u0026SgteProductoId)\n\t\t\n\t\tdo \u0027CalibrarExtrusion\u0027\n\t\t\n\t\t\u0026SgteExtrusion.ExtrusionProductoId = \u0026ProductoId\n\t\t\u0026SgteExtrusion.ExtrusionCalibre = \u0026ExtrusionCalibre\n\t\t\u0026SgteExtrusion.ExtrusionAncho = \u0026ExtrusionAncho\n\t\t\u0026SgteExtrusion.WWPBaseObjects.ExtrusionLongitud = \u0026ExtrusionLongitud\n\t\t\u0026SgteExtrusion.Save()\n\t\t\n\t\tif(\u0026SgteExtrusion.Success())\n\t\t\tcommit\n\t\tendif\n        endif\n        \n\tdo \u0027GestionarBobinas\u0027\n\tdo \u0027TransferirBobinas\u0027\n\t\n\tSub \u0027GestionarBobinas\u0027\n\t\t\n\t\t\u0026BobinaNo = Produccion.GenerarBobinaNo.Udp(\u0026SgteExtrusoraId, \u0026ProductoId)\n\t\t\u0026BobinaNo += 1\n\t\t\t\t\n\t\tfor each DB.Bobina\n\t\t\twhere BobinaId \u003e 0\n\t\t\twhere ExtrusionId = \u0026ExtrusionId\n\t\t\twhere BobinaEstado = EstadoBobina.EnProceso\n\t\t\t\u0026BPTipoMaterial = BobinaProductoTipoMaterial\n\t\t\t\u0026BobinaId = BobinaId\n\t\t\t\u0026Bobina.Load(\u0026BobinaId)\n\t\t\t\n\t\t\tdo \u0027CambioMaterial\u0027\n\t\t\t\n\t\t\tif(\u0026CambioMaterial)\n\t\t\t\t\u0026Bobina.BobinaNo = \u0026BobinaNo\n\t\t\t\t\u0026Bobina.BobinaProductoId = \u0026ProductoId\n\t\t\t\t\u0026Bobina.Save()\n\t\t\t\tcommit\n\t\t\t\t\n\t\t\t\t//Ajustar NoSerie\n\t\t\t\tProduccion.BobinaNoSerie.Call(\u0026BobinaId, \u0026SgteExtrusionId)\n\t\t\tendif\n                        \n\t\t\t//Listado de Bobinas Proceso\n\t\t\t\u0026SDTBobinaItem = New()\n\t\t\t\u0026SDTBobinaItem.FromJson(\u0026Bobina.ToJson())\n\t\t\t\u0026SDTBobinaProceso.Add(\u0026SDTBobinaItem)\n\t\tEndfor\n        EndSub\n        \n        Sub \u0027CalibrarExtrusion\u0027\n\t     for each DB.ExtrusoraProducto\n\t\t   where ExtrusoraProductoId \u003e 0\n\t\t   where ExtrusoraId = \u0026SgteExtrusoraId\n\t\t   where ProductoId = \u0026ProductoId\n\t\t\n\t\t   \u0026ExtrusionCalibre = ExtrusoraProductoCalibre\n                   \u0026ExtrusionAncho = ExtrusoraProductoAncho\n                   \u0026ExtrusionLongitud = ExtrusoraProductoLongitud\n\t\t   Exit\n\t     endfor\n        EndSub\n\n\tSub \u0027TransferirBobinas\u0027\n\t\t\t\n\t\tfor \u0026SDTBobinaItem in \u0026SDTBobinaProceso\n\t\t\t\u0026Bobina.Load(\u0026SDTBobinaItem.BobinaId)\n\t\t\t\u0026Bobina.ExtrusionId = \u0026SgteExtrusionId\n\t\t\t\u0026Bobina.Save()\n\t\t\tcommit\n\t\tendfor\n\tEndSub\n\n\tSub \u0027CambioMaterial\u0027\n\t\t\n\t\t\u0026CambioMaterial = false\n\t\t\n\t\tif(\u0026BPTipoMaterial \u003c\u003e \u0026NPTipoMaterial)\n\t\t\t\u0026CambioMaterial = true\t\n\t\tendif\n\t\n\tEndSub\n",
+                              "cleanSource":  "\t\n\t\u0026NuevoProducto.Load(\u0026ProductoId)\n\t\u0026NPTipoMaterial = \u0026NuevoProducto.ProductoTipoMaterial\n\t\n\t//Sgte Extrusion\n        \u0026SgteExtrusion.Load(\u0026SgteExtrusionId)\n\t\u0026SgteExtrusoraId = \u0026SgteExtrusion.ExtrusionExtrusoraId\n\t\u0026SgteProductoId = \u0026SgteExtrusion.ExtrusionProductoId\n\t\n\tif(\u0026ProductoId \u003c\u003e \u0026SgteProductoId)\n\t\t\n\t\tdo \u0027CalibrarExtrusion\u0027\n\t\t\n\t\t\u0026SgteExtrusion.ExtrusionProductoId = \u0026ProductoId\n\t\t\u0026SgteExtrusion.ExtrusionCalibre = \u0026ExtrusionCalibre\n\t\t\u0026SgteExtrusion.ExtrusionAncho = \u0026ExtrusionAncho\n\t\t\u0026SgteExtrusion.WWPBaseObjects.ExtrusionLongitud = \u0026ExtrusionLongitud\n\t\t\u0026SgteExtrusion.Save()\n\t\t\n\t\tif(\u0026SgteExtrusion.Success())\n\t\t\tcommit\n\t\tendif\n        endif\n        \n\tdo \u0027GestionarBobinas\u0027\n\tdo \u0027TransferirBobinas\u0027\n\t\n\tSub \u0027GestionarBobinas\u0027\n\t\t\n\t\t\u0026BobinaNo = Produccion.GenerarBobinaNo.Udp(\u0026SgteExtrusoraId, \u0026ProductoId)\n\t\t\u0026BobinaNo += 1\n\t\t\t\t\n\t\tfor each DB.Bobina\n\t\t\twhere BobinaId \u003e 0\n\t\t\twhere ExtrusionId = \u0026ExtrusionId\n\t\t\twhere BobinaEstado = EstadoBobina.EnProceso\n\t\t\t\u0026BPTipoMaterial = BobinaProductoTipoMaterial\n\t\t\t\u0026BobinaId = BobinaId\n\t\t\t\u0026Bobina.Load(\u0026BobinaId)\n\t\t\t\n\t\t\tdo \u0027CambioMaterial\u0027\n\t\t\t\n\t\t\tif(\u0026CambioMaterial)\n\t\t\t\t\u0026Bobina.BobinaNo = \u0026BobinaNo\n\t\t\t\t\u0026Bobina.BobinaProductoId = \u0026ProductoId\n\t\t\t\t\u0026Bobina.Save()\n\t\t\t\tcommit\n\t\t\t\t\n\t\t\t\t//Ajustar NoSerie\n\t\t\t\tProduccion.BobinaNoSerie.Call(\u0026BobinaId, \u0026SgteExtrusionId)\n\t\t\tendif\n                        \n\t\t\t//Listado de Bobinas Proceso\n\t\t\t\u0026SDTBobinaItem = New()\n\t\t\t\u0026SDTBobinaItem.FromJson(\u0026Bobina.ToJson())\n\t\t\t\u0026SDTBobinaProceso.Add(\u0026SDTBobinaItem)\n\t\tEndfor\n        EndSub\n        \n        Sub \u0027CalibrarExtrusion\u0027\n\t     for each DB.ExtrusoraProducto\n\t\t   where ExtrusoraProductoId \u003e 0\n\t\t   where ExtrusoraId = \u0026SgteExtrusoraId\n\t\t   where ProductoId = \u0026ProductoId\n\t\t\n\t\t   \u0026ExtrusionCalibre = ExtrusoraProductoCalibre\n                   \u0026ExtrusionAncho = ExtrusoraProductoAncho\n                   \u0026ExtrusionLongitud = ExtrusoraProductoLongitud\n\t\t   Exit\n\t     endfor\n        EndSub\n\n\tSub \u0027TransferirBobinas\u0027\n\t\t\t\n\t\tfor \u0026SDTBobinaItem in \u0026SDTBobinaProceso\n\t\t\t\u0026Bobina.Load(\u0026SDTBobinaItem.BobinaId)\n\t\t\t\u0026Bobina.ExtrusionId = \u0026SgteExtrusionId\n\t\t\t\u0026Bobina.Save()\n\t\t\tcommit\n\t\tendfor\n\tEndSub\n\n\tSub \u0027CambioMaterial\u0027\n\t\t\n\t\t\u0026CambioMaterial = false\n\t\t\n\t\tif(\u0026BPTipoMaterial \u003c\u003e \u0026NPTipoMaterial)\n\t\t\t\u0026CambioMaterial = true\t\n\t\tendif\n\t\n\tEndSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExtrusionId, in:\u0026SgteExtrusionId, in:\u0026ProductoId);\n",
+                              "cleanSource":  "parm(in:\u0026ExtrusionId, in:\u0026SgteExtrusionId, in:\u0026ProductoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.BobinaNoSerie",
+                                         "Produccion.GenerarBobinaNo",
+                                         "Produccion.SDTBobina",
+                                         "DB.Producto",
+                                         "DB.ExtrusoraProducto",
+                                         "DB.Extrusion",
+                                         "DB.Bobina"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Bobina"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Bobina"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Bobina",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina"
+                           },
+                           {
+                               "name":  "BobinaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Id"
+                           },
+                           {
+                               "name":  "BobinaNo",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina No"
+                           },
+                           {
+                               "name":  "BobinaProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Producto Id"
+                           },
+                           {
+                               "name":  "BPTipoMaterial",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "BPTipo Material"
+                           },
+                           {
+                               "name":  "CambioMaterial",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Cambio Material"
+                           },
+                           {
+                               "name":  "Extrusion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion"
+                           },
+                           {
+                               "name":  "ExtrusionAncho",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Ancho"
+                           },
+                           {
+                               "name":  "ExtrusionCalibre",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Calibre"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "ExtrusionLongitud",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Longitud"
+                           },
+                           {
+                               "name":  "ExtrusoraId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusora Id"
+                           },
+                           {
+                               "name":  "isOK",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "is OK"
+                           },
+                           {
+                               "name":  "NPTipoMaterial",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "NPTipo Material"
+                           },
+                           {
+                               "name":  "NuevoProducto",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Nuevo Producto"
+                           },
+                           {
+                               "name":  "OrigenTipoMaterial",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Origen Tipo Material"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "SDTBobinaItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDTBobina Item"
+                           },
+                           {
+                               "name":  "SDTBobinaProceso",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDTBobina Proceso"
+                           },
+                           {
+                               "name":  "SgteExtrusion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Sgte Extrusion"
+                           },
+                           {
+                               "name":  "SgteExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "SgteExtrusoraId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusora Id"
+                           },
+                           {
+                               "name":  "SgteProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "SgteTipoMaterial",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Sgte Tipo Material"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

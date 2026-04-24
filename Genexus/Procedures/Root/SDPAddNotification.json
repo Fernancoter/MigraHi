@@ -1,0 +1,194 @@
+﻿{
+    "uniqueId":  "0e69fa31-2dd7-407d-ab24-b83c83ef4eb3",
+    "name":  "SDPAddNotification",
+    "type":  "Procedure",
+    "module":  "Root",
+    "description":  "SDPAdd Notification",
+    "filePath":  "Procedures/Root/SDPAddNotification.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "Do Case\n\tCase \u0026TipoNotificacion = NotificacionTipo.Bobina\n\t\t\n\t      \u0026Bobina.Load(\u0026Id)\n\t\t\n\t      \u0026ProductsInCartItem = new()\n\t      \u0026ProductsInCartItem.ItemId = \u0026Id\n\t      \u0026ProductsInCartItem.ProductId = \u0026Bobina.BobinaNo.ToString().Trim() + \u0026Bobina.BobinaOrigen.ToString().Trim() \n\t      \u0026ProductsInCartItem.Count = 1\n\t      \u0026ProductsInCartItem.Promotion = \u0026Bobina.BobinaEstado\n\t      \u0026ProductsInCartItem.Variant = \u0027Bobina\u0027\n\t      \u0026ProductsInCartItem.ExtrusionId = \u0026Bobina.Notifications.ExtrusionId\n\t      \u0026ProductsInCartItem.Notificacion = NotificacionTipo.Bobina\n\t\t\n\tCase \u0026TipoNotificacion = NotificacionTipo.Carrera\n\t\n\t      \u0026Carrera.Load(\u0026Id)\n\n\t      \u0026ProductsInCartItem = new()\n\t      \u0026ProductsInCartItem.ItemId = \u0026Id\n\t      \u0026ProductsInCartItem.ProductId = \u0027C\u0027 + \u0026Carrera.CarreraNo.ToString().Trim()\n\t      \u0026ProductsInCartItem.Count = 1\n\t      \u0026ProductsInCartItem.Promotion = \u0026Carrera.CarreraEstado\n\t      \u0026ProductsInCartItem.Variant = \u0027Carrera\u0027\n\t      \u0026ProductsInCartItem.PrensadoId = \u0026Carrera.InicioPBPrensadoId\n\t      \u0026ProductsInCartItem.Notificacion = NotificacionTipo.Carrera\nEndCase\n\n\n\n\u0026ProductsInCartTxt = \u0026WebSession.Get(!\"ProductsInCart\")\n\u0026ProductsInCart.FromJson(\u0026ProductsInCartTxt)\n\u0026ProductsInCart.Add(\u0026ProductsInCartItem)\n\u0026ProductsInCartTxt = \u0026ProductsInCart.ToJson()\n\u0026WebSession.Set(!\"ProductsInCart\", \u0026ProductsInCartTxt)\n",
+                              "cleanSource":  "Do Case\n\tCase \u0026TipoNotificacion = NotificacionTipo.Bobina\n\t\t\n\t      \u0026Bobina.Load(\u0026Id)\n\t\t\n\t      \u0026ProductsInCartItem = new()\n\t      \u0026ProductsInCartItem.ItemId = \u0026Id\n\t      \u0026ProductsInCartItem.ProductId = \u0026Bobina.BobinaNo.ToString().Trim() + \u0026Bobina.BobinaOrigen.ToString().Trim() \n\t      \u0026ProductsInCartItem.Count = 1\n\t      \u0026ProductsInCartItem.Promotion = \u0026Bobina.BobinaEstado\n\t      \u0026ProductsInCartItem.Variant = \u0027Bobina\u0027\n\t      \u0026ProductsInCartItem.ExtrusionId = \u0026Bobina.Notifications.ExtrusionId\n\t      \u0026ProductsInCartItem.Notificacion = NotificacionTipo.Bobina\n\t\t\n\tCase \u0026TipoNotificacion = NotificacionTipo.Carrera\n\t\n\t      \u0026Carrera.Load(\u0026Id)\n\n\t      \u0026ProductsInCartItem = new()\n\t      \u0026ProductsInCartItem.ItemId = \u0026Id\n\t      \u0026ProductsInCartItem.ProductId = \u0027C\u0027 + \u0026Carrera.CarreraNo.ToString().Trim()\n\t      \u0026ProductsInCartItem.Count = 1\n\t      \u0026ProductsInCartItem.Promotion = \u0026Carrera.CarreraEstado\n\t      \u0026ProductsInCartItem.Variant = \u0027Carrera\u0027\n\t      \u0026ProductsInCartItem.PrensadoId = \u0026Carrera.InicioPBPrensadoId\n\t      \u0026ProductsInCartItem.Notificacion = NotificacionTipo.Carrera\nEndCase\n\n\n\n\u0026ProductsInCartTxt = \u0026WebSession.Get(!\"ProductsInCart\")\n\u0026ProductsInCart.FromJson(\u0026ProductsInCartTxt)\n\u0026ProductsInCart.Add(\u0026ProductsInCartItem)\n\u0026ProductsInCartTxt = \u0026ProductsInCart.ToJson()\n\u0026WebSession.Set(!\"ProductsInCart\", \u0026ProductsInCartTxt)"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026Id, in:\u0026TipoNotificacion);\n",
+                              "cleanSource":  "Parm(in:\u0026Id, in:\u0026TipoNotificacion);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "SDPCartProduct",
+                                         "DB.Bobina",
+                                         "DB.Carrera"
+                                     ],
+                         "calledBy":  [
+                                          "SDTerminarCarreraDB",
+                                          "MedirBobinas"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Bobina",
+                                            "DB.Carrera"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "WebSession",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_USRDEFTYP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Web Session"
+                           },
+                           {
+                               "name":  "Bobina",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina"
+                           },
+                           {
+                               "name":  "Count",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Count"
+                           },
+                           {
+                               "name":  "Id",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Id"
+                           },
+                           {
+                               "name":  "ProductId",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Product Id"
+                           },
+                           {
+                               "name":  "ProductsInCart",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Products In Cart"
+                           },
+                           {
+                               "name":  "ProductsInCartItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Products In Cart Item"
+                           },
+                           {
+                               "name":  "ProductsInCartTxt",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Products In Cart Txt"
+                           },
+                           {
+                               "name":  "TipoNotificacion",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Tipo Notificacion"
+                           },
+                           {
+                               "name":  "Carrera",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

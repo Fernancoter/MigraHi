@@ -1,0 +1,90 @@
+﻿{
+    "uniqueId":  "91ce5082-b39e-4cc0-8632-9505701ac9c0",
+    "name":  "WWP_GetNotificationsForUser",
+    "type":  "DataProvider",
+    "module":  "WWPBaseObjects.Notifications.Common",
+    "description":  "Get Notifications For User",
+    "filePath":  "DataProviders/WWPBaseObjects/Notifications/Common/WWP_GetNotificationsForUser.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "WWP_SDTNotificationsData\n{\n\n\tWWP_SDTNotificationsDataItem From WWP_Notification Order (WWPNotificationCreated)\n\tWhere WWPUserExtendedId = WWPBaseObjects.WWP_GetLoggedUserId()\n\tWhere Not WWPNotificationIsRead \n\t{\n\t\tNotificationId = WWPNotificationId\n\t\tNotificationIconClass = ThemeClass:NotificationFontIcon + \" \" + WWPNotificationIcon\n\t\tNotificationTitle = WWPNotificationTitle\n\t\tNotificationDescription = WWPNotificationShortDescription\n\t\tNotificationDatetime = WWPNotificationCreated\n\t    NotificationLink = WWPNotificationLink\n\t}\n}\n",
+                              "cleanSource":  "WWP_SDTNotificationsData\n{\n\n\tWWP_SDTNotificationsDataItem From WWP_Notification Order (WWPNotificationCreated)\n\tWhere WWPUserExtendedId = WWPBaseObjects.WWP_GetLoggedUserId()\n\tWhere Not WWPNotificationIsRead \n\t{\n\t\tNotificationId = WWPNotificationId\n\t\tNotificationIconClass = ThemeClass:NotificationFontIcon + \" \" + WWPNotificationIcon\n\t\tNotificationTitle = WWPNotificationTitle\n\t\tNotificationDescription = WWPNotificationShortDescription\n\t\tNotificationDatetime = WWPNotificationCreated\n\t    NotificationLink = WWPNotificationLink\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_GetLoggedUserId",
+                                         "WWPBaseObjects.Notifications.Common.WWP_SDTNotificationsData",
+                                         "WWPBaseObjects.Notifications.Common.WWP_Notification"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WWP_SDTNotificationsData"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "DateTime",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Date Time"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

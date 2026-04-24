@@ -1,0 +1,145 @@
+﻿{
+    "uniqueId":  "49efb29f-efaf-4ab5-b13b-30fd29fa09d3",
+    "name":  "SDEscanearBobina",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDEscanear Bobina",
+    "filePath":  "Procedures/Produccion/SDEscanearBobina.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\tfor each DB.Bobina\n\t\twhere BobinaId \u003e 0\n\t\twhere BobinaNoSerie.Trim() = \u0026BobinaNoSerie.Trim()\n\t\twhere BobinaEstado in (EstadoBobina.Reposo, EstadoBobina.Disponible, EstadoBobina.Desmontada)\n\t\t\u0026BobinaId = BobinaId\n\t\tReposoTranscurridoBobina.Call(\u0026BobinaId)\n\t\t\n\t\t\u0026Bobina.Load(\u0026BobinaId)\n\t\t\u0026BobinaItem = New()\n\t\t\u0026BobinaItem.FromJson(\u0026Bobina.ToJson())\n\t\tExit\n\tendfor\n",
+                              "cleanSource":  "\t\n\tfor each DB.Bobina\n\t\twhere BobinaId \u003e 0\n\t\twhere BobinaNoSerie.Trim() = \u0026BobinaNoSerie.Trim()\n\t\twhere BobinaEstado in (EstadoBobina.Reposo, EstadoBobina.Disponible, EstadoBobina.Desmontada)\n\t\t\u0026BobinaId = BobinaId\n\t\tReposoTranscurridoBobina.Call(\u0026BobinaId)\n\t\t\n\t\t\u0026Bobina.Load(\u0026BobinaId)\n\t\t\u0026BobinaItem = New()\n\t\t\u0026BobinaItem.FromJson(\u0026Bobina.ToJson())\n\t\tExit\n\tendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026BobinaNoSerie, out:\u0026BobinaItem);\n",
+                              "cleanSource":  "parm(in:\u0026BobinaNoSerie, out:\u0026BobinaItem);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.ReposoTranscurridoBobina",
+                                         "Produccion.SDTBobina",
+                                         "DB.Bobina",
+                                         "ReposoTranscurridoBobina"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Bobina"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Bobina",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina"
+                           },
+                           {
+                               "name":  "BobinaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Id"
+                           },
+                           {
+                               "name":  "BobinaItem",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Bobina Item"
+                           },
+                           {
+                               "name":  "BobinaNoSerie",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Bobina No Serie"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

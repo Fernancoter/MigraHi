@@ -1,0 +1,50 @@
+﻿{
+    "uniqueId":  "eab16152-9cec-4745-a0b8-b9183d6e16d7",
+    "name":  "AuditingObjectAttribute",
+    "type":  "SDT",
+    "module":  "WWPBaseObjects",
+    "description":  "Auditing Object Attribute",
+    "filePath":  "SDTs/WWPBaseObjects/AuditingObjectAttribute.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "AuditHasChange",
+                                          "AuditTransaction"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+
+                       ]
+}

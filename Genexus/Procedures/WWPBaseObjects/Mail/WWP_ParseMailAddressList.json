@@ -1,0 +1,166 @@
+﻿{
+    "uniqueId":  "cde72431-bd85-4557-a7ea-585f2b7c1bdd",
+    "name":  "WWP_ParseMailAddressList",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects.Mail",
+    "description":  "Parse Mail Address List",
+    "filePath":  "Procedures/WWPBaseObjects/Mail/WWP_ParseMailAddressList.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "WWP_Logger.Debug(\u0026Pgmname, !\"Begin parsing mail address list\")\n\n\u0026AddressList.Clear()\n\n\u0026TrimmedAddresses = \u0026AddressString.Trim()\nIf \u0026TrimmedAddresses.IsEmpty()\n\tWWPBaseObjects.WWP_Logger.Error(\u0026Pgmname, !\"Address list is empty\")\n\treturn\nEndIf\n\n\u0026ValidationRegex = !\"\\w+([-+.\u0027]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*\"\n\u0026SeparatorRegex = !\"\\s*,\\s*\"\n\u0026SplittedAddresses = \u0026TrimmedAddresses.SplitRegEx(\u0026SeparatorRegex)\n\nFor \u0026Address in \u0026SplittedAddresses\n\t\u0026Address = \u0026Address.Trim()\n\tIf not \u0026Address.IsMatch(\u0026ValidationRegex)\n\t\tWWP_Logger.Error(\u0026Pgmname, !\"Address is incorrect: \" + \u0026Address)\n\t\t\u0026AddressList.Clear()\n\t\treturn\n\tElse\n\t\t\u0026AddressList.Add(\u0026Address)\n\tEndIf\nEndFor\n\nWWP_Logger.Debug(\u0026Pgmname, !\"Parsing address completed\")\n",
+                              "cleanSource":  "WWP_Logger.Debug(\u0026Pgmname, !\"Begin parsing mail address list\")\n\n\u0026AddressList.Clear()\n\n\u0026TrimmedAddresses = \u0026AddressString.Trim()\nIf \u0026TrimmedAddresses.IsEmpty()\n\tWWPBaseObjects.WWP_Logger.Error(\u0026Pgmname, !\"Address list is empty\")\n\treturn\nEndIf\n\n\u0026ValidationRegex = !\"\\w+([-+.\u0027]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*\"\n\u0026SeparatorRegex = !\"\\s*,\\s*\"\n\u0026SplittedAddresses = \u0026TrimmedAddresses.SplitRegEx(\u0026SeparatorRegex)\n\nFor \u0026Address in \u0026SplittedAddresses\n\t\u0026Address = \u0026Address.Trim()\n\tIf not \u0026Address.IsMatch(\u0026ValidationRegex)\n\t\tWWP_Logger.Error(\u0026Pgmname, !\"Address is incorrect: \" + \u0026Address)\n\t\t\u0026AddressList.Clear()\n\t\treturn\n\tElse\n\t\t\u0026AddressList.Add(\u0026Address)\n\tEndIf\nEndFor\n\nWWP_Logger.Debug(\u0026Pgmname, !\"Parsing address completed\")"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026AddressString, out:\u0026AddressList);\n",
+                              "cleanSource":  "parm(in:\u0026AddressString, out:\u0026AddressList);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_Logger"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_SendMail"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Address",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Address"
+                           },
+                           {
+                               "name":  "AddressList",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Address List"
+                           },
+                           {
+                               "name":  "AddressString",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Address String"
+                           },
+                           {
+                               "name":  "SeparatorRegex",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Separator Regex"
+                           },
+                           {
+                               "name":  "SplittedAddresses",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Splitted Addresses"
+                           },
+                           {
+                               "name":  "TrimmedAddresses",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Trimmed Addresses"
+                           },
+                           {
+                               "name":  "ValidationRegex",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Validation Regex"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

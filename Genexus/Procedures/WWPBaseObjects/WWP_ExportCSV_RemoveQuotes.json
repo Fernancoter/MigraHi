@@ -1,0 +1,126 @@
+﻿{
+    "uniqueId":  "1c7d5ae4-a9d3-4fe6-ad61-13124740bef4",
+    "name":  "WWP_ExportCSV_RemoveQuotes",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Export CSV_Remove Quotes",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_ExportCSV_RemoveQuotes.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026ResText = \u0026Text\nIf \u0026ResText.Length() \u003e 0 AND \u0026ResText.StartsWith(!\u0027\"\u0027) AND \u0026ResText.EndsWith(!\u0027\"\u0027)\n\t\u0026ResText = \u0026ResText.Substring(2, \u0026ResText.Length() - 2)\nEndIf\n",
+                              "cleanSource":  "\n\u0026ResText = \u0026Text\nIf \u0026ResText.Length() \u003e 0 AND \u0026ResText.StartsWith(!\u0027\"\u0027) AND \u0026ResText.EndsWith(!\u0027\"\u0027)\n\t\u0026ResText = \u0026ResText.Substring(2, \u0026ResText.Length() - 2)\nEndIf"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "\nparm(in:\u0026Text, out:\u0026ResText);\n",
+                              "cleanSource":  "\nparm(in:\u0026Text, out:\u0026ResText);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Text",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Text"
+                           },
+                           {
+                               "name":  "ResText",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Res Text"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

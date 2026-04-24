@@ -1,0 +1,177 @@
+﻿{
+    "uniqueId":  "707e2583-2a23-4a3f-9809-5fce54f8aaa0",
+    "name":  "GAMCheckUserActivationMethod",
+    "type":  "Procedure",
+    "module":  "Root",
+    "description":  "Check User Activation Method",
+    "filePath":  "Procedures/Root/GAMCheckUserActivationMethod.json",
+    "isGAMObject":  true,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026Repository = GAMRepository.Get()\nDo Case\nCase \u0026Repository.UserActivationMethod = GAMUserActivationMethod.User\n\t\u0026User.Load(\u0026UserGUID)\n\t\u0026User.SendEmailToActivateAccount(\u0026Application, \u0026LinkURL, \u0026Errors)\n\tIf \u0026Errors.Count = 0\n\t\t\u0026Message = new()\n\t\t\u0026Message.Type = MessageTypes.Warning\n\t\t\u0026Message.Description = \"The account was created successfully, an email was sent with instructions to activate your account!\"\n\t\t\u0026Messages.Add(\u0026Message)\n\tElse\n\t\tGAMConvertErrorsToMessages(\u0026Errors, \u0026Messages)\n\tEndif\n\nCase \u0026Repository.UserActivationMethod = GAMUserActivationMethod.Administrator\n\t///////////////////////////////////////////////////////////////\n\t//Send mail to Administartor (\u0026Repository.EmailSecurityAdministrator) with instructions to activate User\n\t///////////////////////////////////////////////////////////////\n\t\u0026Message = new()\n\t\u0026Message.Type = MessageTypes.Warning\n\t\u0026Message.Description = \"The user was created successfully!!, you must wait for confirmation from the administrator.\"\n\t\u0026Messages.Add(\u0026Message)\t\n\nEndCase\n",
+                              "cleanSource":  "\u0026Repository = GAMRepository.Get()\nDo Case\nCase \u0026Repository.UserActivationMethod = GAMUserActivationMethod.User\n\t\u0026User.Load(\u0026UserGUID)\n\t\u0026User.SendEmailToActivateAccount(\u0026Application, \u0026LinkURL, \u0026Errors)\n\tIf \u0026Errors.Count = 0\n\t\t\u0026Message = new()\n\t\t\u0026Message.Type = MessageTypes.Warning\n\t\t\u0026Message.Description = \"The account was created successfully, an email was sent with instructions to activate your account!\"\n\t\t\u0026Messages.Add(\u0026Message)\n\tElse\n\t\tGAMConvertErrorsToMessages(\u0026Errors, \u0026Messages)\n\tEndif\n\nCase \u0026Repository.UserActivationMethod = GAMUserActivationMethod.Administrator\n\t///////////////////////////////////////////////////////////////\n\t//Send mail to Administartor (\u0026Repository.EmailSecurityAdministrator) with instructions to activate User\n\t///////////////////////////////////////////////////////////////\n\t\u0026Message = new()\n\t\u0026Message.Type = MessageTypes.Warning\n\t\u0026Message.Description = \"The user was created successfully!!, you must wait for confirmation from the administrator.\"\n\t\u0026Messages.Add(\u0026Message)\t\n\nEndCase"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026UserGUID, in:\u0026LinkURL, out:\u0026Messages);\n",
+                              "cleanSource":  "Parm(in:\u0026UserGUID, in:\u0026LinkURL, out:\u0026Messages);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "GAMConvertErrorsToMessages",
+                                         "GeneXus.Common.Messages"
+                                     ],
+                         "calledBy":  [
+                                          "GAMUserEntry",
+                                          "GAMSDRegisterUser",
+                                          "GAMRegisterUser"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "GeneXus.Common.Messages"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "LinkURL",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Link URL"
+                           },
+                           {
+                               "name":  "Application",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Application"
+                           },
+                           {
+                               "name":  "Errors",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Errors"
+                           },
+                           {
+                               "name":  "Message",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Message"
+                           },
+                           {
+                               "name":  "Messages",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Messages"
+                           },
+                           {
+                               "name":  "Repository",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Repository"
+                           },
+                           {
+                               "name":  "User",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "User"
+                           },
+                           {
+                               "name":  "UserGUID",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "User GUID"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

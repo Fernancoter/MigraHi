@@ -1,0 +1,34 @@
+﻿
+=== DataProvider: Produccion.CarreraDP ===
+
+--- Source (Source) ---
+SDTCarrera
+{
+   SDTCarreraItem
+   where CarreraId > 0
+   where InicioPrensadoBobinaId > 0
+   where InicioPBPrensadoId = &PrensadoId when &PrensadoId > 0
+   {
+
+	CarreraId = CarreraId
+	CarreraNo = CarreraNo
+	CarreraEstado = CarreraEstado
+	CarreraPaletTerminado = CarreraPaletTerminado
+	CarreraFechaRegistro = CarreraFechaRegistro
+	CarreraFechaValidacion = WWPBaseObjects.CarreraFechaValidacion
+	CarreraTroquel = Notifications.CarreraTroquel
+	InicioPrensadoBobinaId = InicioPrensadoBobinaId
+	InicioPBPrensadoId = InicioPBPrensadoId
+   }	
+}
+
+--- Rules (Rules) ---
+parm(in:&PrensadoId);
+
+
+=== SDT: Produccion.SDTCarrera ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

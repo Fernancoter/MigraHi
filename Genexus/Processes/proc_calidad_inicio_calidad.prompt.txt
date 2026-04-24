@@ -1,0 +1,4 @@
+﻿
+=== WebPanel: Calidad.InicioCalidad ===
+
+(sin businessLogic extraído)

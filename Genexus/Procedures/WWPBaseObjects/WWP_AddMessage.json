@@ -1,0 +1,175 @@
+﻿{
+    "uniqueId":  "39e18645-f99d-456e-a32b-92dd82508473",
+    "name":  "WWP_AddMessage",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Add Message",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_AddMessage.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026Message = new()\n\u0026Message.Id = \u0026MsgId\n\u0026Message.Type = \u0026MsgType\n\u0026Message.Description = \u0026MsgDsc\n\n\u0026Messages.Add(\u0026Message)\n",
+                              "cleanSource":  "\n\u0026Message = new()\n\u0026Message.Id = \u0026MsgId\n\u0026Message.Type = \u0026MsgType\n\u0026Message.Description = \u0026MsgDsc\n\n\u0026Messages.Add(\u0026Message)"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "\nparm(in:\u0026MsgId, in:\u0026MsgType, in:\u0026MsgDsc, inout:\u0026Messages);\n",
+                              "cleanSource":  "\nparm(in:\u0026MsgId, in:\u0026MsgType, in:\u0026MsgDsc, inout:\u0026Messages);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "GeneXus.Common.Messages"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_AddImportErrorMessage",
+                                          "WWP_AddImportErrorMessages"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "GeneXus.Common.Messages"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Message",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Message"
+                           },
+                           {
+                               "name":  "Id",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Id"
+                           },
+                           {
+                               "name":  "ErrorType",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Error Type"
+                           },
+                           {
+                               "name":  "ErrorDsc",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Error Dsc"
+                           },
+                           {
+                               "name":  "MsgId",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Msg Id"
+                           },
+                           {
+                               "name":  "MsgType",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Msg Type"
+                           },
+                           {
+                               "name":  "MsgDsc",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Msg Dsc"
+                           },
+                           {
+                               "name":  "Messages",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Messages"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

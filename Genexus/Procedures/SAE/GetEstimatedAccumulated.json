@@ -1,0 +1,166 @@
+﻿{
+    "uniqueId":  "c4868fe5-f1bc-4a57-8509-fdb842b20799",
+    "name":  "GetEstimatedAccumulated",
+    "type":  "Procedure",
+    "module":  "SAE",
+    "description":  "Get Estimated Accumulated",
+    "filePath":  "Procedures/SAE/GetEstimatedAccumulated.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026BudgetEstimated = 0\n\nFor each\nWhere ProductNumber = \u0026ProductNumber\nWhere Customer = \u0026Customer\nWhere WWPBaseObjects.Produccion.BudgetYear = \u0026Year\nWhere BudgetMonth \u003c= \u0026Month\n\n\u0026BudgetEstimated = \u0026BudgetEstimated+ BudgetEstimated\n\nendfor\n",
+                              "cleanSource":  "\n\u0026BudgetEstimated = 0\n\nFor each\nWhere ProductNumber = \u0026ProductNumber\nWhere Customer = \u0026Customer\nWhere WWPBaseObjects.Produccion.BudgetYear = \u0026Year\nWhere BudgetMonth \u003c= \u0026Month\n\n\u0026BudgetEstimated = \u0026BudgetEstimated+ BudgetEstimated\n\nendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026ProductNumber,\u0026Customer,\u0026Year,\u0026Month, out:\u0026BudgetEstimated);\n",
+                              "cleanSource":  "parm(\u0026ProductNumber,\u0026Customer,\u0026Year,\u0026Month, out:\u0026BudgetEstimated);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Customer",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Customer"
+                           },
+                           {
+                               "name":  "CustomerShipping",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Customer Shipping"
+                           },
+                           {
+                               "name":  "Month",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Month"
+                           },
+                           {
+                               "name":  "ProductNumber",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Product Number"
+                           },
+                           {
+                               "name":  "Quantity",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Quantity"
+                           },
+                           {
+                               "name":  "Year",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Year"
+                           },
+                           {
+                               "name":  "BudgetEstimated",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Budget Estimated"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

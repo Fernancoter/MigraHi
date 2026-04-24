@@ -1,0 +1,103 @@
+﻿{
+    "uniqueId":  "023c3488-d1a3-4aeb-8d27-7309d445a39c",
+    "name":  "CarreteDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Carrete DP",
+    "filePath":  "DataProviders/Produccion/CarreteDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTCarrete\n{\n\tSDTCarreteItem\n\tOrder (CarreteNoLinea) when \u0026Orden = Orden.Descendente\n\tOrder CarreteNoLinea when \u0026Orden = Orden.Ascendente\n\twhere CarreteCarreraId = \u0026CarreraId when \u0026CarreraId \u003e 0\n\t{\n\t\tCarreteId = CarreteId\n\t\tCarreteNoLinea = CarreteNoLinea\n\t\tCarreteNoSerie = CarreteNoSerie\n\t\tCarreteEstado = CarreteEstado\n\t\tCarreteObservacion = DB.CarreteObservacion\n\t\tCarreteCarreraId = CarreteCarreraId\n\t\tCarreteTerminaPalet = CarreteTerminaPalet\n\t\tCarretePaletSerie = CarretePaletSerie\n\t\tselected = CarreteEnMolino\n\t}\n}\n",
+                              "cleanSource":  "SDTCarrete\n{\n\tSDTCarreteItem\n\tOrder (CarreteNoLinea) when \u0026Orden = Orden.Descendente\n\tOrder CarreteNoLinea when \u0026Orden = Orden.Ascendente\n\twhere CarreteCarreraId = \u0026CarreraId when \u0026CarreraId \u003e 0\n\t{\n\t\tCarreteId = CarreteId\n\t\tCarreteNoLinea = CarreteNoLinea\n\t\tCarreteNoSerie = CarreteNoSerie\n\t\tCarreteEstado = CarreteEstado\n\t\tCarreteObservacion = DB.CarreteObservacion\n\t\tCarreteCarreraId = CarreteCarreraId\n\t\tCarreteTerminaPalet = CarreteTerminaPalet\n\t\tCarretePaletSerie = CarretePaletSerie\n\t\tselected = CarreteEnMolino\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026CarreraId, in:\u0026Orden);\n",
+                              "cleanSource":  "parm(in:\u0026CarreraId, in:\u0026Orden);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTCarrete"
+                                     ],
+                         "calledBy":  [
+                                          "VincularCarretePalet",
+                                          "RptPrensado"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTCarrete"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CarreraId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Carrera Id"
+                           },
+                           {
+                               "name":  "Orden",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Orden"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

@@ -1,0 +1,92 @@
+﻿
+=== Procedure: Produccion.ReposoTranscurrido ===
+
+--- Source (Source) ---
+
+&ExtrusionId = 0
+&TiempoReposo = 0
+
+for each DB.Bobina
+	Order ExtrusionId
+	where BobinaId > 0
+	where ExtrusionId > 0
+	where BobinaEstado in (EstadoBobina.Reposo)
+	&BobinaId = BobinaId
+	&AuxExtrusionId = ExtrusionId
+	
+	if(&ExtrusionId <> &AuxExtrusionId)
+		&ExtrusionId = &AuxExtrusionId
+		&TiempoReposo = ObtenerTiempoReposo.Udp(&ExtrusionId)
+	endif
+	
+	if(&TiempoReposo > 0)
+		BobinaTiempoReposo.Call(&BobinaId, &TiempoReposo)
+	endif
+endfor
+
+
+//for each DB.Extrusion
+//	where ExtrusionId > 0	
+//	&ExtrusionId = ExtrusionId
+//	&TiempoReposo = ObtenerTiempoReposo.Udp(&ExtrusionId)
+//	
+//	if(&TiempoReposo > 0)
+//		for each DB.Bobina
+//			where BobinaId > 0
+//			where ExtrusionId = &ExtrusionId
+//			where BobinaEstado in (EstadoBobina.Reposo, EstadoBobina.Disponible)
+//			
+//			&BobinaId = BobinaId
+//			BobinaTiempoReposo.Call(&BobinaId, &TiempoReposo)
+//	        endfor
+//	endif
+//endfor
+
+
+=== Procedure: Produccion.BobinaTiempoReposo ===
+
+--- Source (Source) ---
+	&Now = Now()
+	
+	&Bobina.Load(&BobinaId)
+	&HoraIniciaReposo = &Bobina.BobinaIniciaReposo
+	&Diferencia = &Now.Difference(&HoraIniciaReposo)
+	&ReposoEnMinutos = &Diferencia / 60
+		
+	if(&ReposoEnMinutos >= &TiempoReposo)
+		&Bobina.BobinaEstado = EstadoBobina.Disponible
+	endif
+
+        &Bobina.BobinaMinutosEnReposo = &ReposoEnMinutos
+	&Bobina.Save()
+	
+	if(&Bobina.Success())
+	        commit
+	endif
+
+--- Rules (Rules) ---
+parm(in:&BobinaId, in:&TiempoReposo);
+
+
+=== Procedure: Produccion.ObtenerTiempoReposo ===
+
+--- Source (Source) ---
+	&Extrusion.Load(&ExtrusionId)
+	&ExtrusoraId = &Extrusion.ExtrusionExtrusoraId
+	&ProductoId = &Extrusion.ExtrusionProductoId
+	
+	&TiempoReposo = 0
+	
+	for each
+		where ExtrusoraProductoId > 0
+		where ExtrusoraId = &ExtrusoraId
+		where ProductoId = &ProductoId
+		&TiempoReposo = ExtrusoraProductoTiempoReposo
+		Exit
+	when none
+		msg('Debe configurar el tiempo en reposo para el producto id:' + &ProductoId.ToString())
+	endfor
+
+--- Rules (Rules) ---
+parm(in:&ExtrusionId, out:&TiempoReposo);
+

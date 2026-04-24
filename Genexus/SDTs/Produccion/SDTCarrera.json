@@ -1,0 +1,128 @@
+﻿{
+    "uniqueId":  "d8c3b820-6879-4fa4-8dbb-27811267cd17",
+    "name":  "SDTCarrera",
+    "type":  "SDT",
+    "module":  "Produccion",
+    "description":  "SDTCarrera",
+    "filePath":  "SDTs/Produccion/SDTCarrera.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "TerminarCarrera",
+                                          "SDTerminarCarreraDB",
+                                          "DetenerPrensa",
+                                          "SDValidarCarrera",
+                                          "RptPrensado",
+                                          "CarreraDP",
+                                          "CarrerasValidas",
+                                          "ValidarCarrera",
+                                          "CarrerasTerminadas"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CarreraId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Id"
+                           },
+                           {
+                               "name":  "CarreraNo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera No"
+                           },
+                           {
+                               "name":  "CarreraEstado",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Estado"
+                           },
+                           {
+                               "name":  "CarreraPaletTerminado",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Palet Terminado"
+                           },
+                           {
+                               "name":  "CarreraFechaRegistro",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Fecha Registro"
+                           },
+                           {
+                               "name":  "CarreraFechaValidacion",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Fecha Validacion"
+                           },
+                           {
+                               "name":  "CarreraTroquel",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Troquel"
+                           },
+                           {
+                               "name":  "InicioPrensadoBobinaId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Inicio Prensado Bobina Id"
+                           },
+                           {
+                               "name":  "InicioPBPrensadoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           }
+                       ]
+}

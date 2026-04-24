@@ -1,0 +1,72 @@
+﻿{
+    "uniqueId":  "2445eb19-983c-41fd-ba7a-39051b01bc07",
+    "name":  "SDTDownTimeCode",
+    "type":  "SDT",
+    "module":  "Downtime",
+    "description":  "SDTDown Time Code",
+    "filePath":  "SDTs/Downtime/SDTDownTimeCode.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "DPDownTimeCode"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "DownTimeCodeId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Down Time Code Id"
+                           },
+                           {
+                               "name":  "DownTimeCodeName",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Down Time Code Name"
+                           },
+                           {
+                               "name":  "DownTimeCodeDescription",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Down Time Code Description"
+                           }
+                       ]
+}

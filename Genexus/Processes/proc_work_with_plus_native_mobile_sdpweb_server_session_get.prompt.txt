@@ -1,0 +1,9 @@
+﻿
+=== Procedure: WorkWithPlus.NativeMobile.SDPWebServerSessionGet ===
+
+--- Source (Source) ---
+&ParameterValue = &WebSession.Get(&ParameterKey)
+
+--- Rules (Rules) ---
+Parm(in:&ParameterKey, out:&ParameterValue);
+

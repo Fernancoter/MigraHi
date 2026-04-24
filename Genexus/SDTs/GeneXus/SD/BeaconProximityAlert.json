@@ -1,0 +1,72 @@
+﻿{
+    "uniqueId":  "b328a978-a1db-40f4-a664-cc7f0b721fa9",
+    "name":  "BeaconProximityAlert",
+    "type":  "SDT",
+    "module":  "GeneXus.SD",
+    "description":  "Beacon Proximity Alert",
+    "filePath":  "SDTs/GeneXus/SD/BeaconProximityAlert.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "GeneXus.SD.BeaconRegion"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "BeaconRegion",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Beacon Region"
+                           },
+                           {
+                               "name":  "NotifyOnEntry",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Alert will be executed when the user enters the region."
+                           },
+                           {
+                               "name":  "NotifyOnExit",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Alert will be executed when the user exits the region."
+                           }
+                       ]
+}

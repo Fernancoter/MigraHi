@@ -1,0 +1,200 @@
+﻿{
+    "uniqueId":  "43b424f9-0709-4eea-a2a8-0ad25d94559e",
+    "name":  "ExportReportTemplate_Style3",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "Export Report Template_Style3",
+    "filePath":  "Procedures/WWPBaseObjects/ExportReportTemplate_Style3.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\nHeader\n\t\u0026Website = !\"http://www.web.com\"\n\t\u0026AddressLine1 = !\"French Boulevard 2859\"\n\t\u0026AddressLine2 = !\"Downtown\"\n\tPrint printTitle\nEnd \nFooter\n\t\u0026PageInfo = \"Page: \" + \u0026Page.ToString().Trim()\n\t\u0026DateInfo = \"Date: \" + \u0026Today.ToFormattedString()\n\tPrint printFooter\nEnd\n\n\n",
+                              "cleanSource":  "\nHeader\n\t\u0026Website = !\"http://www.web.com\"\n\t\u0026AddressLine1 = !\"French Boulevard 2859\"\n\t\u0026AddressLine2 = !\"Downtown\"\n\tPrint printTitle\nEnd \nFooter\n\t\u0026PageInfo = \"Page: \" + \u0026Page.ToString().Trim()\n\t\u0026DateInfo = \"Date: \" + \u0026Today.ToFormattedString()\n\tPrint printFooter\nEnd"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "AddressLine1",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Address Line1"
+                           },
+                           {
+                               "name":  "AddressLine2",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Address Line2"
+                           },
+                           {
+                               "name":  "DateInfo",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Date Info"
+                           },
+                           {
+                               "name":  "Filter",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Filter"
+                           },
+                           {
+                               "name":  "LineNumber",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line Number"
+                           },
+                           {
+                               "name":  "LineTotal",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line Total"
+                           },
+                           {
+                               "name":  "PageInfo",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page Info"
+                           },
+                           {
+                               "name":  "ProductName",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Product Name"
+                           },
+                           {
+                               "name":  "Quantity",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Quantity"
+                           },
+                           {
+                               "name":  "Title",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Title"
+                           },
+                           {
+                               "name":  "UnitCost",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Unit Cost"
+                           },
+                           {
+                               "name":  "Website",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Website"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

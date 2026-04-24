@@ -1,0 +1,150 @@
+﻿{
+    "uniqueId":  "6142bfb2-8b8b-4d9d-9dc2-8e7e9f3d0ba5",
+    "name":  "EscaneoPaletExterno",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Escaneo Palet Externo",
+    "filePath":  "Procedures/Produccion/EscaneoPaletExterno.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\u0026AceptaPaletExterno = true\n\t\n\tfor each\n\t\twhere ConfiguracionKey = \u0027EscaneoPaletExterno\u0027\n\t\t\u0026ConfiguracionValor = ConfiguracionValor\n\twhen none\n\t\t\n\t\t//Valor predeterminado en minutos (7 horas)\n\t\t\u0026ConfiguracionValor = \u00271\u0027\n\t\t\n\t\t//Registro de paramtero TiempoMinLaboral\n\t\t\u0026Configuracion = New()\n\t\t\u0026Configuracion.ConfiguracionKey = \u0027EscaneoPaletExterno\u0027\n\t\t\u0026Configuracion.ConfiguracionValor = \u0026ConfiguracionValor\n\t\t\u0026Configuracion.Save()\n\t\t\n\t\tif(\u0026Configuracion.Success())\n\t\t\tcommit\n\t\tendif\n\tendfor\n\n        \u0026Valor = \u0026ConfiguracionValor.ToNumeric()\n        \n\tif(\u0026Valor = 0)\n\t\t\u0026AceptaPaletExterno = false\n\tendif\n        \n",
+                              "cleanSource":  "\t\u0026AceptaPaletExterno = true\n\t\n\tfor each\n\t\twhere ConfiguracionKey = \u0027EscaneoPaletExterno\u0027\n\t\t\u0026ConfiguracionValor = ConfiguracionValor\n\twhen none\n\t\t\n\t\t//Valor predeterminado en minutos (7 horas)\n\t\t\u0026ConfiguracionValor = \u00271\u0027\n\t\t\n\t\t//Registro de paramtero TiempoMinLaboral\n\t\t\u0026Configuracion = New()\n\t\t\u0026Configuracion.ConfiguracionKey = \u0027EscaneoPaletExterno\u0027\n\t\t\u0026Configuracion.ConfiguracionValor = \u0026ConfiguracionValor\n\t\t\u0026Configuracion.Save()\n\t\t\n\t\tif(\u0026Configuracion.Success())\n\t\t\tcommit\n\t\tendif\n\tendfor\n\n        \u0026Valor = \u0026ConfiguracionValor.ToNumeric()\n        \n\tif(\u0026Valor = 0)\n\t\t\u0026AceptaPaletExterno = false\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(out:\u0026AceptaPaletExterno);\n",
+                              "cleanSource":  "parm(out:\u0026AceptaPaletExterno);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Configuracion"
+                                     ],
+                         "calledBy":  [
+                                          "EncontrarPallet"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Configuracion"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Configuracion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Configuracion"
+                           },
+                           {
+                               "name":  "ConfiguracionValor",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Configuracion Valor"
+                           },
+                           {
+                               "name":  "TiempoLaboralMinutos",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo Laboral Minutos"
+                           },
+                           {
+                               "name":  "AceptaPaletExterno",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Acepta Palet Externo"
+                           },
+                           {
+                               "name":  "Valor",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Valor"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,142 @@
+﻿{
+    "uniqueId":  "4c1de6f2-ff15-4bdb-8a69-5e048bf3650b",
+    "name":  "SDTurnoActivo",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDTurno Activo",
+    "filePath":  "Procedures/Produccion/SDTurnoActivo.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026Tiempo = Now()\n\nfor each DB.Turno\n\twhere TurnoId \u003e 0\n\t\u0026HoraInicio = TurnoHoraInicio\n\t\u0026HoraFin = TurnoHoraFin\n\t\n        if(\u0026Tiempo \u003e= \u0026HoraInicio and \u0026Tiempo \u003c \u0026HoraFin)\n\t\t\u0026TurnoId = TurnoId\n\t\tExit\n\tendif\n\nwhen none\n\t\u0026TurnoId = 0\nendfor\n",
+                              "cleanSource":  "\u0026Tiempo = Now()\n\nfor each DB.Turno\n\twhere TurnoId \u003e 0\n\t\u0026HoraInicio = TurnoHoraInicio\n\t\u0026HoraFin = TurnoHoraFin\n\t\n        if(\u0026Tiempo \u003e= \u0026HoraInicio and \u0026Tiempo \u003c \u0026HoraFin)\n\t\t\u0026TurnoId = TurnoId\n\t\tExit\n\tendif\n\nwhen none\n\t\u0026TurnoId = 0\nendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(out:\u0026TurnoId);\n",
+                              "cleanSource":  "parm(out:\u0026TurnoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Turno"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "HoraFin",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Hora Fin"
+                           },
+                           {
+                               "name":  "HoraInicio",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Hora Inicio"
+                           },
+                           {
+                               "name":  "Tiempo",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo"
+                           },
+                           {
+                               "name":  "TurnoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Turno Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

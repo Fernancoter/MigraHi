@@ -1,0 +1,88 @@
+﻿{
+    "uniqueId":  "6b6d1ca5-fb93-49cb-9adb-4ec8aa80675b",
+    "name":  "WWP_LoadTreeViewSampleData",
+    "type":  "DataProvider",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Load Tree View Sample Data",
+    "filePath":  "DataProviders/WWPBaseObjects/WWP_LoadTreeViewSampleData.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "TreeNodeCollection\n{\n\t\u0026Id = 1\n\tTreeNode\n\t{\n\t\tId = \u0026Id.ToString()\n\t\t\u0026Id = \u0026Id + 1\n\t\tName = !\"Root\"\n\t\tExpanded = True\n\t\tNodes\n\t\t{\n\t\t\tTreeNode\n\t\t\t{\n\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\tName = !\"Option 1\"\n\t\t\t\tExpanded = True\n\t\t\t\tNodes\n\t\t\t\t{\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 1.1\"\n\t\t\t\t\t}\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 1.2\"\n\t\t\t\t\t\tNodes\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tTreeNode\n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\t\t\tName = !\"Option 1.2.1\"\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tTreeNode\n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\t\t\tName = !\"Option 1.2.2\"\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\tTreeNode\n\t\t\t{\n\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\tName = !\"Option 2\"\n\t\t\t\tExpanded = True\n\t\t\t\tNodes\n\t\t\t\t{\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 2.1\"\n\t\t\t\t\t}\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 2.2\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\tTreeNode\n\t\t\t{\n\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\tName = !\"Option 3\"\n\t\t\t\tExpanded = True\n\t\t\t\tNodes\n\t\t\t\t{\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 3.1\"\n\t\t\t\t\t}\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 3.2\"\n\t\t\t\t\t}\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 3.3\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\tTreeNode\n\t\t\t{\n\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\tName = !\"Option 4\"\n\t\t\t\tExpanded = False\n\t\t\t\tNodes\n\t\t\t\t{\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 4.1\"\n\t\t\t\t\t}\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 4.2\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n",
+                              "cleanSource":  "TreeNodeCollection\n{\n\t\u0026Id = 1\n\tTreeNode\n\t{\n\t\tId = \u0026Id.ToString()\n\t\t\u0026Id = \u0026Id + 1\n\t\tName = !\"Root\"\n\t\tExpanded = True\n\t\tNodes\n\t\t{\n\t\t\tTreeNode\n\t\t\t{\n\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\tName = !\"Option 1\"\n\t\t\t\tExpanded = True\n\t\t\t\tNodes\n\t\t\t\t{\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 1.1\"\n\t\t\t\t\t}\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 1.2\"\n\t\t\t\t\t\tNodes\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tTreeNode\n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\t\t\tName = !\"Option 1.2.1\"\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tTreeNode\n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\t\t\tName = !\"Option 1.2.2\"\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\tTreeNode\n\t\t\t{\n\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\tName = !\"Option 2\"\n\t\t\t\tExpanded = True\n\t\t\t\tNodes\n\t\t\t\t{\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 2.1\"\n\t\t\t\t\t}\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 2.2\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\tTreeNode\n\t\t\t{\n\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\tName = !\"Option 3\"\n\t\t\t\tExpanded = True\n\t\t\t\tNodes\n\t\t\t\t{\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 3.1\"\n\t\t\t\t\t}\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 3.2\"\n\t\t\t\t\t}\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 3.3\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\tTreeNode\n\t\t\t{\n\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\tName = !\"Option 4\"\n\t\t\t\tExpanded = False\n\t\t\t\tNodes\n\t\t\t\t{\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 4.1\"\n\t\t\t\t\t}\n\t\t\t\t\tTreeNode\n\t\t\t\t\t{\n\t\t\t\t\t\tId = \u0026Id.ToString()\n\t\t\t\t\t\t\u0026Id = \u0026Id + 1\n\t\t\t\t\t\tName = !\"Option 4.2\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "TreeNodeCollection"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "Root.TreeNodeCollection"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Id",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

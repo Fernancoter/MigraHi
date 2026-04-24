@@ -1,0 +1,95 @@
+﻿{
+    "uniqueId":  "6ed04190-12e6-46f2-9b9b-027cff8396cf",
+    "name":  "DPSDTRptExtrusion",
+    "type":  "DataProvider",
+    "module":  "PrinterSD",
+    "description":  "DPSDTRpt Extrusion",
+    "filePath":  "DataProviders/PrinterSD/DPSDTRptExtrusion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTRptExtrusion\nWhere ExtrusionId = \u0026ExtrusionId\n{\n\tExtrusionId  = ExtrusionId \n\tExtrusionExtrusoraId  = ExtrusionExtrusoraId \n\tExtrusionExtrusoraNombre  = ExtrusionExtrusoraNombre \n\tExtrusionTurnoId  = ExtrusionTurnoId \n\tExtrusionTurnoNombre  = ExtrusionTurnoNombre \n\tExtrusionProductoId  = ExtrusionProductoId \n\tExtrusionProductoNombre  = WWPBaseObjects.Notifications.ExtrusionProductoNombre \n\tExtrusionProductoTipoMaterial  = ExtrusionProductoTipoMaterial \n\tExtrusionFecha  = ExtrusionFecha \n\tExtrusionCalibre  = ExtrusionCalibre \n\tExtrusionAncho  = ExtrusionAncho \n\tExtrusionLongitud  = ExtrusionLongitud \n\tExtrusionVirgenKg  = ExtrusionVirgenKg \n\tExtrusionMeta  = ExtrusionMeta \n\tExtrusionMolidoKg  = ExtrusionMolidoKg \n\tExtrusionRevHusilloVirgen  = ExtrusionRevHusilloVirgen \n\tExtrusionRevHusilloMolido  = ExtrusionRevHusilloMolido \n\tExtrusionEstado  = ExtrusionEstado \n\tExtrusionOperadorId  = ExtrusionOperadorId \n\tExtrusionOperadorNombre  = ExtrusionOperadorNombre \n\tExtrusionHoraIniciaProceso  = ExtrusionHoraIniciaProceso \n\tExtrusionHoraFinProceso  = ExtrusionHoraFinProceso \n\tExtrusionLoteSilo  = ExtrusionLoteSilo \n\tExtrusionMotivoAnticipado  = ExtrusionMotivoAnticipado \n\tExtrusionResultadoBobinasReposoTotales  = ExtrusionResultadoBobinasReposoTotales \n\tExtrusionSiloId  = ExtrusionSiloId \n\tExtrusionSiloNombre  = ExtrusionSiloNombre \n\tExtrusionSiloMolidoId  = ExtrusionSiloMolidoId \n\tExtrusionSiloMolidoNombre  = ExtrusionSiloMolidoNombre \n\tExtrusionBobinas  = ExtrusionBobinas \n\n}\n",
+                              "cleanSource":  "SDTRptExtrusion\nWhere ExtrusionId = \u0026ExtrusionId\n{\n\tExtrusionId  = ExtrusionId \n\tExtrusionExtrusoraId  = ExtrusionExtrusoraId \n\tExtrusionExtrusoraNombre  = ExtrusionExtrusoraNombre \n\tExtrusionTurnoId  = ExtrusionTurnoId \n\tExtrusionTurnoNombre  = ExtrusionTurnoNombre \n\tExtrusionProductoId  = ExtrusionProductoId \n\tExtrusionProductoNombre  = WWPBaseObjects.Notifications.ExtrusionProductoNombre \n\tExtrusionProductoTipoMaterial  = ExtrusionProductoTipoMaterial \n\tExtrusionFecha  = ExtrusionFecha \n\tExtrusionCalibre  = ExtrusionCalibre \n\tExtrusionAncho  = ExtrusionAncho \n\tExtrusionLongitud  = ExtrusionLongitud \n\tExtrusionVirgenKg  = ExtrusionVirgenKg \n\tExtrusionMeta  = ExtrusionMeta \n\tExtrusionMolidoKg  = ExtrusionMolidoKg \n\tExtrusionRevHusilloVirgen  = ExtrusionRevHusilloVirgen \n\tExtrusionRevHusilloMolido  = ExtrusionRevHusilloMolido \n\tExtrusionEstado  = ExtrusionEstado \n\tExtrusionOperadorId  = ExtrusionOperadorId \n\tExtrusionOperadorNombre  = ExtrusionOperadorNombre \n\tExtrusionHoraIniciaProceso  = ExtrusionHoraIniciaProceso \n\tExtrusionHoraFinProceso  = ExtrusionHoraFinProceso \n\tExtrusionLoteSilo  = ExtrusionLoteSilo \n\tExtrusionMotivoAnticipado  = ExtrusionMotivoAnticipado \n\tExtrusionResultadoBobinasReposoTotales  = ExtrusionResultadoBobinasReposoTotales \n\tExtrusionSiloId  = ExtrusionSiloId \n\tExtrusionSiloNombre  = ExtrusionSiloNombre \n\tExtrusionSiloMolidoId  = ExtrusionSiloMolidoId \n\tExtrusionSiloMolidoNombre  = ExtrusionSiloMolidoNombre \n\tExtrusionBobinas  = ExtrusionBobinas \n\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026ExtrusionId);\n",
+                              "cleanSource":  "parm(\u0026ExtrusionId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.ObtenerCantidadBobinasPorExtrusion",
+                                         "PrinterSD.SDTRptExtrusion"
+                                     ],
+                         "calledBy":  [
+                                          "RptExtrusion"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTRptExtrusion"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

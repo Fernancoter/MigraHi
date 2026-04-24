@@ -1,0 +1,80 @@
+﻿{
+    "uniqueId":  "d7ea5b03-a38e-4923-8c58-8a3eb556b008",
+    "name":  "ExtrusionesEnOperacion",
+    "type":  "DataProvider",
+    "module":  "Reportes",
+    "description":  "Extrusiones En Operacion",
+    "filePath":  "DataProviders/Reportes/ExtrusionesEnOperacion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "Extrusion\n\tWhere ExtrusionEstado in(EstadoExtrusion.EnProceso, EstadoExtrusion.Intermedia)\n\n{\n\tExtrusionId = ExtrusionId\n\tExtrusionExtrusoraId = DB.ExtrusionExtrusoraId\n\tExtrusionTurnoId = ExtrusionTurnoId\n\t\n}\n",
+                              "cleanSource":  "Extrusion\n\tWhere ExtrusionEstado in(EstadoExtrusion.EnProceso, EstadoExtrusion.Intermedia)\n\n{\n\tExtrusionId = ExtrusionId\n\tExtrusionExtrusoraId = DB.ExtrusionExtrusoraId\n\tExtrusionTurnoId = ExtrusionTurnoId\n\t\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Extrusion"
+                                     ],
+                         "calledBy":  [
+                                          "ExtrusorasEnOperacion"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

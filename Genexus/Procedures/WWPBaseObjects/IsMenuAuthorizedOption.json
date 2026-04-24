@@ -1,0 +1,185 @@
+﻿{
+    "uniqueId":  "f12eea00-122d-42d5-872e-5638d762f13b",
+    "name":  "IsMenuAuthorizedOption",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "Is Sidebar Authorized Option",
+    "filePath":  "Procedures/WWPBaseObjects/IsMenuAuthorizedOption.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "/* \n\nSDT DVExtUC_SDTSidebarMenuOptionsData\u0027s Item has an \"authorizationKey\" property.\nPossible values:\n - If it is empty, the item will be checked automatically based on its url\n - If it has the \"public\" value, the item will be authorized.\n - If it has aNother value, it will be used as the authorization key.\n*/\n \n//resolve access for this item\nDo Case\n\t\t//Public\n\tCase \u0026DVelop_Menu_Item.authorizationKey.ToLower() = !\"public\"\n\t\t\u0026IsAuthorized = true\n\tCase Not \u0026DVelop_Menu_Item.authorizationKey.IsEmpty()\n\t\t//Check with this key \n\t\t\u0026IsAuthorized = WWPBaseObjects.SecGAMIsAuthByFunctionalityKey(\u0026DVelop_Menu_Item.AuthorizationKey)\n\tOtherwise\n\t\t//Check by url \n\t\t\u0026Url = \u0026DVelop_Menu_Item.link\n\t\tIf Not \u0026Url.IsEmpty()\t\t\n\t\t\tdo \u0027Get Authorization Key From Url\u0027\n\t\t\u0026IsAuthorized = SecGAMIsAuthByFunctionalityKey.Udp(\u0026AuthorizationKey)\n\t\tElse\n\t\t\t\u0026IsAuthorized = True\n\t\tEndIf\nEndCase\n\n\nSub \u0027Get Authorization Key From Url\u0027\n\t\u0026AuthorizationKey.SetEmpty()\n\t\u0026UrlResourceName.setEmpty() \n\t\n\t\u0026Url = \u0026Url.Replace(\".aspx\", \"\")\n\t\n\t//remove base url string\n\t\u0026i = \u0026Url.LastIndexOf(!\"/\")\n\tIf \u0026i \u003e 0\n\t\t\u0026Url = \u0026Url.Substring(\u0026i+1, \u0026Url.Trim().Length() - \u0026i ) \n\telse\n\t\t\u0026Url = \u0026Url.Trim()\n\tendIf\n\t\n\tIf \u0026Url.LastIndexOf(\"?\") \u003e 0 //Remove Parameters\n\t\t\u0026Url = \u0026Url.Substring(1, \u0026Url.LastIndexOf(\"?\") - 1) \n\tEndIf\n\t\n\t\u0026i = \u0026Url.LastIndexOf(!\".\") //last .\n\t\u0026UrlResourceName = \u0026Url.Substring(\u0026i + 1, \u0026Url.Length() - \u0026i)\n\t\u0026AuthorizationKey = \u0026UrlResourceName.Trim().ToLower() + !\"_Execute\"\t\t\nEndSub\n\n\n \n\n \n",
+                              "cleanSource":  "/* \n\nSDT DVExtUC_SDTSidebarMenuOptionsData\u0027s Item has an \"authorizationKey\" property.\nPossible values:\n - If it is empty, the item will be checked automatically based on its url\n - If it has the \"public\" value, the item will be authorized.\n - If it has aNother value, it will be used as the authorization key.\n*/\n \n//resolve access for this item\nDo Case\n\t\t//Public\n\tCase \u0026DVelop_Menu_Item.authorizationKey.ToLower() = !\"public\"\n\t\t\u0026IsAuthorized = true\n\tCase Not \u0026DVelop_Menu_Item.authorizationKey.IsEmpty()\n\t\t//Check with this key \n\t\t\u0026IsAuthorized = WWPBaseObjects.SecGAMIsAuthByFunctionalityKey(\u0026DVelop_Menu_Item.AuthorizationKey)\n\tOtherwise\n\t\t//Check by url \n\t\t\u0026Url = \u0026DVelop_Menu_Item.link\n\t\tIf Not \u0026Url.IsEmpty()\t\t\n\t\t\tdo \u0027Get Authorization Key From Url\u0027\n\t\t\u0026IsAuthorized = SecGAMIsAuthByFunctionalityKey.Udp(\u0026AuthorizationKey)\n\t\tElse\n\t\t\t\u0026IsAuthorized = True\n\t\tEndIf\nEndCase\n\n\nSub \u0027Get Authorization Key From Url\u0027\n\t\u0026AuthorizationKey.SetEmpty()\n\t\u0026UrlResourceName.setEmpty() \n\t\n\t\u0026Url = \u0026Url.Replace(\".aspx\", \"\")\n\t\n\t//remove base url string\n\t\u0026i = \u0026Url.LastIndexOf(!\"/\")\n\tIf \u0026i \u003e 0\n\t\t\u0026Url = \u0026Url.Substring(\u0026i+1, \u0026Url.Trim().Length() - \u0026i ) \n\telse\n\t\t\u0026Url = \u0026Url.Trim()\n\tendIf\n\t\n\tIf \u0026Url.LastIndexOf(\"?\") \u003e 0 //Remove Parameters\n\t\t\u0026Url = \u0026Url.Substring(1, \u0026Url.LastIndexOf(\"?\") - 1) \n\tEndIf\n\t\n\t\u0026i = \u0026Url.LastIndexOf(!\".\") //last .\n\t\u0026UrlResourceName = \u0026Url.Substring(\u0026i + 1, \u0026Url.Length() - \u0026i)\n\t\u0026AuthorizationKey = \u0026UrlResourceName.Trim().ToLower() + !\"_Execute\"\t\t\nEndSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026DVelop_Menu_Item, out:\u0026IsAuthorized);\n",
+                              "cleanSource":  "parm(in:\u0026DVelop_Menu_Item, out:\u0026IsAuthorized);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.SecGAMIsAuthByFunctionalityKey",
+                                         "WWPBaseObjects.DVelop_Menu",
+                                         "SecGAMIsAuthByFunctionalityKey"
+                                     ],
+                         "calledBy":  [
+                                          "GetMenuAuthorizedOptionsRecursive",
+                                          "GetMenuAuthorizedOptions"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "AuthorizationKey",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Authorization Key"
+                           },
+                           {
+                               "name":  "DVelop_Menu_Item",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "DVelop_Menu_Item"
+                           },
+                           {
+                               "name":  "i",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "i"
+                           },
+                           {
+                               "name":  "IsAuthorized",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Is Authorized"
+                           },
+                           {
+                               "name":  "j",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "j"
+                           },
+                           {
+                               "name":  "Url",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Url"
+                           },
+                           {
+                               "name":  "UrlObjectName",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Url Object Name"
+                           },
+                           {
+                               "name":  "UrlResourceName",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Url Resource Name"
+                           },
+                           {
+                               "name":  "UrlResourceNameWithExtension",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Url Resource Name With Extension"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,16 @@
+﻿
+=== Transaction: WWPBaseObjects.Subscriptions.WWP_Subscription ===
+
+--- Rules (Rules) ---
+WWPUserExtendedId.SetNull() If WWPUserExtendedId.IsEmpty() On AfterValidate;
+
+
+=== Procedure: WWPBaseObjects.WWP_GetUserFullName ===
+
+--- Source (Source) ---
+&GAMUser = GAMRepository.GetUserByGUID(&WWPUserExtendedId, &GAMErrorCollection)
+&WWPUserExtendedFullName = iif(&GAMUser.FirstName.IsEmpty(), &GAMUser.Name, &GAMUser.FirstName.Trim() + " " + &GAMUser.LastName.Trim())
+
+--- Rules (Rules) ---
+parm(in:&WWPUserExtendedId, out:&WWPUserExtendedFullName);
+

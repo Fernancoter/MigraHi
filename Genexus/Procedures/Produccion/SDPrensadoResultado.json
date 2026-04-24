@@ -1,0 +1,381 @@
+﻿{
+    "uniqueId":  "f872e16b-90b3-42fd-a4d8-ee5324a640f0",
+    "name":  "SDPrensadoResultado",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDPrensado Resultado",
+    "filePath":  "Procedures/Produccion/SDPrensadoResultado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\t\n\tfor each DB.PrensadoResultado\n\t\twhere PrensadoResultadoId \u003e 0\n\t\twhere PrensadoId = \u0026PrensadoId\n\t\t\u0026PRId = PrensadoResultadoId\n\t\t\u0026PrensadoResultado.Load(\u0026PRId)\n\t\tExit\n\twhen none\n\t\t\n\t\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\t\u0026ProductoId = \u0026Prensado.PrensadoProductoId\n\t\t\n\t\tdo \u0027ProductoTerminado\u0027\n\t\t\n\t\t\u0026CarreteMillar = \u0026ProductoTerminado.ProductoTerminadoCarreteMillar\n\t\t\u0026CarretePeso = \u0026ProductoTerminado.ProductoTerminadoPesoCarrete\n\t\t\n\t\tdo \u0027ResumenCarretes\u0027\n\t        do \u0027ResumenPalets\u0027\n\t\t\n\t\t\u0026PrensadoResultado = New()\n\t\t\u0026PrensadoResultado.PrensadoId = \u0026PrensadoId\n\t\t\u0026PrensadoResultado.PrensadoResultadoPiezasBuenas = \u0026CarretesEnPalet\n\t\t\u0026PrensadoResultado.PrensadoResultadoPiezasMolino = \u0026CarretesMolino\n\t\t\u0026PrensadoResultado.PrensadoResultadoNoPalets = \u0026CantidadPalets\n\t\t\u0026PrensadoResultado.PrensadoResultadoMermaKg = \u0026PrensadoMermaKg\n\t\t\u0026PrensadoResultado.PrensadoResultadoCarretesSobrantes = \u0026CarretesSobrantes\n\t\t\u0026PrensadoResultado.Save()\n\t\t\n\t\tif(\u0026PrensadoResultado.Success())\n\t\t\tcommit\n\t\tendif\n\t\t\n\tendfor\n\n        \u0026SDTPrensadoResultado = New()\n\t\u0026SDTPrensadoResultado.FromJson(\u0026PrensadoResultado.ToJson())\n\n\tSub \u0027ResumenCarretes\u0027\n\t\t\n\t\t\u0026CarretesMolino = 0\n\t\t\u0026CarretesEnPalet = 0\n\t\t\n\t\tfor each\n\t\t\twhere CarreraId \u003e 0\n\t\t\twhere InicioPBPrensadoId = \u0026PrensadoId\n\t\t\t\u0026CarreraId = CarreraId\n\t\t\t\n\t\t\tfor each\n\t\t\t\twhere CarreteId \u003e 0\n\t\t\t\twhere CarreteCarreraId = \u0026CarreraId\n\t\t\t\t\u0026CarreteEstado = WWPBaseObjects.DB.CarreteEstado\n\t\t\t\t\u0026CarreteMermaMolino = CarreteMermaMolino\n\t\t\t\t\u0026CarreteMermaKg = CarreteMermaKg\n\t\t\t\t\n\t\t\t\tDo Case \n\t\t\t\t\tCase \u0026CarreteEstado = EstadoCarrete.EnPalet\n\t\t\t\t\t\t\u0026CarretesEnPalet += 1\n\t\t\t\t\tCase \u0026CarreteEstado = EstadoCarrete.Molino\n\t\t\t\t\t\t\u0026CarretesMolino += 1\n\t\t\t\t\t        \n\t\t\t\t\t\tif(\u0026CarreteMermaMolino)\n\t\t\t\t\t\t\t\u0026PrensadoMermaKg += \u0026CarreteMermaKg\n\t\t\t\t\t\t\t\u0026Porcentaje = (\u0026CarreteMermaKg/\u0026CarretePeso)\n\t\t\t\t\t\t\t\u0026CarretesMolino += \u0026Porcentaje * \u0026CarreteMillar\n\t\t\t\t\t\telse\n\t\t\t\t\t\t\t\u0026CarretesMolino += \u0026CarreteMillar\n\t\t\t\t\t\t\t\u0026PrensadoMermaKg += \u0026CarretePeso\n\t\t\t\t\t\tendif\n\t\t\t\tEndCase\n\t\t\tendfor\n\t\tendfor\n\t\n\t\tif(\u0026CarreteMillar \u003e 0)\n\t\t\t\u0026CarretesEnPalet *= \u0026CarreteMillar\n\t\t\t//\u0026CarretesMolino *= \u0026CarreteMillar\n\t\tendif\n\t\n\tEndSub\n\t\n\tSub \u0027ResumenPalets\u0027\n\t\t\n\t\t\u0026CantidadPalets = 0\n\t\t\u0026CarretesSobrantes = 0\n\t\t\n\t\tfor each\n\t\t\twhere PaletId \u003e 0\n\t\t\t//where PaletPrensadoId = \u0026PrensadoId\n\t\t\twhere PaletPrensadoFinId = \u0026PrensadoId\n\t\t\t\u0026PaletEstatus = PaletEstatus\n\t\t\t\n\t\t\tDo Case \n\t\t\t\tCase \u0026PaletEstatus = Produccion.EstatusPalet.Terminado\n\t\t\t\t\t\u0026CantidadPalets += 1\n\t\t\t\tCase \u0026PaletEstatus = EstatusPalet.EnEnsamble\n\t\t\t\t\t\u0026CarretesSobrantes += PaletNoCarretes\n\t\t\tEndCase\t\n\t\tendfor\n\tEndSub\n        \n\t\n\tSub \u0027ProductoTerminado\u0027\n\t\tfor each DB.ProductoTerminado\n\t\t     where ProductoTerminadoId \u003e 0\n\t\t     where TerminadoProductoId = \u0026ProductoId\n\t\t     \u0026PTId = ProductoTerminadoId\n\t\t     \u0026ProductoTerminado.Load(\u0026PTId)\n\t\t     Exit\n\t        endfor\n\tEndSub\n",
+                              "cleanSource":  "\t\n\t\n\tfor each DB.PrensadoResultado\n\t\twhere PrensadoResultadoId \u003e 0\n\t\twhere PrensadoId = \u0026PrensadoId\n\t\t\u0026PRId = PrensadoResultadoId\n\t\t\u0026PrensadoResultado.Load(\u0026PRId)\n\t\tExit\n\twhen none\n\t\t\n\t\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\t\u0026ProductoId = \u0026Prensado.PrensadoProductoId\n\t\t\n\t\tdo \u0027ProductoTerminado\u0027\n\t\t\n\t\t\u0026CarreteMillar = \u0026ProductoTerminado.ProductoTerminadoCarreteMillar\n\t\t\u0026CarretePeso = \u0026ProductoTerminado.ProductoTerminadoPesoCarrete\n\t\t\n\t\tdo \u0027ResumenCarretes\u0027\n\t        do \u0027ResumenPalets\u0027\n\t\t\n\t\t\u0026PrensadoResultado = New()\n\t\t\u0026PrensadoResultado.PrensadoId = \u0026PrensadoId\n\t\t\u0026PrensadoResultado.PrensadoResultadoPiezasBuenas = \u0026CarretesEnPalet\n\t\t\u0026PrensadoResultado.PrensadoResultadoPiezasMolino = \u0026CarretesMolino\n\t\t\u0026PrensadoResultado.PrensadoResultadoNoPalets = \u0026CantidadPalets\n\t\t\u0026PrensadoResultado.PrensadoResultadoMermaKg = \u0026PrensadoMermaKg\n\t\t\u0026PrensadoResultado.PrensadoResultadoCarretesSobrantes = \u0026CarretesSobrantes\n\t\t\u0026PrensadoResultado.Save()\n\t\t\n\t\tif(\u0026PrensadoResultado.Success())\n\t\t\tcommit\n\t\tendif\n\t\t\n\tendfor\n\n        \u0026SDTPrensadoResultado = New()\n\t\u0026SDTPrensadoResultado.FromJson(\u0026PrensadoResultado.ToJson())\n\n\tSub \u0027ResumenCarretes\u0027\n\t\t\n\t\t\u0026CarretesMolino = 0\n\t\t\u0026CarretesEnPalet = 0\n\t\t\n\t\tfor each\n\t\t\twhere CarreraId \u003e 0\n\t\t\twhere InicioPBPrensadoId = \u0026PrensadoId\n\t\t\t\u0026CarreraId = CarreraId\n\t\t\t\n\t\t\tfor each\n\t\t\t\twhere CarreteId \u003e 0\n\t\t\t\twhere CarreteCarreraId = \u0026CarreraId\n\t\t\t\t\u0026CarreteEstado = WWPBaseObjects.DB.CarreteEstado\n\t\t\t\t\u0026CarreteMermaMolino = CarreteMermaMolino\n\t\t\t\t\u0026CarreteMermaKg = CarreteMermaKg\n\t\t\t\t\n\t\t\t\tDo Case \n\t\t\t\t\tCase \u0026CarreteEstado = EstadoCarrete.EnPalet\n\t\t\t\t\t\t\u0026CarretesEnPalet += 1\n\t\t\t\t\tCase \u0026CarreteEstado = EstadoCarrete.Molino\n\t\t\t\t\t\t\u0026CarretesMolino += 1\n\t\t\t\t\t        \n\t\t\t\t\t\tif(\u0026CarreteMermaMolino)\n\t\t\t\t\t\t\t\u0026PrensadoMermaKg += \u0026CarreteMermaKg\n\t\t\t\t\t\t\t\u0026Porcentaje = (\u0026CarreteMermaKg/\u0026CarretePeso)\n\t\t\t\t\t\t\t\u0026CarretesMolino += \u0026Porcentaje * \u0026CarreteMillar\n\t\t\t\t\t\telse\n\t\t\t\t\t\t\t\u0026CarretesMolino += \u0026CarreteMillar\n\t\t\t\t\t\t\t\u0026PrensadoMermaKg += \u0026CarretePeso\n\t\t\t\t\t\tendif\n\t\t\t\tEndCase\n\t\t\tendfor\n\t\tendfor\n\t\n\t\tif(\u0026CarreteMillar \u003e 0)\n\t\t\t\u0026CarretesEnPalet *= \u0026CarreteMillar\n\t\t\t//\u0026CarretesMolino *= \u0026CarreteMillar\n\t\tendif\n\t\n\tEndSub\n\t\n\tSub \u0027ResumenPalets\u0027\n\t\t\n\t\t\u0026CantidadPalets = 0\n\t\t\u0026CarretesSobrantes = 0\n\t\t\n\t\tfor each\n\t\t\twhere PaletId \u003e 0\n\t\t\t//where PaletPrensadoId = \u0026PrensadoId\n\t\t\twhere PaletPrensadoFinId = \u0026PrensadoId\n\t\t\t\u0026PaletEstatus = PaletEstatus\n\t\t\t\n\t\t\tDo Case \n\t\t\t\tCase \u0026PaletEstatus = Produccion.EstatusPalet.Terminado\n\t\t\t\t\t\u0026CantidadPalets += 1\n\t\t\t\tCase \u0026PaletEstatus = EstatusPalet.EnEnsamble\n\t\t\t\t\t\u0026CarretesSobrantes += PaletNoCarretes\n\t\t\tEndCase\t\n\t\tendfor\n\tEndSub\n        \n\t\n\tSub \u0027ProductoTerminado\u0027\n\t\tfor each DB.ProductoTerminado\n\t\t     where ProductoTerminadoId \u003e 0\n\t\t     where TerminadoProductoId = \u0026ProductoId\n\t\t     \u0026PTId = ProductoTerminadoId\n\t\t     \u0026ProductoTerminado.Load(\u0026PTId)\n\t\t     Exit\n\t        endfor\n\tEndSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId, out:\u0026SDTPrensadoResultado);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId, out:\u0026SDTPrensadoResultado);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTExtrusionResultado",
+                                         "Produccion.SDTPrensadoResultado",
+                                         "DB.Prensado",
+                                         "DB.PrensadoResultado",
+                                         "DB.ExtrusionResultado",
+                                         "DB.ProductoTerminado"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Prensado",
+                                            "DB.PrensadoResultado",
+                                            "DB.ProductoTerminado"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.PrensadoResultado"
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTPrensadoResultado"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PTId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "PTId"
+                           },
+                           {
+                               "name":  "BobinaEstado",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Estado"
+                           },
+                           {
+                               "name":  "BobinaKg",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Kg"
+                           },
+                           {
+                               "name":  "BobinaMermakg",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Merma Kg"
+                           },
+                           {
+                               "name":  "BobinasMolino",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobinas Molino"
+                           },
+                           {
+                               "name":  "BobinasReposo",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobinas Reposo"
+                           },
+                           {
+                               "name":  "CantidadPalets",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Cantidad Palets"
+                           },
+                           {
+                               "name":  "CarreraId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Id"
+                           },
+                           {
+                               "name":  "CarreteEstado",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Estado"
+                           },
+                           {
+                               "name":  "CarreteId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Id"
+                           },
+                           {
+                               "name":  "CarreteMermaKg",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Merma Kg"
+                           },
+                           {
+                               "name":  "CarreteMermaMolino",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Merma Molino"
+                           },
+                           {
+                               "name":  "CarreteMillar",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Millar"
+                           },
+                           {
+                               "name":  "CarretePeso",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Peso"
+                           },
+                           {
+                               "name":  "CarretesEnPalet",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carretes En Palet"
+                           },
+                           {
+                               "name":  "CarretesMolino",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carretes Molino"
+                           },
+                           {
+                               "name":  "CarretesSobrantes",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carretes Sobrantes"
+                           },
+                           {
+                               "name":  "ERId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "ERId"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "ExtrusionResultado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Resultado"
+                           },
+                           {
+                               "name":  "PaletEstatus",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Estatus"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensadoMermaKg",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Merma Kg"
+                           },
+                           {
+                               "name":  "PrensadoResultado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado"
+                           },
+                           {
+                               "name":  "PRId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "PRId"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "ProductoTerminado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Terminado"
+                           },
+                           {
+                               "name":  "SDTExtrusionResultado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDTExtrusion Resultado"
+                           },
+                           {
+                               "name":  "SDTPrensadoResultado",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "SDTPrensado Resultado"
+                           },
+                           {
+                               "name":  "TotalKg",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Total Kg"
+                           },
+                           {
+                               "name":  "TotalMermaKg",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Total Merma Kg"
+                           },
+                           {
+                               "name":  "Prensado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado"
+                           },
+                           {
+                               "name":  "Porcentaje",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Porcentaje"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

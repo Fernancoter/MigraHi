@@ -1,0 +1,142 @@
+﻿{
+    "uniqueId":  "6cd0a2a7-b56b-4040-9041-557f7c567378",
+    "name":  "CarrerasTerminadas",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Carreras Terminadas",
+    "filePath":  "Procedures/Produccion/CarrerasTerminadas.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\u0026isOK = true\n\t\u0026CarreraNo = 0\n\t\n\tfor \u0026SDTCarreraItem in \u0026SDTCarrera\n\t\tif(\u0026SDTCarreraItem.CarreraEstado = EstadoCarrera.Terminada)\n\t\t\t\u0026CarreraNo = \u0026SDTCarreraItem.CarreraNo\n\t\t\t\u0026isOK = false\n\t\t\tExit\n\t\tendif\n\tendfor\n \n        if(Not \u0026isOK)\n              msg(\u0027Debe validar la carrera #\u0027 + \u0026CarreraNo.ToString())\n\tendif\n",
+                              "cleanSource":  "\t\u0026isOK = true\n\t\u0026CarreraNo = 0\n\t\n\tfor \u0026SDTCarreraItem in \u0026SDTCarrera\n\t\tif(\u0026SDTCarreraItem.CarreraEstado = EstadoCarrera.Terminada)\n\t\t\t\u0026CarreraNo = \u0026SDTCarreraItem.CarreraNo\n\t\t\t\u0026isOK = false\n\t\t\tExit\n\t\tendif\n\tendfor\n \n        if(Not \u0026isOK)\n              msg(\u0027Debe validar la carrera #\u0027 + \u0026CarreraNo.ToString())\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026SDTCarrera, out:\u0026isOK);\n",
+                              "cleanSource":  "parm(in:\u0026SDTCarrera, out:\u0026isOK);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTCarrera"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTCarrera"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CarreraNo",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera No"
+                           },
+                           {
+                               "name":  "isOK",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "is OK"
+                           },
+                           {
+                               "name":  "SDTCarrera",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "SDTCarrera"
+                           },
+                           {
+                               "name":  "SDTCarreraItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDTCarrera Item"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

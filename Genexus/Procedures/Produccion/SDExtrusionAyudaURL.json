@@ -1,0 +1,142 @@
+﻿{
+    "uniqueId":  "51288c93-220a-47b3-be51-ead4886370ec",
+    "name":  "SDExtrusionAyudaURL",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDExtrusion Ayuda URL",
+    "filePath":  "Procedures/Produccion/SDExtrusionAyudaURL.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\tfor each\n\t\twhere WWPBaseObjects.ConfiguracionKey = \u0027ExtrusionAyudaURL\u0027\n\t\t\u0026ConfiguracionValor = ConfiguracionValor\n\twhen none\n\t\t\n\t\t//Valor predeterminado en minutos (7 horas)\n\t\t\u0026ConfiguracionValor = \u0027https://www.google.com\u0027\n\t\t\n\t\t//Registro de paramtero TiempoMinLaboral\n\t\t\u0026Configuracion = New()\n\t\t\u0026Configuracion.ConfiguracionKey = \u0027ExtrusionAyudaURL\u0027\n\t\t\u0026Configuracion.ConfiguracionValor = \u0026ConfiguracionValor\n\t\t\u0026Configuracion.Save()\n\t\t\n\t\tif(\u0026Configuracion.Success())\n\t\t\tcommit\n\t\tendif\n\tendfor\n\n        \u0026URL =  \u0026ConfiguracionValor\n",
+                              "cleanSource":  "\tfor each\n\t\twhere WWPBaseObjects.ConfiguracionKey = \u0027ExtrusionAyudaURL\u0027\n\t\t\u0026ConfiguracionValor = ConfiguracionValor\n\twhen none\n\t\t\n\t\t//Valor predeterminado en minutos (7 horas)\n\t\t\u0026ConfiguracionValor = \u0027https://www.google.com\u0027\n\t\t\n\t\t//Registro de paramtero TiempoMinLaboral\n\t\t\u0026Configuracion = New()\n\t\t\u0026Configuracion.ConfiguracionKey = \u0027ExtrusionAyudaURL\u0027\n\t\t\u0026Configuracion.ConfiguracionValor = \u0026ConfiguracionValor\n\t\t\u0026Configuracion.Save()\n\t\t\n\t\tif(\u0026Configuracion.Success())\n\t\t\tcommit\n\t\tendif\n\tendfor\n\n        \u0026URL =  \u0026ConfiguracionValor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(out:\u0026URL);\n",
+                              "cleanSource":  "parm(out:\u0026URL);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Configuracion"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Configuracion"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Configuracion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Configuracion"
+                           },
+                           {
+                               "name":  "ConfiguracionValor",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Configuracion Valor"
+                           },
+                           {
+                               "name":  "TiempoLaboralMinutos",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo Laboral Minutos"
+                           },
+                           {
+                               "name":  "URL",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "URL"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,346 @@
+﻿{
+    "uniqueId":  "f4902729-0a96-42bc-b425-2f4ce3ab7e94",
+    "name":  "VincularCarretePalet",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Vincular Carrete Palet",
+    "filePath":  "Procedures/Produccion/VincularCarretePalet.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\u0026Palet.Load(\u0026PaletId)\n\t\u0026PaletNoSerie = \u0026Palet.PaletNoSerie\n\t\n\t\u0026CantPalet = 0\n\t\u0026Capacidad = \u0026Palet.PaletCapacidad\n\t\u0026CantCarretes = \u0026Palet.PaletNoCarretes\n\t\u0026CantFaltante = \u0026Capacidad - \u0026CantCarretes \n\t\n\t\u0026SDTCarrete = CarreteDP.Udp(\u0026CarreraId, Orden.Ascendente)\n\t\n\tfor \u0026SDTCarreteItem in \u0026SDTCarrete\n\t\t\u0026CarreteId = \u0026SDTCarreteItem.CarreteId\n\t\t\u0026CarreteEstado = \u0026SDTCarreteItem.CarreteEstado\n\t\t\n\t\tif(\u0026CarreteEstado = EstadoCarrete.EnProceso)\n\t\t        \n\t\t\tif(\u0026CantFaltante \u003e 0) \n\t\t\t\t\n\t\t\t\tdo \u0027CarretePalet\u0027\n\t\t\t\t\u0026CantFaltante -= 1\n\t\t\t\t\n\t\t\t\tif(\u0026CantFaltante = 0)\n\t\t\t\t\tdo \u0027CarreteTerminaPalet\u0027\n\t\t\t\t\tdo \u0027TerminarEnsamble\u0027\n\t\t\t\t\tdo \u0027CarreraPaletTerminado\u0027\n\t\t\t\t\t\n\t\t\t\tendif\n\t\t\telse\t\n\t\t\t\tdo \u0027TerminarEnsamble\u0027\n\t\t\t\t\n\t\t\t\t\u0026NewPaletId = ObtenerPalet.Udp(\u0026PrensadoId)\n\t\t\t\tVincularCarretePalet.Call(\u0026CarreraId, \u0026NewPaletId, \u0026PrensadoId)\t\n\t\t\tendif\n\t\t\t\n\t\tendif\n\tendfor\n\n        if(\u0026CantPalet \u003e 0)\n\t\t\n\t\t\u0026SavePalet.Load(\u0026PaletId)\n\t\t\u0026SavePalet.PaletNoCarretes = \u0026CantCarretes + \u0026CantPalet\n\t\t\u0026SavePalet.Save()\n\t\t\n\t\tif(\u0026SavePalet.Success())\n\t\t\tcommit\n\t\tendif\n\tendif\n\n        \n\tSub \u0027CarretePalet\u0027\n\t\t\t\t\n\t\t\u0026PaletCarrete = New()\n\t\t\u0026PaletCarrete.CarreteId = \u0026CarreteId\n\t\t\u0026PaletCarrete.PaletId = \u0026PaletId\n\t\t\u0026PaletCarrete.Save()\n\t\t\n\t\tif(\u0026PaletCarrete.Success())\n\t\t\tcommit\n\t\t\t\n\t\t\t\u0026CantPalet += 1 \n\t\t\tSetCarretePalet.Call(\u0026CarreteId, EstadoCarrete.EnPalet, \u0026PaletNoSerie)\n\t\tendif\n\tEndSub\n\nSub \u0027TerminarEnsamble\u0027\n\t\t\n\t\t\u0026FechaHoy = Today()\n\t\t\n\t\t\u0026SavePalet.Load(\u0026PaletId)\n\t\t\u0026POId = \u0026SavePalet.PaletPrensadoId\n\t\t\u0026PrensadoOrigen.Load(\u0026POId)\n\t\t\u0026POFecha = \u0026PrensadoOrigen.PrensadoFecha.ToDate()\n\t\t/*\n\t\tif(\u0026FechaHoy \u003c\u003e \u0026POFecha)\n\t\t\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\t\t\n\t\t\t\u0026SPPrensaId = \u0026SavePalet.PaletPrensaId\n\t\t\t\u0026SPTurnoId = \u0026Prensado.PrensadoTurnoId\n\t\t\t\u0026SPPaletNo = \u0026SavePalet.PaletNo\n\t\t\t\u0026PaletNoSerie = PaletNoSerie.Udp(\u0026SPPrensaId, \u0026SPTurnoId, \u0026FechaHoy, \u0026SPPaletNo)\n\t\t\t\u0026SavePalet.PaletNoSerie = \u0026PaletNoSerie\n\t\tendif\n\t\t*/\n\t\t\u0026SavePalet.PaletEstatus = EstatusPalet.Terminado\n\t\t\u0026SavePalet.PaletPrensadoFinId = \u0026PrensadoId\n\t\t\u0026SavePalet.PaletHoraFinEnsamble = Now()\n\t\t\u0026SavePalet.PaletNoCarretes = \u0026Capacidad\n\t\t\u0026SavePalet.Save()\n\t\t\n\t\tif(\u0026Palet.Success())\n\t\t\tcommit\n\t\tendif\n\t\n\tEndSub\n\n        Sub \u0027CarreteTerminaPalet\u0027\n\t\t\n\t\t\u0026Carrete.Load(\u0026CarreteId)\n\t\t\u0026Carrete.CarreteTerminaPalet = true\n\t\t\u0026Carrete.Save()\n\t\t\n\t\tif(\u0026Carrete.Success())\n\t\t\tcommit\n\t\tendif\n\tEndsub\n\n         Sub \u0027CarreraPaletTerminado\u0027\n\t\t\n\t\t\u0026Carrera.Load(\u0026CarreraId)\n\t\t\u0026Carrera.CarreraPaletTerminado = \u0026PaletNoSerie\n\t\t\u0026Carrera.Save()\n\t\t\n\t\tif(\u0026Carrera.Success())\n\t\t\tcommit\n\t\tendif\n\tEndsub\n",
+                              "cleanSource":  "\t\u0026Palet.Load(\u0026PaletId)\n\t\u0026PaletNoSerie = \u0026Palet.PaletNoSerie\n\t\n\t\u0026CantPalet = 0\n\t\u0026Capacidad = \u0026Palet.PaletCapacidad\n\t\u0026CantCarretes = \u0026Palet.PaletNoCarretes\n\t\u0026CantFaltante = \u0026Capacidad - \u0026CantCarretes \n\t\n\t\u0026SDTCarrete = CarreteDP.Udp(\u0026CarreraId, Orden.Ascendente)\n\t\n\tfor \u0026SDTCarreteItem in \u0026SDTCarrete\n\t\t\u0026CarreteId = \u0026SDTCarreteItem.CarreteId\n\t\t\u0026CarreteEstado = \u0026SDTCarreteItem.CarreteEstado\n\t\t\n\t\tif(\u0026CarreteEstado = EstadoCarrete.EnProceso)\n\t\t        \n\t\t\tif(\u0026CantFaltante \u003e 0) \n\t\t\t\t\n\t\t\t\tdo \u0027CarretePalet\u0027\n\t\t\t\t\u0026CantFaltante -= 1\n\t\t\t\t\n\t\t\t\tif(\u0026CantFaltante = 0)\n\t\t\t\t\tdo \u0027CarreteTerminaPalet\u0027\n\t\t\t\t\tdo \u0027TerminarEnsamble\u0027\n\t\t\t\t\tdo \u0027CarreraPaletTerminado\u0027\n\t\t\t\t\t\n\t\t\t\tendif\n\t\t\telse\t\n\t\t\t\tdo \u0027TerminarEnsamble\u0027\n\t\t\t\t\n\t\t\t\t\u0026NewPaletId = ObtenerPalet.Udp(\u0026PrensadoId)\n\t\t\t\tVincularCarretePalet.Call(\u0026CarreraId, \u0026NewPaletId, \u0026PrensadoId)\t\n\t\t\tendif\n\t\t\t\n\t\tendif\n\tendfor\n\n        if(\u0026CantPalet \u003e 0)\n\t\t\n\t\t\u0026SavePalet.Load(\u0026PaletId)\n\t\t\u0026SavePalet.PaletNoCarretes = \u0026CantCarretes + \u0026CantPalet\n\t\t\u0026SavePalet.Save()\n\t\t\n\t\tif(\u0026SavePalet.Success())\n\t\t\tcommit\n\t\tendif\n\tendif\n\n        \n\tSub \u0027CarretePalet\u0027\n\t\t\t\t\n\t\t\u0026PaletCarrete = New()\n\t\t\u0026PaletCarrete.CarreteId = \u0026CarreteId\n\t\t\u0026PaletCarrete.PaletId = \u0026PaletId\n\t\t\u0026PaletCarrete.Save()\n\t\t\n\t\tif(\u0026PaletCarrete.Success())\n\t\t\tcommit\n\t\t\t\n\t\t\t\u0026CantPalet += 1 \n\t\t\tSetCarretePalet.Call(\u0026CarreteId, EstadoCarrete.EnPalet, \u0026PaletNoSerie)\n\t\tendif\n\tEndSub\n\nSub \u0027TerminarEnsamble\u0027\n\t\t\n\t\t\u0026FechaHoy = Today()\n\t\t\n\t\t\u0026SavePalet.Load(\u0026PaletId)\n\t\t\u0026POId = \u0026SavePalet.PaletPrensadoId\n\t\t\u0026PrensadoOrigen.Load(\u0026POId)\n\t\t\u0026POFecha = \u0026PrensadoOrigen.PrensadoFecha.ToDate()\n\t\t/*\n\t\tif(\u0026FechaHoy \u003c\u003e \u0026POFecha)\n\t\t\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\t\t\n\t\t\t\u0026SPPrensaId = \u0026SavePalet.PaletPrensaId\n\t\t\t\u0026SPTurnoId = \u0026Prensado.PrensadoTurnoId\n\t\t\t\u0026SPPaletNo = \u0026SavePalet.PaletNo\n\t\t\t\u0026PaletNoSerie = PaletNoSerie.Udp(\u0026SPPrensaId, \u0026SPTurnoId, \u0026FechaHoy, \u0026SPPaletNo)\n\t\t\t\u0026SavePalet.PaletNoSerie = \u0026PaletNoSerie\n\t\tendif\n\t\t*/\n\t\t\u0026SavePalet.PaletEstatus = EstatusPalet.Terminado\n\t\t\u0026SavePalet.PaletPrensadoFinId = \u0026PrensadoId\n\t\t\u0026SavePalet.PaletHoraFinEnsamble = Now()\n\t\t\u0026SavePalet.PaletNoCarretes = \u0026Capacidad\n\t\t\u0026SavePalet.Save()\n\t\t\n\t\tif(\u0026Palet.Success())\n\t\t\tcommit\n\t\tendif\n\t\n\tEndSub\n\n        Sub \u0027CarreteTerminaPalet\u0027\n\t\t\n\t\t\u0026Carrete.Load(\u0026CarreteId)\n\t\t\u0026Carrete.CarreteTerminaPalet = true\n\t\t\u0026Carrete.Save()\n\t\t\n\t\tif(\u0026Carrete.Success())\n\t\t\tcommit\n\t\tendif\n\tEndsub\n\n         Sub \u0027CarreraPaletTerminado\u0027\n\t\t\n\t\t\u0026Carrera.Load(\u0026CarreraId)\n\t\t\u0026Carrera.CarreraPaletTerminado = \u0026PaletNoSerie\n\t\t\u0026Carrera.Save()\n\t\t\n\t\tif(\u0026Carrera.Success())\n\t\t\tcommit\n\t\tendif\n\tEndsub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026CarreraId, in:\u0026PaletId, in:\u0026PrensadoId);\n",
+                              "cleanSource":  "parm(in:\u0026CarreraId, in:\u0026PaletId, in:\u0026PrensadoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.CarreteDP",
+                                         "Produccion.ObtenerPalet",
+                                         "Produccion.VincularCarretePalet",
+                                         "Produccion.SetCarretePalet",
+                                         "Produccion.SDTCarrete",
+                                         "DB.Prensado",
+                                         "DB.Palet",
+                                         "DB.Carrera",
+                                         "DB.Carrete",
+                                         "DB.PaletCarrete",
+                                         "VincularCarretePalet",
+                                         "SetCarretePalet",
+                                         "CarreteDP",
+                                         "ObtenerPalet",
+                                         "PaletNoSerie"
+                                     ],
+                         "calledBy":  [
+                                          "VincularCarretePalet",
+                                          "SDValidarCarrera",
+                                          "ValidarCarrera"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Carrera",
+                                            "DB.Carrete",
+                                            "DB.Palet"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Carrera",
+                                               "DB.Carrete",
+                                               "DB.PaletCarrete"
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTCarrete"
+                                      ],
+                         "usesDataProviders":  [
+                                                   "CarreteDP"
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Carrete",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete"
+                           },
+                           {
+                               "name":  "CantCarretes",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Cant Carretes"
+                           },
+                           {
+                               "name":  "CantFaltante",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Cant Faltante"
+                           },
+                           {
+                               "name":  "CantPalet",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Cant Palet"
+                           },
+                           {
+                               "name":  "Capacidad",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Capacidad"
+                           },
+                           {
+                               "name":  "Carrera",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera"
+                           },
+                           {
+                               "name":  "CarreraId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Carrera Id"
+                           },
+                           {
+                               "name":  "CarreteEstado",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Estado"
+                           },
+                           {
+                               "name":  "CarreteId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Id"
+                           },
+                           {
+                               "name":  "FechaHoy",
+                               "elementType":  "Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Fecha Hoy"
+                           },
+                           {
+                               "name":  "FechaInicioEnsamble",
+                               "elementType":  "Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Fecha Inicio Ensamble"
+                           },
+                           {
+                               "name":  "NewPaletId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Id"
+                           },
+                           {
+                               "name":  "Palet",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet"
+                           },
+                           {
+                               "name":  "PaletCarrete",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Carrete"
+                           },
+                           {
+                               "name":  "PaletId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Palet Id"
+                           },
+                           {
+                               "name":  "PaletNoSerie",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet No Serie"
+                           },
+                           {
+                               "name":  "POFecha",
+                               "elementType":  "Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "POFecha"
+                           },
+                           {
+                               "name":  "POId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "POId"
+                           },
+                           {
+                               "name":  "Prensado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensadoOrigen",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Origen"
+                           },
+                           {
+                               "name":  "SavePalet",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Save Palet"
+                           },
+                           {
+                               "name":  "SDTCarrete",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDTCarrete"
+                           },
+                           {
+                               "name":  "SDTCarreteItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDTCarrete Item"
+                           },
+                           {
+                               "name":  "SPPaletNo",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet No"
+                           },
+                           {
+                               "name":  "SPPrensaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensa Id"
+                           },
+                           {
+                               "name":  "SPTurnoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Turno Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

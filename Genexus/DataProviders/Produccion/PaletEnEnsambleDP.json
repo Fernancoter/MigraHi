@@ -1,0 +1,112 @@
+﻿{
+    "uniqueId":  "8e35ea4b-cd03-4c19-b11d-4af66051a418",
+    "name":  "PaletEnEnsambleDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Palet En Ensamble DP",
+    "filePath":  "DataProviders/Produccion/PaletEnEnsambleDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTPalet\n{\n\t\n\t\u0026ProductoId = ObtenerPrensaProductoPrensado.Udp(\u0026PrensadoId,\u0026PrensaId)\n\n\tSDTPaletItem\n\twhere PaletPrensaId = \u0026PrensaId\n\tWhere PaletEstatus = EstatusPalet.EnEnsamble\n\twhere WWPBaseObjects.PaletProductoId = \u0026ProductoId\n\t\n\t{\n\t\tPaletId = PaletId\n\t\tPaletNoSerie = PaletNoSerie\n\t\tPaletNo = PaletNo\n\t\tPaletNoCarretes = PaletNoCarretes\n\t\tPaletOperadorId = PaletOperadorId\n\t\tPaletProductoId = PaletProductoId\n\t\tPaletPrensaId = PaletPrensaId\n\t\tPaletProductoNombre = PaletProductoNombre\n\t\tPaletHoraInicioEnsamble = PaletHoraInicioEnsamble\n\t\tPaletHoraFinEnsamble = PaletHoraFinEnsamble\n\t\tPaletEstatus = PaletEstatus\n\t\tPaletPrensadoId = PaletPrensadoId\n\t\tPaletPrensadoFinId = PaletPrensadoFinId\n\t}\n}\n",
+                              "cleanSource":  "SDTPalet\n{\n\t\n\t\u0026ProductoId = ObtenerPrensaProductoPrensado.Udp(\u0026PrensadoId,\u0026PrensaId)\n\n\tSDTPaletItem\n\twhere PaletPrensaId = \u0026PrensaId\n\tWhere PaletEstatus = EstatusPalet.EnEnsamble\n\twhere WWPBaseObjects.PaletProductoId = \u0026ProductoId\n\t\n\t{\n\t\tPaletId = PaletId\n\t\tPaletNoSerie = PaletNoSerie\n\t\tPaletNo = PaletNo\n\t\tPaletNoCarretes = PaletNoCarretes\n\t\tPaletOperadorId = PaletOperadorId\n\t\tPaletProductoId = PaletProductoId\n\t\tPaletPrensaId = PaletPrensaId\n\t\tPaletProductoNombre = PaletProductoNombre\n\t\tPaletHoraInicioEnsamble = PaletHoraInicioEnsamble\n\t\tPaletHoraFinEnsamble = PaletHoraFinEnsamble\n\t\tPaletEstatus = PaletEstatus\n\t\tPaletPrensadoId = PaletPrensadoId\n\t\tPaletPrensadoFinId = PaletPrensadoFinId\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.ObtenerPrensaProductoPrensado",
+                                         "Produccion.SDTPalet",
+                                         "ObtenerPrensaProductoPrensado"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTPalet"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensa Id"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

@@ -1,0 +1,105 @@
+﻿{
+    "uniqueId":  "c9353783-bfd2-405c-9b23-b0baa4f78b06",
+    "name":  "DPCBProducto",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "DP Dynamic Combo Box Producto",
+    "filePath":  "DataProviders/Produccion/DPCBProducto.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\nDVB_SDTComboData\nWhere ProductoCategoriaId = \u0026ProductoCategoriaId when Not \u0026ProductoCategoriaId.IsEmpty()\nWhere ProductoCategoriaNombre = \u0026ProductoCategoriaNombre when Not \u0026ProductoCategoriaNombre.IsEmpty()\n{\n\tItem\n\t{\n\t\tID = Notifications.ProductoId.ToString()\n\t\tTitle = ProductoClave\n\t}\n}\n",
+                              "cleanSource":  "\nDVB_SDTComboData\nWhere ProductoCategoriaId = \u0026ProductoCategoriaId when Not \u0026ProductoCategoriaId.IsEmpty()\nWhere ProductoCategoriaNombre = \u0026ProductoCategoriaNombre when Not \u0026ProductoCategoriaNombre.IsEmpty()\n{\n\tItem\n\t{\n\t\tID = Notifications.ProductoId.ToString()\n\t\tTitle = ProductoClave\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026ProductoCategoriaId, \u0026ProductoCategoriaNombre);\n",
+                              "cleanSource":  "parm(\u0026ProductoCategoriaId, \u0026ProductoCategoriaNombre);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.DVB_SDTComboData"
+                                     ],
+                         "calledBy":  [
+                                          "gestionarTroquel",
+                                          "gestionarPrensaProducto",
+                                          "gestionarProducto",
+                                          "gestionarExtrusoraProducto"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WWPBaseObjects.DVB_SDTComboData"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ProductoCategoriaId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Producto Categoria Id"
+                           },
+                           {
+                               "name":  "ProductoCategoriaNombre",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Nombre"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

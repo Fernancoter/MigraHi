@@ -1,0 +1,88 @@
+﻿{
+    "uniqueId":  "86485e75-66d1-4346-9268-fe63612af442",
+    "name":  "SDPProductsListDP",
+    "type":  "DataProvider",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPProducts List DP",
+    "filePath":  "DataProviders/WorkWithPlus/NativeMobile/SDPProductsListDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "//Type:\n//\t\t0 = 2 items per row (information for both options must be provided)\n//\t\t1 = 1 item full row\n//\t\t2 = only left option\n//\n//ComponentToCall: \n//\thttps://wiki.genexus.com/commwiki/servlet/wiki?17411,Dynamic+Calls+in+Smart+Devices,\nSDPProductsListDP\n{\n\tSDPProductData\n\t{\n\t\tId = !\"cookies\"\n\t\tTitle = !\"Cookies\"\t\n\t\t\u0026Image.FromImage(sdpressampleproduct1)\n\t\tImage = \u0026Image\n\t\tSubtitle = !\"Special organic cookies\"\t\n\t\tInformation1 = !\"$12.00\"\n\t\tInformation2 = !\"$15.00\"\n\t\tComponentToCall =  !\"sd:MyProductsProductDetail?cookies\"\n\t}\n\tSDPProductData\n\t{\t\n\t\tId = !\"ricesoup\"\n\t\tTitle = !\"Rice Soup\"\t\t\n\t\t\u0026Image.FromImage(sdpressampleproduct2)\n\t\tImage = \u0026Image\n\t\tSubtitle = !\"Rice soup infusion\"\n\t\tInformation1 = !\"$19.99\"\n\t\tInformation2 = !\"$25.00\"\n\t\tComponentToCall =  !\"sd:MyProductsProductDetail?ricesoup\"\n\t}\n\tSDPProductData\n\t{\n\t\tId = !\"makeup\"\n\t\tTitle = !\"Makeup\"\t\n\t\t\u0026Image.FromImage(sdpressampleproduct3)\n\t\tImage = \u0026Image\n\t\tSubtitle = !\"Beautiful makeup-set with 10 pieces\"\n\t\tInformation1 = !\"$9.99\"\n\t\tInformation2 = !\"$15.00\"\n\t\tComponentToCall =  !\"sd:MyProductsProductDetail?makeup\"\n\t}\n\tSDPProductData\n\t{\t\t\n\t\tId = !\"men\"\n\t\tTitle = !\"Men\u0027s clothing\"\n\t\t\u0026Image.FromImage(sdpressampleproduct4)\n\t\tImage = \u0026Image\n\t\tSubtitle = !\"New collection of men\u0027s clothing\"\t\n\t\tInformation1 = !\"$19.99\"\n\t\tInformation2 = !\"$25.00\"\n\t\tComponentToCall =  !\"sd:MyProductsProductDetail?men\"\n\t}\n\tSDPProductData\n\t{\n\t\tId = !\"baby\"\n\t\tTitle = !\"Baby products\"\n\t\t\u0026Image.FromImage(sdpressampleproduct6)\n\t\tImage = \u0026Image\n\t\tSubtitle = !\"Bag full of baby products for the newborn\"\n\t\tInformation1 = !\"$21.00\"\n\t\tInformation2 = !\"$30.00\"\n\t\tComponentToCall =  !\"sd:MyProductsProductDetail?baby\"\n\t\t\n\t}\n\tSDPProductData\n\t{\t\n\t\tId = !\"bag\"\n\t\tTitle = !\"Fashion bag\"\n\t\t\u0026Image.FromImage(sdpressampleproduct7)\n\t\tImage = \u0026Image\n\t\tSubtitle = !\"Bag from the lates fashion collection\"\n\t\tInformation1 = !\"$19.99\"\n\t\tInformation2 = !\"$25.00\"\n\t\tComponentToCall =  !\"sd:MyProductsProductDetail?bag\"\n\t}\n}\n",
+                              "cleanSource":  "//Type:\n//\t\t0 = 2 items per row (information for both options must be provided)\n//\t\t1 = 1 item full row\n//\t\t2 = only left option\n//\n//ComponentToCall: \n//\thttps://wiki.genexus.com/commwiki/servlet/wiki?17411,Dynamic+Calls+in+Smart+Devices,\nSDPProductsListDP\n{\n\tSDPProductData\n\t{\n\t\tId = !\"cookies\"\n\t\tTitle = !\"Cookies\"\t\n\t\t\u0026Image.FromImage(sdpressampleproduct1)\n\t\tImage = \u0026Image\n\t\tSubtitle = !\"Special organic cookies\"\t\n\t\tInformation1 = !\"$12.00\"\n\t\tInformation2 = !\"$15.00\"\n\t\tComponentToCall =  !\"sd:MyProductsProductDetail?cookies\"\n\t}\n\tSDPProductData\n\t{\t\n\t\tId = !\"ricesoup\"\n\t\tTitle = !\"Rice Soup\"\t\t\n\t\t\u0026Image.FromImage(sdpressampleproduct2)\n\t\tImage = \u0026Image\n\t\tSubtitle = !\"Rice soup infusion\"\n\t\tInformation1 = !\"$19.99\"\n\t\tInformation2 = !\"$25.00\"\n\t\tComponentToCall =  !\"sd:MyProductsProductDetail?ricesoup\"\n\t}\n\tSDPProductData\n\t{\n\t\tId = !\"makeup\"\n\t\tTitle = !\"Makeup\"\t\n\t\t\u0026Image.FromImage(sdpressampleproduct3)\n\t\tImage = \u0026Image\n\t\tSubtitle = !\"Beautiful makeup-set with 10 pieces\"\n\t\tInformation1 = !\"$9.99\"\n\t\tInformation2 = !\"$15.00\"\n\t\tComponentToCall =  !\"sd:MyProductsProductDetail?makeup\"\n\t}\n\tSDPProductData\n\t{\t\t\n\t\tId = !\"men\"\n\t\tTitle = !\"Men\u0027s clothing\"\n\t\t\u0026Image.FromImage(sdpressampleproduct4)\n\t\tImage = \u0026Image\n\t\tSubtitle = !\"New collection of men\u0027s clothing\"\t\n\t\tInformation1 = !\"$19.99\"\n\t\tInformation2 = !\"$25.00\"\n\t\tComponentToCall =  !\"sd:MyProductsProductDetail?men\"\n\t}\n\tSDPProductData\n\t{\n\t\tId = !\"baby\"\n\t\tTitle = !\"Baby products\"\n\t\t\u0026Image.FromImage(sdpressampleproduct6)\n\t\tImage = \u0026Image\n\t\tSubtitle = !\"Bag full of baby products for the newborn\"\n\t\tInformation1 = !\"$21.00\"\n\t\tInformation2 = !\"$30.00\"\n\t\tComponentToCall =  !\"sd:MyProductsProductDetail?baby\"\n\t\t\n\t}\n\tSDPProductData\n\t{\t\n\t\tId = !\"bag\"\n\t\tTitle = !\"Fashion bag\"\n\t\t\u0026Image.FromImage(sdpressampleproduct7)\n\t\tImage = \u0026Image\n\t\tSubtitle = !\"Bag from the lates fashion collection\"\n\t\tInformation1 = !\"$19.99\"\n\t\tInformation2 = !\"$25.00\"\n\t\tComponentToCall =  !\"sd:MyProductsProductDetail?bag\"\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPProductData"
+                                     ],
+                         "calledBy":  [
+                                          "SDPGetProductData"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDPProductData"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Image",
+                               "elementType":  "Variable",
+                               "dataType":  "BITMAP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Image"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

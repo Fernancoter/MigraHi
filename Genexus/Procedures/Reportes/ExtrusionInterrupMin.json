@@ -1,0 +1,190 @@
+﻿{
+    "uniqueId":  "302b0302-7345-46ee-94a8-5faad9ff37ee",
+    "name":  "ExtrusionInterrupMin",
+    "type":  "Procedure",
+    "module":  "Reportes",
+    "description":  "Extrusion Interrup Min",
+    "filePath":  "Procedures/Reportes/ExtrusionInterrupMin.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\u0026TiempoMin = 0\n\t\u0026Now = Now()\n\n\tfor each DB.ExtrusionInterrupcion\n\t\twhere ExtrusionInterrupcionId \u003e 0\n\t\twhere ExtrusionId = \u0026ExtrusionId\n\t\twhere InterrupcionId \u003e 0\n\t\t\n\t\t\u0026ExtrusionInterrupcionId = ExtrusionInterrupcionId\n\t\t\u0026InterrupcionId = InterrupcionId\n\t\t\u0026InterrupcionConcluida = InterrupcionConcluida\n\t\t\u0026FechaHoraRegistro = InterrupcionHoraInicio\n\n\t\tif \u0026InterrupcionConcluida\n\t\t\t\u0026Tiempo += InterrupcionTiempo\n\t\telse\n\t\t\t\u0026DiffProgreso = \u0026Now.Difference(\u0026FechaHoraRegistro)\n\t\t\t\u0026Tiempo += \u0026DiffProgreso\n\t\tendif\n\tendfor\n\n\tif \u0026Tiempo \u003e 0\n\t\t\u0026TiempoMin = trunc((\u0026Tiempo/60),0)\n\tendif\n",
+                              "cleanSource":  "\t\u0026TiempoMin = 0\n\t\u0026Now = Now()\n\n\tfor each DB.ExtrusionInterrupcion\n\t\twhere ExtrusionInterrupcionId \u003e 0\n\t\twhere ExtrusionId = \u0026ExtrusionId\n\t\twhere InterrupcionId \u003e 0\n\t\t\n\t\t\u0026ExtrusionInterrupcionId = ExtrusionInterrupcionId\n\t\t\u0026InterrupcionId = InterrupcionId\n\t\t\u0026InterrupcionConcluida = InterrupcionConcluida\n\t\t\u0026FechaHoraRegistro = InterrupcionHoraInicio\n\n\t\tif \u0026InterrupcionConcluida\n\t\t\t\u0026Tiempo += InterrupcionTiempo\n\t\telse\n\t\t\t\u0026DiffProgreso = \u0026Now.Difference(\u0026FechaHoraRegistro)\n\t\t\t\u0026Tiempo += \u0026DiffProgreso\n\t\tendif\n\tendfor\n\n\tif \u0026Tiempo \u003e 0\n\t\t\u0026TiempoMin = trunc((\u0026Tiempo/60),0)\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExtrusionId, out:\u0026TiempoMin);\n",
+                              "cleanSource":  "parm(in:\u0026ExtrusionId, out:\u0026TiempoMin);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.ExtrusionInterrupcion"
+                                     ],
+                         "calledBy":  [
+                                          "ExtrusorasEnOperacionWCGetFilterData"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "TiempoMin",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Tiempo Min"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "Tiempo",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo"
+                           },
+                           {
+                               "name":  "InterrupcionConcluida",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion Concluida"
+                           },
+                           {
+                               "name":  "FechaHoraRegistro",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Fecha Hora Registro"
+                           },
+                           {
+                               "name":  "Now",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Now"
+                           },
+                           {
+                               "name":  "DiffProgreso",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Diff Progreso"
+                           },
+                           {
+                               "name":  "ExtrusionInterrupcionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Interrupcion Id"
+                           },
+                           {
+                               "name":  "InterrupcionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion Id"
+                           },
+                           {
+                               "name":  "IsOk",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Is Ok"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

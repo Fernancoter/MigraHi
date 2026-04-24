@@ -1,0 +1,185 @@
+﻿{
+    "uniqueId":  "43145e38-ef7f-4855-bee0-9ce4e3d505c5",
+    "name":  "DVMessageGetBasicNotificationMsg",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "DVMessage Get Basic Notification Msg",
+    "filePath":  "Procedures/WWPBaseObjects/DVMessageGetBasicNotificationMsg.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026Parms = DVMessageGetAdvancedNotificationMsg(\u0026Title, \u0026Text, \u0026Type, \u0026ControlSelector, \u0026Hide, DVMessageBoolean.False, \u0027\u0027, \u0026ClickRedirectURL)\n",
+                              "cleanSource":  "\n\u0026Parms = DVMessageGetAdvancedNotificationMsg(\u0026Title, \u0026Text, \u0026Type, \u0026ControlSelector, \u0026Hide, DVMessageBoolean.False, \u0027\u0027, \u0026ClickRedirectURL)"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026Title, in:\u0026Text, in:\u0026Type, in:\u0026ControlSelector, in:\u0026Hide, in:\u0026ClickRedirectURL, out:\u0026Parms);\n",
+                              "cleanSource":  "parm(in:\u0026Title, in:\u0026Text, in:\u0026Type, in:\u0026ControlSelector, in:\u0026Hide, in:\u0026ClickRedirectURL, out:\u0026Parms);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.DVMessageGetAdvancedNotificationMsg"
+                                     ],
+                         "calledBy":  [
+                                          "SaveFilterAs",
+                                          "GAMUpdateRegisterUser",
+                                          "AgregarBobinas",
+                                          "TurnosPorSemanaExtrusoras",
+                                          "TurnosPorSemana",
+                                          "gestionarLote",
+                                          "GAMUserEntry",
+                                          "EmbarqueWP",
+                                          "priceww",
+                                          "CargarEmbarque",
+                                          "TurnosPorSemanaPrensas",
+                                          "GAMRegisterUser"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "AnimateSpeed",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Animate Speed Milliseconds"
+                           },
+                           {
+                               "name":  "ClickRedirectURL",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Click Redirect URL"
+                           },
+                           {
+                               "name":  "ControlSelector",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Control Selector"
+                           },
+                           {
+                               "name":  "Hide",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Hide"
+                           },
+                           {
+                               "name":  "Parms",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Parms"
+                           },
+                           {
+                               "name":  "Text",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Text"
+                           },
+                           {
+                               "name":  "Title",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Title"
+                           },
+                           {
+                               "name":  "Type",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Type"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

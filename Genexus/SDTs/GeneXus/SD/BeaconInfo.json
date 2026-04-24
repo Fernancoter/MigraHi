@@ -1,0 +1,73 @@
+﻿{
+    "uniqueId":  "fe9af240-7309-4128-b185-05d87530afe7",
+    "name":  "BeaconInfo",
+    "type":  "SDT",
+    "module":  "GeneXus.SD",
+    "description":  "Beacon Info",
+    "filePath":  "SDTs/GeneXus/SD/BeaconInfo.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "BeaconRegion",
+                                          "BeaconState"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "UUID",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "The proximity ID of the beacon"
+                           },
+                           {
+                               "name":  "GroupId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Group Identifier (Major Id)"
+                           },
+                           {
+                               "name":  "Id",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Identifier within the GroupId (Minor Id)"
+                           }
+                       ]
+}

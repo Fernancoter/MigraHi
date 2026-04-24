@@ -1,0 +1,183 @@
+﻿{
+    "uniqueId":  "41937add-27e4-40db-a93a-24fd00a10240",
+    "name":  "SDExtrusoraOcupada",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDExtrusoraOcupada",
+    "filePath":  "Procedures/Produccion/SDExtrusoraOcupada.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  " \n \u0026ExtActivaId = 0\n \u0026Disponible = false\n \n for each DB.Extrusion\n\t where ExtrusionId \u003e 0\n\t where ExtrusionId \u003c\u003e \u0026ExtrusionId\n\t where ExtrusionExtrusoraId = \u0026ExtrusoraId\n\t \u0026ExtrusionEstado = ExtrusionEstado\n\t \n\t Do Case\n\t\t Case \u0026ExtrusionEstado = EstadoExtrusion.EnProceso\n\t\t      \u0026ExtActivaId = ExtrusionId\n\t\t      Exit\n\t\t\t \n\t\t Case \u0026ExtrusionEstado = EstadoExtrusion.Intermedia\n\t\t      \u0026ExtActivaId = ExtrusionId\n\t\t      Exit\t \n\t EndCase\n Endfor\n \n",
+                              "cleanSource":  " \n \u0026ExtActivaId = 0\n \u0026Disponible = false\n \n for each DB.Extrusion\n\t where ExtrusionId \u003e 0\n\t where ExtrusionId \u003c\u003e \u0026ExtrusionId\n\t where ExtrusionExtrusoraId = \u0026ExtrusoraId\n\t \u0026ExtrusionEstado = ExtrusionEstado\n\t \n\t Do Case\n\t\t Case \u0026ExtrusionEstado = EstadoExtrusion.EnProceso\n\t\t      \u0026ExtActivaId = ExtrusionId\n\t\t      Exit\n\t\t\t \n\t\t Case \u0026ExtrusionEstado = EstadoExtrusion.Intermedia\n\t\t      \u0026ExtActivaId = ExtrusionId\n\t\t      Exit\t \n\t EndCase\n Endfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExtrusionId, in:\u0026ExtrusoraId, out:\u0026ExtActivaId);\n",
+                              "cleanSource":  "parm(in:\u0026ExtrusionId, in:\u0026ExtrusoraId, out:\u0026ExtActivaId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "GeneXus.Common.Messages",
+                                         "DB.Extrusion"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "DiaExtrusionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "Disponible",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Disponible"
+                           },
+                           {
+                               "name":  "ExtrusionEstado",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Estado"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "ExtrusoraId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusora Id"
+                           },
+                           {
+                               "name":  "isOK",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "is OK"
+                           },
+                           {
+                               "name":  "Mensajes",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Mensajes"
+                           },
+                           {
+                               "name":  "Msj",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Msj"
+                           },
+                           {
+                               "name":  "ExtActivaId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Ext Activa Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

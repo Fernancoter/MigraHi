@@ -1,0 +1,205 @@
+﻿{
+    "uniqueId":  "fe381509-e1e6-4a78-884c-63ffddc7c0e3",
+    "name":  "ActualizarTiemposInterrupcion",
+    "type":  "Procedure",
+    "module":  "Reportes",
+    "description":  "Actualizar Tiempos Interrupcion",
+    "filePath":  "Procedures/Reportes/ActualizarTiemposInterrupcion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026SiguienteInterrupcionId = 0\n\u0026IsOk = False\n\nfor each DB.ExtrusionInterrupcion\n\torder ExtrusionInterrupcionId // Ordenamos por ID\n    where ExtrusionId = \u0026ExtrusionId\n    where InterrupcionId \u003e 0\n    where InterrupcionConcluida = False\n\n\t\u0026InterrupcionId = InterrupcionId\n\t\u0026HoraInicio = InterrupcionHoraInicio\n    \u0026ExtrusionInterrupcionId = ExtrusionInterrupcionId\n\n    // Buscar la siguiente interrupción concluida\n    SiguienteInterrupcion.Call(\u0026ExtrusionId,\u0026ExtrusionInterrupcionId, \u0026SiguienteExtrusionInterrupcionId, \u0026SiguienteInterrupcionId)\n\n\tif \u0026SiguienteInterrupcionId \u003e 0\n\t\t\n\t\t\u0026SiguienteInterrupcion.Load(\u0026SiguienteInterrupcionId)\n\t\t\n\t\t\u0026Interrupcion.Load(\u0026InterrupcionId)\n\t\t\u0026Interrupcion.InterrupcionHoraFin = \u0026SiguienteInterrupcion.InterrupcionHoraInicio\n\t\t\u0026Interrupcion.InterrupcionConcluida = True\n\t\t\u0026Interrupcion.InterrupcionTiempo = \u0026SiguienteInterrupcion.InterrupcionHoraInicio.Difference(\u0026Interrupcion.InterrupcionHoraInicio)\n\t\t\u0026Interrupcion.DownTimeCodeId = \u0026SiguienteInterrupcion.DownTimeCodeId\n\t\t\u0026Interrupcion.Save()\n\t\t\n\t\tif(\u0026Interrupcion.Success())\n\t\t\tmsg(\u0027Se actualizó la información de una interrupción que no fue cerrada\u0027)\n\t\t\t\u0026IsOk = True\n\t\t\tcommit\n\t\tendif\n\t\t\n\telse\n\t\tBusquedaBobinas.Call(\u0026ExtrusionId,\u0026HoraInicio,\u0026BobinaHoraInicio)\n\t\t\n\t\tIf \u0026BobinaHoraInicio \u003e \u0026HoraInicio\n\t\t\t\n\t\t\t\u0026Interrupcion.Load(\u0026InterrupcionId)\n\t\t\t\u0026Interrupcion.InterrupcionHoraFin = \u0026BobinaHoraInicio\n\t\t\t\u0026Interrupcion.InterrupcionConcluida = True\n\t\t\t\u0026Interrupcion.InterrupcionTiempo = \u0026BobinaHoraInicio.Difference(\u0026Interrupcion.InterrupcionHoraInicio)\n\t\t\t\u0026Interrupcion.DownTimeCodeId.SetNull()\n\t\t\t\u0026Interrupcion.Save()\n\t\n\t\t\tif(\u0026Interrupcion.Success())\n\t\t\t\tmsg(\u0027Se actualizó la información de una interrupción que no fue cerrada en base a la hora de inicio de la siguiente bobina perteneciente a esta extrusión\u0027)\n\t\t\t\t\u0026IsOk = True\n\t\t\t\tcommit\n\t\t\tendif\n\t\t\t\n\t\tElse\n\t\t\t\n\t\t\t\u0026Extrusion.Load(\u0026ExtrusionId)\n\n\t\t\tIf \u0026Extrusion.ExtrusionEstado = Produccion.EstadoExtrusion.Terminada\n\t\n\t\t\t\t\u0026Interrupcion.Load(\u0026InterrupcionId)\n\t\t\t\t\u0026Interrupcion.InterrupcionHoraFin = \u0026Extrusion.ExtrusionHoraFinProceso\n\t\t\t\t\u0026Interrupcion.InterrupcionConcluida = True\n\t\t\t\t\u0026Interrupcion.InterrupcionTiempo = \u0026Extrusion.ExtrusionHoraFinProceso.Difference(\u0026Interrupcion.InterrupcionHoraInicio)\n\t\t\t\t\u0026Interrupcion.DownTimeCodeId.SetNull()\n\t\t\t\t\u0026Interrupcion.Save()\n\t\n\t\t\t\tif(\u0026Interrupcion.Success())\n\t\t\t\t\tmsg(\u0027Se actualizó la información de una interrupción que no fue cerrada en base a la hora de fin de la extrusión\u0027)\n\t\t\t\t\t\u0026IsOk = True\n\t\t\t\t\tcommit\n\t\t\t\tendif\n\t\t\tEndIf\n\t\t\t\n\t\tEndIf\n\t\t\n\n\tendif\n\nendfor\n",
+                              "cleanSource":  "\u0026SiguienteInterrupcionId = 0\n\u0026IsOk = False\n\nfor each DB.ExtrusionInterrupcion\n\torder ExtrusionInterrupcionId // Ordenamos por ID\n    where ExtrusionId = \u0026ExtrusionId\n    where InterrupcionId \u003e 0\n    where InterrupcionConcluida = False\n\n\t\u0026InterrupcionId = InterrupcionId\n\t\u0026HoraInicio = InterrupcionHoraInicio\n    \u0026ExtrusionInterrupcionId = ExtrusionInterrupcionId\n\n    // Buscar la siguiente interrupción concluida\n    SiguienteInterrupcion.Call(\u0026ExtrusionId,\u0026ExtrusionInterrupcionId, \u0026SiguienteExtrusionInterrupcionId, \u0026SiguienteInterrupcionId)\n\n\tif \u0026SiguienteInterrupcionId \u003e 0\n\t\t\n\t\t\u0026SiguienteInterrupcion.Load(\u0026SiguienteInterrupcionId)\n\t\t\n\t\t\u0026Interrupcion.Load(\u0026InterrupcionId)\n\t\t\u0026Interrupcion.InterrupcionHoraFin = \u0026SiguienteInterrupcion.InterrupcionHoraInicio\n\t\t\u0026Interrupcion.InterrupcionConcluida = True\n\t\t\u0026Interrupcion.InterrupcionTiempo = \u0026SiguienteInterrupcion.InterrupcionHoraInicio.Difference(\u0026Interrupcion.InterrupcionHoraInicio)\n\t\t\u0026Interrupcion.DownTimeCodeId = \u0026SiguienteInterrupcion.DownTimeCodeId\n\t\t\u0026Interrupcion.Save()\n\t\t\n\t\tif(\u0026Interrupcion.Success())\n\t\t\tmsg(\u0027Se actualizó la información de una interrupción que no fue cerrada\u0027)\n\t\t\t\u0026IsOk = True\n\t\t\tcommit\n\t\tendif\n\t\t\n\telse\n\t\tBusquedaBobinas.Call(\u0026ExtrusionId,\u0026HoraInicio,\u0026BobinaHoraInicio)\n\t\t\n\t\tIf \u0026BobinaHoraInicio \u003e \u0026HoraInicio\n\t\t\t\n\t\t\t\u0026Interrupcion.Load(\u0026InterrupcionId)\n\t\t\t\u0026Interrupcion.InterrupcionHoraFin = \u0026BobinaHoraInicio\n\t\t\t\u0026Interrupcion.InterrupcionConcluida = True\n\t\t\t\u0026Interrupcion.InterrupcionTiempo = \u0026BobinaHoraInicio.Difference(\u0026Interrupcion.InterrupcionHoraInicio)\n\t\t\t\u0026Interrupcion.DownTimeCodeId.SetNull()\n\t\t\t\u0026Interrupcion.Save()\n\t\n\t\t\tif(\u0026Interrupcion.Success())\n\t\t\t\tmsg(\u0027Se actualizó la información de una interrupción que no fue cerrada en base a la hora de inicio de la siguiente bobina perteneciente a esta extrusión\u0027)\n\t\t\t\t\u0026IsOk = True\n\t\t\t\tcommit\n\t\t\tendif\n\t\t\t\n\t\tElse\n\t\t\t\n\t\t\t\u0026Extrusion.Load(\u0026ExtrusionId)\n\n\t\t\tIf \u0026Extrusion.ExtrusionEstado = Produccion.EstadoExtrusion.Terminada\n\t\n\t\t\t\t\u0026Interrupcion.Load(\u0026InterrupcionId)\n\t\t\t\t\u0026Interrupcion.InterrupcionHoraFin = \u0026Extrusion.ExtrusionHoraFinProceso\n\t\t\t\t\u0026Interrupcion.InterrupcionConcluida = True\n\t\t\t\t\u0026Interrupcion.InterrupcionTiempo = \u0026Extrusion.ExtrusionHoraFinProceso.Difference(\u0026Interrupcion.InterrupcionHoraInicio)\n\t\t\t\t\u0026Interrupcion.DownTimeCodeId.SetNull()\n\t\t\t\t\u0026Interrupcion.Save()\n\t\n\t\t\t\tif(\u0026Interrupcion.Success())\n\t\t\t\t\tmsg(\u0027Se actualizó la información de una interrupción que no fue cerrada en base a la hora de fin de la extrusión\u0027)\n\t\t\t\t\t\u0026IsOk = True\n\t\t\t\t\tcommit\n\t\t\t\tendif\n\t\t\tEndIf\n\t\t\t\n\t\tEndIf\n\t\t\n\n\tendif\n\nendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExtrusionId, out: \u0026IsOk);\n",
+                              "cleanSource":  "parm(in:\u0026ExtrusionId, out: \u0026IsOk);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Reportes.SiguienteInterrupcion",
+                                         "Reportes.BusquedaBobinas",
+                                         "DB.Extrusion",
+                                         "DB.Interrupcion",
+                                         "DB.ExtrusionInterrupcion",
+                                         "SiguienteInterrupcion",
+                                         "BusquedaBobinas"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Extrusion",
+                                            "DB.Interrupcion"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Interrupcion"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "ExtrusionInterrupcionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Interrupcion Id"
+                           },
+                           {
+                               "name":  "SiguienteInterrupcionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion Id"
+                           },
+                           {
+                               "name":  "InterrupcionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion Id"
+                           },
+                           {
+                               "name":  "IsOk",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Is Ok"
+                           },
+                           {
+                               "name":  "Interrupcion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion"
+                           },
+                           {
+                               "name":  "SiguienteInterrupcion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Siguiente Interrupcion"
+                           },
+                           {
+                               "name":  "Extrusion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion"
+                           },
+                           {
+                               "name":  "SiguienteExtrusionInterrupcionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Interrupcion Id"
+                           },
+                           {
+                               "name":  "HoraInicio",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Hora Inicio"
+                           },
+                           {
+                               "name":  "BobinaHoraInicio",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Hora Inicio"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

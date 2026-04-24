@@ -1,0 +1,144 @@
+﻿{
+    "uniqueId":  "1a83cffa-4105-4218-9c40-0c7a852856a4",
+    "name":  "ObtenerSDTEtiquetaPalet",
+    "type":  "Procedure",
+    "module":  "PrinterSD",
+    "description":  "Obtener SDTEtiqueta Palet",
+    "filePath":  "Procedures/PrinterSD/ObtenerSDTEtiquetaPalet.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\nFor each\t\n\tWhere PaletId = \u0026PaletId\n\t\n\t\u0026EtiquetaPaletSDT.PaletProductoNombre = PaletProductoNombre\n\t\u0026EtiquetaPaletSDT.PaletNoSerie = PaletNoSerie\n\t\u0026EtiquetaPaletSDT.PaletNo = PaletNo\n\t\u0026EtiquetaPaletSDT.PaletNoCarretes = DB.DB.PaletNoCarretes\n\t\u0026EtiquetaPaletSDT.PaletProductoDescripcion = PaletProductoDescripcion\n\t\u0026EtiquetaPaletSDT.PaletHoraFinEnsamble = PaletHoraFinEnsamble\n\t\u0026EtiquetaPaletSDT.PaletPrensaNombre = PaletPrensaNombre\n\t\n\t\u0026PaletProductoId = PaletProductoId\n\tDo \u0027ObtenerDatosProductoTerminado\u0027\t\nEndFor\n\nSub \u0027ObtenerDatosProductoTerminado\u0027\n\tFor Each\n\t\tWhere TerminadoProductoId = \u0026PaletProductoId\n\t\t\u0026EtiquetaPaletSDT.ProductoTerminadoPaletMillar = ProductoTerminadoPaletMillar\n\t\t\n\t\tif(ProductoTerminadoCodigoSAP.IsEmpty())\n\t\t\t\u0026EtiquetaPaletSDT.ProductoTerminadoCodigoSAP = \u0027N/A\u0027\n\t\telse\n\t\t\t\u0026EtiquetaPaletSDT.ProductoTerminadoCodigoSAP = ProductoTerminadoCodigoSAP\n\t\tendif\n\tWhen None\n\t\t\u0026EtiquetaPaletSDT.ProductoTerminadoPaletMillar = 0\n\t\t\u0026EtiquetaPaletSDT.ProductoTerminadoCodigoSAP = \u0027N/A\u0027\n\tEndFor\nEndSub\n\n",
+                              "cleanSource":  "\n\nFor each\t\n\tWhere PaletId = \u0026PaletId\n\t\n\t\u0026EtiquetaPaletSDT.PaletProductoNombre = PaletProductoNombre\n\t\u0026EtiquetaPaletSDT.PaletNoSerie = PaletNoSerie\n\t\u0026EtiquetaPaletSDT.PaletNo = PaletNo\n\t\u0026EtiquetaPaletSDT.PaletNoCarretes = DB.DB.PaletNoCarretes\n\t\u0026EtiquetaPaletSDT.PaletProductoDescripcion = PaletProductoDescripcion\n\t\u0026EtiquetaPaletSDT.PaletHoraFinEnsamble = PaletHoraFinEnsamble\n\t\u0026EtiquetaPaletSDT.PaletPrensaNombre = PaletPrensaNombre\n\t\n\t\u0026PaletProductoId = PaletProductoId\n\tDo \u0027ObtenerDatosProductoTerminado\u0027\t\nEndFor\n\nSub \u0027ObtenerDatosProductoTerminado\u0027\n\tFor Each\n\t\tWhere TerminadoProductoId = \u0026PaletProductoId\n\t\t\u0026EtiquetaPaletSDT.ProductoTerminadoPaletMillar = ProductoTerminadoPaletMillar\n\t\t\n\t\tif(ProductoTerminadoCodigoSAP.IsEmpty())\n\t\t\t\u0026EtiquetaPaletSDT.ProductoTerminadoCodigoSAP = \u0027N/A\u0027\n\t\telse\n\t\t\t\u0026EtiquetaPaletSDT.ProductoTerminadoCodigoSAP = ProductoTerminadoCodigoSAP\n\t\tendif\n\tWhen None\n\t\t\u0026EtiquetaPaletSDT.ProductoTerminadoPaletMillar = 0\n\t\t\u0026EtiquetaPaletSDT.ProductoTerminadoCodigoSAP = \u0027N/A\u0027\n\tEndFor\nEndSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PaletId, out:\u0026EtiquetaPaletSDT);\n",
+                              "cleanSource":  "parm(in:\u0026PaletId, out:\u0026EtiquetaPaletSDT);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "PrinterSD.EtiquetaPaletSDT",
+                                         "DB.Palet"
+                                     ],
+                         "calledBy":  [
+                                          "PaletReportMain",
+                                          "PaletReportSAP"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "EtiquetaPaletSDT"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "EtiquetaPaletSDT",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Etiqueta Palet SDT"
+                           },
+                           {
+                               "name":  "Palet",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet"
+                           },
+                           {
+                               "name":  "PaletId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Palet Id"
+                           },
+                           {
+                               "name":  "PaletProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Producto Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

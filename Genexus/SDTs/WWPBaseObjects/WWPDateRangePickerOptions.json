@@ -1,0 +1,73 @@
+﻿{
+    "uniqueId":  "c697c495-e69b-45d8-9acd-001d13c0761b",
+    "name":  "WWPDateRangePickerOptions",
+    "type":  "SDT",
+    "module":  "WWPBaseObjects",
+    "description":  "WWPDate Range Picker Options",
+    "filePath":  "SDTs/WWPBaseObjects/WWPDateRangePickerOptions.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "WWP_RangePicker_AddPredefinedRange",
+                                          "WWP_RangePicker_GetOptions"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PickerType",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Picker type: Custom Range Picker, Predefined Range Picker or Sigle Date Time Picker"
+                           },
+                           {
+                               "name":  "MinDate",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "The earliest date a user may select."
+                           },
+                           {
+                               "name":  "MaxDate",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "The latest date a user may select"
+                           }
+                       ]
+}

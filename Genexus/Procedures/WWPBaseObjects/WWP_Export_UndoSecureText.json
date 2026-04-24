@@ -1,0 +1,126 @@
+﻿{
+    "uniqueId":  "25731b04-d97d-4189-b8bb-92229f741bc0",
+    "name":  "WWP_Export_UndoSecureText",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Export_Undo Secure Text",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_Export_UndoSecureText.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026UndoSecureText = \u0026Text\nIf \u0026UndoSecureText.Length() \u003e 0 AND (\u0026UndoSecureText.StartsWith(!\"\u0027=\") OR \u0026UndoSecureText.StartsWith(!\"\u0027+\") OR \u0026UndoSecureText.StartsWith(!\"\u0027-\") OR \u0026UndoSecureText.StartsWith(!\"\u0027@\"))\n\t\u0026UndoSecureText = \u0026UndoSecureText.Substring(2)\nEndIf\n",
+                              "cleanSource":  "\n\u0026UndoSecureText = \u0026Text\nIf \u0026UndoSecureText.Length() \u003e 0 AND (\u0026UndoSecureText.StartsWith(!\"\u0027=\") OR \u0026UndoSecureText.StartsWith(!\"\u0027+\") OR \u0026UndoSecureText.StartsWith(!\"\u0027-\") OR \u0026UndoSecureText.StartsWith(!\"\u0027@\"))\n\t\u0026UndoSecureText = \u0026UndoSecureText.Substring(2)\nEndIf"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "\nparm(in:\u0026Text, out:\u0026UndoSecureText);\n",
+                              "cleanSource":  "\nparm(in:\u0026Text, out:\u0026UndoSecureText);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "UndoSecureText",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Undo Secure Text"
+                           },
+                           {
+                               "name":  "Text",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Text"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

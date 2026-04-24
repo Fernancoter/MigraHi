@@ -1,0 +1,200 @@
+﻿{
+    "uniqueId":  "4c59fb03-39eb-43ed-82dd-c2472708f604",
+    "name":  "ObtenerPrensadoResultado",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Obtener Prensado Resultado",
+    "filePath":  "Procedures/Produccion/ObtenerPrensadoResultado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\nfor each DB.PrensadoResultado\n\twhere DB.PrensadoResultadoId \u003e 0\n\twhere PrensadoId = \u0026PrensadoId\n\t\u0026PRId = PrensadoResultadoId\n\tExit\nwhen none\n\t\n\tdo \u0027ResumenCarretes\u0027\n\tdo \u0027ResumenPalets\u0027\n\t\n\t\u0026PrensadoResultado = New()\n\t\u0026PrensadoResultado.PrensadoId = \u0026PrensadoId\n\t\u0026PrensadoResultado.PrensadoResultadoPiezasBuenas = \u0026CarretesEnPalet\n\t\u0026PrensadoResultado.PrensadoResultadoPiezasMolino = \u0026CarretesMolino\n\t\u0026PrensadoResultado.PrensadoResultadoNoPalets = \u0026CantidadPalets\n\t\u0026PrensadoResultado.PrensadoResultadoCarretesSobrantes = \u0026CarretesSobrantes\n\t\u0026PrensadoResultado.Save()\n\t\n\tif(\u0026PrensadoResultado.Success())\n\t\t\u0026PRId = \u0026PrensadoResultado.PrensadoResultadoId\n\t\tcommit\n\tendif\n\t\nendfor\n\nSub \u0027ResumenCarretes\u0027\n\t\n\t\u0026CarretesMolino = 0\n\t\u0026CarretesEnPalet = 0\n\t\n\tfor each\n\t\twhere CarreraId \u003e 0\n\t\twhere InicioPBPrensadoId = \u0026PrensadoId\n\t\t\u0026CarreraId = CarreraId\n\t        \n\t\tfor each\n\t\t\twhere CarreteId \u003e 0\n\t\t\twhere DB.CarreteCarreraId = \u0026CarreraId\n\t\t\t\u0026CarreteEstado = CarreteEstado\n\t\t\t\n\t\t\tDo Case \n\t\t\t        Case \u0026CarreteEstado = EstadoCarrete.EnPalet\n\t\t\t\t         \u0026CarretesEnPalet += 1\n\t\t\t        Case \u0026CarreteEstado = EstadoCarrete.Molino\n\t\t\t\t         \u0026CarretesMolino += 1\n\t\t\tEndCase\n\t\tendfor\n\tendfor\n\n        \u0026CarreteMillar = ObtenerCarreteMillar.Udp(\u0026PrensadoId)\n\t\n\tif(\u0026CarreteMillar \u003e 0)\n\t\t\u0026CarretesEnPalet *= \u0026CarreteMillar\n\t\t\u0026CarretesMolino *= \u0026CarreteMillar\n\tendif\n\nEndSub\n\nSub \u0027ResumenPalets\u0027\n\t\n\t\u0026CantidadPalets = 0\n\t\u0026CarretesSobrantes = 0\n\t\n\tfor each\n\t\twhere PaletId \u003e 0\n\t\twhere PaletPrensadoFinId = \u0026PrensadoId\n\t\t\u0026PaletEstatus = PaletEstatus\n\t\t\n\t\tDo Case \n\t\t        Case \u0026PaletEstatus in (EstatusPalet.Terminado, EstatusPalet.Embarcado)\n\t\t\t         \u0026CantidadPalets += 1\n\t\t        Case \u0026PaletEstatus = EstatusPalet.EnEnsamble\n\t\t\t         \u0026CarretesSobrantes += PaletNoCarretes\n\t\tEndCase\t\n\tendfor\nEndSub\n",
+                              "cleanSource":  "\n\nfor each DB.PrensadoResultado\n\twhere DB.PrensadoResultadoId \u003e 0\n\twhere PrensadoId = \u0026PrensadoId\n\t\u0026PRId = PrensadoResultadoId\n\tExit\nwhen none\n\t\n\tdo \u0027ResumenCarretes\u0027\n\tdo \u0027ResumenPalets\u0027\n\t\n\t\u0026PrensadoResultado = New()\n\t\u0026PrensadoResultado.PrensadoId = \u0026PrensadoId\n\t\u0026PrensadoResultado.PrensadoResultadoPiezasBuenas = \u0026CarretesEnPalet\n\t\u0026PrensadoResultado.PrensadoResultadoPiezasMolino = \u0026CarretesMolino\n\t\u0026PrensadoResultado.PrensadoResultadoNoPalets = \u0026CantidadPalets\n\t\u0026PrensadoResultado.PrensadoResultadoCarretesSobrantes = \u0026CarretesSobrantes\n\t\u0026PrensadoResultado.Save()\n\t\n\tif(\u0026PrensadoResultado.Success())\n\t\t\u0026PRId = \u0026PrensadoResultado.PrensadoResultadoId\n\t\tcommit\n\tendif\n\t\nendfor\n\nSub \u0027ResumenCarretes\u0027\n\t\n\t\u0026CarretesMolino = 0\n\t\u0026CarretesEnPalet = 0\n\t\n\tfor each\n\t\twhere CarreraId \u003e 0\n\t\twhere InicioPBPrensadoId = \u0026PrensadoId\n\t\t\u0026CarreraId = CarreraId\n\t        \n\t\tfor each\n\t\t\twhere CarreteId \u003e 0\n\t\t\twhere DB.CarreteCarreraId = \u0026CarreraId\n\t\t\t\u0026CarreteEstado = CarreteEstado\n\t\t\t\n\t\t\tDo Case \n\t\t\t        Case \u0026CarreteEstado = EstadoCarrete.EnPalet\n\t\t\t\t         \u0026CarretesEnPalet += 1\n\t\t\t        Case \u0026CarreteEstado = EstadoCarrete.Molino\n\t\t\t\t         \u0026CarretesMolino += 1\n\t\t\tEndCase\n\t\tendfor\n\tendfor\n\n        \u0026CarreteMillar = ObtenerCarreteMillar.Udp(\u0026PrensadoId)\n\t\n\tif(\u0026CarreteMillar \u003e 0)\n\t\t\u0026CarretesEnPalet *= \u0026CarreteMillar\n\t\t\u0026CarretesMolino *= \u0026CarreteMillar\n\tendif\n\nEndSub\n\nSub \u0027ResumenPalets\u0027\n\t\n\t\u0026CantidadPalets = 0\n\t\u0026CarretesSobrantes = 0\n\t\n\tfor each\n\t\twhere PaletId \u003e 0\n\t\twhere PaletPrensadoFinId = \u0026PrensadoId\n\t\t\u0026PaletEstatus = PaletEstatus\n\t\t\n\t\tDo Case \n\t\t        Case \u0026PaletEstatus in (EstatusPalet.Terminado, EstatusPalet.Embarcado)\n\t\t\t         \u0026CantidadPalets += 1\n\t\t        Case \u0026PaletEstatus = EstatusPalet.EnEnsamble\n\t\t\t         \u0026CarretesSobrantes += PaletNoCarretes\n\t\tEndCase\t\n\tendfor\nEndSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId, out:\u0026PRId);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId, out:\u0026PRId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.ObtenerCarreteMillar",
+                                         "DB.PrensadoResultado",
+                                         "ObtenerCarreteMillar"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.PrensadoResultado"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PaletEstatus",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Estatus"
+                           },
+                           {
+                               "name":  "CantidadPalets",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Cantidad Palets"
+                           },
+                           {
+                               "name":  "CarreraId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Id"
+                           },
+                           {
+                               "name":  "CarreteEstado",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Estado"
+                           },
+                           {
+                               "name":  "CarretesEnPalet",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carretes En Palet"
+                           },
+                           {
+                               "name":  "CarretesMolino",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carretes Molino"
+                           },
+                           {
+                               "name":  "CarretesSobrantes",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carretes Sobrantes"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensadoResultado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado"
+                           },
+                           {
+                               "name":  "PRId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "PRId"
+                           },
+                           {
+                               "name":  "CarreteMillar",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Millar"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,130 @@
+﻿{
+    "uniqueId":  "0dd0e61e-28aa-4f41-988d-6f2868b46a1a",
+    "name":  "WWP_GetSMSParameters",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects.SMS",
+    "description":  "Get SMS Parameters",
+    "filePath":  "Procedures/WWPBaseObjects/SMS/WWP_GetSMSParameters.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "WWP_Logger.Debug(\u0026Pgmname, !\"Getting SMS Parameters\")\n\u0026SMSParametersSDT = new()\n\nWWP_GetParameter.Text(!\"SMS_ServicePlanId\", \u0026TextParameter)\n\u0026SMSParametersSDT.ServicePlanId = \u0026TextParameter\n\nWWP_GetParameter.Text(!\"SMS_Token\", \u0026TextParameter)\n\u0026SMSParametersSDT.Token = \u0026TextParameter\n\nWWPBaseObjects.WWP_GetParameter.Text(!\"SMS_ApplicationKey\", \u0026TextParameter)\n\u0026SMSParametersSDT.ApplicationKey = \u0026TextParameter\n\nWWPBaseObjects.WWP_GetParameter.Text(!\"SMS_ApplicationSecret\", \u0026TextParameter)\n\u0026SMSParametersSDT.ApplicationSecret = \u0026TextParameter\n\nWWPBaseObjects.WWP_GetParameter.Text(!\"SMS_DefaultSender\", \u0026TextParameter)\n\u0026SMSParametersSDT.DefaultSender = \u0026TextParameter\n\nWWP_Logger.Debug(\u0026Pgmname, !\"SMS Parameters: \" + \u0026SMSParametersSDT.ToJson())\n",
+                              "cleanSource":  "WWP_Logger.Debug(\u0026Pgmname, !\"Getting SMS Parameters\")\n\u0026SMSParametersSDT = new()\n\nWWP_GetParameter.Text(!\"SMS_ServicePlanId\", \u0026TextParameter)\n\u0026SMSParametersSDT.ServicePlanId = \u0026TextParameter\n\nWWP_GetParameter.Text(!\"SMS_Token\", \u0026TextParameter)\n\u0026SMSParametersSDT.Token = \u0026TextParameter\n\nWWPBaseObjects.WWP_GetParameter.Text(!\"SMS_ApplicationKey\", \u0026TextParameter)\n\u0026SMSParametersSDT.ApplicationKey = \u0026TextParameter\n\nWWPBaseObjects.WWP_GetParameter.Text(!\"SMS_ApplicationSecret\", \u0026TextParameter)\n\u0026SMSParametersSDT.ApplicationSecret = \u0026TextParameter\n\nWWPBaseObjects.WWP_GetParameter.Text(!\"SMS_DefaultSender\", \u0026TextParameter)\n\u0026SMSParametersSDT.DefaultSender = \u0026TextParameter\n\nWWP_Logger.Debug(\u0026Pgmname, !\"SMS Parameters: \" + \u0026SMSParametersSDT.ToJson())"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(out:\u0026SMSParametersSDT);\n",
+                              "cleanSource":  "Parm(out:\u0026SMSParametersSDT);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_Logger",
+                                         "WWPBaseObjects.WWP_GetParameter",
+                                         "WWPBaseObjects.SMS.WWP_SMSParametersSDT"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_ValidateVerificationCode",
+                                          "WWP_SendVerificationCode",
+                                          "WWP_SendPendingNotifications"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SMSParametersSDT",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "SMSParameters SDT"
+                           },
+                           {
+                               "name":  "TextParameter",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Text Parameter"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

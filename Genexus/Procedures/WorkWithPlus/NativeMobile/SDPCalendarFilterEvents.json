@@ -1,0 +1,150 @@
+﻿{
+    "uniqueId":  "1637d141-253a-4ffd-a3fc-42be0cec59e7",
+    "name":  "SDPCalendarFilterEvents",
+    "type":  "Procedure",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPCalendar Filter Events",
+    "filePath":  "Procedures/WorkWithPlus/NativeMobile/SDPCalendarFilterEvents.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\nFor \u0026CalendarEntry in \u0026SDPlusCalendarEntryCollection\n\tIf \u0026CalendarEntry.Year = \u0026Year AND \u0026CalendarEntry.Month = \u0026Month\n\t\t\u0026SDPlusCalendarEntryCollectionFiltered.Add(\u0026CalendarEntry)\n\tEndIf\nEndFor\n\n\u0026SDPlusCalendarEntryCollectionFiltered.Sort(!\"Month,Day\")\n",
+                              "cleanSource":  "\nFor \u0026CalendarEntry in \u0026SDPlusCalendarEntryCollection\n\tIf \u0026CalendarEntry.Year = \u0026Year AND \u0026CalendarEntry.Month = \u0026Month\n\t\t\u0026SDPlusCalendarEntryCollectionFiltered.Add(\u0026CalendarEntry)\n\tEndIf\nEndFor\n\n\u0026SDPlusCalendarEntryCollectionFiltered.Sort(!\"Month,Day\")"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026SDPlusCalendarEntryCollection, in:\u0026Year, in:\u0026Month, out:\u0026SDPlusCalendarEntryCollectionFiltered);\n",
+                              "cleanSource":  "Parm(in:\u0026SDPlusCalendarEntryCollection, in:\u0026Year, in:\u0026Month, out:\u0026SDPlusCalendarEntryCollectionFiltered);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPlusCalendarEntry"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Month",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Month"
+                           },
+                           {
+                               "name":  "SDPlusCalendarEntryCollection",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "SDPlus Calendar Entry Collection"
+                           },
+                           {
+                               "name":  "SDPlusCalendarEntryCollectionFiltered",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "SDPlus Calendar Entry Collection Filtered"
+                           },
+                           {
+                               "name":  "Year",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Year"
+                           },
+                           {
+                               "name":  "CalendarEntry",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Calendar Entry"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

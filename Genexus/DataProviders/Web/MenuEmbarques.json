@@ -1,0 +1,128 @@
+﻿{
+    "uniqueId":  "016558d2-7b44-42fe-92bf-9e0c333df4bc",
+    "name":  "MenuEmbarques",
+    "type":  "DataProvider",
+    "module":  "Web",
+    "description":  "Menu Embarques",
+    "filePath":  "DataProviders/Web/MenuEmbarques.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "DVelop_Menu\n{\n\t\n\t\u0026id = 0\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlinkTarget =\"\" \n\t\tcaption = !\"Embarques\"\n\t\t\n\t\tsubItems\n\t\t{\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioEmbarques.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-home\"\n\t\t\t\tcaption = \"Inicio\"  \n\t\t\t} \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tcustomerww.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-building\"\n\t\t\t\tcaption = \"Clientes\"  \n\t\t\t} \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tProductsWW.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon far fa-dice-six\"\n\t\t\t\tcaption = \"Productos\"  \n\t\t\t} \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tListadoOrdenes.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon far fa-comments-dollar\"\n\t\t\t\tcaption = \"Pedidos\"  \n\t\t\t} \n\t\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tListadoRemisiones.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa-solid fad fa-truck-ramp\"\n\t\t\t\tcaption = \"Remisiones\"  \n\t\t\t} \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tEmbarques.ListadoEmbarques.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa-solid fad fa-truck-ramp\"\n\t\t\t\tcaption = \"Embarques\"  \n\t\t\t} \n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tftbww.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-file-invoice\"\n\t\t\t\tcaption = \"Facturas\"  \n\t\t\t} \n\t\t\n\t\t}\t\n\t}\n}\n",
+                              "cleanSource":  "DVelop_Menu\n{\n\t\n\t\u0026id = 0\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlinkTarget =\"\" \n\t\tcaption = !\"Embarques\"\n\t\t\n\t\tsubItems\n\t\t{\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioEmbarques.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-home\"\n\t\t\t\tcaption = \"Inicio\"  \n\t\t\t} \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tcustomerww.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-building\"\n\t\t\t\tcaption = \"Clientes\"  \n\t\t\t} \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tProductsWW.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon far fa-dice-six\"\n\t\t\t\tcaption = \"Productos\"  \n\t\t\t} \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tListadoOrdenes.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon far fa-comments-dollar\"\n\t\t\t\tcaption = \"Pedidos\"  \n\t\t\t} \n\t\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tListadoRemisiones.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa-solid fad fa-truck-ramp\"\n\t\t\t\tcaption = \"Remisiones\"  \n\t\t\t} \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tEmbarques.ListadoEmbarques.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa-solid fad fa-truck-ramp\"\n\t\t\t\tcaption = \"Embarques\"  \n\t\t\t} \n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tftbww.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-file-invoice\"\n\t\t\t\tcaption = \"Facturas\"  \n\t\t\t} \n\t\t\n\t\t}\t\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.ProgramNames",
+                                         "WWPBaseObjects.DVelop_Menu",
+                                         "DB.CustomerWW",
+                                         "DB.FTBWW",
+                                         "Embarques.InicioEmbarques",
+                                         "Embarques.ProductsWW",
+                                         "Embarques.ListadoEmbarques",
+                                         "Embarques.ListadoRemisiones",
+                                         "Embarques.ListadoOrdenes"
+                                     ],
+                         "calledBy":  [
+                                          "MenuByModule"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WWPBaseObjects.DVelop_Menu"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "id",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "id"
+                           },
+                           {
+                               "name":  "ProgramName",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Program Name"
+                           },
+                           {
+                               "name":  "Repository",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Repository"
+                           },
+                           {
+                               "name":  "Errors",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Errors"
+                           },
+                           {
+                               "name":  "IsRepoAdministrator",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Is Repo Administrator"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

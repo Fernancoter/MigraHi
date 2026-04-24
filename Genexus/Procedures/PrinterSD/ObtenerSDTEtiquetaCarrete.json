@@ -1,0 +1,173 @@
+﻿{
+    "uniqueId":  "32814581-38e1-4c1a-979d-0cfeadc4ce89",
+    "name":  "ObtenerSDTEtiquetaCarrete",
+    "type":  "Procedure",
+    "module":  "PrinterSD",
+    "description":  "Obtener SDTEtiqueta Carrete",
+    "filePath":  "Procedures/PrinterSD/ObtenerSDTEtiquetaCarrete.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026EtiquetaCarreteSDT = New()\n\ndo \u0027CarreteEnPallet\u0027\n\nFor each\n\tWhere CarreteId = \u0026CarreteId\n\t\u0026EtiquetaCarreteSDT.CarreteId = CarreteId\n\t\u0026EtiquetaCarreteSDT.CarreteNoSerie = CarreteNoSerie\n\t\u0026EtiquetaCarreteSDT.InicioPBPrensadoId = InicioPBPrensadoId\n\t\n\t//Asignar el producto del prensado o del palet segun corresponda\n\t//Aplica para los escenarios donde el producto del palet es tipo etiqueta\n\tif(\u0026EnPalet)\n\t\t\u0026EtiquetaCarreteSDT.PrensadoProductoId = \u0026PaletProductoId\n\t        \u0026EtiquetaCarreteSDT.PrensadoProductoNombre = \u0026PaletProductoNombre\n\telse\n\t\t\u0026EtiquetaCarreteSDT.PrensadoProductoId = PrensadoProductoId\n\t        \u0026EtiquetaCarreteSDT.PrensadoProductoNombre = PrensadoProductoNombre\n\tendif\n\n\t\u0026EtiquetaCarreteSDT.PrensadoProductoDescripcion = PrensadoProductoDescripcion\n\t\u0026EtiquetaCarreteSDT.CarreteNoLinea = CarreteNoLinea\n\t\u0026EtiquetaCarreteSDT.CarreraNo = CarreraNo\n\t\u0026EtiquetaCarreteSDT.CarreteCarreraId = CarreteCarreraId\n\tDo \u0027ObtenerTurno\u0027\n\t\n\texit\n\t\nEndFor\ndebugger.Call(niveldebug.Informativo, \u0026Pgmname, \u0027\u0026EtiquetaCarreteSDT.CarreteCarreraId Linea 18 \u0027 + \u0026EtiquetaCarreteSDT.CarreteCarreraId.ToString())\nSub \u0027ObtenerTurno\u0027\n\tFor Each\n\t\tWhere CarreraId = \u0026EtiquetaCarreteSDT.CarreteCarreraId\n\t\t\u0026PrensadoId = InicioPBPrensadoId\n\t\t\n\t\t\u0026EtiquetaCarreteSDT.PrensadoHoraIniciaProceso = CarreraFechaRegistro\n\t\t\u0026EtiquetaCarreteSDT.PrensadoHoraFinProceso = CarreraFechaValidacion\n\t\t\n\t\t\n\tEndFor\n\t\n\tFor Each\n\t\tWhere PrensadoId = \u0026PrensadoId\n\t\t\u0026EtiquetaCarreteSDT.TurnoId = PrensadoTurnoId\n\t\t\u0026EtiquetaCarreteSDT.TurnoNombre = PrensadoTurnoNombre\t\n\t\t\u0026EtiquetaCarreteSDT.PrensaNombre = PrensadoPrensaNombre\n\t\t\u0026EtiquetaCarreteSDT.PrensadoLevasGradosEntrada = PrensadoLevasGradosEntrada\n\t\t\u0026EtiquetaCarreteSDT.PrensadoLevasGradosSalida = PrensadoLevasGradosSalida\n\t\n\t\t\u0026EtiquetaCarreteSDT.PrensadoOperadorNombre = PrensadoOperadorNombre\n\t\t\u0026EtiquetaCarreteSDT.PrensadoTroquelNombre = PrensadoTroquelNombre\n\t\texit\n\tEndFor\n\t\nEndSub\n\n\nSub \u0027CarreteEnPallet\u0027\n\t\n\t\u0026EnPalet = false\n\tfor each DB.PaletCarrete\n\t\twhere PaletId \u003e 0\n\t        where CarreteId = \u0026CarreteId\n\t\t\u0026PaletProductoId = PaletProductoId\n                \u0026PaletProductoNombre = PaletProductoNombre\n\t\t\u0026EnPalet = true\n\t\tExit\n\tendfor\nEndSub\n",
+                              "cleanSource":  "\u0026EtiquetaCarreteSDT = New()\n\ndo \u0027CarreteEnPallet\u0027\n\nFor each\n\tWhere CarreteId = \u0026CarreteId\n\t\u0026EtiquetaCarreteSDT.CarreteId = CarreteId\n\t\u0026EtiquetaCarreteSDT.CarreteNoSerie = CarreteNoSerie\n\t\u0026EtiquetaCarreteSDT.InicioPBPrensadoId = InicioPBPrensadoId\n\t\n\t//Asignar el producto del prensado o del palet segun corresponda\n\t//Aplica para los escenarios donde el producto del palet es tipo etiqueta\n\tif(\u0026EnPalet)\n\t\t\u0026EtiquetaCarreteSDT.PrensadoProductoId = \u0026PaletProductoId\n\t        \u0026EtiquetaCarreteSDT.PrensadoProductoNombre = \u0026PaletProductoNombre\n\telse\n\t\t\u0026EtiquetaCarreteSDT.PrensadoProductoId = PrensadoProductoId\n\t        \u0026EtiquetaCarreteSDT.PrensadoProductoNombre = PrensadoProductoNombre\n\tendif\n\n\t\u0026EtiquetaCarreteSDT.PrensadoProductoDescripcion = PrensadoProductoDescripcion\n\t\u0026EtiquetaCarreteSDT.CarreteNoLinea = CarreteNoLinea\n\t\u0026EtiquetaCarreteSDT.CarreraNo = CarreraNo\n\t\u0026EtiquetaCarreteSDT.CarreteCarreraId = CarreteCarreraId\n\tDo \u0027ObtenerTurno\u0027\n\t\n\texit\n\t\nEndFor\ndebugger.Call(niveldebug.Informativo, \u0026Pgmname, \u0027\u0026EtiquetaCarreteSDT.CarreteCarreraId Linea 18 \u0027 + \u0026EtiquetaCarreteSDT.CarreteCarreraId.ToString())\nSub \u0027ObtenerTurno\u0027\n\tFor Each\n\t\tWhere CarreraId = \u0026EtiquetaCarreteSDT.CarreteCarreraId\n\t\t\u0026PrensadoId = InicioPBPrensadoId\n\t\t\n\t\t\u0026EtiquetaCarreteSDT.PrensadoHoraIniciaProceso = CarreraFechaRegistro\n\t\t\u0026EtiquetaCarreteSDT.PrensadoHoraFinProceso = CarreraFechaValidacion\n\t\t\n\t\t\n\tEndFor\n\t\n\tFor Each\n\t\tWhere PrensadoId = \u0026PrensadoId\n\t\t\u0026EtiquetaCarreteSDT.TurnoId = PrensadoTurnoId\n\t\t\u0026EtiquetaCarreteSDT.TurnoNombre = PrensadoTurnoNombre\t\n\t\t\u0026EtiquetaCarreteSDT.PrensaNombre = PrensadoPrensaNombre\n\t\t\u0026EtiquetaCarreteSDT.PrensadoLevasGradosEntrada = PrensadoLevasGradosEntrada\n\t\t\u0026EtiquetaCarreteSDT.PrensadoLevasGradosSalida = PrensadoLevasGradosSalida\n\t\n\t\t\u0026EtiquetaCarreteSDT.PrensadoOperadorNombre = PrensadoOperadorNombre\n\t\t\u0026EtiquetaCarreteSDT.PrensadoTroquelNombre = PrensadoTroquelNombre\n\t\texit\n\tEndFor\n\t\nEndSub\n\n\nSub \u0027CarreteEnPallet\u0027\n\t\n\t\u0026EnPalet = false\n\tfor each DB.PaletCarrete\n\t\twhere PaletId \u003e 0\n\t        where CarreteId = \u0026CarreteId\n\t\t\u0026PaletProductoId = PaletProductoId\n                \u0026PaletProductoNombre = PaletProductoNombre\n\t\t\u0026EnPalet = true\n\t\tExit\n\tendfor\nEndSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026CarreteId, out:\u0026EtiquetaCarreteSDT);\n",
+                              "cleanSource":  "parm(in:\u0026CarreteId, out:\u0026EtiquetaCarreteSDT);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Web.Debugger",
+                                         "PrinterSD.EtiquetaCarreteSDT",
+                                         "DB.Carrete",
+                                         "DB.PaletCarrete",
+                                         "debugger"
+                                     ],
+                         "calledBy":  [
+                                          "CarreteReportMainPCR",
+                                          "CarreteReportMain",
+                                          "PalletCarreteReportMainPCR",
+                                          "PalletCarreteReportMain"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "EtiquetaCarreteSDT"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "Carrete",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete"
+                           },
+                           {
+                               "name":  "CarreteId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Carrete Id"
+                           },
+                           {
+                               "name":  "EnPalet",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "En Palet"
+                           },
+                           {
+                               "name":  "EtiquetaCarreteSDT",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Etiqueta Carrete SDT"
+                           },
+                           {
+                               "name":  "PaletProductoNombre",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Producto Nombre"
+                           },
+                           {
+                               "name":  "PaletProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Producto Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

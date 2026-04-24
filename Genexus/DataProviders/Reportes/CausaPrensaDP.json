@@ -1,0 +1,80 @@
+﻿{
+    "uniqueId":  "8297a00a-e721-420c-8ffb-7219f6438d61",
+    "name":  "CausaPrensaDP",
+    "type":  "DataProvider",
+    "module":  "Reportes",
+    "description":  "Causa Prensa DP",
+    "filePath":  "DataProviders/Reportes/CausaPrensaDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTCausaInterrupcion\n{\n\tSDTCausaInterrupcionItem\n\twhere CausaInterrupcionId \u003e 0\n\twhere CausaInterrupcionPrensa = true\n\t{\n\t\tCausaInterrupcionId = CausaInterrupcionId\n\t\tCausaInterrupcionNombre = CausaInterrupcionNombre\n\t\tCausaInterrupcionPrensa = CausaInterrupcionPrensa\n\t\tCausaInterrupcionExtrusora = CausaInterrupcionExtrusora\n\t}\n}\n",
+                              "cleanSource":  "SDTCausaInterrupcion\n{\n\tSDTCausaInterrupcionItem\n\twhere CausaInterrupcionId \u003e 0\n\twhere CausaInterrupcionPrensa = true\n\t{\n\t\tCausaInterrupcionId = CausaInterrupcionId\n\t\tCausaInterrupcionNombre = CausaInterrupcionNombre\n\t\tCausaInterrupcionPrensa = CausaInterrupcionPrensa\n\t\tCausaInterrupcionExtrusora = CausaInterrupcionExtrusora\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Reportes.SDTCausaInterrupcion"
+                                     ],
+                         "calledBy":  [
+                                          "PrensaObservacion"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTCausaInterrupcion"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

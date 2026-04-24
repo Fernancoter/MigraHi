@@ -1,0 +1,134 @@
+﻿{
+    "uniqueId":  "83d6b04d-aa3d-429d-9379-8c61dc6b5313",
+    "name":  "SDExtrusionInterrupcion",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDExtrusion Interrupcion",
+    "filePath":  "Procedures/Produccion/SDExtrusionInterrupcion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\t\u0026ExtrusionInterrupcion = New()\n\t\u0026ExtrusionInterrupcion.InterrupcionId = \u0026Id\n\t\u0026ExtrusionInterrupcion.ExtrusionId = \u0026ExtrusionId\n\t\u0026ExtrusionInterrupcion.Save()\n\t\n\tif(\u0026ExtrusionInterrupcion.Success())\n\t\tcommit\n\telse\n\t\tmsg(\u0026ExtrusionInterrupcion.GetMessages().ToJson())\n\tendif\n\t\n",
+                              "cleanSource":  "\t\n\t\u0026ExtrusionInterrupcion = New()\n\t\u0026ExtrusionInterrupcion.InterrupcionId = \u0026Id\n\t\u0026ExtrusionInterrupcion.ExtrusionId = \u0026ExtrusionId\n\t\u0026ExtrusionInterrupcion.Save()\n\t\n\tif(\u0026ExtrusionInterrupcion.Success())\n\t\tcommit\n\telse\n\t\tmsg(\u0026ExtrusionInterrupcion.GetMessages().ToJson())\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026Id, in:\u0026ExtrusionId);\n",
+                              "cleanSource":  "parm(in:\u0026Id, in:\u0026ExtrusionId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.ExtrusionInterrupcion"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.ExtrusionInterrupcion"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ExtrusionInterrupcion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Interrupcion"
+                           },
+                           {
+                               "name":  "Id",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Id"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,4 @@
+﻿
+=== Transaction: DB.PrensaCarrera ===
+
+(sin businessLogic extraído)

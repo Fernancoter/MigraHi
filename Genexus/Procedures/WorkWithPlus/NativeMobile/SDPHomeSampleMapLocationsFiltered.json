@@ -1,0 +1,175 @@
+﻿{
+    "uniqueId":  "d5750aba-f039-4993-bb25-46e85be94b6a",
+    "name":  "SDPHomeSampleMapLocationsFiltered",
+    "type":  "Procedure",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPHome Sample Map Locations Filtered",
+    "filePath":  "Procedures/WorkWithPlus/NativeMobile/SDPHomeSampleMapLocationsFiltered.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "//Get Locations and filter\n\n\u0026LocationsListAux = SDPHomeSampleMapLocations()\n\nFor \u0026LocationItem in \u0026LocationsListAux\n\tIf \u0026CityRegion \u003c 2 OR \u0026LocationItem.Id \u003e 3\n\t\t\u0026LocationsList.Add(\u0026LocationItem)\n\tEndIf\nEndFor\n",
+                              "cleanSource":  "//Get Locations and filter\n\n\u0026LocationsListAux = SDPHomeSampleMapLocations()\n\nFor \u0026LocationItem in \u0026LocationsListAux\n\tIf \u0026CityRegion \u003c 2 OR \u0026LocationItem.Id \u003e 3\n\t\t\u0026LocationsList.Add(\u0026LocationItem)\n\tEndIf\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026CityRegion, in:\u0026TimeFrom, in:\u0026TimeTo, in:\u0026PricePerClass, in:\u0026PricePerMonth, out:\u0026LocationsList);\n",
+                              "cleanSource":  "Parm(in:\u0026CityRegion, in:\u0026TimeFrom, in:\u0026TimeTo, in:\u0026PricePerClass, in:\u0026PricePerMonth, out:\u0026LocationsList);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPHomeSampleMapLocations",
+                                         "WorkWithPlus.NativeMobile.SDPMapLocationData"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CityRegion",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "City Region"
+                           },
+                           {
+                               "name":  "LocationItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Location Item"
+                           },
+                           {
+                               "name":  "LocationsList",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Locations List"
+                           },
+                           {
+                               "name":  "PricePerClass",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Price Per Class"
+                           },
+                           {
+                               "name":  "PricePerMonth",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Price Per Month"
+                           },
+                           {
+                               "name":  "TimeFrom",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATETIME",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Time From"
+                           },
+                           {
+                               "name":  "TimeTo",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATETIME",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Time To"
+                           },
+                           {
+                               "name":  "LocationsListAux",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Locations List Aux"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

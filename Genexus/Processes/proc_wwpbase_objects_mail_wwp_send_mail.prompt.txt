@@ -1,0 +1,241 @@
+﻿
+=== Procedure: WWPBaseObjects.Mail.WWP_SendMail ===
+
+--- Source (Source) ---
+&SendStatus = -1
+&Mail.Load(&MailId)
+
+If &Mail.Fail()
+	WWP_Logger.Error(&Pgmname, !"Mail not found with id: " + &MailId.ToString())
+	return
+EndIf
+
+If &Mail.WWPMailSenderAddress.IsEmpty() or &Mail.WWPMailSenderName.IsEmpty()
+	WWP_Logger.Error(&Pgmname, !"Sender address/name cannot be empty: " + &MailId.ToString())
+	WWP_UpdateMailStatus(&MailId, WWP_StatusMail.Error, !"Sender address/name cannot be empty")
+	return
+EndIf
+
+If &Mail.WWPMailSubject.IsEmpty() or &Mail.WWPMailBody.IsEmpty()
+	WWPBaseObjects.WWP_Logger.Error(&Pgmname, !"Mail subject/body cannot be empty: " + &MailId.ToString())
+	WWP_UpdateMailStatus(&MailId, Mail.WWP_StatusMail.Error, !"Mail subject/body cannot be empty")
+	return
+EndIf
+
+If &Mail.WWPMailTo.IsEmpty() and &Mail.WWPMailCC.IsEmpty() and &Mail.WWPMailBCC.IsEmpty()
+	WWPBaseObjects.WWP_Logger.Error(&Pgmname, !"Mail recipient cannot be empty: " + &MailId.ToString())
+	WWP_UpdateMailStatus(&MailId, WWPBaseObjects.Mail.WWP_StatusMail.Error, !"Mail recipient cannot be empty")
+	return
+EndIf
+
+&ToAddressList = WWP_ParseMailAddressList(&Mail.WWPMailTo)
+If not &Mail.WWPMailTo.IsEmpty() and &ToAddressList.Count = 0
+	WWP_Logger.Error(&Pgmname, !"Mail recipient is not valid address list: " + &MailId.ToString())
+	WWP_UpdateMailStatus(&MailId, WWP_StatusMail.Error, !"Mail To is invalid")
+	return
+EndIf
+
+&CCAddressList = WWP_ParseMailAddressList(&Mail.WWPMailCC)
+If not &Mail.WWPMailCC.IsEmpty() and &CCAddressList.Count = 0
+	WWP_Logger.Error(&Pgmname, !"Mail recipient is not valid address list: " + &MailId.ToString())
+	WWP_UpdateMailStatus(&MailId, Mail.WWP_StatusMail.Error, !"Mail CC is invalid")
+	return
+EndIf
+
+&BCCAddressList = WWP_ParseMailAddressList(&Mail.WWPMailBCC)
+If not &Mail.WWPMailBCC.IsEmpty() and &BCCAddressList.Count = 0
+	WWP_Logger.Error(&Pgmname, !"Mail recipient is not valid address list: " + &MailId.ToString())
+	WWP_UpdateMailStatus(&MailId, WWP_StatusMail.Error, !"Mail BCC is invalid")
+	return
+EndIf
+
+For &Attachment in &Mail.Attachments
+	&FileExists = (FileExist(&Attachment.WWPMailAttachmentFile) = 1)
+	If not &FileExists
+		WWP_Logger.Error(&Pgmname, !"Attachment is not a valid file: " + &Attachment.WWPMailAttachmentFile)
+		WWP_UpdateMailStatus(&MailId, WWP_StatusMail.Error, !"Attachment invalid")
+		return
+	EndIf
+EndFor
+
+&MailMessage = new()
+&MailMessage.From.Address = &Mail.WWPMailSenderAddress
+&MailMessage.From.Name = &Mail.WWPMailSenderName
+&MailMessage.Subject = &Mail.WWPMailSubject
+&MailMessage.HTMLText = &Mail.WWPMailBody
+
+&MailRecipient = new()
+&MailRecipient.Address = &Mail.WWPMailSenderAddress
+&MailRecipient.Name = &Mail.WWPMailSenderName
+&SMTPSession.Sender = &MailRecipient
+
+For &Address in &ToAddressList
+	&MailRecipient = new()
+	&MailRecipient.Address = &Address
+	&MailMessage.To.Add(&MailRecipient)
+EndFor
+
+For &Address in &CCAddressList
+	&MailRecipient = new()
+	&MailRecipient.Address = &Address
+	&MailMessage.CC.Add(&MailRecipient)
+EndFor
+
+For &Address in &BCCAddressList
+	&MailRecipient = new()
+	&MailRecipient.Address = &Address
+	&MailMessage.BCC.Add(&MailRecipient)
+EndFor
+
+For &Attachment in &Mail.Attachments
+	&MailMessage.Attachments.Add(&Attachment.WWPMailAttachmentFile)
+EndFor
+
+&SendStatus = &SmtpSession.Send(&MailMessage)
+&StatusMessage = WWP_GetStatusCodeMessage(&SendStatus)
+
+If &SendStatus <> 0
+	WWP_Logger.Error(&Pgmname, Format(!"Error sending mail with id: %1 - Code: %2 - %3", &MailId.ToString(), &SendStatus.ToString().Trim(), &StatusMessage))
+	WWP_UpdateMailStatus(&MailId, WWP_StatusMail.Error, Format(!"Code: %1 - Message: %2", &SendStatus.ToString().Trim(), &StatusMessage))
+	return
+EndIf
+
+WWP_UpdateMailStatus(&MailId, WWPBaseObjects.Mail.WWP_StatusMail.Sent, !"OK")
+commit
+
+--- Rules (Rules) ---
+parm(in:&MailId, in:&SMTPSession, out:&SendStatus);
+
+
+=== Procedure: WWPBaseObjects.Mail.WWP_GetStatusCodeMessage ===
+
+--- Source (Source) ---
+Do Case
+	Case &StatusCode = 0
+		&Message = !"OK"
+	Case &StatusCode = 1
+		&Message = !"Already logged in"
+	Case &StatusCode = 2
+		&Message = !"Not logged in"
+	Case &StatusCode = 3
+		&Message = !"Could not complete login"
+	Case &StatusCode = 6
+		&Message = !"Invalid sender name"
+	Case &StatusCode = 7
+		&Message = !"Invalid sender address"
+	Case &StatusCode = 8
+		&Message = !"Invalid user name"
+	Case &StatusCode = 9
+		&Message = !"Invalid password"
+	Case &StatusCode = 10
+		&Message = !"Could not send message"
+	Case &StatusCode = 11
+		&Message = !"No messages to receive"
+	Case &StatusCode = 12
+		&Message = !"Could not delete message"		
+	Case &StatusCode = 13
+		&Message = !"No main recipient specified"
+	Case &StatusCode = 14
+		&Message = !"Invalid recipient"
+	Case &StatusCode = 15
+		&Message = !"Invalid attachment"
+	Case &StatusCode = 16
+		&Message = !"Could not save attachment"
+	Case &StatusCode = 17
+		&Message = !"Invalid Authentication value"
+	Case &StatusCode = 18
+		&Message = !"Not enough memory"
+	Case &StatusCode = 19
+		&Message = !"Connection lost"
+	Case &StatusCode = 20
+		&Message = !"Timeout exceeded"
+	Case &StatusCode = 21
+		&Message = !"Memory allocation error"
+	Case &StatusCode = 23
+		&Message = !"The server does not recognize any of the supported authentication methods"
+	Case &StatusCode = 24
+		&Message = !"Authentication error"
+	Case &StatusCode = 25
+		&Message = !"User or password refused"
+	Case &StatusCode = 26
+		&Message = !"No current message"
+	Case &StatusCode = 27
+		&Message = !"Invalid NewMessages value"
+	Otherwise
+		&Message = !"Unknown error"	
+EndCase
+
+--- Rules (Rules) ---
+parm(in:&StatusCode, out:&Message);
+
+
+=== Transaction: WWPBaseObjects.Mail.WWP_Mail ===
+
+--- Start (Event) ---
+
+--- After Trn (Event) ---
+
+--- Rules (Rules) ---
+
+default(WWPMailStatus, WWPBaseObjects.Mail.WWP_StatusMail.Pending);
+default(WWPMailCreated, ServerNow());
+default(WWPMailScheduled, ServerNow());
+
+
+=== Procedure: WWPBaseObjects.Mail.WWP_ParseMailAddressList ===
+
+--- Source (Source) ---
+WWP_Logger.Debug(&Pgmname, !"Begin parsing mail address list")
+
+&AddressList.Clear()
+
+&TrimmedAddresses = &AddressString.Trim()
+If &TrimmedAddresses.IsEmpty()
+	WWPBaseObjects.WWP_Logger.Error(&Pgmname, !"Address list is empty")
+	return
+EndIf
+
+&ValidationRegex = !"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"
+&SeparatorRegex = !"\s*,\s*"
+&SplittedAddresses = &TrimmedAddresses.SplitRegEx(&SeparatorRegex)
+
+For &Address in &SplittedAddresses
+	&Address = &Address.Trim()
+	If not &Address.IsMatch(&ValidationRegex)
+		WWP_Logger.Error(&Pgmname, !"Address is incorrect: " + &Address)
+		&AddressList.Clear()
+		return
+	Else
+		&AddressList.Add(&Address)
+	EndIf
+EndFor
+
+WWP_Logger.Debug(&Pgmname, !"Parsing address completed")
+
+--- Rules (Rules) ---
+parm(in:&AddressString, out:&AddressList);
+
+
+=== Procedure: WWPBaseObjects.Mail.WWP_UpdateMailStatus ===
+
+--- Source (Source) ---
+&Mail.Load(&MailId)
+
+If &Mail.Fail()
+	WWP_Logger.Error(&Pgmname, !"Mail not found with id: " + &MailId.ToString())
+	return
+EndIf
+
+&Mail.WWPMailProcessed = ServerNow()
+&Mail.WWPMailStatus = &MailStatus
+&Mail.WWPMailDetail = &MailDetail
+&Mail.Save()
+
+If &Mail.Fail()
+	WWP_Logger.Error(&Pgmname, !"Error updating mail status with id: " + &MailId.ToString())
+	return
+EndIf
+
+--- Rules (Rules) ---
+parm(in:&MailId, in:&MailStatus, in:&MailDetail);
+

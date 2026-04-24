@@ -1,0 +1,222 @@
+﻿{
+    "uniqueId":  "9d6d48c4-b253-46af-b023-20d87669a7d3",
+    "name":  "GetWWPTitleSettingsIcons",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "Get WWPTitle Settings Icons",
+    "filePath":  "Procedures/WWPBaseObjects/GetWWPTitleSettingsIcons.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026TitleSettingsIcons.Default_fi = !\u0027fas fa-caret-down CSTitleIcon\u0027\n\u0026TitleSettingsIcons.Filtered_fi = !\u0027fas fa-filter CSTitleIcon\u0027\n\u0026TitleSettingsIcons.SortedASC_fi = !\u0027fas fa-long-arrow-alt-up CSTitleIcon\u0027\n\u0026TitleSettingsIcons.SortedDSC_fi = !\u0027fas fa-long-arrow-alt-down CSTitleIcon\u0027\n\u0026TitleSettingsIcons.FilteredSortedASC_fi = !\u0027fas fa-long-arrow-alt-up CSTitleIconDanger\u0027\n\u0026TitleSettingsIcons.FilteredSortedDSC_fi = !\u0027fas fa-long-arrow-alt-down CSTitleIconDanger\u0027\n\u0026TitleSettingsIcons.OptionSortASC_fi = !\u0027fas fa-sort-amount-up CSDropDownFI\u0027\n\u0026TitleSettingsIcons.OptionSortDSC_fi = !\u0027fas fa-sort-amount-down CSDropDownFI\u0027\n\u0026TitleSettingsIcons.OptionApplyFilter_fi = !\u0027fas fa-search\u0027\n\u0026TitleSettingsIcons.OptionFilteringData_fi = !\u0027fa fa-spinner fa-pulse fa-fw CSDropDownFI\u0027\n\u0026TitleSettingsIcons.OptionCleanFilters_fi = !\u0027fas fa-times CSDropDownFI\u0027\n\u0026TitleSettingsIcons.SelectedOption_fi = !\u0027fas fa-filter CSDropDownFilter\u0027\n\u0026TitleSettingsIcons.MultiselOption_fi = !\u0027far fa-square CSDropDownFilter\u0027\n\u0026TitleSettingsIcons.MultiselSelOption_fi = !\u0027far fa-check-square CSDropDownFilter\u0027\n\u0026TitleSettingsIcons.TreeviewCollapse_fi = !\u0027fas fa-angle-down\u0027\n\u0026TitleSettingsIcons.TreeviewExpand_fi = !\u0027fas fa-angle-right\u0027\n\u0026TitleSettingsIcons.FixLeft_fi = !\u0027fa fa-rotate-270 fa-table CSDropDownFI\u0027\n\u0026TitleSettingsIcons.FixRight_fi = !\u0027fa fa-rotate-90 fa-table CSDropDownFI\u0027\n",
+                              "cleanSource":  "\n\u0026TitleSettingsIcons.Default_fi = !\u0027fas fa-caret-down CSTitleIcon\u0027\n\u0026TitleSettingsIcons.Filtered_fi = !\u0027fas fa-filter CSTitleIcon\u0027\n\u0026TitleSettingsIcons.SortedASC_fi = !\u0027fas fa-long-arrow-alt-up CSTitleIcon\u0027\n\u0026TitleSettingsIcons.SortedDSC_fi = !\u0027fas fa-long-arrow-alt-down CSTitleIcon\u0027\n\u0026TitleSettingsIcons.FilteredSortedASC_fi = !\u0027fas fa-long-arrow-alt-up CSTitleIconDanger\u0027\n\u0026TitleSettingsIcons.FilteredSortedDSC_fi = !\u0027fas fa-long-arrow-alt-down CSTitleIconDanger\u0027\n\u0026TitleSettingsIcons.OptionSortASC_fi = !\u0027fas fa-sort-amount-up CSDropDownFI\u0027\n\u0026TitleSettingsIcons.OptionSortDSC_fi = !\u0027fas fa-sort-amount-down CSDropDownFI\u0027\n\u0026TitleSettingsIcons.OptionApplyFilter_fi = !\u0027fas fa-search\u0027\n\u0026TitleSettingsIcons.OptionFilteringData_fi = !\u0027fa fa-spinner fa-pulse fa-fw CSDropDownFI\u0027\n\u0026TitleSettingsIcons.OptionCleanFilters_fi = !\u0027fas fa-times CSDropDownFI\u0027\n\u0026TitleSettingsIcons.SelectedOption_fi = !\u0027fas fa-filter CSDropDownFilter\u0027\n\u0026TitleSettingsIcons.MultiselOption_fi = !\u0027far fa-square CSDropDownFilter\u0027\n\u0026TitleSettingsIcons.MultiselSelOption_fi = !\u0027far fa-check-square CSDropDownFilter\u0027\n\u0026TitleSettingsIcons.TreeviewCollapse_fi = !\u0027fas fa-angle-down\u0027\n\u0026TitleSettingsIcons.TreeviewExpand_fi = !\u0027fas fa-angle-right\u0027\n\u0026TitleSettingsIcons.FixLeft_fi = !\u0027fa fa-rotate-270 fa-table CSDropDownFI\u0027\n\u0026TitleSettingsIcons.FixRight_fi = !\u0027fa fa-rotate-90 fa-table CSDropDownFI\u0027"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "\nparm(out:\u0026TitleSettingsIcons);\n",
+                              "cleanSource":  "\nparm(out:\u0026TitleSettingsIcons);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.DVB_SDTDropDownOptionsTitleSettingsIcons"
+                                     ],
+                         "calledBy":  [
+                                          "gestionarTroquel",
+                                          "PaletPrompt",
+                                          "PrensaPrompt",
+                                          "InterrupcionPrompt",
+                                          "listarLotes",
+                                          "CarretePrompt",
+                                          "EtiquetadoOperadorWW",
+                                          "CarreteDefectoPrompt",
+                                          "vwTrazabilidad",
+                                          "ProductoTerminadoWW",
+                                          "ListadoEmbarques",
+                                          "PrensaObservacionWW",
+                                          "BobinaWW",
+                                          "TableroDirectivoExtrusion",
+                                          "listarOperador",
+                                          "ConsolidatedWW",
+                                          "ListadoOrdenes",
+                                          "TurnoPrompt",
+                                          "CompanyWW",
+                                          "PrensadoPrompt",
+                                          "ListadoRemisiones",
+                                          "StatementOfIncomePrompt",
+                                          "CustomerWW",
+                                          "vwAnaliticaBobina",
+                                          "EtiquetadoOperadorPrompt",
+                                          "BudgetWW",
+                                          "ExtrusionInterrupcionWW",
+                                          "GAMWWUsers",
+                                          "listarPrensaProducto",
+                                          "TroquelWW",
+                                          "PaletWW",
+                                          "PrensaObservacionCausaInterrupcionPrompt",
+                                          "listarPrensas",
+                                          "OrdenesWW",
+                                          "PrensadoInterrupcionPrompt",
+                                          "ExtrusoraObservacionPrompt",
+                                          "vwExtrusionResultado",
+                                          "listarProductoCategoria",
+                                          "vwAnaliticaCarrete",
+                                          "ListarExtrusoraMezcladora",
+                                          "gestionarExtrusora",
+                                          "PrensadoBobinaPrompt",
+                                          "gestionarPrensaProducto",
+                                          "vwPrensadoResultado",
+                                          "FTBWW",
+                                          "listarExtrusoraProducto",
+                                          "CausaInterrupcionPrompt",
+                                          "listarInventario",
+                                          "OrderPrompt",
+                                          "ExtrusoraObservacionWW",
+                                          "TroquelPrompt",
+                                          "listarTurnos",
+                                          "ExtrusionInterrupcionPrompt",
+                                          "CarreraPrompt",
+                                          "ExtrusoraMezcladoraWW",
+                                          "BobinaPrompt",
+                                          "AuditWW",
+                                          "ExtrusionPrompt",
+                                          "DownTimeCodePrompt",
+                                          "ExtrusoraMezcladoraPrompt",
+                                          "listarProductos",
+                                          "SalesPersonPrompt",
+                                          "PrensadoWW",
+                                          "listarSilos",
+                                          "ExtrusoraObservacionCausaInterrupcionPrompt",
+                                          "RemissionsWW",
+                                          "PrensaObservacionPrompt",
+                                          "SalesPersonWW",
+                                          "InterrupcionWW",
+                                          "ImprimirBobinas",
+                                          "CarreteEnPallet",
+                                          "PrensadoInterrupcionWW",
+                                          "gestionarProducto",
+                                          "ExistenciaWW",
+                                          "WWP_MailTemplateWW",
+                                          "CausaInterrupcionWW",
+                                          "ConsolidatedPrompt",
+                                          "BudgetPrompt",
+                                          "CarreraWW",
+                                          "gestionarExtrusoraProducto",
+                                          "EmbarquePalletWW",
+                                          "ExtrusionWW",
+                                          "ProductsWW",
+                                          "CarreteDefectoWW",
+                                          "ExistenciaPrompt",
+                                          "vwCarreteCarrera",
+                                          "vwAnaliticaPrensado",
+                                          "TroquelProductoPrompt",
+                                          "ProductoTerminadoPrompt",
+                                          "listarTroquel",
+                                          "EmbarquePalletPrompt",
+                                          "WWP_Search",
+                                          "TableroDirectivoPrensado",
+                                          "reclamosww",
+                                          "CarreteWW",
+                                          "listarProductoTerminado",
+                                          "PrensadoBobinaWW",
+                                          "vwOrdenEtiquetado",
+                                          "CompanyPrompt",
+                                          "listarExtrusora",
+                                          "StatementOfIncomeWW",
+                                          "DownTimeCodeWW",
+                                          "PalletEnEmbarque",
+                                          "WWP_MailTemplatePrompt",
+                                          "listarExtrusion"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "TitleSettingsIcons",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Title Settings Icons"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

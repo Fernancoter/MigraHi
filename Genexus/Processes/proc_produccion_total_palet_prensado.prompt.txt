@@ -1,0 +1,17 @@
+﻿
+=== Procedure: Produccion.TotalPaletPrensado ===
+
+--- Source (Source) ---
+        
+        &TotalPalets = 0
+	
+	for each DB.Palet
+		where PaletId > 0
+		where PaletPrensadoFinId = &PrensadoId
+		where PaletEstatus in (EstatusPalet.Terminado, EstatusPalet.Embarcado)
+		&TotalPalets += 1	
+	endfor
+
+--- Rules (Rules) ---
+parm(in:&PrensadoId, out:&TotalPalets);
+

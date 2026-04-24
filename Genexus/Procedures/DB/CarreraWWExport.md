@@ -1,0 +1,549 @@
+# Procedure: CarreraWWExport
+
+- **Module:** DB
+- **Description:** Carrera WWExport
+- **GAM Object:** No
+
+## Data Dictionary / Parameters
+
+| Name | Element Type | Data Type | Accessor | Description |
+|---|---|---|---|---|
+| IsAuthorized | Variable | Boolean |  | Is Authorized |
+| WWPContext | Variable | GX_SDT |  | WWPContext |
+| SecurityFunctionalityKeys | Variable | VARCHAR |  | Security Functionality Keys |
+| ExcelDocument | Variable | GX_USRDEFTYP |  | Excel Document |
+| Filename | Parameter | VARCHAR | out | Filename |
+| ErrorMessage | Parameter | VARCHAR | out | Error Message |
+| CellRow | Variable | NUMERIC |  | Cell Row |
+| FirstColumn | Variable | NUMERIC |  | First Column |
+| Random | Variable | NUMERIC |  | Random |
+| OrderedBy | Variable | NUMERIC |  | Ordered By |
+| OrderedDsc | Variable | Boolean |  | Ordered Dsc |
+| FilterFullText | Variable | VARCHAR |  | Filter Full Text |
+| Session | Variable | GX_USRDEFTYP |  | Session |
+| GridStateXML | Variable | LONGVARCHAR |  | Grid State XML |
+| GridState | Variable | GX_SDT |  | Grid State |
+| GridStateFilterValue | Variable | GX_SDT |  | Grid State Filter Value |
+| ColumnsSelector | Variable | GX_SDT |  | Columns Selector |
+| ColumnsSelectorAux | Variable | GX_SDT |  | Columns Selector Aux |
+| ColumnsSelector_Column | Variable | GX_SDT |  | Columns Selector_Column |
+| ColumnsSelectorXML | Variable | LONGVARCHAR |  | Columns Selector XML |
+| UserCustomValue | Variable | LONGVARCHAR |  | User Custom Value |
+| ColumnsToRemove | Variable | NUMERIC |  | Columns To Remove |
+| ColumnToRemove | Variable | NUMERIC |  | Column To Remove |
+| ColumnName | Variable | VARCHAR |  | Column Name |
+| VisibleColumnCount | Variable | NUMERIC |  | Visible Column Count |
+| NewColumnVisible | Variable | Boolean |  | New Column Visible |
+| ColumnsSelectorXML2 | Variable | LONGVARCHAR |  | Columns Selector XML2 |
+| TFCarreraNo | Variable | NUMERIC |  | TFCarrera No |
+| TFCarreraNo_To | Variable | NUMERIC |  | TFCarrera No_To |
+| TFCarreraEstado_SelsJson | Variable | LONGVARCHAR |  | TFCarrera Estado_Sels Json |
+| TFCarreraEstado_Sel | Variable | VARCHAR |  | TFCarrera Estado_Sel |
+| TFCarreraEstado_Sels | Variable | VARCHAR |  | TFCarrera Estado_Sels |
+| TFCarreraPaletTerminado | Variable | VARCHAR |  | TFCarrera Palet Terminado |
+| TFCarreraPaletTerminado_Sel | Variable | VARCHAR |  | TFCarrera Palet Terminado_Sel |
+| TFCarreraFechaRegistro | Variable | DATETIME |  | TFCarrera Fecha Registro |
+| TFCarreraFechaRegistro_To | Variable | DATETIME |  | TFCarrera Fecha Registro_To |
+| TFInicioPBPrensadoId | Variable | NUMERIC |  | TFInicio PBPrensado Id |
+| TFInicioPBPrensadoId_To | Variable | NUMERIC |  | TFInicio PBPrensado Id_To |
+| TFInicioPBPrensaNombre | Variable | VARCHAR |  | TFInicio PBPrensa Nombre |
+| TFInicioPBPrensaNombre_Sel | Variable | VARCHAR |  | TFInicio PBPrensa Nombre_Sel |
+| TFInicioPBTurnoNombre | Variable | VARCHAR |  | TFInicio PBTurno Nombre |
+| TFInicioPBTurnoNombre_Sel | Variable | VARCHAR |  | TFInicio PBTurno Nombre_Sel |
+| TFInicioPrensadoBobinaNoSerie | Variable | VARCHAR |  | TFInicio Prensado Bobina No Serie |
+| TFInicioPrensadoBobinaNoSerie_Sel | Variable | VARCHAR |  | TFInicio Prensado Bobina No Serie_Sel |
+| GridConditionalFormattingFilter | Variable | NUMERIC |  | Grid Conditional Formatting Filter |
+| i | Variable | NUMERIC |  | i |
+| NowDate | Variable | DATE |  | Now Date |
+| TFCarreraInterrupcionId | Variable | NUMERIC |  | TFCarrera Interrupcion Id |
+| TFCarreraInterrupcionId_To | Variable | NUMERIC |  | TFCarrera Interrupcion Id_To |
+| TFCarreraInterrupcionMotivo | Variable | VARCHAR |  | TFCarrera Interrupcion Motivo |
+| TFCarreraInterrupcionMotivo_Sel | Variable | VARCHAR |  | TFCarrera Interrupcion Motivo_Sel |
+| TFCarreraInterrupcionTiempo | Variable | NUMERIC |  | TFCarrera Interrupcion Tiempo |
+| TFCarreraInterrupcionTiempo_To | Variable | NUMERIC |  | TFCarrera Interrupcion Tiempo_To |
+| TFCarreraDownTimeCode | Variable | VARCHAR |  | TFCarrera Down Time Code |
+| TFCarreraDownTimeCode_Sel | Variable | VARCHAR |  | TFCarrera Down Time Code_Sel |
+| TFCarreraDownTimeDescription | Variable | VARCHAR |  | TFCarrera Down Time Description |
+| TFCarreraDownTimeDescription_Sel | Variable | VARCHAR |  | TFCarrera Down Time Description_Sel |
+| IsAuthorizedCarreraInterrupcionId | Variable | Boolean |  | Is Authorized Carrera Interrupcion Id |
+| ColumnsWithSec | Variable | NUMERIC |  | Columns With Sec |
+| IsAuthorizedCarreraInterrupcionTiempo | Variable | Boolean |  | Is Authorized Carrera Interrupcion Tiempo |
+| Today | Standard Variable | DATE |  | Today |
+| Time | Standard Variable | CHARACTER |  | Time |
+| Pgmname | Standard Variable | CHARACTER |  | Pgmname |
+| Pgmdesc | Standard Variable | CHARACTER |  | Pgmdesc |
+| Page | Standard Variable | NUMERIC |  | Page |
+| Line | Standard Variable | NUMERIC |  | Line |
+| Output | Standard Variable | CHARACTER |  | Output |
+
+## Business Logic
+
+### Source (Source)
+
+```genexus
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+// Exports the contents of a grid (using the selected order and filters) to an Excel file.
+LoadWWPContext.Call(&WWPContext)
+
+Do 'OpenDocument'
+
+&CellRow = 1
+&FirstColumn = 1
+
+Do 'LoadGridState'
+
+Do 'WriteFilters'
+
+Do 'AttributesSecurityCode'
+
+Do 'WriteColumnTitles'
+
+Do 'WriteData'
+
+Do 'CloseDocument'
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+
+Sub 'OpenDocument'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+	&Random = Random() * 10000
+	&Filename = !"CarreraWWExport-" + &Random.ToString().Trim() + !".xlsx"
+
+	&ExcelDocument.Open(&Filename)
+	Do 'CheckStatus'
+	&ExcelDocument.Clear()
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'WriteFilters'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+	If not (&FilterFullText.IsEmpty())
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "WWP_FullTextFilterDescription")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWP_Export_SecureText(&FilterFullText)
+	EndIf
+	If not (&TFCarreraNo.IsEmpty() AND &TFCarreraNo_To.IsEmpty())
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "No")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Number = &TFCarreraNo
+		WWP_ExportWriteFilter(&ExcelDocument, false, &CellRow, &FirstColumn + 2, "WWP_TSTo")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 3).Number = &TFCarreraNo_To
+	EndIf
+	If not (&TFCarreraEstado_Sels.Count = 0)
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Estado")
+		&i = 1
+		For &TFCarreraEstado_Sel in &TFCarreraEstado_Sels
+			If &i = 1
+				&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = ''
+			Else
+				&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text += ', '
+			EndIf
+			&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text += &TFCarreraEstado_Sel.EnumerationDescription()
+			&i += 1
+		EndFor
+	EndIf
+	If not (&TFCarreraPaletTerminado_Sel.IsEmpty())
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Palet Terminado")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWP_Export_SecureText(&TFCarreraPaletTerminado_Sel)
+	Else
+		If not (&TFCarreraPaletTerminado.IsEmpty())
+			WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Palet Terminado")
+			&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWP_Export_SecureText(&TFCarreraPaletTerminado)
+		EndIf
+	EndIf
+	If not (&TFCarreraFechaRegistro.IsEmpty() AND &TFCarreraFechaRegistro_To.IsEmpty())
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Fecha Registro")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Date = &TFCarreraFechaRegistro
+		WWP_ExportWriteFilter(&ExcelDocument, false, &CellRow, &FirstColumn + 2, "WWP_TSTo")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 3).Date = &TFCarreraFechaRegistro_To
+	EndIf
+	If not (&TFInicioPBPrensadoId.IsEmpty() AND &TFInicioPBPrensadoId_To.IsEmpty())
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Prensado Id")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Number = &TFInicioPBPrensadoId
+		WWP_ExportWriteFilter(&ExcelDocument, false, &CellRow, &FirstColumn + 2, "WWP_TSTo")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 3).Number = &TFInicioPBPrensadoId_To
+	EndIf
+	If not (&TFInicioPBPrensaNombre_Sel.IsEmpty())
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Prensa")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWP_Export_SecureText(&TFInicioPBPrensaNombre_Sel)
+	Else
+		If not (&TFInicioPBPrensaNombre.IsEmpty())
+			WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Prensa")
+			&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWPBaseObjects.WWP_Export_SecureText(&TFInicioPBPrensaNombre)
+		EndIf
+	EndIf
+	If not (&TFInicioPBTurnoNombre_Sel.IsEmpty())
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Turno")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWP_Export_SecureText(&TFInicioPBTurnoNombre_Sel)
+	Else
+		If not (&TFInicioPBTurnoNombre.IsEmpty())
+			WWPBaseObjects.WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Turno")
+			&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWP_Export_SecureText(&TFInicioPBTurnoNombre)
+		EndIf
+	EndIf
+	If not (&TFInicioPrensadoBobinaNoSerie_Sel.IsEmpty())
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Bobina No. Serie")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWP_Export_SecureText(&TFInicioPrensadoBobinaNoSerie_Sel)
+	Else
+		If not (&TFInicioPrensadoBobinaNoSerie.IsEmpty())
+			WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Bobina No. Serie")
+			&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWP_Export_SecureText(&TFInicioPrensadoBobinaNoSerie)
+		EndIf
+	EndIf
+	If not (&TFCarreraInterrupcionId.IsEmpty() AND &TFCarreraInterrupcionId_To.IsEmpty())
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Interrupcion Id")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Number = &TFCarreraInterrupcionId
+		WWP_ExportWriteFilter(&ExcelDocument, false, &CellRow, &FirstColumn + 2, "WWP_TSTo")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 3).Number = &TFCarreraInterrupcionId_To
+	EndIf
+	If not (&TFCarreraInterrupcionMotivo_Sel.IsEmpty())
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Interrupcion Motivo")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWP_Export_SecureText(&TFCarreraInterrupcionMotivo_Sel)
+	Else
+		If not (&TFCarreraInterrupcionMotivo.IsEmpty())
+			WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Interrupcion Motivo")
+			&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWP_Export_SecureText(&TFCarreraInterrupcionMotivo)
+		EndIf
+	EndIf
+	If not (&TFCarreraInterrupcionTiempo.IsEmpty() AND &TFCarreraInterrupcionTiempo_To.IsEmpty())
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Interrupcion Tiempo")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Number = &TFCarreraInterrupcionTiempo
+		WWP_ExportWriteFilter(&ExcelDocument, false, &CellRow, &FirstColumn + 2, "WWP_TSTo")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 3).Number = &TFCarreraInterrupcionTiempo_To
+	EndIf
+	If not (&TFCarreraDownTimeCode_Sel.IsEmpty())
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Time Code")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWP_Export_SecureText(&TFCarreraDownTimeCode_Sel)
+	Else
+		If not (&TFCarreraDownTimeCode.IsEmpty())
+			WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Time Code")
+			&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWP_Export_SecureText(&TFCarreraDownTimeCode)
+		EndIf
+	EndIf
+	If not (&TFCarreraDownTimeDescription_Sel.IsEmpty())
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Time Description")
+		&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWP_Export_SecureText(&TFCarreraDownTimeDescription_Sel)
+	Else
+		If not (&TFCarreraDownTimeDescription.IsEmpty())
+			WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "Time Description")
+			&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = WWP_Export_SecureText(&TFCarreraDownTimeDescription)
+		EndIf
+	EndIf
+	If not &GridConditionalFormattingFilter.IsEmpty()
+		WWP_ExportWriteFilter(&ExcelDocument, true, &CellRow, &FirstColumn, "WWP_FullTextFilterDescription")
+		Do Case
+			Case &GridConditionalFormattingFilter = 1
+				&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = "En Proceso"
+			Case &GridConditionalFormattingFilter = 2
+				&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = "Terminada"
+			Case &GridConditionalFormattingFilter = 3
+				&ExcelDocument.Cells(&CellRow, &FirstColumn + 1).Text = "Validada"
+		EndCase
+	EndIf
+	&CellRow += 2
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'WriteColumnTitles'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+	&VisibleColumnCount = 0
+	If &Session.Get(!'DB.CarreraWWColumnsSelector') <> ''
+		&ColumnsSelectorXML = &Session.Get(!'DB.CarreraWWColumnsSelector')
+		&ColumnsSelector.FromXml(&ColumnsSelectorXML)
+	Else
+		Do 'InitializeColumnsSelector'
+	EndIf
+
+	&ColumnsSelector.Columns.Item(9).IsVisible = (&IsAuthorizedCarreraInterrupcionId AND &ColumnsSelector.Columns.Item(9).IsVisible)
+	&ColumnsSelector.Columns.Item(11).IsVisible = (&IsAuthorizedCarreraInterrupcionTiempo AND &ColumnsSelector.Columns.Item(11).IsVisible)
+	&ColumnsSelector.Columns.Sort(!'Order')
+	For &ColumnsSelector_Column in &ColumnsSelector.Columns
+		If &ColumnsSelector_Column.IsVisible = True
+			&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Text = GetMessageText(iif(&ColumnsSelector_Column.DisplayName.IsEmpty(), &ColumnsSelector_Column.ColumnName, &ColumnsSelector_Column.DisplayName))
+			&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Bold = True
+			&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Color = 11
+			&VisibleColumnCount += 1
+		EndIf
+	EndFor
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'WriteData'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+	For each Carrera
+		order CarreraNo  when &OrderedBy = 1 AND &OrderedDsc = False
+		order (CarreraNo)  when &OrderedBy = 1 AND &OrderedDsc = True
+		order CarreraEstado  when &OrderedBy = 2 AND &OrderedDsc = False
+		order (CarreraEstado)  when &OrderedBy = 2 AND &OrderedDsc = True
+		order CarreraPaletTerminado  when &OrderedBy = 3 AND &OrderedDsc = False
+		order (CarreraPaletTerminado)  when &OrderedBy = 3 AND &OrderedDsc = True
+		order CarreraFechaRegistro  when &OrderedBy = 4 AND &OrderedDsc = False
+		order (CarreraFechaRegistro)  when &OrderedBy = 4 AND &OrderedDsc = True
+		order InicioPBPrensadoId  when &OrderedBy = 5 AND &OrderedDsc = False
+		order (InicioPBPrensadoId)  when &OrderedBy = 5 AND &OrderedDsc = True
+		order InicioPBPrensaNombre  when &OrderedBy = 6 AND &OrderedDsc = False
+		order (InicioPBPrensaNombre)  when &OrderedBy = 6 AND &OrderedDsc = True
+		order InicioPBTurnoNombre  when &OrderedBy = 7 AND &OrderedDsc = False
+		order (InicioPBTurnoNombre)  when &OrderedBy = 7 AND &OrderedDsc = True
+		order InicioPrensadoBobinaNoSerie  when &OrderedBy = 8 AND &OrderedDsc = False
+		order (InicioPrensadoBobinaNoSerie)  when &OrderedBy = 8 AND &OrderedDsc = True
+		order CarreraInterrupcionId  when &OrderedBy = 9 AND &OrderedDsc = False
+		order (CarreraInterrupcionId)  when &OrderedBy = 9 AND &OrderedDsc = True
+		order CarreraInterrupcionMotivo  when &OrderedBy = 10 AND &OrderedDsc = False
+		order (CarreraInterrupcionMotivo)  when &OrderedBy = 10 AND &OrderedDsc = True
+		order CarreraInterrupcionTiempo  when &OrderedBy = 11 AND &OrderedDsc = False
+		order (CarreraInterrupcionTiempo)  when &OrderedBy = 11 AND &OrderedDsc = True
+		order CarreraDownTimeCode  when &OrderedBy = 12 AND &OrderedDsc = False
+		order (CarreraDownTimeCode)  when &OrderedBy = 12 AND &OrderedDsc = True
+		order CarreraDownTimeDescription  when &OrderedBy = 13 AND &OrderedDsc = False
+		order (CarreraDownTimeDescription)  when &OrderedBy = 13 AND &OrderedDsc = True
+		
+		using CarreraWWDS(&GridConditionalFormattingFilter, &FilterFullText, &TFCarreraNo, &TFCarreraNo_To, &TFCarreraEstado_Sels, &TFCarreraPaletTerminado
+					, &TFCarreraPaletTerminado_Sel, &TFCarreraFechaRegistro, &TFCarreraFechaRegistro_To, &TFInicioPBPrensadoId, &TFInicioPBPrensadoId_To, &TFInicioPBPrensaNombre
+					, &TFInicioPBPrensaNombre_Sel, &TFInicioPBTurnoNombre, &TFInicioPBTurnoNombre_Sel, &TFInicioPrensadoBobinaNoSerie, &TFInicioPrensadoBobinaNoSerie_Sel, &TFCarreraInterrupcionId
+					, &TFCarreraInterrupcionId_To, &TFCarreraInterrupcionMotivo, &TFCarreraInterrupcionMotivo_Sel, &TFCarreraInterrupcionTiempo, &TFCarreraInterrupcionTiempo_To, &TFCarreraDownTimeCode
+					, &TFCarreraDownTimeCode_Sel, &TFCarreraDownTimeDescription, &TFCarreraDownTimeDescription_Sel)
+		Where CarreraFechaRegistro>= &NowDate
+
+		// Write cell values
+		&CellRow += 1
+		
+		Do 'BeforeWriteLine'
+		&VisibleColumnCount = 0
+		For &ColumnsSelector_Column in &ColumnsSelector.Columns
+			If &ColumnsSelector_Column.IsVisible = True
+				Do Case
+					Case &ColumnsSelector_Column.ColumnName = !'CarreraNo'
+						&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Number = CarreraNo
+					Case &ColumnsSelector_Column.ColumnName = !'CarreraEstado'
+						&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Text = CarreraEstado.EnumerationDescription()
+					Case &ColumnsSelector_Column.ColumnName = !'CarreraPaletTerminado'
+						&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Text = WWP_Export_SecureText(CarreraPaletTerminado)
+					Case &ColumnsSelector_Column.ColumnName = !'CarreraFechaRegistro'
+						&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Date = CarreraFechaRegistro
+					Case &ColumnsSelector_Column.ColumnName = !'InicioPBPrensadoId'
+						&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Number = InicioPBPrensadoId
+					Case &ColumnsSelector_Column.ColumnName = !'InicioPBPrensaNombre'
+						&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Text = WWP_Export_SecureText(InicioPBPrensaNombre)
+					Case &ColumnsSelector_Column.ColumnName = !'InicioPBTurnoNombre'
+						&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Text = WWP_Export_SecureText(InicioPBTurnoNombre)
+					Case &ColumnsSelector_Column.ColumnName = !'InicioPrensadoBobinaNoSerie'
+						&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Text = WWP_Export_SecureText(InicioPrensadoBobinaNoSerie)
+					Case &ColumnsSelector_Column.ColumnName = !'CarreraInterrupcionId'
+						&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Number = CarreraInterrupcionId
+					Case &ColumnsSelector_Column.ColumnName = !'CarreraInterrupcionMotivo'
+						&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Text = WWP_Export_SecureText(CarreraInterrupcionMotivo)
+					Case &ColumnsSelector_Column.ColumnName = !'CarreraInterrupcionTiempo'
+						&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Number = CarreraInterrupcionTiempo
+					Case &ColumnsSelector_Column.ColumnName = !'CarreraDownTimeCode'
+						&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Text = WWP_Export_SecureText(CarreraDownTimeCode)
+					Case &ColumnsSelector_Column.ColumnName = !'CarreraDownTimeDescription'
+						&ExcelDocument.Cells(&CellRow, &FirstColumn + &VisibleColumnCount).Text = WWP_Export_SecureText(CarreraDownTimeDescription)
+				EndCase
+				&VisibleColumnCount += 1
+			EndIf
+		EndFor		
+		
+		Do 'AfterWriteLine'
+
+	Endfor
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'AttributesSecurityCode'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+	&IsAuthorizedCarreraInterrupcionId = (CarreraInterrupcionId > 0)
+	&IsAuthorizedCarreraInterrupcionTiempo = (CarreraInterrupcionTiempo > 0)
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'CloseDocument'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+	&ExcelDocument.Save()
+	Do 'CheckStatus'
+	&ExcelDocument.Close()
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'CheckStatus'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+	If (&ExcelDocument.ErrCode <> 0)
+		&Filename = ""
+		&ErrorMessage = &ExcelDocument.ErrDescription
+		&ExcelDocument.Close()
+		Return
+	EndIf
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'InitializeColumnsSelector'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+	&ColumnsSelector = new WWPColumnsSelector()
+	WWP_ColumnsSelector_Add(&ColumnsSelector, !"CarreraNo", '', !'No', True, '')
+	WWP_ColumnsSelector_Add(&ColumnsSelector, !"CarreraEstado", '', !'Estado', True, '')
+	WWP_ColumnsSelector_Add(&ColumnsSelector, !"CarreraPaletTerminado", '', !'Palet Terminado', True, '')
+	WWP_ColumnsSelector_Add(&ColumnsSelector, !"CarreraFechaRegistro", '', !'Fecha Registro', True, '')
+	WWP_ColumnsSelector_Add(&ColumnsSelector, !"InicioPBPrensadoId", '', !'Prensado Id', True, '')
+	WWP_ColumnsSelector_Add(&ColumnsSelector, !"InicioPBPrensaNombre", '', !'Prensa', False, '')
+	WWP_ColumnsSelector_Add(&ColumnsSelector, !"InicioPBTurnoNombre", '', !'Turno', False, '')
+	WWP_ColumnsSelector_Add(&ColumnsSelector, !"InicioPrensadoBobinaNoSerie", '', !'Bobina No. Serie', True, '')
+	If (CarreraInterrupcionId > 0)
+		WWP_ColumnsSelector_Add(&ColumnsSelector, !"CarreraInterrupcionId", '', !'Interrupcion Id', True, '')
+	Else
+		WWP_ColumnsSelector_Add(&ColumnsSelector, '', '', '', False, '')
+	EndIf
+	WWP_ColumnsSelector_Add(&ColumnsSelector, !"CarreraInterrupcionMotivo", '', !'Interrupcion Motivo', True, '')
+	If (CarreraInterrupcionTiempo > 0)
+		WWP_ColumnsSelector_Add(&ColumnsSelector, !"CarreraInterrupcionTiempo", '', !'Interrupcion Tiempo', True, '')
+	Else
+		WWP_ColumnsSelector_Add(&ColumnsSelector, '', '', '', False, '')
+	EndIf
+	WWP_ColumnsSelector_Add(&ColumnsSelector, !"CarreraDownTimeCode", '', !'Time Code', True, '')
+	WWP_ColumnsSelector_Add(&ColumnsSelector, !"CarreraDownTimeDescription", '', !'Time Description', True, '')
+		
+	&UserCustomValue = LoadColumnsSelectorState.Udp(!'DB.CarreraWWColumnsSelector')
+	If not(&UserCustomValue.IsEmpty())
+		&ColumnsSelectorAux.FromXml(&UserCustomValue)
+		WWP_ColumnSelector_UpdateColumns(&ColumnsSelectorAux, &ColumnsSelector)
+	EndIf
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'LoadGridState'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+	// Load grid state from session.
+	If &Session.Get(!"DB.CarreraWWGridState") = !""
+		&GridState.FromXml(LoadGridState.Udp(!"DB.CarreraWWGridState"))
+	Else
+		&GridState.FromXml(&Session.Get(!"DB.CarreraWWGridState"))
+	Endif	
+
+	&OrderedBy = &GridState.OrderedBy
+	&OrderedDsc = &GridState.OrderedDsc
+
+	For &GridStateFilterValue in &GridState.FilterValues
+		Do Case
+			Case &GridStateFilterValue.Name = !"FILTERFULLTEXT"
+				&FilterFullText.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFCARRERANO"
+				&TFCarreraNo.FromString(&GridStateFilterValue.Value)
+				&TFCarreraNo_To.FromString(&GridStateFilterValue.ValueTo)
+			Case &GridStateFilterValue.Name = !"TFCARRERAESTADO_SEL"
+				&TFCarreraEstado_SelsJson = &GridStateFilterValue.Value
+				&TFCarreraEstado_Sels.FromJson(&TFCarreraEstado_SelsJson)
+			Case &GridStateFilterValue.Name = !"TFCARRERAPALETTERMINADO"
+				&TFCarreraPaletTerminado.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFCARRERAPALETTERMINADO_SEL"
+				&TFCarreraPaletTerminado_Sel.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFCARRERAFECHAREGISTRO"
+				&TFCarreraFechaRegistro.FromString(&GridStateFilterValue.Value)
+				&TFCarreraFechaRegistro_To.FromString(&GridStateFilterValue.ValueTo)
+			Case &GridStateFilterValue.Name = !"TFINICIOPBPRENSADOID"
+				&TFInicioPBPrensadoId.FromString(&GridStateFilterValue.Value)
+				&TFInicioPBPrensadoId_To.FromString(&GridStateFilterValue.ValueTo)
+			Case &GridStateFilterValue.Name = !"TFINICIOPBPRENSANOMBRE"
+				&TFInicioPBPrensaNombre.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFINICIOPBPRENSANOMBRE_SEL"
+				&TFInicioPBPrensaNombre_Sel.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFINICIOPBTURNONOMBRE"
+				&TFInicioPBTurnoNombre.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFINICIOPBTURNONOMBRE_SEL"
+				&TFInicioPBTurnoNombre_Sel.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFINICIOPRENSADOBOBINANOSERIE"
+				&TFInicioPrensadoBobinaNoSerie.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFINICIOPRENSADOBOBINANOSERIE_SEL"
+				&TFInicioPrensadoBobinaNoSerie_Sel.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFCARRERAINTERRUPCIONID"
+				&TFCarreraInterrupcionId.FromString(&GridStateFilterValue.Value)
+				&TFCarreraInterrupcionId_To.FromString(&GridStateFilterValue.ValueTo)
+			Case &GridStateFilterValue.Name = !"TFCARRERAINTERRUPCIONMOTIVO"
+				&TFCarreraInterrupcionMotivo.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFCARRERAINTERRUPCIONMOTIVO_SEL"
+				&TFCarreraInterrupcionMotivo_Sel.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFCARRERAINTERRUPCIONTIEMPO"
+				&TFCarreraInterrupcionTiempo.FromString(&GridStateFilterValue.Value)
+				&TFCarreraInterrupcionTiempo_To.FromString(&GridStateFilterValue.ValueTo)
+			Case &GridStateFilterValue.Name = !"TFCARRERADOWNTIMECODE"
+				&TFCarreraDownTimeCode.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFCARRERADOWNTIMECODE_SEL"
+				&TFCarreraDownTimeCode_Sel.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFCARRERADOWNTIMEDESCRIPTION"
+				&TFCarreraDownTimeDescription.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFCARRERADOWNTIMEDESCRIPTION_SEL"
+				&TFCarreraDownTimeDescription_Sel.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"GRIDCFFILTER"
+				&GridConditionalFormattingFilter.FromString(&GridStateFilterValue.Value)
+		EndCase
+	EndFor
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'BeforeWriteLine'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'AfterWriteLine'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+```
+
+### Rules (Rules)
+
+```genexus
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+parm(out:&Filename, out:&ErrorMessage);
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+

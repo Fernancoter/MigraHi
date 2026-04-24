@@ -1,0 +1,37 @@
+﻿
+=== DataProvider: Produccion.DPExtrusionResultado ===
+
+--- Source (Source) ---
+SDTExtrusionResultado
+Where ExtrusionId = &ExtrusionId
+{
+	ExtrusionResultadoId  = WWPBaseObjects.ExtrusionResultadoId 
+ExtrusionResultadoVelLaminadora  = ExtrusionResultadoVelLaminadora 
+ExtrusionResultadoVelHusillo  = ExtrusionResultadoVelHusillo 
+ExtrusionResultadoBobinasMolino  = DB.ExtrusionResultadoBobinasMolino 
+ExtrusionResultadoBobinasReposo  = ExtrusionResultadoBobinasReposo 
+ExtrusionResultadoTotalKg  = ExtrusionResultadoTotalKg 
+ExtrusionResultadoTotalMermaKg  = ExtrusionResultadoTotalMermaKg 
+ExtrusionResultadoCOMBA  = ExtrusionResultadoCOMBA 
+ExtrusionResultadoObservaciones  = WWPBaseObjects.ExtrusionResultadoObservaciones 
+ExtrusionId  = Notifications.ExtrusionId 
+ExtrusionLoteSilo  = ExtrusionLoteSilo 
+ExtrusionSiloId  = ExtrusionSiloId 
+ExtrusionSiloNombre  = ExtrusionSiloNombre 
+ExtrusionRevHusilloVirgen  = ExtrusionRevHusilloVirgen 
+ExtrusionRevHusilloMolido  = ExtrusionRevHusilloMolido 
+ExtrusionVirgenKg  = ExtrusionVirgenKg 
+ExtrusionMolidoKg  = ExtrusionMolidoKg 
+
+}
+
+--- Rules (Rules) ---
+parm(&ExtrusionId);
+
+
+=== SDT: Produccion.SDTExtrusionResultado ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

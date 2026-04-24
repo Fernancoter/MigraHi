@@ -1,0 +1,134 @@
+﻿{
+    "uniqueId":  "9493f371-d60f-4aec-b204-03b26b545bb9",
+    "name":  "LimpiarPalletError",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Limpiar Pallet Error",
+    "filePath":  "Procedures/Produccion/LimpiarPalletError.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "for each DB.EmbarquePallet\n\twhere EmbarqueDetalleId = \u0026EmbarqueDetalleId \n\twhere Not EmbarquePalletNoPallet.IsEmpty()\n\twhere EmbarqueId \u003e 0\n\twhere EmbarquePalletValido = false\n\t\n\t\u0026DeleteEmbarquePallet.Load(\u0026EmbarqueDetalleId, EmbarquePalletNoPallet)\n\t\u0026DeleteEmbarquePallet.Delete()\n\tcommit\nendfor\n",
+                              "cleanSource":  "for each DB.EmbarquePallet\n\twhere EmbarqueDetalleId = \u0026EmbarqueDetalleId \n\twhere Not EmbarquePalletNoPallet.IsEmpty()\n\twhere EmbarqueId \u003e 0\n\twhere EmbarquePalletValido = false\n\t\n\t\u0026DeleteEmbarquePallet.Load(\u0026EmbarqueDetalleId, EmbarquePalletNoPallet)\n\t\u0026DeleteEmbarquePallet.Delete()\n\tcommit\nendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026EmbarqueDetalleId);\n",
+                              "cleanSource":  "parm(in:\u0026EmbarqueDetalleId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.EmbarquePallet"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "EmbarqueDetalleId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Embarque Detalle Id"
+                           },
+                           {
+                               "name":  "EmbarqueId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Embarque Id"
+                           },
+                           {
+                               "name":  "DeleteEmbarquePallet",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Delete Embarque Pallet"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

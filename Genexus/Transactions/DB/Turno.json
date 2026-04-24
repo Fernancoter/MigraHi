@@ -1,0 +1,204 @@
+﻿{
+    "uniqueId":  "e78c0ab4-1c03-4029-abe3-0c947f3c096b",
+    "name":  "Turno",
+    "type":  "Transaction",
+    "module":  "DB",
+    "description":  "Turno",
+    "filePath":  "Transactions/DB/Turno.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Start",
+                              "blockType":  "Event",
+                              "rawSource":  "(Extracted from full RTF)",
+                              "cleanSource":  ""
+                          },
+                          {
+                              "blockName":  "After Trn",
+                              "blockType":  "Event",
+                              "rawSource":  "(Extracted from full RTF)",
+                              "cleanSource":  ""
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.AuditingObject",
+                                         "WWPBaseObjects.WWPTransactionContext",
+                                         "WWPBaseObjects.WWPContext"
+                                     ],
+                         "calledBy":  [
+                                          "listarTurnosGetFilterData",
+                                          "gestionarTurno",
+                                          "TurnoPrompt",
+                                          "ObtenerTurnoPorSemanaPrensado",
+                                          "SDTurnoActivo",
+                                          "listarTurnos",
+                                          "ObtenerTurnoPorSemanaExtrusion",
+                                          "SDPrensadoAnticipado",
+                                          "CrearExtrusion",
+                                          "listarTurnosExportReport",
+                                          "SDTurnoActual",
+                                          "listarTurnosExport",
+                                          "ExclusionDelDia"
+                                      ],
+                         "tablesRead":  [
+                                            "Turno"
+                                        ],
+                         "tablesWritten":  [
+                                               "Turno"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "IsAuthorized",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Is Authorized"
+                           },
+                           {
+                               "name":  "TrnContext",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Trn Context"
+                           },
+                           {
+                               "name":  "WebSession",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_USRDEFTYP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Web Session"
+                           },
+                           {
+                               "name":  "WWPContext",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWPContext"
+                           },
+                           {
+                               "name":  "SecurityFunctionalityKeys",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Security Functionality Keys"
+                           },
+                           {
+                               "name":  "AuditingObject",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Auditing Object"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "GxRemove",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Gx Remove"
+                           },
+                           {
+                               "name":  "Mode",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Mode"
+                           },
+                           {
+                               "name":  "TurnoId",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "TurnoNombre",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "TurnoHoraInicio",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "TurnoHoraFin",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "TurnoEnum",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           }
+                       ]
+}

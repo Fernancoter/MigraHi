@@ -1,0 +1,9 @@
+﻿
+=== Procedure: WWPBaseObjects.SetWWPContext ===
+
+--- Source (Source) ---
+&Session.Set(WWPDomains.WWPContext, &Context.ToXml())
+
+--- Rules (Rules) ---
+parm(in:&Context);
+

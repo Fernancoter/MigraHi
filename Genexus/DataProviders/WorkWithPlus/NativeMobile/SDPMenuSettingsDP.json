@@ -1,0 +1,96 @@
+﻿{
+    "uniqueId":  "55066ef4-9cb9-41b6-9e9b-69375c47b929",
+    "name":  "SDPMenuSettingsDP",
+    "type":  "DataProvider",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPMenu Settings DP",
+    "filePath":  "DataProviders/WorkWithPlus/NativeMobile/SDPMenuSettingsDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDPMenuOptions\n{\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 1\n\t\tTitle = !\"Stores and employees\"\n\t\t\u0026Image.FromImage(SDPResSampleOption1)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?1\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 2\n\t\tTitle = !\"Permissions\"\n\t\t\u0026Image.FromImage(SDPResSampleOption2)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?2\"\n\t\tType = WorkWithPlus.NativeMobile.SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 3\n\t\tType = SDPMenuOptionType.ItemSeparator\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 4\n\t\tTitle = !\"System config\"\n\t\t\u0026Image.FromImage(SDPResSampleOption3)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 5\n\t\tTitle = !\"Print settings\"\t\t\n\t\t\u0026Image.FromImage(SDPResSampleOption4)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?4\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 6\n\t\tType = SDPMenuOptionType.ItemSeparator\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 7\n\t\tTitle = !\"Scanner settings\"\n\t\t\u0026Image.FromImage(SDPResSampleOption5)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?5\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 8\n\t\tTitle = !\"Support us\"\n\t\t\u0026Image.FromImage(SDPResSampleOption6)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?6\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 9\n\t\tType = SDPMenuOptionType.ItemSeparator\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 10\n\t\tTitle = !\"Recommend\"\n\t\t\u0026Image.FromImage(SDPResSampleOption7)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?7\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 11\n\t\tTitle = !\"Feedback\"\n\t\t\u0026Image.FromImage(SDPResSampleOption8)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?8\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 12\n\t\tTitle = !\"About\"\n\t\t\u0026Image.FromImage(SDPResSampleOption9)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?9\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 13\n\t\tType = SDPMenuOptionType.ItemSeparator\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 14\n\t\tTitle = !\"Sign out\"\t\t\n\t\tComponentToCall = !\"sub:Logout\"\n\t\tType = WorkWithPlus.NativeMobile.SDPMenuOptionType.Link\n\t}\n\t//SDPMenuOptionsItem\n\t//{\n\t//\tTitle = !\"SAMPLE WW\"\t\n\t//\t\u0026Image.FromImage(ProductCustomIcon)\n\t//\tIcon = \u0026Image\n\t//\tComponentToCall = !\"sd:WorkWithDevicesProducto.Producto.List?4\"\n\t//}\n\t// For more options:\n\t// https://wiki.genexus.com/commwiki/servlet/wiki?17411,Dynamic+Calls+in+Smart+Devices,\n}\n",
+                              "cleanSource":  "SDPMenuOptions\n{\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 1\n\t\tTitle = !\"Stores and employees\"\n\t\t\u0026Image.FromImage(SDPResSampleOption1)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?1\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 2\n\t\tTitle = !\"Permissions\"\n\t\t\u0026Image.FromImage(SDPResSampleOption2)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?2\"\n\t\tType = WorkWithPlus.NativeMobile.SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 3\n\t\tType = SDPMenuOptionType.ItemSeparator\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 4\n\t\tTitle = !\"System config\"\n\t\t\u0026Image.FromImage(SDPResSampleOption3)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 5\n\t\tTitle = !\"Print settings\"\t\t\n\t\t\u0026Image.FromImage(SDPResSampleOption4)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?4\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 6\n\t\tType = SDPMenuOptionType.ItemSeparator\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 7\n\t\tTitle = !\"Scanner settings\"\n\t\t\u0026Image.FromImage(SDPResSampleOption5)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?5\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 8\n\t\tTitle = !\"Support us\"\n\t\t\u0026Image.FromImage(SDPResSampleOption6)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?6\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 9\n\t\tType = SDPMenuOptionType.ItemSeparator\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 10\n\t\tTitle = !\"Recommend\"\n\t\t\u0026Image.FromImage(SDPResSampleOption7)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?7\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 11\n\t\tTitle = !\"Feedback\"\n\t\t\u0026Image.FromImage(SDPResSampleOption8)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?8\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 12\n\t\tTitle = !\"About\"\n\t\t\u0026Image.FromImage(SDPResSampleOption9)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?9\"\n\t\tType = SDPMenuOptionType.Item\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 13\n\t\tType = SDPMenuOptionType.ItemSeparator\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\tOrderIndex = 14\n\t\tTitle = !\"Sign out\"\t\t\n\t\tComponentToCall = !\"sub:Logout\"\n\t\tType = WorkWithPlus.NativeMobile.SDPMenuOptionType.Link\n\t}\n\t//SDPMenuOptionsItem\n\t//{\n\t//\tTitle = !\"SAMPLE WW\"\t\n\t//\t\u0026Image.FromImage(ProductCustomIcon)\n\t//\tIcon = \u0026Image\n\t//\tComponentToCall = !\"sd:WorkWithDevicesProducto.Producto.List?4\"\n\t//}\n\t// For more options:\n\t// https://wiki.genexus.com/commwiki/servlet/wiki?17411,Dynamic+Calls+in+Smart+Devices,\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPMenuOptions"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDPMenuOptions"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SDPMenuOptions",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDPMenu Options"
+                           },
+                           {
+                               "name":  "Image",
+                               "elementType":  "Variable",
+                               "dataType":  "BITMAP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Image"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

@@ -1,0 +1,115 @@
+﻿{
+    "uniqueId":  "9dda90e0-984b-43ba-9141-a110ce216467",
+    "name":  "BarCode",
+    "type":  "Transaction",
+    "module":  "DB",
+    "description":  "Bar Code",
+    "filePath":  "Transactions/DB/BarCode.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "BarCode"
+                                        ],
+                         "tablesWritten":  [
+                                               "BarCode"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "GxRemove",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Gx Remove"
+                           },
+                           {
+                               "name":  "Mode",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Mode"
+                           },
+                           {
+                               "name":  "BarCodeValue",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "BarCodeImage",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           },
+                           {
+                               "name":  "BarCodeDateTime",
+                               "elementType":  "Attribute",
+                               "dataType":  "Resolved via KB",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  ""
+                           }
+                       ]
+}

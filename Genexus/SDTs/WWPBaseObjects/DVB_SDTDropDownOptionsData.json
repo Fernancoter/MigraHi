@@ -1,0 +1,197 @@
+﻿{
+    "uniqueId":  "00a4c8ec-3599-42e8-ac8b-4fc5ae67d4c6",
+    "name":  "DVB_SDTDropDownOptionsData",
+    "type":  "SDT",
+    "module":  "WWPBaseObjects",
+    "description":  "DVB_SDTDrop Down Options Data",
+    "filePath":  "SDTs/WWPBaseObjects/DVB_SDTDropDownOptionsData.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "SaveFilterAs",
+                                          "GAMWWUserPermissions",
+                                          "listarLotes",
+                                          "EtiquetadoOperadorWW",
+                                          "ExportOptions",
+                                          "vwTrazabilidad",
+                                          "ProductoTerminadoWW",
+                                          "ListadoEmbarques",
+                                          "PrensaObservacionWW",
+                                          "BobinaWW",
+                                          "listarOperador",
+                                          "ConsolidatedWW",
+                                          "ListadoOrdenes",
+                                          "CompanyWW",
+                                          "ListadoRemisiones",
+                                          "PromptGeolocation",
+                                          "CustomerWW",
+                                          "vwAnaliticaBobina",
+                                          "BudgetWW",
+                                          "ExtrusionInterrupcionWW",
+                                          "GAMWWUsers",
+                                          "GAMRolePermissionSelect",
+                                          "listarPrensaProducto",
+                                          "TroquelWW",
+                                          "PaletWW",
+                                          "listarPrensas",
+                                          "OrdenesWW",
+                                          "vwExtrusionResultado",
+                                          "listarProductoCategoria",
+                                          "vwAnaliticaCarrete",
+                                          "ListarExtrusoraMezcladora",
+                                          "GAMWWRoleRoles",
+                                          "vwPrensadoResultado",
+                                          "FTBWW",
+                                          "listarExtrusoraProducto",
+                                          "listarInventario",
+                                          "OrderPrompt",
+                                          "ExtrusoraObservacionWW",
+                                          "listarTurnos",
+                                          "ExtrusoraMezcladoraWW",
+                                          "AuditWW",
+                                          "listarProductos",
+                                          "PrensadoWW",
+                                          "listarSilos",
+                                          "GAMWWRolePermissions",
+                                          "RemissionsWW",
+                                          "SalesPersonWW",
+                                          "InterrupcionWW",
+                                          "CarreteEnPallet",
+                                          "PrensadoInterrupcionWW",
+                                          "ExistenciaWW",
+                                          "WWP_ManageFiltersLoadSavedFilters",
+                                          "WWP_MailTemplateWW",
+                                          "CausaInterrupcionWW",
+                                          "ConsolidatedPrompt",
+                                          "CarreraWW",
+                                          "EmbarquePalletWW",
+                                          "ExtrusionWW",
+                                          "ProductsWW",
+                                          "CarreteDefectoWW",
+                                          "vwCarreteCarrera",
+                                          "vwAnaliticaPrensado",
+                                          "listarTroquel",
+                                          "reclamosww",
+                                          "CarreteWW",
+                                          "listarProductoTerminado",
+                                          "PrensadoBobinaWW",
+                                          "vwOrdenEtiquetado",
+                                          "listarExtrusora",
+                                          "GAMWWUserRoles",
+                                          "StatementOfIncomeWW",
+                                          "DownTimeCodeWW",
+                                          "PalletEnEmbarque",
+                                          "GAMWWRoles",
+                                          "GAMUserPermissionSelect",
+                                          "GAMUserRoleSelect",
+                                          "GAMRoleSelect",
+                                          "listarExtrusion"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Icon",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Icon"
+                           },
+                           {
+                               "name":  "FontIcon",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Font Icon"
+                           },
+                           {
+                               "name":  "Title",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Title"
+                           },
+                           {
+                               "name":  "Tooltip",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tooltip"
+                           },
+                           {
+                               "name":  "Link",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Link"
+                           },
+                           {
+                               "name":  "EventKey",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Event Key"
+                           },
+                           {
+                               "name":  "IsDivider",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Is Divider"
+                           },
+                           {
+                               "name":  "JSonclickEvent",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "JSonclick Event"
+                           },
+                           {
+                               "name":  "ThemeClass",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Theme Class"
+                           }
+                       ]
+}

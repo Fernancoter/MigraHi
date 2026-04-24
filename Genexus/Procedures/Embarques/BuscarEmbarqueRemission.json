@@ -1,0 +1,143 @@
+﻿{
+    "uniqueId":  "37dbc184-9c94-41a8-bf04-3cb147812fa9",
+    "name":  "BuscarEmbarqueRemission",
+    "type":  "Procedure",
+    "module":  "Embarques",
+    "description":  "Buscar Embarque Remission",
+    "filePath":  "Procedures/Embarques/BuscarEmbarqueRemission.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "for each DB.Embarque\n\tWhere EmbarqueRemissionDoc.Trim() = \u0026RemissionDoc.Trim()\n\tWhere EmbarqueOrderDoc.Trim() = \u0026OrderDoc.Trim()\n\t\n\t\u0026EmbarqueId = EmbarqueId\n\t\n\t\nwhen none\n \u0026EmbarqueId = 0\nendfor\n\n\n",
+                              "cleanSource":  "for each DB.Embarque\n\tWhere EmbarqueRemissionDoc.Trim() = \u0026RemissionDoc.Trim()\n\tWhere EmbarqueOrderDoc.Trim() = \u0026OrderDoc.Trim()\n\t\n\t\u0026EmbarqueId = EmbarqueId\n\t\n\t\nwhen none\n \u0026EmbarqueId = 0\nendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026OrderDoc,in:\u0026RemissionDoc,out:\u0026EmbarqueId);\n",
+                              "cleanSource":  "parm(in:\u0026OrderDoc,in:\u0026RemissionDoc,out:\u0026EmbarqueId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Embarque"
+                                     ],
+                         "calledBy":  [
+                                          "CrearEmbarque",
+                                          "InicializarEmbarque"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Existe",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Existe"
+                           },
+                           {
+                               "name":  "OrderDoc",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Order Doc"
+                           },
+                           {
+                               "name":  "RemissionDoc",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Remission Doc"
+                           },
+                           {
+                               "name":  "EmbarqueId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Embarque Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

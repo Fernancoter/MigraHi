@@ -1,0 +1,92 @@
+﻿{
+    "uniqueId":  "c2d0d66a-f13e-4157-a886-2987608a1bce",
+    "name":  "QueryViewerDragAndDropData",
+    "type":  "SDT",
+    "module":  "GeneXusReporting",
+    "description":  "Query Viewer Drag And Drop Data",
+    "filePath":  "SDTs/GeneXusReporting/QueryViewerDragAndDropData.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "TurnosPorSemanaExtrusoras",
+                                          "TurnosPorSemana",
+                                          "InicioPrensado",
+                                          "InicioProduccion",
+                                          "ReportITW",
+                                          "InicioEmbarques",
+                                          "inicioSeguridad",
+                                          "InicioInventario",
+                                          "ModuleA",
+                                          "ModuleB",
+                                          "InicioExtrusion",
+                                          "TurnosPorSemanaPrensas",
+                                          "ConsultarExtrusionesQuery"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Name",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Name"
+                           },
+                           {
+                               "name":  "Type",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Type"
+                           },
+                           {
+                               "name":  "Axis",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Axis"
+                           },
+                           {
+                               "name":  "Position",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Position"
+                           }
+                       ]
+}

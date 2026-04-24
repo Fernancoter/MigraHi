@@ -1,0 +1,19 @@
+﻿
+=== Procedure: Produccion.ObtenerTipoMaterialPorCarrete ===
+
+--- Source (Source) ---
+For Each
+	Where CarreraId = &CarreraId
+	&InicioPBPrensadoId = InicioPBPrensadoId
+When None
+	&InicioPBPrensadoId = 0
+EndFor
+
+For Each
+	Where PrensadoId = &InicioPBPrensadoId
+	&TipoMaterial = PrensadoProductoTipoMaterial
+EndFor
+
+--- Rules (Rules) ---
+parm(In:&CarreraId, Out:&TipoMaterial);
+

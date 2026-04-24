@@ -1,0 +1,85 @@
+﻿{
+    "uniqueId":  "7ed88ff3-0c97-4ec3-aed6-d7e0431a34a0",
+    "name":  "ProgramNames",
+    "type":  "SDT",
+    "module":  "WWPBaseObjects",
+    "description":  "Program Names",
+    "filePath":  "SDTs/WWPBaseObjects/ProgramNames.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "ListWWPPrograms",
+                                          "MenuPrensado",
+                                          "MenuConfiguracion",
+                                          "MenuOptionsData",
+                                          "MenuModuleCatalogosSAE",
+                                          "MenuExtrusion",
+                                          "MenuMateriaPrima",
+                                          "MenuProduccion",
+                                          "MenuInventario",
+                                          "ListPrograms",
+                                          "MenuSeguridad",
+                                          "MenuModuleInformesSAE",
+                                          "MenuEmbarques",
+                                          "MenuCalidad"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Name",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Name"
+                           },
+                           {
+                               "name":  "Description",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Description"
+                           },
+                           {
+                               "name":  "Link",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Link"
+                           }
+                       ]
+}

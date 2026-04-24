@@ -1,0 +1,176 @@
+﻿{
+    "uniqueId":  "6f08fae9-1ced-4ff8-8eb2-05b470bb60b9",
+    "name":  "ExportReportTemplate_Style2",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "Export Report Template_Style2",
+    "filePath":  "Procedures/WWPBaseObjects/ExportReportTemplate_Style2.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\nHeader\n\t\u0026Phone = !\"+1 550 8923\"\n\t\u0026Mail = !\"info@mail.com\"\n\t\u0026AddressLine1 = !\"French Boulevard 2859\"\n\t\u0026AddressLine2 = !\"Downtown\"\n\tPrint printTitle\nEnd \nFooter\n\t\u0026PageInfo = \"Page: \" + \u0026Page.ToString().Trim()\n\t\u0026DateInfo = \"Date: \" + \u0026Today.ToFormattedString()\n\tPrint printFooter\nEnd\n\n",
+                              "cleanSource":  "\nHeader\n\t\u0026Phone = !\"+1 550 8923\"\n\t\u0026Mail = !\"info@mail.com\"\n\t\u0026AddressLine1 = !\"French Boulevard 2859\"\n\t\u0026AddressLine2 = !\"Downtown\"\n\tPrint printTitle\nEnd \nFooter\n\t\u0026PageInfo = \"Page: \" + \u0026Page.ToString().Trim()\n\t\u0026DateInfo = \"Date: \" + \u0026Today.ToFormattedString()\n\tPrint printFooter\nEnd"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "AddressLine1",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Address Line1"
+                           },
+                           {
+                               "name":  "AddressLine2",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Address Line2"
+                           },
+                           {
+                               "name":  "Attribute",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Attribute"
+                           },
+                           {
+                               "name":  "DateInfo",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Date Info"
+                           },
+                           {
+                               "name":  "Filter",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Filter"
+                           },
+                           {
+                               "name":  "Mail",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Mail"
+                           },
+                           {
+                               "name":  "PageInfo",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page Info"
+                           },
+                           {
+                               "name":  "Phone",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Phone"
+                           },
+                           {
+                               "name":  "Title",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Title"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,75 @@
+﻿{
+    "uniqueId":  "e6956f71-04eb-4fa0-92de-79a19f9751b6",
+    "name":  "GridStateCollection",
+    "type":  "SDT",
+    "module":  "WWPBaseObjects",
+    "description":  "Grid State Collection",
+    "filePath":  "SDTs/WWPBaseObjects/GridStateCollection.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "SaveFilterAs",
+                                          "ManageFilters",
+                                          "GetFilterByName",
+                                          "GAMWWUsers",
+                                          "GAMRolePermissionSelect",
+                                          "GAMWWRoleRoles",
+                                          "GAMWWRolePermissions",
+                                          "WWP_ManageFiltersLoadSavedFilters",
+                                          "GAMWWUserRoles",
+                                          "GAMWWRoles",
+                                          "GAMUserRoleSelect",
+                                          "GAMRoleSelect"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Title",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Title"
+                           },
+                           {
+                               "name":  "GridStateXML",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Grid State XML"
+                           }
+                       ]
+}

@@ -1,0 +1,9 @@
+﻿
+=== Procedure: WWPBaseObjects.WWP_GetLoggedUserId ===
+
+--- Source (Source) ---
+&WWPUserExtendedId = GAMUser.GetId()
+
+--- Rules (Rules) ---
+parm(out:&WWPUserExtendedId);
+

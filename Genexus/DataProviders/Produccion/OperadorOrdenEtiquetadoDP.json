@@ -1,0 +1,94 @@
+﻿{
+    "uniqueId":  "10d850e0-2c0f-4881-81fc-59bb003fade5",
+    "name":  "OperadorOrdenEtiquetadoDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Operador Orden Etiquetado DP",
+    "filePath":  "DataProviders/Produccion/OperadorOrdenEtiquetadoDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTOperador\nWhere OrdenEtiquetadoId = \u0026OrdenEtiquetadoId \n{\n\tSDTOperadorItem\n\t{\n\t\tOperadorId = OrdenEtiquetadoId\n\t\tOperadorNombre = OperadorEtiquetadoNombre\n\t\t\n\t}\n}\n",
+                              "cleanSource":  "SDTOperador\nWhere OrdenEtiquetadoId = \u0026OrdenEtiquetadoId \n{\n\tSDTOperadorItem\n\t{\n\t\tOperadorId = OrdenEtiquetadoId\n\t\tOperadorNombre = OperadorEtiquetadoNombre\n\t\t\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026OrdenEtiquetadoId);\n",
+                              "cleanSource":  "parm(in:\u0026OrdenEtiquetadoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTOperador"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTOperador"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "OrdenEtiquetadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Orden Etiquetado Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

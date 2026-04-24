@@ -1,0 +1,9 @@
+﻿
+=== Procedure: WorkWithPlus.NativeMobile.SDPWebServerSessionSet ===
+
+--- Source (Source) ---
+&WebSession.Set(&ParameterKey, &ParameterValue)
+
+--- Rules (Rules) ---
+Parm(in:&ParameterKey, in:&ParameterValue);
+

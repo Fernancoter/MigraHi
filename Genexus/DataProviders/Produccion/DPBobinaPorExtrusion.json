@@ -1,0 +1,94 @@
+﻿{
+    "uniqueId":  "2f030815-37ec-40db-8dc8-4b90dd1f0c20",
+    "name":  "DPBobinaPorExtrusion",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "DPBobina Por Extrusion",
+    "filePath":  "DataProviders/Produccion/DPBobinaPorExtrusion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTBobina\nWhere ExtrusionId = \u0026ExtrusionId\n{\n\tSDTBobinaItem\n\t{\n\t\tBobinaId  = BobinaId \n\t\tExtrusionId  = ExtrusionId \n\t\tBobinaOrigen  = BobinaOrigen \n\t\tBobinaHoraInicio  = BobinaHoraInicio \n\t\tBobinaHoraSalida  = BobinaHoraSalida \n\t\tBobinaNo  = BobinaNo \n\t\tBobinaNoSerie  = BobinaNoSerie \n\t\tBobinaKg  = BobinaKg \n\t\tBobinaMermaKg  = BobinaMermaKg \n\t\tBobinaEspesor  = BobinaEspesor \n\t\tBobinaObservaciones  = BobinaObservaciones \n\t\tBobinaEstado  = BobinaEstado \n\t\tBobinaMotivoMolino  = BobinaMotivoMolino \n\t\tBobinaProductoId  = BobinaProductoId \n\t\tBobinaProductoNombre  = BobinaProductoNombre \n\t\tBobinaCarreras  = BobinaCarreras \n\t\tBobinaIniciaReposo  = BobinaIniciaReposo \n\t\tBobinaMinutosEnReposo  = BobinaMinutosEnReposo \n\t\t//BobinaMolino  = BobinaMolino \n\t\t//BobinaEtiqueta  = BobinaEtiqueta \n\n\t}\n}\n",
+                              "cleanSource":  "SDTBobina\nWhere ExtrusionId = \u0026ExtrusionId\n{\n\tSDTBobinaItem\n\t{\n\t\tBobinaId  = BobinaId \n\t\tExtrusionId  = ExtrusionId \n\t\tBobinaOrigen  = BobinaOrigen \n\t\tBobinaHoraInicio  = BobinaHoraInicio \n\t\tBobinaHoraSalida  = BobinaHoraSalida \n\t\tBobinaNo  = BobinaNo \n\t\tBobinaNoSerie  = BobinaNoSerie \n\t\tBobinaKg  = BobinaKg \n\t\tBobinaMermaKg  = BobinaMermaKg \n\t\tBobinaEspesor  = BobinaEspesor \n\t\tBobinaObservaciones  = BobinaObservaciones \n\t\tBobinaEstado  = BobinaEstado \n\t\tBobinaMotivoMolino  = BobinaMotivoMolino \n\t\tBobinaProductoId  = BobinaProductoId \n\t\tBobinaProductoNombre  = BobinaProductoNombre \n\t\tBobinaCarreras  = BobinaCarreras \n\t\tBobinaIniciaReposo  = BobinaIniciaReposo \n\t\tBobinaMinutosEnReposo  = BobinaMinutosEnReposo \n\t\t//BobinaMolino  = BobinaMolino \n\t\t//BobinaEtiqueta  = BobinaEtiqueta \n\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026ExtrusionId);\n",
+                              "cleanSource":  "parm(\u0026ExtrusionId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTBobina"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTBobina"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

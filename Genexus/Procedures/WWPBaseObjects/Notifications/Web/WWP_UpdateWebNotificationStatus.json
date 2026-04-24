@@ -1,0 +1,143 @@
+﻿{
+    "uniqueId":  "585509ad-8f20-4a86-a0f1-2f83497dc336",
+    "name":  "WWP_UpdateWebNotificationStatus",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects.Notifications.Web",
+    "description":  "Update Web Notification Status",
+    "filePath":  "Procedures/WWPBaseObjects/Notifications/Web/WWP_UpdateWebNotificationStatus.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026WebNotification.Load(\u0026WebNotificationId)\n\nIf \u0026WebNotification.Fail()\n\tWWP_Logger.Error(\u0026Pgmname, !\"Web notificaiton not found with id: \" + \u0026WebNotificationId.ToString())\n\treturn\nEndIf\n\n\u0026WebNotification.WWPWebNotificationProcessed = ServerNow()\n\u0026WebNotification.WWPWebNotificationStatus = \u0026WebNotificationStatus\n\u0026WebNotification.WWPWebNotificationDetail = \u0026WebNotificationDetail\n\u0026WebNotification.Save()\n\nIf \u0026WebNotification.Fail()\n\tWWP_Logger.Error(\u0026Pgmname, !\"Error updating web notification status with id: \" + \u0026WebNotificationId.ToString())\n\treturn\nEndIf\n",
+                              "cleanSource":  "\u0026WebNotification.Load(\u0026WebNotificationId)\n\nIf \u0026WebNotification.Fail()\n\tWWP_Logger.Error(\u0026Pgmname, !\"Web notificaiton not found with id: \" + \u0026WebNotificationId.ToString())\n\treturn\nEndIf\n\n\u0026WebNotification.WWPWebNotificationProcessed = ServerNow()\n\u0026WebNotification.WWPWebNotificationStatus = \u0026WebNotificationStatus\n\u0026WebNotification.WWPWebNotificationDetail = \u0026WebNotificationDetail\n\u0026WebNotification.Save()\n\nIf \u0026WebNotification.Fail()\n\tWWP_Logger.Error(\u0026Pgmname, !\"Error updating web notification status with id: \" + \u0026WebNotificationId.ToString())\n\treturn\nEndIf"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026WebNotificationId, in:\u0026WebNotificationStatus, in:\u0026WebNotificationDetail);\n",
+                              "cleanSource":  "parm(in:\u0026WebNotificationId, in:\u0026WebNotificationStatus, in:\u0026WebNotificationDetail);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_Logger",
+                                         "WWPBaseObjects.Notifications.Web.WWP_WebNotification"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_SendWebNotification"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "WebNotification",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Web Notification"
+                           },
+                           {
+                               "name":  "WebNotificationId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Web Notification Id"
+                           },
+                           {
+                               "name":  "WebNotificationStatus",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Web Notification Status"
+                           },
+                           {
+                               "name":  "WebNotificationDetail",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Web Notification Detail"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

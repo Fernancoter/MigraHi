@@ -1,0 +1,24 @@
+﻿
+=== Procedure: Root.SDPCartProductsList ===
+
+--- Source (Source) ---
+&ProductsInCartTxt = &WebSession.Get(!"ProductsInCart")
+&ProductsInCart.FromJson(&ProductsInCartTxt)
+
+--- Rules (Rules) ---
+Parm(out:&ProductsInCart);
+
+
+=== SDT: Root.SDPCartProduct ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== SDT: WorkWithPlus.NativeMobile.SDPProductData ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

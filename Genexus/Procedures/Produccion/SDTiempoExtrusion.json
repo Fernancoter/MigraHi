@@ -1,0 +1,168 @@
+﻿{
+    "uniqueId":  "8241acf7-dfb6-4c65-afa6-05d831acd05a",
+    "name":  "SDTiempoExtrusion",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDTiempo Extrusion",
+    "filePath":  "Procedures/Produccion/SDTiempoExtrusion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026SgteExtrusionId = Produccion.SgteTurnoExtrusora.Udp(\u0026ExtrusionId)\n\nif(\u0026SgteExtrusionId \u003e 0)\n\t\u0026SgteExtrusion.Load(\u0026SgteExtrusionId)\n\t\u0026SgteExtrusionFecha = \u0026SgteExtrusion.ExtrusionFecha\n\t\u0026Tiempo = \u0026SgteExtrusionFecha.Difference(\u0026IniciaProceso)\n\t\u0026TiempoMin = (\u0026Tiempo/60) - 60\nelse\n\t\u0026TiempoMin = Produccion.SDTiempoLaboral.Udp()\nendif\n",
+                              "cleanSource":  "\u0026SgteExtrusionId = Produccion.SgteTurnoExtrusora.Udp(\u0026ExtrusionId)\n\nif(\u0026SgteExtrusionId \u003e 0)\n\t\u0026SgteExtrusion.Load(\u0026SgteExtrusionId)\n\t\u0026SgteExtrusionFecha = \u0026SgteExtrusion.ExtrusionFecha\n\t\u0026Tiempo = \u0026SgteExtrusionFecha.Difference(\u0026IniciaProceso)\n\t\u0026TiempoMin = (\u0026Tiempo/60) - 60\nelse\n\t\u0026TiempoMin = Produccion.SDTiempoLaboral.Udp()\nendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExtrusionId, in:\u0026IniciaProceso, out:\u0026TiempoMin);\n",
+                              "cleanSource":  "parm(in:\u0026ExtrusionId, in:\u0026IniciaProceso, out:\u0026TiempoMin);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SgteTurnoExtrusora",
+                                         "Produccion.SDTiempoLaboral",
+                                         "DB.Extrusion"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "IniciaProceso",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATETIME",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Inicia Proceso"
+                           },
+                           {
+                               "name":  "SgteExtrusion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Sgte Extrusion"
+                           },
+                           {
+                               "name":  "SgteExtrusionFecha",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Fecha"
+                           },
+                           {
+                               "name":  "SgteExtrusionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "Tiempo",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tiempo"
+                           },
+                           {
+                               "name":  "TiempoMin",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Tiempo Min"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

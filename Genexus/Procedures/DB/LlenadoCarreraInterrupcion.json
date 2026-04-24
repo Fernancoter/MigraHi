@@ -1,0 +1,122 @@
+﻿{
+    "uniqueId":  "4f595eb8-d293-4af7-947e-8eaa5210c214",
+    "name":  "LlenadoCarreraInterrupcion",
+    "type":  "Procedure",
+    "module":  "DB",
+    "description":  "Llenado Carrera Interrupcion",
+    "filePath":  "Procedures/DB/LlenadoCarreraInterrupcion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "For Each\n\tWhere CarreraId \u003e 633800\n\t\u0026InterrupcionId = ObtenerInterrupcionCarrera.Udp(CarreraFechaRegistro,CarreraFechaValidacion, CarreraEstado)\n\t\u0026Carrera.Load(CarreraId)\n\t\u0026Carrera.CarreraInterrupcionId= \u0026InterrupcionId\n\t\u0026Carrera.Save()\n\tIf \u0026Carrera.Success()\n\t\tCommit\n\tEndIf\nEndFor\n",
+                              "cleanSource":  "For Each\n\tWhere CarreraId \u003e 633800\n\t\u0026InterrupcionId = ObtenerInterrupcionCarrera.Udp(CarreraFechaRegistro,CarreraFechaValidacion, CarreraEstado)\n\t\u0026Carrera.Load(CarreraId)\n\t\u0026Carrera.CarreraInterrupcionId= \u0026InterrupcionId\n\t\u0026Carrera.Save()\n\tIf \u0026Carrera.Success()\n\t\tCommit\n\tEndIf\nEndFor"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.ObtenerInterrupcionCarrera",
+                                         "DB.Carrera",
+                                         "ObtenerInterrupcionCarrera"
+                                     ],
+                         "calledBy":  [
+                                          "CarreraWW"
+                                      ],
+                         "tablesRead":  [
+                                            "Carrera"
+                                        ],
+                         "tablesWritten":  [
+                                               "Carrera"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Carrera",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera"
+                           },
+                           {
+                               "name":  "InterrupcionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

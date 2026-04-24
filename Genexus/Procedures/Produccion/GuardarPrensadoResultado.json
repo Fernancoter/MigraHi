@@ -1,0 +1,135 @@
+﻿{
+    "uniqueId":  "4f73d327-c80d-4fa3-afe5-4c19bc25d048",
+    "name":  "GuardarPrensadoResultado",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Guardar Prensado Resultado",
+    "filePath":  "Procedures/Produccion/GuardarPrensadoResultado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\t\u0026isOK = false\n\t\n\t\u0026PrensadoResultado.Load(\u0026SDTPrensadoResultado.PrensadoResultadoId)\n\t\u0026PrensadoResultado.FromJson(\u0026SDTPrensadoResultado.ToJson())\n\t\u0026PrensadoResultado.Save()\n\t\n\tif(\u0026PrensadoResultado.Success())\n\t\tcommit\n\t\t\u0026isOK = true\n\t\t\n\t\tmsg(\u0027Operación de guardado exitosa\u0027)\n\telse\n\t\tmsg(\u0027PrensadoResultado: \u0027 + \u0026PrensadoResultado.GetMessages().ToJson())\n\tendif\n",
+                              "cleanSource":  "\t\n\t\u0026isOK = false\n\t\n\t\u0026PrensadoResultado.Load(\u0026SDTPrensadoResultado.PrensadoResultadoId)\n\t\u0026PrensadoResultado.FromJson(\u0026SDTPrensadoResultado.ToJson())\n\t\u0026PrensadoResultado.Save()\n\t\n\tif(\u0026PrensadoResultado.Success())\n\t\tcommit\n\t\t\u0026isOK = true\n\t\t\n\t\tmsg(\u0027Operación de guardado exitosa\u0027)\n\telse\n\t\tmsg(\u0027PrensadoResultado: \u0027 + \u0026PrensadoResultado.GetMessages().ToJson())\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026SDTPrensadoResultado, out:\u0026isOK);\n",
+                              "cleanSource":  "parm(in:\u0026SDTPrensadoResultado, out:\u0026isOK);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTPrensadoResultado",
+                                         "DB.PrensadoResultado"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.PrensadoResultado"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.PrensadoResultado"
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTPrensadoResultado"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PrensadoResultado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Resultado"
+                           },
+                           {
+                               "name":  "isOK",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "is OK"
+                           },
+                           {
+                               "name":  "SDTPrensadoResultado",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "SDTPrensado Resultado"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

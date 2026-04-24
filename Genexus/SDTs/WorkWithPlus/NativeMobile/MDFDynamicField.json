@@ -1,0 +1,166 @@
+﻿{
+    "uniqueId":  "d7ef112d-d884-47a7-bf34-64dca27f4341",
+    "name":  "MDFDynamicField",
+    "type":  "SDT",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "MDFDynamic Field",
+    "filePath":  "SDTs/WorkWithPlus/NativeMobile/MDFDynamicField.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "SDPMDFFieldsFromJSON",
+                                          "MDFLoadSampleFieldsSession",
+                                          "MDFLoadSampleFields2",
+                                          "MDFLoadSampleFields",
+                                          "SDPMDFFieldGetCharValue",
+                                          "SDPFieldsToJSON",
+                                          "SDPMDFFieldsRequiredChek"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "MDFDynamicFieldId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Id"
+                           },
+                           {
+                               "name":  "MDFDynamicFieldName",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Name"
+                           },
+                           {
+                               "name":  "MDFDynamicFieldDescription",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Description"
+                           },
+                           {
+                               "name":  "MDFDynamicFieldValue",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Enter Value"
+                           },
+                           {
+                               "name":  "MDFDynamicFieldValueNumeric",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Enter Value"
+                           },
+                           {
+                               "name":  "MDFDynamicFieldValueDecimal",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Enter Value"
+                           },
+                           {
+                               "name":  "MDFDynamicFieldValueCheck",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Enter Value"
+                           },
+                           {
+                               "name":  "MDFDynamicFieldValueDate",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Enter Value"
+                           },
+                           {
+                               "name":  "MDFDynamicFieldType",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "MDFDynamic Field Type"
+                           },
+                           {
+                               "name":  "MDFDynamicFieldComboValues",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "MDFDynamic Field Combo Values"
+                           },
+                           {
+                               "name":  "MDFDynamicFieldEnabled",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "MDFDynamic Field Enabled"
+                           },
+                           {
+                               "name":  "MDFDynamicFieldRequired",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "MDFDynamic Field Required"
+                           },
+                           {
+                               "name":  "MDFDynamicFieldClass",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "MDFDynamic Field Class"
+                           },
+                           {
+                               "name":  "MDFDynamicFieldDescriptionClass",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "MDFDynamic Field Description Class"
+                           }
+                       ]
+}

@@ -1,0 +1,128 @@
+﻿{
+    "uniqueId":  "b4677fdc-75c6-4119-8e90-f2ce3ce3fb93",
+    "name":  "ComenzarCargaDeEmbarque",
+    "type":  "Procedure",
+    "module":  "Embarques",
+    "description":  "Comenzar Carga De Embarque",
+    "filePath":  "Procedures/Embarques/ComenzarCargaDeEmbarque.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026Embarque.Load(\u0026EmbarqueId)\n\u0026Embarque.EmbarqueEstatus = EstatusEmbarque.EnProceso\n\u0026Embarque.EmbarqueHoraFin = now()\n\u0026Embarque.Save()\nif(\u0026Embarque.Success())\n\tcommit\n\tCargarEmbarque.Call(\u0026EmbarqueId)\nelse\n\t\n\t//Mostrar Mensajes\nendif\n\n",
+                              "cleanSource":  "\u0026Embarque.Load(\u0026EmbarqueId)\n\u0026Embarque.EmbarqueEstatus = EstatusEmbarque.EnProceso\n\u0026Embarque.EmbarqueHoraFin = now()\n\u0026Embarque.Save()\nif(\u0026Embarque.Success())\n\tcommit\n\tCargarEmbarque.Call(\u0026EmbarqueId)\nelse\n\t\n\t//Mostrar Mensajes\nendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026EmbarqueId);\n",
+                              "cleanSource":  "parm(\u0026EmbarqueId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Embarque",
+                                         "Embarques.CargarEmbarque",
+                                         "CargarEmbarque"
+                                     ],
+                         "calledBy":  [
+                                          "ListadoEmbarques"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Embarque"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Embarque"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "EmbarqueId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Embarque Id"
+                           },
+                           {
+                               "name":  "Embarque",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Embarque"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,167 @@
+﻿{
+    "uniqueId":  "e0ef3e86-d300-4306-b1d1-10640d35a835",
+    "name":  "ObtenerCarreteMillar",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Obtener Carrete Millar",
+    "filePath":  "Procedures/Produccion/ObtenerCarreteMillar.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\t\u0026Prensado.Load(\u0026PrensadoId)\n\t//\u0026PrensaId = \u0026Prensado.PrensadoPrensaId\n\t//\u0026PrensaNombre = \u0026Prensado.PrensadoPrensaNombre\n\t\u0026ProductoId = \u0026Prensado.PrensadoProductoId\n\t//\u0026ProductoNombre = \u0026Prensado.PrensadoProductoNombre\n\t\n\t\u0026CarreteMillar = 0\n\t\n\t\n\tfor each DB.ProductoTerminado\n\t\twhere ProductoTerminadoId \u003e 0\n\t\twhere TerminadoProductoId = \u0026ProductoId\n\tendfor\n//\tfor each\n//\t\twhere PrensaProductoId \u003e 0\n//\t\twhere PrensaId = \u0026PrensaId\n//\t\twhere ComercialProductoId = \u0026ProductoId\n//\t\t\u0026CarreteMillar = PrensaProductoCarreteMillar\n//\t\tExit\n//\twhen none\n//\t\t\t\t\n//\t\tmsg(\u0027Debe configurar los millares para el producto \u0027 + \u0026ProductoNombre.ToString() + \u0027para la prensa \u0027 + \u0026PrensaNombre.ToString())\n//\tendfor\n",
+                              "cleanSource":  "\t\n\t\u0026Prensado.Load(\u0026PrensadoId)\n\t//\u0026PrensaId = \u0026Prensado.PrensadoPrensaId\n\t//\u0026PrensaNombre = \u0026Prensado.PrensadoPrensaNombre\n\t\u0026ProductoId = \u0026Prensado.PrensadoProductoId\n\t//\u0026ProductoNombre = \u0026Prensado.PrensadoProductoNombre\n\t\n\t\u0026CarreteMillar = 0\n\t\n\t\n\tfor each DB.ProductoTerminado\n\t\twhere ProductoTerminadoId \u003e 0\n\t\twhere TerminadoProductoId = \u0026ProductoId\n\tendfor\n//\tfor each\n//\t\twhere PrensaProductoId \u003e 0\n//\t\twhere PrensaId = \u0026PrensaId\n//\t\twhere ComercialProductoId = \u0026ProductoId\n//\t\t\u0026CarreteMillar = PrensaProductoCarreteMillar\n//\t\tExit\n//\twhen none\n//\t\t\t\t\n//\t\tmsg(\u0027Debe configurar los millares para el producto \u0027 + \u0026ProductoNombre.ToString() + \u0027para la prensa \u0027 + \u0026PrensaNombre.ToString())\n//\tendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId, out:\u0026CarreteMillar);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId, out:\u0026CarreteMillar);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Prensado",
+                                         "DB.ProductoTerminado"
+                                     ],
+                         "calledBy":  [
+                                          "ObtenerPrensadoResultado"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Prensado"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CarreteMillar",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Carrete Millar"
+                           },
+                           {
+                               "name":  "Prensado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensa Id"
+                           },
+                           {
+                               "name":  "PrensaNombre",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensa Nombre"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "ProductoNombre",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Nombre"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

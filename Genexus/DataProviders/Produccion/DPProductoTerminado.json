@@ -1,0 +1,94 @@
+﻿{
+    "uniqueId":  "4079d6c0-50ee-4c78-99dc-83035843ec16",
+    "name":  "DPProductoTerminado",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "DPProducto Terminado",
+    "filePath":  "DataProviders/Produccion/DPProductoTerminado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTProductoTerminado\nWhere TerminadoProductoId = \u0026TerminadoProductoId\n{\n\tProductoTerminadoId  = ProductoTerminadoId \n\tProductoTerminadoPalets  = ProductoTerminadoPalets \n\tProductoTerminadoCarreteMillar  = ProductoTerminadoCarreteMillar \n\tProductoTerminadoPaletMillar  = ProductoTerminadoPaletMillar \n\tProductoTerminadoPeso  = ProductoTerminadoPeso \n\tProductoTerminadoPesoCarrete  = ProductoTerminadoPesoCarrete \n\tProductoTerminadoPesoPalet  = ProductoTerminadoPesoPalet \n\tTerminadoProductoId  = TerminadoProductoId \n\tTerminadoProductoNombre  = TerminadoProductoNombre \n\n}\n",
+                              "cleanSource":  "SDTProductoTerminado\nWhere TerminadoProductoId = \u0026TerminadoProductoId\n{\n\tProductoTerminadoId  = ProductoTerminadoId \n\tProductoTerminadoPalets  = ProductoTerminadoPalets \n\tProductoTerminadoCarreteMillar  = ProductoTerminadoCarreteMillar \n\tProductoTerminadoPaletMillar  = ProductoTerminadoPaletMillar \n\tProductoTerminadoPeso  = ProductoTerminadoPeso \n\tProductoTerminadoPesoCarrete  = ProductoTerminadoPesoCarrete \n\tProductoTerminadoPesoPalet  = ProductoTerminadoPesoPalet \n\tTerminadoProductoId  = TerminadoProductoId \n\tTerminadoProductoNombre  = TerminadoProductoNombre \n\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026TerminadoProductoId);\n",
+                              "cleanSource":  "parm(\u0026TerminadoProductoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTProductoTerminado"
+                                     ],
+                         "calledBy":  [
+                                          "RptPrensado"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTProductoTerminado"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "TerminadoProductoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Terminado Producto Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

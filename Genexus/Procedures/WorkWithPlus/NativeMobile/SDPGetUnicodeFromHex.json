@@ -1,0 +1,134 @@
+﻿{
+    "uniqueId":  "1cdad6c4-cc39-4192-b870-cb8ac77e0506",
+    "name":  "SDPGetUnicodeFromHex",
+    "type":  "Procedure",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPGet Unicode From Hex",
+    "filePath":  "Procedures/WorkWithPlus/NativeMobile/SDPGetUnicodeFromHex.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "//List of unicode characters:\n//https://en.wikipedia.org/wiki/List_of_Unicode_characters\n//In case of fontwesome\n//https://fontawesome.com/cheatsheet\n//In case of MaterialIcons\n//https://github.com/google/material-design-icons/blob/master/iconfont/codepoints\n//https://material.io/resources/icons/?style=baseline\n\u0026DecimalValue = WorkWithPlus.NativeMobile.SDPGetDecimalFromHex(\u0026HexaUnicode)\n\u0026UnicodeCharacter = chr(\u0026DecimalValue)\n",
+                              "cleanSource":  "//List of unicode characters:\n//https://en.wikipedia.org/wiki/List_of_Unicode_characters\n//In case of fontwesome\n//https://fontawesome.com/cheatsheet\n//In case of MaterialIcons\n//https://github.com/google/material-design-icons/blob/master/iconfont/codepoints\n//https://material.io/resources/icons/?style=baseline\n\u0026DecimalValue = WorkWithPlus.NativeMobile.SDPGetDecimalFromHex(\u0026HexaUnicode)\n\u0026UnicodeCharacter = chr(\u0026DecimalValue)"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026HexaUnicode, out:\u0026UnicodeCharacter);\n",
+                              "cleanSource":  "Parm(in:\u0026HexaUnicode, out:\u0026UnicodeCharacter);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPGetDecimalFromHex"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "HexaUnicode",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Hexa Unicode"
+                           },
+                           {
+                               "name":  "UnicodeCharacter",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Unicode Character"
+                           },
+                           {
+                               "name":  "DecimalValue",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Decimal Value"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

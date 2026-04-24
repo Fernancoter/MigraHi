@@ -1,0 +1,153 @@
+﻿{
+    "uniqueId":  "e764b8e0-9d19-4cc4-af67-ab5a297be0a5",
+    "name":  "SDTerminarCarreraDB",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDTerminar Carrera DB",
+    "filePath":  "Procedures/Produccion/SDTerminarCarreraDB.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\tfor each DB.Carrera\n\t\twhere CarreraId \u003e 0\n\t\twhere CarreraEstado = EstadoCarrera.EnProceso\n\t\t\u0026CarreraId = WWPBaseObjects.CarreraId\n\t\tSetEstadoCarrera.Call(\u0026CarreraId, EstadoCarrera.Terminada)\n\t\tdo \u0027CarretesEnRevision\u0027\n\t\tSDPAddNotification(\u0026CarreraId, NotificacionTipo.Carrera)\n\tendfor\n\n        Sub \u0027CarretesEnRevision\u0027\n\t\tfor each DB.Carrete\n\t\t\twhere CarreteId \u003e 0\n\t\t\twhere CarreteCarreraId = \u0026CarreraId\n\t\t\t\u0026CarreteId = CarreteId\n\t\t\tSetEstadoCarrete.Call(\u0026CarreteId, EstadoCarrete.EnRevision, false)\n\t\tendfor\n\tEndSub\n",
+                              "cleanSource":  "\n\tfor each DB.Carrera\n\t\twhere CarreraId \u003e 0\n\t\twhere CarreraEstado = EstadoCarrera.EnProceso\n\t\t\u0026CarreraId = WWPBaseObjects.CarreraId\n\t\tSetEstadoCarrera.Call(\u0026CarreraId, EstadoCarrera.Terminada)\n\t\tdo \u0027CarretesEnRevision\u0027\n\t\tSDPAddNotification(\u0026CarreraId, NotificacionTipo.Carrera)\n\tendfor\n\n        Sub \u0027CarretesEnRevision\u0027\n\t\tfor each DB.Carrete\n\t\t\twhere CarreteId \u003e 0\n\t\t\twhere CarreteCarreraId = \u0026CarreraId\n\t\t\t\u0026CarreteId = CarreteId\n\t\t\tSetEstadoCarrete.Call(\u0026CarreteId, EstadoCarrete.EnRevision, false)\n\t\tendfor\n\tEndSub"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SetEstadoCarrera",
+                                         "Produccion.SetEstadoCarrete",
+                                         "SDPAddNotification",
+                                         "Produccion.SDTCarrera",
+                                         "Produccion.SDTCarreraSD",
+                                         "DB.Carrera",
+                                         "DB.Carrete",
+                                         "SetEstadoCarrera",
+                                         "SetEstadoCarrete"
+                                     ],
+                         "calledBy":  [
+                                          "SDTerminarCarrera",
+                                          "SDAgregarCarrera"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SDCarreraItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDCarrera Item"
+                           },
+                           {
+                               "name":  "SDTCarreraItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDTCarrera Item"
+                           },
+                           {
+                               "name":  "SDTCarreraSD",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDTCarrera SD"
+                           },
+                           {
+                               "name":  "CarreraId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Id"
+                           },
+                           {
+                               "name":  "CarreteId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

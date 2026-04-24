@@ -1,0 +1,98 @@
+﻿{
+    "uniqueId":  "b4d07c06-9181-4203-808a-ea96cff8e71e",
+    "name":  "MenuReportesHC",
+    "type":  "DataProvider",
+    "module":  "Reportes",
+    "description":  "Menu Reportes HC",
+    "filePath":  "DataProviders/Reportes/MenuReportesHC.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "DVelop_Menu\n{\n\t\n\t\u0026id = 0\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlinkTarget =\"\" \n\t\tcaption = !\"Reportes HC\"\n\t\t\n\t\tsubItems\n\t\t{\n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioReportesHC.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\tcaption = \"Inicio\"  \n\t\t\t} \n\t\t\n\t\t        \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\tcaption = \"Observaciones\"\n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{\n\t\t\t\t   \tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tCausaInterrupcionWW.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Causas Interrupción\"  \n\t\t\t\t\t} \n\t\t\t\t\t\n\t\t                        Item\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tReportes.ExtrusoraObservacionWW.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Extrusoras\"  \n\t\t\t\t\t} \n\t\t\t\t        \n\t\t\t\t\t Item\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tPrensaObservacionWW.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Prensas\"  \n\t\t\t\t\t} \n\t\t\t\t}\n\t\t\t} \n\t\t\n\t\t        Item\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\tcaption = \"Descargables\"\n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{\n\t\t\t\t   \tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tReporteDRR.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"DRR\"  \n\t\t\t\t\t} \n\t\t\t\t        \n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tPalletEnEmbarque.Link()\n\t\t\t\t\t\tlinkTarget = \"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Pallet_Embarque\"  \n\t\t\t\t\t} \n\t\t\t\t\t\n\t\t\t\t        Item\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tCarreteEnPallet.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Carrete_Pallet\"  \n\t\t\t\t\t} \n\t\t\t\t}\n\t\t\t} \n\t\t\n\t\t         Item\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\tcaption = \"Resúmenes\"\n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tvwExtrusionResultado.Link()\n\t\t\t\t\t\tlinkTarget = \"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Extrusión\"  \n\t\t\t\t\t} \n\t\t\t\t\t\n\t\t\t\t        Item\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tvwPrensadoResultado.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Prensado\"  \n\t\t\t\t\t} \n\t\t\t\t}\n\t\t\t}\n\t\t        \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\tcaption = \"Etiquetado\"\n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tvwOrdenEtiquetado.Link()\n\t\t\t\t\t\tlinkTarget = \"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Órdenes\"  \n\t\t\t\t\t} \n\t\t\t\t}\n\t\t\t}\n\t\t}\t\n        }\n}\n",
+                              "cleanSource":  "DVelop_Menu\n{\n\t\n\t\u0026id = 0\n\tItem\n\t{\n\t\t\u0026id = \u0026id + 1\n\t\tid = \u0026id.ToString()\n\t\ttooltip = \"\"\n\t\tlinkTarget =\"\" \n\t\tcaption = !\"Reportes HC\"\n\t\t\n\t\tsubItems\n\t\t{\n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioReportesHC.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\tcaption = \"Inicio\"  \n\t\t\t} \n\t\t\n\t\t        \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\tcaption = \"Observaciones\"\n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{\n\t\t\t\t   \tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tCausaInterrupcionWW.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Causas Interrupción\"  \n\t\t\t\t\t} \n\t\t\t\t\t\n\t\t                        Item\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tReportes.ExtrusoraObservacionWW.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Extrusoras\"  \n\t\t\t\t\t} \n\t\t\t\t        \n\t\t\t\t\t Item\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tPrensaObservacionWW.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Prensas\"  \n\t\t\t\t\t} \n\t\t\t\t}\n\t\t\t} \n\t\t\n\t\t        Item\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\tcaption = \"Descargables\"\n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{\n\t\t\t\t   \tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tReporteDRR.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"DRR\"  \n\t\t\t\t\t} \n\t\t\t\t        \n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tPalletEnEmbarque.Link()\n\t\t\t\t\t\tlinkTarget = \"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Pallet_Embarque\"  \n\t\t\t\t\t} \n\t\t\t\t\t\n\t\t\t\t        Item\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tCarreteEnPallet.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Carrete_Pallet\"  \n\t\t\t\t\t} \n\t\t\t\t}\n\t\t\t} \n\t\t\n\t\t         Item\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\tcaption = \"Resúmenes\"\n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tvwExtrusionResultado.Link()\n\t\t\t\t\t\tlinkTarget = \"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Extrusión\"  \n\t\t\t\t\t} \n\t\t\t\t\t\n\t\t\t\t        Item\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tvwPrensadoResultado.Link()\n\t\t\t\t\t\tlinkTarget =\"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Prensado\"  \n\t\t\t\t\t} \n\t\t\t\t}\n\t\t\t}\n\t\t        \n\t\t\tItem\n\t\t\t{ \n\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\tid = \u0026id.ToString()\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\tcaption = \"Etiquetado\"\n\t\t\t\t\n\t\t\t\tsubItems\n\t\t\t\t{\n\t\t\t\t\tItem\n\t\t\t\t\t{ \n\t\t\t\t\t\t\u0026id = \u0026id + 1\n\t\t\t\t\t\tid = \u0026id.ToString()\n\t\t\t\t\t\ttooltip = \"\"\n\t\t\t\t\t\tlink =\tvwOrdenEtiquetado.Link()\n\t\t\t\t\t\tlinkTarget = \"\" \n\t\t\t\t\t\ticonClass = !\"menu-icon fa fa-cogs\"\n\t\t\t\t\t\tcaption = \"Órdenes\"  \n\t\t\t\t\t} \n\t\t\t\t}\n\t\t\t}\n\t\t}\t\n        }\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.DVelop_Menu",
+                                         "Reportes.CausaInterrupcionWW",
+                                         "Reportes.ExtrusoraObservacionWW",
+                                         "Reportes.PrensaObservacionWW",
+                                         "Reportes.PalletEnEmbarque",
+                                         "Reportes.CarreteEnPallet",
+                                         "Reportes.InicioReportesHC",
+                                         "Reportes.ReporteDRR",
+                                         "Reportes.vwPrensadoResultado",
+                                         "Reportes.vwExtrusionResultado",
+                                         "Reportes.vwOrdenEtiquetado"
+                                     ],
+                         "calledBy":  [
+                                          "MenuByModule"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WWPBaseObjects.DVelop_Menu"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "id",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

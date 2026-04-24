@@ -1,0 +1,142 @@
+﻿{
+    "uniqueId":  "a50f59e4-0e73-4f4f-ada4-a6cc45d300dc",
+    "name":  "GAMIsAuthenticated",
+    "type":  "Procedure",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "GAMIs Authenticated",
+    "filePath":  "Procedures/WorkWithPlus/NativeMobile/GAMIsAuthenticated.json",
+    "isGAMObject":  true,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026IsAuthorized = Not (GAMSession.IsAnonymousUser(\u0026GAMErrors))\nIF Not \u0026IsAuthorized AND \u0026AllowAutoRegisteredUser\n\t\u0026GAMUser = GeneXusSecurity.GAMUser.Get()\n\t\u0026IsAuthorized = \u0026GAMUser.IsAutoRegisteredUser\nEndIf\n",
+                              "cleanSource":  "\u0026IsAuthorized = Not (GAMSession.IsAnonymousUser(\u0026GAMErrors))\nIF Not \u0026IsAuthorized AND \u0026AllowAutoRegisteredUser\n\t\u0026GAMUser = GeneXusSecurity.GAMUser.Get()\n\t\u0026IsAuthorized = \u0026GAMUser.IsAutoRegisteredUser\nEndIf"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026AllowAutoRegisteredUser, out:\u0026IsAuthorized);\n",
+                              "cleanSource":  "parm(in:\u0026AllowAutoRegisteredUser, out:\u0026IsAuthorized);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "GAMUser",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "GAMUser"
+                           },
+                           {
+                               "name":  "AllowAutoRegisteredUser",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Allow Auto Registered User"
+                           },
+                           {
+                               "name":  "GAMErrors",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "GAMErrors"
+                           },
+                           {
+                               "name":  "IsAuthorized",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Is Authorized"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

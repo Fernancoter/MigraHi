@@ -1,0 +1,88 @@
+﻿{
+    "uniqueId":  "3d90881e-f894-4d74-bda4-c421bbd06a30",
+    "name":  "SDPLaunchpadDP",
+    "type":  "DataProvider",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPLaunchpad DP",
+    "filePath":  "DataProviders/WorkWithPlus/NativeMobile/SDPLaunchpadDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "//ComponentToCall: \n//\thttps://wiki.genexus.com/commwiki/servlet/wiki?17411,Dynamic+Calls+in+Smart+Devices,\nSDPLaunchpadOptions\n{\n//\tOption\n//\t{\n//\t\tName = !\"SDPerfilOperador\"\n//\t\t//Description = !\"20 Diciembre, 2021\"\n//\t\t//Information = !\"The world\u0027s leading brands rely our multi-packaging solutions.\"\n//\t\tLink = !\"SDPerfilOperador\"\n//\t\t//\u0026Image.FromImage(hicone_banner)\t\t\n//\t\t//Icon = \u0026Image\n//\t\tTileSize = SDPTileSize.TwoBlocks\n//\t\tTileType = SDPTileType.WebComponent\n//\t}\n\n//\tOption\n//\t{\n//\t\tName = !\"temperature\"\n//\t\tDescription = !\"20 Diciembre, 2021\"\n//\t\tInformation = !\"The world\u0027s leading brands rely our multi-packaging solutions.\"\n//\t\t//Link = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?1\"\n//\t\t\u0026Image.FromImage(hicone_banner)\t\t\n//\t\tIcon = \u0026Image\n//\t\tTileSize = SDPTileSize.TwoBlocks\n//\t\tTileType = SDPTileType.Image\n//\t}\n\n\tOption\n\t{\n\t\tName = !\"products\"\n\t\tDescription = !\"\"\n\t\tInformation = !\"Extrusiones\"\n\t\tLink = !\"HICONE_SDListaExtrusiones\"\n\t\t//\u0026Image.FromImage(SDPResSampleOption1)\t\t\n\t\t\u0026Image.FromImage(extrusion_inter)\n\t\tIcon = \u0026Image\n\t\tTileSize = SDPTileSize.OneBlock\n\t\tTileType = SDPTileType.Information\n\t}\n\tOption\n\t{\n\t\tName = !\"people\"\n\t\tDescription = !\"\"\n\t\tInformation = !\"Prensados\"\n\t\tLink = !\"HICONE_SDListaPrensados\"\n//\t\t\u0026Image.FromImage(SDPResSampleOption2)\t\n                \u0026Image.FromImage(layers_blue)\n\t\tIcon = \u0026Image\n\t\tTileSize = SDPTileSize.OneBlock\n\t\tTileType = SDPTileType.Information\n\t}\n\n        Option\n\t{\n\t\tName = !\"appointments\"\n\t\tDescription = !\"\"\n\t\tInformation = !\"Reportes\"\n\t\tLink = !\"HICONE_SDReportes\"\n\t\t\u0026Image.FromImage(clipboard)\n\t\tIcon = \u0026Image\n\t\tTileSize = SDPTileSize.OneBlock\n\t\tTileType = SDPTileType.Information\n\t}\n\tOption\n\t{\n\t\tName = !\"appointments\"\n\t\tDescription = !\"\"\n\t\tInformation = !\"Manual de Ayuda\"\n\t\tLink = !\"sd:BrowserSD.BrowserURL?https://nedi.mx/knowledge/article/941\"\n\t\t//\u0026Image.FromImage(SDPResSampleOption3)\n\t\t\u0026Image.FromImage(book)\n\t\tIcon = \u0026Image\n\t\tTileSize = SDPTileSize.OneBlock\n\t\tTileType = SDPTileType.Information\n\t}\n        \n\tOption\n\t{\n\t\tName = !\"appointments\"\n\t\tDescription = !\"\"\n\t\tInformation = !\"Wizard\"\n\t\tLink = !\"HICONE_SDInitWizard\"\n\t\t\u0026Image.FromImage(wizard)\n\t\tIcon = \u0026Image\n\t\tTileSize = SDPTileSize.OneBlock\n\t\tTileType = SDPTileType.Information\n\t}\n\n\tOption\n\t{\n\t\tName = !\"appointments\"\n\t\tDescription = !\"\"\n\t\tInformation = !\"Etiquetado Pallets\"\n\t\tLink = !\"HICONE_SDEtiquetadoPallet\"\n\t\t\u0026Image.FromImage(tag)\n\t\tIcon = \u0026Image\n\t\tTileSize = SDPTileSize.OneBlock\n\t\tTileType = SDPTileType.Information\n\t}\n}\n",
+                              "cleanSource":  "//ComponentToCall: \n//\thttps://wiki.genexus.com/commwiki/servlet/wiki?17411,Dynamic+Calls+in+Smart+Devices,\nSDPLaunchpadOptions\n{\n//\tOption\n//\t{\n//\t\tName = !\"SDPerfilOperador\"\n//\t\t//Description = !\"20 Diciembre, 2021\"\n//\t\t//Information = !\"The world\u0027s leading brands rely our multi-packaging solutions.\"\n//\t\tLink = !\"SDPerfilOperador\"\n//\t\t//\u0026Image.FromImage(hicone_banner)\t\t\n//\t\t//Icon = \u0026Image\n//\t\tTileSize = SDPTileSize.TwoBlocks\n//\t\tTileType = SDPTileType.WebComponent\n//\t}\n\n//\tOption\n//\t{\n//\t\tName = !\"temperature\"\n//\t\tDescription = !\"20 Diciembre, 2021\"\n//\t\tInformation = !\"The world\u0027s leading brands rely our multi-packaging solutions.\"\n//\t\t//Link = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?1\"\n//\t\t\u0026Image.FromImage(hicone_banner)\t\t\n//\t\tIcon = \u0026Image\n//\t\tTileSize = SDPTileSize.TwoBlocks\n//\t\tTileType = SDPTileType.Image\n//\t}\n\n\tOption\n\t{\n\t\tName = !\"products\"\n\t\tDescription = !\"\"\n\t\tInformation = !\"Extrusiones\"\n\t\tLink = !\"HICONE_SDListaExtrusiones\"\n\t\t//\u0026Image.FromImage(SDPResSampleOption1)\t\t\n\t\t\u0026Image.FromImage(extrusion_inter)\n\t\tIcon = \u0026Image\n\t\tTileSize = SDPTileSize.OneBlock\n\t\tTileType = SDPTileType.Information\n\t}\n\tOption\n\t{\n\t\tName = !\"people\"\n\t\tDescription = !\"\"\n\t\tInformation = !\"Prensados\"\n\t\tLink = !\"HICONE_SDListaPrensados\"\n//\t\t\u0026Image.FromImage(SDPResSampleOption2)\t\n                \u0026Image.FromImage(layers_blue)\n\t\tIcon = \u0026Image\n\t\tTileSize = SDPTileSize.OneBlock\n\t\tTileType = SDPTileType.Information\n\t}\n\n        Option\n\t{\n\t\tName = !\"appointments\"\n\t\tDescription = !\"\"\n\t\tInformation = !\"Reportes\"\n\t\tLink = !\"HICONE_SDReportes\"\n\t\t\u0026Image.FromImage(clipboard)\n\t\tIcon = \u0026Image\n\t\tTileSize = SDPTileSize.OneBlock\n\t\tTileType = SDPTileType.Information\n\t}\n\tOption\n\t{\n\t\tName = !\"appointments\"\n\t\tDescription = !\"\"\n\t\tInformation = !\"Manual de Ayuda\"\n\t\tLink = !\"sd:BrowserSD.BrowserURL?https://nedi.mx/knowledge/article/941\"\n\t\t//\u0026Image.FromImage(SDPResSampleOption3)\n\t\t\u0026Image.FromImage(book)\n\t\tIcon = \u0026Image\n\t\tTileSize = SDPTileSize.OneBlock\n\t\tTileType = SDPTileType.Information\n\t}\n        \n\tOption\n\t{\n\t\tName = !\"appointments\"\n\t\tDescription = !\"\"\n\t\tInformation = !\"Wizard\"\n\t\tLink = !\"HICONE_SDInitWizard\"\n\t\t\u0026Image.FromImage(wizard)\n\t\tIcon = \u0026Image\n\t\tTileSize = SDPTileSize.OneBlock\n\t\tTileType = SDPTileType.Information\n\t}\n\n\tOption\n\t{\n\t\tName = !\"appointments\"\n\t\tDescription = !\"\"\n\t\tInformation = !\"Etiquetado Pallets\"\n\t\tLink = !\"HICONE_SDEtiquetadoPallet\"\n\t\t\u0026Image.FromImage(tag)\n\t\tIcon = \u0026Image\n\t\tTileSize = SDPTileSize.OneBlock\n\t\tTileType = SDPTileType.Information\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPLaunchpadOptions"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDPLaunchpadOptions"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Image",
+                               "elementType":  "Variable",
+                               "dataType":  "BITMAP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Image"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

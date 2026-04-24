@@ -1,0 +1,166 @@
+﻿{
+    "uniqueId":  "1d1a8e44-93b3-4aef-a53a-d5bb0c802e98",
+    "name":  "WWP_ParsePhoneNumbersList",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects.SMS",
+    "description":  "Parse Phone Numbers List",
+    "filePath":  "Procedures/WWPBaseObjects/SMS/WWP_ParsePhoneNumbersList.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "WWP_Logger.Debug(\u0026Pgmname, !\"Begin parsing phone numbers list\")\n\n\u0026PhonesList.Clear()\n\n\u0026TrimmedPhones = \u0026PhonesString.Trim()\nIf \u0026TrimmedPhones.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\"Phones list is empty\")\n\treturn\nEndIf\n\n\u0026ValidationRegex = !\"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$\"\n\u0026SeparatorRegex = !\"\\s*,\\s*\"\n\u0026SplittedPhones = \u0026TrimmedPhones.SplitRegEx(\u0026SeparatorRegex)\n\nFor \u0026Phone in \u0026SplittedPhones\n\t\u0026Phone = \u0026Phone.Trim()\n\tIf not \u0026Phone.IsMatch(\u0026ValidationRegex)\n\t\tWWPBaseObjects.WWP_Logger.Error(\u0026Pgmname, !\"\u0026Phone is incorrect: \" + \u0026Phone)\n\t\t\u0026PhonesList.Clear()\n\t\treturn\n\tElse\n\t\t\u0026PhonesList.Add(\u0026Phone)\n\tEndIf\nEndFor\n\nWWP_Logger.Debug(\u0026Pgmname, !\"Parsing phones completed\")\n",
+                              "cleanSource":  "WWP_Logger.Debug(\u0026Pgmname, !\"Begin parsing phone numbers list\")\n\n\u0026PhonesList.Clear()\n\n\u0026TrimmedPhones = \u0026PhonesString.Trim()\nIf \u0026TrimmedPhones.IsEmpty()\n\tWWP_Logger.Error(\u0026Pgmname, !\"Phones list is empty\")\n\treturn\nEndIf\n\n\u0026ValidationRegex = !\"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$\"\n\u0026SeparatorRegex = !\"\\s*,\\s*\"\n\u0026SplittedPhones = \u0026TrimmedPhones.SplitRegEx(\u0026SeparatorRegex)\n\nFor \u0026Phone in \u0026SplittedPhones\n\t\u0026Phone = \u0026Phone.Trim()\n\tIf not \u0026Phone.IsMatch(\u0026ValidationRegex)\n\t\tWWPBaseObjects.WWP_Logger.Error(\u0026Pgmname, !\"\u0026Phone is incorrect: \" + \u0026Phone)\n\t\t\u0026PhonesList.Clear()\n\t\treturn\n\tElse\n\t\t\u0026PhonesList.Add(\u0026Phone)\n\tEndIf\nEndFor\n\nWWP_Logger.Debug(\u0026Pgmname, !\"Parsing phones completed\")"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PhonesString, out:\u0026PhonesList);\n",
+                              "cleanSource":  "parm(in:\u0026PhonesString, out:\u0026PhonesList);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_Logger"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_SendSMS"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Phone",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Phone"
+                           },
+                           {
+                               "name":  "PhonesList",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Phones List"
+                           },
+                           {
+                               "name":  "PhonesString",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Phones String"
+                           },
+                           {
+                               "name":  "SeparatorRegex",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Separator Regex"
+                           },
+                           {
+                               "name":  "SplittedPhones",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Splitted Phones"
+                           },
+                           {
+                               "name":  "TrimmedPhones",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Trimmed Phones"
+                           },
+                           {
+                               "name":  "ValidationRegex",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Validation Regex"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

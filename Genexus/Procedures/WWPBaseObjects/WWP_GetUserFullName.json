@@ -1,0 +1,147 @@
+﻿{
+    "uniqueId":  "0346ccd1-a28f-4edc-a747-ba258b1a8569",
+    "name":  "WWP_GetUserFullName",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Get User Full Name",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_GetUserFullName.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026GAMUser = GAMRepository.GetUserByGUID(\u0026WWPUserExtendedId, \u0026GAMErrorCollection)\n\u0026WWPUserExtendedFullName = iif(\u0026GAMUser.FirstName.IsEmpty(), \u0026GAMUser.Name, \u0026GAMUser.FirstName.Trim() + \" \" + \u0026GAMUser.LastName.Trim())\n",
+                              "cleanSource":  "\u0026GAMUser = GAMRepository.GetUserByGUID(\u0026WWPUserExtendedId, \u0026GAMErrorCollection)\n\u0026WWPUserExtendedFullName = iif(\u0026GAMUser.FirstName.IsEmpty(), \u0026GAMUser.Name, \u0026GAMUser.FirstName.Trim() + \" \" + \u0026GAMUser.LastName.Trim())"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026WWPUserExtendedId, out:\u0026WWPUserExtendedFullName);\n",
+                              "cleanSource":  "parm(in:\u0026WWPUserExtendedId, out:\u0026WWPUserExtendedFullName);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "WWP_DiscussionMessageMention",
+                                          "WWP_Subscription",
+                                          "WWP_DiscussionMessage",
+                                          "WWP_Notification",
+                                          "Embarque",
+                                          "WWP_UserExtended"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "GAMErrorCollection",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "GAMError Collection"
+                           },
+                           {
+                               "name":  "WWPUserExtendedFullName",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "User Full Name"
+                           },
+                           {
+                               "name":  "WWPUserExtendedId",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "User Id"
+                           },
+                           {
+                               "name":  "GAMUser",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "GAMUser"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

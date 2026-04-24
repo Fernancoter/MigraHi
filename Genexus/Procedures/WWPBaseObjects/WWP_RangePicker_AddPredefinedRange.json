@@ -1,0 +1,120 @@
+﻿{
+    "uniqueId":  "9fd34730-e7d7-45cf-9f91-2842e6350b50",
+    "name":  "WWP_RangePicker_AddPredefinedRange",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Range Picker Add Predefined Range",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_RangePicker_AddPredefinedRange.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\nStub Past(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterPast\u0027\n\t\u0026PickerOption.StartDate = ymdtod(1970, 1, 1)\n\t\u0026PickerOption.EndDate = \u0026Today.AddDays(-1)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub Yesterday(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterYesterday\u0027\n\t\u0026PickerOption.StartDate = \u0026Today.AddDays(-1)\n\t\u0026PickerOption.EndDate = \u0026Today.AddDays(-1)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub Today(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterToday\u0027\n\t\u0026PickerOption.StartDate = \u0026Today\n\t\u0026PickerOption.EndDate = \u0026Today\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub Tomorrow(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterTomorrow\u0027\n\t\u0026PickerOption.StartDate = \u0026Today.AddDays(1)\n\t\u0026PickerOption.EndDate = \u0026Today.AddDays(1)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub InTheFuture(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterInTheFuture\u0027\n\t\u0026PickerOption.StartDate = \u0026Today.AddDays(1)\n\t\u0026PickerOption.EndDate = ymdtod(2039, 12, 31)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub LastWeek(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterLastWeek\u0027\n\t\u0026PickerOption.StartDate = \u0026Today - dow(\u0026Today) - 6\n\t\u0026PickerOption.EndDate = \u0026Today - dow(\u0026Today)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub LastMonth(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterLastMonth\u0027\n\t\u0026PickerOption.StartDate = AddMth(\u0026Today, -1) - Day(\u0026Today) + 1\n\t\u0026PickerOption.EndDate = EoM(AddMth(\u0026Today, -1))\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub LastYear(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterLastYear\u0027\n\t\u0026PickerOption.StartDate = YMDtoD(year(\u0026Today) - 1, 1, 1)\n\t\u0026PickerOption.EndDate = YMDtoD(year(\u0026Today) - 1, 12, 31)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub ThisWeek(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterThisWeek\u0027\n\t\u0026PickerOption.StartDate = \u0026Today - dow(\u0026Today) + 1\n\t\u0026PickerOption.EndDate = \u0026Today  - dow(\u0026Today) + 7\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub ThisMonth(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterThisMonth\u0027\n\t\u0026PickerOption.StartDate = \u0026Today - Day(\u0026Today) + 1\n\t\u0026PickerOption.EndDate = EoM(\u0026Today)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub ThisYear(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterThisYear\u0027\n\t\u0026PickerOption.StartDate = YMDtoD(year(\u0026Today), 1, 1)\n\t\u0026PickerOption.EndDate = YMDtoD(year(\u0026Today), 12, 31)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub NextWeek(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterNextWeek\u0027\n\t\u0026PickerOption.StartDate = \u0026Today + 7 - dow(\u0026Today) + 1\n\t\u0026PickerOption.EndDate = \u0026Today + 14 - dow(\u0026Today)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub NextMonth(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterNextMonth\u0027\n\t\u0026PickerOption.StartDate = AddMth(\u0026Today, 1) - Day(\u0026Today) + 1\n\t\u0026PickerOption.EndDate = EoM(AddMth(\u0026Today, 1))\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub NextYear(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterNextYear\u0027\n\t\u0026PickerOption.StartDate = YMDtoD(year(\u0026Today) + 1, 1, 1)\n\t\u0026PickerOption.EndDate = YMDtoD(year(\u0026Today) + 1, 12, 31)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n",
+                              "cleanSource":  "\nStub Past(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterPast\u0027\n\t\u0026PickerOption.StartDate = ymdtod(1970, 1, 1)\n\t\u0026PickerOption.EndDate = \u0026Today.AddDays(-1)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub Yesterday(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterYesterday\u0027\n\t\u0026PickerOption.StartDate = \u0026Today.AddDays(-1)\n\t\u0026PickerOption.EndDate = \u0026Today.AddDays(-1)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub Today(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterToday\u0027\n\t\u0026PickerOption.StartDate = \u0026Today\n\t\u0026PickerOption.EndDate = \u0026Today\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub Tomorrow(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterTomorrow\u0027\n\t\u0026PickerOption.StartDate = \u0026Today.AddDays(1)\n\t\u0026PickerOption.EndDate = \u0026Today.AddDays(1)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub InTheFuture(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterInTheFuture\u0027\n\t\u0026PickerOption.StartDate = \u0026Today.AddDays(1)\n\t\u0026PickerOption.EndDate = ymdtod(2039, 12, 31)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub LastWeek(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterLastWeek\u0027\n\t\u0026PickerOption.StartDate = \u0026Today - dow(\u0026Today) - 6\n\t\u0026PickerOption.EndDate = \u0026Today - dow(\u0026Today)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub LastMonth(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterLastMonth\u0027\n\t\u0026PickerOption.StartDate = AddMth(\u0026Today, -1) - Day(\u0026Today) + 1\n\t\u0026PickerOption.EndDate = EoM(AddMth(\u0026Today, -1))\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub LastYear(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterLastYear\u0027\n\t\u0026PickerOption.StartDate = YMDtoD(year(\u0026Today) - 1, 1, 1)\n\t\u0026PickerOption.EndDate = YMDtoD(year(\u0026Today) - 1, 12, 31)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub ThisWeek(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterThisWeek\u0027\n\t\u0026PickerOption.StartDate = \u0026Today - dow(\u0026Today) + 1\n\t\u0026PickerOption.EndDate = \u0026Today  - dow(\u0026Today) + 7\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub ThisMonth(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterThisMonth\u0027\n\t\u0026PickerOption.StartDate = \u0026Today - Day(\u0026Today) + 1\n\t\u0026PickerOption.EndDate = EoM(\u0026Today)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub ThisYear(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterThisYear\u0027\n\t\u0026PickerOption.StartDate = YMDtoD(year(\u0026Today), 1, 1)\n\t\u0026PickerOption.EndDate = YMDtoD(year(\u0026Today), 12, 31)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub NextWeek(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterNextWeek\u0027\n\t\u0026PickerOption.StartDate = \u0026Today + 7 - dow(\u0026Today) + 1\n\t\u0026PickerOption.EndDate = \u0026Today + 14 - dow(\u0026Today)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub NextMonth(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterNextMonth\u0027\n\t\u0026PickerOption.StartDate = AddMth(\u0026Today, 1) - Day(\u0026Today) + 1\n\t\u0026PickerOption.EndDate = EoM(AddMth(\u0026Today, 1))\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub\n\nStub NextYear(inout:\u0026PickerOptions)\n\t\u0026PickerOption = new()\n\t\u0026PickerOption.DisplayName = \u0027WWP_FilterNextYear\u0027\n\t\u0026PickerOption.StartDate = YMDtoD(year(\u0026Today) + 1, 1, 1)\n\t\u0026PickerOption.EndDate = YMDtoD(year(\u0026Today) + 1, 12, 31)\n\t\u0026PickerOptions.Ranges.Add(\u0026PickerOption)\nEndStub"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWPDateRangePickerOptions"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_RangePicker_GetOptions"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PickerOptions",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Picker Options"
+                           },
+                           {
+                               "name":  "PickerOption",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Picker Option"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

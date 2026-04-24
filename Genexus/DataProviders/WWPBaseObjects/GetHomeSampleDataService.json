@@ -1,0 +1,97 @@
+﻿{
+    "uniqueId":  "b75d4340-e275-4d0a-9471-8c36e3edf2b0",
+    "name":  "GetHomeSampleDataService",
+    "type":  "DataProvider",
+    "module":  "WWPBaseObjects",
+    "description":  "Get Home Sample Data Service",
+    "filePath":  "DataProviders/WWPBaseObjects/GetHomeSampleDataService.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "HomeSampleData\n{\n  \u0026HomeSampleData = GetHomeSampleData()\n\tHomeSampleDataItem Input \u0026HomeSampleDataItem in \u0026HomeSampleData\n\t{\n\t\tProductName = \u0026HomeSampleDataItem.ProductName\n\t\tProductPrice = \u0026HomeSampleDataItem.ProductPrice\n\t\tProductVolume = \u0026HomeSampleDataItem.ProductVolume\n\t\tProductWeight = \u0026HomeSampleDataItem.ProductWeight\n\t\tProductDiscount = \u0026HomeSampleDataItem.ProductDiscount\n\t\tProductStatus = \u0026HomeSampleDataItem.ProductStatus\n\t}\n}\n\n",
+                              "cleanSource":  "HomeSampleData\n{\n  \u0026HomeSampleData = GetHomeSampleData()\n\tHomeSampleDataItem Input \u0026HomeSampleDataItem in \u0026HomeSampleData\n\t{\n\t\tProductName = \u0026HomeSampleDataItem.ProductName\n\t\tProductPrice = \u0026HomeSampleDataItem.ProductPrice\n\t\tProductVolume = \u0026HomeSampleDataItem.ProductVolume\n\t\tProductWeight = \u0026HomeSampleDataItem.ProductWeight\n\t\tProductDiscount = \u0026HomeSampleDataItem.ProductDiscount\n\t\tProductStatus = \u0026HomeSampleDataItem.ProductStatus\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.GetHomeSampleData",
+                                         "WWPBaseObjects.HomeSampleData"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "HomeSampleData"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "HomeSampleData",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Home Sample Data"
+                           },
+                           {
+                               "name":  "HomeSampleDataItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Home Sample Data Item"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

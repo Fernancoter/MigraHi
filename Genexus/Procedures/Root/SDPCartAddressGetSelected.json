@@ -1,0 +1,136 @@
+﻿{
+    "uniqueId":  "bba5eea7-dbb4-481f-ba5a-b77468bf8475",
+    "name":  "SDPCartAddressGetSelected",
+    "type":  "Procedure",
+    "module":  "Root",
+    "description":  "SDPCart Address Get Selected",
+    "filePath":  "Procedures/Root/SDPCartAddressGetSelected.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026Selected = SDPWebServerSessionGet(!\"SelectedAddress\")\n\u0026SDPUserAddressCollection = SDPCartAddressGetAvailable()\nFor \u0026SDPCartUserAddress in \u0026SDPUserAddressCollection\n\tIf \u0026Selected = \u0026SDPCartUserAddress.Id\n\t\texit\n\tEndIf\nEndFor\n",
+                              "cleanSource":  "\u0026Selected = SDPWebServerSessionGet(!\"SelectedAddress\")\n\u0026SDPUserAddressCollection = SDPCartAddressGetAvailable()\nFor \u0026SDPCartUserAddress in \u0026SDPUserAddressCollection\n\tIf \u0026Selected = \u0026SDPCartUserAddress.Id\n\t\texit\n\tEndIf\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(out:\u0026SDPCartUserAddress);\n",
+                              "cleanSource":  "Parm(out:\u0026SDPCartUserAddress);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPWebServerSessionGet",
+                                         "SDPCartAddressGetAvailable",
+                                         "SDPCartUserAddress"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDPCartUserAddress"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SDPUserAddressCollection",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDPUser Address Collection"
+                           },
+                           {
+                               "name":  "SDPCartUserAddress",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "SDPCart User Address"
+                           },
+                           {
+                               "name":  "Selected",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Selected"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

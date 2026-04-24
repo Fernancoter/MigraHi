@@ -1,0 +1,134 @@
+﻿{
+    "uniqueId":  "61bb6913-04a5-4290-89fe-bc01b564f369",
+    "name":  "OrdenEtiquetadoAbierta",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Orden Etiquetado Abierta",
+    "filePath":  "Procedures/Produccion/OrdenEtiquetadoAbierta.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "        \n\t\u0026OEId = 0\n\t\n\tfor each DB.OrdenEtiquetado\n\t\twhere OrdenEtiquetadoId \u003e 0\n\t\twhere OperadorEtiquetadoId = \u0026OperadorId\n\t\twhere OrdenEtiquetadoEstado = EstadoOrdenEtiquetado.Abierta\n\t\t\u0026OEId = OrdenEtiquetadoId\n\t\tExit\n\tendfor\n",
+                              "cleanSource":  "        \n\t\u0026OEId = 0\n\t\n\tfor each DB.OrdenEtiquetado\n\t\twhere OrdenEtiquetadoId \u003e 0\n\t\twhere OperadorEtiquetadoId = \u0026OperadorId\n\t\twhere OrdenEtiquetadoEstado = EstadoOrdenEtiquetado.Abierta\n\t\t\u0026OEId = OrdenEtiquetadoId\n\t\tExit\n\tendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026OperadorId, out:\u0026OEId);\n",
+                              "cleanSource":  "parm(in:\u0026OperadorId, out:\u0026OEId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.OrdenEtiquetado"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "OEId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "OEId"
+                           },
+                           {
+                               "name":  "OperadorId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Operador Id"
+                           },
+                           {
+                               "name":  "OrdenEtiquetado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Orden Etiquetado"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

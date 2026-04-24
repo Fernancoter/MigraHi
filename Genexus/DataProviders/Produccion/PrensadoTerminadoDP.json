@@ -1,0 +1,104 @@
+﻿{
+    "uniqueId":  "e124e173-cacb-4b71-86d8-084999c8d6d6",
+    "name":  "PrensadoTerminadoDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Prensado Terminado DP",
+    "filePath":  "DataProviders/Produccion/PrensadoTerminadoDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTPrensado\n{\n\tSDTPrensadoItem\n\twhere PrensadoId \u003e 0\n\twhere PrensadoFecha.ToDate() = \u0026Fecha when Not \u0026Fecha.IsEmpty()\n\twhere PrensadoPrensaId = \u0026PrensaId when \u0026PrensaId \u003e 0\n\twhere PrensadoEstado = EstadoPrensado.Terminado\n\t{\n\t\tPrensadoId = PrensadoId\n\t\tPrensadoPrensaId = Reportes.PrensadoPrensaId\n\t\tPrensadoPrensaNombre = PrensadoPrensaNombre\n\t\tPrensadoTurnoId = PrensadoTurnoId\n\t\tPrensadoTurnoNombre = PrensadoTurnoNombre\n\t\tPrensadoProductoId = PrensadoProductoId\n\t\tPrensadoProductoNombre = WWPBaseObjects.PrensadoProductoNombre\n\t\tPrensadoOperadorId = PrensadoOperadorId\n\t\tPrensadoOperadorNombre = DB.PrensadoOperadorNombre\n\t\tPrensadoHoraIniciaProceso = PrensadoHoraIniciaProceso\n\t\tPrensadoHoraFinProceso = PrensadoHoraFinProceso\n\t\tBobinaDesmontadaId = SDBobinaDesmontada.Udp(WWPBaseObjects.Notifications.PrensadoId)\n\t}\n}\n",
+                              "cleanSource":  "SDTPrensado\n{\n\tSDTPrensadoItem\n\twhere PrensadoId \u003e 0\n\twhere PrensadoFecha.ToDate() = \u0026Fecha when Not \u0026Fecha.IsEmpty()\n\twhere PrensadoPrensaId = \u0026PrensaId when \u0026PrensaId \u003e 0\n\twhere PrensadoEstado = EstadoPrensado.Terminado\n\t{\n\t\tPrensadoId = PrensadoId\n\t\tPrensadoPrensaId = Reportes.PrensadoPrensaId\n\t\tPrensadoPrensaNombre = PrensadoPrensaNombre\n\t\tPrensadoTurnoId = PrensadoTurnoId\n\t\tPrensadoTurnoNombre = PrensadoTurnoNombre\n\t\tPrensadoProductoId = PrensadoProductoId\n\t\tPrensadoProductoNombre = WWPBaseObjects.PrensadoProductoNombre\n\t\tPrensadoOperadorId = PrensadoOperadorId\n\t\tPrensadoOperadorNombre = DB.PrensadoOperadorNombre\n\t\tPrensadoHoraIniciaProceso = PrensadoHoraIniciaProceso\n\t\tPrensadoHoraFinProceso = PrensadoHoraFinProceso\n\t\tBobinaDesmontadaId = SDBobinaDesmontada.Udp(WWPBaseObjects.Notifications.PrensadoId)\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026Fecha, in:\u0026PrensaId);\n",
+                              "cleanSource":  "parm(in:\u0026Fecha, in:\u0026PrensaId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDBobinaDesmontada",
+                                         "Produccion.SDTPrensado",
+                                         "SDBobinaDesmontada"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTPrensado"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Fecha",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATE",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Fecha"
+                           },
+                           {
+                               "name":  "PrensaId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensa Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

@@ -1,0 +1,84 @@
+﻿{
+    "uniqueId":  "6a9acc01-c58f-46d4-97f4-403f1c2131cc",
+    "name":  "QueryViewerItemExpandData",
+    "type":  "SDT",
+    "module":  "GeneXusReporting",
+    "description":  "Query Viewer Item Expand Data",
+    "filePath":  "SDTs/GeneXusReporting/QueryViewerItemExpandData.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "TurnosPorSemanaExtrusoras",
+                                          "TurnosPorSemana",
+                                          "InicioPrensado",
+                                          "InicioProduccion",
+                                          "ReportITW",
+                                          "InicioEmbarques",
+                                          "inicioSeguridad",
+                                          "InicioInventario",
+                                          "ModuleA",
+                                          "ModuleB",
+                                          "InicioExtrusion",
+                                          "TurnosPorSemanaPrensas",
+                                          "ConsultarExtrusionesQuery"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Name",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Name"
+                           },
+                           {
+                               "name":  "Value",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Value"
+                           },
+                           {
+                               "name":  "ExpandedValues",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Expanded Values"
+                           }
+                       ]
+}

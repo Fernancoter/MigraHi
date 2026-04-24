@@ -1,0 +1,80 @@
+﻿{
+    "uniqueId":  "f9316e2c-ab0a-46dc-9906-b57cc24afb76",
+    "name":  "DPDownTimeCode",
+    "type":  "DataProvider",
+    "module":  "Downtime",
+    "description":  "DPDown Time Code",
+    "filePath":  "DataProviders/Downtime/DPDownTimeCode.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTDownTimeCode\n{\n\tSDTDownTimeCodeItem\n\t{\n\t\tDownTimeCodeId = DownTimeCodeId\n\t\tDownTimeCodeName = DownTimeCodeName\n\t\tDownTimeCodeDescription = DownTimeCodeDescription\n\t}\n}\n",
+                              "cleanSource":  "SDTDownTimeCode\n{\n\tSDTDownTimeCodeItem\n\t{\n\t\tDownTimeCodeId = DownTimeCodeId\n\t\tDownTimeCodeName = DownTimeCodeName\n\t\tDownTimeCodeDescription = DownTimeCodeDescription\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Downtime.SDTDownTimeCode"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTDownTimeCode"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

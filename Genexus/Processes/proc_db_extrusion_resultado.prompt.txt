@@ -1,0 +1,4 @@
+﻿
+=== Transaction: DB.ExtrusionResultado ===
+
+(sin businessLogic extraído)

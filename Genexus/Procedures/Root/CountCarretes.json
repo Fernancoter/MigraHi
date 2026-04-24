@@ -1,0 +1,126 @@
+﻿{
+    "uniqueId":  "8972a277-9fbf-4444-a88b-6ba820c2dc26",
+    "name":  "CountCarretes",
+    "type":  "Procedure",
+    "module":  "Root",
+    "description":  "Count Carretes",
+    "filePath":  "Procedures/Root/CountCarretes.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026PaletNoCarretesEtiquetados = 0\n\nFor each DB.PaletCarrete\n\twhere PaletId = \u0026PaletId\n\twhere CarreteEstado = EstadoCarrete.Etiquetado\n\t\u0026PaletNoCarretesEtiquetados += 1\nEndFor\n\n\n\n//\u0026PaletNoCarretesEtiquetados = count(PaletCarreteId, PaletId = \u0026PaletId and CarreteEstado = EstadoCarrete.Etiquetado)\n",
+                              "cleanSource":  "\u0026PaletNoCarretesEtiquetados = 0\n\nFor each DB.PaletCarrete\n\twhere PaletId = \u0026PaletId\n\twhere CarreteEstado = EstadoCarrete.Etiquetado\n\t\u0026PaletNoCarretesEtiquetados += 1\nEndFor\n\n\n\n//\u0026PaletNoCarretesEtiquetados = count(PaletCarreteId, PaletId = \u0026PaletId and CarreteEstado = EstadoCarrete.Etiquetado)"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PaletId, out:\u0026PaletNoCarretesEtiquetados);\n",
+                              "cleanSource":  "parm(in:\u0026PaletId, out:\u0026PaletNoCarretesEtiquetados);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.PaletCarrete"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PaletId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Palet Id"
+                           },
+                           {
+                               "name":  "PaletNoCarretesEtiquetados",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Palet No Carretes Etiquetados"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,97 @@
+﻿{
+    "uniqueId":  "3cdeaeef-4c77-4222-9f96-6c6557dacd34",
+    "name":  "SDTLotes",
+    "type":  "SDT",
+    "module":  "Produccion",
+    "description":  "SDTLotes",
+    "filePath":  "SDTs/Produccion/SDTLotes.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "LoteDP",
+                                          "LotesDisponiblesDP"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "LoteId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Lote Id"
+                           },
+                           {
+                               "name":  "LoteEmbarque",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Lote NO."
+                           },
+                           {
+                               "name":  "LotePO",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Lote PO."
+                           },
+                           {
+                               "name":  "LoteFechaRegistro",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Lote Fecha Registro"
+                           },
+                           {
+                               "name":  "LoteSiloId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Lote Silo Id"
+                           },
+                           {
+                               "name":  "LoteConsumido",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Lote Consumido"
+                           }
+                       ]
+}

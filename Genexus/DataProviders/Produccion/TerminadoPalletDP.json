@@ -1,0 +1,110 @@
+﻿{
+    "uniqueId":  "6bf455bf-4eb6-47bc-9747-7951234c1f26",
+    "name":  "TerminadoPalletDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Terminado Pallet DP",
+    "filePath":  "DataProviders/Produccion/TerminadoPalletDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTPalet\n{\t\n\tSDTPaletItem\n\twhere PaletId \u003e 0\n\twhere PaletEstatus in (EstatusPalet.Terminado, EstatusPalet.Incompleto)\n\twhere PaletProductoId = \u0026ProductoId\n\t{\n\t\tPaletId = PaletId\n\t\tPaletNoSerie = PaletNoSerie\n\t\tPaletNo = PaletNo\n\t\tPaletNoCarretes = PaletNoCarretes\n\t\tPaletOperadorId = PaletOperadorId\n\t\tPaletProductoId = PaletProductoId\n\t\tPaletPrensaId = PaletPrensaId\n\t\tPaletProductoNombre = PaletProductoNombre\n\t\tPaletHoraInicioEnsamble = WWPBaseObjects.PaletHoraInicioEnsamble\n\t\tPaletHoraFinEnsamble = PaletHoraFinEnsamble\n\t\tPaletEstatus = PaletEstatus\n\t\tPaletPrensadoId = PaletPrensadoId\n\t\tPaletPrensadoFinId = PaletPrensadoFinId\n\t}\n}\n",
+                              "cleanSource":  "SDTPalet\n{\t\n\tSDTPaletItem\n\twhere PaletId \u003e 0\n\twhere PaletEstatus in (EstatusPalet.Terminado, EstatusPalet.Incompleto)\n\twhere PaletProductoId = \u0026ProductoId\n\t{\n\t\tPaletId = PaletId\n\t\tPaletNoSerie = PaletNoSerie\n\t\tPaletNo = PaletNo\n\t\tPaletNoCarretes = PaletNoCarretes\n\t\tPaletOperadorId = PaletOperadorId\n\t\tPaletProductoId = PaletProductoId\n\t\tPaletPrensaId = PaletPrensaId\n\t\tPaletProductoNombre = PaletProductoNombre\n\t\tPaletHoraInicioEnsamble = WWPBaseObjects.PaletHoraInicioEnsamble\n\t\tPaletHoraFinEnsamble = PaletHoraFinEnsamble\n\t\tPaletEstatus = PaletEstatus\n\t\tPaletPrensadoId = PaletPrensadoId\n\t\tPaletPrensadoFinId = PaletPrensadoFinId\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ProductoId);\n",
+                              "cleanSource":  "parm(in:\u0026ProductoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTPalet"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTPalet"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensa Id"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

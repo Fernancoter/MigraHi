@@ -1,0 +1,142 @@
+﻿{
+    "uniqueId":  "d180ec19-8e53-4e14-98d9-5413140b2b95",
+    "name":  "SDPSampleChartData",
+    "type":  "Procedure",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPSample Chart Data",
+    "filePath":  "Procedures/WorkWithPlus/NativeMobile/SDPSampleChartData.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\u0026Random = 1\n\t\n\tif \u0026UseRandom\n\t\t\u0026Random = Random()\n\tEndIf\n\t\u0026SDPlusChartDataSample = new()\n\t\u0026SDPlusChartDataSample.Category = !\"Uruguay\"\n\t\u0026SDPlusChartDataSample.Serie1 = 120 * \u0026Random\n\t\u0026SDPlusChartDataSampleCollection.Add(\u0026SDPlusChartDataSample)\n\t\n\tif \u0026UseRandom\n\t\t\u0026Random = Random()\n\tEndIf\n\t\u0026SDPlusChartDataSample = new()\n\t\u0026SDPlusChartDataSample.Category = !\"Brasil\"\n\t\u0026SDPlusChartDataSample.Serie1 = 140 * \u0026Random\n\t\u0026SDPlusChartDataSampleCollection.Add(\u0026SDPlusChartDataSample)\n\t\n\tif \u0026UseRandom\n\t\t\u0026Random = Random()\n\tEndIf\n\t\u0026SDPlusChartDataSample = new()\n\t\u0026SDPlusChartDataSample.Category = !\"Spain\"\n\t\u0026SDPlusChartDataSample.Serie1 = 100 * \u0026Random\n\t\u0026SDPlusChartDataSampleCollection.Add(\u0026SDPlusChartDataSample)\n\t\n\tif \u0026UseRandom\n\t\t\u0026Random = Random()\n\tEndIf\n\t\u0026SDPlusChartDataSample = new()\n\t\u0026SDPlusChartDataSample.Category = !\"Argentina\"\n\t\u0026SDPlusChartDataSample.Serie1 = 90 * \u0026Random\n\t\u0026SDPlusChartDataSampleCollection.Add(\u0026SDPlusChartDataSample)\n",
+                              "cleanSource":  "\t\u0026Random = 1\n\t\n\tif \u0026UseRandom\n\t\t\u0026Random = Random()\n\tEndIf\n\t\u0026SDPlusChartDataSample = new()\n\t\u0026SDPlusChartDataSample.Category = !\"Uruguay\"\n\t\u0026SDPlusChartDataSample.Serie1 = 120 * \u0026Random\n\t\u0026SDPlusChartDataSampleCollection.Add(\u0026SDPlusChartDataSample)\n\t\n\tif \u0026UseRandom\n\t\t\u0026Random = Random()\n\tEndIf\n\t\u0026SDPlusChartDataSample = new()\n\t\u0026SDPlusChartDataSample.Category = !\"Brasil\"\n\t\u0026SDPlusChartDataSample.Serie1 = 140 * \u0026Random\n\t\u0026SDPlusChartDataSampleCollection.Add(\u0026SDPlusChartDataSample)\n\t\n\tif \u0026UseRandom\n\t\t\u0026Random = Random()\n\tEndIf\n\t\u0026SDPlusChartDataSample = new()\n\t\u0026SDPlusChartDataSample.Category = !\"Spain\"\n\t\u0026SDPlusChartDataSample.Serie1 = 100 * \u0026Random\n\t\u0026SDPlusChartDataSampleCollection.Add(\u0026SDPlusChartDataSample)\n\t\n\tif \u0026UseRandom\n\t\t\u0026Random = Random()\n\tEndIf\n\t\u0026SDPlusChartDataSample = new()\n\t\u0026SDPlusChartDataSample.Category = !\"Argentina\"\n\t\u0026SDPlusChartDataSample.Serie1 = 90 * \u0026Random\n\t\u0026SDPlusChartDataSampleCollection.Add(\u0026SDPlusChartDataSample)"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026UseRandom, out:\u0026SDPlusChartDataSampleCollection);\n",
+                              "cleanSource":  "Parm(in:\u0026UseRandom, out:\u0026SDPlusChartDataSampleCollection);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPlusChartDataSample"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDPlusChartDataSample"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SDPlusChartDataSample",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDPlus Chart Data Sample"
+                           },
+                           {
+                               "name":  "SDPlusChartDataSampleCollection",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "SDPlus Chart Data Sample Collection"
+                           },
+                           {
+                               "name":  "UseRandom",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Use Random"
+                           },
+                           {
+                               "name":  "Random",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Random"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

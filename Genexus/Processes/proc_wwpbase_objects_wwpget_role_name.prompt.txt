@@ -1,0 +1,10 @@
+﻿
+=== Procedure: WWPBaseObjects.WWPGetRoleName ===
+
+--- Source (Source) ---
+&GAMRole = GAMRole.GetByGUID(&WWPSubscriptionRoleId, &GAMErrorCollection)
+&RoleName = &GAMRole.Name
+
+--- Rules (Rules) ---
+parm(in:&WWPSubscriptionRoleId, out:&RoleName);
+

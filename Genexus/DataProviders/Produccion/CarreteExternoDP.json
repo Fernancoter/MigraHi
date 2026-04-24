@@ -1,0 +1,158 @@
+﻿{
+    "uniqueId":  "711d998e-3649-4580-8053-de7c7a0e2a80",
+    "name":  "CarreteExternoDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Carrete Externo DP",
+    "filePath":  "DataProviders/Produccion/CarreteExternoDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTCarrete\n{\t\n\tSDTCarreteItem\n\twhere PaletCarreteId \u003e 0\n\twhere Not PaletId = \u0026PaletId\n\twhere WWPBaseObjects.PaletProductoId = \u0026ProductoId\n\twhere PaletEstatus in (EstatusPalet.EnEnsamble, Produccion.EstatusPalet.Incompleto, EstatusPalet.Terminado)\n\twhere CarreteId \u003e 0\n\twhere CarreteEstado = EstadoCarrete.EnPalet\n\t\n\t{\n\t\tCarreteId = Notifications.CarreteId\n\t\tCarreteNoLinea = CarreteNoLinea\n\t\tCarreteNoSerie = CarreteNoSerie\n\t\tCarreteEstado = CarreteEstado\n\t\tCarreteObservacion = CarreteObservacion\n\t\tCarreteCarreraId = CarreteCarreraId\n\t\tCarreteTerminaPalet = CarreteTerminaPalet\n\t\tCarretePaletSerie = CarretePaletSerie\n\t\tselected = CarreteEnMolino\n\t}\n}\n",
+                              "cleanSource":  "SDTCarrete\n{\t\n\tSDTCarreteItem\n\twhere PaletCarreteId \u003e 0\n\twhere Not PaletId = \u0026PaletId\n\twhere WWPBaseObjects.PaletProductoId = \u0026ProductoId\n\twhere PaletEstatus in (EstatusPalet.EnEnsamble, Produccion.EstatusPalet.Incompleto, EstatusPalet.Terminado)\n\twhere CarreteId \u003e 0\n\twhere CarreteEstado = EstadoCarrete.EnPalet\n\t\n\t{\n\t\tCarreteId = Notifications.CarreteId\n\t\tCarreteNoLinea = CarreteNoLinea\n\t\tCarreteNoSerie = CarreteNoSerie\n\t\tCarreteEstado = CarreteEstado\n\t\tCarreteObservacion = CarreteObservacion\n\t\tCarreteCarreraId = CarreteCarreraId\n\t\tCarreteTerminaPalet = CarreteTerminaPalet\n\t\tCarretePaletSerie = CarretePaletSerie\n\t\tselected = CarreteEnMolino\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PaletId, in:\u0026ProductoId);\n",
+                              "cleanSource":  "parm(in:\u0026PaletId, in:\u0026ProductoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTCarrete"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTCarrete"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "BobinaEstado",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Estado"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensa Id"
+                           },
+                           {
+                               "name":  "ProductoConEtiqueta",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Con Etiqueta"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "PaletId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Palet Id"
+                           },
+                           {
+                               "name":  "ProductoEtiquetaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Etiqueta Id"
+                           },
+                           {
+                               "name":  "ProductoNombre",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Nombre"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

@@ -1,0 +1,134 @@
+﻿{
+    "uniqueId":  "2843677c-316b-4feb-a831-6d8a90269e06",
+    "name":  "SDGuardarCarrete",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDGuardar Carrete",
+    "filePath":  "Procedures/Produccion/SDGuardarCarrete.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "        \n\t\u0026GuardarCarrete.Load(\u0026CarreteId)\n\t\n\tif(\u0026Carrete.CarreteId \u003e 0)\n\t\t\u0026GuardarCarrete.CarreteObservacion = \u0026Carrete.CarreteObservacion\n\t        \u0026GuardarCarrete.CarreteMolino = \u0026Carrete.CarreteMolino\n\t        \u0026GuardarCarrete.CarreteMermaMolino = \u0026Carrete.CarreteMermaMolino\n\t\t\u0026GuardarCarrete.CarreteMermaKg = \u0026Carrete.CarreteMermaKg\n\telse\n\t\t\u0026GuardarCarrete.CarreteObservacion.SetEmpty()\n\t        \u0026GuardarCarrete.CarreteMolino = Produccion.MolinoCarrete.NoAplica\n\t        \u0026GuardarCarrete.CarreteMermaMolino = false\n\t\t\u0026GuardarCarrete.CarreteMermaKg.SetEmpty()\n\tendif\n\t\n\t\u0026GuardarCarrete.Save()\n\t\n\tif(\u0026GuardarCarrete.Success())\n\t\tcommit\n\tendif\n",
+                              "cleanSource":  "        \n\t\u0026GuardarCarrete.Load(\u0026CarreteId)\n\t\n\tif(\u0026Carrete.CarreteId \u003e 0)\n\t\t\u0026GuardarCarrete.CarreteObservacion = \u0026Carrete.CarreteObservacion\n\t        \u0026GuardarCarrete.CarreteMolino = \u0026Carrete.CarreteMolino\n\t        \u0026GuardarCarrete.CarreteMermaMolino = \u0026Carrete.CarreteMermaMolino\n\t\t\u0026GuardarCarrete.CarreteMermaKg = \u0026Carrete.CarreteMermaKg\n\telse\n\t\t\u0026GuardarCarrete.CarreteObservacion.SetEmpty()\n\t        \u0026GuardarCarrete.CarreteMolino = Produccion.MolinoCarrete.NoAplica\n\t        \u0026GuardarCarrete.CarreteMermaMolino = false\n\t\t\u0026GuardarCarrete.CarreteMermaKg.SetEmpty()\n\tendif\n\t\n\t\u0026GuardarCarrete.Save()\n\t\n\tif(\u0026GuardarCarrete.Success())\n\t\tcommit\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026CarreteId, in:\u0026Carrete);\n",
+                              "cleanSource":  "parm(in:\u0026CarreteId, in:\u0026Carrete);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Carrete"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CarreteId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Carrete Id"
+                           },
+                           {
+                               "name":  "Carrete",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Carrete"
+                           },
+                           {
+                               "name":  "GuardarCarrete",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Guardar Carrete"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

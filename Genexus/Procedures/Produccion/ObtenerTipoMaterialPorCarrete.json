@@ -1,0 +1,136 @@
+﻿{
+    "uniqueId":  "2df2c4af-e718-4093-af26-c406faabdc1f",
+    "name":  "ObtenerTipoMaterialPorCarrete",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Obtener Tipo Material Por Carrete",
+    "filePath":  "Procedures/Produccion/ObtenerTipoMaterialPorCarrete.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "For Each\n\tWhere CarreraId = \u0026CarreraId\n\t\u0026InicioPBPrensadoId = InicioPBPrensadoId\nWhen None\n\t\u0026InicioPBPrensadoId = 0\nEndFor\n\nFor Each\n\tWhere PrensadoId = \u0026InicioPBPrensadoId\n\t\u0026TipoMaterial = PrensadoProductoTipoMaterial\nEndFor\n",
+                              "cleanSource":  "For Each\n\tWhere CarreraId = \u0026CarreraId\n\t\u0026InicioPBPrensadoId = InicioPBPrensadoId\nWhen None\n\t\u0026InicioPBPrensadoId = 0\nEndFor\n\nFor Each\n\tWhere PrensadoId = \u0026InicioPBPrensadoId\n\t\u0026TipoMaterial = PrensadoProductoTipoMaterial\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(In:\u0026CarreraId, Out:\u0026TipoMaterial);\n",
+                              "cleanSource":  "parm(In:\u0026CarreraId, Out:\u0026TipoMaterial);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "vwAnaliticaCarrete",
+                                          "CarreraWW",
+                                          "CarreteWW"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "TipoMaterial",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Tipo Material"
+                           },
+                           {
+                               "name":  "CarreraId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Carrera Id"
+                           },
+                           {
+                               "name":  "InicioPBPrensadoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Inicio PBPrensado Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

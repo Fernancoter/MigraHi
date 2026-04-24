@@ -1,0 +1,81 @@
+﻿{
+    "uniqueId":  "7f97a894-20b0-4bc8-a843-e73d1da44eb2",
+    "name":  "ReclamoProductoDP",
+    "type":  "DataProvider",
+    "module":  "Calidad",
+    "description":  "Reclamo Producto DP",
+    "filePath":  "DataProviders/Calidad/ReclamoProductoDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTProducto\n{\n\tSDTProductoItem\n\twhere ProductoTerminadoId \u003e 0\n\twhere TerminadoProductoId \u003e 0\n\twhere ProductoTerminadoConEtiqueta = false\n\t{\n\t\tProductoId = TerminadoProductoId\n\t\tProductoNombre = TerminadoProductoNombre\n\t}\n}\n",
+                              "cleanSource":  "SDTProducto\n{\n\tSDTProductoItem\n\twhere ProductoTerminadoId \u003e 0\n\twhere TerminadoProductoId \u003e 0\n\twhere ProductoTerminadoConEtiqueta = false\n\t{\n\t\tProductoId = TerminadoProductoId\n\t\tProductoNombre = TerminadoProductoNombre\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTProducto"
+                                     ],
+                         "calledBy":  [
+                                          "EditarReclamoDetalle",
+                                          "ReclamoDetalle"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "Produccion.SDTProducto"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

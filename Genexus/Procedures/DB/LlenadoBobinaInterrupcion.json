@@ -1,0 +1,131 @@
+﻿{
+    "uniqueId":  "453a9091-3a23-4443-8f19-fa6da2acd071",
+    "name":  "LlenadoBobinaInterrupcion",
+    "type":  "Procedure",
+    "module":  "DB",
+    "description":  "Llenado Bobina Interrupcion",
+    "filePath":  "Procedures/DB/LlenadoBobinaInterrupcion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "For Each\n\tWhere BobinaId \u003e 410600\n\t\u0026InterrupcionId = ObtenerInterrupcionBobina.Udp(BobinaHoraInicio, BobinaHoraSalida, BobinaEstado)\n\t\u0026Bobina.Load(BobinaId)\n\t\u0026Bobina.BobinaInterrupcionesId = \u0026InterrupcionId\n\t\u0026Bobina.Save()\n\tIf \u0026Bobina.Success()\n\t\tCommit\n\tEndIf\nEndFor\n",
+                              "cleanSource":  "For Each\n\tWhere BobinaId \u003e 410600\n\t\u0026InterrupcionId = ObtenerInterrupcionBobina.Udp(BobinaHoraInicio, BobinaHoraSalida, BobinaEstado)\n\t\u0026Bobina.Load(BobinaId)\n\t\u0026Bobina.BobinaInterrupcionesId = \u0026InterrupcionId\n\t\u0026Bobina.Save()\n\tIf \u0026Bobina.Success()\n\t\tCommit\n\tEndIf\nEndFor"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.ObtenerInterrupcionBobina",
+                                         "DB.Bobina",
+                                         "DB.Interrupcion",
+                                         "ObtenerInterrupcionBobina"
+                                     ],
+                         "calledBy":  [
+                                          "vwAnaliticaBobina"
+                                      ],
+                         "tablesRead":  [
+                                            "Bobina"
+                                        ],
+                         "tablesWritten":  [
+                                               "Bobina"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "InterrupcionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion Id"
+                           },
+                           {
+                               "name":  "Interrupcion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion"
+                           },
+                           {
+                               "name":  "Bobina",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

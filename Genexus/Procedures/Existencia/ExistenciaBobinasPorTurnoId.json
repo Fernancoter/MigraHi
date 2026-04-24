@@ -1,0 +1,144 @@
+﻿{
+    "uniqueId":  "bcd81765-863f-4978-97d6-8b93f1227673",
+    "name":  "ExistenciaBobinasPorTurnoId",
+    "type":  "Procedure",
+    "module":  "Existencia",
+    "description":  "Existencia Bobinas Por Turno Id",
+    "filePath":  "Procedures/Existencia/ExistenciaBobinasPorTurnoId.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "Debugger.Call(NivelDebug.Informativo, \u0026Pgmname, \u0027Entra a Existencias Bobina por Turno\u0027)\n\u0026ExistenciaProductoCantidadTurnoSistema = 0\nfor each DB.ExtrusionResultado\n\tWhere ExtrusionFecha.ToDate() = \u0026ExistenciaFecha.ToDate()\n\tWhere ExtrusionTurnoId = \u0026TurnoId\n\tWhere ExtrusionProductoId = \u0026ProductoId\n\t\n\t\u0026ExistenciaProductoCantidadTurnoSistema = \u0026ExistenciaProductoCantidadTurnoSistema+  ExtrusionResultadoBobinasReposo\n\tDebugger.Call(NivelDebug.Informativo, \u0026Pgmname, \u0027Bobina por Turno: \u0027 + ExtrusionResultadoBobinasReposo.ToString())\nendfor\n",
+                              "cleanSource":  "Debugger.Call(NivelDebug.Informativo, \u0026Pgmname, \u0027Entra a Existencias Bobina por Turno\u0027)\n\u0026ExistenciaProductoCantidadTurnoSistema = 0\nfor each DB.ExtrusionResultado\n\tWhere ExtrusionFecha.ToDate() = \u0026ExistenciaFecha.ToDate()\n\tWhere ExtrusionTurnoId = \u0026TurnoId\n\tWhere ExtrusionProductoId = \u0026ProductoId\n\t\n\t\u0026ExistenciaProductoCantidadTurnoSistema = \u0026ExistenciaProductoCantidadTurnoSistema+  ExtrusionResultadoBobinasReposo\n\tDebugger.Call(NivelDebug.Informativo, \u0026Pgmname, \u0027Bobina por Turno: \u0027 + ExtrusionResultadoBobinasReposo.ToString())\nendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026TurnoId,in:\u0026ProductoId,in:\u0026ExistenciaFecha, out:\u0026ExistenciaProductoCantidadTurnoSistema);\n",
+                              "cleanSource":  "parm(in:\u0026TurnoId,in:\u0026ProductoId,in:\u0026ExistenciaFecha, out:\u0026ExistenciaProductoCantidadTurnoSistema);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Web.Debugger",
+                                         "DB.ExtrusionResultado",
+                                         "Debugger"
+                                     ],
+                         "calledBy":  [
+                                          "ObtenerExistenciaProducto"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "TurnoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Turno Id"
+                           },
+                           {
+                               "name":  "ExistenciaFecha",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATETIME",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Existencia Fecha"
+                           },
+                           {
+                               "name":  "ExistenciaProductoCantidadTurnoSistema",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Existencia Producto Cantidad Turno Sistema"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

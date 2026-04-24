@@ -1,0 +1,127 @@
+﻿{
+    "uniqueId":  "e4ee9240-d354-40ef-9f9c-343d79b0aaa8",
+    "name":  "CarreteRevisionDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Carrete Revision DP",
+    "filePath":  "DataProviders/Produccion/CarreteRevisionDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTCarrete\n{\n\t\u0026ProductoId = Produccion.ObtenerPrensaProductoPrensado.Udp(\u0026PrensadoId,\u0026PrensaId)\n\tSDTCarreteItem\n\twhere CarreteId \u003e 0\n\twhere CarreteEstado = EstadoCarrete.EnRevision\n\twhere DB.PrensadoProductoId = \u0026ProductoId\n\twhere InicioPBPrensadoId \u003c\u003e \u0026PrensadoId\n\t{\n\t\tCarreteId = CarreteId\n\t\tCarreteNoLinea = CarreteNoLinea\n\t\tCarreteNoSerie = CarreteNoSerie\n\t\tCarreteEstado = DB.CarreteEstado\n\t\tCarreteObservacion = CarreteObservacion\n\t\tCarreteCarreraId = CarreteCarreraId\n\t\tCarreteTerminaPalet = CarreteTerminaPalet\n\t\tCarretePaletSerie = CarretePaletSerie\n\t\tselected = CarreteEnMolino\n\t}\n}\n",
+                              "cleanSource":  "SDTCarrete\n{\n\t\u0026ProductoId = Produccion.ObtenerPrensaProductoPrensado.Udp(\u0026PrensadoId,\u0026PrensaId)\n\tSDTCarreteItem\n\twhere CarreteId \u003e 0\n\twhere CarreteEstado = EstadoCarrete.EnRevision\n\twhere DB.PrensadoProductoId = \u0026ProductoId\n\twhere InicioPBPrensadoId \u003c\u003e \u0026PrensadoId\n\t{\n\t\tCarreteId = CarreteId\n\t\tCarreteNoLinea = CarreteNoLinea\n\t\tCarreteNoSerie = CarreteNoSerie\n\t\tCarreteEstado = DB.CarreteEstado\n\t\tCarreteObservacion = CarreteObservacion\n\t\tCarreteCarreraId = CarreteCarreraId\n\t\tCarreteTerminaPalet = CarreteTerminaPalet\n\t\tCarretePaletSerie = CarretePaletSerie\n\t\tselected = CarreteEnMolino\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.ObtenerPrensaProductoPrensado",
+                                         "Produccion.SDTCarrete"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTCarrete"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "BobinaEstado",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Estado"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensa Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

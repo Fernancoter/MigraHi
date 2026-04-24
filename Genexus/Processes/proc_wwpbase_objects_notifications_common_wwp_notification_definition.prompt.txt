@@ -1,0 +1,4 @@
+﻿
+=== Transaction: WWPBaseObjects.Notifications.Common.WWP_NotificationDefinition ===
+
+(sin businessLogic extraído)

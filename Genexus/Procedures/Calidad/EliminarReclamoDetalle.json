@@ -1,0 +1,137 @@
+﻿{
+    "uniqueId":  "92735ee6-606e-4291-8367-bad8a0d9a978",
+    "name":  "EliminarReclamoDetalle",
+    "type":  "Procedure",
+    "module":  "Calidad",
+    "description":  "Eliminar Reclamo Detalle",
+    "filePath":  "Procedures/Calidad/EliminarReclamoDetalle.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "        \n\t\u0026ReclamoDetalle.Load(\u0026ReclamoId)\n\t\u0026ReclamoDetalle.Delete()\n\tcommit\n\t\n\t\u0026Reclamo.Load(\u0026ReclamoId)\n\t\u0026Reclamo.Check()\n\t\u0026Reclamo.Save()\n\tcommit\n\t\n",
+                              "cleanSource":  "        \n\t\u0026ReclamoDetalle.Load(\u0026ReclamoId)\n\t\u0026ReclamoDetalle.Delete()\n\tcommit\n\t\n\t\u0026Reclamo.Load(\u0026ReclamoId)\n\t\u0026Reclamo.Check()\n\t\u0026Reclamo.Save()\n\tcommit"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ReclamoId);\n",
+                              "cleanSource":  "parm(in:\u0026ReclamoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Calidad.ReclamoDetalle",
+                                         "Calidad.Reclamo"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "Reclamo",
+                                            "ReclamoDetalle"
+                                        ],
+                         "tablesWritten":  [
+                                               "Reclamo",
+                                               "ReclamoDetalle"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ReclamoDetalle",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Reclamo Detalle"
+                           },
+                           {
+                               "name":  "ReclamoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Reclamo Id"
+                           },
+                           {
+                               "name":  "Reclamo",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Reclamo"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

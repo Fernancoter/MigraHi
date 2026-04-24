@@ -1,0 +1,137 @@
+﻿{
+    "uniqueId":  "29b8f658-27fa-4fd7-8526-09f733320818",
+    "name":  "ObtenerSDTEtiquetaBobina",
+    "type":  "Procedure",
+    "module":  "PrinterSD",
+    "description":  "Obtener SDTEtiqueta Bobina",
+    "filePath":  "Procedures/PrinterSD/ObtenerSDTEtiquetaBobina.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\nFor each\n\tWhere BobinaId = \u0026BobinaId\n\n\t\u0026EtiquetaBobinaSDT.BobinaId = BobinaId\n\t\u0026EtiquetaBobinaSDT.ExtrusionId = ExtrusionId\n\t\u0026EtiquetaBobinaSDT.ExtrusionFecha = ExtrusionFecha\n\t\u0026EtiquetaBobinaSDT.ExtrusionOperadorNombre = ExtrusionOperadorNombre\n\t\u0026EtiquetaBobinaSDT.BobinaNoSerie = BobinaNoSerie\n\t\u0026EtiquetaBobinaSDT.BobinaOrigen = BobinaOrigen\n\t\u0026EtiquetaBobinaSDT.BobinaHoraInicio = BobinaHoraInicio\n\t\u0026EtiquetaBobinaSDT.BobinaHoraSalida = BobinaHoraSalida\n\t\u0026EtiquetaBobinaSDT.BobinaNo = BobinaNo\n\t\u0026EtiquetaBobinaSDT.BobinaKg = BobinaKg\n\t\u0026EtiquetaBobinaSDT.BobinaMermaKg = BobinaMermaKg\n\t\u0026EtiquetaBobinaSDT.BobinaEspesor = BobinaEspesor\n\t\u0026EtiquetaBobinaSDT.BobinaObservaciones = BobinaObservaciones\n\t\u0026EtiquetaBobinaSDT.BobinaEstado = BobinaEstado\n\t\u0026EtiquetaBobinaSDT.BobinaCarreras = BobinaCarreras\n\t\u0026EtiquetaBobinaSDT.BobinaIniciaReposo = BobinaIniciaReposo\n\t\u0026EtiquetaBobinaSDT.BobinaMinutosEnReposo = BobinaMinutosEnReposo\n\t\u0026EtiquetaBobinaSDT.BobinaMotivoMolino = BobinaMotivoMolino\n\t\u0026EtiquetaBobinaSDT.BobinaProductoId = BobinaProductoId\n\t\u0026EtiquetaBobinaSDT.BobinaProductoNombre = BobinaProductoNombre\n\t\u0026EtiquetaBobinaSDT.ExtrusionExtrusoraNombre = ExtrusionExtrusoraNombre\n\t\u0026EtiquetaBobinaSDT.ExtrusionExtrusoraIdTexto = ExtrusionExtrusoraId.ToString().Trim()\n\t\u0026EtiquetaBobinaSDT.ExtrusionLoteSilo = ExtrusionLoteSilo\n\t\u0026EtiquetaBobinaSDT.ExtrusionSiloNombre = ExtrusionSiloNombre\n\t\u0026EtiquetaBobinaSDT.BobinaDesviacionEstandar = BobinaDesviacionEstandar\n\t\u0026EtiquetaBobinaSDT.BobinaColorEstacion = BobinaColorEstacion\n\n\texit\nendfor\n",
+                              "cleanSource":  "\n\nFor each\n\tWhere BobinaId = \u0026BobinaId\n\n\t\u0026EtiquetaBobinaSDT.BobinaId = BobinaId\n\t\u0026EtiquetaBobinaSDT.ExtrusionId = ExtrusionId\n\t\u0026EtiquetaBobinaSDT.ExtrusionFecha = ExtrusionFecha\n\t\u0026EtiquetaBobinaSDT.ExtrusionOperadorNombre = ExtrusionOperadorNombre\n\t\u0026EtiquetaBobinaSDT.BobinaNoSerie = BobinaNoSerie\n\t\u0026EtiquetaBobinaSDT.BobinaOrigen = BobinaOrigen\n\t\u0026EtiquetaBobinaSDT.BobinaHoraInicio = BobinaHoraInicio\n\t\u0026EtiquetaBobinaSDT.BobinaHoraSalida = BobinaHoraSalida\n\t\u0026EtiquetaBobinaSDT.BobinaNo = BobinaNo\n\t\u0026EtiquetaBobinaSDT.BobinaKg = BobinaKg\n\t\u0026EtiquetaBobinaSDT.BobinaMermaKg = BobinaMermaKg\n\t\u0026EtiquetaBobinaSDT.BobinaEspesor = BobinaEspesor\n\t\u0026EtiquetaBobinaSDT.BobinaObservaciones = BobinaObservaciones\n\t\u0026EtiquetaBobinaSDT.BobinaEstado = BobinaEstado\n\t\u0026EtiquetaBobinaSDT.BobinaCarreras = BobinaCarreras\n\t\u0026EtiquetaBobinaSDT.BobinaIniciaReposo = BobinaIniciaReposo\n\t\u0026EtiquetaBobinaSDT.BobinaMinutosEnReposo = BobinaMinutosEnReposo\n\t\u0026EtiquetaBobinaSDT.BobinaMotivoMolino = BobinaMotivoMolino\n\t\u0026EtiquetaBobinaSDT.BobinaProductoId = BobinaProductoId\n\t\u0026EtiquetaBobinaSDT.BobinaProductoNombre = BobinaProductoNombre\n\t\u0026EtiquetaBobinaSDT.ExtrusionExtrusoraNombre = ExtrusionExtrusoraNombre\n\t\u0026EtiquetaBobinaSDT.ExtrusionExtrusoraIdTexto = ExtrusionExtrusoraId.ToString().Trim()\n\t\u0026EtiquetaBobinaSDT.ExtrusionLoteSilo = ExtrusionLoteSilo\n\t\u0026EtiquetaBobinaSDT.ExtrusionSiloNombre = ExtrusionSiloNombre\n\t\u0026EtiquetaBobinaSDT.BobinaDesviacionEstandar = BobinaDesviacionEstandar\n\t\u0026EtiquetaBobinaSDT.BobinaColorEstacion = BobinaColorEstacion\n\n\texit\nendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026BobinaId, out:\u0026EtiquetaBobinaSDT);\n",
+                              "cleanSource":  "parm(in:\u0026BobinaId, out:\u0026EtiquetaBobinaSDT);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "PrinterSD.EtiquetaBobinaSDT",
+                                         "DB.Bobina"
+                                     ],
+                         "calledBy":  [
+                                          "BobinaReportMainMulti",
+                                          "BobinaReportMain",
+                                          "RptPrensado"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "EtiquetaBobinaSDT"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "BobinaId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Bobina Id"
+                           },
+                           {
+                               "name":  "EtiquetaBobinaSDT",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Etiqueta Bobina SDT"
+                           },
+                           {
+                               "name":  "Bobina",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,167 @@
+﻿{
+    "uniqueId":  "a0576f24-6ef5-4b14-a12b-52eefcaa0070",
+    "name":  "WWP_GetUsersFromRole",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Get Users From Role",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_GetUsersFromRole.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026GAMRole = GAMRepository.GetRoleByGUID(\u0026WWPSubscriptionRoleId, \u0026GAMErrorCollection)\n\u0026GAMUserCollection = \u0026GAMRole.GetUsers(\u0026GAMErrorCollection)\n\n\u0026WWPUserExtendedIdCollection.Clear()\nFor \u0026GAMUser In \u0026GAMUserCollection\n\t\u0026WWPUserExtendedIdCollection.Add(\u0026GAMUser.GUID)\nEndFor\n",
+                              "cleanSource":  "\u0026GAMRole = GAMRepository.GetRoleByGUID(\u0026WWPSubscriptionRoleId, \u0026GAMErrorCollection)\n\u0026GAMUserCollection = \u0026GAMRole.GetUsers(\u0026GAMErrorCollection)\n\n\u0026WWPUserExtendedIdCollection.Clear()\nFor \u0026GAMUser In \u0026GAMUserCollection\n\t\u0026WWPUserExtendedIdCollection.Add(\u0026GAMUser.GUID)\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026WWPSubscriptionRoleId, out:\u0026WWPUserExtendedIdCollection);\n",
+                              "cleanSource":  "parm(in:\u0026WWPSubscriptionRoleId, out:\u0026WWPUserExtendedIdCollection);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "WWP_SendNotification",
+                                          "WWP_RoleUpdateSubscription"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "RoleId",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Role Id"
+                           },
+                           {
+                               "name":  "WWPUserExtendedIdCollection",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "WWPUser Extended Id"
+                           },
+                           {
+                               "name":  "WWPSubscriptionRoleId",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "WWPSubscription Role Id"
+                           },
+                           {
+                               "name":  "GAMUser",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "GAMUser"
+                           },
+                           {
+                               "name":  "GAMRole",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "GAMRole"
+                           },
+                           {
+                               "name":  "GAMErrorCollection",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "GAMError Collection"
+                           },
+                           {
+                               "name":  "GAMUserCollection",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "GAMUser Collection"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,104 @@
+﻿{
+    "uniqueId":  "9a95776c-98a9-43a1-aa80-ff2ec76283c8",
+    "name":  "FacebookAccessToken",
+    "type":  "SDT",
+    "module":  "GeneXus.Social",
+    "description":  "Facebook Access Token",
+    "filePath":  "SDTs/GeneXus/Social/FacebookAccessToken.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "AccessToken",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Facebook Access Token"
+                           },
+                           {
+                               "name":  "ApplicationId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Facebook Application Id"
+                           },
+                           {
+                               "name":  "UserId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Facebook User Id"
+                           },
+                           {
+                               "name":  "Permissions",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Permissions granted by user"
+                           },
+                           {
+                               "name":  "DeclinedPermissions",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Declined Permissions by user"
+                           },
+                           {
+                               "name":  "ExpirationDate",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Token Expiration Date"
+                           },
+                           {
+                               "name":  "LastRefreshDate",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Token Last Refresh Date"
+                           }
+                       ]
+}

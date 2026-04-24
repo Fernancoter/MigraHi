@@ -1,0 +1,88 @@
+﻿{
+    "uniqueId":  "2e6715b4-0997-42a1-a2c9-aceeb5df820a",
+    "name":  "DPCarreteCarrera",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "DPCarrete Carrera",
+    "filePath":  "DataProviders/Produccion/DPCarreteCarrera.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTCarreteCarrera\n{\n\tSDTCarreteCarreraItem\n\t{\n\t\tLevel1\n\t\t{\n\t\t\tCarreteId  = CarreteId \n\t\t\tCarreteNoLinea  = CarreteNoLinea \n\t\t\tCarreteNoSerie  = CarreteNoSerie \n\t\t\tCarreteEstado  = CarreteEstado \n\t\t\tCarreteEnMolino  = CarreteEnMolino \n\t\t\tCarreteMolino  = CarreteMolino \n\t\t\tCarreteMermaMolino  = CarreteMermaMolino \n\t\t\tCarreteMermaKg  = CarreteMermaKg \n\t\t\tCarreteObservacion  = CarreteObservacion \n\t\t\tCarreteTerminaPalet  = CarreteTerminaPalet \n\t\t\tCarreteCarreraId  = CarreteCarreraId \n\t\t\tPaletNoSerie = PaletNoSerie\n\t\t\t\u0026CarreraId = CarreteCarreraId \n\t\t}\n\t\tLevel2\n\t\tWhere CarreraId = \u0026CarreraId\n\t\t{\n\t\t\tCarreraId = WWPBaseObjects.Notifications.CarreraId\n\t\t\tCarreraNo  = CarreraNo \n\t\t\tCarreraEstado  = CarreraEstado \n\t\t\tCarreraPaletTerminado  = CarreraPaletTerminado \n\t\t\tInicioPrensadoBobinaId  = InicioPrensadoBobinaId \n\t\t\tInicioPBPrensadoId  = InicioPBPrensadoId \n\t\t\tInicioPrensadoBobinaBoninaId  = InicioPrensadoBobinaBoninaId \n\t\t\tInicioPrensadoBobinaNoSerie  = InicioPrensadoBobinaNoSerie \n\t\t\tInicioPrensadoBobinaEspesor  = InicioPrensadoBobinaEspesor \n\t\t\tInicioPrensadoBobinaEstado  = InicioPrensadoBobinaEstado \n\t\n\t\t}\n\t}\n}\n",
+                              "cleanSource":  "SDTCarreteCarrera\n{\n\tSDTCarreteCarreraItem\n\t{\n\t\tLevel1\n\t\t{\n\t\t\tCarreteId  = CarreteId \n\t\t\tCarreteNoLinea  = CarreteNoLinea \n\t\t\tCarreteNoSerie  = CarreteNoSerie \n\t\t\tCarreteEstado  = CarreteEstado \n\t\t\tCarreteEnMolino  = CarreteEnMolino \n\t\t\tCarreteMolino  = CarreteMolino \n\t\t\tCarreteMermaMolino  = CarreteMermaMolino \n\t\t\tCarreteMermaKg  = CarreteMermaKg \n\t\t\tCarreteObservacion  = CarreteObservacion \n\t\t\tCarreteTerminaPalet  = CarreteTerminaPalet \n\t\t\tCarreteCarreraId  = CarreteCarreraId \n\t\t\tPaletNoSerie = PaletNoSerie\n\t\t\t\u0026CarreraId = CarreteCarreraId \n\t\t}\n\t\tLevel2\n\t\tWhere CarreraId = \u0026CarreraId\n\t\t{\n\t\t\tCarreraId = WWPBaseObjects.Notifications.CarreraId\n\t\t\tCarreraNo  = CarreraNo \n\t\t\tCarreraEstado  = CarreraEstado \n\t\t\tCarreraPaletTerminado  = CarreraPaletTerminado \n\t\t\tInicioPrensadoBobinaId  = InicioPrensadoBobinaId \n\t\t\tInicioPBPrensadoId  = InicioPBPrensadoId \n\t\t\tInicioPrensadoBobinaBoninaId  = InicioPrensadoBobinaBoninaId \n\t\t\tInicioPrensadoBobinaNoSerie  = InicioPrensadoBobinaNoSerie \n\t\t\tInicioPrensadoBobinaEspesor  = InicioPrensadoBobinaEspesor \n\t\t\tInicioPrensadoBobinaEstado  = InicioPrensadoBobinaEstado \n\t\n\t\t}\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTCarreteCarrera"
+                                     ],
+                         "calledBy":  [
+                                          "vwCarreteCarrera"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTCarreteCarrera"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CarreraId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

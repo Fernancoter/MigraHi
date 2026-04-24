@@ -1,0 +1,29 @@
+﻿
+=== DataProvider: Produccion.DPProductoTerminado ===
+
+--- Source (Source) ---
+SDTProductoTerminado
+Where TerminadoProductoId = &TerminadoProductoId
+{
+	ProductoTerminadoId  = ProductoTerminadoId 
+	ProductoTerminadoPalets  = ProductoTerminadoPalets 
+	ProductoTerminadoCarreteMillar  = ProductoTerminadoCarreteMillar 
+	ProductoTerminadoPaletMillar  = ProductoTerminadoPaletMillar 
+	ProductoTerminadoPeso  = ProductoTerminadoPeso 
+	ProductoTerminadoPesoCarrete  = ProductoTerminadoPesoCarrete 
+	ProductoTerminadoPesoPalet  = ProductoTerminadoPesoPalet 
+	TerminadoProductoId  = TerminadoProductoId 
+	TerminadoProductoNombre  = TerminadoProductoNombre 
+
+}
+
+--- Rules (Rules) ---
+parm(&TerminadoProductoId);
+
+
+=== SDT: Produccion.SDTProductoTerminado ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

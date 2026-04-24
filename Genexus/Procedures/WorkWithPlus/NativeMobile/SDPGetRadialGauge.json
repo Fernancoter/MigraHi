@@ -1,0 +1,184 @@
+﻿{
+    "uniqueId":  "d3fa043c-1c40-4b78-8b5e-3884849efa9e",
+    "name":  "SDPGetRadialGauge",
+    "type":  "Procedure",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPGet Radial Gauge",
+    "filePath":  "Procedures/WorkWithPlus/NativeMobile/SDPGetRadialGauge.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026HTML = !\u0027\u003cmeta name=\"viewport\" content= \"width=device-width, user-scalable=no\"\u003e\u003cstyle\u003ebody{background-color: #00000000;}.flex-wrapper{display: flex; flex-flow: row nowrap;}.single-chart{width: 100%; justify-content: space-around ;}.circular-chart{display: block; margin: 10px auto; max-width: 80%; max-height: 250px;}.circle-bg{fill: none; stroke: %shadowcolor%; stroke-width: 3.8;}.circle{fill: none; stroke-width: 2.8; stroke-linecap: round; %animation%}@keyframes progress{0%, 40% { opacity: 0;} 40% { stroke-dasharray: 0 100;}} .percentage{fill: %textcolor%; font-family: sans-serif; font-size: 0.5em; text-anchor: middle;}\u003c/style\u003e\u0027 \n//0%{opacity: 0;}10%{stroke-dasharray: 0 100;}\n\u0026HTML += !\u0027\u003cdiv class=\"flex-wrapper\"\u003e \u003cdiv class=\"single-chart\"\u003e\u003csvg viewBox=\"0 0 36 36\" class=\"circular-chart\"\u003e\u003cpath class=\"circle-bg\" d=\"M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831\"  /\u003e\u0027\n\u0026HTML += !\u0027\u003cpath class=\"circle\" stroke=\"%color%\" stroke-dasharray=\"%value%, 100\" d=\"M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831\"/\u003e\u003ctext x=\"18\" y=\"20.35\" class=\"percentage\"\u003e%text%\u003c/text\u003e\u003c/svg\u003e\u003c/div\u003e\u003c/div\u003e\u0027\n\n\u0026propertyName = !\"color\"\n\u0026propertyValue = \u0026ProgressColor\nIf \u0026ProgressColor.IsEmpty()\n\t\u0026propertyValue = !\"#4CC790\"\nEndIf\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"value\"\n\u0026propertyValue = \u0026Value.ToString()\nIf \u0026Value \u003e 100\n\t\u0026propertyValue = !\"100\"\nEndIf\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"text\"\n\u0026propertyValue = \u0026InnerText\nIf \u0026InnerText.Length() = 0\n\t\u0026propertyValue = \u0026Value.ToString() + !\"%\"\nEndIf\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"animation\"\n\u0026propertyValue = !\"\"\nIf \u0026AllowAnimation\n\t\u0026propertyValue = !\"animation: progress 2s ease-out forwards;\"\nEndIF\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"textcolor\"\n\u0026propertyValue = \u0026TextColor\nIf \u0026ProgressColor.IsEmpty()\n\t\u0026propertyValue = !\"#666\"\nEndIf\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"shadowcolor\"\n\u0026propertyValue = \u0026ShadowColor\nIf \u0026ProgressColor.IsEmpty()\n\t\u0026propertyValue = !\"#eee\"\nEndIf\ndo \u0027ReplaceTemplate\u0027\n\nSub \u0027ReplaceTemplate\u0027\n\t\u0026HTML = \u0026HTML.Replace(!\"%\" + \u0026propertyName.Trim() + !\"%\", \u0026propertyValue.Trim())\nendSub\n",
+                              "cleanSource":  "\u0026HTML = !\u0027\u003cmeta name=\"viewport\" content= \"width=device-width, user-scalable=no\"\u003e\u003cstyle\u003ebody{background-color: #00000000;}.flex-wrapper{display: flex; flex-flow: row nowrap;}.single-chart{width: 100%; justify-content: space-around ;}.circular-chart{display: block; margin: 10px auto; max-width: 80%; max-height: 250px;}.circle-bg{fill: none; stroke: %shadowcolor%; stroke-width: 3.8;}.circle{fill: none; stroke-width: 2.8; stroke-linecap: round; %animation%}@keyframes progress{0%, 40% { opacity: 0;} 40% { stroke-dasharray: 0 100;}} .percentage{fill: %textcolor%; font-family: sans-serif; font-size: 0.5em; text-anchor: middle;}\u003c/style\u003e\u0027 \n//0%{opacity: 0;}10%{stroke-dasharray: 0 100;}\n\u0026HTML += !\u0027\u003cdiv class=\"flex-wrapper\"\u003e \u003cdiv class=\"single-chart\"\u003e\u003csvg viewBox=\"0 0 36 36\" class=\"circular-chart\"\u003e\u003cpath class=\"circle-bg\" d=\"M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831\"  /\u003e\u0027\n\u0026HTML += !\u0027\u003cpath class=\"circle\" stroke=\"%color%\" stroke-dasharray=\"%value%, 100\" d=\"M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831\"/\u003e\u003ctext x=\"18\" y=\"20.35\" class=\"percentage\"\u003e%text%\u003c/text\u003e\u003c/svg\u003e\u003c/div\u003e\u003c/div\u003e\u0027\n\n\u0026propertyName = !\"color\"\n\u0026propertyValue = \u0026ProgressColor\nIf \u0026ProgressColor.IsEmpty()\n\t\u0026propertyValue = !\"#4CC790\"\nEndIf\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"value\"\n\u0026propertyValue = \u0026Value.ToString()\nIf \u0026Value \u003e 100\n\t\u0026propertyValue = !\"100\"\nEndIf\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"text\"\n\u0026propertyValue = \u0026InnerText\nIf \u0026InnerText.Length() = 0\n\t\u0026propertyValue = \u0026Value.ToString() + !\"%\"\nEndIf\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"animation\"\n\u0026propertyValue = !\"\"\nIf \u0026AllowAnimation\n\t\u0026propertyValue = !\"animation: progress 2s ease-out forwards;\"\nEndIF\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"textcolor\"\n\u0026propertyValue = \u0026TextColor\nIf \u0026ProgressColor.IsEmpty()\n\t\u0026propertyValue = !\"#666\"\nEndIf\ndo \u0027ReplaceTemplate\u0027\n\n\u0026propertyName = !\"shadowcolor\"\n\u0026propertyValue = \u0026ShadowColor\nIf \u0026ProgressColor.IsEmpty()\n\t\u0026propertyValue = !\"#eee\"\nEndIf\ndo \u0027ReplaceTemplate\u0027\n\nSub \u0027ReplaceTemplate\u0027\n\t\u0026HTML = \u0026HTML.Replace(!\"%\" + \u0026propertyName.Trim() + !\"%\", \u0026propertyValue.Trim())\nendSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026Value, in:\u0026InnerText, in:\u0026ProgressColor, in:\u0026TextColor, in:\u0026ShadowColor, in:\u0026AllowAnimation, out:\u0026HTML);\n",
+                              "cleanSource":  "Parm(in:\u0026Value, in:\u0026InnerText, in:\u0026ProgressColor, in:\u0026TextColor, in:\u0026ShadowColor, in:\u0026AllowAnimation, out:\u0026HTML);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "SDPGetRadialGaugeWhite",
+                                          "SDPGetRadialGaugeLight",
+                                          "SDPGetRadialGaugeDark"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "HTML",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "HTML"
+                           },
+                           {
+                               "name":  "AllowAnimation",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Allow Animation"
+                           },
+                           {
+                               "name":  "InnerText",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Inner Text"
+                           },
+                           {
+                               "name":  "ProgressColor",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Progress Color"
+                           },
+                           {
+                               "name":  "propertyName",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "property Name"
+                           },
+                           {
+                               "name":  "propertyValue",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "property Value"
+                           },
+                           {
+                               "name":  "ShadowColor",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Shadow Color"
+                           },
+                           {
+                               "name":  "TextColor",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Text Color"
+                           },
+                           {
+                               "name":  "Value",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Value"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

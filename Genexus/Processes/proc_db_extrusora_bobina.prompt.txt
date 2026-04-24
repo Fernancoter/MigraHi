@@ -1,0 +1,4 @@
+﻿
+=== Transaction: DB.ExtrusoraBobina ===
+
+(sin businessLogic extraído)

@@ -1,0 +1,140 @@
+﻿{
+    "uniqueId":  "3272c248-b330-4847-9674-a5429dab466b",
+    "name":  "WWP_GetEntityByName",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Get Entity By Name",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_GetEntityByName.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "For Each WWP_Entity\n\tWhere WWPEntityName = \u0026WWPEntityName\n\t\u0026WWPEntityId = WWPEntityId\n\tExit\nWhen None\n\t\u0026WWP_Entity = New()\n\t\u0026WWP_Entity.DB.WWPEntityName = \u0026WWPEntityName\n\t\u0026WWP_Entity.Save()\n\tIf \u0026WWP_Entity.Success()\n\t\t\u0026WWPEntityId = \u0026WWP_Entity.WWPEntityId\n\tEndIf\nEndFor\n",
+                              "cleanSource":  "For Each WWP_Entity\n\tWhere WWPEntityName = \u0026WWPEntityName\n\t\u0026WWPEntityId = WWPEntityId\n\tExit\nWhen None\n\t\u0026WWP_Entity = New()\n\t\u0026WWP_Entity.DB.WWPEntityName = \u0026WWPEntityName\n\t\u0026WWP_Entity.Save()\n\tIf \u0026WWP_Entity.Success()\n\t\t\u0026WWPEntityId = \u0026WWP_Entity.WWPEntityId\n\tEndIf\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026WWPEntityName, out:\u0026WWPEntityId);\n",
+                              "cleanSource":  "Parm(in:\u0026WWPEntityName, out:\u0026WWPEntityId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_Entity"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_SendNotification",
+                                          "WWP_HasSubscriptionsToDisplay",
+                                          "WWP_SubscribeLoggedUserToDiscussion",
+                                          "WWP_AutomaticNotificationDefinitionsToLoad",
+                                          "WWP_HasDiscussionMessages",
+                                          "WWP_SubscribeMentionedUsersToDiscussion",
+                                          "WWP_SendMentionNotification"
+                                      ],
+                         "tablesRead":  [
+                                            "WWP_Entity"
+                                        ],
+                         "tablesWritten":  [
+                                               "WWP_Entity"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "WWPEntityName",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Entity Name"
+                           },
+                           {
+                               "name":  "WWPEntityId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Entity Id"
+                           },
+                           {
+                               "name":  "WWP_Entity",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWP_Entity"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,291 @@
+﻿{
+    "uniqueId":  "91cc2687-0461-43c3-a0e4-e8816c1440b0",
+    "name":  "AuditTransaction",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "Audit Transaction",
+    "filePath":  "Procedures/WWPBaseObjects/AuditTransaction.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\n//This is a procedure in which you has to define the behaviour of auditing after a record has\n//being inserted, modified or deleted (when the transaction has auditing enabled).\n//There is an example below of a way to audit the actions of record, saving them in DataBase\n//(but this can be modified to do whatever you want):\nLoadWWPContext.call(\u0026WWPContext)\n\u0026UserGUID = \u0026WWPContext.UserGUID\n\nif(\u0026UserGUID.IsEmpty())\n\t \u0026UserGUID = GamUser.GetId()\nendif\n\n\u0026GAMUser.Load(\u0026UserGUID)\n\n\u0026AuditPrimaryKey = \"\"\n\u0026FirstRecord = True\nFor \u0026AuditingObjectRecordItem in \u0026AuditingObject.Record\n\n\t\u0026ActualMode = \u0026AuditingObject.Mode\n\t\u0026AuditingObjectAttribute = new()\n\t\u0026AuditingObjectAttribute.Attribute.FromJson(\u0026AuditingObjectRecordItem.Attribute.ToJson())\n\n\t\u0026isOK = AuditHasChange.Udp(\u0026AuditingObjectAttribute, \u0026ActualMode)\n\t\n\tif(\u0026isOK)\n\t\t\n\t\t\u0026Audit = new()\n\t\t\u0026Audit.AuditDate = now()\n\t\t\u0026Audit.GAMUserGUID = \u0026UserGUID\n\t\t\u0026Audit.SecUserName = \u0026GAMUser.FirstName + \u0027 \u0027 + \u0026GAMUser.LastName\n\t\t\u0026Audit.WWPBaseObjects.SecUserEmail = \u0026GAMUser.EMail\n\t\t//\u0026Audit.SecUserId = \u0026WWPContext.UserId\n\t\t\u0026Audit.AuditTableName = \u0026AuditingObjectRecordItem.TableName\n\t\t\n\t\tFor \u0026AuditingObjectRecordItemAttributeItem in \u0026AuditingObjectRecordItem.Attribute\n\t\t\tIf (\u0026AuditingObjectRecordItemAttributeItem.IsPartOfKey)\n\t\t\t\tdo case\n\t\t\t\t\tCase \u0026ActualMode = TrnMode.Insert\n\t\t\t\t\t\t\u0026Audit.AuditAction = \"Insert\"\n\t\t\t\t\t\t\u0026Audit.AuditTableKey = \u0026AuditingObjectRecordItemAttributeItem.NewValue.ToNumeric()\n\t\t\t\t\t\texit\n\t\t\t\t\tCase \u0026ActualMode = TrnMode.Update\n\t\t\t\t\t\t\u0026Audit.AuditAction = \"Update\"\n\t\t\t\t\t\t\u0026Audit.AuditTableKey = \u0026AuditingObjectRecordItemAttributeItem.OldValue.ToNumeric()\n\t\t\t\t\t\texit\n\t\t\t\t\tCase \u0026ActualMode = TrnMode.Delete\n\t\t\t\t\t\t\u0026Audit.AuditAction = \"Delete\"\n\t\t\t\t\t\t\u0026Audit.AuditTableKey = \u0026AuditingObjectRecordItemAttributeItem.OldValue.ToNumeric()\n\t\t\t\t\t\texit\n\t\t\t\tEndCase\n\t\t\t\t\n\t\t\tendif\n\t\tendfor\n\t\t\n\t\t\u0026Audit.AuditDescription = \u0026AuditingObjectAttribute.ToJson()\n\t\t\u0026Audit.AuditShortDescription = \u0027\u0027\n\t\t\u0026Audit.Save()\n\t\t\n\t\tIf \u0026Audit.Success()\n\t\t\tCommit\n\t\tEndIf\n\tendif\n\nEndFor\n\n//Finally, apply WorkWithPlus Pattern to Audit, removing actions of Insert, Update and Delete\n//Audit transaction cannot have Auditing enabled, because it will enter in loop\n//So, make sure that property \u0027Enable Auditing\u0027 is False in Audit transaction\n",
+                              "cleanSource":  "\n\n//This is a procedure in which you has to define the behaviour of auditing after a record has\n//being inserted, modified or deleted (when the transaction has auditing enabled).\n//There is an example below of a way to audit the actions of record, saving them in DataBase\n//(but this can be modified to do whatever you want):\nLoadWWPContext.call(\u0026WWPContext)\n\u0026UserGUID = \u0026WWPContext.UserGUID\n\nif(\u0026UserGUID.IsEmpty())\n\t \u0026UserGUID = GamUser.GetId()\nendif\n\n\u0026GAMUser.Load(\u0026UserGUID)\n\n\u0026AuditPrimaryKey = \"\"\n\u0026FirstRecord = True\nFor \u0026AuditingObjectRecordItem in \u0026AuditingObject.Record\n\n\t\u0026ActualMode = \u0026AuditingObject.Mode\n\t\u0026AuditingObjectAttribute = new()\n\t\u0026AuditingObjectAttribute.Attribute.FromJson(\u0026AuditingObjectRecordItem.Attribute.ToJson())\n\n\t\u0026isOK = AuditHasChange.Udp(\u0026AuditingObjectAttribute, \u0026ActualMode)\n\t\n\tif(\u0026isOK)\n\t\t\n\t\t\u0026Audit = new()\n\t\t\u0026Audit.AuditDate = now()\n\t\t\u0026Audit.GAMUserGUID = \u0026UserGUID\n\t\t\u0026Audit.SecUserName = \u0026GAMUser.FirstName + \u0027 \u0027 + \u0026GAMUser.LastName\n\t\t\u0026Audit.WWPBaseObjects.SecUserEmail = \u0026GAMUser.EMail\n\t\t//\u0026Audit.SecUserId = \u0026WWPContext.UserId\n\t\t\u0026Audit.AuditTableName = \u0026AuditingObjectRecordItem.TableName\n\t\t\n\t\tFor \u0026AuditingObjectRecordItemAttributeItem in \u0026AuditingObjectRecordItem.Attribute\n\t\t\tIf (\u0026AuditingObjectRecordItemAttributeItem.IsPartOfKey)\n\t\t\t\tdo case\n\t\t\t\t\tCase \u0026ActualMode = TrnMode.Insert\n\t\t\t\t\t\t\u0026Audit.AuditAction = \"Insert\"\n\t\t\t\t\t\t\u0026Audit.AuditTableKey = \u0026AuditingObjectRecordItemAttributeItem.NewValue.ToNumeric()\n\t\t\t\t\t\texit\n\t\t\t\t\tCase \u0026ActualMode = TrnMode.Update\n\t\t\t\t\t\t\u0026Audit.AuditAction = \"Update\"\n\t\t\t\t\t\t\u0026Audit.AuditTableKey = \u0026AuditingObjectRecordItemAttributeItem.OldValue.ToNumeric()\n\t\t\t\t\t\texit\n\t\t\t\t\tCase \u0026ActualMode = TrnMode.Delete\n\t\t\t\t\t\t\u0026Audit.AuditAction = \"Delete\"\n\t\t\t\t\t\t\u0026Audit.AuditTableKey = \u0026AuditingObjectRecordItemAttributeItem.OldValue.ToNumeric()\n\t\t\t\t\t\texit\n\t\t\t\tEndCase\n\t\t\t\t\n\t\t\tendif\n\t\tendfor\n\t\t\n\t\t\u0026Audit.AuditDescription = \u0026AuditingObjectAttribute.ToJson()\n\t\t\u0026Audit.AuditShortDescription = \u0027\u0027\n\t\t\u0026Audit.Save()\n\t\t\n\t\tIf \u0026Audit.Success()\n\t\t\tCommit\n\t\tEndIf\n\tendif\n\nEndFor\n\n//Finally, apply WorkWithPlus Pattern to Audit, removing actions of Insert, Update and Delete\n//Audit transaction cannot have Auditing enabled, because it will enter in loop\n//So, make sure that property \u0027Enable Auditing\u0027 is False in Audit transaction"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026AuditingObject, in:\u0026CallerName);\n",
+                              "cleanSource":  "parm(in:\u0026AuditingObject, in:\u0026CallerName);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.LoadWWPContext",
+                                         "WWPBaseObjects.AuditHasChange",
+                                         "WWPBaseObjects.AuditingObject",
+                                         "WWPBaseObjects.WWPContext",
+                                         "WWPBaseObjects.AuditingObjectAttribute",
+                                         "WWPBaseObjects.Audit",
+                                         "LoadWWPContext",
+                                         "AuditHasChange"
+                                     ],
+                         "calledBy":  [
+                                          "CausaInterrupcion",
+                                          "PrensadoBobina",
+                                          "Carrera",
+                                          "ExtrusoraMezcladora",
+                                          "Reclamo",
+                                          "Palet",
+                                          "Lote",
+                                          "PrensadoInterrupcion",
+                                          "Interrupcion",
+                                          "StatementOfIncome",
+                                          "Inventario",
+                                          "WWP_MailTemplate",
+                                          "Budget",
+                                          "Extrusion",
+                                          "EmbarqueDetalle",
+                                          "ExtrusoraObservacion",
+                                          "Company",
+                                          "FTB",
+                                          "ExtrusionInterrupcion",
+                                          "CarreteDefecto",
+                                          "PrensaTroquel",
+                                          "EmbarquePallet",
+                                          "Product",
+                                          "Troquel",
+                                          "Remission",
+                                          "Consolidated",
+                                          "Prensado",
+                                          "DownTimeCode",
+                                          "SalesPerson",
+                                          "ReclamoDetalle",
+                                          "Embarque",
+                                          "ProductoTerminado",
+                                          "EtiquetadoOperador",
+                                          "PrensaObservacion",
+                                          "Existencia",
+                                          "Customer",
+                                          "Bobina"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+                                               "Audit"
+                                           ],
+                         "usesSDTs":  [
+                                          "AuditingObject",
+                                          "AuditingObjectAttribute",
+                                          "WWPContext"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "AuditingObject",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Auditing Object"
+                           },
+                           {
+                               "name":  "AuditingObjectRecordItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Auditing Object Record Item"
+                           },
+                           {
+                               "name":  "AuditingObjectRecordItemAttributeItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Auditing Object Record Item Attribute Item"
+                           },
+                           {
+                               "name":  "CallerName",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Caller Name"
+                           },
+                           {
+                               "name":  "Audit",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Audit"
+                           },
+                           {
+                               "name":  "AuditDescription",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Audit Description"
+                           },
+                           {
+                               "name":  "AuditShortDescription",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Audit Short Description"
+                           },
+                           {
+                               "name":  "AuditPrimaryKey",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Audit Primary Key"
+                           },
+                           {
+                               "name":  "WWPContext",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "WWPContext"
+                           },
+                           {
+                               "name":  "FirstRecord",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "First Record"
+                           },
+                           {
+                               "name":  "ActualMode",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Actual Mode"
+                           },
+                           {
+                               "name":  "AuditingObjectAttribute",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Auditing Object Attribute"
+                           },
+                           {
+                               "name":  "isOK",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "is OK"
+                           },
+                           {
+                               "name":  "UserGUID",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "User GUID"
+                           },
+                           {
+                               "name":  "UserEmail",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "User Email"
+                           },
+                           {
+                               "name":  "UserName",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "User Name"
+                           },
+                           {
+                               "name":  "GAMUser",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "GAMUser"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

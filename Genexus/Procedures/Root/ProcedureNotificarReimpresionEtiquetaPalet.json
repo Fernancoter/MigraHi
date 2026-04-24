@@ -1,0 +1,146 @@
+﻿{
+    "uniqueId":  "5cee56e0-d683-4452-8740-570f43dfafbd",
+    "name":  "ProcedureNotificarReimpresionEtiquetaPalet",
+    "type":  "Procedure",
+    "module":  "Root",
+    "description":  "Procedure Notificar Reimpresion Etiqueta Palet",
+    "filePath":  "Procedures/Root/ProcedureNotificarReimpresionEtiquetaPalet.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026PaletEtiquetaImpresa = new()\n\u0026PaletEtiquetaImpresa.PaletEtiquetaImpresaFechaHora = now()\n\u0026PaletEtiquetaImpresa.PaletId = \u0026PaletId\n\u0026PaletEtiquetaImpresa.Save()\ncommit\n\n\u0026count = 0\nfor each PaletEtiquetaImpresa\n\tWhere PaletId = \u0026PaletId\n\t\n\t\u0026count = \u0026count +1\n\t\nendfor\n\nif(\u0026count\u003e1)\n\t\u0026Palet.Load(\u0026PaletId)\n\t\n\tNotificarImpresion.Call(\u0026Palet.PaletNoSerie)\n\t\nendif\n",
+                              "cleanSource":  "\n\u0026PaletEtiquetaImpresa = new()\n\u0026PaletEtiquetaImpresa.PaletEtiquetaImpresaFechaHora = now()\n\u0026PaletEtiquetaImpresa.PaletId = \u0026PaletId\n\u0026PaletEtiquetaImpresa.Save()\ncommit\n\n\u0026count = 0\nfor each PaletEtiquetaImpresa\n\tWhere PaletId = \u0026PaletId\n\t\n\t\u0026count = \u0026count +1\n\t\nendfor\n\nif(\u0026count\u003e1)\n\t\u0026Palet.Load(\u0026PaletId)\n\t\n\tNotificarImpresion.Call(\u0026Palet.PaletNoSerie)\n\t\nendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026PaletId);\n",
+                              "cleanSource":  "parm(\u0026PaletId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Embarques.NotificarImpresion",
+                                         "DB.Palet",
+                                         "PaletEtiquetaImpresa",
+                                         "NotificarImpresion"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Palet",
+                                            "PaletEtiquetaImpresa"
+                                        ],
+                         "tablesWritten":  [
+                                               "PaletEtiquetaImpresa"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PaletId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Palet Id"
+                           },
+                           {
+                               "name":  "PaletEtiquetaImpresa",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Etiqueta Impresa"
+                           },
+                           {
+                               "name":  "count",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "count"
+                           },
+                           {
+                               "name":  "Palet",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

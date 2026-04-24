@@ -1,0 +1,80 @@
+﻿{
+    "uniqueId":  "ac8599e4-ceff-46da-a577-774bc9596cf1",
+    "name":  "ProductoTerminadoDP",
+    "type":  "DataProvider",
+    "module":  "Embarques",
+    "description":  "Producto Terminado DP",
+    "filePath":  "DataProviders/Embarques/ProductoTerminadoDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "DVB_SDTComboData\n{\n\tItem\n\t{\n\t\tID = DB.TerminadoProductoId.ToString()\n\t\tTitle = TerminadoProductoNombre\n\t}\n}\n",
+                              "cleanSource":  "DVB_SDTComboData\n{\n\tItem\n\t{\n\t\tID = DB.TerminadoProductoId.ToString()\n\t\tTitle = TerminadoProductoNombre\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.DVB_SDTComboData"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WWPBaseObjects.DVB_SDTComboData"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

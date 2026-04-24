@@ -1,0 +1,4 @@
+﻿
+=== Transaction: DB.OrdenEtiquetado ===
+
+(sin businessLogic extraído)

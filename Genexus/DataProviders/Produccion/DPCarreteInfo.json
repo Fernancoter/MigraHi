@@ -1,0 +1,94 @@
+﻿{
+    "uniqueId":  "4defc04e-34cf-49dd-960a-768b05039a67",
+    "name":  "DPCarreteInfo",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "DPCarrete Info",
+    "filePath":  "DataProviders/Produccion/DPCarreteInfo.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTCarreteInfo\nWhere CarreteId = \u0026CarreteId\n{\n\tSDTCarreteInfoItem\n\t{\n\t\tPaletId  = PaletId \nPaletNoSerie  = PaletNoSerie \nPaletNo  = PaletNo \nPaletOperadorId  = PaletOperadorId \nPaletProductoId  = PaletProductoId \nPaletProductoNombre  = PaletProductoNombre \nPaletProductoDescripcion  = PaletProductoDescripcion \nPaletHoraInicioEnsamble  = PaletHoraInicioEnsamble \nPaletHoraFinEnsamble  = PaletHoraFinEnsamble \nPaletEstatus  = PaletEstatus \nPaletPrensaId  = PaletPrensaId \nPaletPrensadoId  = PaletPrensadoId \nPaletCapacidad  = WWPBaseObjects.PaletCapacidad \nPaletNoCarretes  = PaletNoCarretes \n\n\t}\n}\n",
+                              "cleanSource":  "SDTCarreteInfo\nWhere CarreteId = \u0026CarreteId\n{\n\tSDTCarreteInfoItem\n\t{\n\t\tPaletId  = PaletId \nPaletNoSerie  = PaletNoSerie \nPaletNo  = PaletNo \nPaletOperadorId  = PaletOperadorId \nPaletProductoId  = PaletProductoId \nPaletProductoNombre  = PaletProductoNombre \nPaletProductoDescripcion  = PaletProductoDescripcion \nPaletHoraInicioEnsamble  = PaletHoraInicioEnsamble \nPaletHoraFinEnsamble  = PaletHoraFinEnsamble \nPaletEstatus  = PaletEstatus \nPaletPrensaId  = PaletPrensaId \nPaletPrensadoId  = PaletPrensadoId \nPaletCapacidad  = WWPBaseObjects.PaletCapacidad \nPaletNoCarretes  = PaletNoCarretes \n\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026CarreteId);\n",
+                              "cleanSource":  "parm(\u0026CarreteId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTCarreteInfo"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTCarreteInfo"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CarreteId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Carrete Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

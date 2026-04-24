@@ -1,0 +1,978 @@
+[
+  {
+    "root": "Web",
+    "items": [
+      {
+        "label": "Seguridad",
+        "children": [
+          {
+            "label": "Inicio",
+            "target": "inicioSeguridad",
+            "targetType": "WebPanel",
+            "targetModule": "Seguridad",
+            "iconClass": "menu-icon fa fa-home"
+          },
+          {
+            "label": "Usuarios",
+            "target": "GAMWWUsers",
+            "targetType": "WebPanel",
+            "targetModule": "Root",
+            "iconClass": "menu-icon far fa-stop-circle"
+          },
+          {
+            "label": "Roles",
+            "target": "GAMWWRoles",
+            "targetType": "WebPanel",
+            "targetModule": "Root",
+            "iconClass": "menu-icon far fa-stop-circle"
+          }
+        ]
+      },
+      {
+        "label": "Producción",
+        "children": [
+          {
+            "label": "Inicio",
+            "target": "InicioProduccion",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fa fa-home"
+          },
+          {
+            "label": "Operadores",
+            "target": "listarOperador",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-user-cog"
+          },
+          {
+            "label": "Productos",
+            "target": "listarProductos",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-dolly"
+          },
+          {
+            "label": "Turnos Por Semana",
+            "target": "TurnosPorSemana",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-calendar-day"
+          },
+          {
+            "label": "Catálogos",
+            "iconClass": "menu-icon fas fa-th-list",
+            "children": [
+              {
+                "label": "Categorías",
+                "target": "listarProductoCategoria",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon fas fa-asterisk"
+              },
+              {
+                "label": "Turnos",
+                "target": "listarTurnos",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon fas fa-clipboard-list"
+              },
+              {
+                "label": "Extrusoras",
+                "target": "listarExtrusora",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon fas fa-align-justify"
+              },
+              {
+                "label": "Prensas",
+                "target": "listarPrensas",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon fas fa-align-center"
+              },
+              {
+                "label": "Silos",
+                "target": "listarSilos",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon fas fa-database"
+              },
+              {
+                "label": "Troqueles",
+                "target": "listarTroquel",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon fas fa-border-none"
+              }
+            ]
+          },
+          {
+            "label": "Referencias",
+            "iconClass": "menu-icon fas fa-paperclip",
+            "children": [
+              {
+                "label": "Configuración",
+                "target": "WWConfiguracion",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-cogs"
+              },
+              {
+                "label": "Extrusora Producto",
+                "target": "listarExtrusoraProducto",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon fas fa-link"
+              },
+              {
+                "label": "Extrusora Mezcladora",
+                "target": "ListarExtrusoraMezcladora",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon fas fa-link"
+              },
+              {
+                "label": "Prensa Producto",
+                "target": "listarPrensaProducto",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon fas fa-link"
+              },
+              {
+                "label": "Producto Terminado",
+                "target": "listarProductoTerminado",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon fas fa-link"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Inventarios",
+        "children": [
+          {
+            "label": "Inicio",
+            "target": "InicioInventario",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fa fa-home"
+          },
+          {
+            "label": "Silos",
+            "target": "listarSilos",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-database"
+          },
+          {
+            "label": "Lotes",
+            "target": "listarLotes",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-box"
+          },
+          {
+            "label": "Cierre de Mes",
+            "target": "listarInventario",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-calendar"
+          },
+          {
+            "label": "Inventario",
+            "target": "ExistenciaWW",
+            "targetType": "WebPanel",
+            "targetModule": "DB",
+            "iconClass": "menu-icon fas fa-boxes"
+          }
+        ]
+      },
+      {
+        "label": "Extrusión",
+        "children": [
+          {
+            "label": "Inicio",
+            "target": "InicioExtrusion",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fa fa-home"
+          },
+          {
+            "label": "Turnos Por Semana",
+            "target": "TurnosPorSemanaExtrusoras",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-calendar-day"
+          },
+          {
+            "label": "Extrusoras",
+            "target": "listarExtrusora",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-align-justify"
+          },
+          {
+            "label": "Extrusora Producto",
+            "target": "listarExtrusoraProducto",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-link"
+          },
+          {
+            "label": "Operación",
+            "iconClass": "menu-icon fal fa-draw-circle",
+            "children": [
+              {
+                "label": "Extrusiones",
+                "target": "ExtrusionWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Bobinas",
+                "target": "vwAnaliticaBobina",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon far fa-stop-circle"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Prensado",
+        "children": [
+          {
+            "label": "Inicio",
+            "target": "InicioPrensado",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fa fa-home"
+          },
+          {
+            "label": "Turnos Por Semana",
+            "target": "TurnosPorSemanaPrensas",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-calendar-day"
+          },
+          {
+            "label": "Troqueles",
+            "target": "TroquelWW",
+            "targetType": "WebPanel",
+            "targetModule": "DB",
+            "iconClass": "menu-icon fas fa-border-none"
+          },
+          {
+            "label": "Prensas",
+            "target": "listarPrensas",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-align-center"
+          },
+          {
+            "label": "Prensa Producto",
+            "target": "listarPrensaProducto",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-link"
+          },
+          {
+            "label": "Producto Terminado",
+            "target": "listarProductoTerminado",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-link"
+          },
+          {
+            "label": "Operación",
+            "iconClass": "menu-icon fas fa-vector-square",
+            "children": [
+              {
+                "label": "Prensados",
+                "target": "vwAnaliticaPrensado",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Carreras",
+                "target": "CarreraWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Carretes",
+                "target": "vwAnaliticaCarrete",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Palets",
+                "target": "PaletWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Producción",
+        "children": [
+          {
+            "label": "Inicio",
+            "target": "InicioProduccion",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fa fa-home"
+          },
+          {
+            "label": "Turnos Por Semana",
+            "target": "TurnosPorSemana",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-calendar-day"
+          },
+          {
+            "label": "Extrusión",
+            "iconClass": "menu-icon fal fa-draw-circle",
+            "children": [
+              {
+                "label": "Extrusión del Día",
+                "target": "ExclusionDelDia",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Extrusiones",
+                "target": "ExtrusionWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Bobinas",
+                "target": "BobinaWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              }
+            ]
+          },
+          {
+            "label": "Prensado",
+            "iconClass": "menu-icon fas fa-vector-square",
+            "children": [
+              {
+                "label": "Prensado del día",
+                "target": "PrensadoDelDia",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Prensados",
+                "target": "PrensadoWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Carreras",
+                "target": "CarreraWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Carretes",
+                "target": "CarreteWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Palets",
+                "target": "PaletWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              }
+            ]
+          },
+          {
+            "label": "Catálogos",
+            "iconClass": "menu-icon fas fa-book",
+            "children": [
+              {
+                "label": "Categorías",
+                "target": "WWProductoCategoria",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-asterisk"
+              },
+              {
+                "label": "Productos",
+                "target": "WWProducto",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-dolly"
+              },
+              {
+                "label": "Turnos",
+                "iconClass": "menu-icon fas fa-clipboard-list"
+              },
+              {
+                "label": "Operadores",
+                "target": "WWOperador",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-user-cog"
+              },
+              {
+                "label": "Extrusoras",
+                "target": "WWExtrusora",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-align-justify"
+              },
+              {
+                "label": "Prensas",
+                "iconClass": "menu-icon fas fa-align-center"
+              },
+              {
+                "label": "Inventarios",
+                "target": "WWInventario",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-boxes"
+              },
+              {
+                "label": "Silos",
+                "target": "listarSilos",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon fas fa-database"
+              },
+              {
+                "label": "Lotes",
+                "target": "listarLotes",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon fas fa-box"
+              },
+              {
+                "label": "Troqueles",
+                "target": "TroquelWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-border-none"
+              }
+            ]
+          },
+          {
+            "label": "Referencias",
+            "iconClass": "menu-icon fas fa-paperclip",
+            "children": [
+              {
+                "label": "Configuración",
+                "target": "WWConfiguracion",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-cogs"
+              },
+              {
+                "label": "PrensaProducto",
+                "target": "WWPrensaProducto",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-link"
+              },
+              {
+                "label": "ExtrusoraProducto",
+                "target": "WWExtrusoraProducto",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-link"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Reportes",
+        "children": [
+          {
+            "label": "Report Orders Price",
+            "target": "OrdersMoney",
+            "targetType": "WebPanel",
+            "targetModule": "SAE",
+            "iconClass": "menu-icon far fa-dot-circle"
+          },
+          {
+            "label": "Report Orders",
+            "target": "Orders",
+            "targetType": "WebPanel",
+            "targetModule": "SAE",
+            "iconClass": "menu-icon far fa-dot-circle"
+          },
+          {
+            "label": "Report FTB",
+            "target": "FTBWW",
+            "targetType": "WebPanel",
+            "targetModule": "DB",
+            "iconClass": "menu-icon far fa-dot-circle"
+          },
+          {
+            "label": "FTB YTD",
+            "target": "FTBYTD",
+            "targetType": "WebPanel",
+            "targetModule": "SAE",
+            "iconClass": "menu-icon far fa-dot-circle"
+          },
+          {
+            "label": "Realtime Inventory",
+            "target": "RealtimeInventory",
+            "targetType": "WebPanel",
+            "targetModule": "SAE",
+            "iconClass": "menu-icon far fa-dot-circle"
+          }
+        ]
+      },
+      {
+        "label": "Reportes",
+        "children": [
+          {
+            "label": "Customer",
+            "target": "CustomerWW",
+            "targetType": "WebPanel",
+            "targetModule": "DB",
+            "iconClass": "menu-icon far fa-dot-circle"
+          },
+          {
+            "label": "Outlook",
+            "target": "outlookww",
+            "targetType": "WebPanel",
+            "targetModule": "SAE",
+            "iconClass": "menu-icon far fa-dot-circle"
+          },
+          {
+            "label": "Budget",
+            "target": "BudgetWW",
+            "targetType": "WebPanel",
+            "targetModule": "DB",
+            "iconClass": "menu-icon far fa-dot-circle"
+          },
+          {
+            "label": "Price",
+            "target": "priceww",
+            "targetType": "WebPanel",
+            "targetModule": "SAE",
+            "iconClass": "menu-icon far fa-dot-circle"
+          },
+          {
+            "label": "Product",
+            "target": "ProductsWW",
+            "targetType": "WebPanel",
+            "targetModule": "Embarques",
+            "iconClass": "menu-icon far fa-dot-circle"
+          },
+          {
+            "label": "SalesPerson",
+            "target": "SalesPersonWW",
+            "targetType": "WebPanel",
+            "targetModule": "DB",
+            "iconClass": "menu-icon far fa-dot-circle"
+          }
+        ]
+      },
+      {
+        "label": "Embarques",
+        "children": [
+          {
+            "label": "Inicio",
+            "target": "InicioEmbarques",
+            "targetType": "WebPanel",
+            "targetModule": "Embarques",
+            "iconClass": "menu-icon fa fa-home"
+          },
+          {
+            "label": "Clientes",
+            "target": "CustomerWW",
+            "targetType": "WebPanel",
+            "targetModule": "DB",
+            "iconClass": "menu-icon fas fa-building"
+          },
+          {
+            "label": "Productos",
+            "target": "ProductsWW",
+            "targetType": "WebPanel",
+            "targetModule": "Embarques",
+            "iconClass": "menu-icon far fa-dice-six"
+          },
+          {
+            "label": "Pedidos",
+            "target": "ListadoOrdenes",
+            "targetType": "WebPanel",
+            "targetModule": "Embarques",
+            "iconClass": "menu-icon far fa-comments-dollar"
+          },
+          {
+            "label": "Remisiones",
+            "target": "ListadoRemisiones",
+            "targetType": "WebPanel",
+            "targetModule": "Embarques",
+            "iconClass": "menu-icon fa-solid fad fa-truck-ramp"
+          },
+          {
+            "label": "Embarques",
+            "target": "ListadoEmbarques",
+            "targetType": "WebPanel",
+            "targetModule": "Embarques",
+            "iconClass": "menu-icon fa-solid fad fa-truck-ramp"
+          },
+          {
+            "label": "Facturas",
+            "target": "FTBWW",
+            "targetType": "WebPanel",
+            "targetModule": "DB",
+            "iconClass": "menu-icon fas fa-file-invoice"
+          }
+        ]
+      },
+      {
+        "label": "Calidad",
+        "children": [
+          {
+            "label": "Inicio",
+            "target": "InicioCalidad",
+            "targetType": "WebPanel",
+            "targetModule": "Calidad",
+            "iconClass": "menu-icon fa fa-home"
+          },
+          {
+            "label": "Defectos",
+            "target": "CarreteDefectoWW",
+            "targetType": "WebPanel",
+            "targetModule": "Calidad",
+            "iconClass": "menu-icon fas fa-cog"
+          },
+          {
+            "label": "Reclamos",
+            "target": "reclamosww",
+            "targetType": "WebPanel",
+            "targetModule": "Calidad",
+            "iconClass": "menu-icon fas fa-building"
+          },
+          {
+            "label": "Consultar",
+            "target": "ConsultarCarrete",
+            "targetType": "WebPanel",
+            "targetModule": "Calidad",
+            "iconClass": "menu-icon fas fa-search"
+          }
+        ]
+      },
+      {
+        "label": "Reportes HC",
+        "children": [
+          {
+            "label": "Inicio",
+            "target": "InicioReportesHC",
+            "targetType": "WebPanel",
+            "targetModule": "Reportes",
+            "iconClass": "menu-icon fa fa-cogs"
+          },
+          {
+            "label": "Observaciones",
+            "iconClass": "menu-icon fa fa-cogs",
+            "children": [
+              {
+                "label": "Causas Interrupción",
+                "target": "CausaInterrupcionWW",
+                "targetType": "WebPanel",
+                "targetModule": "Reportes",
+                "iconClass": "menu-icon fa fa-cogs"
+              },
+              {
+                "label": "Extrusoras",
+                "target": "ExtrusoraObservacionWW",
+                "targetType": "WebPanel",
+                "targetModule": "Reportes",
+                "iconClass": "menu-icon fa fa-cogs"
+              },
+              {
+                "label": "Prensas",
+                "target": "PrensaObservacionWW",
+                "targetType": "WebPanel",
+                "targetModule": "Reportes",
+                "iconClass": "menu-icon fa fa-cogs"
+              }
+            ]
+          },
+          {
+            "label": "Descargables",
+            "iconClass": "menu-icon fa fa-cogs",
+            "children": [
+              {
+                "label": "DRR",
+                "target": "ReporteDRR",
+                "targetType": "WebPanel",
+                "targetModule": "Reportes",
+                "iconClass": "menu-icon fa fa-cogs"
+              },
+              {
+                "label": "Pallet_Embarque",
+                "target": "PalletEnEmbarque",
+                "targetType": "WebPanel",
+                "targetModule": "Reportes",
+                "iconClass": "menu-icon fa fa-cogs"
+              },
+              {
+                "label": "Carrete_Pallet",
+                "target": "CarreteEnPallet",
+                "targetType": "WebPanel",
+                "targetModule": "Reportes",
+                "iconClass": "menu-icon fa fa-cogs"
+              }
+            ]
+          },
+          {
+            "label": "Resúmenes",
+            "iconClass": "menu-icon fa fa-cogs",
+            "children": [
+              {
+                "label": "Extrusión",
+                "target": "vwExtrusionResultado",
+                "targetType": "WebPanel",
+                "targetModule": "Reportes",
+                "iconClass": "menu-icon fa fa-cogs"
+              },
+              {
+                "label": "Prensado",
+                "target": "vwPrensadoResultado",
+                "targetType": "WebPanel",
+                "targetModule": "Reportes",
+                "iconClass": "menu-icon fa fa-cogs"
+              }
+            ]
+          },
+          {
+            "label": "Etiquetado",
+            "iconClass": "menu-icon fa fa-cogs",
+            "children": [
+              {
+                "label": "Órdenes",
+                "target": "vwOrdenEtiquetado",
+                "targetType": "WebPanel",
+                "targetModule": "Reportes",
+                "iconClass": "menu-icon fa fa-cogs"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Producción",
+        "isDefault": true,
+        "children": [
+          {
+            "label": "Inicio",
+            "target": "InicioProduccion",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fa fa-home"
+          },
+          {
+            "label": "Turnos Por Semana",
+            "target": "TurnosPorSemana",
+            "targetType": "WebPanel",
+            "targetModule": "Produccion",
+            "iconClass": "menu-icon fas fa-calendar-day"
+          },
+          {
+            "label": "Extrusión",
+            "iconClass": "menu-icon fal fa-draw-circle",
+            "children": [
+              {
+                "label": "Extrusión del Día",
+                "target": "ExclusionDelDia",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Extrusiones",
+                "target": "ExtrusionWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Bobinas",
+                "target": "BobinaWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              }
+            ]
+          },
+          {
+            "label": "Prensado",
+            "iconClass": "menu-icon fas fa-vector-square",
+            "children": [
+              {
+                "label": "Prensado del día",
+                "target": "PrensadoDelDia",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Prensados",
+                "target": "PrensadoWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Carreras",
+                "target": "CarreraWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Carretes",
+                "target": "CarreteWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              },
+              {
+                "label": "Palets",
+                "target": "PaletWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon far fa-stop-circle"
+              }
+            ]
+          },
+          {
+            "label": "Catálogos",
+            "iconClass": "menu-icon fas fa-book",
+            "children": [
+              {
+                "label": "Categorías",
+                "target": "WWProductoCategoria",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-asterisk"
+              },
+              {
+                "label": "Productos",
+                "target": "WWProducto",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-dolly"
+              },
+              {
+                "label": "Turnos",
+                "iconClass": "menu-icon fas fa-clipboard-list"
+              },
+              {
+                "label": "Operadores",
+                "target": "WWOperador",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-user-cog"
+              },
+              {
+                "label": "Extrusoras",
+                "target": "WWExtrusora",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-align-justify"
+              },
+              {
+                "label": "Prensas",
+                "iconClass": "menu-icon fas fa-align-center"
+              },
+              {
+                "label": "Inventarios",
+                "target": "WWInventario",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-boxes"
+              },
+              {
+                "label": "Silos",
+                "target": "listarSilos",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon fas fa-database"
+              },
+              {
+                "label": "Lotes",
+                "target": "listarLotes",
+                "targetType": "WebPanel",
+                "targetModule": "Produccion",
+                "iconClass": "menu-icon fas fa-box"
+              },
+              {
+                "label": "Troqueles",
+                "target": "TroquelWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-border-none"
+              }
+            ]
+          },
+          {
+            "label": "Referencias",
+            "iconClass": "menu-icon fas fa-paperclip",
+            "children": [
+              {
+                "label": "Configuración",
+                "target": "WWConfiguracion",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-cogs"
+              },
+              {
+                "label": "PrensaProducto",
+                "target": "WWPrensaProducto",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-link"
+              },
+              {
+                "label": "ExtrusoraProducto",
+                "target": "WWExtrusoraProducto",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-link"
+              },
+              {
+                "label": "ExtrusoraMezcladora",
+                "target": "ExtrusoraMezcladoraWW",
+                "targetType": "WebPanel",
+                "targetModule": "DB",
+                "iconClass": "menu-icon fas fa-link"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

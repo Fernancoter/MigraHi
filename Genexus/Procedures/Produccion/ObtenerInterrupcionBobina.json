@@ -1,0 +1,150 @@
+﻿{
+    "uniqueId":  "a9d38203-cca2-49f2-a7cb-aa5a1f4ef0ca",
+    "name":  "ObtenerInterrupcionBobina",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Obtener Interrupcion Bobina",
+    "filePath":  "Procedures/Produccion/ObtenerInterrupcionBobina.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "For Each\n\tOrder InterrupcionHoraInicio\n    Where InterrupcionHoraInicio \u003e= \u0026BobinaHoraInicio\n    Where \u0026BobinaEstado = \u0027En Proceso\u0027 or InterrupcionHoraFin \u003c= \u0026BobinaHoraSalida\n    Defined by InterrupcionId\n    \u0026AuxInterrupcionId = InterrupcionId\n\tFor Each DB.ExtrusionInterrupcion\n\t\tWhere InterrupcionId = \u0026AuxInterrupcionId\n\t\t\t\u0026InterrupcionId = InterrupcionId\n\t\tExit\n\tEndFor\nEndFor\n",
+                              "cleanSource":  "For Each\n\tOrder InterrupcionHoraInicio\n    Where InterrupcionHoraInicio \u003e= \u0026BobinaHoraInicio\n    Where \u0026BobinaEstado = \u0027En Proceso\u0027 or InterrupcionHoraFin \u003c= \u0026BobinaHoraSalida\n    Defined by InterrupcionId\n    \u0026AuxInterrupcionId = InterrupcionId\n\tFor Each DB.ExtrusionInterrupcion\n\t\tWhere InterrupcionId = \u0026AuxInterrupcionId\n\t\t\t\u0026InterrupcionId = InterrupcionId\n\t\tExit\n\tEndFor\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026BobinaHoraInicio, in:\u0026BobinaHoraSalida, in:\u0026BobinaEstado, out:\u0026InterrupcionId);\n",
+                              "cleanSource":  "parm(in:\u0026BobinaHoraInicio, in:\u0026BobinaHoraSalida, in:\u0026BobinaEstado, out:\u0026InterrupcionId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.ExtrusionInterrupcion"
+                                     ],
+                         "calledBy":  [
+                                          "LlenadoBobinaInterrupcion"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Order"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "BobinaHoraInicio",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATETIME",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Bobina Hora Inicio"
+                           },
+                           {
+                               "name":  "BobinaHoraSalida",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATETIME",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Bobina Hora Salida"
+                           },
+                           {
+                               "name":  "BobinaEstado",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Bobina Estado"
+                           },
+                           {
+                               "name":  "InterrupcionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Interrupcion Id"
+                           },
+                           {
+                               "name":  "AuxInterrupcionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Interrupcion Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

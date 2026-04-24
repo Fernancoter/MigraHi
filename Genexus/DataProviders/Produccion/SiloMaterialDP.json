@@ -1,0 +1,102 @@
+﻿{
+    "uniqueId":  "d5c6c0b2-93d3-489a-bd49-1391d5200d62",
+    "name":  "SiloMaterialDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Silo Material DP",
+    "filePath":  "DataProviders/Produccion/SiloMaterialDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTSilo\nwhere SiloId \u003e 0\nwhere SiloActivo = True\nwhere SiloEstadoMaterial = \u0026EstadoMaterial when \u0026EstadoMaterial \u003e 0\nwhere SiloTipoMaterial = \u0026TipoMaterial when Not \u0026TipoMaterial.IsEmpty()\n{\n\tSDTSiloItem\n\t{\n\t\tSiloId = SiloId\n\t\tSiloNombre = SiloNombre\n\t\tSiloKgMinimo = SiloKgMinimo\n\t\tSiloKgMaximo = SiloKgMaximo\n\t\tSiloEstadoMaterial = SiloEstadoMaterial\n\t\tSiloTipoMaterial = SiloTipoMaterial\n\t}\n}\n",
+                              "cleanSource":  "SDTSilo\nwhere SiloId \u003e 0\nwhere SiloActivo = True\nwhere SiloEstadoMaterial = \u0026EstadoMaterial when \u0026EstadoMaterial \u003e 0\nwhere SiloTipoMaterial = \u0026TipoMaterial when Not \u0026TipoMaterial.IsEmpty()\n{\n\tSDTSiloItem\n\t{\n\t\tSiloId = SiloId\n\t\tSiloNombre = SiloNombre\n\t\tSiloKgMinimo = SiloKgMinimo\n\t\tSiloKgMaximo = SiloKgMaximo\n\t\tSiloEstadoMaterial = SiloEstadoMaterial\n\t\tSiloTipoMaterial = SiloTipoMaterial\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026EstadoMaterial, in:\u0026TipoMaterial);\n",
+                              "cleanSource":  "parm(in:\u0026EstadoMaterial, in:\u0026TipoMaterial);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTSilo"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTSilo"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "EstadoMaterial",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Estado Material"
+                           },
+                           {
+                               "name":  "TipoMaterial",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Tipo Material"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

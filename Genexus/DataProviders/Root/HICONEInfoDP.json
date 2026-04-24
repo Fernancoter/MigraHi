@@ -1,0 +1,97 @@
+﻿{
+    "uniqueId":  "f45506da-c582-4ad2-ac8d-57fbe386936c",
+    "name":  "HICONEInfoDP",
+    "type":  "DataProvider",
+    "module":  "Root",
+    "description":  "SDPMenu Info DP",
+    "filePath":  "DataProviders/Root/HICONEInfoDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDPMenuInfo\n{\n\t\u0026GamUser = GamUser.Get()\n\tTitleInfo = \u0026GamUser.Name\n\tSecondaryInfo = \u0026GamUser.EMail\n\tImage = SDPResUserAvatar.Link()\n\tInfoField1 = !\"Platinum\"\n\tInfoField2 = !\"2000\"\n\tInfoFieldNumeric1 = 60\n}\n/*\n\tReplace with real information\n*/\n",
+                              "cleanSource":  "SDPMenuInfo\n{\n\t\u0026GamUser = GamUser.Get()\n\tTitleInfo = \u0026GamUser.Name\n\tSecondaryInfo = \u0026GamUser.EMail\n\tImage = SDPResUserAvatar.Link()\n\tInfoField1 = !\"Platinum\"\n\tInfoField2 = !\"2000\"\n\tInfoFieldNumeric1 = 60\n}\n/*\n\tReplace with real information\n*/"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPMenuInfo",
+                                         "WorkWithPlus.NativeMobile.SDPMenuOptions"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WorkWithPlus.NativeMobile.SDPMenuInfo"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SDPMenuOptions",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDPMenu Options"
+                           },
+                           {
+                               "name":  "GamUser",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Gam User"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

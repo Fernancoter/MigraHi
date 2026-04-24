@@ -1,0 +1,245 @@
+﻿{
+    "uniqueId":  "4a8b11ed-6a06-425a-9f8c-e9594cf5ee8f",
+    "name":  "SDPrensaCarrera",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDPrensa Carrera",
+    "filePath":  "Procedures/Produccion/SDPrensaCarrera.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "        \n\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\u0026PrensadoProductoId = \u0026Prensado.PrensadoProductoId\n\t\u0026PrensaId = \u0026Prensado.PrensadoPrensaId\n\t\u0026BobinaId = 0\n\t\u0026BobinaAuxId = 0\n\t\n\t\n\tfor each DB.PrensaCarrera\n\t\twhere PrensaCarreraId \u003e 0\n\t\twhere PrensaId = \u0026PrensaId\n\t\twhere CarreraId \u003e 0\n\t\t\u0026PCId = PrensaCarreraId\n\t\t\u0026CarreraId = CarreraId\n\t\t\u0026CarreraEstado = CarreraEstado\n\t\t\u0026CarreraPrensadoId = InicioPBPrensadoId\n\t\t\u0026BobinaId = InicioPrensadoBobinaBoninaId\n\t\t\n\t\tif(\u0026BobinaAuxId \u003c\u003e \u0026BobinaId)\n\t\t\t\u0026BobinaAuxId = \u0026BobinaId\n\t\t\t\u0026PBId = CrearPrensadoBobina.Udp(\u0026PrensadoId, \u0026BobinaAuxId)\n\t\tendif\n\t\t\n\t\tDo Case\n\t\t\tCase \u0026CarreraEstado = EstadoCarrera.EnProceso\n\t\t\t     do \u0027TransferirCarrera\u0027\n\t\t\t     do \u0027EliminarRegistro\u0027\n\t\t\t\t\n\t\t\tCase \u0026CarreraEstado = EstadoCarrera.Terminada\n\t\t\t     do \u0027TransferirCarrera\u0027\n\t\t\t     do \u0027EliminarRegistro\u0027\n\t\tEndCase\n\tEndfor\n\n        do \u0027RecalibrarProducto\u0027\n\n        Sub \u0027TransferirCarrera\u0027\n\t\t\u0026Carrera.Load(\u0026CarreraId)\n\t\t\u0026Carrera.InicioPrensadoBobinaId = \u0026PBId\n\t\t\u0026Carrera.Save()\n\t\t\n\t\tif(\u0026Carrera.Success())\n\t\t\tcommit\n\t\tendif\n\tEndSub\n\n        Sub \u0027EliminarRegistro\u0027\n\t\t\u0026DeletePrensaCarrera.Load(\u0026PCId)\n\t\t\u0026DeletePrensaCarrera.Delete()\n\t\tcommit\n\tEndSub\n\n        Sub \u0027RecalibrarProducto\u0027\n\t     \n\t     if(\u0026CarreraPrensadoId \u003e 0)\n\t\t   \u0026CarreraPrensado.Load(\u0026CarreraPrensadoId)\n\t\t   \u0026CarreraProductoId = \u0026CarreraPrensado.PrensadoProductoId\n\t\t\n\t\t   if(\u0026CarreraProductoId \u003c\u003e \u0026PrensadoProductoId)\n\t\t\t\u0026Prensado.PrensadoProductoId = \u0026CarreraProductoId\n\t\t\t\u0026Prensado.Save()\n\t\t\tcommit\n\t\t   endif\n\t\t\n\t     endif\n   \n\tEndSub\n",
+                              "cleanSource":  "        \n\t\u0026Prensado.Load(\u0026PrensadoId)\n\t\u0026PrensadoProductoId = \u0026Prensado.PrensadoProductoId\n\t\u0026PrensaId = \u0026Prensado.PrensadoPrensaId\n\t\u0026BobinaId = 0\n\t\u0026BobinaAuxId = 0\n\t\n\t\n\tfor each DB.PrensaCarrera\n\t\twhere PrensaCarreraId \u003e 0\n\t\twhere PrensaId = \u0026PrensaId\n\t\twhere CarreraId \u003e 0\n\t\t\u0026PCId = PrensaCarreraId\n\t\t\u0026CarreraId = CarreraId\n\t\t\u0026CarreraEstado = CarreraEstado\n\t\t\u0026CarreraPrensadoId = InicioPBPrensadoId\n\t\t\u0026BobinaId = InicioPrensadoBobinaBoninaId\n\t\t\n\t\tif(\u0026BobinaAuxId \u003c\u003e \u0026BobinaId)\n\t\t\t\u0026BobinaAuxId = \u0026BobinaId\n\t\t\t\u0026PBId = CrearPrensadoBobina.Udp(\u0026PrensadoId, \u0026BobinaAuxId)\n\t\tendif\n\t\t\n\t\tDo Case\n\t\t\tCase \u0026CarreraEstado = EstadoCarrera.EnProceso\n\t\t\t     do \u0027TransferirCarrera\u0027\n\t\t\t     do \u0027EliminarRegistro\u0027\n\t\t\t\t\n\t\t\tCase \u0026CarreraEstado = EstadoCarrera.Terminada\n\t\t\t     do \u0027TransferirCarrera\u0027\n\t\t\t     do \u0027EliminarRegistro\u0027\n\t\tEndCase\n\tEndfor\n\n        do \u0027RecalibrarProducto\u0027\n\n        Sub \u0027TransferirCarrera\u0027\n\t\t\u0026Carrera.Load(\u0026CarreraId)\n\t\t\u0026Carrera.InicioPrensadoBobinaId = \u0026PBId\n\t\t\u0026Carrera.Save()\n\t\t\n\t\tif(\u0026Carrera.Success())\n\t\t\tcommit\n\t\tendif\n\tEndSub\n\n        Sub \u0027EliminarRegistro\u0027\n\t\t\u0026DeletePrensaCarrera.Load(\u0026PCId)\n\t\t\u0026DeletePrensaCarrera.Delete()\n\t\tcommit\n\tEndSub\n\n        Sub \u0027RecalibrarProducto\u0027\n\t     \n\t     if(\u0026CarreraPrensadoId \u003e 0)\n\t\t   \u0026CarreraPrensado.Load(\u0026CarreraPrensadoId)\n\t\t   \u0026CarreraProductoId = \u0026CarreraPrensado.PrensadoProductoId\n\t\t\n\t\t   if(\u0026CarreraProductoId \u003c\u003e \u0026PrensadoProductoId)\n\t\t\t\u0026Prensado.PrensadoProductoId = \u0026CarreraProductoId\n\t\t\t\u0026Prensado.Save()\n\t\t\tcommit\n\t\t   endif\n\t\t\n\t     endif\n   \n\tEndSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.CrearPrensadoBobina",
+                                         "DB.Bobina",
+                                         "DB.Prensado",
+                                         "DB.Carrera",
+                                         "DB.PrensaCarrera",
+                                         "CrearPrensadoBobina"
+                                     ],
+                         "calledBy":  [
+                                          "SDInitPrensado"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Carrera",
+                                            "DB.Prensado"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Carrera",
+                                               "DB.Prensado"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Prensado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado"
+                           },
+                           {
+                               "name":  "Bobina",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina"
+                           },
+                           {
+                               "name":  "BobinaAuxId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Aux Id"
+                           },
+                           {
+                               "name":  "BobinaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Id"
+                           },
+                           {
+                               "name":  "Carrera",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera"
+                           },
+                           {
+                               "name":  "CarreraEstado",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Estado"
+                           },
+                           {
+                               "name":  "CarreraId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Id"
+                           },
+                           {
+                               "name":  "CarreraPrensado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrera Prensado"
+                           },
+                           {
+                               "name":  "CarreraPrensadoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "CarreraProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "DeletePrensaCarrera",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Delete Prensa Carrera"
+                           },
+                           {
+                               "name":  "PBId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "PBId"
+                           },
+                           {
+                               "name":  "PCId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "PCId"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensadoProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Producto Id"
+                           },
+                           {
+                               "name":  "PrensaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensa Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

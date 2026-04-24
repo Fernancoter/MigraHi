@@ -1,0 +1,126 @@
+﻿{
+    "uniqueId":  "123e9393-1dc5-4c57-9664-fcbf7b8b2ab5",
+    "name":  "ExtrusionInterrupEnCurso",
+    "type":  "Procedure",
+    "module":  "Reportes",
+    "description":  "Extrusion Interrup En Curso",
+    "filePath":  "Procedures/Reportes/ExtrusionInterrupEnCurso.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\tfor each DB.ExtrusionInterrupcion\n\t\twhere ExtrusionInterrupcionId \u003e 0\n\t\twhere ExtrusionId = \u0026ExtrusionId\n\t\twhere InterrupcionId \u003e 0\n\t\twhere InterrupcionConcluida = false\n\t\t\u0026EnCurso = true\n\t\tExit\n\twhen none\n\t\t\u0026EnCurso = false\n\tendfor\n\t\n",
+                              "cleanSource":  "\t\n\tfor each DB.ExtrusionInterrupcion\n\t\twhere ExtrusionInterrupcionId \u003e 0\n\t\twhere ExtrusionId = \u0026ExtrusionId\n\t\twhere InterrupcionId \u003e 0\n\t\twhere InterrupcionConcluida = false\n\t\t\u0026EnCurso = true\n\t\tExit\n\twhen none\n\t\t\u0026EnCurso = false\n\tendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExtrusionId, out:\u0026EnCurso);\n",
+                              "cleanSource":  "parm(in:\u0026ExtrusionId, out:\u0026EnCurso);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.ExtrusionInterrupcion"
+                                     ],
+                         "calledBy":  [
+                                          "ExtrusorasEnOperacionWCGetFilterData"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "EnCurso",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "En Curso"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,20 @@
+﻿
+=== Procedure: Informes.TotalPalletPorProductNumber ===
+
+--- Source (Source) ---
+&Count = 0
+
+for each
+	Where ProductNumber = &ProductNumber
+	if(ProductPiecesPlt>0)
+		&Count = (&ProductExist * 1000)/ProductPiecesPlt
+	else
+		&Count = 0
+	endif
+	exit
+	
+endfor
+
+--- Rules (Rules) ---
+parm(in:&ProductNumber, in:&ProductExist, out: &Count);
+

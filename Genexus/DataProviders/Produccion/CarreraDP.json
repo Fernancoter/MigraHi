@@ -1,0 +1,102 @@
+﻿{
+    "uniqueId":  "a07c6c18-647d-4ba9-8289-e446414c2ae9",
+    "name":  "CarreraDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Carrera DP",
+    "filePath":  "DataProviders/Produccion/CarreraDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTCarrera\n{\n   SDTCarreraItem\n   where CarreraId \u003e 0\n   where InicioPrensadoBobinaId \u003e 0\n   where InicioPBPrensadoId = \u0026PrensadoId when \u0026PrensadoId \u003e 0\n   {\n\n\tCarreraId = CarreraId\n\tCarreraNo = CarreraNo\n\tCarreraEstado = CarreraEstado\n\tCarreraPaletTerminado = CarreraPaletTerminado\n\tCarreraFechaRegistro = CarreraFechaRegistro\n\tCarreraFechaValidacion = WWPBaseObjects.CarreraFechaValidacion\n\tCarreraTroquel = Notifications.CarreraTroquel\n\tInicioPrensadoBobinaId = InicioPrensadoBobinaId\n\tInicioPBPrensadoId = InicioPBPrensadoId\n   }\t\n}\n",
+                              "cleanSource":  "SDTCarrera\n{\n   SDTCarreraItem\n   where CarreraId \u003e 0\n   where InicioPrensadoBobinaId \u003e 0\n   where InicioPBPrensadoId = \u0026PrensadoId when \u0026PrensadoId \u003e 0\n   {\n\n\tCarreraId = CarreraId\n\tCarreraNo = CarreraNo\n\tCarreraEstado = CarreraEstado\n\tCarreraPaletTerminado = CarreraPaletTerminado\n\tCarreraFechaRegistro = CarreraFechaRegistro\n\tCarreraFechaValidacion = WWPBaseObjects.CarreraFechaValidacion\n\tCarreraTroquel = Notifications.CarreraTroquel\n\tInicioPrensadoBobinaId = InicioPrensadoBobinaId\n\tInicioPBPrensadoId = InicioPBPrensadoId\n   }\t\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTCarrera"
+                                     ],
+                         "calledBy":  [
+                                          "RptPrensado"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTCarrera"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PBobinaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

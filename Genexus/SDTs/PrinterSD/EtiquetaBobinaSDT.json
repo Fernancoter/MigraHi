@@ -1,0 +1,260 @@
+﻿{
+    "uniqueId":  "711db798-b75b-495f-9249-9f47580f370a",
+    "name":  "EtiquetaBobinaSDT",
+    "type":  "SDT",
+    "module":  "PrinterSD",
+    "description":  "Etiqueta Bobina SDT",
+    "filePath":  "SDTs/PrinterSD/EtiquetaBobinaSDT.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "BobinaReportMainMulti",
+                                          "BobinaWW",
+                                          "BobinaReportMain",
+                                          "RptPrensado",
+                                          "ObtenerSDTEtiquetaBobina"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "BobinaId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Id"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "ExtrusionFecha",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Fecha"
+                           },
+                           {
+                               "name":  "ExtrusionOperadorNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Operador Nombre"
+                           },
+                           {
+                               "name":  "BobinaNoSerie",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina No Serie"
+                           },
+                           {
+                               "name":  "BobinaOrigen",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Origen"
+                           },
+                           {
+                               "name":  "BobinaHoraInicio",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Hora Inicio"
+                           },
+                           {
+                               "name":  "BobinaHoraSalida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Hora Salida"
+                           },
+                           {
+                               "name":  "BobinaNo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina No"
+                           },
+                           {
+                               "name":  "BobinaKg",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Kg"
+                           },
+                           {
+                               "name":  "BobinaMermaKg",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Merma Kg"
+                           },
+                           {
+                               "name":  "BobinaEspesor",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Espesor"
+                           },
+                           {
+                               "name":  "BobinaObservaciones",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Observaciones"
+                           },
+                           {
+                               "name":  "BobinaEstado",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Estado"
+                           },
+                           {
+                               "name":  "BobinaCarreras",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Carreras"
+                           },
+                           {
+                               "name":  "BobinaIniciaReposo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Inicia Reposo"
+                           },
+                           {
+                               "name":  "BobinaMinutosEnReposo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Minutos En Reposo"
+                           },
+                           {
+                               "name":  "BobinaMotivoMolino",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Motivo Molino"
+                           },
+                           {
+                               "name":  "BobinaProductoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Producto Id"
+                           },
+                           {
+                               "name":  "BobinaProductoNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Producto Nombre"
+                           },
+                           {
+                               "name":  "ExtrusionExtrusoraNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Extrusora Nombre"
+                           },
+                           {
+                               "name":  "ExtrusionExtrusoraIdTexto",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Extrusora Id Texto"
+                           },
+                           {
+                               "name":  "ExtrusionLoteSilo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Lote Silo"
+                           },
+                           {
+                               "name":  "ExtrusionSiloNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Silo Nombre"
+                           },
+                           {
+                               "name":  "BobinaDesviacionEstandar",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Desviacion Estandar"
+                           },
+                           {
+                               "name":  "BobinaColorEstacion",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Color Estacion"
+                           }
+                       ]
+}

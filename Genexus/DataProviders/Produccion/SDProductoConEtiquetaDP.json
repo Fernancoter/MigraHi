@@ -1,0 +1,110 @@
+﻿{
+    "uniqueId":  "7e374bdc-2b4d-40fa-9499-40d706a8266c",
+    "name":  "SDProductoConEtiquetaDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "SDProducto Con Etiqueta DP",
+    "filePath":  "DataProviders/Produccion/SDProductoConEtiquetaDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTProducto\n{\n\tSDTProductoItem\n\twhere ProductoTerminadoId \u003e 0\n\twhere TerminadoProductoNombre.Substring(1,5) = \u0026ProductoConEtiqueta.Substring(1,5)\n\twhere TerminadoProductoActivo = true\n\twhere ProductoTerminadoConEtiqueta = true\n\t{\n\t\tProductoId = TerminadoProductoId\n\t\tProductoNombre = TerminadoProductoNombre\n\t}\n}\n",
+                              "cleanSource":  "SDTProducto\n{\n\tSDTProductoItem\n\twhere ProductoTerminadoId \u003e 0\n\twhere TerminadoProductoNombre.Substring(1,5) = \u0026ProductoConEtiqueta.Substring(1,5)\n\twhere TerminadoProductoActivo = true\n\twhere ProductoTerminadoConEtiqueta = true\n\t{\n\t\tProductoId = TerminadoProductoId\n\t\tProductoNombre = TerminadoProductoNombre\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ProductoConEtiqueta);\n",
+                              "cleanSource":  "parm(in:\u0026ProductoConEtiqueta);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTProducto"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTProducto"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PrefijoProducto",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prefijo Producto"
+                           },
+                           {
+                               "name":  "ProductoConEtiqueta",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Producto Con Etiqueta"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

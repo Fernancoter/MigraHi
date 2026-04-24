@@ -1,0 +1,307 @@
+﻿{
+    "uniqueId":  "99128715-6705-4f81-b179-a4c3ce9fee42",
+    "name":  "SDTExtrusion",
+    "type":  "SDT",
+    "module":  "Produccion",
+    "description":  "SDTExtrusion",
+    "filePath":  "SDTs/Produccion/SDTExtrusion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "ObtenerTurnoPorSemanaPrensado",
+                                          "ProgramarExtrusion",
+                                          "wzExtrusionDP",
+                                          "SDExtrusionItem",
+                                          "PrensadoDelDia",
+                                          "ObtenerTurnoPorSemanaExtrusion",
+                                          "ProgramarPrensado",
+                                          "ExtrusionDP",
+                                          "ExtrusionTerminadaDP",
+                                          "ExclusionDelDia",
+                                          "GuardarExtrusion",
+                                          "SDInitExtrusion"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "ExtrusionExtrusoraId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusora Id"
+                           },
+                           {
+                               "name":  "ExtrusionExtrusoraNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusora Nombre"
+                           },
+                           {
+                               "name":  "ExtrusionTurnoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Turno Id"
+                           },
+                           {
+                               "name":  "ExtrusionTurnoNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Turno Nombre"
+                           },
+                           {
+                               "name":  "ExtrusionFecha",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Fecha"
+                           },
+                           {
+                               "name":  "ExtrusionCalibre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Calibre"
+                           },
+                           {
+                               "name":  "ExtrusionAncho",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Ancho"
+                           },
+                           {
+                               "name":  "ExtrusionLongitud",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Longitud"
+                           },
+                           {
+                               "name":  "ExtrusionVirgenKg",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Virgen Kg"
+                           },
+                           {
+                               "name":  "ExtrusionMolidoKg",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Molido Kg"
+                           },
+                           {
+                               "name":  "ExtrusionVelocidadLaminadora",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Velocidad Laminadora"
+                           },
+                           {
+                               "name":  "ExtrusionVelocidadHusillo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Velocidad Husillo"
+                           },
+                           {
+                               "name":  "ExtrusionRevHusilloVirgen",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Rev Husillo Virgen"
+                           },
+                           {
+                               "name":  "ExtrusionRevHusilloMolido",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Rev Husillo Molido"
+                           },
+                           {
+                               "name":  "ExtrusionProductoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "ExtrusionProductoNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Nombre"
+                           },
+                           {
+                               "name":  "ExtrusionProductoTipoMaterial",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Producto Tipo Material"
+                           },
+                           {
+                               "name":  "ExtrusionEstado",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Estado"
+                           },
+                           {
+                               "name":  "ExtrusionOperadorId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Operador Id"
+                           },
+                           {
+                               "name":  "ExtrusionOperadorNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Operador Nombre"
+                           },
+                           {
+                               "name":  "ExtrusionMeta",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Meta"
+                           },
+                           {
+                               "name":  "ExtrusionLoteSilo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Lote Silo"
+                           },
+                           {
+                               "name":  "ExtrusionCOMBA",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion COMBA"
+                           },
+                           {
+                               "name":  "ExtrusionHoraIniciaProceso",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Hora Inicia Proceso"
+                           },
+                           {
+                               "name":  "ExtrusionHoraFinProceso",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Hora Fin Proceso"
+                           },
+                           {
+                               "name":  "ExtrusionSiloId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Silo Id"
+                           },
+                           {
+                               "name":  "ExtrusionSiloNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Silo Nombre"
+                           },
+                           {
+                               "name":  "ExtrusionLotePaqueteAditivos",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Paquete Aditivos"
+                           },
+                           {
+                               "name":  "ExtrusionSiloMolidoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Silo Molido Id"
+                           },
+                           {
+                               "name":  "ExtrusionSiloMolidoNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Silo Molido Nombre"
+                           }
+                       ]
+}

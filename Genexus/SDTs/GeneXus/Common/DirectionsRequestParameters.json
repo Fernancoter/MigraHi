@@ -1,0 +1,104 @@
+﻿{
+    "uniqueId":  "c450f05a-2750-4e87-9c48-6a8084eca2b0",
+    "name":  "DirectionsRequestParameters",
+    "type":  "SDT",
+    "module":  "GeneXus.Common",
+    "description":  "Directions Request Parameters",
+    "filePath":  "SDTs/GeneXus/Common/DirectionsRequestParameters.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "GeneXus.Common.Notifications.ConfigurationProperty"
+                                     ],
+                         "calledBy":  [
+                                          "DirectionsServiceRequest"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "sourceLocation",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Source Location"
+                           },
+                           {
+                               "name":  "destinationLocation",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Destination Location"
+                           },
+                           {
+                               "name":  "waypoints",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Intermediate waypoints"
+                           },
+                           {
+                               "name":  "optimizeWaypoints",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "optimize Waypoints"
+                           },
+                           {
+                               "name":  "transportType",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "transport Type"
+                           },
+                           {
+                               "name":  "requestAlternateRoutes",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "request Alternate Routes"
+                           },
+                           {
+                               "name":  "additionalParameters",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "additional Parameters"
+                           }
+                       ]
+}

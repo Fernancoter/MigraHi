@@ -1,0 +1,111 @@
+﻿{
+    "uniqueId":  "c24d8961-69f3-4c2e-910d-88bca847dd6d",
+    "name":  "BobinaDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Bobina DP",
+    "filePath":  "DataProviders/Produccion/BobinaDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTBobina\n{\n\tSDTBobinaItem\n\twhere ExtrusionId = \u0026ExtrusionId when \u0026ExtrusionId \u003e 0\n\twhere BobinaEstado = \u0026BobinaEstado when Not \u0026BobinaEstado.IsEmpty()\n\twhere BobinaProductoId = \u0026ProductoId when \u0026ProductoId \u003e 0\n\t{\n\t\tBobinaId = BobinaId\n\t\tExtrusionId = ExtrusionId\n\t\tBobinaOrigen = BobinaOrigen\n\t\tBobinaHoraInicio = BobinaHoraInicio\n\t\tHoraInicio = BobinaHoraInicio\n\t\tBobinaHoraSalida = BobinaHoraSalida\n\t\tHoraSalida = BobinaHoraSalida\n\t\tBobinaNo = BobinaNo\n\t\tBobinaDesviacionEstandar = BobinaDesviacionEstandar\n\t\tBobinaColorEstacion = BobinaColorEstacion\n\t\tBobinaKg = BobinaKg\n\t\tBobinaKgTexto = trim(BobinaKg.ToString())\n\t\tBobinaMermaKg = BobinaMermaKg\n\t\tBobinaMermaKgTexto = trim(BobinaMermaKg.ToString())\n\t\tBobinaEspesor = BobinaEspesor\n\t\tBobinaObservaciones = BobinaObservaciones\n\t\tBobinaNoSerie = BobinaNoSerie\n\t\tBobinaEstado = BobinaEstado\n\t\tBobinaMotivoMolino = BobinaMotivoMolino\n\t\tMotivoObservaciones = iif(BobinaMotivoMolino = MotivoMolino.NoAplica,\u0027\u0027,BobinaMotivoMolino) + \u0027 \u0027 + BobinaObservaciones\n\t\tBobinaProductoId = BobinaProductoId\n\t\tBobinaProductoNombre = BobinaProductoNombre\n\t\tBobinaCarreras = BobinaCarreras\n\t\tBobinaIniciaReposo = BobinaIniciaReposo\n\t\tBobinaMinutosEnReposo = BobinaMinutosEnReposo\n\t\tBobinaEtiqueta = \u0027\u003cb\u003e\u0027 + BobinaNo.ToFormattedString() + BobinaOrigen.Trim() + \u0027\u003c/b\u003e\u0027\n\t}\n}\n",
+                              "cleanSource":  "SDTBobina\n{\n\tSDTBobinaItem\n\twhere ExtrusionId = \u0026ExtrusionId when \u0026ExtrusionId \u003e 0\n\twhere BobinaEstado = \u0026BobinaEstado when Not \u0026BobinaEstado.IsEmpty()\n\twhere BobinaProductoId = \u0026ProductoId when \u0026ProductoId \u003e 0\n\t{\n\t\tBobinaId = BobinaId\n\t\tExtrusionId = ExtrusionId\n\t\tBobinaOrigen = BobinaOrigen\n\t\tBobinaHoraInicio = BobinaHoraInicio\n\t\tHoraInicio = BobinaHoraInicio\n\t\tBobinaHoraSalida = BobinaHoraSalida\n\t\tHoraSalida = BobinaHoraSalida\n\t\tBobinaNo = BobinaNo\n\t\tBobinaDesviacionEstandar = BobinaDesviacionEstandar\n\t\tBobinaColorEstacion = BobinaColorEstacion\n\t\tBobinaKg = BobinaKg\n\t\tBobinaKgTexto = trim(BobinaKg.ToString())\n\t\tBobinaMermaKg = BobinaMermaKg\n\t\tBobinaMermaKgTexto = trim(BobinaMermaKg.ToString())\n\t\tBobinaEspesor = BobinaEspesor\n\t\tBobinaObservaciones = BobinaObservaciones\n\t\tBobinaNoSerie = BobinaNoSerie\n\t\tBobinaEstado = BobinaEstado\n\t\tBobinaMotivoMolino = BobinaMotivoMolino\n\t\tMotivoObservaciones = iif(BobinaMotivoMolino = MotivoMolino.NoAplica,\u0027\u0027,BobinaMotivoMolino) + \u0027 \u0027 + BobinaObservaciones\n\t\tBobinaProductoId = BobinaProductoId\n\t\tBobinaProductoNombre = BobinaProductoNombre\n\t\tBobinaCarreras = BobinaCarreras\n\t\tBobinaIniciaReposo = BobinaIniciaReposo\n\t\tBobinaMinutosEnReposo = BobinaMinutosEnReposo\n\t\tBobinaEtiqueta = \u0027\u003cb\u003e\u0027 + BobinaNo.ToFormattedString() + BobinaOrigen.Trim() + \u0027\u003c/b\u003e\u0027\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExtrusionId, in:\u0026BobinaEstado, in:\u0026ProductoId);\n",
+                              "cleanSource":  "parm(in:\u0026ExtrusionId, in:\u0026BobinaEstado, in:\u0026ProductoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTBobina"
+                                     ],
+                         "calledBy":  [
+                                          "RptExtrusion",
+                                          "ExtrusionDelDiaBobinas"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTBobina"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "BobinaEstado",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Bobina Estado"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

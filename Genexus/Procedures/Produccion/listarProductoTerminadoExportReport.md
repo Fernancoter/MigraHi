@@ -1,0 +1,367 @@
+# Procedure: listarProductoTerminadoExportReport
+
+- **Module:** Produccion
+- **Description:** listar Producto Terminado Export Report
+- **GAM Object:** No
+
+## Data Dictionary / Parameters
+
+| Name | Element Type | Data Type | Accessor | Description |
+|---|---|---|---|---|
+| IsAuthorized | Variable | Boolean |  | Is Authorized |
+| WWPContext | Variable | GX_SDT |  | WWPContext |
+| SecurityFunctionalityKeys | Variable | VARCHAR |  | Security Functionality Keys |
+| OrderedBy | Variable | NUMERIC |  | Ordered By |
+| OrderedDsc | Variable | Boolean |  | Ordered Dsc |
+| FilterFullText | Variable | VARCHAR |  | Filter Full Text |
+| Session | Variable | GX_USRDEFTYP |  | Session |
+| GridStateXML | Variable | LONGVARCHAR |  | Grid State XML |
+| GridState | Variable | GX_SDT |  | Grid State |
+| GridStateFilterValue | Variable | GX_SDT |  | Grid State Filter Value |
+| TFProductoTerminadoPalets | Variable | NUMERIC |  | TFProducto Terminado Palets |
+| TFProductoTerminadoPalets_To | Variable | NUMERIC |  | TFProducto Terminado Palets_To |
+| TFProductoTerminadoCarreteMillar | Variable | NUMERIC |  | TFProducto Terminado Carrete Millar |
+| TFProductoTerminadoCarreteMillar_To | Variable | NUMERIC |  | TFProducto Terminado Carrete Millar_To |
+| TFProductoTerminadoPaletMillar | Variable | NUMERIC |  | TFProducto Terminado Palet Millar |
+| TFProductoTerminadoPaletMillar_To | Variable | NUMERIC |  | TFProducto Terminado Palet Millar_To |
+| TFProductoTerminadoPeso | Variable | NUMERIC |  | TFProducto Terminado Peso |
+| TFProductoTerminadoPeso_To | Variable | NUMERIC |  | TFProducto Terminado Peso_To |
+| TFProductoTerminadoPesoCarrete | Variable | NUMERIC |  | TFProducto Terminado Peso Carrete |
+| TFProductoTerminadoPesoCarrete_To | Variable | NUMERIC |  | TFProducto Terminado Peso Carrete_To |
+| TFProductoTerminadoPesoPalet | Variable | NUMERIC |  | TFProducto Terminado Peso Palet |
+| TFProductoTerminadoPesoPalet_To | Variable | NUMERIC |  | TFProducto Terminado Peso Palet_To |
+| TFProductoTerminadoConEtiqueta_Sel | Variable | NUMERIC |  | TFProducto Terminado Con Etiqueta_Sel |
+| TFProductoTerminadoEtiquetable_Sel | Variable | NUMERIC |  | TFProducto Terminado Etiquetable_Sel |
+| TFTerminadoProductoNombre | Variable | VARCHAR |  | TFTerminado Producto Nombre |
+| TFTerminadoProductoNombre_Sel | Variable | VARCHAR |  | TFTerminado Producto Nombre_Sel |
+| TFProductoTerminadoCodigoSAP | Variable | VARCHAR |  | TFProducto Terminado Codigo SAP |
+| TFProductoTerminadoCodigoSAP_Sel | Variable | VARCHAR |  | TFProducto Terminado Codigo SAP_Sel |
+| TFTerminadoProductoActivo_Sel | Variable | NUMERIC |  | TFTerminado Producto Activo_Sel |
+| TFProductoTerminadoPalets_To_Description | Variable | VARCHAR |  | TFProducto Terminado Palets_To_Description |
+| TFProductoTerminadoCarreteMillar_To_Description | Variable | VARCHAR |  | TFProducto Terminado Carrete Millar_To_Description |
+| TFProductoTerminadoPaletMillar_To_Description | Variable | VARCHAR |  | TFProducto Terminado Palet Millar_To_Description |
+| TFProductoTerminadoPeso_To_Description | Variable | VARCHAR |  | TFProducto Terminado Peso_To_Description |
+| TFProductoTerminadoPesoCarrete_To_Description | Variable | VARCHAR |  | TFProducto Terminado Peso Carrete_To_Description |
+| TFProductoTerminadoPesoPalet_To_Description | Variable | VARCHAR |  | TFProducto Terminado Peso Palet_To_Description |
+| FilterTFProductoTerminadoConEtiqueta_SelValueDescription | Variable | VARCHAR |  | Filter TFProducto Terminado Con Etiqueta_Sel Value Description |
+| FilterTFProductoTerminadoEtiquetable_SelValueDescription | Variable | VARCHAR |  | Filter TFProducto Terminado Etiquetable_Sel Value Description |
+| FilterTFTerminadoProductoActivo_SelValueDescription | Variable | VARCHAR |  | Filter TFTerminado Producto Activo_Sel Value Description |
+| AddressLine1 | Variable | VARCHAR |  | Address Line1 |
+| AddressLine2 | Variable | VARCHAR |  | Address Line2 |
+| AddressLine3 | Variable | VARCHAR |  | Address Line3 |
+| AppName | Variable | VARCHAR |  | App Name |
+| Attribute | Variable | VARCHAR |  | Attribute |
+| DateInfo | Variable | VARCHAR |  | Date Info |
+| Filter | Variable | VARCHAR |  | Filter |
+| Mail | Variable | VARCHAR |  | Mail |
+| PageInfo | Variable | VARCHAR |  | Page Info |
+| Phone | Variable | VARCHAR |  | Phone |
+| Title | Variable | VARCHAR |  | Title |
+| Website | Variable | VARCHAR |  | Website |
+| TFProductoTerminadoMRD | Variable | NUMERIC |  | TFProducto Terminado MRD |
+| TFProductoTerminadoMRD_To | Variable | NUMERIC |  | TFProducto Terminado MRD_To |
+| TFProductoTerminadoMRD_To_Description | Variable | VARCHAR |  | TFProducto Terminado MRD_To_Description |
+| Today | Standard Variable | DATE |  | Today |
+| Time | Standard Variable | CHARACTER |  | Time |
+| Pgmname | Standard Variable | CHARACTER |  | Pgmname |
+| Pgmdesc | Standard Variable | CHARACTER |  | Pgmdesc |
+| Page | Standard Variable | NUMERIC |  | Page |
+| Line | Standard Variable | NUMERIC |  | Line |
+| Output | Standard Variable | CHARACTER |  | Output |
+
+## Business Logic
+
+### Source (Source)
+
+```genexus
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+// Exports the contents of a grid (using the selected order and filters) to a PDF file.
+&IsAuthorized = SecGAMIsAuthByFunctionalityKey.Udp(!'listarproductoterminado_Execute') 
+If &IsAuthorized
+
+	LoadWWPContext.Call(&WWPContext)
+
+Do 'LoadGridState'
+
+&Title = "Producto Terminado List"
+
+//Report Template Source
+	Header
+		&AppName = "DVelop Software Solutions"
+		&Phone = !"+1 550 8923"
+		&Mail = !"info@mail.com"
+		&Website = !"http://www.web.com"
+		&AddressLine1 = !"French Boulevard 2859"
+		&AddressLine2 = !"Downtown"
+		&AddressLine3 = !"Paris, France"
+		Print printTitle
+	End 
+	Footer
+		&PageInfo = "Page: " + &Page.ToString().Trim()
+		&DateInfo = "Date: " + &Today.ToFormattedString()
+		Print printFooter
+	End
+
+	Do 'PrintFilters'
+
+	Do 'PrintColumnTitles'
+
+	Do 'PrintData'
+
+	Do 'PrintFooter'
+
+EndIf
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+
+Sub 'PrintFilters'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+	If not &FilterFullText.IsEmpty()
+		print printBlockFilterFilterFullText
+	EndIf
+	If not (&TFProductoTerminadoPalets.IsEmpty() AND &TFProductoTerminadoPalets_To.IsEmpty())
+		print printBlockTFProductoTerminadoPalets
+		&TFProductoTerminadoPalets_To_Description = format('%1 (%2)', "Terminado Palets", "WWP_TSTo")
+		print printBlockTFProductoTerminadoPalets_To
+	EndIf
+	If not (&TFProductoTerminadoCarreteMillar.IsEmpty() AND &TFProductoTerminadoCarreteMillar_To.IsEmpty())
+		print printBlockTFProductoTerminadoCarreteMillar
+		&TFProductoTerminadoCarreteMillar_To_Description = format('%1 (%2)', "Carrete Millar", "WWP_TSTo")
+		print printBlockTFProductoTerminadoCarreteMillar_To
+	EndIf
+	If not (&TFProductoTerminadoPaletMillar.IsEmpty() AND &TFProductoTerminadoPaletMillar_To.IsEmpty())
+		print printBlockTFProductoTerminadoPaletMillar
+		&TFProductoTerminadoPaletMillar_To_Description = format('%1 (%2)', "Palet Millar", "WWP_TSTo")
+		print printBlockTFProductoTerminadoPaletMillar_To
+	EndIf
+	If not (&TFProductoTerminadoPeso.IsEmpty() AND &TFProductoTerminadoPeso_To.IsEmpty())
+		print printBlockTFProductoTerminadoPeso
+		&TFProductoTerminadoPeso_To_Description = format('%1 (%2)', "Terminado Peso", "WWP_TSTo")
+		print printBlockTFProductoTerminadoPeso_To
+	EndIf
+	If not (&TFProductoTerminadoPesoCarrete.IsEmpty() AND &TFProductoTerminadoPesoCarrete_To.IsEmpty())
+		print printBlockTFProductoTerminadoPesoCarrete
+		&TFProductoTerminadoPesoCarrete_To_Description = format('%1 (%2)', "Peso Carrete", "WWP_TSTo")
+		print printBlockTFProductoTerminadoPesoCarrete_To
+	EndIf
+	If not (&TFProductoTerminadoPesoPalet.IsEmpty() AND &TFProductoTerminadoPesoPalet_To.IsEmpty())
+		print printBlockTFProductoTerminadoPesoPalet
+		&TFProductoTerminadoPesoPalet_To_Description = format('%1 (%2)', "Peso Palet", "WWP_TSTo")
+		print printBlockTFProductoTerminadoPesoPalet_To
+	EndIf
+	If not &TFProductoTerminadoConEtiqueta_Sel.IsEmpty()
+		Do Case
+			Case &TFProductoTerminadoConEtiqueta_Sel = 1
+				&FilterTFProductoTerminadoConEtiqueta_SelValueDescription = "WWP_TSChecked" 
+			Case &TFProductoTerminadoConEtiqueta_Sel = 2
+				&FilterTFProductoTerminadoConEtiqueta_SelValueDescription = "WWP_TSUnChecked" 
+		EndCase
+
+		print printBlockTFProductoTerminadoConEtiqueta_Sel
+	EndIf
+	If not &TFProductoTerminadoEtiquetable_Sel.IsEmpty()
+		Do Case
+			Case &TFProductoTerminadoEtiquetable_Sel = 1
+				&FilterTFProductoTerminadoEtiquetable_SelValueDescription = "WWP_TSChecked" 
+			Case &TFProductoTerminadoEtiquetable_Sel = 2
+				&FilterTFProductoTerminadoEtiquetable_SelValueDescription = "WWP_TSUnChecked" 
+		EndCase
+
+		print printBlockTFProductoTerminadoEtiquetable_Sel
+	EndIf
+	If not &TFTerminadoProductoNombre_Sel.IsEmpty()
+		print printBlockTFTerminadoProductoNombre_Sel
+	Else
+		If not &TFTerminadoProductoNombre.IsEmpty()
+			print printBlockTFTerminadoProductoNombre
+		EndIf
+	EndIf
+	If not &TFProductoTerminadoCodigoSAP_Sel.IsEmpty()
+		print printBlockTFProductoTerminadoCodigoSAP_Sel
+	Else
+		If not &TFProductoTerminadoCodigoSAP.IsEmpty()
+			print printBlockTFProductoTerminadoCodigoSAP
+		EndIf
+	EndIf
+	If not (&TFProductoTerminadoMRD.IsEmpty() AND &TFProductoTerminadoMRD_To.IsEmpty())
+		print printBlockTFProductoTerminadoMRD
+		&TFProductoTerminadoMRD_To_Description = format('%1 (%2)', "MRD", "WWP_TSTo")
+		print printBlockTFProductoTerminadoMRD_To
+	EndIf
+	If not &TFTerminadoProductoActivo_Sel.IsEmpty()
+		Do Case
+			Case &TFTerminadoProductoActivo_Sel = 1
+				&FilterTFTerminadoProductoActivo_SelValueDescription = "WWP_TSChecked" 
+			Case &TFTerminadoProductoActivo_Sel = 2
+				&FilterTFTerminadoProductoActivo_SelValueDescription = "WWP_TSUnChecked" 
+		EndCase
+
+		print printBlockTFTerminadoProductoActivo_Sel
+	EndIf
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'PrintColumnTitles'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+	print printBlockBeforeGrid
+	print printBlockLines_titles
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'PrintData'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+	For each DB.ProductoTerminado
+		order ProductoTerminadoPalets  when &OrderedBy = 1 AND &OrderedDsc = False
+		order (DB.ProductoTerminadoPalets)  when &OrderedBy = 1 AND &OrderedDsc = True
+		order ProductoTerminadoCarreteMillar  when &OrderedBy = 2 AND &OrderedDsc = False
+		order (ProductoTerminadoCarreteMillar)  when &OrderedBy = 2 AND &OrderedDsc = True
+		order ProductoTerminadoPaletMillar  when &OrderedBy = 3 AND &OrderedDsc = False
+		order (ProductoTerminadoPaletMillar)  when &OrderedBy = 3 AND &OrderedDsc = True
+		order ProductoTerminadoPeso  when &OrderedBy = 4 AND &OrderedDsc = False
+		order (ProductoTerminadoPeso)  when &OrderedBy = 4 AND &OrderedDsc = True
+		order ProductoTerminadoPesoCarrete  when &OrderedBy = 5 AND &OrderedDsc = False
+		order (ProductoTerminadoPesoCarrete)  when &OrderedBy = 5 AND &OrderedDsc = True
+		order ProductoTerminadoPesoPalet  when &OrderedBy = 6 AND &OrderedDsc = False
+		order (ProductoTerminadoPesoPalet)  when &OrderedBy = 6 AND &OrderedDsc = True
+		order ProductoTerminadoConEtiqueta  when &OrderedBy = 7 AND &OrderedDsc = False
+		order (ProductoTerminadoConEtiqueta)  when &OrderedBy = 7 AND &OrderedDsc = True
+		order ProductoTerminadoEtiquetable  when &OrderedBy = 8 AND &OrderedDsc = False
+		order (DB.ProductoTerminadoEtiquetable)  when &OrderedBy = 8 AND &OrderedDsc = True
+		order TerminadoProductoNombre  when &OrderedBy = 9 AND &OrderedDsc = False
+		order (SAE.TerminadoProductoNombre)  when &OrderedBy = 9 AND &OrderedDsc = True
+		order ProductoTerminadoCodigoSAP  when &OrderedBy = 10 AND &OrderedDsc = False
+		order (ProductoTerminadoCodigoSAP)  when &OrderedBy = 10 AND &OrderedDsc = True
+		order ProductoTerminadoMRD  when &OrderedBy = 11 AND &OrderedDsc = False
+		order (ProductoTerminadoMRD)  when &OrderedBy = 11 AND &OrderedDsc = True
+		order TerminadoProductoActivo  when &OrderedBy = 12 AND &OrderedDsc = False
+		order (TerminadoProductoActivo)  when &OrderedBy = 12 AND &OrderedDsc = True
+		
+		using listarProductoTerminadoDS(&FilterFullText, &TFProductoTerminadoPalets, &TFProductoTerminadoPalets_To, &TFProductoTerminadoCarreteMillar, &TFProductoTerminadoCarreteMillar_To, &TFProductoTerminadoPaletMillar
+					, &TFProductoTerminadoPaletMillar_To, &TFProductoTerminadoPeso, &TFProductoTerminadoPeso_To, &TFProductoTerminadoPesoCarrete, &TFProductoTerminadoPesoCarrete_To, &TFProductoTerminadoPesoPalet
+					, &TFProductoTerminadoPesoPalet_To, &TFProductoTerminadoConEtiqueta_Sel, &TFProductoTerminadoEtiquetable_Sel, &TFTerminadoProductoNombre, &TFTerminadoProductoNombre_Sel, &TFProductoTerminadoCodigoSAP
+					, &TFProductoTerminadoCodigoSAP_Sel, &TFProductoTerminadoMRD, &TFProductoTerminadoMRD_To, &TFTerminadoProductoActivo_Sel)
+
+		Do 'BeforePrintLine'
+		print printBlockLines_data
+		Do 'AfterPrintLine'
+	EndFor
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'LoadGridState'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+	// Load grid state from session.
+	If &Session.Get(!"Produccion.listarProductoTerminadoGridState") = !""
+		&GridState.FromXml(LoadGridState.Udp(!"Produccion.listarProductoTerminadoGridState"))
+	Else
+		&GridState.FromXml(&Session.Get(!"Produccion.listarProductoTerminadoGridState"))
+	Endif	
+
+	&OrderedBy = &GridState.OrderedBy
+	&OrderedDsc = &GridState.OrderedDsc
+
+	For &GridStateFilterValue in &GridState.FilterValues
+		Do Case
+			Case &GridStateFilterValue.Name = !"FILTERFULLTEXT"
+				&FilterFullText.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFPRODUCTOTERMINADOPALETS"
+				&TFProductoTerminadoPalets.FromString(&GridStateFilterValue.Value)
+				&TFProductoTerminadoPalets_To.FromString(&GridStateFilterValue.ValueTo)
+			Case &GridStateFilterValue.Name = !"TFPRODUCTOTERMINADOCARRETEMILLAR"
+				&TFProductoTerminadoCarreteMillar.FromString(&GridStateFilterValue.Value)
+				&TFProductoTerminadoCarreteMillar_To.FromString(&GridStateFilterValue.ValueTo)
+			Case &GridStateFilterValue.Name = !"TFPRODUCTOTERMINADOPALETMILLAR"
+				&TFProductoTerminadoPaletMillar.FromString(&GridStateFilterValue.Value)
+				&TFProductoTerminadoPaletMillar_To.FromString(&GridStateFilterValue.ValueTo)
+			Case &GridStateFilterValue.Name = !"TFPRODUCTOTERMINADOPESO"
+				&TFProductoTerminadoPeso.FromString(&GridStateFilterValue.Value)
+				&TFProductoTerminadoPeso_To.FromString(&GridStateFilterValue.ValueTo)
+			Case &GridStateFilterValue.Name = !"TFPRODUCTOTERMINADOPESOCARRETE"
+				&TFProductoTerminadoPesoCarrete.FromString(&GridStateFilterValue.Value)
+				&TFProductoTerminadoPesoCarrete_To.FromString(&GridStateFilterValue.ValueTo)
+			Case &GridStateFilterValue.Name = !"TFPRODUCTOTERMINADOPESOPALET"
+				&TFProductoTerminadoPesoPalet.FromString(&GridStateFilterValue.Value)
+				&TFProductoTerminadoPesoPalet_To.FromString(&GridStateFilterValue.ValueTo)
+			Case &GridStateFilterValue.Name = !"TFPRODUCTOTERMINADOCONETIQUETA_SEL"
+				&TFProductoTerminadoConEtiqueta_Sel.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFPRODUCTOTERMINADOETIQUETABLE_SEL"
+				&TFProductoTerminadoEtiquetable_Sel.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFTERMINADOPRODUCTONOMBRE"
+				&TFTerminadoProductoNombre.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFTERMINADOPRODUCTONOMBRE_SEL"
+				&TFTerminadoProductoNombre_Sel.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFPRODUCTOTERMINADOCODIGOSAP"
+				&TFProductoTerminadoCodigoSAP.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFPRODUCTOTERMINADOCODIGOSAP_SEL"
+				&TFProductoTerminadoCodigoSAP_Sel.FromString(&GridStateFilterValue.Value)
+			Case &GridStateFilterValue.Name = !"TFPRODUCTOTERMINADOMRD"
+				&TFProductoTerminadoMRD.FromString(&GridStateFilterValue.Value)
+				&TFProductoTerminadoMRD_To.FromString(&GridStateFilterValue.ValueTo)
+			Case &GridStateFilterValue.Name = !"TFTERMINADOPRODUCTOACTIVO_SEL"
+				&TFTerminadoProductoActivo_Sel.FromString(&GridStateFilterValue.Value)
+		EndCase
+	EndFor
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'BeforePrintLine'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'AfterPrintLine'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+
+Sub 'PrintFooter'
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+
+EndSub
+```
+
+### Rules (Rules)
+
+```genexus
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+Output_file("listarProductoTerminadoExportReport","PDF");
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+

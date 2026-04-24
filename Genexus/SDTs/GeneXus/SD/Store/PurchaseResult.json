@@ -1,0 +1,89 @@
+﻿{
+    "uniqueId":  "002421fa-9b9c-4ea9-8093-cb564324f484",
+    "name":  "PurchaseResult",
+    "type":  "SDT",
+    "module":  "GeneXus.SD.Store",
+    "description":  "Purchase Result",
+    "filePath":  "SDTs/GeneXus/SD/Store/PurchaseResult.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "PurchasesInformation",
+                                          "StorePurchase"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Success",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Success"
+                           },
+                           {
+                               "name":  "PurchaseId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Purchase Id"
+                           },
+                           {
+                               "name":  "PurchasePlatform",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Purchase Platform"
+                           },
+                           {
+                               "name":  "ProductIdentifier",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Product Identifier"
+                           },
+                           {
+                               "name":  "TransactionData",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Transaction Data"
+                           }
+                       ]
+}

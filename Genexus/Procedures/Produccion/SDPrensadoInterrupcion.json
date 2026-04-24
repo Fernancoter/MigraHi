@@ -1,0 +1,134 @@
+﻿{
+    "uniqueId":  "94a8d717-9d67-4945-be67-6d8a05122937",
+    "name":  "SDPrensadoInterrupcion",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDPrensado Interrupcion",
+    "filePath":  "Procedures/Produccion/SDPrensadoInterrupcion.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\n\t\u0026PrensadoInterrupcion = New()\n\t\u0026PrensadoInterrupcion.InterrupcionId = \u0026Id\n\t\u0026PrensadoInterrupcion.PrensadoId = \u0026PrensadoId\n\t\u0026PrensadoInterrupcion.Save()\n\t\n\tif(\u0026PrensadoInterrupcion.Success())\n\t\tcommit\n\telse\n\t\tmsg(\u0026PrensadoInterrupcion.GetMessages().ToJson())\n\tendif\n\t\n",
+                              "cleanSource":  "\t\n\t\u0026PrensadoInterrupcion = New()\n\t\u0026PrensadoInterrupcion.InterrupcionId = \u0026Id\n\t\u0026PrensadoInterrupcion.PrensadoId = \u0026PrensadoId\n\t\u0026PrensadoInterrupcion.Save()\n\t\n\tif(\u0026PrensadoInterrupcion.Success())\n\t\tcommit\n\telse\n\t\tmsg(\u0026PrensadoInterrupcion.GetMessages().ToJson())\n\tendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026Id, in:\u0026PrensadoId);\n",
+                              "cleanSource":  "parm(in:\u0026Id, in:\u0026PrensadoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.PrensadoInterrupcion"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.PrensadoInterrupcion"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Id",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Id"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensadoInterrupcion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Interrupcion"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

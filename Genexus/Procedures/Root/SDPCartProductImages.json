@@ -1,0 +1,142 @@
+﻿{
+    "uniqueId":  "2df9d39a-cb1d-415c-8c47-2cb6ce995db4",
+    "name":  "SDPCartProductImages",
+    "type":  "Procedure",
+    "module":  "Root",
+    "description":  "SDPCart Product Images",
+    "filePath":  "Procedures/Root/SDPCartProductImages.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "// In this sample we will hardcode some product images\nif \u0026ProductId = !\"cookies\"\t\n\t\u0026SDPProductDataImage = new()\n\t\u0026SDPProductDataImage.Image = sdpressampleproduct1.Link()\n\t\u0026SDPProductDataImages.Add(\u0026SDPProductDataImage)\n\t\n\t\u0026SDPProductDataImage = new()\n\t\u0026SDPProductDataImage.Image = sdpressampleproduct1_v1.Link()\n\t\u0026SDPProductDataImages.Add(\u0026SDPProductDataImage)\n\t\n\t\u0026SDPProductDataImage = new()\n\t\u0026SDPProductDataImage.Image = sdpressampleproduct1_v2.Link()\n\t\u0026SDPProductDataImages.Add(\u0026SDPProductDataImage)\n\t\n\t\u0026SDPProductDataImage = new()\n\t\u0026SDPProductDataImage.Image = sdpressampleproduct1_v3.Link()\n\t\u0026SDPProductDataImages.Add(\u0026SDPProductDataImage)\nEndIf\n",
+                              "cleanSource":  "// In this sample we will hardcode some product images\nif \u0026ProductId = !\"cookies\"\t\n\t\u0026SDPProductDataImage = new()\n\t\u0026SDPProductDataImage.Image = sdpressampleproduct1.Link()\n\t\u0026SDPProductDataImages.Add(\u0026SDPProductDataImage)\n\t\n\t\u0026SDPProductDataImage = new()\n\t\u0026SDPProductDataImage.Image = sdpressampleproduct1_v1.Link()\n\t\u0026SDPProductDataImages.Add(\u0026SDPProductDataImage)\n\t\n\t\u0026SDPProductDataImage = new()\n\t\u0026SDPProductDataImage.Image = sdpressampleproduct1_v2.Link()\n\t\u0026SDPProductDataImages.Add(\u0026SDPProductDataImage)\n\t\n\t\u0026SDPProductDataImage = new()\n\t\u0026SDPProductDataImage.Image = sdpressampleproduct1_v3.Link()\n\t\u0026SDPProductDataImages.Add(\u0026SDPProductDataImage)\nEndIf"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026ProductId, out:\u0026SDPProductDataImages);\n",
+                              "cleanSource":  "Parm(in:\u0026ProductId, out:\u0026SDPProductDataImages);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPProductDataImages"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WorkWithPlus.NativeMobile.SDPProductDataImages"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Image",
+                               "elementType":  "Variable",
+                               "dataType":  "BITMAP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Image"
+                           },
+                           {
+                               "name":  "ProductId",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Product Id"
+                           },
+                           {
+                               "name":  "SDPProductDataImage",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDPProduct Data Image"
+                           },
+                           {
+                               "name":  "SDPProductDataImages",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "SDPProduct Data Images"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

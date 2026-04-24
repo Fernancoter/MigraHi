@@ -1,0 +1,178 @@
+﻿{
+    "uniqueId":  "9448f50d-6e0c-4733-b471-4b67a4b6a6ca",
+    "name":  "BobinaReportMainMulti",
+    "type":  "Procedure",
+    "module":  "PrinterSD",
+    "description":  "Bobina Report Main Multi",
+    "filePath":  "Procedures/PrinterSD/BobinaReportMainMulti.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\n\nfor each\n\twhere BobinaNoSerie in \u0026CollectionBobinaNoSerie\n\t\n\t\n\t\n\t\u0026EtiquetaBobinaSDT = ObtenerSDTEtiquetaBobina.Udp(BobinaId)\n\t\n\t\u0026BobinaNoserie = \u0026EtiquetaBobinaSDT.BobinaNoSerie\n\t\n\t//\u0026linkURL=\u0027https://sdx.genexus.com/agetqrcode.aspx?\u0027+\u0026EtiquetaBobinaSDT.BobinaNoSerie\n\t//\u0026linkURL=\u0027https://barcode.tec-it.com/barcode.ashx?data=\u0027+\u0026EtiquetaBobinaSDT.BobinaNoSerie + \u0027\u0026code=Code128\u0027\n\t//\u0026QRImage.FromURL(\u0026linkURL)\n\t\n\t\u0026QRImage = ObtenerBarCode.Udp(\u0026EtiquetaBobinaSDT.BobinaNoSerie)\n\t\n\tprint printBlock1\n\nendfor\n",
+                              "cleanSource":  "\n\n\nfor each\n\twhere BobinaNoSerie in \u0026CollectionBobinaNoSerie\n\t\n\t\n\t\n\t\u0026EtiquetaBobinaSDT = ObtenerSDTEtiquetaBobina.Udp(BobinaId)\n\t\n\t\u0026BobinaNoserie = \u0026EtiquetaBobinaSDT.BobinaNoSerie\n\t\n\t//\u0026linkURL=\u0027https://sdx.genexus.com/agetqrcode.aspx?\u0027+\u0026EtiquetaBobinaSDT.BobinaNoSerie\n\t//\u0026linkURL=\u0027https://barcode.tec-it.com/barcode.ashx?data=\u0027+\u0026EtiquetaBobinaSDT.BobinaNoSerie + \u0027\u0026code=Code128\u0027\n\t//\u0026QRImage.FromURL(\u0026linkURL)\n\t\n\t\u0026QRImage = ObtenerBarCode.Udp(\u0026EtiquetaBobinaSDT.BobinaNoSerie)\n\t\n\tprint printBlock1\n\nendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "Parm(in:\u0026CollectionBobinaNoSerie,in:\u0026PDFNombre);\nOutput_File(\u0026PDFNombre, \u0027PDF\u0027);\n\n\n",
+                              "cleanSource":  "Parm(in:\u0026CollectionBobinaNoSerie,in:\u0026PDFNombre);\nOutput_File(\u0026PDFNombre, \u0027PDF\u0027);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "PrinterSD.ObtenerSDTEtiquetaBobina",
+                                         "PrinterSD.ObtenerBarCode",
+                                         "PrinterSD.EtiquetaBobinaSDT",
+                                         "ObtenerSDTEtiquetaBobina",
+                                         "ObtenerBarCode"
+                                     ],
+                         "calledBy":  [
+                                          "ImprimirBobinas"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "EtiquetaBobinaSDT"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "BobinaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Id"
+                           },
+                           {
+                               "name":  "EtiquetaBobinaSDT",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Etiqueta Bobina SDT"
+                           },
+                           {
+                               "name":  "linkURL",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "link URL"
+                           },
+                           {
+                               "name":  "NamePDF",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Name PDF"
+                           },
+                           {
+                               "name":  "PDFNombre",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "PDFNombre"
+                           },
+                           {
+                               "name":  "QRImage",
+                               "elementType":  "Variable",
+                               "dataType":  "BITMAP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "QRImage"
+                           },
+                           {
+                               "name":  "BobinaNoserie",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina No Serie"
+                           },
+                           {
+                               "name":  "CollectionBobinaNoSerie",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Bobina No Serie"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

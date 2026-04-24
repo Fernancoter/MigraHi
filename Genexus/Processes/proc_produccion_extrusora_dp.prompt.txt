@@ -1,0 +1,21 @@
+﻿
+=== DataProvider: Produccion.ExtrusoraDP ===
+
+--- Source (Source) ---
+SDTExtrusora
+{
+	SDTExtrusoraItem
+	{
+		ExtrusoraId = ExtrusoraId
+		ExtrusoraNombre = ExtrusoraNombre
+		ExtrusoraImagen = ExtrusoraImagen
+	}
+}
+
+
+=== SDT: Produccion.SDTExtrusora ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

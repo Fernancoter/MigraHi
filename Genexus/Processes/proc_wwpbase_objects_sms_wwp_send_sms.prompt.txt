@@ -1,0 +1,149 @@
+﻿
+=== Procedure: WWPBaseObjects.SMS.WWP_SendSMS ===
+
+--- Source (Source) ---
+&Success = False
+&SMS.Load(&SMSId)
+
+If &SMS.Fail()
+	WWP_Logger.Error(&Pgmname, !"SMS not found with id: " + &SMSId.ToString().Trim())
+	return
+EndIf
+
+If &SMS.Produccion.WWPSMSMessage.IsEmpty()
+	WWP_Logger.Error(&Pgmname, !"SMS message cannot be empty: " + &SMSId.ToString().Trim())
+	WWP_UpdateSMSStatus(&SMSId, WWPBaseObjects.SMS.WWP_StatusSMS.Error, !"SMS message cannot be empty")
+	return
+EndIf
+
+If &SMS.WWPSMSSenderNumber.IsEmpty()
+	WWPBaseObjects.WWP_Logger.Error(&Pgmname, !"SMS sender cannot be empty: " + &SMSId.ToString().Trim())
+	WWPBaseObjects.SMS.WWP_UpdateSMSStatus(&SMSId, WWP_StatusSMS.Error, !"SMS sender cannot be empty")
+	return
+EndIf
+
+If &SMS.WWPSMSRecipientNumbers.IsEmpty()
+	WWPBaseObjects.WWP_Logger.Error(&Pgmname, !"SMS recipient cannot be empty: " + &SMSId.ToString().Trim())
+	WWP_UpdateSMSStatus(&SMSId, WWP_StatusSMS.Error, !"SMS recipient cannot be empty")
+	return
+EndIf
+
+&RecipientPhoneList = WWPBaseObjects.SMS.WWP_ParsePhoneNumbersList(&SMS.WWPSMSRecipientNumbers)
+If not &SMS.WWPSMSRecipientNumbers.IsEmpty() and &RecipientPhoneList.Count = 0
+	WWP_Logger.Error(&Pgmname, !"SMS recipient is not valid phone list: " + &SMSId.ToString().Trim())
+	WWPBaseObjects.SMS.WWP_UpdateSMSStatus(&SMSId, WWP_StatusSMS.Error, !"SMS recipient is not valid")
+	return
+EndIf
+
+&RequestBody = !'{"from": "%1", "to": %2, "body": "%3" }'
+&RequestBody = Format(&RequestBody, &SMS.WWPSMSSenderNumber.Trim(), &RecipientPhoneList.ToJson(), &SMS.WWPSMSMessage.Trim())
+
+WWPBaseObjects.WWP_Logger.Debug(&Pgmname, !"Calling Sinch API with body: " + &RequestBody)
+
+&HttpClient = new()
+&HttpClient.Secure = 1
+&HttpClient.Host = !"sms.api.sinch.com"
+&HttpClient.BaseUrl = Format(!"xms/v1/%1/", &SMSParametersSDT.ServicePlanId)
+&HttpClient.AddHeader(!"Authorization", !"Bearer " + &SMSParametersSDT.Token.Trim())
+&HttpClient.AddHeader(!"Content-Type", !"application/json")
+&HttpClient.AddString(&RequestBody)
+&HttpClient.Execute(!"POST", !"batches")
+
+&Response = &HttpClient.ToString()
+WWPBaseObjects.WWP_Logger.Debug(&Pgmname, !"Sinch API response: " + &Response)
+&SendSMSResultSDT.FromJson(&Response)
+
+If &HttpClient.StatusCode <> 201
+	WWP_Logger.Error(&Pgmname, Format(!"Error sending sms with id: %1 - Code: %2 - %3", &SMSId.ToString().Trim(), &HttpClient.ErrCode.ToString().Trim(), &HttpClient.ErrDescription))
+	WWP_UpdateSMSStatus(&SMSId, WWP_StatusSMS.Error, Format(!"Code: %1 - %2", &HttpClient.ErrCode.ToString().Trim(), &HttpClient.ErrDescription))
+	return
+EndIf
+
+WWP_UpdateSMSStatus(&SMSId, WWP_StatusSMS.Sent, &Response)
+&Success = True
+commit
+
+--- Rules (Rules) ---
+parm(in:&SMSId, in:&SMSParametersSDT, out:&Success, out:&SendSMSResultSDT);
+
+
+=== Procedure: WWPBaseObjects.SMS.WWP_ParsePhoneNumbersList ===
+
+--- Source (Source) ---
+WWP_Logger.Debug(&Pgmname, !"Begin parsing phone numbers list")
+
+&PhonesList.Clear()
+
+&TrimmedPhones = &PhonesString.Trim()
+If &TrimmedPhones.IsEmpty()
+	WWP_Logger.Error(&Pgmname, !"Phones list is empty")
+	return
+EndIf
+
+&ValidationRegex = !"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$"
+&SeparatorRegex = !"\s*,\s*"
+&SplittedPhones = &TrimmedPhones.SplitRegEx(&SeparatorRegex)
+
+For &Phone in &SplittedPhones
+	&Phone = &Phone.Trim()
+	If not &Phone.IsMatch(&ValidationRegex)
+		WWPBaseObjects.WWP_Logger.Error(&Pgmname, !"&Phone is incorrect: " + &Phone)
+		&PhonesList.Clear()
+		return
+	Else
+		&PhonesList.Add(&Phone)
+	EndIf
+EndFor
+
+WWP_Logger.Debug(&Pgmname, !"Parsing phones completed")
+
+--- Rules (Rules) ---
+parm(in:&PhonesString, out:&PhonesList);
+
+
+=== SDT: WWPBaseObjects.SMS.WWP_SendSMSResultSDT ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== Transaction: WWPBaseObjects.SMS.WWP_SMS ===
+
+--- Rules (Rules) ---
+
+default(WWPSMSStatus, WWPBaseObjects.SMS.WWP_StatusSMS.Pending);
+default(DB.WWPSMSCreated, ServerNow());
+default(WWPSMSScheduled, ServerNow());
+
+
+=== SDT: WWPBaseObjects.SMS.WWP_SMSParametersSDT ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== Procedure: WWPBaseObjects.SMS.WWP_UpdateSMSStatus ===
+
+--- Source (Source) ---
+&SMS.Load(&SMSId)
+
+If &SMS.Fail()
+	WWP_Logger.Error(&Pgmname, !"SMS not found with id: " + &SMSId.ToString())
+	return
+EndIf
+
+&SMS.WWPSMSProcessed = ServerNow()
+&SMS.WWPSMSStatus = &SMSStatus
+&SMS.WWPSMSDetail = &SMSDetail
+&SMS.Save()
+
+If &SMS.Fail()
+	WWP_Logger.Error(&Pgmname, !"Error updating SMS status with id: " + &SMSId.ToString())
+	return
+EndIf
+
+--- Rules (Rules) ---
+parm(in:&SMSId, in:&SMSStatus, in:&SMSDetail);
+

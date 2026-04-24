@@ -1,0 +1,24 @@
+﻿
+=== Procedure: WWPBaseObjects.WWP_GetEntityByName ===
+
+--- Source (Source) ---
+For Each WWP_Entity
+	Where WWPEntityName = &WWPEntityName
+	&WWPEntityId = WWPEntityId
+	Exit
+When None
+	&WWP_Entity = New()
+	&WWP_Entity.DB.WWPEntityName = &WWPEntityName
+	&WWP_Entity.Save()
+	If &WWP_Entity.Success()
+		&WWPEntityId = &WWP_Entity.WWPEntityId
+	EndIf
+EndFor
+
+--- Rules (Rules) ---
+Parm(in:&WWPEntityName, out:&WWPEntityId);
+
+
+=== Transaction: WWPBaseObjects.WWP_Entity ===
+
+(sin businessLogic extraído)

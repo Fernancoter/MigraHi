@@ -1,0 +1,135 @@
+﻿{
+    "uniqueId":  "13296dcf-dfdd-4b92-82a4-813c2ea73610",
+    "name":  "GuardarExistenciaSilo",
+    "type":  "Procedure",
+    "module":  "Existencia",
+    "description":  "Guardar Existencia Silo",
+    "filePath":  "Procedures/Existencia/GuardarExistenciaSilo.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\n    for \u0026ESItem in \u0026SDTExistenciaSilo\n\t    \n\t    \u0026ExistenciaSilo.Load(\u0026ESItem.ExistenciaSiloId)\n\t    \u0026ExistenciaSilo.SiloId = \u0026ESItem.SiloId\n\t    \u0026ExistenciaSilo.ExistenciaSiloCantidad = \u0026ESItem.ExistenciaSiloCantidad\n\t    \u0026ExistenciaSilo.Mail.ExistenciaSiloVirgenLote = \u0026ESItem.ExistenciaSiloVirgenLote\n\t    \u0026ExistenciaSilo.ExistenciaId = \u0026ESItem.ExistenciaId\n\t    \u0026ExistenciaSilo.Save()\n\t    \n\t    if(\u0026ExistenciaSilo.Success())\n\t\t    commit\n\t    endif\n    endfor\n",
+                              "cleanSource":  "\n\n    for \u0026ESItem in \u0026SDTExistenciaSilo\n\t    \n\t    \u0026ExistenciaSilo.Load(\u0026ESItem.ExistenciaSiloId)\n\t    \u0026ExistenciaSilo.SiloId = \u0026ESItem.SiloId\n\t    \u0026ExistenciaSilo.ExistenciaSiloCantidad = \u0026ESItem.ExistenciaSiloCantidad\n\t    \u0026ExistenciaSilo.Mail.ExistenciaSiloVirgenLote = \u0026ESItem.ExistenciaSiloVirgenLote\n\t    \u0026ExistenciaSilo.ExistenciaId = \u0026ESItem.ExistenciaId\n\t    \u0026ExistenciaSilo.Save()\n\t    \n\t    if(\u0026ExistenciaSilo.Success())\n\t\t    commit\n\t    endif\n    endfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026SDTExistenciaSilo);\n",
+                              "cleanSource":  "parm(in:\u0026SDTExistenciaSilo);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Existencia.SDTExistenciaSilo",
+                                         "DB.ExistenciaSilo"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.ExistenciaSilo"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.ExistenciaSilo"
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTExistenciaSilo"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ESItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "ESItem"
+                           },
+                           {
+                               "name":  "ExistenciaSilo",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Existencia Silo"
+                           },
+                           {
+                               "name":  "SDTExistenciaSilo",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "SDTExistencia Silo"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

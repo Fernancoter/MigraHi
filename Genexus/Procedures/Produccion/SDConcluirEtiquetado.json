@@ -1,0 +1,210 @@
+﻿{
+    "uniqueId":  "b46ca791-4d0e-440e-addb-e063535a461b",
+    "name":  "SDConcluirEtiquetado",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDConcluir Etiquetado",
+    "filePath":  "Procedures/Produccion/SDConcluirEtiquetado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "        \n\t\u0026Count = 0\n\t\u0026Mensajes.Clear()\n\t\n\tfor each DB.PaletCarrete\n\t\tOrder (CarreteEstado)\n\t\twhere PaletCarreteId \u003e 0\n\t\twhere PaletId = \u0026PaletId\n\t\twhere CarreteId \u003e 0\n\t\t\u0026CarreteEstado = CarreteEstado\n\t\t\n\t\tDo Case \n\t\t\tCase \u0026CarreteEstado = EstadoCarrete.Etiquetado\n\t\t\t     \u0026Count += 1\n\t\t\t\t\n\t\t\tCase \u0026CarreteEstado = EstadoCarrete.Etiquetar\n\t\t\t     \u0026Msj = New()\n\t\t             \u0026Msj.Id = !\u0027CarreteEtiquetar\u0027\n\t\t             \u0026Msj.Description = \u0027El Pallet contiene carretes por etiquetar.\u0027\n\t\t             \u0026Msj.Type = MessageTypes.Info\n\t\t             \u0026Mensajes.Add(\u0026Msj)\n\t\t\t     Exit\n\t\t\t\t\n\t\t\tCase \u0026CarreteEstado = EstadoCarrete.Molino\n\t\t\t     \u0026Msj = New()\n\t\t             \u0026Msj.Id = !\u0027CarreteMolino\u0027\n\t\t             \u0026Msj.Description = \u0027El Pallet contiene carretes a molino. Elimine las referencias.\u0027\n\t\t             \u0026Msj.Type = MessageTypes.Info\n\t\t             \u0026Mensajes.Add(\u0026Msj)\n\t\t\t     Exit\n\t        EndCase\n\tendfor\n        \n\tif(\u0026Count = \u0026PaletCapacidad)\n\t\tSetEstatusPalet.Call(\u0026PaletId, EstatusPalet.Terminado)\n\telse\n\t\tif(\u0026Mensajes.Count = 0)\n\t\t\t\u0026Diff = \u0026PaletCapacidad - \u0026Count\n\t\t\t\u0026Msj = New()\n\t\t\t\u0026Msj.Id = !\u0027FaltanteEnPallet\u0027\n\t\t\t\u0026Msj.Description = \u0027Falta(n) \u0027 + \u0026Diff.ToString() + \u0027 carrete(s) para completar el Pallet.\u0027\n\t\t\t\u0026Msj.Type = MessageTypes.Info\n\t\t\t\u0026Mensajes.Add(\u0026Msj)\n\t\tendif\n        endif\n",
+                              "cleanSource":  "        \n\t\u0026Count = 0\n\t\u0026Mensajes.Clear()\n\t\n\tfor each DB.PaletCarrete\n\t\tOrder (CarreteEstado)\n\t\twhere PaletCarreteId \u003e 0\n\t\twhere PaletId = \u0026PaletId\n\t\twhere CarreteId \u003e 0\n\t\t\u0026CarreteEstado = CarreteEstado\n\t\t\n\t\tDo Case \n\t\t\tCase \u0026CarreteEstado = EstadoCarrete.Etiquetado\n\t\t\t     \u0026Count += 1\n\t\t\t\t\n\t\t\tCase \u0026CarreteEstado = EstadoCarrete.Etiquetar\n\t\t\t     \u0026Msj = New()\n\t\t             \u0026Msj.Id = !\u0027CarreteEtiquetar\u0027\n\t\t             \u0026Msj.Description = \u0027El Pallet contiene carretes por etiquetar.\u0027\n\t\t             \u0026Msj.Type = MessageTypes.Info\n\t\t             \u0026Mensajes.Add(\u0026Msj)\n\t\t\t     Exit\n\t\t\t\t\n\t\t\tCase \u0026CarreteEstado = EstadoCarrete.Molino\n\t\t\t     \u0026Msj = New()\n\t\t             \u0026Msj.Id = !\u0027CarreteMolino\u0027\n\t\t             \u0026Msj.Description = \u0027El Pallet contiene carretes a molino. Elimine las referencias.\u0027\n\t\t             \u0026Msj.Type = MessageTypes.Info\n\t\t             \u0026Mensajes.Add(\u0026Msj)\n\t\t\t     Exit\n\t        EndCase\n\tendfor\n        \n\tif(\u0026Count = \u0026PaletCapacidad)\n\t\tSetEstatusPalet.Call(\u0026PaletId, EstatusPalet.Terminado)\n\telse\n\t\tif(\u0026Mensajes.Count = 0)\n\t\t\t\u0026Diff = \u0026PaletCapacidad - \u0026Count\n\t\t\t\u0026Msj = New()\n\t\t\t\u0026Msj.Id = !\u0027FaltanteEnPallet\u0027\n\t\t\t\u0026Msj.Description = \u0027Falta(n) \u0027 + \u0026Diff.ToString() + \u0027 carrete(s) para completar el Pallet.\u0027\n\t\t\t\u0026Msj.Type = MessageTypes.Info\n\t\t\t\u0026Mensajes.Add(\u0026Msj)\n\t\tendif\n        endif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PaletId, in:\u0026PaletCapacidad, out:\u0026Mensajes);\n",
+                              "cleanSource":  "parm(in:\u0026PaletId, in:\u0026PaletCapacidad, out:\u0026Mensajes);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SetEstatusPalet",
+                                         "GeneXus.Common.Messages",
+                                         "DB.Palet",
+                                         "DB.PaletCarrete",
+                                         "SetEstatusPalet"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Palet",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet"
+                           },
+                           {
+                               "name":  "Capacidad",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Capacidad"
+                           },
+                           {
+                               "name":  "CarreteId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Id"
+                           },
+                           {
+                               "name":  "Count",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Count"
+                           },
+                           {
+                               "name":  "Mensajes",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Mensajes"
+                           },
+                           {
+                               "name":  "Msj",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Msj"
+                           },
+                           {
+                               "name":  "PaletId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Palet Id"
+                           },
+                           {
+                               "name":  "PaletCarrete",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Carrete"
+                           },
+                           {
+                               "name":  "PCId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "PCId"
+                           },
+                           {
+                               "name":  "PaletCapacidad",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Palet Capacidad"
+                           },
+                           {
+                               "name":  "CarreteEstado",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Estado"
+                           },
+                           {
+                               "name":  "Diff",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Diff"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

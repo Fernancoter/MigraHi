@@ -1,0 +1,187 @@
+﻿{
+    "uniqueId":  "2ef72d0d-6c7e-461d-b7d3-923d515f82dc",
+    "name":  "WWPrensaProducto",
+    "type":  "WebPanel",
+    "module":  "DB",
+    "description":  "Prensa Productoes",
+    "filePath":  "WebPanels/DB/WWPrensaProducto.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Start",
+                              "blockType":  "Event",
+                              "rawSource":  "(Extracted from full RTF)",
+                              "cleanSource":  "If not IsAuthorized(\u0026PgmName)\n\t\tNotAuthorized(\u0026PgmName)\n\tEndif\n\tGrid.Rows = 10\n\t\u0026Update = \"GXM_update\"\n\t\u0026Delete = \"GX_BtnDelete\"\n\tForm.Caption = \u0027Prensa Productoes\u0027\n\tDo \u0027PrepareTransaction\u0027\n\tGrid.LoadSessionState()"
+                          },
+                          {
+                              "blockName":  "Refresh",
+                              "blockType":  "Event",
+                              "rawSource":  "(Extracted from full RTF)",
+                              "cleanSource":  "Grid.SaveSessionState()"
+                          },
+                          {
+                              "blockName":  "Grid.Load",
+                              "blockType":  "Event",
+                              "rawSource":  "(Extracted from full RTF)",
+                              "cleanSource":  "\u0026Update.Link = PrensaProducto.Link(TrnMode.Update, PrensaProductoId)\n\t\u0026Delete.Link = PrensaProducto.Link(TrnMode.Delete, PrensaProductoId)\n\tPrensaProductoId.Link = ViewPrensaProducto.Link(PrensaProductoId, \"\")"
+                          },
+                          {
+                              "blockName":  "\u0027DoInsert\u0027",
+                              "blockType":  "Event",
+                              "rawSource":  "(Extracted from full RTF)",
+                              "cleanSource":  "PrensaProducto(TrnMode.Insert, nullvalue(PrensaProductoId))"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.IsAuthorized",
+                                         "GeneXus.Common.GridState",
+                                         "TransactionContext",
+                                         "DB.PrensaProducto",
+                                         "DB.ViewPrensaProducto",
+                                         "WWPBaseObjects.NotAuthorized"
+                                     ],
+                         "calledBy":  [
+                                          "ViewPrensaProducto",
+                                          "MenuMateriaPrima",
+                                          "MenuProduccion",
+                                          "MenuDP",
+                                          "PrensaProducto"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "IsAuthorized",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Is Authorized"
+                           },
+                           {
+                               "name":  "Session",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_USRDEFTYP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Session"
+                           },
+                           {
+                               "name":  "HTTPRequest",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_USRDEFTYP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "HTTPRequest"
+                           },
+                           {
+                               "name":  "GridState",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Grid State"
+                           },
+                           {
+                               "name":  "TrnContext",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Trn Context"
+                           },
+                           {
+                               "name":  "TrnContextAtt",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Trn Context Att"
+                           },
+                           {
+                               "name":  "PrensaProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensa Producto Id"
+                           },
+                           {
+                               "name":  "Update",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Update"
+                           },
+                           {
+                               "name":  "Delete",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Delete"
+                           },
+                           {
+                               "name":  "ADVANCED_LABEL_TEMPLATE",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "ADVANCED_LABEL_TEMPLATE"
+                           }
+                       ]
+}

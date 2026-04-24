@@ -1,0 +1,129 @@
+﻿{
+    "uniqueId":  "6bc07e70-6d7b-4690-9478-532536fa139c",
+    "name":  "SDTExistenciaProducto",
+    "type":  "SDT",
+    "module":  "Existencia",
+    "description":  "SDTExistencia Producto",
+    "filePath":  "SDTs/Existencia/SDTExistenciaProducto.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "GuardarExistenciaProducto",
+                                          "ObtenerExistenciaProducto"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ExistenciaProductoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Existencia Producto Id"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "ProductoNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Nombre"
+                           },
+                           {
+                               "name":  "ExistenciaId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Existencia Id"
+                           },
+                           {
+                               "name":  "ExistenciaProductoCantidad",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Existencia Producto Cantidad"
+                           },
+                           {
+                               "name":  "ExistenciaProductoCantidadSistema",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Existencia Producto Cantidad Sistema"
+                           },
+                           {
+                               "name":  "ExistenciaProductoCantidadTurno",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Existencia Producto Cantidad Turno"
+                           },
+                           {
+                               "name":  "ExistenciaProductoCantidadTurnoSistema",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Existencia Producto Cantidad Turno Sistema"
+                           },
+                           {
+                               "name":  "ExistenciaProductoMillarReal",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Existencia Producto Millar Real"
+                           },
+                           {
+                               "name":  "ExistenciaProductoMillarSistema",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Existencia Producto Millar Sistema"
+                           }
+                       ]
+}

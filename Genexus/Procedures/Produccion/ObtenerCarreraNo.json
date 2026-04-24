@@ -1,0 +1,167 @@
+﻿{
+    "uniqueId":  "7e7a776e-7dee-4b38-b0ae-711734b5ebba",
+    "name":  "ObtenerCarreraNo",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Obtener Carrera No",
+    "filePath":  "Procedures/Produccion/ObtenerCarreraNo.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026Prensado.Load(\u0026PrensadoId)\n\u0026PrensaId = \u0026Prensado.PrensadoPrensaId\n\u0026FechaIniciaProceso = \u0026Prensado.PrensadoHoraIniciaProceso\n\n\u0026No = 0\nfor each DB.Prensado\n\twhere PrensadoId \u003e 0\n\twhere PrensadoFecha.ToDate() = \u0026FechaIniciaProceso.ToDate()\n\twhere PrensadoPrensaId = \u0026PrensaId\n\t\u0026AuxPrensadoId = DB.PrensadoId\n\t\n\tfor each DB.Carrera\n\t\twhere CarreraId \u003e 0\n\t\twhere InicioPBPrensadoId = \u0026AuxPrensadoId\n\t\t\u0026No += 1\n\tendfor\nendfor\n",
+                              "cleanSource":  "\u0026Prensado.Load(\u0026PrensadoId)\n\u0026PrensaId = \u0026Prensado.PrensadoPrensaId\n\u0026FechaIniciaProceso = \u0026Prensado.PrensadoHoraIniciaProceso\n\n\u0026No = 0\nfor each DB.Prensado\n\twhere PrensadoId \u003e 0\n\twhere PrensadoFecha.ToDate() = \u0026FechaIniciaProceso.ToDate()\n\twhere PrensadoPrensaId = \u0026PrensaId\n\t\u0026AuxPrensadoId = DB.PrensadoId\n\t\n\tfor each DB.Carrera\n\t\twhere CarreraId \u003e 0\n\t\twhere InicioPBPrensadoId = \u0026AuxPrensadoId\n\t\t\u0026No += 1\n\tendfor\nendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId, out:\u0026No);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId, out:\u0026No);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Prensado",
+                                         "DB.Carrera"
+                                     ],
+                         "calledBy":  [
+                                          "IniciarCarrera"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Prensado"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "AuxPrensadoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "FechaIniciaProceso",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Fecha Inicia Proceso"
+                           },
+                           {
+                               "name":  "No",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "No"
+                           },
+                           {
+                               "name":  "Prensado",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado"
+                           },
+                           {
+                               "name":  "PrensadoFecha",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Fecha"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensaId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensa Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

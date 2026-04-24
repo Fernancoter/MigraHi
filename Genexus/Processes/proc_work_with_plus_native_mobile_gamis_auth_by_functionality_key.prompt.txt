@@ -1,0 +1,13 @@
+﻿
+=== Procedure: WorkWithPlus.NativeMobile.GAMIsAuthByFunctionalityKey ===
+
+--- Source (Source) ---
+If &FunctionalityKey = !'<Check_Is_Authenticated>'
+	&IsAuthorized = Not (GAMSession.IsAnonymousUser(&GAMErrors))
+Else
+	&IsAuthorized = GAMRepository.CheckPermission(&FunctionalityKey)
+Endif
+
+--- Rules (Rules) ---
+parm(in:&FunctionalityKey, out:&IsAuthorized);
+

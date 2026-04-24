@@ -1,0 +1,105 @@
+﻿{
+    "uniqueId":  "bd6f8f08-c323-4e7c-b2cc-77d39770c885",
+    "name":  "WWP_SMTPParametersSDT",
+    "type":  "SDT",
+    "module":  "WWPBaseObjects.Mail",
+    "description":  "WWP_SMTPParameters SDT",
+    "filePath":  "SDTs/WWPBaseObjects/Mail/WWP_SMTPParametersSDT.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "WWP_GetSMTPParameters",
+                                          "WWP_SendPendingNotifications"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Host",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Host"
+                           },
+                           {
+                               "name":  "Port",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Port"
+                           },
+                           {
+                               "name":  "Username",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Username"
+                           },
+                           {
+                               "name":  "Password",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Password"
+                           },
+                           {
+                               "name":  "Authentication",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Authentication"
+                           },
+                           {
+                               "name":  "Secure",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Secure"
+                           },
+                           {
+                               "name":  "Timeout",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Timeout"
+                           }
+                       ]
+}

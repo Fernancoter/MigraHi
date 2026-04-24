@@ -1,0 +1,135 @@
+﻿{
+    "uniqueId":  "835cb084-f258-4566-b2e3-3b35e7bc4d74",
+    "name":  "GuardarExistenciaProducto",
+    "type":  "Procedure",
+    "module":  "Existencia",
+    "description":  "Guardar Existencia Producto",
+    "filePath":  "Procedures/Existencia/GuardarExistenciaProducto.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\n    for \u0026EPItem in \u0026SDTExistenciaProducto\n\t   \n\t    \u0026ExistenciaProducto.Load(\u0026EPItem.ExistenciaProductoId) \n\t    \u0026ExistenciaProducto.ProductoId = \u0026EPItem.ProductoId\n\t    \u0026ExistenciaProducto.ExistenciaId = \u0026EPItem.ExistenciaId\n\t    \u0026ExistenciaProducto.WWPBaseObjects.ExistenciaProductoCantidad = \u0026EPItem.ExistenciaProductoCantidad\n\t    \u0026ExistenciaProducto.ExistenciaProductoCantidadSistema = \u0026EPItem.ExistenciaProductoCantidadSistema\n\t    \u0026ExistenciaProducto.ExistenciaProductoMillarReal = \u0026EPItem.ExistenciaProductoMillarReal\n\t    \u0026ExistenciaProducto.ExistenciaProductoMillarSistema = \u0026EPItem.ExistenciaProductoMillarSistema\n\t    \n\t    \u0026ExistenciaProducto.ExistenciaProductoCantidadTurno = \u0026EPItem.ExistenciaProductoCantidadTurno\n\t    \u0026ExistenciaProducto.ExistenciaProductoCantidadTurnoSistema = \u0026EPItem.ExistenciaProductoCantidadTurnoSistema\n\t    \n\t    \u0026ExistenciaProducto.Save()\n\t  \n\t    if(\u0026ExistenciaProducto.Success())\n\t\t    commit\n\t    endif\n    endfor\n",
+                              "cleanSource":  "\n\n    for \u0026EPItem in \u0026SDTExistenciaProducto\n\t   \n\t    \u0026ExistenciaProducto.Load(\u0026EPItem.ExistenciaProductoId) \n\t    \u0026ExistenciaProducto.ProductoId = \u0026EPItem.ProductoId\n\t    \u0026ExistenciaProducto.ExistenciaId = \u0026EPItem.ExistenciaId\n\t    \u0026ExistenciaProducto.WWPBaseObjects.ExistenciaProductoCantidad = \u0026EPItem.ExistenciaProductoCantidad\n\t    \u0026ExistenciaProducto.ExistenciaProductoCantidadSistema = \u0026EPItem.ExistenciaProductoCantidadSistema\n\t    \u0026ExistenciaProducto.ExistenciaProductoMillarReal = \u0026EPItem.ExistenciaProductoMillarReal\n\t    \u0026ExistenciaProducto.ExistenciaProductoMillarSistema = \u0026EPItem.ExistenciaProductoMillarSistema\n\t    \n\t    \u0026ExistenciaProducto.ExistenciaProductoCantidadTurno = \u0026EPItem.ExistenciaProductoCantidadTurno\n\t    \u0026ExistenciaProducto.ExistenciaProductoCantidadTurnoSistema = \u0026EPItem.ExistenciaProductoCantidadTurnoSistema\n\t    \n\t    \u0026ExistenciaProducto.Save()\n\t  \n\t    if(\u0026ExistenciaProducto.Success())\n\t\t    commit\n\t    endif\n    endfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026SDTExistenciaProducto);\n",
+                              "cleanSource":  "parm(in:\u0026SDTExistenciaProducto);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Existencia.SDTExistenciaProducto",
+                                         "DB.ExistenciaProducto"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.ExistenciaProducto"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.ExistenciaProducto"
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTExistenciaProducto"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "EPItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "EPItem"
+                           },
+                           {
+                               "name":  "ExistenciaProducto",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Existencia Producto"
+                           },
+                           {
+                               "name":  "SDTExistenciaProducto",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "SDTExistencia Producto"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

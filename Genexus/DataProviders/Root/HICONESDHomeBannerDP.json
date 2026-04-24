@@ -1,0 +1,96 @@
+﻿{
+    "uniqueId":  "22f545e0-8d0e-4b55-a002-8a594c6b6c08",
+    "name":  "HICONESDHomeBannerDP",
+    "type":  "DataProvider",
+    "module":  "Root",
+    "description":  "SDPHome Banner DP",
+    "filePath":  "DataProviders/Root/HICONESDHomeBannerDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDPMenuOptions\n{\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpresbannersample1)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"\"\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpresbannersample2)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"\"\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpresbannersample3)\n\t\tIcon = \u0026Image\n\t\t//Add ComponentToCall to allow banner tap\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpresbannersample4)\n\t\tIcon = \u0026Image\n\t\t//Add ComponentToCall to allow banner tap\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t}\n}\n",
+                              "cleanSource":  "SDPMenuOptions\n{\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpresbannersample1)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"\"\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpresbannersample2)\n\t\tIcon = \u0026Image\n\t\tComponentToCall = !\"\"\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpresbannersample3)\n\t\tIcon = \u0026Image\n\t\t//Add ComponentToCall to allow banner tap\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t}\n\tSDPMenuOptionsItem\n\t{\n\t\t\u0026Image.FromImage(sdpresbannersample4)\n\t\tIcon = \u0026Image\n\t\t//Add ComponentToCall to allow banner tap\n\t\tComponentToCall = !\"sd:WorkWithPlus.NativeMobile.SDPSampleOptionScreen?3\"\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.SDPMenuOptions"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WorkWithPlus.NativeMobile.SDPMenuOptions"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SDPMenuOptions",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "SDPMenu Options"
+                           },
+                           {
+                               "name":  "Image",
+                               "elementType":  "Variable",
+                               "dataType":  "BITMAP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Image"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

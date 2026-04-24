@@ -1,0 +1,7 @@
+﻿
+=== Transaction: WWPBaseObjects.Notifications.Web.WWP_WebClient ===
+
+--- Rules (Rules) ---
+default(WWPWebClientFirstRegistered, ServerNow());
+default(WWPWebClientLastRegistered, ServerNow());
+

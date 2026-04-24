@@ -1,0 +1,94 @@
+﻿{
+    "uniqueId":  "34b4be19-4e89-4084-9435-3d7c39bbd8fb",
+    "name":  "DPSDTRptPrensado",
+    "type":  "DataProvider",
+    "module":  "PrinterSD",
+    "description":  "DPSDTRpt Prensado",
+    "filePath":  "DataProviders/PrinterSD/DPSDTRptPrensado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTRptPrensado\nWhere PrensadoId = \u0026PrensadoId\n{\n\tPrensadoId  = PrensadoId \n\tPrensadoFecha  = PrensadoFecha \n\tPrensadoPrensaId  = PrensadoPrensaId \n\tPrensadoPrensaNombre  = PrensadoPrensaNombre \n\tPrensadoTurnoId  = PrensadoTurnoId \n\tPrensadoTurnoNombre  = PrensadoTurnoNombre \n\tPrensadoProductoId  = PrensadoProductoId \n\tPrensadoProductoNombre  = PrensadoProductoNombre \n\tPrensadoProductoTipoMaterial  = PrensadoProductoTipoMaterial \n\tPrensadoOperadorId  = PrensadoOperadorId \n\tPrensadoOperadorNombre  = PrensadoOperadorNombre \n\tPrensadoBobinaMermaKg  = PrensadoBobinaMermaKg \n\tPrensadoEstado  = PrensadoEstado \n\tPrensadoLevasUnidadMedida  = PrensadoLevasUnidadMedida \n\tPrensadoRodillosUnidadMedida  = PrensadoRodillosUnidadMedida \n\tPrensadoLevasKgEntrada  = PrensadoLevasKgEntrada \n\tPrensadoLevasKgSalida  = PrensadoLevasKgSalida \n\tPrensadoLevasGradosEntrada  = PrensadoLevasGradosEntrada \n\tPrensadoLevasGradosSalida  = PrensadoLevasGradosSalida \n\tPrensadoRodillosKgEntrada  = PrensadoRodillosKgEntrada \n\tPrensadoRodillosKgSalida  = PrensadoRodillosKgSalida \n\tPrensadoRodillosGradosEntrada  = PrensadoRodillosGradosEntrada \n\tPrensadoRodillosGradosSalida  = PrensadoRodillosGradosSalida \n\tPrensadoMotivoAnticipado  = WWPBaseObjects.Notifications.PrensadoMotivoAnticipado \n\tPrensadoTroquelId  = PrensadoTroquelId \n\tPrensadoTroquelNombre  = PrensadoTroquelNombre \n\tPrensadoHoraIniciaProceso  = PrensadoHoraIniciaProceso \n\tPrensadoHoraFinProceso  = PrensadoHoraFinProceso \n\tPrensadoProductoDescripcion  = PrensadoProductoDescripcion \n\tPrensadoMeta  = PrensadoMeta \n\n}\n\t\n\n",
+                              "cleanSource":  "SDTRptPrensado\nWhere PrensadoId = \u0026PrensadoId\n{\n\tPrensadoId  = PrensadoId \n\tPrensadoFecha  = PrensadoFecha \n\tPrensadoPrensaId  = PrensadoPrensaId \n\tPrensadoPrensaNombre  = PrensadoPrensaNombre \n\tPrensadoTurnoId  = PrensadoTurnoId \n\tPrensadoTurnoNombre  = PrensadoTurnoNombre \n\tPrensadoProductoId  = PrensadoProductoId \n\tPrensadoProductoNombre  = PrensadoProductoNombre \n\tPrensadoProductoTipoMaterial  = PrensadoProductoTipoMaterial \n\tPrensadoOperadorId  = PrensadoOperadorId \n\tPrensadoOperadorNombre  = PrensadoOperadorNombre \n\tPrensadoBobinaMermaKg  = PrensadoBobinaMermaKg \n\tPrensadoEstado  = PrensadoEstado \n\tPrensadoLevasUnidadMedida  = PrensadoLevasUnidadMedida \n\tPrensadoRodillosUnidadMedida  = PrensadoRodillosUnidadMedida \n\tPrensadoLevasKgEntrada  = PrensadoLevasKgEntrada \n\tPrensadoLevasKgSalida  = PrensadoLevasKgSalida \n\tPrensadoLevasGradosEntrada  = PrensadoLevasGradosEntrada \n\tPrensadoLevasGradosSalida  = PrensadoLevasGradosSalida \n\tPrensadoRodillosKgEntrada  = PrensadoRodillosKgEntrada \n\tPrensadoRodillosKgSalida  = PrensadoRodillosKgSalida \n\tPrensadoRodillosGradosEntrada  = PrensadoRodillosGradosEntrada \n\tPrensadoRodillosGradosSalida  = PrensadoRodillosGradosSalida \n\tPrensadoMotivoAnticipado  = WWPBaseObjects.Notifications.PrensadoMotivoAnticipado \n\tPrensadoTroquelId  = PrensadoTroquelId \n\tPrensadoTroquelNombre  = PrensadoTroquelNombre \n\tPrensadoHoraIniciaProceso  = PrensadoHoraIniciaProceso \n\tPrensadoHoraFinProceso  = PrensadoHoraFinProceso \n\tPrensadoProductoDescripcion  = PrensadoProductoDescripcion \n\tPrensadoMeta  = PrensadoMeta \n\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(\u0026PrensadoId);\n",
+                              "cleanSource":  "parm(\u0026PrensadoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "PrinterSD.SDTRptPrensado"
+                                     ],
+                         "calledBy":  [
+                                          "RptPrensado"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTRptPrensado"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

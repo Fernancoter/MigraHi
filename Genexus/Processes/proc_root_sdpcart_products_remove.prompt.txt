@@ -1,0 +1,34 @@
+﻿
+=== Procedure: Root.SDPCartProductsRemove ===
+
+--- Source (Source) ---
+&ProductsInCartTxt = &WebSession.Get(!"ProductsInCart")
+&ProductsInCart.FromJson(&ProductsInCartTxt)
+&Index = 0
+For &ProductsInCartItem in &ProductsInCart
+	&Index = &Index + 1
+	If &ProductId = &ProductsInCartItem.ProductId
+		&ProductsInCart.Remove(&Index)
+		exit
+	EndIf
+EndFor
+&ProductsInCartTxt = &ProductsInCart.ToJson()
+&WebSession.Set(!"ProductsInCart", &ProductsInCartTxt)
+
+--- Rules (Rules) ---
+Parm(in:&ProductId, in:&Count);
+
+
+=== SDT: Root.SDPCartProduct ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== SDT: WorkWithPlus.NativeMobile.SDPProductData ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

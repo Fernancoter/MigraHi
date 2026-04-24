@@ -1,0 +1,230 @@
+﻿
+=== Procedure: PrinterSD.CarreteReportMainPCR ===
+
+--- Source (Source) ---
+if(&CarreraId>0)
+	for each DB.Carrete
+		Where CarreteCarreraId = &CarreraId
+		
+		&EtiquetaCarretaSDT = ObtenerSDTEtiquetaCarrete.Udp(CarreteId)
+		&EtiquetaCarreraSDT.EtiquetaCarreteSDT.Add(&EtiquetaCarretaSDT)
+	endfor
+else
+	&EtiquetaCarretaSDT = ObtenerSDTEtiquetaCarrete.Udp(&CarreteId)
+	&EtiquetaCarreraSDT.EtiquetaCarreteSDT.Add(&EtiquetaCarretaSDT)
+endif
+
+debugger.Call(niveldebug.Informativo, &Pgmname, &EtiquetaCarretaSDT.ToJson())
+
+For &EtiquetaCarretaSDT in &EtiquetaCarreraSDT.EtiquetaCarreteSDT
+//	&linkURL='https://barcode.tec-it.com/barcode.ashx?data='+&EtiquetaCarretaSDT.CarreteNoSerie + '&code=Code128'
+//	//&linkURL='https://sdx.genexus.com/agetqrcode.aspx?'+&EtiquetaCarretaSDT.CarreteNoSerie
+//	
+//	&QRImage.FromURL(&linkURL)
+	
+	&QRImage = ObtenerBarCode.Udp(&EtiquetaCarretaSDT.CarreteNoSerie)
+
+	print printBlock1
+Endfor
+
+--- Rules (Rules) ---
+Parm(in:&CarreteId,in:&CarreraId,in:&PDFNombre);
+Output_File(&PDFNombre, 'PDF');
+
+
+=== SDT: PrinterSD.EtiquetaCarreraSDT ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== SDT: PrinterSD.EtiquetaCarreteSDT ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== Procedure: PrinterSD.ObtenerBarCode ===
+
+--- Source (Source) ---
+&ImgTxt = &StringLibrary.GetBarCodeBase64(&BarCodeValue,2)
+&ImgBlob.FromBase64String(&ImgTxt)
+GuardarBarCode.Call(&BarCodeValue, &ImgBlob)
+
+For Each
+	Where BarCodeValue = &BarCodeValue
+	&BarCodeImage = BarCodeImage
+	Exit
+EndFor
+
+--- Rules (Rules) ---
+parm(In:&BarCodeValue, Out:&BarCodeImage);
+
+
+=== Procedure: PrinterSD.ObtenerSDTEtiquetaCarrete ===
+
+--- Source (Source) ---
+&EtiquetaCarreteSDT = New()
+
+do 'CarreteEnPallet'
+
+For each
+	Where CarreteId = &CarreteId
+	&EtiquetaCarreteSDT.CarreteId = CarreteId
+	&EtiquetaCarreteSDT.CarreteNoSerie = CarreteNoSerie
+	&EtiquetaCarreteSDT.InicioPBPrensadoId = InicioPBPrensadoId
+	
+	//Asignar el producto del prensado o del palet segun corresponda
+	//Aplica para los escenarios donde el producto del palet es tipo etiqueta
+	if(&EnPalet)
+		&EtiquetaCarreteSDT.PrensadoProductoId = &PaletProductoId
+	        &EtiquetaCarreteSDT.PrensadoProductoNombre = &PaletProductoNombre
+	else
+		&EtiquetaCarreteSDT.PrensadoProductoId = PrensadoProductoId
+	        &EtiquetaCarreteSDT.PrensadoProductoNombre = PrensadoProductoNombre
+	endif
+
+	&EtiquetaCarreteSDT.PrensadoProductoDescripcion = PrensadoProductoDescripcion
+	&EtiquetaCarreteSDT.CarreteNoLinea = CarreteNoLinea
+	&EtiquetaCarreteSDT.CarreraNo = CarreraNo
+	&EtiquetaCarreteSDT.CarreteCarreraId = CarreteCarreraId
+	Do 'ObtenerTurno'
+	
+	exit
+	
+EndFor
+debugger.Call(niveldebug.Informativo, &Pgmname, '&EtiquetaCarreteSDT.CarreteCarreraId Linea 18 ' + &EtiquetaCarreteSDT.CarreteCarreraId.ToString())
+Sub 'ObtenerTurno'
+	For Each
+		Where CarreraId = &EtiquetaCarreteSDT.CarreteCarreraId
+		&PrensadoId = InicioPBPrensadoId
+		
+		&EtiquetaCarreteSDT.PrensadoHoraIniciaProceso = CarreraFechaRegistro
+		&EtiquetaCarreteSDT.PrensadoHoraFinProceso = CarreraFechaValidacion
+		
+		
+	EndFor
+	
+	For Each
+		Where PrensadoId = &PrensadoId
+		&EtiquetaCarreteSDT.TurnoId = PrensadoTurnoId
+		&EtiquetaCarreteSDT.TurnoNombre = PrensadoTurnoNombre	
+		&EtiquetaCarreteSDT.PrensaNombre = PrensadoPrensaNombre
+		&EtiquetaCarreteSDT.PrensadoLevasGradosEntrada = PrensadoLevasGradosEntrada
+		&EtiquetaCarreteSDT.PrensadoLevasGradosSalida = PrensadoLevasGradosSalida
+	
+		&EtiquetaCarreteSDT.PrensadoOperadorNombre = PrensadoOperadorNombre
+		&EtiquetaCarreteSDT.PrensadoTroquelNombre = PrensadoTroquelNombre
+		exit
+	EndFor
+	
+EndSub
+
+
+Sub 'CarreteEnPallet'
+	
+	&EnPalet = false
+	for each DB.PaletCarrete
+		where PaletId > 0
+	        where CarreteId = &CarreteId
+		&PaletProductoId = PaletProductoId
+                &PaletProductoNombre = PaletProductoNombre
+		&EnPalet = true
+		Exit
+	endfor
+EndSub
+
+--- Rules (Rules) ---
+parm(in:&CarreteId, out:&EtiquetaCarreteSDT);
+
+
+=== Procedure: Web.Debugger ===
+
+--- Source (Source) ---
+/*
+ Niveles de debug:
+0 - Apagado
+1 - Informativo
+2 - Advertencia
+3 - Debug
+4 - Error
+5 - Critico
+El Nivel de debug detallará a partir de que nivel se desea informar:
+	Si por ejemplo el parámetro indica 0(Apagado) -> no se generan logs
+	Si por ejemplo el parámetro indica 1(Critico) -> se muestran solo los críticos
+	Si por ejemplo el parámetro indica 2(Error) -> se muestran los de tipo error y críticos
+	Si por ejemplo el parámetro indica 3(Degub) -> se muestran los de tipo error, degub y críticos
+	Si por ejemplo el parámetro indica 3(Advertencia) -> se muestran los de tipo error, degub, advertencia y críticos
+	Si por ejemplo el parámetro indica 5(Informativo) -> se muestran los de tipo error, degub, advertencia, informativos y críticos
+	
+*/
+
+//call("CargarContexto", &Contexto)
+&Usuario = &WebSession.Get('UserName').ToString()
+
+
+&HTTP_HOST= &HttpRequest.BaseUrl.Replace('/','')
+&HTTP_HOST= &HTTP_HOST.Replace(':','')
+&FechaArchivo = Now()
+//Se carga el nivel del debug configurado en base de datos
+&NivelDebugConfigurado = NivelDebug.Informativo
+//Se carga el tipo de debugg base de datos o archivo
+&TipoDebug = TipoDebug.Archivo
+&NivelDebugDescripcion = &NivelDebug.EnumerationDescription()
+
+//valida si el debug esta prendido o esta dentro del rango
+if &NivelDebugConfigurado  >= &NivelDebug
+	do case
+		case &TipoDebug = TipoDebug.BaseDatos
+			//guardar en base de datos
+		case &TipoDebug = TipoDebug.Archivo
+			//guardad en archivo
+			Do 'GuardarArchivo'
+	endcase
+else
+	return
+endif
+
+
+sub 'GuardarArchivo'
+	&NombreArchivo =  &HTTP_HOST.Trim() + "_" + &FechaArchivo.Year().ToString().Trim()+&FechaArchivo.Month().ToString().Trim()+&FechaArchivo.Day().ToString().Trim() + ".log"
+	
+	&MensajeDebug =  "-> Usuario: "+ &Usuario.ToString() +" | "+&Time.ToString().Trim()+" ("+&NivelDebugDescripcion.Trim()+") "+"["+&Programa.ToString().Trim()+"] -> "
+	&MensajeDebug = &MensajeDebug + &Log
+	&ResultFile = DFWOpen(&NombreArchivo,"","",1)
+	&ResultFile = DFWPTxt(&MensajeDebug)
+	&ResultFile = DFWNext()
+	&ResultFile = DFWClose()
+endsub
+
+--- Rules (Rules) ---
+parm(in:&NivelDebug,&Programa,&Log);
+
+
+=== Procedure: PrinterSD.GuardarBarCode ===
+
+--- Source (Source) ---
+For Each
+	Where BarCodeValue = &BarCodeValue
+	delete
+EndFor
+&datetime = datetime.Now()
+&datetime = &datetime.AddDays(-1)
+For Each
+	Where BarCodeDateTime < &datetime or BarCodeDateTime.IsNull()
+	delete
+EndFor
+
+
+New
+	BarCodeValue = &BarCodeValue
+	BarCodeImage = &ImgBlob
+	BarCodeDateTime = datetime.Now()
+endnew
+commit
+
+--- Rules (Rules) ---
+parm(In:&BarCodeValue,In: &ImgBlob);
+

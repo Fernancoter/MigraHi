@@ -1,0 +1,7 @@
+﻿
+=== Transaction: DB.PrensadoResultado ===
+
+--- Start (Event) ---
+
+--- After Trn (Event) ---
+

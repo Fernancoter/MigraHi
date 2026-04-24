@@ -1,0 +1,158 @@
+﻿{
+    "uniqueId":  "b99c4f72-d493-4f64-a058-9fd7638772dc",
+    "name":  "SDExtrusoraDisponible",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDExtrusora Disponible",
+    "filePath":  "Procedures/Produccion/SDExtrusoraDisponible.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  " \n \u0026Disponible = true\n \n for each\n\t where ExtrusionId \u003e 0\n\t where ExtrusionId \u003c\u003e \u0026ExtrusionId\n\t where ExtrusionExtrusoraId = \u0026ExtrusoraId\n\t \u0026DiaExtrusionId = ExtrusionId\n\t \u0026ExtrusionEstado = ExtrusionEstado\n\t \n\t Do Case\n\t\t Case \u0026ExtrusionEstado = EstadoExtrusion.EnProceso\n\t\t      \u0026Disponible = false\n\t\t      Exit\n\t\t \n\t\t Case \u0026ExtrusionEstado = EstadoExtrusion.Intermedia\n\t\t      \u0026Disponible = false\n\t\t      Exit\t \n\t\t \n\t\t Case \u0026ExtrusionEstado = EstadoExtrusion.Programada\n\t\t      \n\t\t      do \u0027BobinaEnProceso\u0027\n\t\t      \n\t\t      if(\u0026isOK)\n\t\t\t   \u0026Disponible = false\n\t\t           Exit\n\t\t      endif\n\t EndCase\n Endfor\n\n Sub \u0027BobinaEnProceso\u0027\n\t \n\t \u0026isOK = false\n\t \n\t for each\n\t\t where BobinaId \u003e 0\n\t\t where ExtrusionId = \u0026DiaExtrusionId\n\t\t \n\t\t if(BobinaEstado = EstadoBobina.EnProceso)\n\t\t\t \u0026isOK = true\n\t\t\t Exit\n\t\t endif \n\t endfor\n EndSub\n \n",
+                              "cleanSource":  " \n \u0026Disponible = true\n \n for each\n\t where ExtrusionId \u003e 0\n\t where ExtrusionId \u003c\u003e \u0026ExtrusionId\n\t where ExtrusionExtrusoraId = \u0026ExtrusoraId\n\t \u0026DiaExtrusionId = ExtrusionId\n\t \u0026ExtrusionEstado = ExtrusionEstado\n\t \n\t Do Case\n\t\t Case \u0026ExtrusionEstado = EstadoExtrusion.EnProceso\n\t\t      \u0026Disponible = false\n\t\t      Exit\n\t\t \n\t\t Case \u0026ExtrusionEstado = EstadoExtrusion.Intermedia\n\t\t      \u0026Disponible = false\n\t\t      Exit\t \n\t\t \n\t\t Case \u0026ExtrusionEstado = EstadoExtrusion.Programada\n\t\t      \n\t\t      do \u0027BobinaEnProceso\u0027\n\t\t      \n\t\t      if(\u0026isOK)\n\t\t\t   \u0026Disponible = false\n\t\t           Exit\n\t\t      endif\n\t EndCase\n Endfor\n\n Sub \u0027BobinaEnProceso\u0027\n\t \n\t \u0026isOK = false\n\t \n\t for each\n\t\t where BobinaId \u003e 0\n\t\t where ExtrusionId = \u0026DiaExtrusionId\n\t\t \n\t\t if(BobinaEstado = EstadoBobina.EnProceso)\n\t\t\t \u0026isOK = true\n\t\t\t Exit\n\t\t endif \n\t endfor\n EndSub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExtrusionId, in:\u0026ExtrusoraId, out:\u0026Disponible);\n",
+                              "cleanSource":  "parm(in:\u0026ExtrusionId, in:\u0026ExtrusoraId, out:\u0026Disponible);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Disponible",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Disponible"
+                           },
+                           {
+                               "name":  "ExtrusionEstado",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Estado"
+                           },
+                           {
+                               "name":  "ExtrusoraId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusora Id"
+                           },
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "isOK",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "is OK"
+                           },
+                           {
+                               "name":  "DiaExtrusionId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

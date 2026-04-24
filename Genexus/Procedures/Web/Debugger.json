@@ -1,0 +1,235 @@
+﻿{
+    "uniqueId":  "8db1a804-5bee-4964-8ba3-48a34388b5be",
+    "name":  "Debugger",
+    "type":  "Procedure",
+    "module":  "Web",
+    "description":  "Debugger",
+    "filePath":  "Procedures/Web/Debugger.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "/*\n Niveles de debug:\n0 - Apagado\n1 - Informativo\n2 - Advertencia\n3 - Debug\n4 - Error\n5 - Critico\nEl Nivel de debug detallará a partir de que nivel se desea informar:\n\tSi por ejemplo el parámetro indica 0(Apagado) -\u003e no se generan logs\n\tSi por ejemplo el parámetro indica 1(Critico) -\u003e se muestran solo los críticos\n\tSi por ejemplo el parámetro indica 2(Error) -\u003e se muestran los de tipo error y críticos\n\tSi por ejemplo el parámetro indica 3(Degub) -\u003e se muestran los de tipo error, degub y críticos\n\tSi por ejemplo el parámetro indica 3(Advertencia) -\u003e se muestran los de tipo error, degub, advertencia y críticos\n\tSi por ejemplo el parámetro indica 5(Informativo) -\u003e se muestran los de tipo error, degub, advertencia, informativos y críticos\n\t\n*/\n\n//call(\"CargarContexto\", \u0026Contexto)\n\u0026Usuario = \u0026WebSession.Get(\u0027UserName\u0027).ToString()\n\n\n\u0026HTTP_HOST= \u0026HttpRequest.BaseUrl.Replace(\u0027/\u0027,\u0027\u0027)\n\u0026HTTP_HOST= \u0026HTTP_HOST.Replace(\u0027:\u0027,\u0027\u0027)\n\u0026FechaArchivo = Now()\n//Se carga el nivel del debug configurado en base de datos\n\u0026NivelDebugConfigurado = NivelDebug.Informativo\n//Se carga el tipo de debugg base de datos o archivo\n\u0026TipoDebug = TipoDebug.Archivo\n\u0026NivelDebugDescripcion = \u0026NivelDebug.EnumerationDescription()\n\n//valida si el debug esta prendido o esta dentro del rango\nif \u0026NivelDebugConfigurado  \u003e= \u0026NivelDebug\n\tdo case\n\t\tcase \u0026TipoDebug = TipoDebug.BaseDatos\n\t\t\t//guardar en base de datos\n\t\tcase \u0026TipoDebug = TipoDebug.Archivo\n\t\t\t//guardad en archivo\n\t\t\tDo \u0027GuardarArchivo\u0027\n\tendcase\nelse\n\treturn\nendif\n\n\nsub \u0027GuardarArchivo\u0027\n\t\u0026NombreArchivo =  \u0026HTTP_HOST.Trim() + \"_\" + \u0026FechaArchivo.Year().ToString().Trim()+\u0026FechaArchivo.Month().ToString().Trim()+\u0026FechaArchivo.Day().ToString().Trim() + \".log\"\n\t\n\t\u0026MensajeDebug =  \"-\u003e Usuario: \"+ \u0026Usuario.ToString() +\" | \"+\u0026Time.ToString().Trim()+\" (\"+\u0026NivelDebugDescripcion.Trim()+\") \"+\"[\"+\u0026Programa.ToString().Trim()+\"] -\u003e \"\n\t\u0026MensajeDebug = \u0026MensajeDebug + \u0026Log\n\t\u0026ResultFile = DFWOpen(\u0026NombreArchivo,\"\",\"\",1)\n\t\u0026ResultFile = DFWPTxt(\u0026MensajeDebug)\n\t\u0026ResultFile = DFWNext()\n\t\u0026ResultFile = DFWClose()\nendsub\n\n\n",
+                              "cleanSource":  "/*\n Niveles de debug:\n0 - Apagado\n1 - Informativo\n2 - Advertencia\n3 - Debug\n4 - Error\n5 - Critico\nEl Nivel de debug detallará a partir de que nivel se desea informar:\n\tSi por ejemplo el parámetro indica 0(Apagado) -\u003e no se generan logs\n\tSi por ejemplo el parámetro indica 1(Critico) -\u003e se muestran solo los críticos\n\tSi por ejemplo el parámetro indica 2(Error) -\u003e se muestran los de tipo error y críticos\n\tSi por ejemplo el parámetro indica 3(Degub) -\u003e se muestran los de tipo error, degub y críticos\n\tSi por ejemplo el parámetro indica 3(Advertencia) -\u003e se muestran los de tipo error, degub, advertencia y críticos\n\tSi por ejemplo el parámetro indica 5(Informativo) -\u003e se muestran los de tipo error, degub, advertencia, informativos y críticos\n\t\n*/\n\n//call(\"CargarContexto\", \u0026Contexto)\n\u0026Usuario = \u0026WebSession.Get(\u0027UserName\u0027).ToString()\n\n\n\u0026HTTP_HOST= \u0026HttpRequest.BaseUrl.Replace(\u0027/\u0027,\u0027\u0027)\n\u0026HTTP_HOST= \u0026HTTP_HOST.Replace(\u0027:\u0027,\u0027\u0027)\n\u0026FechaArchivo = Now()\n//Se carga el nivel del debug configurado en base de datos\n\u0026NivelDebugConfigurado = NivelDebug.Informativo\n//Se carga el tipo de debugg base de datos o archivo\n\u0026TipoDebug = TipoDebug.Archivo\n\u0026NivelDebugDescripcion = \u0026NivelDebug.EnumerationDescription()\n\n//valida si el debug esta prendido o esta dentro del rango\nif \u0026NivelDebugConfigurado  \u003e= \u0026NivelDebug\n\tdo case\n\t\tcase \u0026TipoDebug = TipoDebug.BaseDatos\n\t\t\t//guardar en base de datos\n\t\tcase \u0026TipoDebug = TipoDebug.Archivo\n\t\t\t//guardad en archivo\n\t\t\tDo \u0027GuardarArchivo\u0027\n\tendcase\nelse\n\treturn\nendif\n\n\nsub \u0027GuardarArchivo\u0027\n\t\u0026NombreArchivo =  \u0026HTTP_HOST.Trim() + \"_\" + \u0026FechaArchivo.Year().ToString().Trim()+\u0026FechaArchivo.Month().ToString().Trim()+\u0026FechaArchivo.Day().ToString().Trim() + \".log\"\n\t\n\t\u0026MensajeDebug =  \"-\u003e Usuario: \"+ \u0026Usuario.ToString() +\" | \"+\u0026Time.ToString().Trim()+\" (\"+\u0026NivelDebugDescripcion.Trim()+\") \"+\"[\"+\u0026Programa.ToString().Trim()+\"] -\u003e \"\n\t\u0026MensajeDebug = \u0026MensajeDebug + \u0026Log\n\t\u0026ResultFile = DFWOpen(\u0026NombreArchivo,\"\",\"\",1)\n\t\u0026ResultFile = DFWPTxt(\u0026MensajeDebug)\n\t\u0026ResultFile = DFWNext()\n\t\u0026ResultFile = DFWClose()\nendsub"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026NivelDebug,\u0026Programa,\u0026Log);\n",
+                              "cleanSource":  "parm(in:\u0026NivelDebug,\u0026Programa,\u0026Log);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "InsertarManualenteBobinas",
+                                          "AgregarBobinas",
+                                          "SetNotSuccessMessagesLog",
+                                          "ExistenciaBobinasPorTurnoId",
+                                          "ExistenciaPalletPorTurnoId",
+                                          "vwAnaliticaCarrete",
+                                          "CarreteReportMainPCR",
+                                          "PaletReportMain",
+                                          "CrearExtrusion",
+                                          "PaletReportSAP",
+                                          "TieneTraslapePrensado",
+                                          "PalletCarreteReportMainPCR",
+                                          "CarreteWW",
+                                          "ObtenerSDTEtiquetaCarrete"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "FechaArchivo",
+                               "elementType":  "Variable",
+                               "dataType":  "DATETIME",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Fecha Archivo"
+                           },
+                           {
+                               "name":  "HTTP_HOST",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "HTTP_HOST"
+                           },
+                           {
+                               "name":  "Log",
+                               "elementType":  "Parameter",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Log"
+                           },
+                           {
+                               "name":  "MensajeDebug",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Mensaje Debug"
+                           },
+                           {
+                               "name":  "NivelDebug",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Nivel Debug"
+                           },
+                           {
+                               "name":  "NivelDebugConfigurado",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Nivel Debug Configurado"
+                           },
+                           {
+                               "name":  "NivelDebugDescripcion",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Nivel Debug Descripcion"
+                           },
+                           {
+                               "name":  "NombreArchivo",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Nombre Archivo"
+                           },
+                           {
+                               "name":  "Programa",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Programa"
+                           },
+                           {
+                               "name":  "ResultFile",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Result File"
+                           },
+                           {
+                               "name":  "TipoDebug",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tipo Debug"
+                           },
+                           {
+                               "name":  "Usuario",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Usuario"
+                           },
+                           {
+                               "name":  "WebSession",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_USRDEFTYP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Web Session"
+                           },
+                           {
+                               "name":  "HttpRequest",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_USRDEFTYP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Http Request"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

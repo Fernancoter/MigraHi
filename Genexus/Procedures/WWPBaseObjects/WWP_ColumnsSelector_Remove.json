@@ -1,0 +1,150 @@
+﻿{
+    "uniqueId":  "346f2eb9-4258-4db8-ae95-f8d4e09c5cd5",
+    "name":  "WWP_ColumnsSelector_Remove",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "Columns Selector - Remove Columns",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_ColumnsSelector_Remove.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026i = 1\nFor \u0026Column in \u0026ColumnsSelector.Columns\n\tIf \u0026Column.ColumnName = \u0026ColumnName\n\t\tExit\n\tEndIf\n\t\u0026i += 1\nEndFor\n\nIf \u0026i \u003c= \u0026ColumnsSelector.Columns.Count\n\t\u0026ColumnsSelector.Columns.Remove(\u0026i)\nEndIf\n",
+                              "cleanSource":  "\n\u0026i = 1\nFor \u0026Column in \u0026ColumnsSelector.Columns\n\tIf \u0026Column.ColumnName = \u0026ColumnName\n\t\tExit\n\tEndIf\n\t\u0026i += 1\nEndFor\n\nIf \u0026i \u003c= \u0026ColumnsSelector.Columns.Count\n\t\u0026ColumnsSelector.Columns.Remove(\u0026i)\nEndIf"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "\nparm(inout:\u0026ColumnsSelector, in:\u0026ColumnName, in:\u0026IsVisible);\n",
+                              "cleanSource":  "\nparm(inout:\u0026ColumnsSelector, in:\u0026ColumnName, in:\u0026IsVisible);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWPColumnsSelector"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ColumnsSelector",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Columns Selector"
+                           },
+                           {
+                               "name":  "ColumnName",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Column Name"
+                           },
+                           {
+                               "name":  "IsVisible",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Is Visible"
+                           },
+                           {
+                               "name":  "Column",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Column"
+                           },
+                           {
+                               "name":  "i",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "i"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

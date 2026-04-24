@@ -1,0 +1,126 @@
+﻿{
+    "uniqueId":  "50113a3e-44eb-4043-9364-1667c7c36468",
+    "name":  "SDPMDFFieldGetCharValue",
+    "type":  "Procedure",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPMDFField Get Char Value",
+    "filePath":  "Procedures/WorkWithPlus/NativeMobile/SDPMDFFieldGetCharValue.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026FieldValue = \u0026DynamicFormField.MDFDynamicFieldValue\n\nif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Boolean\n\t\u0026FieldValue = trim(\u0026DynamicFormField.MDFDynamicFieldValueCheck.ToString())\nendif\n\nif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Date\n\t\u0026FieldValue = trim(\u0026DynamicFormField.MDFDynamicFieldValueDate.ToString())\nendif\n\nif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Decimal\n\t\u0026FieldValue = trim(\u0026DynamicFormField.MDFDynamicFieldValueDecimal.ToString())\nendif\n\nif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Numeric\n\t\u0026FieldValue = trim(\u0026DynamicFormField.MDFDynamicFieldValueNumeric.ToString())\nendif\n",
+                              "cleanSource":  "\n\u0026FieldValue = \u0026DynamicFormField.MDFDynamicFieldValue\n\nif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Boolean\n\t\u0026FieldValue = trim(\u0026DynamicFormField.MDFDynamicFieldValueCheck.ToString())\nendif\n\nif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Date\n\t\u0026FieldValue = trim(\u0026DynamicFormField.MDFDynamicFieldValueDate.ToString())\nendif\n\nif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Decimal\n\t\u0026FieldValue = trim(\u0026DynamicFormField.MDFDynamicFieldValueDecimal.ToString())\nendif\n\nif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Numeric\n\t\u0026FieldValue = trim(\u0026DynamicFormField.MDFDynamicFieldValueNumeric.ToString())\nendif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026DynamicFormField, out:\u0026FieldValue);\n",
+                              "cleanSource":  "parm(in:\u0026DynamicFormField, out:\u0026FieldValue);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.MDFDynamicField"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "DynamicFormField",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Dynamic Form Field"
+                           },
+                           {
+                               "name":  "FieldValue",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Field Value"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

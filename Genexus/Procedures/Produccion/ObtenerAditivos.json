@@ -1,0 +1,134 @@
+﻿{
+    "uniqueId":  "6703934a-5e45-4e18-ae25-516a53858567",
+    "name":  "ObtenerAditivos",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Obtener Aditivos",
+    "filePath":  "Procedures/Produccion/ObtenerAditivos.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "If not (\u0026LoteId.IsEmpty())\n\tFor Each\n\t\t//Where LoteEmbarque = \u0026ExtrusionLoteSilo\n\t\tWhere LoteId = \u0026LoteId\n\t\t\u0026LotePaqueteAditivos = LotePaqueteAditivos\n\tWhen None\n\t\t\u0026LotePaqueteAditivos = PaqueteAditivos.NA\n\tEndFor\nElse\n\t\u0026LotePaqueteAditivos = PaqueteAditivos.NA\nEndIf\n",
+                              "cleanSource":  "If not (\u0026LoteId.IsEmpty())\n\tFor Each\n\t\t//Where LoteEmbarque = \u0026ExtrusionLoteSilo\n\t\tWhere LoteId = \u0026LoteId\n\t\t\u0026LotePaqueteAditivos = LotePaqueteAditivos\n\tWhen None\n\t\t\u0026LotePaqueteAditivos = PaqueteAditivos.NA\n\tEndFor\nElse\n\t\u0026LotePaqueteAditivos = PaqueteAditivos.NA\nEndIf"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(In:\u0026LoteId, Out:\u0026LotePaqueteAditivos);\n",
+                              "cleanSource":  "parm(In:\u0026LoteId, Out:\u0026LotePaqueteAditivos);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ExtrusionLoteSilo",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion Lote Silo"
+                           },
+                           {
+                               "name":  "LotePaqueteAditivos",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Lote Paquete Aditivos"
+                           },
+                           {
+                               "name":  "LoteId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Lote Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

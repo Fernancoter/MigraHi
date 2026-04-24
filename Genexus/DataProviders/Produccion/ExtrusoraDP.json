@@ -1,0 +1,81 @@
+﻿{
+    "uniqueId":  "0853b29c-ec29-4dd1-82b4-4994b91e4a50",
+    "name":  "ExtrusoraDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Extrusora DP",
+    "filePath":  "DataProviders/Produccion/ExtrusoraDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTExtrusora\n{\n\tSDTExtrusoraItem\n\t{\n\t\tExtrusoraId = ExtrusoraId\n\t\tExtrusoraNombre = ExtrusoraNombre\n\t\tExtrusoraImagen = ExtrusoraImagen\n\t}\n}\n",
+                              "cleanSource":  "SDTExtrusora\n{\n\tSDTExtrusoraItem\n\t{\n\t\tExtrusoraId = ExtrusoraId\n\t\tExtrusoraNombre = ExtrusoraNombre\n\t\tExtrusoraImagen = ExtrusoraImagen\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTExtrusora"
+                                     ],
+                         "calledBy":  [
+                                          "ExtrusoraObservacion",
+                                          "ExclusionDelDia"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTExtrusora"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

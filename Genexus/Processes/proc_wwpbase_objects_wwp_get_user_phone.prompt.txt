@@ -1,0 +1,10 @@
+﻿
+=== Procedure: WWPBaseObjects.WWP_GetUserPhone ===
+
+--- Source (Source) ---
+&GAMUser = GAMRepository.GetUserByGUID(&WWPUserExtendedId, &GAMErrorCollection)
+&WWPUserExtendedPhone = &GAMUser.Phone
+
+--- Rules (Rules) ---
+parm(in:&WWPUserExtendedId, out:&WWPUserExtendedPhone);
+

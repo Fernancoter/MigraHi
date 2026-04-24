@@ -1,0 +1,279 @@
+﻿{
+    "uniqueId":  "3e8112de-606f-4e27-bee8-840559aa7ddd",
+    "name":  "SDTPrensado",
+    "type":  "SDT",
+    "module":  "Produccion",
+    "description":  "SDTPrensado",
+    "filePath":  "SDTs/Produccion/SDTPrensado.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "PrensadoDelDiaDP",
+                                          "PrensadoDP",
+                                          "SDInitPrensado",
+                                          "GuardarPrensado",
+                                          "PrensadoDelDia",
+                                          "SDPrensadoItem",
+                                          "wzPrensadoDP",
+                                          "PrensadoTerminadoDP"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PrensadoFecha",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Fecha"
+                           },
+                           {
+                               "name":  "PrensadoPrensaId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensa Id"
+                           },
+                           {
+                               "name":  "PrensadoPrensaNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensa Nombre"
+                           },
+                           {
+                               "name":  "PrensadoTurnoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Turno Id"
+                           },
+                           {
+                               "name":  "PrensadoTurnoNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Turno Nombre"
+                           },
+                           {
+                               "name":  "PrensadoOperadorId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Operador Id"
+                           },
+                           {
+                               "name":  "PrensadoOperadorNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Operador Nombre"
+                           },
+                           {
+                               "name":  "PrensadoProductoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "PrensadoProductoNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Nombre"
+                           },
+                           {
+                               "name":  "PrensadoEstado",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Estado"
+                           },
+                           {
+                               "name":  "PrensadoTroquelId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Troquel Id"
+                           },
+                           {
+                               "name":  "PrensadoTroquelNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Troquel Nombre"
+                           },
+                           {
+                               "name":  "PrensadoHoraIniciaProceso",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Hora Inicia Proceso"
+                           },
+                           {
+                               "name":  "PrensadoHoraFinProceso",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Hora Fin Proceso"
+                           },
+                           {
+                               "name":  "PrensadoLevasKgEntrada",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Levas Kg Entrada"
+                           },
+                           {
+                               "name":  "PrensadoLevasKgSalida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Levas Kg Salida"
+                           },
+                           {
+                               "name":  "PrensadoLevasGradosEntrada",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Levas Grados Entrada"
+                           },
+                           {
+                               "name":  "PrensadoLevasGradosSalida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Levas Grados Salida"
+                           },
+                           {
+                               "name":  "PrensadoRodillosKgEntrada",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Rodillos Kg Entrada"
+                           },
+                           {
+                               "name":  "PrensadoRodillosKgSalida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Rodillos Kg Salida"
+                           },
+                           {
+                               "name":  "PrensadoRodillosGradosEntrada",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Rodillos Grados Entrada"
+                           },
+                           {
+                               "name":  "PrensadoRodillosGradosSalida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Rodillos Grados Salida"
+                           },
+                           {
+                               "name":  "PrensadoLevasUnidadMedida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Levas Unidad Medida"
+                           },
+                           {
+                               "name":  "PrensadoRodillosUnidadMedida",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Rodillos Unidad Medida"
+                           },
+                           {
+                               "name":  "PrensadoMotivoAnticipado",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Motivo Anticipado"
+                           },
+                           {
+                               "name":  "PrensadoMeta",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Meta"
+                           },
+                           {
+                               "name":  "BobinaDesmontadaId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina Desmontada Id"
+                           }
+                       ]
+}

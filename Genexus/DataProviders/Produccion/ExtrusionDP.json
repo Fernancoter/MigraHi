@@ -1,0 +1,126 @@
+﻿{
+    "uniqueId":  "5b973a63-b6a9-40b9-862e-e33a2c45863f",
+    "name":  "ExtrusionDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Extrusion DP",
+    "filePath":  "DataProviders/Produccion/ExtrusionDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTExtrusion\n{        \n//\tSDTExtrusionItem\n//        Where ExtrusionId \u003e 0\n//        where ExtrusionOperadorId = \u0026OperadorId and ExtrusionEstado in (EstadoExtrusion.Programada) when \u0026Asignado = true and \u0026OperadorId \u003e 0\n//\twhere (ExtrusionOperadorId.IsNull() or ExtrusionOperadorId \u003c\u003e \u0026OperadorId) and ExtrusionEstado in (EstadoExtrusion.Programada, EstadoExtrusion.Intermedia) when \u0026Asignado = false\n//\twhere ExtrusionExtrusoraId = \u0026ExtrusoraId when \u0026ExtrusoraId \u003e 0 and \u0026Asignado = false\n//\twhere ExtrusionTurnoId = \u0026TurnoId when \u0026TurnoId \u003e 0 and \u0026Asignado = false\n//\twhere ExtrusionFecha.ToDate() = \u0026Fecha.ToDate() when not \u0026Fecha.IsEmpty()\n\n        SDTExtrusionItem\n        Where ExtrusionId \u003e 0\n\twhere ExtrusionEstado in (EstadoExtrusion.Programada, EstadoExtrusion.Intermedia)\n\twhere ExtrusionExtrusoraId = \u0026ExtrusoraId when \u0026ExtrusoraId \u003e 0\n\twhere ExtrusionTurnoId = \u0026TurnoId when \u0026TurnoId \u003e 0\n\twhere ExtrusionFecha.ToDate() = \u0026Fecha\n\n\t{\n\t\tExtrusionId = ExtrusionId\n\t\tExtrusionExtrusoraId = ExtrusionExtrusoraId\n\t\tExtrusionExtrusoraNombre = ExtrusionExtrusoraNombre\n\t\tExtrusionTurnoId = ExtrusionTurnoId\n\t\tExtrusionTurnoNombre = Notifications.ExtrusionTurnoNombre\n\t\tExtrusionFecha = ExtrusionFecha\n\t\tExtrusionCalibre = ExtrusionCalibre\n\t\tExtrusionAncho = ExtrusionAncho\n\t\tExtrusionLongitud = ExtrusionLongitud\n\n\t\tExtrusionProductoId = ExtrusionProductoId\n\t\tExtrusionProductoNombre = ExtrusionProductoNombre\n\t\tExtrusionProductoTipoMaterial = Produccion.ExtrusionProductoTipoMaterial\n\t\tExtrusionEstado = ExtrusionEstado\n\t\tExtrusionLotePaqueteAditivos = ExtrusionLotePaqueteAditivos\n\t\t\n//\t\tExtrusionVirgenKg = ExtrusionVirgenKg\n//\t\tExtrusionMolidoKg = ExtrusionMolidoKg\n\n//\t\tExtrusionOperadorId = ExtrusionOperadorId\n//\t\tExtrusionOperadorNombre = ExtrusionOperadorNombre\n//\t\tExtrusionMeta = ExtrusionMeta\n//\t\tExtrusionLoteSilo = ExtrusionLoteSilo\n//\t\tExtrusionHoraIniciaProceso = ExtrusionHoraIniciaProceso\n//\t\tExtrusionHoraFinProceso = ExtrusionHoraFinProceso\n//\t\tExtrusionSiloId = ExtrusionSiloId\n//\t\tExtrusionSiloNombre = ExtrusionSiloNombre\n//\t\tExtrusionSiloMolidoId = ExtrusionSiloMolidoId\n//\t\tExtrusionSiloMolidoNombre = ExtrusionSiloMolidoNombre\n//\t\tExtrusionRevHusilloVirgen = ExtrusionRevHusilloVirgen\n//\t\tExtrusionRevHusilloMolido = ExtrusionRevHusilloMolido\n\t}\n}\n",
+                              "cleanSource":  "SDTExtrusion\n{        \n//\tSDTExtrusionItem\n//        Where ExtrusionId \u003e 0\n//        where ExtrusionOperadorId = \u0026OperadorId and ExtrusionEstado in (EstadoExtrusion.Programada) when \u0026Asignado = true and \u0026OperadorId \u003e 0\n//\twhere (ExtrusionOperadorId.IsNull() or ExtrusionOperadorId \u003c\u003e \u0026OperadorId) and ExtrusionEstado in (EstadoExtrusion.Programada, EstadoExtrusion.Intermedia) when \u0026Asignado = false\n//\twhere ExtrusionExtrusoraId = \u0026ExtrusoraId when \u0026ExtrusoraId \u003e 0 and \u0026Asignado = false\n//\twhere ExtrusionTurnoId = \u0026TurnoId when \u0026TurnoId \u003e 0 and \u0026Asignado = false\n//\twhere ExtrusionFecha.ToDate() = \u0026Fecha.ToDate() when not \u0026Fecha.IsEmpty()\n\n        SDTExtrusionItem\n        Where ExtrusionId \u003e 0\n\twhere ExtrusionEstado in (EstadoExtrusion.Programada, EstadoExtrusion.Intermedia)\n\twhere ExtrusionExtrusoraId = \u0026ExtrusoraId when \u0026ExtrusoraId \u003e 0\n\twhere ExtrusionTurnoId = \u0026TurnoId when \u0026TurnoId \u003e 0\n\twhere ExtrusionFecha.ToDate() = \u0026Fecha\n\n\t{\n\t\tExtrusionId = ExtrusionId\n\t\tExtrusionExtrusoraId = ExtrusionExtrusoraId\n\t\tExtrusionExtrusoraNombre = ExtrusionExtrusoraNombre\n\t\tExtrusionTurnoId = ExtrusionTurnoId\n\t\tExtrusionTurnoNombre = Notifications.ExtrusionTurnoNombre\n\t\tExtrusionFecha = ExtrusionFecha\n\t\tExtrusionCalibre = ExtrusionCalibre\n\t\tExtrusionAncho = ExtrusionAncho\n\t\tExtrusionLongitud = ExtrusionLongitud\n\n\t\tExtrusionProductoId = ExtrusionProductoId\n\t\tExtrusionProductoNombre = ExtrusionProductoNombre\n\t\tExtrusionProductoTipoMaterial = Produccion.ExtrusionProductoTipoMaterial\n\t\tExtrusionEstado = ExtrusionEstado\n\t\tExtrusionLotePaqueteAditivos = ExtrusionLotePaqueteAditivos\n\t\t\n//\t\tExtrusionVirgenKg = ExtrusionVirgenKg\n//\t\tExtrusionMolidoKg = ExtrusionMolidoKg\n\n//\t\tExtrusionOperadorId = ExtrusionOperadorId\n//\t\tExtrusionOperadorNombre = ExtrusionOperadorNombre\n//\t\tExtrusionMeta = ExtrusionMeta\n//\t\tExtrusionLoteSilo = ExtrusionLoteSilo\n//\t\tExtrusionHoraIniciaProceso = ExtrusionHoraIniciaProceso\n//\t\tExtrusionHoraFinProceso = ExtrusionHoraFinProceso\n//\t\tExtrusionSiloId = ExtrusionSiloId\n//\t\tExtrusionSiloNombre = ExtrusionSiloNombre\n//\t\tExtrusionSiloMolidoId = ExtrusionSiloMolidoId\n//\t\tExtrusionSiloMolidoNombre = ExtrusionSiloMolidoNombre\n//\t\tExtrusionRevHusilloVirgen = ExtrusionRevHusilloVirgen\n//\t\tExtrusionRevHusilloMolido = ExtrusionRevHusilloMolido\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "//parm(in:\u0026OperadorId, in:\u0026ExtrusoraId, in:\u0026TurnoId, in:\u0026Fecha, in:\u0026Asignado);\nparm(in:\u0026ExtrusoraId, in:\u0026TurnoId, in:\u0026Fecha);\n",
+                              "cleanSource":  "//parm(in:\u0026OperadorId, in:\u0026ExtrusoraId, in:\u0026TurnoId, in:\u0026Fecha, in:\u0026Asignado);\nparm(in:\u0026ExtrusoraId, in:\u0026TurnoId, in:\u0026Fecha);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTExtrusion"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTExtrusion"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Asignado",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Asignado"
+                           },
+                           {
+                               "name":  "ExtrusoraId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusora Id"
+                           },
+                           {
+                               "name":  "Fecha",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATE",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Fecha"
+                           },
+                           {
+                               "name":  "OperadorId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Operador Id"
+                           },
+                           {
+                               "name":  "TurnoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Turno Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

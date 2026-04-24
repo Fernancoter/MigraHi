@@ -1,0 +1,102 @@
+﻿{
+    "uniqueId":  "2fec13c9-154d-4e3c-b581-03a475390d92",
+    "name":  "SDProductoTerminadoDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "SDProducto Terminado",
+    "filePath":  "DataProviders/Produccion/SDProductoTerminadoDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTProducto\n{\n\tSDTProductoItem\n\twhere ProductoTerminadoId \u003e 0\n\twhere TerminadoProductoId \u003e 0\n\twhere TerminadoProductoId \u003c\u003e \u0026ProductoId when \u0026ProductoId \u003e 0\n\twhere TerminadoProductoActivo = true\n\twhere ProductoTerminadoConEtiqueta = \u0026ConEtiqueta\n\t{\n\t\tProductoId = TerminadoProductoId\n\t\tProductoNombre = TerminadoProductoNombre\n\t}\n}\n",
+                              "cleanSource":  "SDTProducto\n{\n\tSDTProductoItem\n\twhere ProductoTerminadoId \u003e 0\n\twhere TerminadoProductoId \u003e 0\n\twhere TerminadoProductoId \u003c\u003e \u0026ProductoId when \u0026ProductoId \u003e 0\n\twhere TerminadoProductoActivo = true\n\twhere ProductoTerminadoConEtiqueta = \u0026ConEtiqueta\n\t{\n\t\tProductoId = TerminadoProductoId\n\t\tProductoNombre = TerminadoProductoNombre\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ProductoId, in:\u0026ConEtiqueta);\n",
+                              "cleanSource":  "parm(in:\u0026ProductoId, in:\u0026ConEtiqueta);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTProducto"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTProducto"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ConEtiqueta",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Con Etiqueta"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

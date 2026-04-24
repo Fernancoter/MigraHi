@@ -1,0 +1,159 @@
+﻿{
+    "uniqueId":  "f9c8f609-767b-4ffd-8fec-2c05079c31d1",
+    "name":  "SDObtenerTiempoProceso",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDObtener Tiempo Proceso",
+    "filePath":  "Procedures/Produccion/SDObtenerTiempoProceso.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "        \n\t\u0026Extrusion.Load(\u0026ExtrusionId)\n\t\u0026ExtrusoraId = \u0026Extrusion.ExtrusionExtrusoraId\n\t\u0026ProductoId = \u0026Extrusion.ExtrusionProductoId\n\t\n\t\u0026TiempoProceso = 0\n\t\n\tfor each\n\t\twhere ExtrusoraProductoId \u003e 0\n\t\twhere ExtrusoraId = \u0026ExtrusoraId\n\t\twhere ProductoId = \u0026ProductoId\n\t\t\u0026TiempoProceso = ExtrusoraProductoTiempoProceso\n\t\tExit\n\twhen none\n\t\tmsg(\u0027Debe configurar el tiempo de proceso para el producto \u0027 + \u0026Bobina.BobinaProductoNombre)\n\tendfor\n",
+                              "cleanSource":  "        \n\t\u0026Extrusion.Load(\u0026ExtrusionId)\n\t\u0026ExtrusoraId = \u0026Extrusion.ExtrusionExtrusoraId\n\t\u0026ProductoId = \u0026Extrusion.ExtrusionProductoId\n\t\n\t\u0026TiempoProceso = 0\n\t\n\tfor each\n\t\twhere ExtrusoraProductoId \u003e 0\n\t\twhere ExtrusoraId = \u0026ExtrusoraId\n\t\twhere ProductoId = \u0026ProductoId\n\t\t\u0026TiempoProceso = ExtrusoraProductoTiempoProceso\n\t\tExit\n\twhen none\n\t\tmsg(\u0027Debe configurar el tiempo de proceso para el producto \u0027 + \u0026Bobina.BobinaProductoNombre)\n\tendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ExtrusionId, out:\u0026TiempoProceso);\n",
+                              "cleanSource":  "parm(in:\u0026ExtrusionId, out:\u0026TiempoProceso);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Extrusion",
+                                         "DB.Bobina"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Extrusion"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ExtrusionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Extrusion Id"
+                           },
+                           {
+                               "name":  "Extrusion",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusion"
+                           },
+                           {
+                               "name":  "TiempoProceso",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Tiempo Proceso"
+                           },
+                           {
+                               "name":  "ExtrusoraId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Extrusora Id"
+                           },
+                           {
+                               "name":  "ProductoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Id"
+                           },
+                           {
+                               "name":  "Bobina",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Bobina"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

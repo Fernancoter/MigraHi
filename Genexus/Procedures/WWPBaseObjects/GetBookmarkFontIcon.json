@@ -1,0 +1,159 @@
+﻿{
+    "uniqueId":  "87b4556f-7c32-42eb-a546-b026e29c98fd",
+    "name":  "GetBookmarkFontIcon",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "Get Bookmark Font Icon",
+    "filePath":  "Procedures/WWPBaseObjects/GetBookmarkFontIcon.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\nFor \u0026DVelop_MenuItem in \u0026DVelop_Menu\n\tIf \u0026DVelop_MenuItem.link = \u0026LinkToFind\n\t\t\u0026FontIcon = \u0026DVelop_MenuItem.iconClass\n\t\tExit\n\tElse\n\t\t\u0026FontIcon = GetBookmarkFontIcon(\u0026LinkToFind, \u0026DVelop_MenuItem.subItems)\n\t\tIf \u0026FontIcon \u003c\u003e \u0027\u0027\n\t\t\tExit\n\t\tEndIf\n\tEndIf\nEndFor\n",
+                              "cleanSource":  "\nFor \u0026DVelop_MenuItem in \u0026DVelop_Menu\n\tIf \u0026DVelop_MenuItem.link = \u0026LinkToFind\n\t\t\u0026FontIcon = \u0026DVelop_MenuItem.iconClass\n\t\tExit\n\tElse\n\t\t\u0026FontIcon = GetBookmarkFontIcon(\u0026LinkToFind, \u0026DVelop_MenuItem.subItems)\n\t\tIf \u0026FontIcon \u003c\u003e \u0027\u0027\n\t\t\tExit\n\t\tEndIf\n\tEndIf\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026LinkToFind, in:\u0026DVelop_Menu, out:\u0026FontIcon);\n",
+                              "cleanSource":  "parm(in:\u0026LinkToFind, in:\u0026DVelop_Menu, out:\u0026FontIcon);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.GetBookmarkFontIcon",
+                                         "WWPBaseObjects.DVelop_Menu"
+                                     ],
+                         "calledBy":  [
+                                          "GetBookmarkFontIcon"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "DVelop_Menu"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "DVelop_MenuItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "DVelop_Menu Item"
+                           },
+                           {
+                               "name":  "DVelop_Menu",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "DVelop_Menu"
+                           },
+                           {
+                               "name":  "FontIcon",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Font Icon"
+                           },
+                           {
+                               "name":  "LinkToFind",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Link To Find"
+                           },
+                           {
+                               "name":  "LinkFound",
+                               "elementType":  "Variable",
+                               "dataType":  "Boolean",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Link Found"
+                           },
+                           {
+                               "name":  "HttpRequest",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_USRDEFTYP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Http Request"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,127 @@
+﻿{
+    "uniqueId":  "e6ebb61b-e07b-41a2-b72b-52b3bf2fe69a",
+    "name":  "WWP_RangePicker_GetOptions",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Get Range Picker Options",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_RangePicker_GetOptions.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026PickerOptions = new()\n\nWWPBaseObjects.WWP_RangePicker_AddPredefinedRange.Past(\u0026PickerOptions)\nWWPBaseObjects.WWP_RangePicker_AddPredefinedRange.Yesterday(\u0026PickerOptions)\nWWPBaseObjects.WWP_RangePicker_AddPredefinedRange.Today(\u0026PickerOptions)\nWWPBaseObjects.WWP_RangePicker_AddPredefinedRange.Tomorrow(\u0026PickerOptions)\nWWP_RangePicker_AddPredefinedRange.InTheFuture(\u0026PickerOptions)\nWWPBaseObjects.WWP_RangePicker_AddPredefinedRange.LastWeek(\u0026PickerOptions)\nWWP_RangePicker_AddPredefinedRange.LastMonth(\u0026PickerOptions)\nWWP_RangePicker_AddPredefinedRange.LastYear(\u0026PickerOptions)\nWWPBaseObjects.WWP_RangePicker_AddPredefinedRange.ThisWeek(\u0026PickerOptions)\nWWPBaseObjects.WWP_RangePicker_AddPredefinedRange.ThisMonth(\u0026PickerOptions)\nWWP_RangePicker_AddPredefinedRange.ThisYear(\u0026PickerOptions)\nWWP_RangePicker_AddPredefinedRange.NextWeek(\u0026PickerOptions)\nWWP_RangePicker_AddPredefinedRange.NextMonth(\u0026PickerOptions)\nWWP_RangePicker_AddPredefinedRange.NextYear(\u0026PickerOptions)\n",
+                              "cleanSource":  "\n\u0026PickerOptions = new()\n\nWWPBaseObjects.WWP_RangePicker_AddPredefinedRange.Past(\u0026PickerOptions)\nWWPBaseObjects.WWP_RangePicker_AddPredefinedRange.Yesterday(\u0026PickerOptions)\nWWPBaseObjects.WWP_RangePicker_AddPredefinedRange.Today(\u0026PickerOptions)\nWWPBaseObjects.WWP_RangePicker_AddPredefinedRange.Tomorrow(\u0026PickerOptions)\nWWP_RangePicker_AddPredefinedRange.InTheFuture(\u0026PickerOptions)\nWWPBaseObjects.WWP_RangePicker_AddPredefinedRange.LastWeek(\u0026PickerOptions)\nWWP_RangePicker_AddPredefinedRange.LastMonth(\u0026PickerOptions)\nWWP_RangePicker_AddPredefinedRange.LastYear(\u0026PickerOptions)\nWWPBaseObjects.WWP_RangePicker_AddPredefinedRange.ThisWeek(\u0026PickerOptions)\nWWPBaseObjects.WWP_RangePicker_AddPredefinedRange.ThisMonth(\u0026PickerOptions)\nWWP_RangePicker_AddPredefinedRange.ThisYear(\u0026PickerOptions)\nWWP_RangePicker_AddPredefinedRange.NextWeek(\u0026PickerOptions)\nWWP_RangePicker_AddPredefinedRange.NextMonth(\u0026PickerOptions)\nWWP_RangePicker_AddPredefinedRange.NextYear(\u0026PickerOptions)"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "\nparm(out:\u0026PickerOptions);\n",
+                              "cleanSource":  "\nparm(out:\u0026PickerOptions);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_RangePicker_AddPredefinedRange",
+                                         "WWPBaseObjects.WWPDateRangePickerOptions"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PickerOptions",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Picker Options"
+                           },
+                           {
+                               "name":  "PickerOption",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Picker Option"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,84 @@
+﻿{
+    "uniqueId":  "99e3d9d3-b225-4e72-95b6-1250464aee2f",
+    "name":  "TurnoDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Turno DP",
+    "filePath":  "DataProviders/Produccion/TurnoDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTTurno\n{\n\tSDTTurnoItem\n\t{\n\t\tTurnoId = TurnoId\n\t\tTurnoNombre = TurnoNombre\n\t}\n}\n",
+                              "cleanSource":  "SDTTurno\n{\n\tSDTTurnoItem\n\t{\n\t\tTurnoId = TurnoId\n\t\tTurnoNombre = TurnoNombre\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTTurno"
+                                     ],
+                         "calledBy":  [
+                                          "PrensadoDelDia",
+                                          "ExtrusoraObservacion",
+                                          "ExclusionDelDia",
+                                          "PrensaObservacion",
+                                          "Existencia"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTTurno"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

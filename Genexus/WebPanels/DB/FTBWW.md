@@ -1,0 +1,396 @@
+# WebPanel: FTBWW
+
+- **Module:** DB
+- **Description:**  FTB
+- **GAM Object:** No
+
+## Data Dictionary / Parameters
+
+| Name | Element Type | Data Type | Accessor | Description |
+|---|---|---|---|---|
+| IsAuthorized | Variable | Boolean |  | Is Authorized |
+| WWPContext | Variable | GX_SDT |  | WWPContext |
+| SecurityFunctionalityKeys | Variable | VARCHAR |  | Security Functionality Keys |
+| HTTPRequest | Variable | GX_USRDEFTYP |  | HTTPRequest |
+| TrnContext | Variable | GX_SDT |  | Trn Context |
+| TrnContextAtt | Variable | GX_SDT |  | Trn Context Att |
+| GridState | Variable | GX_SDT |  | Grid State |
+| GridStateFilterValue | Variable | GX_SDT |  | Grid State Filter Value |
+| OrderedBy | Variable | NUMERIC |  | Ordered By |
+| OrderedDsc | Variable | Boolean |  | Ordered Dsc |
+| OrderedByAux | Variable | NUMERIC |  | Ordered By Aux |
+| FilterFullText | Variable | VARCHAR |  | Filter Full Text |
+| ColumnsSelectorXML | Variable | LONGVARCHAR |  | Columns Selector XML |
+| UserCustomValue | Variable | LONGVARCHAR |  | User Custom Value |
+| ColumnsSelector | Variable | GX_SDT |  | Columns Selector |
+| ColumnsSelectorAux | Variable | GX_SDT |  | Columns Selector Aux |
+| Session | Variable | GX_USRDEFTYP |  | Session |
+| ManageFiltersData | Variable | GX_SDT |  | Manage Filters Data |
+| ManageFiltersXml | Variable | LONGVARCHAR |  | Manage Filters Xml |
+| ManageFiltersExecutionStep | Variable | NUMERIC |  | Manage Filters Execution Step |
+| TFInvoice | Variable | VARCHAR |  | TFInvoice |
+| TFInvoice_Sel | Variable | VARCHAR |  | TFInvoice_Sel |
+| TFProductNumber | Variable | VARCHAR |  | TFProduct Number |
+| TFProductNumber_Sel | Variable | VARCHAR |  | TFProduct Number_Sel |
+| TFNumPar | Variable | NUMERIC |  | TFNum Par |
+| TFNumPar_To | Variable | NUMERIC |  | TFNum Par_To |
+| TFUnit | Variable | VARCHAR |  | TFUnit |
+| TFUnit_Sel | Variable | VARCHAR |  | TFUnit_Sel |
+| TFSalesPerson | Variable | VARCHAR |  | TFSales Person |
+| TFSalesPerson_Sel | Variable | VARCHAR |  | TFSales Person_Sel |
+| TFMarketCode | Variable | VARCHAR |  | TFMarket Code |
+| TFMarketCode_Sel | Variable | VARCHAR |  | TFMarket Code_Sel |
+| TFSubMarketCode | Variable | VARCHAR |  | TFSub Market Code |
+| TFSubMarketCode_Sel | Variable | VARCHAR |  | TFSub Market Code_Sel |
+| TFFTBCustomer | Variable | VARCHAR |  | TFFTBCustomer |
+| TFFTBCustomer_Sel | Variable | VARCHAR |  | TFFTBCustomer_Sel |
+| TFCustomerName | Variable | VARCHAR |  | TFCustomer Name |
+| TFCustomerName_Sel | Variable | VARCHAR |  | TFCustomer Name_Sel |
+| TFConsolidatedName | Variable | VARCHAR |  | TFConsolidated Name |
+| TFConsolidatedName_Sel | Variable | VARCHAR |  | TFConsolidated Name_Sel |
+| TFFTBCustomerNameShipping | Variable | VARCHAR |  | TFFTBCustomer Name Shipping |
+| TFFTBCustomerNameShipping_Sel | Variable | VARCHAR |  | TFFTBCustomer Name Shipping_Sel |
+| TFInvoiceDate | Variable | DATE |  | TFInvoice Date |
+| TFInvoiceDate_To | Variable | DATE |  | TFInvoice Date_To |
+| DDO_InvoiceDateAuxDate | Variable | DATE |  | DDO_Invoice Date Aux Date |
+| DDO_InvoiceDateAuxDateTo | Variable | DATE |  | DDO_Invoice Date Aux Date To |
+| DDO_InvoiceDateAuxDateText | Variable | VARCHAR |  | DDO_Invoice Date Aux Date Text |
+| TFProductType | Variable | VARCHAR |  | TFProduct Type |
+| TFProductType_Sel | Variable | VARCHAR |  | TFProduct Type_Sel |
+| TFPackaging | Variable | VARCHAR |  | TFPackaging |
+| TFPackaging_Sel | Variable | VARCHAR |  | TFPackaging_Sel |
+| TFSubProductType | Variable | VARCHAR |  | TFSub Product Type |
+| TFSubProductType_Sel | Variable | VARCHAR |  | TFSub Product Type_Sel |
+| TFProductCost | Variable | NUMERIC |  | TFProduct Cost |
+| TFProductCost_To | Variable | NUMERIC |  | TFProduct Cost_To |
+| TFQuantity | Variable | NUMERIC |  | TFQuantity |
+| TFQuantity_To | Variable | NUMERIC |  | TFQuantity_To |
+| TFLCExtendedPrice | Variable | NUMERIC |  | TFLCExtended Price |
+| TFLCExtendedPrice_To | Variable | NUMERIC |  | TFLCExtended Price_To |
+| TFLCExtendedCost | Variable | NUMERIC |  | TFLCExtended Cost |
+| TFLCExtendedCost_To | Variable | NUMERIC |  | TFLCExtended Cost_To |
+| TFCurrency | Variable | VARCHAR |  | TFCurrency |
+| TFCurrency_Sel | Variable | VARCHAR |  | TFCurrency_Sel |
+| TFFTBShipping | Variable | VARCHAR |  | TFFTBShipping |
+| TFFTBShipping_Sel | Variable | VARCHAR |  | TFFTBShipping_Sel |
+| TFBudgetCustomer | Variable | VARCHAR |  | TFBudget Customer |
+| TFBudgetCustomer_Sel | Variable | VARCHAR |  | TFBudget Customer_Sel |
+| TFBudgetConsolidatedName | Variable | VARCHAR |  | TFBudget Consolidated Name |
+| TFBudgetConsolidatedName_Sel | Variable | VARCHAR |  | TFBudget Consolidated Name_Sel |
+| TFBudgetCustomerName | Variable | VARCHAR |  | TFBudget Customer Name |
+| TFBudgetCustomerName_Sel | Variable | VARCHAR |  | TFBudget Customer Name_Sel |
+| TFFTBYear | Variable | NUMERIC |  | TFFTBYear |
+| TFFTBYear_To | Variable | NUMERIC |  | TFFTBYear_To |
+| DDO_TitleSettingsIcons | Variable | GX_SDT |  | DDO_Title Settings Icons |
+| GAMSession | Variable | GX_EXTERNAL_OBJECT |  | GAMSession |
+| GAMErrors | Variable | GX_EXTERNAL_OBJECT |  | GAMErrors |
+| PageToGo | Variable | NUMERIC |  | Page To Go |
+| GridCurrentPage | Variable | NUMERIC |  | Grid Current Page |
+| GridPageCount | Variable | NUMERIC |  | Grid Page Count |
+| GridAppliedFilters | Variable | VARCHAR |  | Grid Applied Filters |
+| GridActions | Variable | NUMERIC |  | Grid Actions |
+| IsAuthorized_Display | Variable | Boolean |  | Is Authorized_Display |
+| IsAuthorized_Update | Variable | Boolean |  | Is Authorized_Update |
+| IsAuthorized_Delete | Variable | Boolean |  | Is Authorized_Delete |
+| IsAuthorized_Insert | Variable | Boolean |  | Is Authorized_Insert |
+| ExcelFilename | Variable | VARCHAR |  | Excel Filename |
+| ErrorMessage | Variable | VARCHAR |  | Error Message |
+| Update | Variable | CHARACTER |  | Update |
+| Delete | Variable | CHARACTER |  | Delete |
+| AGExportData | Variable | GX_SDT |  | AGExport Data |
+| AGExportDataItem | Variable | GX_SDT |  | AGExport Data Item |
+| TFProductDesc | Variable | VARCHAR |  | TFProduct Desc |
+| TFProductDesc_Sel | Variable | VARCHAR |  | TFProduct Desc_Sel |
+| Today | Variable | DATE |  | Today |
+| Time | Variable | CHARACTER |  | Time |
+| Pgmname | Variable | CHARACTER |  | Pgmname |
+| Pgmdesc | Variable | CHARACTER |  | Pgmdesc |
+
+## Business Logic
+
+### Start (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	TFInvoiceDate_RangePicker.Attach(&DDO_InvoiceDateAuxDateText.InternalName)
+	
+	Grid.Rows = Page.Rows
+	Grid_Empowerer.GridInternalName = Grid.InternalName
+	DDO_GridColumnsSelector.GridInternalName = Grid.InternalName
+	If &HTTPRequest.Method = HttpMethod.Get
+		Do 'LoadSavedFilters'
+	EndIf
+	ddo_AGExport.TitleControlIdToReplace = BtnAGExport.InternalName
+	&AGExportData = new()
+	
+	&AGExportDataItem = new()
+	&AGExportDataItem.Title = ''
+	&AGExportDataItem.Icon = ActionExportReport.Link()
+	&AGExportDataItem.EventKey = !'ExportReport'
+	&AGExportDataItem.IsDivider = False
+	&AGExportData.Add(&AGExportDataItem)
+	
+	DDC_Subscriptions.TitleControlIdToReplace = BtnSubscriptions.InternalName
+	
+	&GAMSession = GAMSession.Get(&GAMErrors)
+	DDO_Grid.GridInternalName = Grid.InternalName
+	DDO_Grid.GAMOAuthToken = &GAMSession.Token
+	Form.Caption = ' FTB'
+	Do 'PrepareTransaction'
+	Do 'LoadGridState'
+	If &OrderedBy < 1
+		&OrderedBy = 1
+		Do 'SetDDOSortedStatus'
+	EndIf
+	&DDO_TitleSettingsIcons = GetWWPTitleSettingsIcons()
+	DDO_GridColumnsSelector.TitleControlIdToReplace = BtnEditColumns.InternalName
+	GridPaginationBar.RowsPerPageSelectedValue = Grid.Rows
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### Refresh (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	LoadWWPContext.Call(&WWPContext)
+	Do 'CheckSecurityForActions'
+	Do Case
+		Case &ManageFiltersExecutionStep = 1
+			&ManageFiltersExecutionStep = 2
+		Case &ManageFiltersExecutionStep = 2
+			&ManageFiltersExecutionStep = 0
+			Do 'LoadSavedFilters'
+	EndCase
+	Do 'SaveGridState'
+	
+	If &Session.Get(!'DB.FTBWWColumnsSelector') <> ''
+		&ColumnsSelectorXML = &Session.Get(!'DB.FTBWWColumnsSelector')
+		&ColumnsSelector.FromXml(&ColumnsSelectorXML)
+	Else
+		Do 'InitializeColumnsSelector'
+	EndIf
+	Unit.Visible = &ColumnsSelector.Columns.Item(1).IsVisible
+	SalesPerson.Visible = &ColumnsSelector.Columns.Item(2).IsVisible
+	MarketCode.Visible = &ColumnsSelector.Columns.Item(3).IsVisible
+	SubMarketCode.Visible = &ColumnsSelector.Columns.Item(4).IsVisible
+	FTBCustomer.Visible = &ColumnsSelector.Columns.Item(5).IsVisible
+	CustomerName.Visible = &ColumnsSelector.Columns.Item(6).IsVisible
+	FTBCustomerNameShipping.Visible = &ColumnsSelector.Columns.Item(7).IsVisible
+	ConsolidatedName.Visible = &ColumnsSelector.Columns.Item(8).IsVisible
+	InvoiceDate.Visible = &ColumnsSelector.Columns.Item(9).IsVisible
+	Invoice.Visible = &ColumnsSelector.Columns.Item(10).IsVisible
+	ProductNumber.Visible = &ColumnsSelector.Columns.Item(11).IsVisible
+	ProductDesc.Visible = &ColumnsSelector.Columns.Item(12).IsVisible
+	ProductType.Visible = &ColumnsSelector.Columns.Item(13).IsVisible
+	Packaging.Visible = &ColumnsSelector.Columns.Item(14).IsVisible
+	SubProductType.Visible = &ColumnsSelector.Columns.Item(15).IsVisible
+	Quantity.Visible = &ColumnsSelector.Columns.Item(16).IsVisible
+	LCExtendedPrice.Visible = &ColumnsSelector.Columns.Item(17).IsVisible
+	LCExtendedCost.Visible = &ColumnsSelector.Columns.Item(18).IsVisible
+	Currency.Visible = &ColumnsSelector.Columns.Item(19).IsVisible
+	&GridCurrentPage = Grid.CurrentPage
+	&GridPageCount = Grid.PageCount
+	&GridAppliedFilters = WWP_GetAppliedFiltersDescription(&Pgmname)
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### GridPaginationBar.ChangePage (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Do Case
+		Case GridPaginationBar.SelectedPage = !'Previous'
+			Grid.PreviousPage()
+		Case GridPaginationBar.SelectedPage = !'Next'
+			Grid.NextPage()
+		Otherwise
+			&PageToGo.FromString(GridPaginationBar.SelectedPage)
+			Grid.GotoPage(&PageToGo)
+	EndCase
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### GridPaginationBar.ChangeRowsPerPage (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Grid.Rows = GridPaginationBar.RowsPerPageSelectedValue
+	Grid.FirstPage()
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### DDO_Grid.OnOptionClicked (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Do Case
+		Case DDO_Grid.ActiveEventKey = !'<#OrderASC#>' OR DDO_Grid.ActiveEventKey = !'<#OrderDSC#>'
+			&OrderedBy.FromString(DDO_Grid.SelectedValue_get)
+			&OrderedDsc = iif(DDO_Grid.ActiveEventKey = !'<#OrderDSC#>', true, false)
+			Do 'SetDDOSortedStatus'
+			Grid.FirstPage()
+		Case DDO_Grid.ActiveEventKey = !'<#Filter#>'
+			Do Case
+				Case DDO_Grid.SelectedColumn = !'Unit'
+					&TFUnit = DDO_Grid.FilteredText_get
+					&TFUnit_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'SalesPerson'
+					&TFSalesPerson = DDO_Grid.FilteredText_get
+					&TFSalesPerson_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'MarketCode'
+					&TFMarketCode = DDO_Grid.FilteredText_get
+					&TFMarketCode_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'SubMarketCode'
+					&TFSubMarketCode = DDO_Grid.FilteredText_get
+					&TFSubMarketCode_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'FTBCustomer'
+					&TFFTBCustomer = DDO_Grid.FilteredText_get
+					&TFFTBCustomer_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'CustomerName'
+					&TFCustomerName = DDO_Grid.FilteredText_get
+					&TFCustomerName_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'FTBCustomerNameShipping'
+					&TFFTBCustomerNameShipping = DDO_Grid.FilteredText_get
+					&TFFTBCustomerNameShipping_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'ConsolidatedName'
+					&TFConsolidatedName = DDO_Grid.FilteredText_get
+					&TFConsolidatedName_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'InvoiceDate'
+					&TFInvoiceDate.FromString(DDO_Grid.FilteredText_get)
+					&TFInvoiceDate_To.FromString(DDO_Grid.FilteredTextTo_get)
+				Case DDO_Grid.SelectedColumn = !'Invoice'
+					&TFInvoice = DDO_Grid.FilteredText_get
+					&TFInvoice_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'ProductNumber'
+					&TFProductNumber = DDO_Grid.FilteredText_get
+					&TFProductNumber_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'ProductDesc'
+					&TFProductDesc = DDO_Grid.FilteredText_get
+					&TFProductDesc_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'ProductType'
+					&TFProductType = DDO_Grid.FilteredText_get
+					&TFProductType_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'Packaging'
+					&TFPackaging = DDO_Grid.FilteredText_get
+					&TFPackaging_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'SubProductType'
+					&TFSubProductType = DDO_Grid.FilteredText_get
+					&TFSubProductType_Sel = DDO_Grid.SelectedValue_get
+				Case DDO_Grid.SelectedColumn = !'Quantity'
+					&TFQuantity.FromString(DDO_Grid.FilteredText_get)
+					&TFQuantity_To.FromString(DDO_Grid.FilteredTextTo_get)
+				Case DDO_Grid.SelectedColumn = !'LCExtendedPrice'
+					&TFLCExtendedPrice.FromString(DDO_Grid.FilteredText_get)
+					&TFLCExtendedPrice_To.FromString(DDO_Grid.FilteredTextTo_get)
+				Case DDO_Grid.SelectedColumn = !'LCExtendedCost'
+					&TFLCExtendedCost.FromString(DDO_Grid.FilteredText_get)
+					&TFLCExtendedCost_To.FromString(DDO_Grid.FilteredTextTo_get)
+				Case DDO_Grid.SelectedColumn = !'Currency'
+					&TFCurrency = DDO_Grid.FilteredText_get
+					&TFCurrency_Sel = DDO_Grid.SelectedValue_get
+			EndCase
+			Grid.FirstPage()
+	EndCase
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### Grid.Load (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### DDO_GridColumnsSelector.OnColumnsChanged (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	&ColumnsSelectorXML = DDO_GridColumnsSelector.ColumnsSelectorValues
+	&ColumnsSelector.FromJson(&ColumnsSelectorXML)
+	SaveColumnsSelectorState(!'DB.FTBWWColumnsSelector', iif(&ColumnsSelectorXML.IsEmpty(), '', &ColumnsSelector.ToXml()))
+	Refresh
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### ddo_ManageFilters.OnOptionClicked (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Do Case
+		Case ddo_ManageFilters.ActiveEventKey = !'<#Clean#>'
+			Do 'CleanFilters'
+			Grid.FirstPage()
+			Refresh
+		Case ddo_ManageFilters.ActiveEventKey = !'<#Save#>'
+			Do 'SaveGridState'
+			SaveFilterAs.Popup(!'DB.FTBWWFilters', &PgmName + !"GridState")
+			&ManageFiltersExecutionStep = 2
+			Refresh
+		Case ddo_ManageFilters.ActiveEventKey = !'<#Manage#>'
+			ManageFilters.Popup(!'DB.FTBWWFilters')
+			&ManageFiltersExecutionStep = 2
+			Refresh
+		Otherwise
+			&ManageFiltersXml = GetFilterByName(!'DB.FTBWWFilters', ddo_ManageFilters.ActiveEventKey)
+			If &ManageFiltersXml.IsEmpty()
+				msg('WWP_FilterNotExist')
+			Else
+				Do 'CleanFilters'
+				SaveGridState.Call(&PgmName + !"GridState",  &ManageFiltersXml)
+				&GridState.FromXml(&ManageFiltersXml)
+				&OrderedBy = &GridState.OrderedBy
+				&OrderedDsc = &GridState.OrderedDsc
+				Do 'SetDDOSortedStatus' 
+				Do 'LoadRegFiltersState'
+				Grid.FirstPage()
+				Refresh
+			EndIf
+	EndCase
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### ddo_AGExport.OnOptionClicked (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	Do Case
+		Case ddo_AGExport.ActiveEventKey = !'ExportReport'
+			Do 'DoExportReport'
+	EndCase
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### DDC_Subscriptions.OnLoadComponent (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	WWPAux_WC.Object = WWP_SubscriptionsPanel.Create(!'FTB', WWPBaseObjects.Notifications.WWP_NotificationAppliesTo.AnyRecord, '', '')
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### 'DoExport' (Event)
+
+```genexus
+/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+	// Generate Excel spreadsheet and download it.
+	Do 'LoadGridState'
+	FTBWWExport.Call(&ExcelFilename, &ErrorMessage)
+	If (&ExcelFilename <> "")
+		Link(&ExcelFilename)
+	Else
+		msg(&ErrorMessage)
+	Endif
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+
+### Rules (Rules)
+
+```genexus
+
+	/* Generated by DVelop Work With Plus Pattern [Start] - Do not change */
+
+
+
+	/* Generated by DVelop Work With Plus Pattern [End] - Do not change */
+```
+

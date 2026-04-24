@@ -1,0 +1,137 @@
+﻿{
+    "uniqueId":  "19c10b18-2f94-4024-aad7-e47b40175cb5",
+    "name":  "AuditingObject",
+    "type":  "SDT",
+    "module":  "WWPBaseObjects",
+    "description":  "Auditing Object",
+    "filePath":  "SDTs/WWPBaseObjects/AuditingObject.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "CausaInterrupcion",
+                                          "LoadAuditExtrusionInterrupcion",
+                                          "PrensadoBobina",
+                                          "LoadAuditProduct",
+                                          "LoadAuditLote",
+                                          "LoadAuditInventario",
+                                          "Carrera",
+                                          "Carrete",
+                                          "Order",
+                                          "ExtrusoraMezcladora",
+                                          "LoadAuditRemission",
+                                          "Reclamo",
+                                          "Palet",
+                                          "Lote",
+                                          "PrensadoInterrupcion",
+                                          "Interrupcion",
+                                          "StatementOfIncome",
+                                          "LoadAuditWWP_MailTemplate",
+                                          "LoadAuditExtrusion",
+                                          "Silo",
+                                          "LoadAuditFTB",
+                                          "LoadAuditBobina",
+                                          "Inventario",
+                                          "LoadAuditPrensaTroquel",
+                                          "Turno",
+                                          "WWP_MailTemplate",
+                                          "Budget",
+                                          "LoadAuditStatementOfIncome",
+                                          "Extrusion",
+                                          "LoadAuditCustomer",
+                                          "EmbarqueDetalle",
+                                          "AuditTransaction",
+                                          "LoadAuditCompany",
+                                          "LoadAuditExtrusoraObservacion",
+                                          "LoadAuditReclamoDetalle",
+                                          "ExtrusoraObservacion",
+                                          "LoadAuditCarrera",
+                                          "Company",
+                                          "LoadAuditDownTimeCode",
+                                          "FTB",
+                                          "ExtrusionInterrupcion",
+                                          "LoadAuditEtiquetadoOperador",
+                                          "CarreteDefecto",
+                                          "LoadAuditConsolidated",
+                                          "LoadAuditCarreteDefecto",
+                                          "PrensaTroquel",
+                                          "LoadAuditEmbarqueDetalle",
+                                          "AuditTransactionOriginal",
+                                          "LoadAuditProductoTerminado",
+                                          "LoadAuditSalesPerson",
+                                          "EmbarquePallet",
+                                          "Product",
+                                          "Troquel",
+                                          "Remission",
+                                          "LoadAuditPrensadoInterrupcion",
+                                          "Consolidated",
+                                          "Prensado",
+                                          "LoadAuditPalet",
+                                          "DownTimeCode",
+                                          "LoadAuditReclamo",
+                                          "SalesPerson",
+                                          "LoadAuditInterrupcion",
+                                          "LoadAuditCausaInterrupcion",
+                                          "LoadAuditExtrusoraMezcladora",
+                                          "ReclamoDetalle",
+                                          "Embarque",
+                                          "LoadAuditPrensadoBobina",
+                                          "LoadAuditEmbarque",
+                                          "Prensa",
+                                          "LoadAuditPrensado",
+                                          "LoadAuditBudget",
+                                          "LoadAuditPrensaObservacion",
+                                          "WWP_Mail",
+                                          "ProductoTerminado",
+                                          "LoadAuditExistencia",
+                                          "EtiquetadoOperador",
+                                          "PrensaObservacion",
+                                          "Existencia",
+                                          "Customer",
+                                          "Bobina",
+                                          "LoadAuditTroquel",
+                                          "LoadAuditEmbarquePallet"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Mode",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Mode"
+                           }
+                       ]
+}

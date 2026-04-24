@@ -1,0 +1,177 @@
+﻿{
+    "uniqueId":  "6fd742e9-b260-46dc-bd80-24521555d1b7",
+    "name":  "HabilitarOperador",
+    "type":  "Procedure",
+    "module":  "Seguridad",
+    "description":  "Habilitar Operador",
+    "filePath":  "Procedures/Seguridad/HabilitarOperador.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\u0026isOk = False\n\n\u0026Operador.Load(\u0026OperadorId)\n\u0026isOk = \u0026Operador.Success()\n\nIf \u0026isOk\n\t\n\t\u0026User.Load(\u0026Operador.OperadorUserGUID)\n\t\n\tIf Not \u0026User.IsEnabledInRepository\n\t\t\u0026isOK = \u0026User.RepositoryEnable(\u0026Errors) \n\tEndIf\n\t\n\tIf \u0026isOK\n\t    \n\t\t\u0026Operador.OperadorActivo = True\n\t\t\u0026Operador.Save()\n\t\t\u0026isOk = \u0026Operador.Success()\n\t\t\n\t\tIf Not \u0026isOk\n\t\t\tsetnotSuccessMessagesLog.Call(\u0026Operador.GetMessages(), \u0026Pgmname)\n\t\tEndIf\n\t\t\n\tElse\n\t\t\n\t\tFor \u0026Error in \u0026Errors\n\t        Msg(Format(!\"%1 (GAM%2)\", \u0026Error.Message, \u0026Error.Code))\n\t    EndFor\n\t\t\n\tEndIf\n\t\nElse\n\t\n\tsetnotSuccessMessagesLog.Call(\u0026Operador.GetMessages(), \u0026Pgmname)\nEndIf\n",
+                              "cleanSource":  "\u0026isOk = False\n\n\u0026Operador.Load(\u0026OperadorId)\n\u0026isOk = \u0026Operador.Success()\n\nIf \u0026isOk\n\t\n\t\u0026User.Load(\u0026Operador.OperadorUserGUID)\n\t\n\tIf Not \u0026User.IsEnabledInRepository\n\t\t\u0026isOK = \u0026User.RepositoryEnable(\u0026Errors) \n\tEndIf\n\t\n\tIf \u0026isOK\n\t    \n\t\t\u0026Operador.OperadorActivo = True\n\t\t\u0026Operador.Save()\n\t\t\u0026isOk = \u0026Operador.Success()\n\t\t\n\t\tIf Not \u0026isOk\n\t\t\tsetnotSuccessMessagesLog.Call(\u0026Operador.GetMessages(), \u0026Pgmname)\n\t\tEndIf\n\t\t\n\tElse\n\t\t\n\t\tFor \u0026Error in \u0026Errors\n\t        Msg(Format(!\"%1 (GAM%2)\", \u0026Error.Message, \u0026Error.Code))\n\t    EndFor\n\t\t\n\tEndIf\n\t\nElse\n\t\n\tsetnotSuccessMessagesLog.Call(\u0026Operador.GetMessages(), \u0026Pgmname)\nEndIf"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(In:\u0026OperadorId, Out:\u0026IsOk);\n",
+                              "cleanSource":  "parm(In:\u0026OperadorId, Out:\u0026IsOk);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Web.SetNotSuccessMessagesLog",
+                                         "GeneXus.Common.Messages",
+                                         "DB.Operador",
+                                         "setnotSuccessMessagesLog"
+                                     ],
+                         "calledBy":  [
+                                          "listarOperador"
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Operador"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Operador"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "isOk",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "is Ok"
+                           },
+                           {
+                               "name":  "User",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "User"
+                           },
+                           {
+                               "name":  "Operador",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Operador"
+                           },
+                           {
+                               "name":  "Errors",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Errors"
+                           },
+                           {
+                               "name":  "Error",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_EXTERNAL_OBJECT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Error"
+                           },
+                           {
+                               "name":  "Messages",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Messages"
+                           },
+                           {
+                               "name":  "Message",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Message"
+                           },
+                           {
+                               "name":  "OperadorId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Operador Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

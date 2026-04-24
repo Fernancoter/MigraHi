@@ -1,0 +1,126 @@
+﻿{
+    "uniqueId":  "08016952-daeb-4a2e-be08-9c0e7b22e661",
+    "name":  "MDFLoadSampleFields2",
+    "type":  "Procedure",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "MDFLoad Sample Fields2",
+    "filePath":  "Procedures/WorkWithPlus/NativeMobile/MDFLoadSampleFields2.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\t\u0026DynamicFormFields = new()\n\t\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\"Field2\"\n\t\u0026DynamicFormField.MDFDynamicFieldValue = !\"value 1\"\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\"Text Field\"\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Character\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\"Field3\"\t\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\"Boolean field\"\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Boolean\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\"Field5\"\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Numeric\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\"Numeric field\"\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\"Field7\"\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = WorkWithPlus.NativeMobile.SDPMDFFieldType.Decimal\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\"Decimal field\"\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\"Field10\"\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Date\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\"Date field\"\n\t\u0026DynamicFormField.MDFDynamicFieldValueDate = today()\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\t\n\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\"FieldCombo2\"\n\t\u0026DynamicFormField.MDFDynamicFieldComboValues =  !\"1:Descripcion 1;2:Descripcion 2;3:Descripcion 3\"\n\t\u0026DynamicFormField.MDFDynamicFieldValue = !\"2\"\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\"Enum field\"\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Combo\n\t\n",
+                              "cleanSource":  "\t\u0026DynamicFormFields = new()\n\t\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\"Field2\"\n\t\u0026DynamicFormField.MDFDynamicFieldValue = !\"value 1\"\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\"Text Field\"\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Character\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\"Field3\"\t\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\"Boolean field\"\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Boolean\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\"Field5\"\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Numeric\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\"Numeric field\"\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\"Field7\"\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = WorkWithPlus.NativeMobile.SDPMDFFieldType.Decimal\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\"Decimal field\"\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\n\t\t\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\"Field10\"\t\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Date\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\"Date field\"\n\t\u0026DynamicFormField.MDFDynamicFieldValueDate = today()\n\t\u0026DynamicFormField.MDFDynamicFieldEnabled = true\n\t\u0026DynamicFormField.MDFDynamicFieldRequired = false\t\n\n\t\u0026DynamicFormField = new()\n\t\u0026DynamicFormFields.Add(\u0026DynamicFormField)\n\t\u0026DynamicFormField.MDFDynamicFieldName = !\"FieldCombo2\"\n\t\u0026DynamicFormField.MDFDynamicFieldComboValues =  !\"1:Descripcion 1;2:Descripcion 2;3:Descripcion 3\"\n\t\u0026DynamicFormField.MDFDynamicFieldValue = !\"2\"\n\t\u0026DynamicFormField.MDFDynamicFieldDescription = !\"Enum field\"\n\t\u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Combo"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(out:\u0026DynamicFormFields);\n",
+                              "cleanSource":  "parm(out:\u0026DynamicFormFields);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.MDFDynamicField"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "DynamicFormFields",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Dynamic Form Fields"
+                           },
+                           {
+                               "name":  "DynamicFormField",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Dynamic Form Field"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

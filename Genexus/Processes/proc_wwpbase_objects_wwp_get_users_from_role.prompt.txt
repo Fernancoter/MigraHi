@@ -1,0 +1,15 @@
+﻿
+=== Procedure: WWPBaseObjects.WWP_GetUsersFromRole ===
+
+--- Source (Source) ---
+&GAMRole = GAMRepository.GetRoleByGUID(&WWPSubscriptionRoleId, &GAMErrorCollection)
+&GAMUserCollection = &GAMRole.GetUsers(&GAMErrorCollection)
+
+&WWPUserExtendedIdCollection.Clear()
+For &GAMUser In &GAMUserCollection
+	&WWPUserExtendedIdCollection.Add(&GAMUser.GUID)
+EndFor
+
+--- Rules (Rules) ---
+parm(in:&WWPSubscriptionRoleId, out:&WWPUserExtendedIdCollection);
+

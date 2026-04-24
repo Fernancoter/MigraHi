@@ -1,0 +1,134 @@
+﻿{
+    "uniqueId":  "91e63d7f-f71a-4e0b-8ccd-7c00c23c8952",
+    "name":  "SDPFieldsToJSON",
+    "type":  "Procedure",
+    "module":  "WorkWithPlus.NativeMobile",
+    "description":  "SDPMDFFields To JSON",
+    "filePath":  "Procedures/WorkWithPlus/NativeMobile/SDPFieldsToJSON.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "//Se cargan los valores dependiendo del tipo de dato del campo\n\nfor \u0026DynamicFormField in \u0026DynamicFormFields\n\t\u0026FormFieldsJson += !\"{\"+ \u0026DynamicFormField.MDFDynamicFieldName + !\":\"\n\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Character\n\t\t\u0026FormFieldsJson += \u0026DynamicFormField.MDFDynamicFieldValue\n\tendif\n\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Boolean\n\t\t\u0026FormFieldsJson += \u0026DynamicFormField.MDFDynamicFieldValueCheck.ToString()\n\tendif\n\tif \u0026DynamicFormField.MDFDynamicFieldType = WorkWithPlus.NativeMobile.SDPMDFFieldType.Date\n\t\t\u0026FormFieldsJson += \u0026DynamicFormField.MDFDynamicFieldValueDate.ToString()\n\tendif\n\tif \u0026DynamicFormField.MDFDynamicFieldType = WorkWithPlus.NativeMobile.SDPMDFFieldType.Numeric\n\t\t\u0026FormFieldsJson += \u0026DynamicFormField.MDFDynamicFieldValueNumeric.ToString()\n\tendif\n\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Decimal\n\t\t\u0026FormFieldsJson += \u0026DynamicFormField.MDFDynamicFieldValueDecimal.ToString()\n\tendif\n\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Combo\n\t\t\u0026FormFieldsJson += \u0026DynamicFormField.MDFDynamicFieldValue\n\tendif\n\t\u0026FormFieldsJson += !\"}\"\nendfor\n",
+                              "cleanSource":  "//Se cargan los valores dependiendo del tipo de dato del campo\n\nfor \u0026DynamicFormField in \u0026DynamicFormFields\n\t\u0026FormFieldsJson += !\"{\"+ \u0026DynamicFormField.MDFDynamicFieldName + !\":\"\n\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Character\n\t\t\u0026FormFieldsJson += \u0026DynamicFormField.MDFDynamicFieldValue\n\tendif\n\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Boolean\n\t\t\u0026FormFieldsJson += \u0026DynamicFormField.MDFDynamicFieldValueCheck.ToString()\n\tendif\n\tif \u0026DynamicFormField.MDFDynamicFieldType = WorkWithPlus.NativeMobile.SDPMDFFieldType.Date\n\t\t\u0026FormFieldsJson += \u0026DynamicFormField.MDFDynamicFieldValueDate.ToString()\n\tendif\n\tif \u0026DynamicFormField.MDFDynamicFieldType = WorkWithPlus.NativeMobile.SDPMDFFieldType.Numeric\n\t\t\u0026FormFieldsJson += \u0026DynamicFormField.MDFDynamicFieldValueNumeric.ToString()\n\tendif\n\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Decimal\n\t\t\u0026FormFieldsJson += \u0026DynamicFormField.MDFDynamicFieldValueDecimal.ToString()\n\tendif\n\tif \u0026DynamicFormField.MDFDynamicFieldType = SDPMDFFieldType.Combo\n\t\t\u0026FormFieldsJson += \u0026DynamicFormField.MDFDynamicFieldValue\n\tendif\n\t\u0026FormFieldsJson += !\"}\"\nendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026DynamicFormFields, out:\u0026FormFieldsJson);\n",
+                              "cleanSource":  "parm(in:\u0026DynamicFormFields, out:\u0026FormFieldsJson);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WorkWithPlus.NativeMobile.MDFDynamicField"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "DynamicFormFields",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Dynamic Form Fields"
+                           },
+                           {
+                               "name":  "FormFieldsJson",
+                               "elementType":  "Parameter",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Form Fields Json"
+                           },
+                           {
+                               "name":  "DynamicFormField",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Dynamic Form Field"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

@@ -1,0 +1,94 @@
+﻿{
+    "uniqueId":  "c5ea12b5-2e2b-479f-a95d-425fc8f67751",
+    "name":  "PrensadoBobinaDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Prensado Bobina DP",
+    "filePath":  "DataProviders/Produccion/PrensadoBobinaDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTPrensadoBobina\n{\n\tSDTPrensadoBobinaItem\n\twhere PrensadoBobinaId \u003e 0\n\twhere PrensadoId = \u0026PrensadoId\n\t{\n\t\tPrensadoBobinaId = PrensadoBobinaId\n\t\tPrensadoId = PrensadoId\n\t\tBobinaId = BobinaId\n\t\tBobinaNoSerie = BobinaNoSerie\n\t\tBobinaEstado = BobinaEstado\n\t\tPrensadoBobinaCantCarrera = PrensadoBobinaCantCarrera\t\n\t\tBobinaKg = BobinaKg\n\t\tBobinaCarreras = BobinaCarreras\n\t}\n}\n",
+                              "cleanSource":  "SDTPrensadoBobina\n{\n\tSDTPrensadoBobinaItem\n\twhere PrensadoBobinaId \u003e 0\n\twhere PrensadoId = \u0026PrensadoId\n\t{\n\t\tPrensadoBobinaId = PrensadoBobinaId\n\t\tPrensadoId = PrensadoId\n\t\tBobinaId = BobinaId\n\t\tBobinaNoSerie = BobinaNoSerie\n\t\tBobinaEstado = BobinaEstado\n\t\tPrensadoBobinaCantCarrera = PrensadoBobinaCantCarrera\t\n\t\tBobinaKg = BobinaKg\n\t\tBobinaCarreras = BobinaCarreras\n\t}\n}"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PrensadoId);\n",
+                              "cleanSource":  "parm(in:\u0026PrensadoId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTPrensadoBobina"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTPrensadoBobina"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

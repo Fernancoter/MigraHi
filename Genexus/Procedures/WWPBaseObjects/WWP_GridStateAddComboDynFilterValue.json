@@ -1,0 +1,175 @@
+﻿{
+    "uniqueId":  "4a7cd984-f1ff-4a5a-9521-4423d2145864",
+    "name":  "WWP_GridStateAddComboDynFilterValue",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "WWP_Grid State Add Combo Dyn Filter Value",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_GridStateAddComboDynFilterValue.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026GridStateDynamicFilter.Dsc = \u0026FilterDsc\n\u0026GridStateDynamicFilter.Value = \u0026FilterValue\nIf \u0026HasMultipleSelection\n\t\u0026FilterValueCol.FromJson(\u0026FilterValue)\n\tFor \u0026FilterValueItem in \u0026FilterValueCol\n\t\tFor \u0026ComboItem in \u0026ComboItems\n\t\t\tIf \u0026ComboItem.ID.Trim() = \u0026FilterValueItem.Trim()\n\t\t\t\t\u0026GridStateDynamicFilter.ValueTo += iif(\u0026GridStateDynamicFilter.ValueTo.IsEmpty(), \u0027\u0027, \u0027, \u0027) + \u0026ComboItem.Title\n\t\t\t\tExit\n\t\t\tEndIf\n\t\tEndFor\n\tEndFor\nElse\n\tFor \u0026ComboItem in \u0026ComboItems\n\t\tIf \u0026ComboItem.ID.Trim() = \u0026FilterValue.Trim()\n\t\t\t\u0026GridStateDynamicFilter.ValueTo = \u0026ComboItem.Title\n\t\t\tExit\n\t\tEndIf\n\tEndFor\nEndIf\n",
+                              "cleanSource":  "\n\u0026GridStateDynamicFilter.Dsc = \u0026FilterDsc\n\u0026GridStateDynamicFilter.Value = \u0026FilterValue\nIf \u0026HasMultipleSelection\n\t\u0026FilterValueCol.FromJson(\u0026FilterValue)\n\tFor \u0026FilterValueItem in \u0026FilterValueCol\n\t\tFor \u0026ComboItem in \u0026ComboItems\n\t\t\tIf \u0026ComboItem.ID.Trim() = \u0026FilterValueItem.Trim()\n\t\t\t\t\u0026GridStateDynamicFilter.ValueTo += iif(\u0026GridStateDynamicFilter.ValueTo.IsEmpty(), \u0027\u0027, \u0027, \u0027) + \u0026ComboItem.Title\n\t\t\t\tExit\n\t\t\tEndIf\n\t\tEndFor\n\tEndFor\nElse\n\tFor \u0026ComboItem in \u0026ComboItems\n\t\tIf \u0026ComboItem.ID.Trim() = \u0026FilterValue.Trim()\n\t\t\t\u0026GridStateDynamicFilter.ValueTo = \u0026ComboItem.Title\n\t\t\tExit\n\t\tEndIf\n\tEndFor\nEndIf"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "\nparm(inout:\u0026GridStateDynamicFilter, in:\u0026FilterDsc, in:\u0026FilterValue, inout:\u0026ComboItems, in:\u0026HasMultipleSelection);\n",
+                              "cleanSource":  "\nparm(inout:\u0026GridStateDynamicFilter, in:\u0026FilterDsc, in:\u0026FilterValue, inout:\u0026ComboItems, in:\u0026HasMultipleSelection);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWPGridState",
+                                         "WWPBaseObjects.DVB_SDTComboData"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ComboItem",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Combo Item"
+                           },
+                           {
+                               "name":  "ComboItems",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Combo Items"
+                           },
+                           {
+                               "name":  "FilterDsc",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Filter Dsc"
+                           },
+                           {
+                               "name":  "FilterValue",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Filter Value"
+                           },
+                           {
+                               "name":  "GridStateDynamicFilter",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Grid State Dynamic Filter"
+                           },
+                           {
+                               "name":  "HasMultipleSelection",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Has Multiple Selection"
+                           },
+                           {
+                               "name":  "FilterValueItem",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Filter Value Item"
+                           },
+                           {
+                               "name":  "FilterValueCol",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Filter Value Col"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

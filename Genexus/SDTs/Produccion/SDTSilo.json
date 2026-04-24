@@ -1,0 +1,97 @@
+﻿{
+    "uniqueId":  "b45e1044-a93d-4b78-b2ef-f0ac91e5aa5c",
+    "name":  "SDTSilo",
+    "type":  "SDT",
+    "module":  "Produccion",
+    "description":  "SDTSilo",
+    "filePath":  "SDTs/Produccion/SDTSilo.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "SiloMaterialDP",
+                                          "gestionarLote"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "SiloId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Silo Id"
+                           },
+                           {
+                               "name":  "SiloNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Silo Nombre"
+                           },
+                           {
+                               "name":  "SiloKgMinimo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Mínimo (kg)"
+                           },
+                           {
+                               "name":  "SiloKgMaximo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Máximo (kg)"
+                           },
+                           {
+                               "name":  "SiloEstadoMaterial",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Estado Material"
+                           },
+                           {
+                               "name":  "SiloTipoMaterial",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Tipo Material"
+                           }
+                       ]
+}

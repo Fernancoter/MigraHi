@@ -1,0 +1,80 @@
+﻿{
+    "uniqueId":  "ea08f6f9-2020-4741-a97f-6f6c91092454",
+    "name":  "DPCBOpeardor",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "DP Dynamic Combo Box Opeardor",
+    "filePath":  "DataProviders/Produccion/DPCBOpeardor.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "DVB_SDTComboData\nWhere OperadorActivo = True\n{\n\t\n\tItem\n\t{\n\t\tID = OperadorId.ToString()\n\t\tTitle = OperadorNombre\n\t}\n}\n",
+                              "cleanSource":  "DVB_SDTComboData\nWhere OperadorActivo = True\n{\n\t\n\tItem\n\t{\n\t\tID = OperadorId.ToString()\n\t\tTitle = OperadorNombre\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.DVB_SDTComboData"
+                                     ],
+                         "calledBy":  [
+                                          "gestionarExtrusora"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WWPBaseObjects.DVB_SDTComboData"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

@@ -1,0 +1,188 @@
+﻿{
+    "uniqueId":  "5aaa7052-b707-42f6-bf8d-2cd491c6a5b3",
+    "name":  "SaveColumnsSelectorState",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "Save Columns Selector State",
+    "filePath":  "Procedures/WWPBaseObjects/SaveColumnsSelectorState.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "//This is a procedure in which user has to define the behaviour of columns selector state.\n//You can save the ColumnsSelector state in session, database or whatever you want.\n//By default, it calls to SaveUserKeyValue Procedure in order to have the same mechanism in all the end users configurations\nSaveUserKeyValue(\u0026UserCustomKey, \u0026UserCustomValue)\n",
+                              "cleanSource":  "//This is a procedure in which user has to define the behaviour of columns selector state.\n//You can save the ColumnsSelector state in session, database or whatever you want.\n//By default, it calls to SaveUserKeyValue Procedure in order to have the same mechanism in all the end users configurations\nSaveUserKeyValue(\u0026UserCustomKey, \u0026UserCustomValue)"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026UserCustomKey,in:\u0026UserCustomValue);\n",
+                              "cleanSource":  "parm(in:\u0026UserCustomKey,in:\u0026UserCustomValue);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.SaveUserKeyValue"
+                                     ],
+                         "calledBy":  [
+                                          "listarLotes",
+                                          "EtiquetadoOperadorWW",
+                                          "vwTrazabilidad",
+                                          "ProductoTerminadoWW",
+                                          "ListadoEmbarques",
+                                          "PrensaObservacionWW",
+                                          "BobinaWW",
+                                          "listarOperador",
+                                          "ConsolidatedWW",
+                                          "ListadoOrdenes",
+                                          "CompanyWW",
+                                          "ListadoRemisiones",
+                                          "CustomerWW",
+                                          "vwAnaliticaBobina",
+                                          "BudgetWW",
+                                          "ExtrusionInterrupcionWW",
+                                          "GAMWWUsers",
+                                          "listarPrensaProducto",
+                                          "TroquelWW",
+                                          "PaletWW",
+                                          "listarPrensas",
+                                          "OrdenesWW",
+                                          "vwExtrusionResultado",
+                                          "listarProductoCategoria",
+                                          "vwAnaliticaCarrete",
+                                          "ListarExtrusoraMezcladora",
+                                          "vwPrensadoResultado",
+                                          "FTBWW",
+                                          "listarExtrusoraProducto",
+                                          "listarInventario",
+                                          "ExtrusoraObservacionWW",
+                                          "listarTurnos",
+                                          "ExtrusoraMezcladoraWW",
+                                          "AuditWW",
+                                          "listarProductos",
+                                          "PrensadoWW",
+                                          "listarSilos",
+                                          "RemissionsWW",
+                                          "SalesPersonWW",
+                                          "InterrupcionWW",
+                                          "CarreteEnPallet",
+                                          "PrensadoInterrupcionWW",
+                                          "ExistenciaWW",
+                                          "WWP_MailTemplateWW",
+                                          "CausaInterrupcionWW",
+                                          "CarreraWW",
+                                          "EmbarquePalletWW",
+                                          "ExtrusionWW",
+                                          "ProductsWW",
+                                          "CarreteDefectoWW",
+                                          "vwCarreteCarrera",
+                                          "vwAnaliticaPrensado",
+                                          "listarTroquel",
+                                          "reclamosww",
+                                          "CarreteWW",
+                                          "listarProductoTerminado",
+                                          "PrensadoBobinaWW",
+                                          "vwOrdenEtiquetado",
+                                          "listarExtrusora",
+                                          "StatementOfIncomeWW",
+                                          "DownTimeCodeWW",
+                                          "PalletEnEmbarque",
+                                          "listarExtrusion"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "UserCustomKey",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "User Custom Key"
+                           },
+                           {
+                               "name":  "UserCustomValue",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "User Custom Value"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

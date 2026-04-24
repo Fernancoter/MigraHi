@@ -1,0 +1,114 @@
+﻿{
+    "uniqueId":  "27aa162f-4e62-4f9f-b764-e745ebf5e2d7",
+    "name":  "Modules",
+    "type":  "DataProvider",
+    "module":  "Web",
+    "description":  "Get Home Modules Sample Copy1",
+    "filePath":  "DataProviders/Web/Modules.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "DVelop_Menu\n{\n\t\n\tItem\n\t\t\t{ \n\t\t\t\tid = !\"3\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = inicioinventario.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon  far fa-warehouse\"\n\t\t\t\tcaption = \"Inventario\"  \n\t\t\t\tadditionalData = \"Inventario\" //Uso como descripción\n\t\t\t\tlinkTarget = user_hard_hat_regular.Link() //Uso como URL de Imágen de Módulo\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t} \n\t\t\tItem\n\t\t\t{ \n\t\t\t\tid = !\"4\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = InicioExtrusion.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon  fal fa-draw-circle\"\n\t\t\t\tcaption = \"Extrusión\"  \n\t\t\t\tadditionalData = \"Extrusión\" //Uso como descripción\n\t\t\t\tlinkTarget = user_hard_hat_regular.Link() //Uso como URL de Imágen de Módulo\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t} \n\t\tItem\n\t\t\t{ \n\t\t\t\tid = !\"5\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = InicioPrensado.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon  fas fa-vector-square\"\n\t\t\t\tcaption = \"Prensado\"  \n\t\t\t\tadditionalData = \"Prensado\" //Uso como descripción\n\t\t\t\tlinkTarget = user_hard_hat_regular.Link() //Uso como URL de Imágen de Módulo\n\t\t\t\t\n\t\t\t\t\n\t\t\t}\n\t\t\tItem\n\t\t\t{ \n\t\t\tid = !\"9\"\n\t\t\t\n\t\t\ttooltip = \"\"\n\t\t\tlink = InicioEmbarques.Link()\n\t\t\tlinkTarget =\"\" \n\t\t\ticonClass = !\"menu-icon far fa-shipping-fast\"\n\t\t\tcaption = \"Embarques\"  \n\t\t\tadditionalData = \"Embarques\" //Uso como descripción\n\t\t\tlinkTarget = user_hard_hat_regular.Link() //Uso como URL de Imágen de Módulo\n\t\t\t\n\t\t\t}\n\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\tid = !\"10\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = InicioCalidad.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-tasks\"\n\t\t\t\tcaption = \"Calidad\"  \n\t\t\t\tadditionalData = \"Calidad\" //Uso como descripción\n\t\t\t\tlinkTarget = tasks_solid.Link() //Uso como URL de Imágen de Módulo\n\t\t\t\t\n\t\t\t\t\n\t\t\t}\n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\tid = !\"1\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tSeguridad.inicioSeguridad.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fal fa-user-unlock\"\n\t\t\t\tcaption = \"Seguridad\"  \n\t\t\t\tlinkTarget = user_unlock_light.Link()\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t} \n\t\t\tItem\n\t\t\t{ \n\t\t\t\tid = !\"2\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = InicioProduccion.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon  far fa-sliders-h\"\n\t\t\t\tcaption = \"Configurar Producción\"  \n\t\t\t\tadditionalData = \"Configurar Producción\" //Uso como descripción\n\t\t\t\tlinkTarget = user_hard_hat_regular.Link() //Uso como URL de Imágen de Módulo\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t} \n\t\t\n\n\t\t\tItem\n\t\t\t{ \t\t\t\t\n\t\t\t\tid = !\"7\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioReportes.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-file-chart-pie\"\n\t\t\t\tcaption = \"Reportes SAE\"  \n\t\t\t\tlinkTarget = file_chart_pie_solid.Link()\n\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t} \n\t\t\tItem\n\t\t\t{ \t\t\t\t\n\t\t\t\tid = !\"8\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioCatalogosSAE.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon far fa-th-list\"\n\t\t\t\tcaption = \"Catálogos SAE\"  \n\t\t\t\tlinkTarget = th_list_regular.Link()\n\t\t\t\t\n\t\t\t} \n\t\t\n\t\t        Item\n\t\t\t{ \t\t\t\t\n\t\t\t\tid = !\"11\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioReportesHC.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-file-chart-pie\"\n\t\t\t\tcaption = \"Informes Operativos\"  \n\t\t\t\tlinkTarget = file_chart_pie_solid.Link()\n\n\t\t\t} \n}\n",
+                              "cleanSource":  "DVelop_Menu\n{\n\t\n\tItem\n\t\t\t{ \n\t\t\t\tid = !\"3\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = inicioinventario.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon  far fa-warehouse\"\n\t\t\t\tcaption = \"Inventario\"  \n\t\t\t\tadditionalData = \"Inventario\" //Uso como descripción\n\t\t\t\tlinkTarget = user_hard_hat_regular.Link() //Uso como URL de Imágen de Módulo\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t} \n\t\t\tItem\n\t\t\t{ \n\t\t\t\tid = !\"4\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = InicioExtrusion.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon  fal fa-draw-circle\"\n\t\t\t\tcaption = \"Extrusión\"  \n\t\t\t\tadditionalData = \"Extrusión\" //Uso como descripción\n\t\t\t\tlinkTarget = user_hard_hat_regular.Link() //Uso como URL de Imágen de Módulo\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t} \n\t\tItem\n\t\t\t{ \n\t\t\t\tid = !\"5\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = InicioPrensado.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon  fas fa-vector-square\"\n\t\t\t\tcaption = \"Prensado\"  \n\t\t\t\tadditionalData = \"Prensado\" //Uso como descripción\n\t\t\t\tlinkTarget = user_hard_hat_regular.Link() //Uso como URL de Imágen de Módulo\n\t\t\t\t\n\t\t\t\t\n\t\t\t}\n\t\t\tItem\n\t\t\t{ \n\t\t\tid = !\"9\"\n\t\t\t\n\t\t\ttooltip = \"\"\n\t\t\tlink = InicioEmbarques.Link()\n\t\t\tlinkTarget =\"\" \n\t\t\ticonClass = !\"menu-icon far fa-shipping-fast\"\n\t\t\tcaption = \"Embarques\"  \n\t\t\tadditionalData = \"Embarques\" //Uso como descripción\n\t\t\tlinkTarget = user_hard_hat_regular.Link() //Uso como URL de Imágen de Módulo\n\t\t\t\n\t\t\t}\n\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\tid = !\"10\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = InicioCalidad.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-tasks\"\n\t\t\t\tcaption = \"Calidad\"  \n\t\t\t\tadditionalData = \"Calidad\" //Uso como descripción\n\t\t\t\tlinkTarget = tasks_solid.Link() //Uso como URL de Imágen de Módulo\n\t\t\t\t\n\t\t\t\t\n\t\t\t}\n\t\t\n\t\t\tItem\n\t\t\t{ \n\t\t\t\tid = !\"1\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tSeguridad.inicioSeguridad.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fal fa-user-unlock\"\n\t\t\t\tcaption = \"Seguridad\"  \n\t\t\t\tlinkTarget = user_unlock_light.Link()\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t} \n\t\t\tItem\n\t\t\t{ \n\t\t\t\tid = !\"2\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink = InicioProduccion.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon  far fa-sliders-h\"\n\t\t\t\tcaption = \"Configurar Producción\"  \n\t\t\t\tadditionalData = \"Configurar Producción\" //Uso como descripción\n\t\t\t\tlinkTarget = user_hard_hat_regular.Link() //Uso como URL de Imágen de Módulo\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t} \n\t\t\n\n\t\t\tItem\n\t\t\t{ \t\t\t\t\n\t\t\t\tid = !\"7\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioReportes.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-file-chart-pie\"\n\t\t\t\tcaption = \"Reportes SAE\"  \n\t\t\t\tlinkTarget = file_chart_pie_solid.Link()\n\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t} \n\t\t\tItem\n\t\t\t{ \t\t\t\t\n\t\t\t\tid = !\"8\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioCatalogosSAE.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon far fa-th-list\"\n\t\t\t\tcaption = \"Catálogos SAE\"  \n\t\t\t\tlinkTarget = th_list_regular.Link()\n\t\t\t\t\n\t\t\t} \n\t\t\n\t\t        Item\n\t\t\t{ \t\t\t\t\n\t\t\t\tid = !\"11\"\n\t\t\t\t\n\t\t\t\ttooltip = \"\"\n\t\t\t\tlink =\tInicioReportesHC.Link()\n\t\t\t\tlinkTarget =\"\" \n\t\t\t\ticonClass = !\"menu-icon fas fa-file-chart-pie\"\n\t\t\t\tcaption = \"Informes Operativos\"  \n\t\t\t\tlinkTarget = file_chart_pie_solid.Link()\n\n\t\t\t} \n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.DVelop_Menu",
+                                         "Produccion.InicioProduccion",
+                                         "SAE.InicioReportes",
+                                         "SAE.InicioCatalogosSAE",
+                                         "Seguridad.inicioSeguridad",
+                                         "Produccion.InicioExtrusion",
+                                         "Produccion.InicioPrensado",
+                                         "Produccion.InicioInventario",
+                                         "Embarques.InicioEmbarques",
+                                         "Calidad.InicioCalidad",
+                                         "Reportes.InicioReportesHC"
+                                     ],
+                         "calledBy":  [
+                                          "SetDefaultModule"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "WWPBaseObjects.DVelop_Menu"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "MaxItemsToGet",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Max Items To Get"
+                           },
+                           {
+                               "name":  "Count",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Count"
+                           },
+                           {
+                               "name":  "id",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

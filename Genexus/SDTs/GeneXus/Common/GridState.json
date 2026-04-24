@@ -1,0 +1,72 @@
+﻿{
+    "uniqueId":  "e4cc8497-2f3c-4852-9a3d-54ecc953ccc7",
+    "name":  "GridState",
+    "type":  "SDT",
+    "module":  "GeneXus.Common",
+    "description":  "Grid State",
+    "filePath":  "SDTs/GeneXus/Common/GridState.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)(Unable to serialize SDT Structure directly)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "WWOperador",
+                                          "WWPrensa",
+                                          "WWConfiguracion",
+                                          "WWProductoCategoria",
+                                          "WWPrensaProducto",
+                                          "WWExtrusora",
+                                          "WWExtrusoraProducto",
+                                          "WWInventario",
+                                          "WWProducto"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "CurrentPage",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Current Page"
+                           },
+                           {
+                               "name":  "OrderedBy",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Ordered By"
+                           }
+                       ]
+}

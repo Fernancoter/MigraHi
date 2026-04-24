@@ -1,0 +1,57 @@
+﻿
+=== Procedure: Root.SDPAddNotification ===
+
+--- Source (Source) ---
+Do Case
+	Case &TipoNotificacion = NotificacionTipo.Bobina
+		
+	      &Bobina.Load(&Id)
+		
+	      &ProductsInCartItem = new()
+	      &ProductsInCartItem.ItemId = &Id
+	      &ProductsInCartItem.ProductId = &Bobina.BobinaNo.ToString().Trim() + &Bobina.BobinaOrigen.ToString().Trim() 
+	      &ProductsInCartItem.Count = 1
+	      &ProductsInCartItem.Promotion = &Bobina.BobinaEstado
+	      &ProductsInCartItem.Variant = 'Bobina'
+	      &ProductsInCartItem.ExtrusionId = &Bobina.Notifications.ExtrusionId
+	      &ProductsInCartItem.Notificacion = NotificacionTipo.Bobina
+		
+	Case &TipoNotificacion = NotificacionTipo.Carrera
+	
+	      &Carrera.Load(&Id)
+
+	      &ProductsInCartItem = new()
+	      &ProductsInCartItem.ItemId = &Id
+	      &ProductsInCartItem.ProductId = 'C' + &Carrera.CarreraNo.ToString().Trim()
+	      &ProductsInCartItem.Count = 1
+	      &ProductsInCartItem.Promotion = &Carrera.CarreraEstado
+	      &ProductsInCartItem.Variant = 'Carrera'
+	      &ProductsInCartItem.PrensadoId = &Carrera.InicioPBPrensadoId
+	      &ProductsInCartItem.Notificacion = NotificacionTipo.Carrera
+EndCase
+
+
+
+&ProductsInCartTxt = &WebSession.Get(!"ProductsInCart")
+&ProductsInCart.FromJson(&ProductsInCartTxt)
+&ProductsInCart.Add(&ProductsInCartItem)
+&ProductsInCartTxt = &ProductsInCart.ToJson()
+&WebSession.Set(!"ProductsInCart", &ProductsInCartTxt)
+
+--- Rules (Rules) ---
+Parm(in:&Id, in:&TipoNotificacion);
+
+
+=== SDT: Root.SDPCartProduct ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+
+
+=== SDT: WorkWithPlus.NativeMobile.SDPProductData ===
+
+--- SDT Structure (Structure) ---
+// SDT Extraction
+(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)
+

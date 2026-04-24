@@ -1,0 +1,126 @@
+﻿{
+    "uniqueId":  "bcba45f3-ffb4-48c2-b5e1-69ce9bff1033",
+    "name":  "ObtenerProductoCategoriaPorClaveExterna",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "Obtener Producto Categoria Por Clave Externa",
+    "filePath":  "Procedures/Produccion/ObtenerProductoCategoriaPorClaveExterna.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "for each DB.ProductoCategoria\n\tWhere ProductoCategoriaClaveExterna = \u0026ProductoCategoriaClaveExterna\n\t\u0026ProductoCategoriaId = ProductoCategoriaId\n\texit\n\t\nendfor\n",
+                              "cleanSource":  "for each DB.ProductoCategoria\n\tWhere ProductoCategoriaClaveExterna = \u0026ProductoCategoriaClaveExterna\n\t\u0026ProductoCategoriaId = ProductoCategoriaId\n\texit\n\t\nendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026ProductoCategoriaClaveExterna,out:\u0026ProductoCategoriaId);\n",
+                              "cleanSource":  "parm(in:\u0026ProductoCategoriaClaveExterna,out:\u0026ProductoCategoriaId);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.ProductoCategoria"
+                                     ],
+                         "calledBy":  [
+                                          "GuardarProductoCategoria"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ProductoCategoriaClaveExterna",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Producto Categoria Clave Externa"
+                           },
+                           {
+                               "name":  "ProductoCategoriaId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Producto Categoria Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

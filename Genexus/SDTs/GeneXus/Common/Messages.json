@@ -1,0 +1,126 @@
+﻿{
+    "uniqueId":  "7ca0895b-df0a-472f-acb8-517e356b2fcd",
+    "name":  "Messages",
+    "type":  "SDT",
+    "module":  "GeneXus.Common",
+    "description":  "Messages",
+    "filePath":  "SDTs/GeneXus/Common/Messages.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "gestionarTroquel",
+                                          "SaveFilterAs",
+                                          "EditarReclamoDetalle",
+                                          "SDExtrusoraOcupada",
+                                          "GAMUpdateRegisterUser",
+                                          "SDAgregarCarrete",
+                                          "WWP_AddImportErrorMessage",
+                                          "ExportOptions",
+                                          "HabilitarOperador",
+                                          "gestionarTurno",
+                                          "GAMSDChangePasswordUser",
+                                          "gestionarExtrusoraMezcladora",
+                                          "GAMSetPassword",
+                                          "SDRetiquetarPallet",
+                                          "GAMCheckUserActivationMethod",
+                                          "SetNotSuccessMessagesLog",
+                                          "GAMChangePassword",
+                                          "gestionarSilo",
+                                          "Directions",
+                                          "GAMRoleEntry",
+                                          "gestionarExtrusora",
+                                          "SDConcluirEtiquetado",
+                                          "gestionarPrensaProducto",
+                                          "SDInitPrensado",
+                                          "WWP_AddMessage",
+                                          "gestionarOperador",
+                                          "EncontrarPallet",
+                                          "gestionarProductoCategoria",
+                                          "gestionarProductoTerminado",
+                                          "gestionarInventario",
+                                          "GAMSDDisplayLastGAMErrors",
+                                          "SDAsignarTroquel",
+                                          "gestionarLote",
+                                          "gestionarPrensa",
+                                          "GAMConvertErrorsToMessages",
+                                          "SDTerminarCarrera",
+                                          "SDPrensadoAnticipado",
+                                          "gestionarProducto",
+                                          "GAMUserEntry",
+                                          "GAMChangeYourPassword",
+                                          "SDEtiquetarCarreteExterno",
+                                          "gestionarExtrusoraProducto",
+                                          "GAMSDRegisterUser",
+                                          "SDPMDFFieldsRequiredChek",
+                                          "DeshabilitarOperador",
+                                          "DirectionsServiceRequest",
+                                          "WWP_StorageProvider_GetFilePath",
+                                          "WWP_AddImportErrorMessages",
+                                          "SDAgregarCarrera",
+                                          "MostrarMensajes",
+                                          "SDInitExtrusion",
+                                          "SDPalletEtiquetado",
+                                          "WWP_ImportData",
+                                          "GAMSDUpdateRegisterUser",
+                                          "GAMRegisterUser"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Id",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Id"
+                           },
+                           {
+                               "name":  "Type",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Type"
+                           },
+                           {
+                               "name":  "Description",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Description"
+                           }
+                       ]
+}

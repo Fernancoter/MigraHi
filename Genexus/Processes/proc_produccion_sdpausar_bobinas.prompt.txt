@@ -1,0 +1,54 @@
+﻿
+=== Procedure: Produccion.SDPausarBobinas ===
+
+--- Source (Source) ---
+        
+	&Extrusion.Load(&ExtrusionId)
+	&ExtrusoraId = &Extrusion.ExtrusionExtrusoraId
+	
+	for each DB.Bobina
+		where BobinaId > 0
+		where ExtrusionId = &ExtrusionId
+		where BobinaEstado = EstadoBobina.EnProceso
+		&BobinaId = BobinaId
+	        
+		SetEstadoBobina.Call(&BobinaId, EstadoBobina.Pausada)
+		
+		do 'ExtrusoraBobina'
+	Endfor
+
+        Sub 'ExtrusoraBobina'
+		
+		&ExtrusoraBobina = New()
+		&ExtrusoraBobina.BobinaId = &BobinaId
+		&ExtrusoraBobina.ExtrusoraId = &ExtrusoraId
+		&ExtrusoraBobina.Save()
+		
+		if(&ExtrusoraBobina.Success())
+			commit
+		endif
+	EndSub
+
+--- Rules (Rules) ---
+parm(in:&ExtrusionId);
+
+
+=== Transaction: DB.ExtrusoraBobina ===
+
+(sin businessLogic extraído)
+
+=== Procedure: Produccion.SetEstadoBobina ===
+
+--- Source (Source) ---
+         
+	 &Bobina.Load(&BobinaId)
+	 &Bobina.BobinaEstado = &BobinaEstado
+	 &Bobina.Save()
+	 
+	 if(&Bobina.Success())
+		 commit
+         endif
+
+--- Rules (Rules) ---
+parm(in:&BobinaId, in:&BobinaEstado);
+

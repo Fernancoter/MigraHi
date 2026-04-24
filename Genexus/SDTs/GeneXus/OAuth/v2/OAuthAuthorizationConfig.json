@@ -1,0 +1,72 @@
+﻿{
+    "uniqueId":  "fd2333bc-24bd-4da6-8a93-e7a6041c5590",
+    "name":  "OAuthAuthorizationConfig",
+    "type":  "SDT",
+    "module":  "GeneXus.OAuth.v2",
+    "description":  "OAuth Authorization Config",
+    "filePath":  "SDTs/GeneXus/OAuth/v2/OAuthAuthorizationConfig.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "AccessTokenUrl",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Access Token Url"
+                           },
+                           {
+                               "name":  "ClientId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Client Id"
+                           },
+                           {
+                               "name":  "ClientSecret",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Client Secret"
+                           }
+                       ]
+}

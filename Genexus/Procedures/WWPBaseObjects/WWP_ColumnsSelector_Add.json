@@ -1,0 +1,293 @@
+﻿{
+    "uniqueId":  "dc918520-43f4-40ba-98ea-1ae2643c505c",
+    "name":  "WWP_ColumnsSelector_Add",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "Columns Selector - Add Columns",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_ColumnsSelector_Add.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n\u0026Column = new ()\n\u0026Column.ColumnName = \u0026ColumnName\n\u0026Column.DisplayName = \u0026DisplayName\n\u0026Column.IsVisible = \u0026IsVisible\n\u0026Column.Order = \u0026ColumnsSelector.Columns.Count + 1\n\u0026Column.Category = \u0026Category\n\u0026ColumnsSelector.Columns.Add(\u0026Column)\n",
+                              "cleanSource":  "\n\u0026Column = new ()\n\u0026Column.ColumnName = \u0026ColumnName\n\u0026Column.DisplayName = \u0026DisplayName\n\u0026Column.IsVisible = \u0026IsVisible\n\u0026Column.Order = \u0026ColumnsSelector.Columns.Count + 1\n\u0026Column.Category = \u0026Category\n\u0026ColumnsSelector.Columns.Add(\u0026Column)"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "\nparm(inout:\u0026ColumnsSelector, in:\u0026ColumnName, in:\u0026Category, in:\u0026DisplayName, in:\u0026IsVisible, in:\u0026Fixed);\n",
+                              "cleanSource":  "\nparm(inout:\u0026ColumnsSelector, in:\u0026ColumnName, in:\u0026Category, in:\u0026DisplayName, in:\u0026IsVisible, in:\u0026Fixed);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWPColumnsSelector"
+                                     ],
+                         "calledBy":  [
+                                          "OrdenesWWExport",
+                                          "WCDetallePrensadoBobinaExport",
+                                          "vwPrensadoResultadoExport",
+                                          "listarLotes",
+                                          "EtiquetadoOperadorWW",
+                                          "DownTimeCodeWWExport",
+                                          "vwTrazabilidad",
+                                          "FTBWWExport",
+                                          "ProductoTerminadoWW",
+                                          "listarLotesExport",
+                                          "ListadoEmbarques",
+                                          "CarreraWWExport",
+                                          "PrensaObservacionWW",
+                                          "reclamoswwExport",
+                                          "listarProductoCategoriaExport",
+                                          "BobinaWW",
+                                          "listarOperador",
+                                          "ConsolidatedWW",
+                                          "ListadoOrdenes",
+                                          "CompanyWW",
+                                          "EtiquetadoOperadorWWExport",
+                                          "CarreteWWExport",
+                                          "ListadoRemisiones",
+                                          "vwOrdenEtiquetadoExport",
+                                          "CustomerWW",
+                                          "vwAnaliticaBobina",
+                                          "listarExtrusoraExport",
+                                          "BudgetWW",
+                                          "ExtrusionInterrupcionWW",
+                                          "GAMWWUsers",
+                                          "listarPrensaProducto",
+                                          "ExtrusionInterrupcionWWExport",
+                                          "BudgetWWExport",
+                                          "TroquelWW",
+                                          "PaletWW",
+                                          "wcCarreteInfoExport",
+                                          "PrensadoWWExport",
+                                          "ExistenciaWWExport",
+                                          "listarPrensas",
+                                          "listarProductoTerminadoExport",
+                                          "OrdenesWW",
+                                          "BobinaWWExport",
+                                          "vwExtrusionResultado",
+                                          "ConsolidatedWWExport",
+                                          "ExtrusoraObservacionWWExport",
+                                          "listarProductosExport",
+                                          "listarProductoCategoria",
+                                          "vwAnaliticaCarrete",
+                                          "ListarExtrusoraMezcladora",
+                                          "SalesPersonWWExport",
+                                          "vwAnaliticaPrensadoExport",
+                                          "TroquelWWExport",
+                                          "PalletEnEmbarqueExport",
+                                          "listarExtrusionExport",
+                                          "vwPrensadoResultado",
+                                          "FTBWW",
+                                          "listarExtrusoraProducto",
+                                          "StatementOfIncomeWWExport",
+                                          "ProductoTerminadoWWExport",
+                                          "ProductsWWExport",
+                                          "listarInventario",
+                                          "ExtrusionWWExport",
+                                          "CarreteDefectoWWExport",
+                                          "ExtrusoraObservacionWW",
+                                          "listarTurnos",
+                                          "ExtrusoraMezcladoraWW",
+                                          "AuditWW",
+                                          "WWP_MailTemplateWWExport",
+                                          "listarProductos",
+                                          "EmbarquePalletWWExport",
+                                          "vwAnaliticaCarreteExport",
+                                          "PrensadoWW",
+                                          "listarSilos",
+                                          "RemissionsWW",
+                                          "ListadoOrdenesExport",
+                                          "SalesPersonWW",
+                                          "InterrupcionWW",
+                                          "CarreteEnPallet",
+                                          "PrensadoInterrupcionWW",
+                                          "ExistenciaWW",
+                                          "listarPrensasExport",
+                                          "WWP_MailTemplateWW",
+                                          "CausaInterrupcionWW",
+                                          "PaletWWExport",
+                                          "ListadoEmbarquesExport",
+                                          "CarreraWW",
+                                          "EmbarquePalletWW",
+                                          "ExtrusionWW",
+                                          "listarSilosExport",
+                                          "ProductsWW",
+                                          "vwAnaliticaBobinaExport",
+                                          "CarreteDefectoWW",
+                                          "vwCarreteCarrera",
+                                          "CustomerWWExport",
+                                          "vwAnaliticaPrensado",
+                                          "vwCarreteCarreraExport",
+                                          "RemissionsWWExport",
+                                          "vwExtrusionResultadoExport",
+                                          "listarTroquel",
+                                          "wcBobinasPorExtrusionExport",
+                                          "PrensaObservacionWWExport",
+                                          "reclamosww",
+                                          "CarreteWW",
+                                          "listarTroquelExport",
+                                          "listarProductoTerminado",
+                                          "PrensadoBobinaWW",
+                                          "listarInventarioExport",
+                                          "listarOperadorExport",
+                                          "vwOrdenEtiquetado",
+                                          "listarExtrusoraProductoExport",
+                                          "PrensadoInterrupcionWWExport",
+                                          "ExtrusoraMezcladoraWWExport",
+                                          "listarExtrusora",
+                                          "listarTurnosExport",
+                                          "InterrupcionWWExport",
+                                          "StatementOfIncomeWW",
+                                          "listarPrensaProductoExport",
+                                          "vwTrazabilidadExport",
+                                          "DownTimeCodeWW",
+                                          "ListarExtrusoraMezcladoraExport",
+                                          "PalletEnEmbarque",
+                                          "CausaInterrupcionWWExport",
+                                          "CarreteEnPalletExport",
+                                          "CompanyWWExport",
+                                          "ListadoRemisionesExport",
+                                          "AuditWWExport",
+                                          "PrensadoBobinaWWExport",
+                                          "listarExtrusion"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "ColumnsSelector",
+                               "elementType":  "Parameter",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Columns Selector"
+                           },
+                           {
+                               "name":  "ColumnName",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Column Name"
+                           },
+                           {
+                               "name":  "Category",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Category"
+                           },
+                           {
+                               "name":  "DisplayName",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Display Name"
+                           },
+                           {
+                               "name":  "Fixed",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Fixed"
+                           },
+                           {
+                               "name":  "IsVisible",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Is Visible"
+                           },
+                           {
+                               "name":  "Column",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_SDT",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Column"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

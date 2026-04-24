@@ -1,0 +1,156 @@
+﻿{
+    "uniqueId":  "584b024a-c82f-4514-80db-169c99abbc8b",
+    "name":  "WWP_Logger",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects",
+    "description":  "Logger",
+    "filePath":  "Procedures/WWPBaseObjects/WWP_Logger.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "Stub Debug(in:\u0026Topic, in:\u0026Message)\n\tDo \u0027FormatMessage\u0027\n\tLog.Debug(\u0026FormattedMessage, \u0026Topic.Trim())\nEndStub\n\nStub Info(in:\u0026Topic, in:\u0026Message)\n\tDo \u0027FormatMessage\u0027\n\tLog.Info(\u0026FormattedMessage, \u0026Topic.Trim())\nEndStub\n\nStub Warning(in:\u0026Topic, in:\u0026Message)\n\tDo \u0027FormatMessage\u0027\n\tGeneXus.Common.Log.Warning(\u0026FormattedMessage, \u0026Topic.Trim())\nEndStub\n\nStub Error(in:\u0026Topic, in:\u0026Message)\n\tDo \u0027FormatMessage\u0027\n\tLog.Error(\u0026FormattedMessage, \u0026Topic.Trim())\nEndStub\n\nSub \u0027FormatMessage\u0027\n\t\n\t\u0026FormattedMessage = !\"\"\n\t\n\t\u0026WWPUserExtendedId = WWP_GetLoggedUserId()\n\t\n\tIf not \u0026WWPUserExtendedId.IsEmpty()\n\t\t\u0026FormattedMessage += Format(!\"[UserGUID: %1] \", \u0026WWPUserExtendedId.Trim())\n\tElse\n\t\t\u0026FormattedMessage += Format(!\"[UserGUID: %1] \", !\"N/A\")\n\tEndIf\n\n\tIf not \u0026WWPUserExtendedId.IsEmpty()\n\t\t\u0026FormattedMessage += Format(!\"[UserName: %1] \", \u0026WWPUserExtendedId.Trim())\n\tElse\n\t\t\u0026FormattedMessage += Format(!\"[UserName: %1] \", !\"N/A\")\n\tEndIf\n\t\n\t\u0026FormattedMessage += \u0026Message.Trim()\n\t\nEndSub\n",
+                              "cleanSource":  "Stub Debug(in:\u0026Topic, in:\u0026Message)\n\tDo \u0027FormatMessage\u0027\n\tLog.Debug(\u0026FormattedMessage, \u0026Topic.Trim())\nEndStub\n\nStub Info(in:\u0026Topic, in:\u0026Message)\n\tDo \u0027FormatMessage\u0027\n\tLog.Info(\u0026FormattedMessage, \u0026Topic.Trim())\nEndStub\n\nStub Warning(in:\u0026Topic, in:\u0026Message)\n\tDo \u0027FormatMessage\u0027\n\tGeneXus.Common.Log.Warning(\u0026FormattedMessage, \u0026Topic.Trim())\nEndStub\n\nStub Error(in:\u0026Topic, in:\u0026Message)\n\tDo \u0027FormatMessage\u0027\n\tLog.Error(\u0026FormattedMessage, \u0026Topic.Trim())\nEndStub\n\nSub \u0027FormatMessage\u0027\n\t\n\t\u0026FormattedMessage = !\"\"\n\t\n\t\u0026WWPUserExtendedId = WWP_GetLoggedUserId()\n\t\n\tIf not \u0026WWPUserExtendedId.IsEmpty()\n\t\t\u0026FormattedMessage += Format(!\"[UserGUID: %1] \", \u0026WWPUserExtendedId.Trim())\n\tElse\n\t\t\u0026FormattedMessage += Format(!\"[UserGUID: %1] \", !\"N/A\")\n\tEndIf\n\n\tIf not \u0026WWPUserExtendedId.IsEmpty()\n\t\t\u0026FormattedMessage += Format(!\"[UserName: %1] \", \u0026WWPUserExtendedId.Trim())\n\tElse\n\t\t\u0026FormattedMessage += Format(!\"[UserName: %1] \", !\"N/A\")\n\tEndIf\n\t\n\t\u0026FormattedMessage += \u0026Message.Trim()\n\t\nEndSub"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_GetLoggedUserId"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_UpdateUserExtendedPhoto",
+                                          "WWP_GetUnreadWebNotifications",
+                                          "WWP_UpdateWebNotificationStatus",
+                                          "WWP_GetSMSParameters",
+                                          "ObtenerTurnoPorSemanaPrensado",
+                                          "WWP_SendMail",
+                                          "WWP_ValidateVerificationCode",
+                                          "WWP_RegisterWebClient",
+                                          "WWP_UpdateSMSStatus",
+                                          "WWP_SubscribeLoggedUserToDiscussion",
+                                          "WWP_CreateUserExtended",
+                                          "WWP_UpdateMailStatus",
+                                          "WWP_SendSMS",
+                                          "WWP_SendWebNotification",
+                                          "WWP_GetSMTPParameters",
+                                          "WWP_SubscribeMentionedUsersToDiscussion",
+                                          "WWP_ParseMailAddressList",
+                                          "WWP_SendVerificationCode",
+                                          "WWP_ToggleWebNotificationRead",
+                                          "WWP_ParsePhoneNumbersList",
+                                          "WWP_SendPendingNotifications"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "FormattedMessage",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Formatted Message"
+                           },
+                           {
+                               "name":  "Message",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Message"
+                           },
+                           {
+                               "name":  "Topic",
+                               "elementType":  "Variable",
+                               "dataType":  "LONGVARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Topic"
+                           },
+                           {
+                               "name":  "WWPUserExtendedId",
+                               "elementType":  "Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "User Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

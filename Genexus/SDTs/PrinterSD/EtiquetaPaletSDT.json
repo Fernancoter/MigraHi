@@ -1,0 +1,186 @@
+﻿{
+    "uniqueId":  "ad132748-26ed-4454-a946-9318e4c8108d",
+    "name":  "EtiquetaPaletSDT",
+    "type":  "SDT",
+    "module":  "PrinterSD",
+    "description":  "Etiqueta Palet SDT",
+    "filePath":  "SDTs/PrinterSD/EtiquetaPaletSDT.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "SDT Structure",
+                              "blockType":  "Structure",
+                              "rawSource":  "SDT Internal Format",
+                              "cleanSource":  "// SDT Extraction\n(Raw representation avoided to prevent serialization errors. Core variables added to DataDictionary.)"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+
+                                     ],
+                         "calledBy":  [
+                                          "ObtenerSDTEtiquetaPalet",
+                                          "PaletReportMain",
+                                          "PaletReportSAP"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "PaletId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Id"
+                           },
+                           {
+                               "name":  "PaletNoSerie",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet No Serie"
+                           },
+                           {
+                               "name":  "PaletNo",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet No"
+                           },
+                           {
+                               "name":  "PaletOperadorId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Operador Id"
+                           },
+                           {
+                               "name":  "PaletProductoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Producto Id"
+                           },
+                           {
+                               "name":  "PaletProductoNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Producto Nombre"
+                           },
+                           {
+                               "name":  "PaletProductoDescripcion",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Producto Descripcion"
+                           },
+                           {
+                               "name":  "PaletHoraInicioEnsamble",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Hora Inicio Ensamble"
+                           },
+                           {
+                               "name":  "PaletHoraFinEnsamble",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Hora Fin Ensamble"
+                           },
+                           {
+                               "name":  "PaletEstatus",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Estatus"
+                           },
+                           {
+                               "name":  "PaletPrensaId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Prensa Id"
+                           },
+                           {
+                               "name":  "PaletPrensaNombre",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Prensa Nombre"
+                           },
+                           {
+                               "name":  "PaletPrensadoId",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Prensado Id"
+                           },
+                           {
+                               "name":  "PaletCapacidad",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Capacidad"
+                           },
+                           {
+                               "name":  "PaletNoCarretes",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet No Carretes"
+                           },
+                           {
+                               "name":  "ProductoTerminadoPaletMillar",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Terminado Palet Millar"
+                           },
+                           {
+                               "name":  "ProductoTerminadoCodigoSAP",
+                               "elementType":  "SDTItem",
+                               "dataType":  "Dynamic",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Producto Terminado Codigo SAP"
+                           }
+                       ]
+}

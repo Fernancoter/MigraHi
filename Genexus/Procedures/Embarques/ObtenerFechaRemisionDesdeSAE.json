@@ -1,0 +1,151 @@
+﻿{
+    "uniqueId":  "a4ed4ebd-0cca-47be-a523-d6b2b7d94812",
+    "name":  "ObtenerFechaRemisionDesdeSAE",
+    "type":  "Procedure",
+    "module":  "Embarques",
+    "description":  "Obtener Fecha Remision Desde SAE",
+    "filePath":  "Procedures/Embarques/ObtenerFechaRemisionDesdeSAE.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "for each DB.Remission\n\tWhere RemissionDoc = \u0026RemissionDoc\n\t\u0026EmbarqueFecha =  RemissionDate\n\texit\nwhen none\n\t\u0026EmbarqueFecha = now()\nendfor\n\n\n",
+                              "cleanSource":  "for each DB.Remission\n\tWhere RemissionDoc = \u0026RemissionDoc\n\t\u0026EmbarqueFecha =  RemissionDate\n\texit\nwhen none\n\t\u0026EmbarqueFecha = now()\nendfor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "\nparm(in:\u0026RemissionDoc, out:\u0026EmbarqueFecha);\n",
+                              "cleanSource":  "\nparm(in:\u0026RemissionDoc, out:\u0026EmbarqueFecha);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "DB.Remission"
+                                     ],
+                         "calledBy":  [
+                                          "CrearEmbarque",
+                                          "InicializarEmbarque"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "RemissionDoc",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Remisión SAE"
+                           },
+                           {
+                               "name":  "EmbarqueFecha",
+                               "elementType":  "Parameter",
+                               "dataType":  "DATE",
+                               "accessor":  "out",
+                               "domain":  "",
+                               "description":  "Fecha de Embarque"
+                           },
+                           {
+                               "name":  "CustomerName",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Cliente"
+                           },
+                           {
+                               "name":  "OrderShipping",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Envío"
+                           },
+                           {
+                               "name":  "OrderDoc",
+                               "elementType":  "Variable",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pedido SAE"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

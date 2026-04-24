@@ -1,0 +1,9 @@
+﻿
+=== Procedure: Produccion.ObtenerCantidadBobinasPorExtrusion ===
+
+--- Source (Source) ---
+&ExtrusionBobinas = count(BobinaId, ExtrusionId = &ExtrusionId)
+
+--- Rules (Rules) ---
+parm(In:&ExtrusionId, Out:&ExtrusionBobinas);
+

@@ -1,0 +1,185 @@
+﻿{
+    "uniqueId":  "da6cc7db-b844-4a87-a20b-d3b09c77c287",
+    "name":  "SDCorregirPallet",
+    "type":  "Procedure",
+    "module":  "Produccion",
+    "description":  "SDCorregir Pallet",
+    "filePath":  "Procedures/Produccion/SDCorregirPallet.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "\n     \u0026Palet.Load(\u0026PaletId)\n     \u0026PaletCarretes = \u0026Palet.PaletNoCarretes\n     \u0026Palet.PaletNoCarretes = \u0026Carretes\n     \u0026Palet.Save()\n     \n     if(\u0026Palet.Success())\n\t     commit\n     endif\n\t\n     if(\u0026PaletCarretes \u003e 0)\n\t     for each DB.PaletCarrete\n\t\t     where PaletCarreteId \u003e 0\n\t\t     where CarreteId \u003e 0\n\t\t     where PaletId = \u0026PaletId\n\t\t     \u0026CarreteId = CarreteId\n\t\t     \u0026PCId = PaletCarreteId\n\t\t     \n\t\t     //Eliminar Referencia\n\t\t     \u0026DeletePaletCarrete.Load(\u0026PCId)\n\t\t     \u0026DeletePaletCarrete.Delete()\n\t\t     commit\n\t\t     \n\t\t     //Carrete en Pallet Desconocido\n\t\t     SetEstadoCarrete.Call(\u0026CarreteId, EstadoCarrete.EnPaletDesconocido, false)\n\t     endfor\n     endif\n\t   \n\n",
+                              "cleanSource":  "\n     \u0026Palet.Load(\u0026PaletId)\n     \u0026PaletCarretes = \u0026Palet.PaletNoCarretes\n     \u0026Palet.PaletNoCarretes = \u0026Carretes\n     \u0026Palet.Save()\n     \n     if(\u0026Palet.Success())\n\t     commit\n     endif\n\t\n     if(\u0026PaletCarretes \u003e 0)\n\t     for each DB.PaletCarrete\n\t\t     where PaletCarreteId \u003e 0\n\t\t     where CarreteId \u003e 0\n\t\t     where PaletId = \u0026PaletId\n\t\t     \u0026CarreteId = CarreteId\n\t\t     \u0026PCId = PaletCarreteId\n\t\t     \n\t\t     //Eliminar Referencia\n\t\t     \u0026DeletePaletCarrete.Load(\u0026PCId)\n\t\t     \u0026DeletePaletCarrete.Delete()\n\t\t     commit\n\t\t     \n\t\t     //Carrete en Pallet Desconocido\n\t\t     SetEstadoCarrete.Call(\u0026CarreteId, EstadoCarrete.EnPaletDesconocido, false)\n\t     endfor\n     endif"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026PaletId,in:\u0026Carretes,in:\u0026Password );\n",
+                              "cleanSource":  "parm(in:\u0026PaletId,in:\u0026Carretes,in:\u0026Password );"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SetEstadoCarrete",
+                                         "DB.Palet",
+                                         "DB.PaletCarrete",
+                                         "SetEstadoCarrete"
+                                     ],
+                         "calledBy":  [
+
+                                      ],
+                         "tablesRead":  [
+                                            "DB.Palet"
+                                        ],
+                         "tablesWritten":  [
+                                               "DB.Palet"
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "DeletePaletCarrete",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Delete Palet Carrete"
+                           },
+                           {
+                               "name":  "Palet",
+                               "elementType":  "Variable",
+                               "dataType":  "GX_BUSCOMP",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet"
+                           },
+                           {
+                               "name":  "Carretes",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Carretes"
+                           },
+                           {
+                               "name":  "PaletCarretes",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Palet Carretes"
+                           },
+                           {
+                               "name":  "PaletId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Palet Id"
+                           },
+                           {
+                               "name":  "PrensadoId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Prensado Id"
+                           },
+                           {
+                               "name":  "PCId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "PCId"
+                           },
+                           {
+                               "name":  "CarreteId",
+                               "elementType":  "Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Carrete Id"
+                           },
+                           {
+                               "name":  "Password",
+                               "elementType":  "Parameter",
+                               "dataType":  "VARCHAR",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "Password"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}

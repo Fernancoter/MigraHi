@@ -1,0 +1,81 @@
+﻿{
+    "uniqueId":  "8ad1e491-0561-4b8f-a704-5bdf935e1c5e",
+    "name":  "OperadorDP",
+    "type":  "DataProvider",
+    "module":  "Produccion",
+    "description":  "Operador DP",
+    "filePath":  "DataProviders/Produccion/OperadorDP.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "SDTOperador\nWhere OperadorActivo = True \n{\n\tSDTOperadorItem\n\t{\n\t\tOperadorId = OperadorId\n\t\tOperadorNombre = OperadorNombre\n\t\tOperadorFotografia = OperadorFotografia\n\t}\n}\n",
+                              "cleanSource":  "SDTOperador\nWhere OperadorActivo = True \n{\n\tSDTOperadorItem\n\t{\n\t\tOperadorId = OperadorId\n\t\tOperadorNombre = OperadorNombre\n\t\tOperadorFotografia = OperadorFotografia\n\t}\n}"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "Produccion.SDTOperador"
+                                     ],
+                         "calledBy":  [
+                                          "PrensadoDelDia",
+                                          "ExclusionDelDia"
+                                      ],
+                         "tablesRead":  [
+
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+                                          "SDTOperador"
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           }
+                       ]
+}

@@ -1,0 +1,135 @@
+﻿{
+    "uniqueId":  "139985ae-0881-4ba1-8e67-ed571e71dab6",
+    "name":  "WWP_CheckUserIsNotUnsubscribed",
+    "type":  "Procedure",
+    "module":  "WWPBaseObjects.Subscriptions",
+    "description":  "Check User Is Not Unsubscribed",
+    "filePath":  "Procedures/WWPBaseObjects/Subscriptions/WWP_CheckUserIsNotUnsubscribed.json",
+    "isGAMObject":  false,
+    "interfaceElements":  [
+
+                          ],
+    "businessLogic":  [
+                          {
+                              "blockName":  "Source",
+                              "blockType":  "Source",
+                              "rawSource":  "For Each WWP_Subscription\n\tWhere WWPNotificationDefinitionId = \u0026WWPNotificationDefinitionId\n\tWhere WWPUserExtendedId = WWPBaseObjects.WWP_GetLoggedUserId()\n\tWhere WWPSubscriptionSubscribed = False\n\t\u0026IncludeNotification = False\n\t\u0026WWPSubscriptionId = WWPSubscriptionId\n\tExit\nEndFor\n",
+                              "cleanSource":  "For Each WWP_Subscription\n\tWhere WWPNotificationDefinitionId = \u0026WWPNotificationDefinitionId\n\tWhere WWPUserExtendedId = WWPBaseObjects.WWP_GetLoggedUserId()\n\tWhere WWPSubscriptionSubscribed = False\n\t\u0026IncludeNotification = False\n\t\u0026WWPSubscriptionId = WWPSubscriptionId\n\tExit\nEndFor"
+                          },
+                          {
+                              "blockName":  "Rules",
+                              "blockType":  "Rules",
+                              "rawSource":  "parm(in:\u0026WWPNotificationDefinitionId, inout:\u0026WWPSubscriptionId, inout:\u0026IncludeNotification);\n",
+                              "cleanSource":  "parm(in:\u0026WWPNotificationDefinitionId, inout:\u0026WWPSubscriptionId, inout:\u0026IncludeNotification);"
+                          }
+                      ],
+    "dependencies":  {
+                         "callsTo":  [
+                                         "WWPBaseObjects.WWP_GetLoggedUserId",
+                                         "WWPBaseObjects.Subscriptions.WWP_Subscription"
+                                     ],
+                         "calledBy":  [
+                                          "WWP_SubscriptionsSettings"
+                                      ],
+                         "tablesRead":  [
+                                            "WWP_Subscription"
+                                        ],
+                         "tablesWritten":  [
+
+                                           ],
+                         "usesSDTs":  [
+
+                                      ],
+                         "usesDataProviders":  [
+
+                                               ],
+                         "unresolved_refs":  [
+
+                                             ],
+                         "ambiguous":  [
+
+                                       ]
+                     },
+    "dataDictionary":  [
+                           {
+                               "name":  "IncludeNotification",
+                               "elementType":  "Parameter",
+                               "dataType":  "Boolean",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "Include Notification"
+                           },
+                           {
+                               "name":  "WWPNotificationDefinitionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "in",
+                               "domain":  "",
+                               "description":  "WWPNotification Definition Id"
+                           },
+                           {
+                               "name":  "WWPSubscriptionId",
+                               "elementType":  "Parameter",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "inout",
+                               "domain":  "",
+                               "description":  "WWPSubscription Id"
+                           },
+                           {
+                               "name":  "Today",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "DATE",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Today"
+                           },
+                           {
+                               "name":  "Time",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Time"
+                           },
+                           {
+                               "name":  "Pgmname",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmname"
+                           },
+                           {
+                               "name":  "Pgmdesc",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Pgmdesc"
+                           },
+                           {
+                               "name":  "Page",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Page"
+                           },
+                           {
+                               "name":  "Line",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "NUMERIC",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Line"
+                           },
+                           {
+                               "name":  "Output",
+                               "elementType":  "Standard Variable",
+                               "dataType":  "CHARACTER",
+                               "accessor":  "",
+                               "domain":  "",
+                               "description":  "Output"
+                           }
+                       ]
+}
