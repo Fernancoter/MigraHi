@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../core/auth/auth.service';
+import { AuthService } from '../../core/services/auth.service';
 import { NavigationService } from '../../core/services/navigation.service';
 
 interface ModuleItem {
@@ -60,12 +60,12 @@ interface ModuleItem {
           <button class="icon-btn-modern">🔔<span class="badge-dot"></span></button>
         </div>
         
-        <div class="user-pill" (click)="onLogout()">
+        <div class="user-pill" (click)="onLogout()" [title]="'Cerrar sesión'">
           <div class="user-info">
-            <span class="user-name">Administrador</span>
-            <span class="user-role">SuperAdmin</span>
+            <span class="user-name">{{ userFullName() }}</span>
+            <span class="user-role">{{ userRole() }}</span>
           </div>
-          <div class="user-avatar">AD</div>
+          <div class="user-avatar">{{ userInitials() }}</div>
         </div>
       </div>
     </header>
@@ -151,13 +151,33 @@ export class HeaderComponent {
     { title: 'Catálogos SAE', icon: '📂', route: '/catalogos-sae' }
   ];
 
+  readonly userFullName = computed(() => {
+    const u = this.authService.currentUser();
+    if (!u) return 'Invitado';
+    const full = `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim();
+    return full || u.email || 'Usuario';
+  });
+
+  readonly userRole = computed(() => {
+    const u = this.authService.currentUser();
+    return u?.operadorId ? `Operador ${u.operadorId}` : 'Usuario';
+  });
+
+  readonly userInitials = computed(() => {
+    const u = this.authService.currentUser();
+    if (!u) return '··';
+    const a = (u.firstName?.[0] ?? '').toUpperCase();
+    const b = (u.lastName?.[0] ?? '').toUpperCase();
+    const initials = `${a}${b}`;
+    return initials || (u.email?.[0]?.toUpperCase() ?? '?');
+  });
+
   constructor(private authService: AuthService, private router: Router, private navService: NavigationService) {}
 
   onLogout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
   }
-  
+
   toggleSidebar() {
     this.navService.toggleSidebar();
   }

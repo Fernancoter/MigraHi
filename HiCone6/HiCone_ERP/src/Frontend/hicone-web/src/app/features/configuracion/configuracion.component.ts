@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from '../../core/auth/auth.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-configuracion',
@@ -16,11 +16,11 @@ import { AuthService } from '../../core/auth/auth.service';
 
       <div class="config-grid">
         <div class="config-card profile-card">
-          <div class="avatar-large">AD</div>
+          <div class="avatar-large">{{ initials() }}</div>
           <div class="profile-info">
-            <h2>{{ user?.name }}</h2>
-            <p>{{ user?.email }}</p>
-            <span class="role-tag">{{ user?.role }}</span>
+            <h2>{{ fullName() }}</h2>
+            <p>{{ user()?.email }}</p>
+            <span class="role-tag">{{ user()?.operadorId ? 'Operador #' + user()?.operadorId : 'Usuario' }}</span>
           </div>
           <hr>
           <button (click)="onLogout()" class="btn-logout">
@@ -103,14 +103,26 @@ import { AuthService } from '../../core/auth/auth.service';
   `]
 })
 export class ConfiguracionComponent {
-  user: any;
+  private readonly authService = inject(AuthService);
 
-  constructor(private authService: AuthService, private router: Router) {
-    this.user = this.authService.currentUserValue;
-  }
+  readonly user = this.authService.currentUser;
+
+  readonly fullName = computed(() => {
+    const u = this.user();
+    if (!u) return 'Invitado';
+    const name = `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim();
+    return name || u.email || 'Usuario';
+  });
+
+  readonly initials = computed(() => {
+    const u = this.user();
+    if (!u) return '··';
+    const a = (u.firstName?.[0] ?? '').toUpperCase();
+    const b = (u.lastName?.[0] ?? '').toUpperCase();
+    return `${a}${b}` || (u.email?.[0]?.toUpperCase() ?? '?');
+  });
 
   onLogout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
   }
 }

@@ -3,6 +3,7 @@ using HiCone.Domain.Entities.Inventario;
 using HiCone.Domain.Entities.Produccion;
 using HiCone.Domain.Entities.Tenant;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace HiCone.Persistence.Seeds;
@@ -11,18 +12,20 @@ public class ApplicationDbContextSeeder
 {
     private readonly ILogger<ApplicationDbContextSeeder> _logger;
     private readonly ApplicationDbContext _context;
+    private readonly IConfiguration _configuration;
 
-    public ApplicationDbContextSeeder(ILogger<ApplicationDbContextSeeder> logger, ApplicationDbContext context)
+    public ApplicationDbContextSeeder(ILogger<ApplicationDbContextSeeder> logger, ApplicationDbContext context, IConfiguration configuration)
     {
         _logger = logger;
         _context = context;
+        _configuration = configuration;
     }
 
     public async Task SeedAsync()
     {
         try
         {
-            await _context.Database.EnsureCreatedAsync();
+            await _context.Database.MigrateAsync();
             await TrySeedAsync();
         }
         catch (Exception ex)
@@ -93,20 +96,31 @@ public class ApplicationDbContextSeeder
         await _context.SaveChangesAsync(default);
 
         // Admin User
-        var adminEmail = "admin@hicone.com";
-        if (!await _context.Users.AnyAsync(u => u.Email == adminEmail))
+        var adminSection = _configuration.GetSection("Seed:Admin");
+        var adminUsername = adminSection["Username"] ?? "admin";
+        var adminEmail = adminSection["Email"] ?? "admin@hicone.com";
+        var adminFirstName = adminSection["FirstName"] ?? "Admin";
+        var adminLastName = adminSection["LastName"] ?? "HiCone";
+        var adminOperadorId = int.TryParse(adminSection["OperadorId"], out var opId) ? opId : 1;
+        var adminPassword = adminSection["Password"];
+
+        if (string.IsNullOrWhiteSpace(adminPassword))
+        {
+            _logger.LogWarning("Seed:Admin:Password not configured. Skipping admin user creation. Set it via appsettings.Development.json or the SEED__ADMIN__PASSWORD env var.");
+        }
+        else if (!await _context.Users.AnyAsync(u => u.Email == adminEmail))
         {
             var superAdminRole = await _context.Roles.FirstAsync(r => r.Name == "SuperAdmin");
-            
+
             var adminUser = new User
             {
-                Username = "admin",
+                Username = adminUsername,
                 Email = adminEmail,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("hicone123"), 
-                FirstName = "Admin",
-                LastName = "HiCone",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(adminPassword),
+                FirstName = adminFirstName,
+                LastName = adminLastName,
                 TenantId = defaultTenantId,
-                OperadorId = 1,
+                OperadorId = adminOperadorId,
                 MustChangePassword = false,
                 EmailConfirmed = true
             };

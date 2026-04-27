@@ -17,9 +17,17 @@ namespace HiCone.Persistence;
 
 public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
+    private readonly ICurrentTenantService? _currentTenantService;
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
+    }
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentTenantService currentTenantService)
+        : base(options)
+    {
+        _currentTenantService = currentTenantService;
     }
 
     // ── Identity & Tenant ────────────────────────────────────────────────
@@ -109,18 +117,57 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        // Global query filters for Soft Delete
+        // Global query filter that combines Soft Delete + Tenant scoping where applicable.
+        // For TenantEntity-derived types we filter by current tenantId and ignore rows of other tenants.
+        // The filter resolves at query time via the captured _currentTenantService field, so each request
+        // sees only its own tenant's data even if it tries to query directly.
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
-            if (typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType))
-            {
-                var parameter = System.Linq.Expressions.Expression.Parameter(entityType.ClrType, "e");
-                var property = System.Linq.Expressions.Expression.Property(parameter, nameof(ISoftDeletable.IsDeleted));
-                var condition = System.Linq.Expressions.Expression.Equal(property, System.Linq.Expressions.Expression.Constant(false));
-                var lambda = System.Linq.Expressions.Expression.Lambda(condition, parameter);
+            var clrType = entityType.ClrType;
+            var isSoftDeletable = typeof(ISoftDeletable).IsAssignableFrom(clrType);
+            var isTenantScoped = typeof(TenantEntity).IsAssignableFrom(clrType);
 
-                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+            if (!isSoftDeletable && !isTenantScoped) continue;
+
+            var parameter = System.Linq.Expressions.Expression.Parameter(clrType, "e");
+            System.Linq.Expressions.Expression? body = null;
+
+            if (isSoftDeletable)
+            {
+                var prop = System.Linq.Expressions.Expression.Property(parameter, nameof(ISoftDeletable.IsDeleted));
+                body = System.Linq.Expressions.Expression.Equal(prop, System.Linq.Expressions.Expression.Constant(false));
+            }
+
+            if (isTenantScoped)
+            {
+                // e.TenantId == _currentTenantService.TenantId (or no filter when service is unavailable / system context)
+                var tenantProp = System.Linq.Expressions.Expression.Property(parameter, nameof(TenantEntity.TenantId));
+                var contextRef = System.Linq.Expressions.Expression.Constant(this);
+                var serviceField = typeof(ApplicationDbContext).GetField("_currentTenantService",
+                    System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+                var serviceAccess = System.Linq.Expressions.Expression.Field(contextRef, serviceField);
+
+                // ScopedTenantId(serviceAccess) == e.TenantId  OR  serviceAccess == null  (system access)
+                var helperMethod = typeof(ApplicationDbContext).GetMethod(nameof(IsTenantMatch),
+                    System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+                var tenantCheck = System.Linq.Expressions.Expression.Call(helperMethod, serviceAccess, tenantProp);
+
+                body = body == null ? tenantCheck : System.Linq.Expressions.Expression.AndAlso(body, tenantCheck);
+            }
+
+            if (body != null)
+            {
+                var lambda = System.Linq.Expressions.Expression.Lambda(body, parameter);
+                modelBuilder.Entity(clrType).HasQueryFilter(lambda);
             }
         }
+    }
+
+    private static bool IsTenantMatch(ICurrentTenantService? service, Guid entityTenantId)
+    {
+        if (service is null) return true;                       // bootstrap / migrations / seeders
+        var current = service.TenantId;
+        if (current is null || current == Guid.Empty) return true; // unauthenticated / system jobs
+        return current == entityTenantId;
     }
 }

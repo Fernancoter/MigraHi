@@ -1,11 +1,13 @@
 using HiCone.Application.Common.Interfaces;
 using HiCone.Domain.Entities.Inventario;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace HiCone.API.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/[controller]")]
 public class ArticulosController : ControllerBase
 {

@@ -147,20 +147,15 @@ export class LoginComponent {
   onLogin() {
     this.loading = true;
     this.errorMessage = '';
-    
-    try {
-      this.authService.login(this.email, this.password).subscribe({
-        next: () => {
-          this.router.navigate(['/dashboard']);
-        },
-        error: (err) => {
-          this.errorMessage = 'Correo o contraseña incorrectos';
-          this.loading = false;
-        }
-      });
-    } catch (e) {
-      this.errorMessage = 'Error de conexión';
-      this.loading = false;
-    }
+
+    this.authService.login({ email: this.email, password: this.password, rememberMe: false }).subscribe({
+      next: () => {
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        this.errorMessage = err?.error?.errors?.[0] ?? 'Correo o contraseña incorrectos';
+        this.loading = false;
+      }
+    });
   }
 }

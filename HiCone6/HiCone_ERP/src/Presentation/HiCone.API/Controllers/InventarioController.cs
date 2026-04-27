@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HiCone.Application.Services.Inventario;
 
 namespace HiCone.API.Controllers.v1
 {
     [ApiController]
+    [Authorize]
     [Route("api/v1/[controller]")]
     public class InventarioController : ControllerBase
     {
