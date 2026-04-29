@@ -88,6 +88,22 @@ import { NavigationService } from '../../core/services/navigation.service';
           </div>
         </ng-container>
 
+        <!-- Seguridad -->
+        <ng-container *ngIf="(activeModule$ | async) === 'SEGURIDAD'">
+          <a routerLink="/seguridad" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-item" title="Inicio">
+            <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+            <span class="item-label">Inicio</span>
+          </a>
+          <a routerLink="/seguridad/usuarios" routerLinkActive="active" class="nav-item" title="Usuarios">
+            <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <span class="item-label">Usuarios</span>
+          </a>
+          <a routerLink="/seguridad/roles" routerLinkActive="active" class="nav-item" title="Roles">
+            <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            <span class="item-label">Roles</span>
+          </a>
+        </ng-container>
+
         <!-- Fallback System Menu -->
         <ng-container *ngIf="(activeModule$ | async) === 'SISTEMA'">
           <a routerLink="/dashboard" routerLinkActive="active" class="nav-item" title="Dashboard Global">
@@ -144,21 +160,21 @@ import { NavigationService } from '../../core/services/navigation.service';
     
     .banner-avatar {
       background: rgba(255,255,255,0.15);
-      border: 3px solid rgba(255,255,255,0.8);
-      width: 50px;
-      height: 50px;
+      border: 2px solid rgba(255,255,255,0.7);
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.6rem;
       position: relative;
       z-index: 1;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
       transition: all 0.3s;
     }
 
-    .helmet-icon { width: 24px; height: 24px; color: white; }
+    .helmet-icon { width: 20px; height: 20px; color: white; }
 
     .banner-text {
       text-align: center;

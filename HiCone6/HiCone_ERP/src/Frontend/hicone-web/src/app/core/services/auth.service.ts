@@ -121,4 +121,10 @@ export class AuthService {
   getAccessToken(): string | null {
     return localStorage.getItem(this.AUTH_KEY);
   }
+
+  /** Alias utilizado por los módulos de seguridad */
+  getToken(): string | null {
+    return this.getAccessToken();
+  }
 }
+

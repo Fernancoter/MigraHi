@@ -13,8 +13,10 @@ import { SilosComponent } from './features/inventario/silos/silos.component';
 import { CatalogosSaeComponent } from './features/catalogos-sae/catalogos-sae.component';
 import { ReportesSaeComponent } from './features/reportes-sae/reportes-sae.component';
 import { SeguridadComponent } from './features/seguridad/seguridad.component';
+import { SeguridadInicioComponent } from './features/seguridad/inicio/seguridad-inicio.component';
+import { UsuariosComponent } from './features/seguridad/usuarios/usuarios.component';
+import { RolesComponent } from './features/seguridad/roles/roles.component';
 import { authGuard } from './core/guards/auth.guard';
-
 import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
@@ -33,13 +35,23 @@ export const routes: Routes = [
       { path: 'produccion', component: ProduccionListComponent },
       { path: 'embarques', component: EmbarquesComponent },
       { path: 'calidad', component: CalidadComponent },
-      { path: 'seguridad', component: SeguridadComponent },
       { path: 'configuracion', component: ConfiguracionComponent },
       { path: 'reportes-sae', component: ReportesSaeComponent },
       { path: 'catalogos-sae', component: CatalogosSaeComponent },
-      { path: 'informes', component: DashboardComponent },     // Placeholder funcional
+      { path: 'informes', component: DashboardComponent },
+      // Módulo de Seguridad (con sub-rutas)
+      {
+        path: 'seguridad',
+        component: SeguridadComponent,
+        children: [
+          { path: '', component: SeguridadInicioComponent },
+          { path: 'usuarios', component: UsuariosComponent },
+          { path: 'roles', component: RolesComponent }
+        ]
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
   { path: '**', redirectTo: 'dashboard' }
 ];
+
