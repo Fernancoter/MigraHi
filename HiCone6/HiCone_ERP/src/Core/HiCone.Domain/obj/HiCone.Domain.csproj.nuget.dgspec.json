@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Ronny\\Desktop\\HICONE\\migrahi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj": {}
+    "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Ronny\\Desktop\\HICONE\\migrahi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj": {
+    "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ronny\\Desktop\\HICONE\\migrahi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj",
         "projectName": "HiCone.Domain",
-        "projectPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\migrahi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj",
+        "projectPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\HiCone.Domain.csproj",
         "packagesPath": "C:\\Users\\Ronny\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\migrahi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\obj\\",
+        "outputPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "centralPackageVersionsManagementEnabled": true,
         "configFilePaths": [

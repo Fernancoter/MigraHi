@@ -19,5 +19,21 @@
 - **Database Schema**: Recreated database to include the new `Username` column in the `Users` table.
 - **Auth Flow**: Fixed password mismatch by implementing dynamic BCrypt hashing in the seeder.
 
+## [1.2.0] - 2026-04-30
+### Added
+- **Permissions System**: Migration of 350+ security records from legacy system.
+- **Application Modules**: Creation of "HICONE" as the primary operational module for security.
+- **Frontend Security UI**: Advanced pagination (20 items/page) and search filtering in Roles/Permissions views.
+- **Data Seeding**: Refactored `ApplicationDbContextSeeder` to include the complete unified permission catalog.
+
+### Changed
+- **Architecture**: Split security entries between GAM (Administrative) and HICONE (Operational) as per user requirements.
+- **UX**: Implemented "Actions" dropdown for export/import functionality in the Roles screen.
+- **Reactivity**: Converted `allPermissions` to Angular Signals for improved performance and real-time UI updates.
+
+### Fixed
+- **Pagination Bug**: Resolved issue where switching between applications would cause the page index to get stuck or out of range.
+- **Filtering**: Fixed permissions view to correctly filter records by the selected Application (GAM/HICONE).
+
 ---
 *Maintenance by Antigravity AI*

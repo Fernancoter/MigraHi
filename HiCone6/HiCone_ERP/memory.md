@@ -1,6 +1,10 @@
 # Project Memory: HiCone ERP Modernization
 
-## Current State
+## Rama Activa
+`security/refactor` — compilación estable, sincronizada con `main`.
+
+## Estado Actual
+✅ **Módulo de Seguridad COMPLETADO** (commit: 3a869aa)
 The project is in the initial phase of modernization/migration from a GeneXus-based ERP to a modern Angular + .NET platform. The focus is currently on the **Authentication Module**.
 
 ## Completed Tasks
@@ -16,6 +20,11 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - Proper validation handling (GAM18/GAM79 matching styles).
     - **Branding Update**: Integrated official Hi-Cone logo and removed temporary placeholders.
     - **Security/UX**: Added password visibility toggle with interactive SVG icons.
+- [x] **Migración Masiva de Permisos**:
+    - Se migraron más de 350 permisos desde el sistema legacy.
+    - Consolidación de módulos: Se definió **GAM** para los primeros 13 permisos administrativos y **HICONE** para todo el catálogo operativo (Lotes 1-18).
+    - Implementación en Backend (`ApplicationDbContextSeeder.cs`) y Frontend (Mock data en `roles.component.ts`).
+    - Mejora de UX: Paginación funcional en todas las vistas de seguridad y filtrado dinámico por aplicación.
 - [x] **Visual Identity & Infrastructure**:
     - Created `public/assets/images` directory for graphic resource management.
     - Integrated `login-bg.png` as high-resolution background for the login screen.
@@ -30,18 +39,23 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - `core/services/auth.service.ts`
     - `core/guards/auth.guard.ts`
     - `features/auth/login/login.component.ts`
+    - `features/seguridad/roles/roles.component.ts`
+- Backend:
+    - `HiCone.Persistence/Seeds/ApplicationDbContextSeeder.cs`
 - Routes: `app.routes.ts`
 
 ## Technical Decisions
 - **Standalone Architecture**: Using Angular Standalone Components for the entire frontend.
 - **Session Management**: Currently simulated with LocalStorage persistence for developer preview; ready for JWT integration.
 - **Validation**: Using Reactive Forms for real-time feedback and server-simulated error messages.
+- **Reactivity**: Converted `allPermissions` to Angular Signals in the Roles component for improved performance and real-time UI updates.
 
 ## Next Steps
-- [ ] Integration with .NET Identity / AuthController when backend endpoints are available.
-- [ ] Implement Register and Forgot Password pages (currently placeholders).
-- [ ] Expansion of Dashboard and other core modules (Inventario, Clientes, etc.).
+- [ ] Continuar con la migración de permisos de **HICONE** (Punto de control: **Página 38** del documento de referencia).
+- [ ] Integración final de permisos con el backend real cuando se ejecute el seeder en producción.
+- [ ] Implementar páginas de Registro y Recuperación de contraseña (actualmente placeholders).
 
 ## Notes
 - Do not modify pages related to "Silos" or "Producción" until explicitly requested by the user.
 - Maintain the glassmorphism dark theme across all new modules.
+- Split security entries: GAM (13 first records) vs HICONE (everything else).

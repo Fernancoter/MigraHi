@@ -1,0 +1,450 @@
+<div class="module-page animate-fade-in">
+  <!-- ==============================================
+       VISTA PRINCIPAL: Lista de Roles
+       ============================================== -->
+  <ng-container *ngIf="viewState() === 'main'">
+    <header class="module-header">
+      <div class="title-area">
+        <nav class="breadcrumb">Seguridad › Roles</nav>
+        <h1>Roles</h1>
+      </div>
+    </header>
+
+    <div class="alert alert-error"   *ngIf="errorMsg()">⚠️ {{ errorMsg() }}</div>
+    <div class="alert alert-success" *ngIf="successMsg()">✅ {{ successMsg() }}</div>
+
+    <div class="table-card gam-card">
+      <div class="table-toolbar">
+        <div class="toolbar-left">
+          <button class="btn-primary legacy-add-btn" (click)="openModal()">+ Nuevo Rol</button>
+        </div>
+        <div class="toolbar-right">
+          <div class="gam-filter">
+            <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            <label>Nombre</label>
+            <input type="text" class="gam-search-line" (input)="onSearch($event)">
+          </div>
+        </div>
+      </div>
+
+      <div class="loading-state" *ngIf="isLoading()">
+        <span class="spinner"></span> Cargando roles...
+      </div>
+
+      <table *ngIf="!isLoading()" class="data-table gam-table">
+        <thead>
+          <tr>
+            <th class="icon-col"></th>
+            <th class="icon-col"></th>
+            <th class="icon-col-header">Hijos</th>
+            <th class="icon-col-header">Permisos</th>
+            <th class="icon-col-header">Copiar</th>
+            <th class="icon-col-header">Suscripciones</th>
+            <th>Nombre</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of paginatedRoles()">
+            <td class="icon-cell">
+              <button class="gam-icon-btn edit-btn" (click)="openModal(r)" title="Editar" [disabled]="r.isSystem">✏️</button>
+            </td>
+            <td class="icon-cell">
+              <button class="gam-icon-btn del-btn" (click)="deleteRole(r.id)" title="Eliminar" [disabled]="r.isSystem">❌</button>
+            </td>
+            <td class="icon-cell">
+              <!-- Hijos (Gear) -->
+              <button class="gam-icon-btn gear-btn" (click)="openHijosView(r)" title="Hijos">⚙️</button>
+            </td>
+            <td class="icon-cell">
+              <!-- Permisos (Lock) -->
+              <button class="gam-icon-btn lock-btn" (click)="openPermisosView(r)" title="Permisos">🔒</button>
+            </td>
+            <td class="icon-cell">
+              <!-- Copiar (Copy) -->
+              <button class="gam-icon-btn copy-btn" (click)="copyRole(r)" title="Copiar">📄</button>
+            </td>
+            <td class="icon-cell">
+              <!-- Suscripciones (RSS) -->
+              <button class="gam-icon-btn rss-btn" (click)="openSuscripcionesView(r)" title="Suscripciones">📶</button>
+            </td>
+            <td>
+              <a href="javascript:void(0)" class="gam-link" (click)="openModal(r)">{{ r.name }}</a>
+            </td>
+          </tr>
+          <tr *ngIf="paginatedRoles().length === 0 && !isLoading()">
+            <td colspan="7" class="empty-row">No se encontraron registros</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Paginación Main -->
+      <div class="pagination-area" *ngIf="totalPagesRoles() > 1" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #64748b; border-top: 1px solid #f1f5f9;">
+        <span>Página {{ currentPageRoles() }} de {{ totalPagesRoles() }}</span>
+        <div style="display: flex; gap: 0.3rem;">
+          <button class="btn-secondary" [disabled]="currentPageRoles() === 1" (click)="prevPageRoles()" style="padding: 0.2rem 0.6rem;">Ant</button>
+          <button style="border: 1px solid #4caf50; background: #4caf50; color: white; border-radius: 4px; padding: 0.2rem 0.6rem;">{{ currentPageRoles() }}</button>
+          <button class="btn-secondary" [disabled]="currentPageRoles() === totalPagesRoles()" (click)="nextPageRoles()" style="padding: 0.2rem 0.6rem;">Sig</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal CRUD (Mantenido igual) -->
+    <div class="modal-overlay" *ngIf="showModal()" (click)="closeModalOnOverlay($event)">
+      <div class="modal-box animate-scale-up" id="role-modal">
+        <div class="modal-header">
+          <h2>{{ editingRole ? 'Editar Rol' : 'Nuevo Rol' }}</h2>
+          <button class="modal-close" (click)="closeModal()">✕</button>
+        </div>
+
+        <form [formGroup]="roleForm" (ngSubmit)="onSubmit()" class="modal-form">
+          <div class="form-group">
+            <label>Nombre del Rol *</label>
+            <input type="text" formControlName="name" placeholder="ej. Supervisor de Planta" id="role-name-input">
+            <span class="field-error" *ngIf="isInvalid('name')">Requerido</span>
+          </div>
+          <div class="form-group">
+            <label>Descripción</label>
+            <input type="text" formControlName="description" placeholder="Descripción opcional" id="role-desc-input">
+          </div>
+
+          <div class="form-group">
+            <label>Permisos Asignados</label>
+            <div class="permissions-panel">
+              <div class="perm-module" *ngFor="let mod of permissionsByModule()">
+                <div class="perm-module-header">
+                  <input type="checkbox"
+                    [id]="'mod-' + mod.module"
+                    [checked]="isModuleFullySelected(mod)"
+                    [indeterminate]="isModulePartiallySelected(mod)"
+                    (change)="toggleModule(mod, $event)">
+                  <label [for]="'mod-' + mod.module" class="perm-module-label">{{ mod.module }}</label>
+                </div>
+                <div class="perm-items">
+                  <label class="perm-check" *ngFor="let perm of mod.permissions">
+                    <input type="checkbox"
+                      [checked]="selectedPermIds().includes(perm.id)"
+                      (change)="togglePerm(perm.id, $event)">
+                    <div class="perm-info">
+                      <span class="perm-name">{{ perm.name }}</span>
+                      <span class="perm-code">{{ perm.code }}</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <p class="text-muted" *ngIf="allPermissions.length === 0">Sin permisos disponibles en el sistema.</p>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" (click)="closeModal()">Cancelar</button>
+            <button type="submit" class="btn-primary" [disabled]="isSaving()">
+              {{ isSaving() ? 'Guardando...' : (editingRole ? 'Guardar Cambios' : 'Crear Rol') }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- ==============================================
+       VISTA SECUNDARIA: Hijos
+       ============================================== -->
+  <ng-container *ngIf="viewState() === 'hijos'">
+    <header class="module-header">
+      <div class="title-area">
+        <h1 class="gam-h1-link">Roles del rol: {{ selectedRoleContext()?.name }}</h1>
+        <nav class="breadcrumb">Seguridad › Roles</nav>
+      </div>
+    </header>
+
+    <div class="table-card gam-card">
+      <div class="table-toolbar">
+        <div class="toolbar-left">
+          <!-- Boton Atrás -->
+          <button class="btn-secondary" (click)="closeSubView()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;"><path d="m15 18-6-6 6-6"/></svg>
+            Atrás
+          </button>
+          <!-- Boton Agregar -->
+          <button class="btn-primary" style="margin-left: 10px;">+ Nuevo Rol Hijo</button>
+        </div>
+        
+        <div class="toolbar-right stacked-filters">
+          <div class="gam-filter-row">
+            <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            <label>Nombre</label>
+            <input type="text" class="gam-search-line">
+          </div>
+          <div class="gam-filter-row" style="margin-left: 20px;">
+            <label>Id externo</label>
+            <input type="text" class="gam-search-line">
+          </div>
+        </div>
+      </div>
+
+      <table class="data-table gam-table hijos-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="empty-row text-left">No se encontraron registros</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <!-- ==============================================
+       VISTA SECUNDARIA: Permisos
+       ============================================== -->
+  <ng-container *ngIf="viewState() === 'permisos'">
+    <header class="module-header">
+      <div class="title-area">
+        <h1 class="gam-h1-link">Permisos del rol: {{ selectedRoleContext()?.name }}</h1>
+        <nav class="breadcrumb">Seguridad › Roles</nav>
+      </div>
+    </header>
+
+    <div class="table-card gam-card">
+      <div class="table-toolbar" style="align-items: flex-start;">
+        <div class="toolbar-left" style="gap: 8px;">
+          <!-- Boton Atrás -->
+          <button class="btn-secondary" (click)="closeSubView()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;"><path d="m15 18-6-6 6-6"/></svg>
+            Atrás
+          </button>
+          <!-- Boton Agregar -->
+          <button class="btn-primary" (click)="openAddPermisosView()">+ Nuevo Permiso</button>
+          
+          <div class="dropdown-container">
+            <button class="btn-secondary dropdown-toggle" (click)="toggleExportMenu()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              Acciones ▾
+            </button>
+            <div class="dropdown-menu animate-fade-in" *ngIf="showExportMenu()">
+              <button class="dropdown-item" (click)="showExportMenu.set(false)">Exportar a CSV</button>
+              <button class="dropdown-item" (click)="showExportMenu.set(false)" style="color: #4caf50;">Importar Datos</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="toolbar-right stacked-filters">
+          <div class="gam-filter-row">
+            <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            <label>Aplicación</label>
+            <select class="gam-search-line" [value]="selectedApp()" (change)="onAppChange($event)">
+              <option *ngFor="let app of availableApps()" [value]="app">{{ app }}</option>
+            </select>
+          </div>
+          <div class="gam-filter-row" style="margin-left: 20px;">
+            <label>Nombre</label>
+            <input type="text" class="gam-search-line" (input)="onSearchPermisos($event)">
+          </div>
+          <div class="gam-filter-row" style="margin-left: 20px;">
+            <label>Tipo</label>
+            <select class="gam-search-line">
+              <option>(Ninguno)</option>
+            </select>
+          </div>
+          <div class="gam-filter-row" style="margin-left: 20px;">
+            <label>¿Es heredado?</label>
+            <select class="gam-search-line">
+              <option>Todos</option>
+              <option>Sí</option>
+              <option>No</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <table class="data-table gam-table">
+        <thead>
+          <tr>
+            <th>Nombre del permiso</th>
+            <th>Descripción</th>
+            <th>Tipo de acceso</th>
+            <th>Heredado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of paginatedPermisos()">
+            <td><span class="role-name-badge">{{ p.name }}</span> <span class="text-muted" style="font-size:0.75rem;">({{ p.code }})</span></td>
+            <td>{{ p.description || p.module }}</td>
+            <td>Permitido</td>
+            <td>No</td>
+          </tr>
+          <tr *ngIf="paginatedPermisos().length === 0">
+            <td colspan="4" class="empty-row">No se encontraron registros</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Paginación Permisos -->
+      <div class="pagination-area" *ngIf="totalPagesPermisos() > 1" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #64748b; border-top: 1px solid #f1f5f9;">
+        <span>Página {{ currentPagePermisos() }} de {{ totalPagesPermisos() }}</span>
+        <div style="display: flex; gap: 0.3rem;">
+          <button class="btn-secondary" [disabled]="currentPagePermisos() === 1" (click)="prevPagePermisos()" style="padding: 0.2rem 0.6rem;">Ant</button>
+          <button style="border: 1px solid #4caf50; background: #4caf50; color: white; border-radius: 4px; padding: 0.2rem 0.6rem;">{{ currentPagePermisos() }}</button>
+          <button class="btn-secondary" [disabled]="currentPagePermisos() === totalPagesPermisos()" (click)="nextPagePermisos()" style="padding: 0.2rem 0.6rem;">Sig</button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- ==============================================
+       VISTA SECUNDARIA: Suscripciones
+       ============================================== -->
+  <ng-container *ngIf="viewState() === 'suscripciones'">
+    <header class="module-header">
+      <div class="title-area">
+        <h1 class="gam-h1-link">Subscriptions for Role: {{ selectedRoleContext()?.name }}</h1>
+        <nav class="breadcrumb">Seguridad › Roles</nav>
+      </div>
+    </header>
+
+    <div class="table-card gam-card">
+      <div class="table-toolbar" style="align-items: flex-end; border-bottom: none; padding-bottom: 0;">
+        <div class="toolbar-left" style="gap: 8px;">
+          <!-- Boton Atrás -->
+          <button class="btn-secondary" (click)="closeSubView()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;"><path d="m15 18-6-6 6-6"/></svg>
+            Atrás
+          </button>
+        </div>
+        
+        <div class="toolbar-right">
+          <div class="gam-filter-row">
+            <label style="margin-right: 0.5rem; color: #94a3b8;">Buscar</label>
+            <input type="text" class="gam-search-line" (input)="onSearchSuscripciones($event)">
+          </div>
+        </div>
+      </div>
+
+      <div style="padding: 1rem 1.5rem; display: flex; align-items: center; gap: 0.5rem; margin-top: -0.5rem;">
+        <input type="checkbox" id="chk-subscribed-events" style="accent-color: #4caf50;">
+        <label for="chk-subscribed-events" style="font-size: 0.85rem; font-weight: normal; color: #334155;">Show only role's subscribed events</label>
+      </div>
+
+      <table class="data-table gam-table">
+        <tbody>
+          <tr *ngFor="let s of paginatedSuscripciones()" style="cursor: pointer;">
+            <td style="border-bottom: 1px solid #f1f5f9; padding: 1rem;">{{ s }}</td>
+            <td style="border-bottom: 1px solid #f1f5f9; text-align: right; width: 40px; color: #94a3b8;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </td>
+          </tr>
+          <tr *ngIf="paginatedSuscripciones().length === 0">
+            <td colspan="2" class="empty-row">No se encontraron registros</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <!-- Paginación Suscripciones -->
+      <div class="pagination-area" *ngIf="totalPagesSuscripciones() > 1" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #64748b; border-top: 1px solid #f1f5f9;">
+        <span>Página {{ currentPageSuscripciones() }} de {{ totalPagesSuscripciones() }}</span>
+        <div style="display: flex; gap: 0.3rem;">
+          <button class="btn-secondary" [disabled]="currentPageSuscripciones() === 1" (click)="prevPageSuscripciones()" style="padding: 0.2rem 0.6rem;">Ant</button>
+          <button style="border: 1px solid #4caf50; background: #4caf50; color: white; border-radius: 4px; padding: 0.2rem 0.6rem;">{{ currentPageSuscripciones() }}</button>
+          <button class="btn-secondary" [disabled]="currentPageSuscripciones() === totalPagesSuscripciones()" (click)="nextPageSuscripciones()" style="padding: 0.2rem 0.6rem;">Sig</button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- ==============================================
+       VISTA SECUNDARIA: Agregar Permisos
+       ============================================== -->
+  <ng-container *ngIf="viewState() === 'add-permisos'">
+    <header class="module-header">
+      <div class="title-area">
+        <h1 class="gam-h1-link">Agregar Permisos al rol: {{ selectedRoleContext()?.name }}</h1>
+        <nav class="breadcrumb">Seguridad › Roles › Permisos › Agregar</nav>
+      </div>
+    </header>
+
+    <div class="table-card gam-card">
+      <div class="table-toolbar" style="align-items: flex-start;">
+        <div class="toolbar-right stacked-filters" style="width: 100%; justify-content: flex-start; margin-left: 0;">
+          <div class="gam-filter-row">
+            <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            <label>Aplicación</label>
+            <select class="gam-search-line" [value]="selectedApp()" (change)="onAppChange($event)">
+              <option *ngFor="let app of availableApps()" [value]="app">{{ app }}</option>
+            </select>
+          </div>
+          <div class="gam-filter-row" style="margin-left: 20px;">
+            <label>Tipo</label>
+            <select class="gam-search-line">
+              <option>(Ninguno)</option>
+            </select>
+          </div>
+          <div class="gam-filter-row" style="margin-left: 20px;">
+            <label>¿Es heredado?</label>
+            <select class="gam-search-line">
+              <option>Todos</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container" style="min-height: 400px;">
+        <table class="data-table gam-table">
+          <thead>
+            <tr>
+              <th class="icon-col">
+                <input type="checkbox" [checked]="isAllPermsToAddSelected()" (change)="toggleAllPermsToAdd($event)">
+              </th>
+              <th>Nombre del permiso</th>
+              <th>Descripción</th>
+              <th>Tipo de acceso</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of paginatedPermsToAdd()">
+              <td class="icon-cell">
+                <input type="checkbox" [checked]="selectedPermsToAdd().includes(p.id)" (change)="togglePermToAdd(p.id, $event)">
+              </td>
+              <td style="color: #4caf50;">{{ p.code }}</td>
+              <td>{{ p.name }}</td>
+              <td>
+                <select class="gam-search-line" style="padding: 2px 4px; font-size: 0.8rem;">
+                  <option>Permitir</option>
+                  <option>Denegar</option>
+                </select>
+              </td>
+            </tr>
+            <tr *ngIf="paginatedPermsToAdd().length === 0">
+              <td colspan="4" class="empty-row">No se encontraron permisos disponibles para esta aplicación</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-area" *ngIf="totalPagesToAdd() > 1" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #64748b; border-top: 1px solid #f1f5f9;">
+        <span>Página {{ currentPageToAdd() }} de {{ totalPagesToAdd() }}</span>
+        <div style="display: flex; gap: 0.3rem;">
+          <button class="btn-secondary" [disabled]="currentPageToAdd() === 1" (click)="prevPageToAdd()" style="padding: 0.2rem 0.6rem;">Ant</button>
+          <button style="border: 1px solid #4caf50; background: #4caf50; color: white; border-radius: 4px; padding: 0.2rem 0.6rem;">{{ currentPageToAdd() }}</button>
+          <button class="btn-secondary" [disabled]="currentPageToAdd() === totalPagesToAdd()" (click)="nextPageToAdd()" style="padding: 0.2rem 0.6rem;">Sig</button>
+        </div>
+      </div>
+
+      <div class="footer-actions" style="padding: 1rem 1.5rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; gap: 10px;">
+        <button class="btn-primary" 
+          [disabled]="selectedPermsToAdd().length === 0 || isSaving()" 
+          (click)="addSelectedPermissions()"
+          style="background: #4caf50; border-color: #4caf50; text-transform: uppercase; font-weight: bold;">
+          {{ isSaving() ? 'AGREGANDO...' : 'AGREGAR SELECCIONADOS' }}
+        </button>
+        <button class="btn-secondary" 
+          (click)="closeAddPermisosView()"
+          style="text-transform: uppercase; font-weight: bold;">
+          CANCELAR
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</div>
