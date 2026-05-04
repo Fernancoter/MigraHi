@@ -16,12 +16,15 @@ public class RolesController : ControllerBase
         _identityService = identityService;
     }
 
-    /// <summary>Obtiene todos los roles del sistema.</summary>
+    /// <summary>Obtiene los roles del sistema de forma paginada.</summary>
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        [FromQuery] string? searchTerm = null)
     {
-        var roles = await _identityService.GetRolesAsync();
-        return Ok(roles);
+        var result = await _identityService.GetRolesAsync(page, pageSize, searchTerm);
+        return Ok(result);
     }
 
     /// <summary>Obtiene un rol por ID.</summary>
@@ -68,11 +71,15 @@ public class RolesController : ControllerBase
         return NoContent();
     }
 
-    /// <summary>Obtiene todos los permisos disponibles para asignar a roles.</summary>
+    /// <summary>Obtiene los permisos disponibles de forma paginada, con filtros opcionales.</summary>
     [HttpGet("permissions")]
-    public async Task<IActionResult> GetPermissions()
+    public async Task<IActionResult> GetPermissions(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        [FromQuery] string? searchTerm = null,
+        [FromQuery] string? module = null)
     {
-        var permissions = await _identityService.GetPermissionsAsync();
+        var permissions = await _identityService.GetPermissionsAsync(page, pageSize, searchTerm, module);
         return Ok(permissions);
     }
 }

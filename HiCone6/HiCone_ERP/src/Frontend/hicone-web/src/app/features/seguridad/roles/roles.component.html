@@ -44,7 +44,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let r of paginatedRoles()">
+          <tr *ngFor="let r of roles()">
             <td class="icon-cell">
               <button class="gam-icon-btn edit-btn" (click)="openModal(r)" title="Editar" [disabled]="r.isSystem">✏️</button>
             </td>
@@ -71,7 +71,7 @@
               <a href="javascript:void(0)" class="gam-link" (click)="openModal(r)">{{ r.name }}</a>
             </td>
           </tr>
-          <tr *ngIf="paginatedRoles().length === 0 && !isLoading()">
+          <tr *ngIf="roles().length === 0 && !isLoading()">
             <td colspan="7" class="empty-row">No se encontraron registros</td>
           </tr>
         </tbody>
@@ -79,7 +79,7 @@
 
       <!-- Paginación Main -->
       <div class="pagination-area" *ngIf="totalPagesRoles() > 1" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #64748b; border-top: 1px solid #f1f5f9;">
-        <span>Página {{ currentPageRoles() }} de {{ totalPagesRoles() }}</span>
+        <span>{{ totalRoles() }} registros — Página {{ currentPageRoles() }} de {{ totalPagesRoles() }}</span>
         <div style="display: flex; gap: 0.3rem;">
           <button class="btn-secondary" [disabled]="currentPageRoles() === 1" (click)="prevPageRoles()" style="padding: 0.2rem 0.6rem;">Ant</button>
           <button style="border: 1px solid #4caf50; background: #4caf50; color: white; border-radius: 4px; padding: 0.2rem 0.6rem;">{{ currentPageRoles() }}</button>
@@ -403,7 +403,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let p of paginatedPermsToAdd()">
+            <tr *ngFor="let p of permsToAdd()">
               <td class="icon-cell">
                 <input type="checkbox" [checked]="selectedPermsToAdd().includes(p.id)" (change)="togglePermToAdd(p.id, $event)">
               </td>
@@ -416,7 +416,7 @@
                 </select>
               </td>
             </tr>
-            <tr *ngIf="paginatedPermsToAdd().length === 0">
+            <tr *ngIf="permsToAdd().length === 0">
               <td colspan="4" class="empty-row">No se encontraron permisos disponibles para esta aplicación</td>
             </tr>
           </tbody>
@@ -424,7 +424,7 @@
       </div>
 
       <div class="pagination-area" *ngIf="totalPagesToAdd() > 1" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #64748b; border-top: 1px solid #f1f5f9;">
-        <span>Página {{ currentPageToAdd() }} de {{ totalPagesToAdd() }}</span>
+        <span>{{ totalPermsToAdd() }} permisos — Página {{ currentPageToAdd() }} de {{ totalPagesToAdd() }}</span>
         <div style="display: flex; gap: 0.3rem;">
           <button class="btn-secondary" [disabled]="currentPageToAdd() === 1" (click)="prevPageToAdd()" style="padding: 0.2rem 0.6rem;">Ant</button>
           <button style="border: 1px solid #4caf50; background: #4caf50; color: white; border-radius: 4px; padding: 0.2rem 0.6rem;">{{ currentPageToAdd() }}</button>

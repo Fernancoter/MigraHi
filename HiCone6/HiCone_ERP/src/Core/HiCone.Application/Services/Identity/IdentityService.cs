@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HiCone.Domain.Entities.Identity;
 using HiCone.Application.Common.Interfaces;
+using HiCone.Application.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using BC = BCrypt.Net.BCrypt;
 
@@ -157,14 +158,14 @@ namespace HiCone.Application.Services.Identity
         Task<bool> ChangePasswordAsync(Guid id, string newPassword);
 
         // Roles
-        Task<IEnumerable<RoleDto>> GetRolesAsync();
+        Task<PaginatedResult<RoleDto>> GetRolesAsync(int page = 1, int pageSize = 20, string? searchTerm = null);
         Task<RoleDto?> GetRoleByIdAsync(Guid id);
         Task<RoleDto> CreateRoleAsync(CreateRoleDto dto);
         Task<RoleDto?> UpdateRoleAsync(Guid id, UpdateRoleDto dto);
         Task<bool> DeleteRoleAsync(Guid id);
 
         // Permissions
-        Task<IEnumerable<PermissionDto>> GetPermissionsAsync();
+        Task<PaginatedResult<PermissionDto>> GetPermissionsAsync(int page = 1, int pageSize = 20, string? searchTerm = null, string? module = null);
 
         // Excel — scaffolding preparado, pendiente configurar (Paso 2)
         Task<byte[]> ExportUsersToExcelAsync();
@@ -378,9 +379,24 @@ namespace HiCone.Application.Services.Identity
 
         // ── Roles ────────────────────────────────────────────────────────────
 
-        public async Task<IEnumerable<RoleDto>> GetRolesAsync()
+        public async Task<PaginatedResult<RoleDto>> GetRolesAsync(int page = 1, int pageSize = 20, string? searchTerm = null)
         {
-            return await _context.Roles
+            var query = _context.Roles.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var term = searchTerm.Trim().ToLower();
+                query = query.Where(r =>
+                    r.Name.ToLower().Contains(term) ||
+                    (r.Description != null && r.Description.ToLower().Contains(term)));
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(r => r.Name)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .Include(r => r.RolePermissions)
                     .ThenInclude(rp => rp.Permission)
                 .Select(r => new RoleDto
@@ -399,6 +415,14 @@ namespace HiCone.Application.Services.Identity
                     }).ToList()
                 })
                 .ToListAsync();
+
+            return new PaginatedResult<RoleDto>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = page,
+                PageSize = pageSize
+            };
         }
 
         public async Task<RoleDto?> GetRoleByIdAsync(Guid id)
@@ -478,9 +502,29 @@ namespace HiCone.Application.Services.Identity
 
         // ── Permissions ──────────────────────────────────────────────────────
 
-        public async Task<IEnumerable<PermissionDto>> GetPermissionsAsync()
+        public async Task<PaginatedResult<PermissionDto>> GetPermissionsAsync(int page = 1, int pageSize = 20, string? searchTerm = null, string? module = null)
         {
-            return await _context.Permissions
+            var query = _context.Permissions.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(module))
+                query = query.Where(p => p.Module == module);
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var term = searchTerm.Trim().ToLower();
+                query = query.Where(p =>
+                    p.Name.ToLower().Contains(term) ||
+                    p.Code.ToLower().Contains(term) ||
+                    (p.Description != null && p.Description.ToLower().Contains(term)));
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(p => p.Module)
+                .ThenBy(p => p.Name)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .Select(p => new PermissionDto
                 {
                     Id = p.Id,
@@ -490,6 +534,14 @@ namespace HiCone.Application.Services.Identity
                     Description = p.Description
                 })
                 .ToListAsync();
+
+            return new PaginatedResult<PermissionDto>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = page,
+                PageSize = pageSize
+            };
         }
 
         // ── Excel — scaffolding (Paso 2: pendiente de configurar) ─────────────
