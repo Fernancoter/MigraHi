@@ -9,6 +9,27 @@ public class Permission
     public string Name { get; set; } = null!;
     public string Code { get; set; } = null!; // unique
     public string? Description { get; set; }
+
+    public virtual ICollection<SecurityApplicationPermission> SecurityApplicationPermissions { get; set; } = new List<SecurityApplicationPermission>();
+}
+
+public class SecurityApplication
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string Name { get; set; } = null!;
+    public string? Description { get; set; }
+    
+    public virtual ICollection<SecurityApplicationPermission> SecurityApplicationPermissions { get; set; } = new List<SecurityApplicationPermission>();
+}
+
+public class SecurityApplicationPermission
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid SecurityApplicationId { get; set; }
+    public Guid PermissionId { get; set; }
+
+    public virtual SecurityApplication SecurityApplication { get; set; } = null!;
+    public virtual Permission Permission { get; set; } = null!;
 }
 
 public class Role : BaseEntity

@@ -20,14 +20,17 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - Proper validation handling (GAM18/GAM79 matching styles).
     - **Branding Update**: Integrated official Hi-Cone logo and removed temporary placeholders.
     - **Security/UX**: Added password visibility toggle with interactive SVG icons.
+- [x] **Refactor de Arquitectura de Permisos (Many-to-Many)**:
+    - Se implementaron las entidades `SecurityApplication` y `SecurityApplicationPermission`.
+    - Se migraron los 878 permisos a una estructura relacional donde un permiso puede pertenecer a múltiples aplicaciones.
+    - Se crearon 4 aplicaciones base: `GAM Backoffice`, `HICONE`, `ReportesHICONE` y `KBS2022_HiCone2022`.
+    - Se automatizó la vinculación en el Seeder.
 - [x] **Migración Masiva de Permisos FINALIZADA**:
     - Se migraron los **878 permisos** totales desde el sistema legacy (GeneXus).
-    - Consolidación total de módulos: **GAM** (13 administrativos) y **HICONE** (865 operativos).
+    - Consolidación total de módulos: **GAM Backoffice** y **HICONE/Reportes**.
     - Inyección automatizada en Backend (`ApplicationDbContextSeeder.cs`) mediante lotes validados.
-    - **Refactor de Paginación**: Implementación de lógica "Sliding Window" (1 ... 18, 19, [20], 21, 22 ... 88) en el frontend.
-    - **Mejoras de Organización**:
-        - Se implementó ordenamiento alfabético (por Módulo y Nombre) en todas las listas de permisos (Modal, Vista de Permisos, Agregar Permisos).
-        - Se añadió un buscador dinámico en la vista de "Agregar Permisos" para facilitar la selección en el catálogo de 870 registros.
+    - **Refactor de Paginación**: Implementación de lógica "Sliding Window" en el frontend.
+    - **Mejoras de Organización**: Ordenamiento alfabético y buscador dinámico.
 - [x] **Visual Identity & Infrastructure**:
     - Created `public/assets/images` directory for graphic resource management.
     - Integrated `login-bg.png` as high-resolution background for the login screen.
@@ -61,6 +64,7 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
 - [ ] Resolver advertencias de precisión decimal en entidades financieras detectadas durante el build.
 
 ## Notes
-- Se completó la carga de todos los archivos PDF proporcionados (hasta la "página final").
-- La paginación ahora soporta saltos dinámicos y elipsis (`...`) para datasets de gran escala.
-- Split security entries: GAM (13 first records) vs HICONE (everything else).
+- Se completó la carga de todos los archivos PDF proporcionados.
+- La arquitectura ahora permite escalar a múltiples aplicaciones compartiendo el mismo catálogo de permisos.
+- Se renombró el módulo legacy "GAM" a "GAM Backoffice" para mayor claridad.
+- Se forzó la recreación de la base de datos para aplicar el cambio estructural.

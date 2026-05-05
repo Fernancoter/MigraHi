@@ -1,7 +1,6 @@
 import re
 
-# List of permission codes for ReportesHICONE
-reportes_hicone_codes = {
+reportes_codes = {
     "addressdisplay_Execute", "bobina_Delete", "bobina_Execute", "bobina_FullControl", "bobina_Insert", "bobina_Update",
     "budget_Delete", "budget_Execute", "budget_FullControl", "budget_Insert", "budget_Update",
     "carrera_Delete", "carrera_Execute", "carrera_FullControl", "carrera_Insert", "carrera_Update",
@@ -77,99 +76,28 @@ reportes_hicone_codes = {
 seeder_path = r'c:\Users\Ronny\Desktop\HICONE\MigraHi\HiCone6\HiCone_ERP\src\Infrastructure\HiCone.Persistence\Seeds\ApplicationDbContextSeeder.cs'
 
 with open(seeder_path, 'r', encoding='utf-8') as f:
-    lines = f.readlines()
+    content = f.read()
 
-new_lines = []
-in_permissions = False
-processed_count = 0
+# Normalize existing content (clean up previous attempts)
+content = content.replace('Application app', 'SecurityApplication app')
+content = content.replace('var applications = new List<Application>', 'var applications = new List<SecurityApplication>')
+content = content.replace('new Application {', 'new SecurityApplication {')
+content = content.replace('await _context.Applications', 'await _context.SecurityApplications')
+content = content.replace('new ApplicationPermission', 'new SecurityApplicationPermission')
+content = content.replace('ApplicationId =', 'SecurityApplicationId =')
+content = content.replace('await _context.ApplicationPermissions', 'await _context.SecurityApplicationPermissions')
+content = content.replace('ap.ApplicationId', 'ap.SecurityApplicationId')
 
-# Applications setup
-apps_code = """
-        // Applications
-        var appGam = new Application { Name = "GAM Backoffice", Description = "Administración de Seguridad" };
-        var appHicone = new Application { Name = "HICONE", Description = "Módulo Operativo HiCone" };
-        var appReportes = new Application { Name = "ReportesHICONE", Description = "Módulo de Reportes" };
-        var appKbs = new Application { Name = "KBS2022_HiCone2022", Description = "Módulo HiCone 2022" };
+# Re-apply replacements for HICONE -> ReportesHICONE if missed
+for code in reportes_codes:
+    pattern = r'Module = "HICONE", (Name = ".*?", )Code = "' + re.escape(code) + '"'
+    replacement = r'Module = "ReportesHICONE", \1Code = "' + code + '"'
+    content = re.sub(pattern, replacement, content)
 
-        var applications = new List<Application> { appGam, appHicone, appReportes, appKbs };
+# Ensure GAM Backoffice naming
+content = content.replace('Module = "GAM"', 'Module = "GAM Backoffice"')
 
-        foreach (var app in applications)
-        {
-            if (!await _context.Applications.AnyAsync(a => a.Name == app.Name))
-            {
-                _context.Applications.Add(app);
-            }
-            else
-            {
-                var existingApp = await _context.Applications.FirstAsync(a => a.Name == app.Name);
-                if (app.Name == "GAM Backoffice") appGam = existingApp;
-                if (app.Name == "HICONE") appHicone = existingApp;
-                if (app.Name == "ReportesHICONE") appReportes = existingApp;
-                if (app.Name == "KBS2022_HiCone2022") appKbs = existingApp;
-            }
-        }
-        await _context.SaveChangesAsync();
-"""
+with open(seeder_path, 'w', encoding='utf-8') as f:
+    f.write(content)
 
-permission_mapping = []
-
-for line in lines:
-    # Rename GAM to GAM Backoffice in the Module assignment
-    if 'Module = "GAM"' in line:
-        line = line.replace('Module = "GAM"', 'Module = "GAM Backoffice"')
-    
-    # Check if this line is a permission entry
-    match = re.search(r'Code = "([^"]+)"', line)
-    if match:
-        code = match.group(1)
-        # Determine target applications
-        apps = []
-        if 'Module = "GAM Backoffice"' in line:
-            apps.append("appGam")
-        elif 'Module = "HICONE"' in line:
-            apps.append("appHicone")
-            apps.append("appKbs") # KBS gets same as HICONE
-            if code in reportes_hicone_codes:
-                apps.append("appReportes")
-                # Move from HICONE to ReportesHICONE if it's in the list?
-                # User says "van a pertenecer a ReportesHICONE". 
-                # I'll keep them in HICONE too just in case, but prioritize Reportes.
-                # Actually, I'll update the Module field to ReportesHICONE if it's in the list.
-                line = line.replace('Module = "HICONE"', 'Module = "ReportesHICONE"')
-        
-        permission_mapping.append((code, apps))
-
-    new_lines.append(line)
-
-# I will write the final logic at the end of the TrySeedAsync method.
-# Wait, I need to insert the apps_code before the permissions list.
-
-# Reconstruct the file
-final_output = []
-skip_until = 0
-for i, line in enumerate(new_lines):
-    if i < skip_until: continue
-    
-    if '// Permissions' in line:
-        final_output.append(apps_code)
-        final_output.append(line)
-    elif 'foreach (var p in permissions)' in line:
-        # Replace the seed logic with many-to-many logic
-        new_seed_logic = """
-        foreach (var p in permissions)
-        {
-            var existingPermission = await _context.Permissions.FirstOrDefaultAsync(existing => existing.Code == p.Code);
-            if (existingPermission == None) // Wait, I'll use null
-            {
-                _context.Permissions.Add(p);
-                existingPermission = p;
-            }
-            
-            // Map to applications
-            // (I'll generate this mapping dynamically)
-        }
-"""
-        # This is getting complex for a script. I'll do it more manually but guided.
-        final_output.append(line)
-    else:
-        final_output.append(line)
+print("Seeder fixed and updated.")
