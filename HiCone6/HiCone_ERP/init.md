@@ -16,7 +16,9 @@ dotnet build
 ```powershell
 dotnet run --project src/Presentation/HiCone.API/HiCone.API.csproj
 ```
-El backend estará disponible típicamente en `http://localhost:5000` o según lo configurado en su `launchSettings.json`.
+El backend estará disponible en:
+- **HTTP:** `http://localhost:5007`
+- **HTTPS:** `https://localhost:7100`
 
 ---
 
@@ -37,7 +39,8 @@ O bien:
 ```powershell
 npx ng serve
 ```
-El frontend estará disponible en `http://localhost:4200/`.
+El frontend estará disponible en:
+- **URL:** `http://localhost:4200/`
 
 ---
 

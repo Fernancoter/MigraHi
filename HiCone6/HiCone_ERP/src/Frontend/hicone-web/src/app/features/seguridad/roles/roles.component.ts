@@ -76,7 +76,11 @@ export class RolesComponent implements OnInit {
         (p.description ?? '').toLowerCase().includes(term)
       );
     }
-    return perms;
+    // Sort by module then name
+    return perms.sort((a, b) => {
+      const modCmp = a.module.localeCompare(b.module);
+      return modCmp !== 0 ? modCmp : a.name.localeCompare(b.name);
+    });
   });
 
   paginatedPermisos = computed(() => {
@@ -94,6 +98,7 @@ export class RolesComponent implements OnInit {
   totalPagesToAdd = signal(1);
   currentPageToAdd = signal(1);
   selectedPermsToAdd = signal<string[]>([]);
+  searchToAddQuery = signal('');
   readonly pageSizeToAdd = 20;
 
   // ── Suscripciones ──────────────────────────────────────────────────────
@@ -211,6 +216,9 @@ export class RolesComponent implements OnInit {
       .set('pageSize', this.pageSizeToAdd.toString())
       .set('module', this.selectedApp());
 
+    const q = this.searchToAddQuery();
+    if (q) params = params.set('searchTerm', q);
+
     this.http.get<PaginatedResult<PermissionDto>>(`${this.apiUrl}/roles/permissions`, {
       headers: this.headers(),
       params
@@ -257,6 +265,13 @@ export class RolesComponent implements OnInit {
     }
   }
 
+  onSearchToAdd(event: Event) {
+    const q = (event.target as HTMLInputElement).value;
+    this.searchToAddQuery.set(q);
+    this.currentPageToAdd.set(1);
+    this.loadPermsToAdd();
+  }
+
   // ── Modal CRUD ────────────────────────────────────────────────────────
 
   permissionsByModule() {
@@ -265,7 +280,13 @@ export class RolesComponent implements OnInit {
       if (!map.has(p.module)) map.set(p.module, { module: p.module, permissions: [] });
       map.get(p.module)!.permissions.push(p);
     }
-    return Array.from(map.values());
+    // Sort modules alphabetically and then their permissions by name
+    return Array.from(map.values())
+      .sort((a, b) => a.module.localeCompare(b.module))
+      .map(m => ({
+        ...m,
+        permissions: m.permissions.sort((a, b) => a.name.localeCompare(b.name))
+      }));
   }
 
   isModuleFullySelected(mod: { permissions: PermissionDto[] }) {
@@ -407,6 +428,57 @@ export class RolesComponent implements OnInit {
 
   prevPageSuscripciones() { if (this.currentPageSuscripciones() > 1) this.currentPageSuscripciones.update(p => p - 1); }
   nextPageSuscripciones() { if (this.currentPageSuscripciones() < this.totalPagesSuscripciones()) this.currentPageSuscripciones.update(p => p + 1); }
+
+  getPages(current: number, total: number): (number | string)[] {
+    if (total <= 1) return [];
+    const pages: (number | string)[] = [];
+    const windowSize = 1; // Un paso a cada lado para que no sea muy ancho en movil
+
+    // Siempre la primera
+    pages.push(1);
+
+    if (current > windowSize + 2) {
+      pages.push('...');
+    }
+
+    const start = Math.max(2, current - windowSize);
+    const end = Math.min(total - 1, current + windowSize);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (current < total - (windowSize + 1)) {
+      pages.push('...');
+    }
+
+    // Siempre la última
+    pages.push(total);
+
+    return pages;
+  }
+
+  setPageRoles(p: number | string) {
+    if (typeof p === 'number') {
+      this.currentPageRoles.set(p);
+      this.loadRoles();
+    }
+  }
+
+  setPagePermisos(p: number | string) {
+    if (typeof p === 'number') this.currentPagePermisos.set(p);
+  }
+
+  setPageSuscripciones(p: number | string) {
+    if (typeof p === 'number') this.currentPageSuscripciones.set(p);
+  }
+
+  setPageToAdd(p: number | string) {
+    if (typeof p === 'number') {
+      this.currentPageToAdd.set(p);
+      this.loadPermsToAdd();
+    }
+  }
 
   // ── Add Permisos View ─────────────────────────────────────────────────
 

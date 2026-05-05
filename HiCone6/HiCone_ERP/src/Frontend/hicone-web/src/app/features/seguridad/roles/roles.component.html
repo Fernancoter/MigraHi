@@ -80,10 +80,15 @@
       <!-- Paginación Main -->
       <div class="pagination-area" *ngIf="totalPagesRoles() > 1" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #64748b; border-top: 1px solid #f1f5f9;">
         <span>{{ totalRoles() }} registros — Página {{ currentPageRoles() }} de {{ totalPagesRoles() }}</span>
-        <div style="display: flex; gap: 0.3rem;">
-          <button class="btn-secondary" [disabled]="currentPageRoles() === 1" (click)="prevPageRoles()" style="padding: 0.2rem 0.6rem;">Ant</button>
-          <button style="border: 1px solid #4caf50; background: #4caf50; color: white; border-radius: 4px; padding: 0.2rem 0.6rem;">{{ currentPageRoles() }}</button>
-          <button class="btn-secondary" [disabled]="currentPageRoles() === totalPagesRoles()" (click)="nextPageRoles()" style="padding: 0.2rem 0.6rem;">Sig</button>
+        <div class="pagination-controls">
+          <button class="btn-pagination" [disabled]="currentPageRoles() === 1" (click)="prevPageRoles()">‹</button>
+          <ng-container *ngFor="let p of getPages(currentPageRoles(), totalPagesRoles())">
+            <button class="btn-pagination" 
+              [class.active]="p === currentPageRoles()"
+              [disabled]="p === '...'"
+              (click)="setPageRoles(p)">{{ p }}</button>
+          </ng-container>
+          <button class="btn-pagination" [disabled]="currentPageRoles() === totalPagesRoles()" (click)="nextPageRoles()">›</button>
         </div>
       </div>
     </div>
@@ -285,10 +290,15 @@
       <!-- Paginación Permisos -->
       <div class="pagination-area" *ngIf="totalPagesPermisos() > 1" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #64748b; border-top: 1px solid #f1f5f9;">
         <span>Página {{ currentPagePermisos() }} de {{ totalPagesPermisos() }}</span>
-        <div style="display: flex; gap: 0.3rem;">
-          <button class="btn-secondary" [disabled]="currentPagePermisos() === 1" (click)="prevPagePermisos()" style="padding: 0.2rem 0.6rem;">Ant</button>
-          <button style="border: 1px solid #4caf50; background: #4caf50; color: white; border-radius: 4px; padding: 0.2rem 0.6rem;">{{ currentPagePermisos() }}</button>
-          <button class="btn-secondary" [disabled]="currentPagePermisos() === totalPagesPermisos()" (click)="nextPagePermisos()" style="padding: 0.2rem 0.6rem;">Sig</button>
+        <div class="pagination-controls">
+          <button class="btn-pagination" [disabled]="currentPagePermisos() === 1" (click)="prevPagePermisos()">‹</button>
+          <ng-container *ngFor="let p of getPages(currentPagePermisos(), totalPagesPermisos())">
+            <button class="btn-pagination" 
+              [class.active]="p === currentPagePermisos()"
+              [disabled]="p === '...'"
+              (click)="setPagePermisos(p)">{{ p }}</button>
+          </ng-container>
+          <button class="btn-pagination" [disabled]="currentPagePermisos() === totalPagesPermisos()" (click)="nextPagePermisos()">›</button>
         </div>
       </div>
     </div>
@@ -345,10 +355,15 @@
       <!-- Paginación Suscripciones -->
       <div class="pagination-area" *ngIf="totalPagesSuscripciones() > 1" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #64748b; border-top: 1px solid #f1f5f9;">
         <span>Página {{ currentPageSuscripciones() }} de {{ totalPagesSuscripciones() }}</span>
-        <div style="display: flex; gap: 0.3rem;">
-          <button class="btn-secondary" [disabled]="currentPageSuscripciones() === 1" (click)="prevPageSuscripciones()" style="padding: 0.2rem 0.6rem;">Ant</button>
-          <button style="border: 1px solid #4caf50; background: #4caf50; color: white; border-radius: 4px; padding: 0.2rem 0.6rem;">{{ currentPageSuscripciones() }}</button>
-          <button class="btn-secondary" [disabled]="currentPageSuscripciones() === totalPagesSuscripciones()" (click)="nextPageSuscripciones()" style="padding: 0.2rem 0.6rem;">Sig</button>
+        <div class="pagination-controls">
+          <button class="btn-pagination" [disabled]="currentPageSuscripciones() === 1" (click)="prevPageSuscripciones()">‹</button>
+          <ng-container *ngFor="let p of getPages(currentPageSuscripciones(), totalPagesSuscripciones())">
+            <button class="btn-pagination" 
+              [class.active]="p === currentPageSuscripciones()"
+              [disabled]="p === '...'"
+              (click)="setPageSuscripciones(p)">{{ p }}</button>
+          </ng-container>
+          <button class="btn-pagination" [disabled]="currentPageSuscripciones() === totalPagesSuscripciones()" (click)="nextPageSuscripciones()">›</button>
         </div>
       </div>
     </div>
@@ -374,6 +389,10 @@
             <select class="gam-search-line" [value]="selectedApp()" (change)="onAppChange($event)">
               <option *ngFor="let app of availableApps()" [value]="app">{{ app }}</option>
             </select>
+          </div>
+          <div class="gam-filter-row" style="margin-left: 20px;">
+            <label>Buscar</label>
+            <input type="text" class="gam-search-line" placeholder="Nombre o código..." (input)="onSearchToAdd($event)">
           </div>
           <div class="gam-filter-row" style="margin-left: 20px;">
             <label>Tipo</label>
@@ -425,10 +444,15 @@
 
       <div class="pagination-area" *ngIf="totalPagesToAdd() > 1" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #64748b; border-top: 1px solid #f1f5f9;">
         <span>{{ totalPermsToAdd() }} permisos — Página {{ currentPageToAdd() }} de {{ totalPagesToAdd() }}</span>
-        <div style="display: flex; gap: 0.3rem;">
-          <button class="btn-secondary" [disabled]="currentPageToAdd() === 1" (click)="prevPageToAdd()" style="padding: 0.2rem 0.6rem;">Ant</button>
-          <button style="border: 1px solid #4caf50; background: #4caf50; color: white; border-radius: 4px; padding: 0.2rem 0.6rem;">{{ currentPageToAdd() }}</button>
-          <button class="btn-secondary" [disabled]="currentPageToAdd() === totalPagesToAdd()" (click)="nextPageToAdd()" style="padding: 0.2rem 0.6rem;">Sig</button>
+        <div class="pagination-controls">
+          <button class="btn-pagination" [disabled]="currentPageToAdd() === 1" (click)="prevPageToAdd()">‹</button>
+          <ng-container *ngFor="let p of getPages(currentPageToAdd(), totalPagesToAdd())">
+            <button class="btn-pagination" 
+              [class.active]="p === currentPageToAdd()"
+              [disabled]="p === '...'"
+              (click)="setPageToAdd(p)">{{ p }}</button>
+          </ng-container>
+          <button class="btn-pagination" [disabled]="currentPageToAdd() === totalPagesToAdd()" (click)="nextPageToAdd()">›</button>
         </div>
       </div>
 

@@ -157,3 +157,51 @@ input[type="text"].form-control:focus { outline: none; border-color: #2e7d32; bo
 .dropdown-item:hover { background: #f8fafc; color: #1e293b; }
 .dropdown-divider { height: 1px; background: #f1f5f9; margin: 0.4rem 0; }
 
+
+/* Pagination Refactor */
+.pagination-controls {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.btn-pagination {
+  background: white;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.5rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-pagination:hover:not(:disabled):not(.active) {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.btn-pagination.active {
+  background: #4caf50;
+  border-color: #4caf50;
+  color: white;
+  cursor: default;
+}
+
+.btn-pagination:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #f8fafc;
+}
+
+.btn-pagination[disabled="true"] {
+  border-color: transparent;
+  cursor: default;
+}

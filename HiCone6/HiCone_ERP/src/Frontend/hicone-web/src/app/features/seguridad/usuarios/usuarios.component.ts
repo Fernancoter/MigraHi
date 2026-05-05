@@ -37,6 +37,11 @@ interface RoleDto {
   name: string;
 }
 
+interface PaginatedResult<T> {
+  items: T[];
+  totalCount: number;
+}
+
 interface ColumnDef {
   id: string;
   label: string;
@@ -195,8 +200,9 @@ export class UsuariosComponent implements OnInit {
   }
 
   loadRoles() {
-    this.http.get<RoleDto[]>(`${this.apiUrl}/roles`, { headers: this.headers() }).subscribe({
-      next: (data) => { this.availableRoles = data; }
+    this.http.get<PaginatedResult<RoleDto>>(`${this.apiUrl}/roles?page=1&pageSize=1000`, { headers: this.headers() }).subscribe({
+      next: (data) => { this.availableRoles = data.items; },
+      error: () => { this.errorMsg.set('Error al cargar roles para usuarios.'); }
     });
   }
 

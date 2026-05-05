@@ -20,11 +20,14 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - Proper validation handling (GAM18/GAM79 matching styles).
     - **Branding Update**: Integrated official Hi-Cone logo and removed temporary placeholders.
     - **Security/UX**: Added password visibility toggle with interactive SVG icons.
-- [x] **Migración Masiva de Permisos**:
-    - Se migraron más de 350 permisos desde el sistema legacy.
-    - Consolidación de módulos: Se definió **GAM** para los primeros 13 permisos administrativos y **HICONE** para todo el catálogo operativo (Lotes 1-18).
-    - Implementación en Backend (`ApplicationDbContextSeeder.cs`) y Frontend (Mock data en `roles.component.ts`).
-    - Mejora de UX: Paginación funcional en todas las vistas de seguridad y filtrado dinámico por aplicación.
+- [x] **Migración Masiva de Permisos FINALIZADA**:
+    - Se migraron los **878 permisos** totales desde el sistema legacy (GeneXus).
+    - Consolidación total de módulos: **GAM** (13 administrativos) y **HICONE** (865 operativos).
+    - Inyección automatizada en Backend (`ApplicationDbContextSeeder.cs`) mediante lotes validados.
+    - **Refactor de Paginación**: Implementación de lógica "Sliding Window" (1 ... 18, 19, [20], 21, 22 ... 88) en el frontend.
+    - **Mejoras de Organización**:
+        - Se implementó ordenamiento alfabético (por Módulo y Nombre) en todas las listas de permisos (Modal, Vista de Permisos, Agregar Permisos).
+        - Se añadió un buscador dinámico en la vista de "Agregar Permisos" para facilitar la selección en el catálogo de 870 registros.
 - [x] **Visual Identity & Infrastructure**:
     - Created `public/assets/images` directory for graphic resource management.
     - Integrated `login-bg.png` as high-resolution background for the login screen.
@@ -34,7 +37,9 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - Ajusted shadows, glows, and interactive elements to harmonize with the new brand palette.
 - [x] **Generación de Reporte de Estructura**: Se analizó el entorno heredado (`HiCone6`) identificando que la lógica existe como metadatos encriptados/comprimidos (base de datos `.mdf` y `kb.data`) exclusivos para el IDE de GeneXus. El reporte fue guardado como `reporteEstructura.md`.
 
-## Key Files
+- Documentation:
+    - `init.md`: Guía de inicio rápido con comandos y puertos.
+    - `config_servidores.csv`: Resumen de servidores y comandos en formato Excel/CSV.
 - Frontend: `src/Frontend/hicone-web/src/app`
     - `core/services/auth.service.ts`
     - `core/guards/auth.guard.ts`
@@ -51,11 +56,11 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
 - **Reactivity**: Converted `allPermissions` to Angular Signals in the Roles component for improved performance and real-time UI updates.
 
 ## Next Steps
-- [ ] Continuar con la migración de permisos de **HICONE** (Punto de control: **Página 38** del documento de referencia).
 - [ ] Integración final de permisos con el backend real cuando se ejecute el seeder en producción.
 - [ ] Implementar páginas de Registro y Recuperación de contraseña (actualmente placeholders).
+- [ ] Resolver advertencias de precisión decimal en entidades financieras detectadas durante el build.
 
 ## Notes
-- Do not modify pages related to "Silos" or "Producción" until explicitly requested by the user.
-- Maintain the glassmorphism dark theme across all new modules.
+- Se completó la carga de todos los archivos PDF proporcionados (hasta la "página final").
+- La paginación ahora soporta saltos dinámicos y elipsis (`...`) para datasets de gran escala.
 - Split security entries: GAM (13 first records) vs HICONE (everything else).
