@@ -22,6 +22,7 @@ public class ApplicationDbContextSeeder
     {
         try
         {
+            // await _context.Database.EnsureDeletedAsync();
             await _context.Database.EnsureCreatedAsync();
             await TrySeedAsync();
         }
@@ -1364,11 +1365,17 @@ public class ApplicationDbContextSeeder
 
         foreach (var p in permissions)
         {
-            var perm = await _context.Permissions.FirstOrDefaultAsync(existing => existing.Code == p.Code);
+            var perm = await _context.Permissions.FirstOrDefaultAsync(x => x.Code == p.Code);
             if (perm == null)
             {
-                _context.Permissions.Add(p);
                 perm = p;
+                _context.Permissions.Add(perm);
+                await _context.SaveChangesAsync();
+            }
+            else if (perm.Module != p.Module)
+            {
+                perm.Module = p.Module;
+                await _context.SaveChangesAsync();
             }
 
             // Relationship mapping

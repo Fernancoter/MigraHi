@@ -47,6 +47,7 @@ public class RolePermission
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid RoleId { get; set; }
     public Guid PermissionId { get; set; }
+    public HiCone.Domain.Enums.AccessType AccessType { get; set; } = HiCone.Domain.Enums.AccessType.Allow;
 
     public virtual Role Role { get; set; } = null!;
     public virtual Permission Permission { get; set; } = null!;

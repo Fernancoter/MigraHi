@@ -82,4 +82,12 @@ public class RolesController : ControllerBase
         var permissions = await _identityService.GetPermissionsAsync(page, pageSize, searchTerm, module);
         return Ok(permissions);
     }
+
+    /// <summary>Obtiene el catálogo de aplicaciones de seguridad.</summary>
+    [HttpGet("applications")]
+    public async Task<IActionResult> GetApplications()
+    {
+        var applications = await _identityService.GetApplicationsAsync();
+        return Ok(applications);
+    }
 }

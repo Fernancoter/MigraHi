@@ -106,14 +106,20 @@ namespace HiCone.Application.Services.Identity
     {
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
-        public List<Guid> PermissionIds { get; set; } = new();
+        public List<RolePermissionInputDto> Permissions { get; set; } = new();
+    }
+
+    public class RolePermissionInputDto
+    {
+        public Guid PermissionId { get; set; }
+        public int AccessType { get; set; }
     }
 
     public class UpdateRoleDto
     {
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
-        public List<Guid> PermissionIds { get; set; } = new();
+        public List<RolePermissionInputDto> Permissions { get; set; } = new();
     }
 
     public class PermissionDto
@@ -122,6 +128,15 @@ namespace HiCone.Application.Services.Identity
         public string Module { get; set; } = null!;
         public string Name { get; set; } = null!;
         public string Code { get; set; } = null!;
+        public string? Description { get; set; }
+        public List<string> Applications { get; set; } = new();
+        public int AccessType { get; set; } = 0; // 0=Allow, 1=Deny, 2=Restricted
+    }
+
+    public class ApplicationDto
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = null!;
         public string? Description { get; set; }
     }
 
@@ -166,6 +181,9 @@ namespace HiCone.Application.Services.Identity
 
         // Permissions
         Task<PaginatedResult<PermissionDto>> GetPermissionsAsync(int page = 1, int pageSize = 20, string? searchTerm = null, string? module = null);
+
+        // Applications
+        Task<IEnumerable<ApplicationDto>> GetApplicationsAsync();
 
         // Excel — scaffolding preparado, pendiente configurar (Paso 2)
         Task<byte[]> ExportUsersToExcelAsync();
@@ -411,7 +429,10 @@ namespace HiCone.Application.Services.Identity
                         Module = rp.Permission.Module,
                         Name = rp.Permission.Name,
                         Code = rp.Permission.Code,
-                        Description = rp.Permission.Description
+                        Description = rp.Permission.Description,
+                        Applications = rp.Permission.SecurityApplicationPermissions
+                            .Select(ap => ap.SecurityApplication.Name).ToList(),
+                        AccessType = (int)rp.AccessType
                     }).ToList()
                 })
                 .ToListAsync();
@@ -446,7 +467,10 @@ namespace HiCone.Application.Services.Identity
                     Module = rp.Permission.Module,
                     Name = rp.Permission.Name,
                     Code = rp.Permission.Code,
-                    Description = rp.Permission.Description
+                    Description = rp.Permission.Description,
+                    Applications = rp.Permission.SecurityApplicationPermissions
+                        .Select(ap => ap.SecurityApplication.Name).ToList(),
+                    AccessType = (int)rp.AccessType
                 }).ToList()
             };
         }
@@ -462,8 +486,13 @@ namespace HiCone.Application.Services.Identity
 
             _context.Roles.Add(role);
 
-            foreach (var permId in dto.PermissionIds)
-                _context.RolePermissions.Add(new RolePermission { RoleId = role.Id, PermissionId = permId });
+            foreach (var p in dto.Permissions)
+                _context.RolePermissions.Add(new RolePermission 
+                { 
+                    RoleId = role.Id, 
+                    PermissionId = p.PermissionId,
+                    AccessType = (HiCone.Domain.Enums.AccessType)p.AccessType
+                });
 
             await _context.SaveChangesAsync(default);
             return (await GetRoleByIdAsync(role.Id))!;
@@ -480,11 +509,18 @@ namespace HiCone.Application.Services.Identity
             role.Name = dto.Name;
             role.Description = dto.Description;
 
-            var existingPermIds = role.RolePermissions.Select(rp => rp.PermissionId).ToList();
-            var toRemove = role.RolePermissions.Where(rp => !dto.PermissionIds.Contains(rp.PermissionId)).ToList();
-            foreach (var rp in toRemove) _context.RolePermissions.Remove(rp);
-            foreach (var permId in dto.PermissionIds.Where(pid => !existingPermIds.Contains(pid)))
-                _context.RolePermissions.Add(new RolePermission { RoleId = id, PermissionId = permId });
+            var existing = role.RolePermissions.ToList();
+            foreach (var ep in existing) _context.RolePermissions.Remove(ep);
+
+            foreach (var p in dto.Permissions)
+            {
+                _context.RolePermissions.Add(new RolePermission 
+                { 
+                    RoleId = id, 
+                    PermissionId = p.PermissionId,
+                    AccessType = (HiCone.Domain.Enums.AccessType)p.AccessType
+                });
+            }
 
             await _context.SaveChangesAsync(default);
             return await GetRoleByIdAsync(id);
@@ -506,8 +542,11 @@ namespace HiCone.Application.Services.Identity
         {
             var query = _context.Permissions.AsQueryable();
 
+            // Filtrar por aplicación si se especifica
             if (!string.IsNullOrWhiteSpace(module))
-                query = query.Where(p => p.Module == module);
+            {
+                query = query.Where(p => p.SecurityApplicationPermissions.Any(ap => ap.SecurityApplication.Name == module));
+            }
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -531,7 +570,9 @@ namespace HiCone.Application.Services.Identity
                     Module = p.Module,
                     Name = p.Name,
                     Code = p.Code,
-                    Description = p.Description
+                    Description = p.Description,
+                    Applications = p.SecurityApplicationPermissions
+                        .Select(ap => ap.SecurityApplication.Name).ToList()
                 })
                 .ToListAsync();
 
@@ -542,6 +583,19 @@ namespace HiCone.Application.Services.Identity
                 PageNumber = page,
                 PageSize = pageSize
             };
+        }
+
+        public async Task<IEnumerable<ApplicationDto>> GetApplicationsAsync()
+        {
+            return await _context.SecurityApplications
+                .OrderBy(a => a.Name)
+                .Select(a => new ApplicationDto
+                {
+                    Id = a.Id,
+                    Name = a.Name,
+                    Description = a.Description
+                })
+                .ToListAsync();
         }
 
         // ── Excel — scaffolding (Paso 2: pendiente de configurar) ─────────────

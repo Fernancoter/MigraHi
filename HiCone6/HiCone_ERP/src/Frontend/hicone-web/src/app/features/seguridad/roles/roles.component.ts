@@ -12,6 +12,8 @@ interface PermissionDto {
   name: string;
   code: string;
   description?: string;
+  applications: string[];
+  accessType: number; // 0=Allow, 1=Deny, 2=Restricted
 }
 
 interface RoleDto {
@@ -20,6 +22,12 @@ interface RoleDto {
   description?: string;
   isSystem: boolean;
   permissions: PermissionDto[];
+}
+
+interface ApplicationDto {
+  id: string;
+  name: string;
+  description?: string;
 }
 
 /** Respuesta paginada del servidor */
@@ -59,7 +67,8 @@ export class RolesComponent implements OnInit {
 
   // ── Permisos del rol seleccionado ──────────────────────────────────────
   allRolePermissions = signal<PermissionDto[]>([]);   // todos los permisos ya asignados al rol
-  selectedApp = signal<string>('GAM');
+  applications = signal<ApplicationDto[]>([]);
+  selectedApp = signal<string>('GAM Backoffice');
   searchPermisosQuery = signal('');
   currentPagePermisos = signal(1);
 
@@ -67,7 +76,7 @@ export class RolesComponent implements OnInit {
     const q = this.searchPermisosQuery();
     const app = this.selectedApp();
     let perms = this.allRolePermissions();
-    if (app) perms = perms.filter(p => p.module === app);
+    if (app) perms = perms.filter(p => p.applications.includes(app));
     if (q) {
       const term = q.toLowerCase();
       perms = perms.filter(p =>
@@ -97,7 +106,6 @@ export class RolesComponent implements OnInit {
   totalPermsToAdd = signal(0);
   totalPagesToAdd = signal(1);
   currentPageToAdd = signal(1);
-  selectedPermsToAdd = signal<string[]>([]);
   searchToAddQuery = signal('');
   readonly pageSizeToAdd = 20;
 
@@ -121,7 +129,12 @@ export class RolesComponent implements OnInit {
 
   // ── Permisos en modal de creación/edición ─────────────────────────────
   allPermissions = signal<PermissionDto[]>([]);
-  selectedPermIds = signal<string[]>([]);
+  selectedPermsWithAccess = signal<{id: string, accessType: number}[]>([]); // Para el modal
+  
+  selectedPermIdsForAssignment = computed(() => this.selectedPermsWithAccess().map(p => p.id));
+
+  // ── UI Checkboxes (Independientes de la asignación) ───────────────────
+  checkboxSelectedIds = signal<string[]>([]);
 
   // ── UI State ───────────────────────────────────────────────────────────
   isLoading = signal(true);
@@ -144,6 +157,7 @@ export class RolesComponent implements OnInit {
 
   ngOnInit() {
     this.loadRoles();
+    this.loadApplications();
     this.loadAllPermissionsForModal();
   }
 
@@ -201,6 +215,19 @@ export class RolesComponent implements OnInit {
       params
     }).subscribe({
       next: (result) => this.allPermissions.set(result.items)
+    });
+  }
+
+  loadApplications() {
+    this.http.get<ApplicationDto[]>(`${this.apiUrl}/roles/applications`, {
+      headers: this.headers()
+    }).subscribe({
+      next: (apps) => {
+        this.applications.set(apps);
+        if (apps.length > 0 && !apps.find(a => a.name === this.selectedApp())) {
+          this.selectedApp.set(apps[0].name);
+        }
+      }
     });
   }
 
@@ -290,34 +317,58 @@ export class RolesComponent implements OnInit {
   }
 
   isModuleFullySelected(mod: { permissions: PermissionDto[] }) {
-    return mod.permissions.every(p => this.selectedPermIds().includes(p.id));
+    return mod.permissions.every(p => this.checkboxSelectedIds().includes(p.id));
   }
 
   isModulePartiallySelected(mod: { permissions: PermissionDto[] }) {
-    const sel = this.selectedPermIds();
+    const sel = this.checkboxSelectedIds();
     return mod.permissions.some(p => sel.includes(p.id)) && !this.isModuleFullySelected(mod);
   }
 
   toggleModule(mod: { permissions: PermissionDto[] }, event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     const ids = mod.permissions.map(p => p.id);
-    const current = this.selectedPermIds();
-    this.selectedPermIds.set(checked
-      ? [...new Set([...current, ...ids])]
-      : current.filter(id => !ids.includes(id)));
+    const current = this.checkboxSelectedIds();
+    if (checked) {
+      const newItems = ids.filter(id => !current.includes(id));
+      this.checkboxSelectedIds.set([...current, ...newItems]);
+    } else {
+      this.checkboxSelectedIds.set(current.filter(id => !ids.includes(id)));
+    }
   }
 
   togglePerm(id: string, event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-    const current = this.selectedPermIds();
-    this.selectedPermIds.set(checked ? [...current, id] : current.filter(p => p !== id));
+    const current = this.checkboxSelectedIds();
+    if (checked) {
+      this.checkboxSelectedIds.set([...current, id]);
+    } else {
+      this.checkboxSelectedIds.set(current.filter(cid => cid !== id));
+    }
+  }
+
+  getPermAccessType(id: string): number {
+    return this.selectedPermsWithAccess().find(p => p.id === id)?.accessType ?? 0;
+  }
+
+  setPermAccessType(id: string, event: Event) {
+    const val = parseInt((event.target as HTMLSelectElement).value);
+    this.selectedPermsWithAccess.update(curr => {
+      const exists = curr.find(p => p.id === id);
+      if (exists) {
+        return curr.map(p => p.id === id ? { ...p, accessType: val } : p);
+      } else {
+        return [...curr, { id, accessType: val }];
+      }
+    });
   }
 
   openModal(role?: RoleDto) {
     this.editingRole = role ?? null;
     this.errorMsg.set(null);
     this.successMsg.set(null);
-    this.selectedPermIds.set(role?.permissions.map(p => p.id) ?? []);
+    this.selectedPermsWithAccess.set(role?.permissions.map(p => ({ id: p.id, accessType: p.accessType })) ?? []);
+    this.checkboxSelectedIds.set(role?.permissions.map(p => p.id) ?? []);
     this.roleForm.reset({ name: role?.name ?? '', description: role?.description ?? '' });
     this.showModal.set(true);
   }
@@ -326,7 +377,8 @@ export class RolesComponent implements OnInit {
     this.editingRole = null;
     this.errorMsg.set(null);
     this.successMsg.set(null);
-    this.selectedPermIds.set(role.permissions.map(p => p.id) ?? []);
+    this.selectedPermsWithAccess.set(role.permissions.map(p => ({ id: p.id, accessType: p.accessType })) ?? []);
+    this.checkboxSelectedIds.set(role.permissions.map(p => p.id) ?? []);
     this.roleForm.reset({ name: `${role.name} - Copia`, description: role.description });
     this.showModal.set(true);
   }
@@ -346,8 +398,11 @@ export class RolesComponent implements OnInit {
     if (this.roleForm.invalid) { this.roleForm.markAllAsTouched(); return; }
     this.isSaving.set(true);
     this.errorMsg.set(null);
-
-    const payload = { ...this.roleForm.value, permissionIds: this.selectedPermIds() };
+  
+    const payload = { 
+      ...this.roleForm.value, 
+      permissions: this.selectedPermsWithAccess().map(p => ({ permissionId: p.id, accessType: p.accessType }))
+    };
 
     const req = this.editingRole
       ? this.http.put(`${this.apiUrl}/roles/${this.editingRole.id}`, payload, { headers: this.headers() })
@@ -387,7 +442,7 @@ export class RolesComponent implements OnInit {
     this.allRolePermissions.set(role.permissions);
     this.currentPagePermisos.set(1);
     this.searchPermisosQuery.set('');
-    this.selectedApp.set('GAM');
+    // No forzamos a 'GAM', dejamos la app seleccionada actual o la primera disponible
     this.viewState.set('permisos');
   }
 
@@ -483,15 +538,12 @@ export class RolesComponent implements OnInit {
   // ── Add Permisos View ─────────────────────────────────────────────────
 
   availableApps = computed(() => {
-    const modules = this.allPermissions().map(p => p.module);
-    const apps = [...new Set(modules)];
-    if (!apps.includes('GAM')) apps.push('GAM');
-    if (!apps.includes('HICONE')) apps.push('HICONE');
-    return apps;
+    return this.applications().map(a => a.name);
   });
 
   openAddPermisosView() {
     this.selectedPermsToAdd.set([]);
+    this.checkboxSelectedIds.set([]);
     this.currentPageToAdd.set(1);
     this.viewState.set('add-permisos');
     this.loadPermsToAdd();
@@ -515,26 +567,54 @@ export class RolesComponent implements OnInit {
     }
   }
 
+  // ── Add Permisos View ─────────────────────────────────────────────────
+  selectedPermsToAdd = signal<{id: string, accessType: number}[]>([]);
+  
   togglePermToAdd(id: string, event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-    const current = this.selectedPermsToAdd();
-    this.selectedPermsToAdd.set(checked ? [...current, id] : current.filter(p => p !== id));
+    const current = this.checkboxSelectedIds();
+    if (checked) {
+      this.checkboxSelectedIds.set([...current, id]);
+    } else {
+      this.checkboxSelectedIds.set(current.filter(cid => cid !== id));
+    }
+  }
+
+  setPermToAddAccessType(id: string, event: Event) {
+    const val = parseInt((event.target as HTMLSelectElement).value);
+    this.selectedPermsToAdd.update(curr => {
+      const exists = curr.find(p => p.id === id);
+      if (exists) {
+        return curr.map(p => p.id === id ? { ...p, accessType: val } : p);
+      } else {
+        return [...curr, { id, accessType: val }];
+      }
+    });
+  }
+
+  getPermToAddAccessType(id: string): number {
+    return this.selectedPermsToAdd().find(p => p.id === id)?.accessType ?? 0;
+  }
+
+  isPermToAddSelected(id: string): boolean {
+    return this.checkboxSelectedIds().includes(id);
   }
 
   isAllPermsToAddSelected() {
     const filtered = this.permsToAdd();
     if (filtered.length === 0) return false;
-    return filtered.every(p => this.selectedPermsToAdd().includes(p.id));
+    return filtered.every(p => this.isPermToAddSelected(p.id));
   }
 
   toggleAllPermsToAdd(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
+    const current = this.checkboxSelectedIds();
+    const pageIds = this.permsToAdd().map(p => p.id);
     if (checked) {
-      const allIds = this.permsToAdd().map(p => p.id);
-      this.selectedPermsToAdd.set([...new Set([...this.selectedPermsToAdd(), ...allIds])]);
+      const newIds = pageIds.filter(id => !current.includes(id));
+      this.checkboxSelectedIds.set([...current, ...newIds]);
     } else {
-      const pageIds = new Set(this.permsToAdd().map(p => p.id));
-      this.selectedPermsToAdd.set(this.selectedPermsToAdd().filter(id => !pageIds.has(id)));
+      this.checkboxSelectedIds.set(current.filter(id => !pageIds.includes(id)));
     }
   }
 
@@ -542,15 +622,15 @@ export class RolesComponent implements OnInit {
     const role = this.selectedRoleContext();
     if (!role) return;
 
-    const newPermIds = this.selectedPermsToAdd();
-    if (newPermIds.length === 0) return;
+    const newPerms = this.selectedPermsToAdd();
+    if (newPerms.length === 0) return;
 
     this.isSaving.set(true);
-    const currentPermIds = role.permissions.map(p => p.id);
+    const currentPerms = role.permissions.map(p => ({ permissionId: p.id, accessType: p.accessType }));
     const payload = {
       name: role.name,
       description: role.description,
-      permissionIds: [...currentPermIds, ...newPermIds]
+      permissions: [...currentPerms, ...newPerms.map(p => ({ permissionId: p.id, accessType: p.accessType }))]
     };
 
     this.http.put(`${this.apiUrl}/roles/${role.id}`, payload, { headers: this.headers() }).subscribe({
@@ -568,6 +648,35 @@ export class RolesComponent implements OnInit {
       error: (err) => {
         this.isSaving.set(false);
         this.errorMsg.set(err.error?.message || 'Error al agregar permisos.');
+      }
+    });
+  }
+
+  updatePermissionAccess(permissionId: string, event: Event) {
+    const role = this.selectedRoleContext();
+    if (!role) return;
+
+    const accessType = parseInt((event.target as HTMLSelectElement).value);
+    
+    // Optimistic update
+    this.allRolePermissions.update(perms => 
+      perms.map(p => p.id === permissionId ? { ...p, accessType } : p)
+    );
+
+    const payload = {
+      name: role.name,
+      description: role.description,
+      permissions: this.allRolePermissions().map(p => ({ permissionId: p.id, accessType: p.accessType }))
+    };
+
+    this.http.put(`${this.apiUrl}/roles/${role.id}`, payload, { headers: this.headers() }).subscribe({
+      next: () => {
+        this.successMsg.set('Tipo de acceso actualizado.');
+        setTimeout(() => this.successMsg.set(null), 3000);
+      },
+      error: (err) => {
+        this.errorMsg.set('Error al actualizar el tipo de acceso.');
+        this.loadRoles(); // Revert on error
       }
     });
   }

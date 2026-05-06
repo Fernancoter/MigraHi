@@ -19,6 +19,8 @@ public interface IApplicationDbContext
     DbSet<User> Users { get; }
     DbSet<Role> Roles { get; }
     DbSet<Permission> Permissions { get; }
+    DbSet<SecurityApplication> SecurityApplications { get; }
+    DbSet<SecurityApplicationPermission> SecurityApplicationPermissions { get; }
     DbSet<RolePermission> RolePermissions { get; }
     DbSet<UserRole> UserRoles { get; }
     DbSet<UserTenant> UserTenants { get; }

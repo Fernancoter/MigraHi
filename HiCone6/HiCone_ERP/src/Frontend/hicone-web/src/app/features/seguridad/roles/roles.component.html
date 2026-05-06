@@ -125,15 +125,29 @@
                   <label [for]="'mod-' + mod.module" class="perm-module-label">{{ mod.module }}</label>
                 </div>
                 <div class="perm-items">
-                  <label class="perm-check" *ngFor="let perm of mod.permissions">
-                    <input type="checkbox"
-                      [checked]="selectedPermIds().includes(perm.id)"
-                      (change)="togglePerm(perm.id, $event)">
-                    <div class="perm-info">
-                      <span class="perm-name">{{ perm.name }}</span>
-                      <span class="perm-code">{{ perm.code }}</span>
+                  <div class="perm-row" *ngFor="let perm of mod.permissions">
+                    <label class="perm-check">
+                      <input type="checkbox"
+                        [checked]="checkboxSelectedIds().includes(perm.id)"
+                        (change)="togglePerm(perm.id, $event)">
+                      <div class="perm-info">
+                        <span class="perm-name">{{ perm.name }}</span>
+                        <span class="perm-code">{{ perm.code }}</span>
+                      </div>
+                    </label>
+                    
+                    <div class="access-select-wrapper mini">
+                      <select class="gam-select-access" 
+                        [value]="getPermAccessType(perm.id)"
+                        [ngClass]="{'allow': getPermAccessType(perm.id) === 0, 'deny': getPermAccessType(perm.id) === 1, 'restricted': getPermAccessType(perm.id) === 2}"
+                        (change)="setPermAccessType(perm.id, $event)">
+                        <option value="0">Permitir</option>
+                        <option value="1">Rechazar</option>
+                        <option value="2">Restringido</option>
+                      </select>
+                      <span class="select-arrow">▼</span>
                     </div>
-                  </label>
+                  </div>
                 </div>
               </div>
               <p class="text-muted" *ngIf="allPermissions.length === 0">Sin permisos disponibles en el sistema.</p>
@@ -278,7 +292,19 @@
           <tr *ngFor="let p of paginatedPermisos()">
             <td><span class="role-name-badge">{{ p.name }}</span> <span class="text-muted" style="font-size:0.75rem;">({{ p.code }})</span></td>
             <td>{{ p.description || p.module }}</td>
-            <td>Permitido</td>
+            <td>
+              <div class="access-select-wrapper">
+                <select class="gam-select-access" 
+                  [value]="p.accessType"
+                  [ngClass]="{'allow': p.accessType === 0, 'deny': p.accessType === 1, 'restricted': p.accessType === 2}"
+                  (change)="updatePermissionAccess(p.id, $event)">
+                  <option value="0">Permitir</option>
+                  <option value="1">Rechazar</option>
+                  <option value="2">Restringido</option>
+                </select>
+                <span class="select-arrow">▼</span>
+              </div>
+            </td>
             <td>No</td>
           </tr>
           <tr *ngIf="paginatedPermisos().length === 0">
@@ -424,15 +450,22 @@
           <tbody>
             <tr *ngFor="let p of permsToAdd()">
               <td class="icon-cell">
-                <input type="checkbox" [checked]="selectedPermsToAdd().includes(p.id)" (change)="togglePermToAdd(p.id, $event)">
+                <input type="checkbox" [checked]="checkboxSelectedIds().includes(p.id)" (change)="togglePermToAdd(p.id, $event)">
               </td>
               <td style="color: #4caf50;">{{ p.code }}</td>
               <td>{{ p.name }}</td>
               <td>
-                <select class="gam-search-line" style="padding: 2px 4px; font-size: 0.8rem;">
-                  <option>Permitir</option>
-                  <option>Denegar</option>
-                </select>
+                <div class="access-select-wrapper">
+                  <select class="gam-select-access"
+                    [value]="getPermToAddAccessType(p.id)"
+                    [ngClass]="{'allow': getPermToAddAccessType(p.id) === 0, 'deny': getPermToAddAccessType(p.id) === 1, 'restricted': getPermToAddAccessType(p.id) === 2}"
+                    (change)="setPermToAddAccessType(p.id, $event)">
+                    <option value="0">Permitir</option>
+                    <option value="1">Rechazar</option>
+                    <option value="2">Restringido</option>
+                  </select>
+                  <span class="select-arrow">▼</span>
+                </div>
               </td>
             </tr>
             <tr *ngIf="permsToAdd().length === 0">
