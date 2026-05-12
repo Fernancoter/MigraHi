@@ -33,7 +33,6 @@ public class Prensa : TenantEntity { }
 public class PrensaProducto : TenantEntity { }
 public class Troquel : TenantEntity { }
 public class PrensaTroquel : TenantEntity { }
-public class Operario : TenantEntity { }
 public class Turno : TenantEntity { }
 public class CausaInterrupcion : TenantEntity { }
 public class ProductoCategoria : TenantEntity { }

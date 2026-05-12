@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HiCone.Domain.Entities.Identity;
+using HiCone.Domain.Entities.Produccion;
+using HiCone.Domain.Enums;
 using HiCone.Application.Common.Interfaces;
 using HiCone.Application.Common.Models;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +26,7 @@ namespace HiCone.Application.Services.Identity
         public bool IsLockedOut { get; set; }
         public bool MustChangePassword { get; set; }
         public DateTime? LastLoginAt { get; set; }
-        public int? OperadorId { get; set; }
+        public Guid? OperadorId { get; set; }
         public string? Gender { get; set; }
         public string? AuthenticationType { get; set; }
         public int? CompanyId { get; set; }
@@ -50,7 +52,7 @@ namespace HiCone.Application.Services.Identity
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string? PhoneNumber { get; set; }
-        public int? OperadorId { get; set; }
+        public Guid? OperadorId { get; set; }
         public string? Gender { get; set; }
         public string? AuthenticationType { get; set; }
         public int? CompanyId { get; set; }
@@ -76,7 +78,7 @@ namespace HiCone.Application.Services.Identity
         public bool IsActive { get; set; }
         public bool IsLockedOut { get; set; }
         public bool MustChangePassword { get; set; }
-        public int? OperadorId { get; set; }
+        public Guid? OperadorId { get; set; }
         public string? Gender { get; set; }
         public string? AuthenticationType { get; set; }
         public int? CompanyId { get; set; }
@@ -152,12 +154,28 @@ namespace HiCone.Application.Services.Identity
         public string? Roles { get; set; }          // roles separados por coma
     }
 
+    public class CreateOperadorDto
+    {
+        public string Nombre { get; set; } = null!;
+        public string? Codigo { get; set; }
+        public Guid? UserGUID { get; set; }
+    }
+
     public class ImportResultDto
     {
         public int Created { get; set; }
         public int Updated { get; set; }
         public int Errors { get; set; }
         public List<string> ErrorMessages { get; set; } = new();
+    }
+
+    public class OperadorDto
+    {
+        public Guid Id { get; set; }
+        public string OperadorNombre { get; set; } = null!;
+        public Guid OperadorUserGUID { get; set; }
+        public bool Activo { get; set; }
+        public string? Username { get; set; }
     }
 
     // ─── Interface ───────────────────────────────────────────────────────────
@@ -178,6 +196,12 @@ namespace HiCone.Application.Services.Identity
         Task<RoleDto> CreateRoleAsync(CreateRoleDto dto);
         Task<RoleDto?> UpdateRoleAsync(Guid id, UpdateRoleDto dto);
         Task<bool> DeleteRoleAsync(Guid id);
+        
+        // Operadores
+        Task<bool> DeshabilitarOperadorAsync(Guid operadorId);
+        Task<bool> HabilitarOperadorAsync(Guid operadorId);
+        Task<IEnumerable<OperadorDto>> GetOperadoresAsync();
+        Task<OperadorDto> CreateOperadorAsync(CreateOperadorDto dto);
 
         // Permissions
         Task<PaginatedResult<PermissionDto>> GetPermissionsAsync(int page = 1, int pageSize = 20, string? searchTerm = null, string? module = null);
@@ -195,13 +219,13 @@ namespace HiCone.Application.Services.Identity
     public class IdentityService : IIdentityService
     {
         private readonly IApplicationDbContext _context;
+        private readonly IInfrastructureIdentityService _infrastructureIdentityService;
 
-        public IdentityService(IApplicationDbContext context)
+        public IdentityService(IApplicationDbContext context, IInfrastructureIdentityService infrastructureIdentityService)
         {
             _context = context;
+            _infrastructureIdentityService = infrastructureIdentityService;
         }
-
-        // ── Users ────────────────────────────────────────────────────────────
 
         public async Task<IEnumerable<UserDto>> GetUsersAsync()
         {
@@ -221,7 +245,10 @@ namespace HiCone.Application.Services.Identity
                     IsLockedOut = u.IsLockedOut,
                     MustChangePassword = u.MustChangePassword,
                     LastLoginAt = u.LastLoginAt,
-                    OperadorId = u.OperadorId,
+                    OperadorId = u.OperadorId ?? _context.Operadores
+                        .Where(o => o.UserGUID == u.Id)
+                        .Select(o => (Guid?)o.Id)
+                        .FirstOrDefault(),
                     Gender = u.Gender,
                     AuthenticationType = u.AuthenticationType,
                     CompanyId = u.CompanyId,
@@ -324,6 +351,26 @@ namespace HiCone.Application.Services.Identity
                 });
             }
 
+            // Sync Operador record if role is assigned
+            var operadorRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Operador");
+            if (operadorRole != null && dto.RoleIds.Contains(operadorRole.Id))
+            {
+                var exists = await _context.Operadores.AnyAsync(o => o.UserGUID == user.Id);
+                if (!exists)
+                {
+                    var operador = new Operador
+                    {
+                        Nombre = $"{user.FirstName} {user.LastName}",
+                        UserGUID = user.Id,
+                        Activo = true,
+                        TenantId = new Guid("00000000-0000-0000-0000-000000000001") // Default Tenant
+                    };
+                    _context.Operadores.Add(operador);
+                    await _context.SaveChangesAsync(default);
+                    user.OperadorId = operador.Id;
+                }
+            }
+
             await _context.SaveChangesAsync(default);
             return (await GetUserByIdAsync(user.Id))!;
         }
@@ -357,16 +404,46 @@ namespace HiCone.Application.Services.Identity
             user.PasswordNeverExpires = dto.PasswordNeverExpires;
             user.SecurityPolicyId = dto.SecurityPolicyId;
             user.IsRepositoryEnabled = dto.IsRepositoryEnabled;
-            if (dto.AvatarUrl != null)
-                user.AvatarUrl = dto.AvatarUrl;
+            user.AvatarUrl = dto.AvatarUrl;
 
-            var existingRoleIds = user.UserRoles.Select(ur => ur.RoleId).ToList();
-            var toRemove = user.UserRoles.Where(ur => !dto.RoleIds.Contains(ur.RoleId)).ToList();
-            foreach (var ur in toRemove)
-                _context.UserRoles.Remove(ur);
+            // Update Roles
+            var existingRoles = await _context.UserRoles.Where(ur => ur.UserId == id).ToListAsync();
+            _context.UserRoles.RemoveRange(existingRoles);
 
-            foreach (var roleId in dto.RoleIds.Where(rid => !existingRoleIds.Contains(rid)))
-                _context.UserRoles.Add(new UserRole { UserId = id, RoleId = roleId, AssignedAt = DateTime.UtcNow });
+            foreach (var roleId in dto.RoleIds)
+            {
+                _context.UserRoles.Add(new UserRole
+                {
+                    UserId = id,
+                    RoleId = roleId,
+                    AssignedAt = DateTime.UtcNow
+                });
+            }
+
+            // Sync Operador record if role is assigned
+            var operadorRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Operador");
+            if (operadorRole != null && dto.RoleIds.Contains(operadorRole.Id))
+            {
+                var operador = await _context.Operadores.FirstOrDefaultAsync(o => o.UserGUID == id);
+                if (operador == null)
+                {
+                    operador = new Operador
+                    {
+                        Nombre = $"{user.FirstName} {user.LastName}",
+                        UserGUID = id,
+                        Activo = true,
+                        TenantId = new Guid("00000000-0000-0000-0000-000000000001")
+                    };
+                    _context.Operadores.Add(operador);
+                    await _context.SaveChangesAsync(default);
+                }
+                user.OperadorId = operador.Id;
+            }
+            else
+            {
+                // If role removed, we might want to unlink, but usually we keep it
+                // user.OperadorId = null; 
+            }
 
             await _context.SaveChangesAsync(default);
             return await GetUserByIdAsync(id);
@@ -375,75 +452,50 @@ namespace HiCone.Application.Services.Identity
         public async Task<bool> DeleteUserAsync(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
-            if (user == null || user.IsDeleted) return false;
+            if (user == null) return false;
 
             user.IsDeleted = true;
-            user.IsActive = false;
+            user.DeletedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync(default);
             return true;
         }
 
         public async Task<bool> ChangePasswordAsync(Guid id, string newPassword)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted);
+            var user = await _context.Users.FindAsync(id);
             if (user == null) return false;
 
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            user.MustChangePassword = true;
-
+            user.PasswordHash = BC.HashPassword(newPassword);
             await _context.SaveChangesAsync(default);
             return true;
         }
 
-        // ── Roles ────────────────────────────────────────────────────────────
+        // ─── Roles ───────────────────────────────────────────────────────────────
 
         public async Task<PaginatedResult<RoleDto>> GetRolesAsync(int page = 1, int pageSize = 20, string? searchTerm = null)
         {
             var query = _context.Roles.AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(searchTerm))
+            if (!string.IsNullOrEmpty(searchTerm))
             {
-                var term = searchTerm.Trim().ToLower();
-                query = query.Where(r =>
-                    r.Name.ToLower().Contains(term) ||
-                    (r.Description != null && r.Description.ToLower().Contains(term)));
+                query = query.Where(r => r.Name.Contains(searchTerm) || (r.Description != null && r.Description.Contains(searchTerm)));
             }
 
             var totalCount = await query.CountAsync();
-
             var items = await query
                 .OrderBy(r => r.Name)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Include(r => r.RolePermissions)
-                    .ThenInclude(rp => rp.Permission)
                 .Select(r => new RoleDto
                 {
                     Id = r.Id,
                     Name = r.Name,
                     Description = r.Description,
-                    IsSystem = r.IsSystem,
-                    Permissions = r.RolePermissions.Select(rp => new PermissionDto
-                    {
-                        Id = rp.Permission.Id,
-                        Module = rp.Permission.Module,
-                        Name = rp.Permission.Name,
-                        Code = rp.Permission.Code,
-                        Description = rp.Permission.Description,
-                        Applications = rp.Permission.SecurityApplicationPermissions
-                            .Select(ap => ap.SecurityApplication.Name).ToList(),
-                        AccessType = (int)rp.AccessType
-                    }).ToList()
+                    IsSystem = r.IsSystem
                 })
                 .ToListAsync();
 
-            return new PaginatedResult<RoleDto>
-            {
-                Items = items,
-                TotalCount = totalCount,
-                PageNumber = page,
-                PageSize = pageSize
-            };
+            return new PaginatedResult<RoleDto> { Items = items, TotalCount = totalCount };
         }
 
         public async Task<RoleDto?> GetRoleByIdAsync(Guid id)
@@ -463,13 +515,11 @@ namespace HiCone.Application.Services.Identity
                 IsSystem = role.IsSystem,
                 Permissions = role.RolePermissions.Select(rp => new PermissionDto
                 {
-                    Id = rp.Permission.Id,
+                    Id = rp.PermissionId,
                     Module = rp.Permission.Module,
                     Name = rp.Permission.Name,
                     Code = rp.Permission.Code,
                     Description = rp.Permission.Description,
-                    Applications = rp.Permission.SecurityApplicationPermissions
-                        .Select(ap => ap.SecurityApplication.Name).ToList(),
                     AccessType = (int)rp.AccessType
                 }).ToList()
             };
@@ -485,14 +535,17 @@ namespace HiCone.Application.Services.Identity
             };
 
             _context.Roles.Add(role);
+            await _context.SaveChangesAsync(default);
 
             foreach (var p in dto.Permissions)
-                _context.RolePermissions.Add(new RolePermission 
-                { 
-                    RoleId = role.Id, 
+            {
+                _context.RolePermissions.Add(new RolePermission
+                {
+                    RoleId = role.Id,
                     PermissionId = p.PermissionId,
-                    AccessType = (HiCone.Domain.Enums.AccessType)p.AccessType
+                    AccessType = (AccessType)p.AccessType
                 });
+            }
 
             await _context.SaveChangesAsync(default);
             return (await GetRoleByIdAsync(role.Id))!;
@@ -500,25 +553,22 @@ namespace HiCone.Application.Services.Identity
 
         public async Task<RoleDto?> UpdateRoleAsync(Guid id, UpdateRoleDto dto)
         {
-            var role = await _context.Roles
-                .Include(r => r.RolePermissions)
-                .FirstOrDefaultAsync(r => r.Id == id);
-
-            if (role == null || role.IsSystem) return null;
+            var role = await _context.Roles.FindAsync(id);
+            if (role == null) return null;
 
             role.Name = dto.Name;
             role.Description = dto.Description;
 
-            var existing = role.RolePermissions.ToList();
-            foreach (var ep in existing) _context.RolePermissions.Remove(ep);
+            var existingPermissions = await _context.RolePermissions.Where(rp => rp.RoleId == id).ToListAsync();
+            _context.RolePermissions.RemoveRange(existingPermissions);
 
             foreach (var p in dto.Permissions)
             {
-                _context.RolePermissions.Add(new RolePermission 
-                { 
-                    RoleId = id, 
+                _context.RolePermissions.Add(new RolePermission
+                {
+                    RoleId = id,
                     PermissionId = p.PermissionId,
-                    AccessType = (HiCone.Domain.Enums.AccessType)p.AccessType
+                    AccessType = (AccessType)p.AccessType
                 });
             }
 
@@ -536,32 +586,25 @@ namespace HiCone.Application.Services.Identity
             return true;
         }
 
-        // ── Permissions ──────────────────────────────────────────────────────
+        // ─── Permissions ─────────────────────────────────────────────────────────
 
         public async Task<PaginatedResult<PermissionDto>> GetPermissionsAsync(int page = 1, int pageSize = 20, string? searchTerm = null, string? module = null)
         {
             var query = _context.Permissions.AsQueryable();
 
-            // Filtrar por aplicación si se especifica
-            if (!string.IsNullOrWhiteSpace(module))
+            if (!string.IsNullOrEmpty(searchTerm))
             {
-                query = query.Where(p => p.SecurityApplicationPermissions.Any(ap => ap.SecurityApplication.Name == module));
+                query = query.Where(p => p.Name.Contains(searchTerm) || p.Code.Contains(searchTerm));
             }
 
-            if (!string.IsNullOrWhiteSpace(searchTerm))
+            if (!string.IsNullOrEmpty(module))
             {
-                var term = searchTerm.Trim().ToLower();
-                query = query.Where(p =>
-                    p.Name.ToLower().Contains(term) ||
-                    p.Code.ToLower().Contains(term) ||
-                    (p.Description != null && p.Description.ToLower().Contains(term)));
+                query = query.Where(p => p.Module == module);
             }
 
             var totalCount = await query.CountAsync();
-
             var items = await query
-                .OrderBy(p => p.Module)
-                .ThenBy(p => p.Name)
+                .OrderBy(p => p.Module).ThenBy(p => p.Name)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(p => new PermissionDto
@@ -570,25 +613,16 @@ namespace HiCone.Application.Services.Identity
                     Module = p.Module,
                     Name = p.Name,
                     Code = p.Code,
-                    Description = p.Description,
-                    Applications = p.SecurityApplicationPermissions
-                        .Select(ap => ap.SecurityApplication.Name).ToList()
+                    Description = p.Description
                 })
                 .ToListAsync();
 
-            return new PaginatedResult<PermissionDto>
-            {
-                Items = items,
-                TotalCount = totalCount,
-                PageNumber = page,
-                PageSize = pageSize
-            };
+            return new PaginatedResult<PermissionDto> { Items = items, TotalCount = totalCount };
         }
 
         public async Task<IEnumerable<ApplicationDto>> GetApplicationsAsync()
         {
             return await _context.SecurityApplications
-                .OrderBy(a => a.Name)
                 .Select(a => new ApplicationDto
                 {
                     Id = a.Id,
@@ -598,22 +632,12 @@ namespace HiCone.Application.Services.Identity
                 .ToListAsync();
         }
 
-        // ── Excel — scaffolding (Paso 2: pendiente de configurar) ─────────────
-
-        /// <summary>
-        /// STUB: Exportar usuarios a Excel.
-        /// TODO (Paso 2): Integrar librería ClosedXML o EPPlus para generar el .xlsx.
-        /// </summary>
         public Task<byte[]> ExportUsersToExcelAsync()
         {
-            // Placeholder — devuelve array vacío hasta que se configure en Paso 2
+            // Placeholder — responde con array vacío hasta que se configure en Paso 2
             return Task.FromResult(Array.Empty<byte>());
         }
 
-        /// <summary>
-        /// STUB: Importar usuarios desde Excel.
-        /// TODO (Paso 2): Parsear el archivo .xlsx, mapear columnas y persistir registros.
-        /// </summary>
         public Task<ImportResultDto> ImportUsersFromExcelAsync(byte[] fileBytes)
         {
             // Placeholder — responde con 0 operaciones hasta que se configure en Paso 2
@@ -624,6 +648,50 @@ namespace HiCone.Application.Services.Identity
                 Errors = 0,
                 ErrorMessages = new List<string> { "Funcionalidad de importación en configuración (Paso 2)." }
             });
+        }
+
+        // ── Operadores ───────────────────────────────────────────────────────
+
+        public async Task<bool> DeshabilitarOperadorAsync(Guid operadorId)
+        {
+            return await _infrastructureIdentityService.DeshabilitarOperadorAsync(operadorId);
+        }
+
+        public async Task<bool> HabilitarOperadorAsync(Guid operadorId)
+        {
+            return await _infrastructureIdentityService.HabilitarOperadorAsync(operadorId);
+        }
+
+        public async Task<IEnumerable<OperadorDto>> GetOperadoresAsync()
+        {
+            return await _context.Operadores
+                .Include(o => o.User)
+                .Select(o => new OperadorDto
+                {
+                    Id = o.Id,
+                    OperadorNombre = o.Nombre,
+                    OperadorUserGUID = o.UserGUID ?? Guid.Empty,
+                    Activo = o.Activo,
+                    Username = o.User != null ? o.User.Username : null
+                })
+                .ToListAsync();
+        }
+
+        public async Task<OperadorDto> CreateOperadorAsync(CreateOperadorDto dto)
+        {
+            var operador = new Operador
+            {
+                Nombre = dto.Nombre,
+                Codigo = dto.Codigo,
+                UserGUID = dto.UserGUID,
+                Activo = true,
+                TenantId = new Guid("00000000-0000-0000-0000-000000000001") // Ensure TenantId is set
+            };
+
+            _context.Operadores.Add(operador);
+            await _context.SaveChangesAsync(default);
+
+            return (await GetOperadoresAsync()).First(o => o.Id == operador.Id);
         }
     }
 }

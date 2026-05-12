@@ -1,17 +1,21 @@
 using HiCone.Application.Common.Interfaces;
 using HiCone.Domain.Entities.Identity;
+using HiCone.Domain.Entities.Produccion;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using BC = BCrypt.Net.BCrypt;
 
 namespace HiCone.Infrastructure.Identity;
 
-public class IdentityService : IIdentityService
+public class IdentityService : IInfrastructureIdentityService
 {
     private readonly IApplicationDbContext _context;
+    private readonly ILogger<IdentityService> _logger;
 
-    public IdentityService(IApplicationDbContext context)
+    public IdentityService(IApplicationDbContext context, ILogger<IdentityService> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task<(bool Success, string[] Errors)> CreateUserAsync(string email, string password, string firstName, string lastName)
@@ -103,5 +107,71 @@ public class IdentityService : IIdentityService
     public async Task<User?> GetUserByIdAsync(Guid userId)
     {
         return await _context.Users.FindAsync(userId);
+    }
+
+    // ── Operadores ─────────────────────────────────────────────────────────
+
+    public async Task<bool> DeshabilitarOperadorAsync(Guid operadorId)
+    {
+        var operador = await _context.Operadores
+            .Include(o => o.User)
+            .FirstOrDefaultAsync(o => o.Id == operadorId);
+
+        if (operador == null)
+        {
+            _logger.LogWarning("Intento de deshabilitar operador no existente: {OperadorId}", operadorId);
+            return false;
+        }
+
+        try
+        {
+            if (operador.User != null)
+            {
+                // Mapeo de &User.RepositoryDisable(&Errors)
+                operador.User.IsRepositoryEnabled = false;
+                operador.User.IsActive = false;
+            }
+
+            operador.Activo = false;
+            await _context.SaveChangesAsync(default);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al deshabilitar el operador {OperadorId}", operadorId);
+            return false;
+        }
+    }
+
+    public async Task<bool> HabilitarOperadorAsync(Guid operadorId)
+    {
+        var operador = await _context.Operadores
+            .Include(o => o.User)
+            .FirstOrDefaultAsync(o => o.Id == operadorId);
+
+        if (operador == null)
+        {
+            _logger.LogWarning("Intento de habilitar operador no existente: {OperadorId}", operadorId);
+            return false;
+        }
+
+        try
+        {
+            if (operador.User != null)
+            {
+                // Mapeo de &User.RepositoryEnable(&Errors)
+                operador.User.IsRepositoryEnabled = true;
+                operador.User.IsActive = true;
+            }
+
+            operador.Activo = true;
+            await _context.SaveChangesAsync(default);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al habilitar el operador {OperadorId}", operadorId);
+            return false;
+        }
     }
 }

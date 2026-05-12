@@ -8,10 +8,10 @@ namespace HiCone.API.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly IIdentityService _identityService;
+    private readonly IInfrastructureIdentityService _identityService;
     private readonly ITokenService _tokenService;
 
-    public AuthController(IIdentityService identityService, ITokenService tokenService)
+    public AuthController(IInfrastructureIdentityService identityService, ITokenService tokenService)
     {
         _identityService = identityService;
         _tokenService = tokenService;
@@ -103,5 +103,5 @@ public class UserDto
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
     public Guid CompanyId { get; set; }
-    public int? OperadorId { get; set; }
+    public Guid? OperadorId { get; set; }
 }

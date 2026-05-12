@@ -1457,7 +1457,6 @@ public class ApplicationDbContextSeeder
                 FirstName = "Admin",
                 LastName = "HiCone",
                 TenantId = defaultTenantId,
-                OperadorId = 1,
                 MustChangePassword = false,
                 EmailConfirmed = true
             };

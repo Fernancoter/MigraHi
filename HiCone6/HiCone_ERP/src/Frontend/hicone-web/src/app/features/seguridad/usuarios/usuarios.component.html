@@ -252,7 +252,24 @@
     <td class="icon-cell"><button class="gam-icon-btn" (click)="openModal(u, true)" title="Visualizar">🔍</button></td>
     <td class="icon-cell"><button class="gam-icon-btn edit-btn" (click)="openModal(u)" title="Editar">✏️</button></td>
     <td class="icon-cell"><button class="gam-icon-btn del-btn" (click)="openDeleteModal(u)" title="Eliminar">❌</button></td>
-    <td class="icon-cell" *ngIf="isColVisible('roles')"><button class="gam-icon-btn" title="Roles">⚙️</button></td>
+    <td class="icon-cell" *ngIf="isColVisible('roles')">
+      <div class="dropdown-container">
+        <button class="gam-icon-btn" (click)="toggleConfigMenu(u.id, $event)" title="Configuración">⚙️</button>
+        <div class="dropdown-menu config-menu" *ngIf="showUserConfigId() === u.id">
+          <div class="menu-title">Configuración de {{ u.username }}</div>
+          
+          <!-- Lógica de Operador -->
+          <ng-container *ngIf="u.operadorId">
+            <button class="dropdown-item" (click)="toggleOperatorStatus(u)">
+              {{ isOperatorActive(u) ? '🛑 Deshabilitar Operador' : '✅ Habilitar Operador' }}
+            </button>
+          </ng-container>
+          
+          <button class="dropdown-item" (click)="openPermisos(u)">🔒 Gestionar Permisos</button>
+          <button class="dropdown-item" (click)="openPasswordModal(u)">🔑 Cambiar Contraseña</button>
+        </div>
+      </div>
+    </td>
     <td class="icon-cell" *ngIf="isColVisible('permisos')"><button class="gam-icon-btn" (click)="openPermisos(u)" title="Permisos">🔒</button></td>
     <td class="icon-cell" *ngIf="isColVisible('contrasena')"><button class="gam-icon-btn" (click)="openPasswordModal(u)" title="Contraseña">🔑</button></td>
     
@@ -378,12 +395,10 @@
           </div>
 
           <div class="form-group">
-            <label>Operador Id</label>
+            <label>Operador Vinculado</label>
             <select formControlName="operadorId" class="form-control">
               <option [ngValue]="null">Seleccione un operador...</option>
-              <!-- Aquí irían los operadores cargados desde el backend -->
-              <option [ngValue]="1">Operador Prueba 1</option>
-              <option [ngValue]="2">Operador Prueba 2</option>
+              <option *ngFor="let op of availableOperadores()" [value]="op.id">{{ op.operadorNombre }}</option>
             </select>
           </div>
 

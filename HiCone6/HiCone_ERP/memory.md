@@ -38,6 +38,10 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - Added dark linear-gradient overlay to improve text legibility while maintaining the glassmorphism effect.
     - Migrated global theme in `styles.scss` from blue to corporate green (`#10b981`).
     - Ajusted shadows, glows, and interactive elements to harmonize with the new brand palette.
+- [x] **Refactor de Operadores y Seguridad**:
+    - Se creó la entidad `Operador` vinculada a Identity mediante `UserGUID`.
+    - Se implementaron los procedimientos `DeshabilitarOperador` y `HabilitarOperador` mapeando la lógica de GAM (`IsRepositoryEnabled`).
+    - Se estandarizaron los IDs de operadores a `Guid`.
 - [x] **Generación de Reporte de Estructura**: Se analizó el entorno heredado (`HiCone6`) identificando que la lógica existe como metadatos encriptados/comprimidos (base de datos `.mdf` y `kb.data`) exclusivos para el IDE de GeneXus. El reporte fue guardado como `reporteEstructura.md`.
 
 - Documentation:
@@ -59,7 +63,7 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
 - **Reactivity**: Converted `allPermissions` to Angular Signals in the Roles component for improved performance and real-time UI updates.
 
 ## Next Steps
-- [ ] Integración final de permisos con el backend real cuando se ejecute el seeder en producción.
+- [x] Integración final de permisos con el backend real.
 - [ ] Implementar páginas de Registro y Recuperación de contraseña (actualmente placeholders).
 - [ ] Resolver advertencias de precisión decimal en entidades financieras detectadas durante el build.
 

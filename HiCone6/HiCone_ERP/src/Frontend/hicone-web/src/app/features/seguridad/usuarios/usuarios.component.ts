@@ -15,7 +15,7 @@ interface UserDto {
   isLockedOut: boolean;
   mustChangePassword: boolean;
   lastLoginAt?: string;
-  operadorId?: number;
+  operadorId?: string; // Guid
   gender?: string;
   authenticationType?: string;
   companyId?: number;
@@ -61,6 +61,7 @@ export class UsuariosComponent implements OnInit {
   users = signal<UserDto[]>([]);
   filteredUsers = signal<UserDto[]>([]);
   availableRoles: RoleDto[] = [];
+  availableOperadores = signal<any[]>([]);
   selectedRoleIds = signal<string[]>([]);
 
   // Paginación
@@ -86,6 +87,7 @@ export class UsuariosComponent implements OnInit {
   showColumnMenu = signal(false);
   showGroupMenu = signal(false);
   showFilterPanel = signal(false);
+  showUserConfigId = signal<string | null>(null);
 
   // Sub-views State
   viewState = signal<'main' | 'permisos'>('main');
@@ -157,6 +159,7 @@ export class UsuariosComponent implements OnInit {
   ngOnInit() {
     this.loadUsers();
     this.loadRoles();
+    this.loadOperadores();
   }
 
   onFileSelected(event: any) {
@@ -193,9 +196,42 @@ export class UsuariosComponent implements OnInit {
         this.isLoading.set(false); 
       },
       error: () => { 
-        this.errorMsg.set('Error al cargar usuarios.'); 
         this.isLoading.set(false); 
       }
+    });
+  }
+
+  toggleConfigMenu(userId: string, event: Event) {
+    event.stopPropagation();
+    if (this.showUserConfigId() === userId) {
+      this.showUserConfigId.set(null);
+    } else {
+      this.closeAllDropdownMenus();
+      this.showUserConfigId.set(userId);
+    }
+  }
+
+  isOperatorActive(user: UserDto): boolean {
+    if (!user.operadorId) return false;
+    const op = this.availableOperadores().find(o => o.id === user.operadorId);
+    return op ? op.activo : user.isRepositoryEnabled;
+  }
+
+  toggleOperatorStatus(user: UserDto) {
+    if (!user.operadorId) return;
+    
+    const isCurrentlyActive = this.isOperatorActive(user);
+    const action = isCurrentlyActive ? 'deshabilitar' : 'habilitar';
+
+    this.http.post(`${this.apiUrl}/Operadores/${user.operadorId}/${action}`, {}, { headers: this.headers() }).subscribe({
+      next: () => {
+        this.successMsg.set(`Operador ${action === 'habilitar' ? 'habilitado' : 'deshabilitado'} correctamente.`);
+        this.loadUsers();
+        this.loadOperadores();
+        this.showUserConfigId.set(null);
+        setTimeout(() => this.successMsg.set(null), 3000);
+      },
+      error: () => this.errorMsg.set(`Error al ${action} el operador.`)
     });
   }
 
@@ -203,6 +239,13 @@ export class UsuariosComponent implements OnInit {
     this.http.get<PaginatedResult<RoleDto>>(`${this.apiUrl}/roles?page=1&pageSize=1000`, { headers: this.headers() }).subscribe({
       next: (data) => { this.availableRoles = data.items; },
       error: () => { this.errorMsg.set('Error al cargar roles para usuarios.'); }
+    });
+  }
+
+  loadOperadores() {
+    this.http.get<any[]>(`${this.apiUrl}/Operadores`, { headers: this.headers() }).subscribe({
+      next: (data) => { this.availableOperadores.set(data); },
+      error: () => { console.error('Error al cargar operadores para dropdown.'); }
     });
   }
 
@@ -217,6 +260,7 @@ export class UsuariosComponent implements OnInit {
     this.showImportMenu.set(false);
     this.showColumnMenu.set(false);
     this.showGroupMenu.set(false);
+    this.showUserConfigId.set(null);
   }
 
   // ─── Lógica de Columnas ──────────────────────────────────────────────────

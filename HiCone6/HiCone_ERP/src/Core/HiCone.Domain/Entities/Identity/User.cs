@@ -20,7 +20,7 @@ public class User : TenantEntity
     public string? AuthenticationType { get; set; } // Local, GAM, LDAP, Google
 
     // Business Context (Legacy Alignment)
-    public int? OperadorId { get; set; } 
+    public Guid? OperadorId { get; set; } 
     public int? CompanyId { get; set; }
     public string? Namespace { get; set; }
     public string? ExternalId { get; set; }
