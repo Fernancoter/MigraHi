@@ -20,3 +20,13 @@ Se han completado todas las implementaciones descritas en el plan para replicar 
 
 > [!TIP]
 > Todo esto se implementó respetando meticulosamente el diseño visual, colores y botones del frontend que ya tenías desarrollados en Angular. El cambio fue "quirúrgico" en la comunicación y validación entre Angular y el Backend .NET 8.
+
+## 📄 Exportación de Reportes (Excel y PDF)
+Para replicar y mejorar la funcionalidad de exportación del sistema original de QA (GeneXus), se habilitó la exportación de información desde las tablas:
+
+*   **Exportación a Excel (CSV):** Permite descargar la información filtrada de los lotes y existencias en crudo para su manipulación en hojas de cálculo.
+*   **Reportes Formales PDF:** Se implementó un nuevo servicio (`PdfExportService`) utilizando `jspdf` y `jspdf-autotable`. Este servicio genera documentos con diseño institucional:
+    *   Incluye un membrete estético con datos de contacto (replicando el estilo de DVelop Software Solutions / QA).
+    *   Genera tablas limpias, cebradas con colores corporativos (verdes y grises).
+    *   Soporta paginación automática.
+    *   Se encuentra activo y funcional en las pantallas de **Lotes** y **Existencias**.

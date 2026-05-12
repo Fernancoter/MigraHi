@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InventarioService, Lote, Silo } from '../../../core/services/inventario';
+import { PdfExportService } from '../../../core/services/pdf-export.service';
 
 @Component({
   selector: 'app-lotes',
@@ -21,7 +22,17 @@ import { InventarioService, Lote, Silo } from '../../../core/services/inventario
         
         <div class="toolbar-premium">
           <div class="btn-group-modern">
-            <button class="btn-legacy secondary">📥 Exportar <span class="arrow">▼</span></button>
+            <div class="dropdown-container">
+              <button class="btn-legacy secondary" (click)="showExportSelector = !showExportSelector">📥 Exportar <span class="arrow">▼</span></button>
+              <div class="column-selector-dropdown shadow-premium" *ngIf="showExportSelector">
+                <div class="column-list custom-scroll">
+                  <div class="column-group">
+                    <label class="item-label export-item" (click)="exportToCSV(); showExportSelector = false">📄 Excel (CSV)</label>
+                    <label class="item-label export-item" (click)="exportToPDF(); showExportSelector = false">📕 PDF</label>
+                  </div>
+                </div>
+              </div>
+            </div>
             <button class="btn-legacy secondary" (click)="openModal()">Agregar</button>
             <div class="dropdown-container">
               <button class="btn-legacy primary" (click)="toggleColumnSelector()">Selecciona columnas <span class="arrow">▼</span></button>
@@ -233,16 +244,21 @@ import { InventarioService, Lote, Silo } from '../../../core/services/inventario
 
     .text-right { text-align: right; }
     .text-center { text-align: center; }
+    .export-item { padding: 0.5rem; cursor: pointer; display: block; }
+    .export-item:hover { background: #f1f5f9; }
   `]
 })
 export class LotesComponent implements OnInit {
   private inventarioService = inject(InventarioService);
+  private pdfService = inject(PdfExportService);
+  
   lotes: Lote[] = [];
   silos: Silo[] = [];
   selectedSilo: Silo | null = null;
   searchQuery = '';
   showModal = false;
   showColumnSelector = false;
+  showExportSelector = false;
   newLote: Partial<Lote> = this.getDefaultLote();
 
   columns = [
@@ -317,5 +333,64 @@ export class LotesComponent implements OnInit {
   get filteredLotes() {
     const q = this.searchQuery.toLowerCase();
     return this.lotes.filter(l => (l.loteEmbarque?.toLowerCase() || '').includes(q));
+  }
+
+  exportToCSV() {
+    if (this.lotes.length === 0) return;
+    
+    // Preparar los datos
+    const headers = ['Lote No.', 'Lote PO', 'Fecha Registro', 'Trunk No', 'Tipo Material', 'Silo', 'Kg', 'Consumido', 'Aditivos'];
+    
+    const rows = this.filteredLotes.map(l => [
+      l.loteEmbarque || '',
+      l.lotePO || '',
+      l.loteFechaRegistro ? new Date(l.loteFechaRegistro).toLocaleDateString() : '',
+      l.loteTrunkNo || '',
+      l.loteTipoMaterial || '',
+      this.getSiloNombre(l.loteSiloId),
+      l.loteKg?.toString() || '0',
+      l.loteConsumido ? 'Si' : 'No',
+      l.lotePaqueteAditivos || ''
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    // Crear y descargar archivo
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `Lotes_Export_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  exportToPDF() {
+    if (this.lotes.length === 0) return;
+    
+    const headers = ['Lote No.', 'Lote PO', 'Fecha Registro', 'Trunk No', 'Tipo Material', 'Silo', 'Kg', 'Consumido', 'Aditivos'];
+    
+    const data = this.filteredLotes.map(l => [
+      l.loteEmbarque || '',
+      l.lotePO || '',
+      l.loteFechaRegistro ? new Date(l.loteFechaRegistro).toLocaleDateString() : '',
+      l.loteTrunkNo || '',
+      l.loteTipoMaterial || '',
+      this.getSiloNombre(l.loteSiloId),
+      l.loteKg?.toString() || '0',
+      l.loteConsumido ? 'Si' : 'No',
+      l.lotePaqueteAditivos || ''
+    ]);
+
+    this.pdfService.exportTable(
+      'Lote List', 
+      headers, 
+      data, 
+      `Lotes_Report_${new Date().toISOString().split('T')[0]}.pdf`
+    );
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InventarioService, ExistenciaSiloDto } from '../../../core/services/inventario';
+import { PdfExportService } from '../../../core/services/pdf-export.service';
 
 @Component({
   selector: 'app-existencias',
@@ -19,9 +20,19 @@ import { InventarioService, ExistenciaSiloDto } from '../../../core/services/inv
           </nav>
         </div>
         <div class="header-actions">
-          <button class="btn-secondary-modern">
-            <span class="icon">📊</span> Exportar Excel
-          </button>
+          <div class="dropdown-container">
+            <button class="btn-secondary-modern" (click)="showExportSelector = !showExportSelector">
+              <span class="icon">📊</span> Exportar <span class="arrow">▼</span>
+            </button>
+            <div class="column-selector-dropdown shadow-premium" *ngIf="showExportSelector">
+              <div class="column-list custom-scroll">
+                <div class="column-group">
+                  <label class="item-label export-item" (click)="exportToCSV(); showExportSelector = false">📄 Excel (CSV)</label>
+                  <label class="item-label export-item" (click)="exportToPDF(); showExportSelector = false">📕 PDF</label>
+                </div>
+              </div>
+            </div>
+          </div>
           <button class="btn-primary-modern" (click)="guardarExistenciasSilos()" *ngIf="activeTab === 'silos'">
             <span class="icon">💾</span> Confirmar Ajuste
           </button>
@@ -161,11 +172,19 @@ import { InventarioService, ExistenciaSiloDto } from '../../../core/services/inv
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .modern-input { border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem; width: 120px; font-family: monospace; font-size: 1rem; color: #1e293b; background: #f8fafc; }
     .modern-input:focus { outline: none; border-color: #166534; background: #fff; }
+    
+    .dropdown-container { position: relative; display: inline-block; margin-right: 0.5rem; }
+    .column-selector-dropdown { position: absolute; top: 110%; right: 0; width: 180px; background: white; border: 1px solid #ccc; border-radius: 4px; z-index: 100; padding: 0.5rem; }
+    .export-item { padding: 0.5rem; cursor: pointer; display: block; font-size: 0.85rem; color: #333; }
+    .export-item:hover { background: #f1f5f9; }
+    .arrow { font-size: 0.7rem; margin-left: 0.3rem; }
   `]
 })
 export class ExistenciasComponent implements OnInit {
   private inventarioService = inject(InventarioService);
+  private pdfService = inject(PdfExportService);
   activeTab = 'silos';
+  showExportSelector = false;
   
   // Placeholder ID for existence record, in a real app this would be chosen or created
   currentExistenciaId = '00000000-0000-0000-0000-000000000000'; 
@@ -199,6 +218,90 @@ export class ExistenciasComponent implements OnInit {
         },
         error: (err) => alert('❌ Error al guardar existencias: ' + (err.error || err.message))
       });
+    }
+  }
+
+  exportToCSV() {
+    let csvContent = '';
+    let fileName = '';
+
+    if (this.activeTab === 'producto') {
+      const headers = ['Producto', 'SKU', 'Categoría', 'Stock Sistema', 'Stock Físico', 'Diferencia'];
+      const rows = this.inventory.map(i => [
+        i.nombre,
+        i.sku,
+        i.categoria,
+        i.sistema.toString(),
+        i.fisico.toString(),
+        (i.fisico - i.sistema).toString()
+      ]);
+      
+      csvContent = [
+        headers.join(','),
+        ...rows.map(r => r.map(cell => `"${cell}"`).join(','))
+      ].join('\n');
+      
+      fileName = `Existencias_Productos_${new Date().toISOString().split('T')[0]}.csv`;
+    } else {
+      const headers = ['Silo', 'Tipo Material', 'Lote Virgen Actual', 'Cantidad Física (kg)'];
+      const rows = this.silosInventory.map(s => [
+        s.siloNombre || '',
+        s.tipoMaterial || '',
+        s.loteVirgen || '',
+        s.cantidadReal?.toString() || '0'
+      ]);
+      
+      csvContent = [
+        headers.join(','),
+        ...rows.map(r => r.map(cell => `"${cell}"`).join(','))
+      ].join('\n');
+      
+      fileName = `Existencias_Silos_${new Date().toISOString().split('T')[0]}.csv`;
+    }
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  exportToPDF() {
+    if (this.activeTab === 'producto') {
+      const headers = ['Producto', 'SKU', 'Categoría', 'Stock Sistema', 'Stock Físico', 'Diferencia'];
+      const rows = this.inventory.map(i => [
+        i.nombre,
+        i.sku,
+        i.categoria,
+        i.sistema.toString(),
+        i.fisico.toString(),
+        (i.fisico - i.sistema).toString()
+      ]);
+      
+      this.pdfService.exportTable(
+        'Existencia List',
+        headers,
+        rows,
+        `Existencias_Productos_Report_${new Date().toISOString().split('T')[0]}.pdf`
+      );
+    } else {
+      const headers = ['Silo', 'Tipo Material', 'Lote Virgen Actual', 'Cantidad Física (kg)'];
+      const rows = this.silosInventory.map(s => [
+        s.siloNombre || '',
+        s.tipoMaterial || '',
+        s.loteVirgen || '',
+        s.cantidadReal?.toString() || '0'
+      ]);
+      
+      this.pdfService.exportTable(
+        'Existencia en Silos List',
+        headers,
+        rows,
+        `Existencias_Silos_Report_${new Date().toISOString().split('T')[0]}.pdf`
+      );
     }
   }
 }
