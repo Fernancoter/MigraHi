@@ -52,6 +52,8 @@ public interface IApplicationDbContext
     DbSet<Operario> Operarios { get; }
     DbSet<Turno> Turnos { get; }
     DbSet<CausaInterrupcion> CausasInterrupcion { get; }
+    DbSet<SiloProduccion> SilosProduccion { get; }
+    DbSet<ConfiguracionSistema> ConfiguracionesSistema { get; }
 
     // ── Produccion — Catálogos Productos ─────────────────────────────────
     DbSet<Producto> Productos { get; }

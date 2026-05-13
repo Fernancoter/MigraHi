@@ -18,6 +18,13 @@ import { UsuariosComponent } from './features/seguridad/usuarios/usuarios.compon
 import { RolesComponent } from './features/seguridad/roles/roles.component';
 import { authGuard } from './core/guards/auth.guard';
 import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
+// Módulo Configurar Producción
+import { TableroProduccionComponent } from './features/produccion/tablero/tablero.component';
+import { CategoriasComponent } from './features/produccion/catalogos/categorias/categorias.component';
+import { TurnosCatalogoComponent } from './features/produccion/catalogos/turnos/turnos.component';
+import { ExtrusorasCatalogoComponent } from './features/produccion/catalogos/extrusoras/extrusoras.component';
+import { PrensasCatalogoComponent } from './features/produccion/catalogos/prensas/prensas.component';
+import { SilosCatalogoComponent } from './features/produccion/catalogos/silos/silos.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -32,14 +39,13 @@ export const routes: Routes = [
       { path: 'inventario', component: ArticulosListComponent },
       { path: 'clientes', component: ClientesListComponent },
       { path: 'ventas', component: VentasListComponent },
-      { path: 'produccion', component: ProduccionListComponent },
       { path: 'embarques', component: EmbarquesComponent },
       { path: 'calidad', component: CalidadComponent },
       { path: 'configuracion', component: ConfiguracionComponent },
       { path: 'reportes-sae', component: ReportesSaeComponent },
       { path: 'catalogos-sae', component: CatalogosSaeComponent },
       { path: 'informes', component: DashboardComponent },
-      // Módulo de Seguridad (con sub-rutas)
+      // Seguridad
       {
         path: 'seguridad',
         component: SeguridadComponent,
@@ -49,9 +55,17 @@ export const routes: Routes = [
           { path: 'roles', component: RolesComponent }
         ]
       },
+      // Configurar Producción
+      { path: 'produccion', component: TableroProduccionComponent },
+      { path: 'produccion/inicio', component: TableroProduccionComponent },
+      { path: 'produccion/catalogos/categorias', component: CategoriasComponent },
+      { path: 'produccion/catalogos/turnos', component: TurnosCatalogoComponent },
+      { path: 'produccion/catalogos/extrusoras', component: ExtrusorasCatalogoComponent },
+      { path: 'produccion/catalogos/prensas', component: PrensasCatalogoComponent },
+      { path: 'produccion/catalogos/silos', component: SilosCatalogoComponent },
+      { path: 'produccion/extrusion', component: ProduccionListComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
   { path: '**', redirectTo: 'dashboard' }
 ];
-

@@ -27,12 +27,12 @@ public class CurrentUserService : ICurrentUserService
         }
     }
 
-    public int? OperadorId 
+    public Guid? OperadorId 
     {
         get 
         {
             var operadorId = _httpContextAccessor.HttpContext?.User?.FindFirst("operadorId")?.Value;
-            return string.IsNullOrEmpty(operadorId) ? null : int.Parse(operadorId);
+            return string.IsNullOrEmpty(operadorId) ? null : Guid.Parse(operadorId);
         }
     }
 

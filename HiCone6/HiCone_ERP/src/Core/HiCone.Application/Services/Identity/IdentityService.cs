@@ -24,7 +24,7 @@ namespace HiCone.Application.Services.Identity
         public bool IsLockedOut { get; set; }
         public bool MustChangePassword { get; set; }
         public DateTime? LastLoginAt { get; set; }
-        public int? OperadorId { get; set; }
+        public Guid? OperadorId { get; set; }
         public string? Gender { get; set; }
         public string? AuthenticationType { get; set; }
         public int? CompanyId { get; set; }
@@ -50,7 +50,7 @@ namespace HiCone.Application.Services.Identity
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string? PhoneNumber { get; set; }
-        public int? OperadorId { get; set; }
+        public Guid? OperadorId { get; set; }
         public string? Gender { get; set; }
         public string? AuthenticationType { get; set; }
         public int? CompanyId { get; set; }
@@ -76,7 +76,7 @@ namespace HiCone.Application.Services.Identity
         public bool IsActive { get; set; }
         public bool IsLockedOut { get; set; }
         public bool MustChangePassword { get; set; }
-        public int? OperadorId { get; set; }
+        public Guid? OperadorId { get; set; }
         public string? Gender { get; set; }
         public string? AuthenticationType { get; set; }
         public int? CompanyId { get; set; }

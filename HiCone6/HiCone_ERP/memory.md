@@ -3,7 +3,11 @@
 ## Rama Activa
 `security/refactor` — compilación estable, sincronizada con `main`.
 
-## Estado Actual
+## Estado Actual (2026-05-13)
+- **Backend:** Operativo (Puerto 5007). Bug de Usuarios CORREGIDO (Refactor de OperadorId a Guid completado).
+- **Frontend:** Operativo (Puerto 4200). Módulo "Configurar Producción" consolidado y funcional.
+- **Base de Datos:** `HiCone_ERP_V3` sincronizada y seeder actualizado.
+
 ✅ **Módulo de Seguridad COMPLETADO** (commit: 3a869aa)
 The project is in the initial phase of modernization/migration from a GeneXus-based ERP to a modern Angular + .NET platform. The focus is currently on the **Authentication Module**.
 

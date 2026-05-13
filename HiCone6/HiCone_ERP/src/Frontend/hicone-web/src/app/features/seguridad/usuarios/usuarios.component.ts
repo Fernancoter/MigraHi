@@ -15,7 +15,7 @@ interface UserDto {
   isLockedOut: boolean;
   mustChangePassword: boolean;
   lastLoginAt?: string;
-  operadorId?: number;
+  operadorId?: string;
   gender?: string;
   authenticationType?: string;
   companyId?: number;
