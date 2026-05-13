@@ -26,19 +26,44 @@ public class ProduccionController : ControllerBase
     // TABLERO DE INICIO — EXTRUSIÓN
     // ─────────────────────────────────────────────────────────────────────────
 
-    /// <summary>Retorna el tablero de extrusión: programación + operación en curso</summary>
-    [HttpGet("tablero/extrusion")]
-    public async Task<ActionResult<object>> GetTableroExtrusion()
+    /// <summary>Retorna el listado de programación de extrusión</summary>
+    [HttpGet("extrusion/programacion")]
+    public async Task<ActionResult<IEnumerable<object>>> GetProgramacionExtrusion()
     {
-        var operacion = await _context.Extrusiones
+        var items = await _context.Extrusiones
             .Include(e => e.Extrusora)
             .Include(e => e.Turno)
             .Include(e => e.Operario)
-            .OrderByDescending(e => e.Fecha)
-            .Take(50)
+            .Where(e => e.Status == ExtrusionStatus.Programada || e.Status == ExtrusionStatus.PorProgramar)
+            .OrderBy(e => e.Fecha)
             .Select(e => new
             {
                 e.Id,
+                FechaExtrusora = e.Fecha,
+                Turno = e.Turno != null ? e.Turno.Nombre : "",
+                e.Producto,
+                Operador = e.Operario != null ? e.Operario.Nombre : "",
+                e.Programado
+            })
+            .ToListAsync();
+
+        return Ok(items);
+    }
+
+    /// <summary>Retorna el listado de operación de extrusión</summary>
+    [HttpGet("extrusion/operacion")]
+    public async Task<ActionResult<IEnumerable<object>>> GetOperacionExtrusion()
+    {
+        var items = await _context.Extrusiones
+            .Include(e => e.Extrusora)
+            .Include(e => e.Turno)
+            .Include(e => e.Operario)
+            .Where(e => e.Status != ExtrusionStatus.Programada && e.Status != ExtrusionStatus.PorProgramar)
+            .OrderByDescending(e => e.Fecha)
+            .Select(e => new
+            {
+                e.Id,
+                Status = e.Status.ToString(),
                 Extrusora = e.Extrusora.Nombre,
                 Turno = e.Turno != null ? e.Turno.Nombre : "",
                 e.Producto,
@@ -46,13 +71,33 @@ public class ProduccionController : ControllerBase
                 e.Producido,
                 TiempoInterrupcion = e.TiempoInterrupcionMin,
                 e.EnCurso,
-                ExtrusionId = e.ExtrusionIdLegacy,
-                e.Fecha,
-                e.Programado
+                ExtrusionId = e.ExtrusionIdLegacy
             })
             .ToListAsync();
 
-        return Ok(new { operacion });
+        return Ok(items);
+    }
+
+    /// <summary>Obtiene el detalle de una extrusión para el modal</summary>
+    [HttpGet("extrusion/{id}")]
+    public async Task<ActionResult<object>> GetExtrusion(Guid id)
+    {
+        var e = await _context.Extrusiones
+            .Include(e => e.Extrusora)
+            .Include(e => e.Turno)
+            .Include(e => e.Operario)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (e == null) return NotFound();
+
+        return Ok(new
+        {
+            e.Id,
+            Extrusora = e.Extrusora.Nombre,
+            Turno = e.Turno != null ? e.Turno.Nombre : "",
+            e.Producto,
+            Operador = e.Operario != null ? e.Operario.Nombre : ""
+        });
     }
 
     /// <summary>Retorna el tablero de prensado: programación + operación en curso</summary>

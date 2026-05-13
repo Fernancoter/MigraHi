@@ -578,8 +578,8 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("namespace");
 
-                    b.Property<int?>("OperadorId")
-                        .HasColumnType("int")
+                    b.Property<Guid?>("OperadorId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("operador_id");
 
                     b.Property<DateTime?>("PasswordExpiresAt")
@@ -1546,6 +1546,10 @@ namespace HiCone.Persistence.Migrations
                     b.Property<decimal>("Programado")
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("programado");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")

@@ -1,5 +1,19 @@
 # Changelog - HiCone ERP Modernization
 
+## [1.3.0] - 2026-05-13
+### Added
+- **Production Module (Extrusión)**: Implemented complete dashboard with two tables (Programación & Operación).
+- **Interactive Features**: Added client-side sorting and operational status detail modals.
+- **Database Baseline**: Generated `InitialProductionBaseline` for a clean database start.
+
+### Changed
+- **UI/UX Aesthetics**: Replaced literal characters with custom SVG chevrons for dropdowns.
+- **Table Alignment**: Improved header layout using flexbox to maintain vertical alignment in multi-line headers.
+
+### Fixed
+- **Database Synchronization**: Resolved "Operand type clash" and "Invalid Column" errors by resetting migrations.
+- **Seeder Robustness**: Fixed `ApplicationDbContextSeeder` to handle relational dependencies and avoid unique constraint violations.
+
 ## [1.1.0] - 2026-04-23
 ### Added
 - **Auth System**: Full JWT authentication system replacing GeneXus GAM.

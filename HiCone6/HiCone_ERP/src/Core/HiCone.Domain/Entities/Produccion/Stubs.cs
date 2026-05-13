@@ -156,6 +156,15 @@ public class PrensaProducto : TenantEntity
 // EXTRUSIÓN (Tablero de Inicio)
 // ─────────────────────────────────────────────────────────────────────────────
 
+public enum ExtrusionStatus
+{
+    Programada,
+    EnProceso,
+    Intermedia,
+    Terminada,
+    PorProgramar
+}
+
 /// <summary>Registro de extrusión en curso (PDF: Tablero > Extrusión)</summary>
 public class Extrusion : TenantEntity
 {
@@ -176,6 +185,7 @@ public class Extrusion : TenantEntity
     public long ExtrusionIdLegacy { get; set; }         // ID heredado del sistema GeneXus
 
     public decimal Programado { get; set; }
+    public ExtrusionStatus Status { get; set; } = ExtrusionStatus.PorProgramar;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

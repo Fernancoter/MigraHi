@@ -1,12 +1,12 @@
 # Project Memory: HiCone ERP Modernization
 
 ## Rama Activa
-`security/refactor` — compilación estable, sincronizada con `main`.
+`configurarProduccion/refactor` — funcional, sincronizada con el nuevo baseline de DB.
 
 ## Estado Actual (2026-05-13)
-- **Backend:** Operativo (Puerto 5007). Bug de Usuarios CORREGIDO (Refactor de OperadorId a Guid completado).
-- **Frontend:** Operativo (Puerto 4200). Módulo "Configurar Producción" consolidado y funcional.
-- **Base de Datos:** `HiCone_ERP_V3` sincronizada y seeder actualizado.
+- **Backend:** Operativo (Puerto 5007). Seeder corregido y estable.
+- **Frontend:** Operativo (Puerto 4200). Módulo "Configurar Producción" (Sección Extrusión) completado al 100%.
+- **Base de Datos:** `HiCone_ERP_V3` estabilizada mediante `InitialProductionBaseline`.
 
 ✅ **Módulo de Seguridad COMPLETADO** (commit: 3a869aa)
 The project is in the initial phase of modernization/migration from a GeneXus-based ERP to a modern Angular + .NET platform. The focus is currently on the **Authentication Module**.
@@ -43,6 +43,12 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - Migrated global theme in `styles.scss` from blue to corporate green (`#10b981`).
     - Ajusted shadows, glows, and interactive elements to harmonize with the new brand palette.
 - [x] **Generación de Reporte de Estructura**: Se analizó el entorno heredado (`HiCone6`) identificando que la lógica existe como metadatos encriptados/comprimidos (base de datos `.mdf` y `kb.data`) exclusivos para el IDE de GeneXus. El reporte fue guardado como `reporteEstructura.md`.
+- [x] **Módulo de Producción - Extrusión (Inicio) FINALIZADO**:
+    - **Backend**: Implementación de controladores para Programación y Operación.
+    - **Database**: Recreación de esquema limpio y generación de `InitialProductionBaseline` para resolver conflictos de tipos (Guid vs Int).
+    - **Seeder**: Lógica de inserción robusta para datos maestros de producción y registros semilla.
+    - **Frontend**: Dashboard con dos tablas interactivas, ordenamiento, filtrado (placeholder) y modales de edición.
+    - **UI/UX**: Reemplazo de iconos literales por SVG chevrons y alineación flexbox para headers multilínea.
 
 - Documentation:
     - `init.md`: Guía de inicio rápido con comandos y puertos.

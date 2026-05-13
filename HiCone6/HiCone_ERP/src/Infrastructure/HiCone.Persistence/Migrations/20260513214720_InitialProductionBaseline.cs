@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HiCone.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialBaseline : Migration
+    public partial class InitialProductionBaseline : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -823,7 +823,7 @@ namespace HiCone.Persistence.Migrations
                     last_login_at = table.Column<DateTime>(type: "datetime2", nullable: true),
                     gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     authentication_type = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    operador_id = table.Column<int>(type: "int", nullable: true),
+                    operador_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     company_id = table.Column<int>(type: "int", nullable: true),
                     @namespace = table.Column<string>(name: "namespace", type: "nvarchar(max)", nullable: true),
                     external_id = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -1155,6 +1155,7 @@ namespace HiCone.Persistence.Migrations
                     en_curso = table.Column<bool>(type: "bit", nullable: false),
                     extrusion_id_legacy = table.Column<long>(type: "bigint", nullable: false),
                     programado = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    status = table.Column<int>(type: "int", nullable: false),
                     lote_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     created_by = table.Column<string>(type: "nvarchar(max)", nullable: true),

@@ -17,13 +17,39 @@ export interface ConfiguracionSistema { id: string; key: string; valor: string; 
 export interface ExtrusionItem { id: string; extrusora: string; turno: string; producto: string; operador: string; producido: number; tiempoInterrupcion: number; enCurso: boolean; extrusionId: number; fecha: string; programado: number; }
 export interface PrensadoItem  { id: string; prensa: string; turno: string; producto: string; operador: string; producido: number; tiempoInterrupcion: number; enCurso: boolean; fecha: string; programado: number; }
 
+export interface ExtrusionProgramacion {
+  id: string;
+  fechaExtrusora: string;
+  turno: string;
+  producto: string;
+  operador: string;
+  programado: number;
+}
+
+export interface ExtrusionOperacion {
+  id: string;
+  status: string;
+  extrusora: string;
+  turno: string;
+  producto: string;
+  operador: string;
+  producido: number;
+  tiempoInterrupcion: number;
+  enCurso: boolean;
+  extrusionId: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ProduccionConfigService {
   private http = inject(HttpClient);
   private base = `http://localhost:5007/api/v1/produccion`;
 
   // ── TABLERO ────────────────────────────────────────────────────────────────
-  getTableroExtrusion() { return this.http.get<{ operacion: ExtrusionItem[] }>(`${this.base}/tablero/extrusion`); }
+  // ── TABLERO / EXTRUSIÓN ───────────────────────────────────────────────────
+  getExtrusionProgramacion() { return this.http.get<ExtrusionProgramacion[]>(`${this.base}/extrusion/programacion`); }
+  getExtrusionOperacion()   { return this.http.get<ExtrusionOperacion[]>(`${this.base}/extrusion/operacion`); }
+  getExtrusionDetail(id: string) { return this.http.get<any>(`${this.base}/extrusion/${id}`); }
+  
   getTableroPrensado()  { return this.http.get<{ operacion: PrensadoItem[]  }>(`${this.base}/tablero/prensado`);  }
 
   // ── OPERARIOS ──────────────────────────────────────────────────────────────

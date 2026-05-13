@@ -28,7 +28,11 @@ public class ApplicationDbContextSeeder
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while seeding the database.");
+            _logger.LogError(ex, "An error occurred while seeding the database: {Message}", ex.Message);
+            if (ex.InnerException != null)
+            {
+                _logger.LogError(ex.InnerException, "Inner exception: {InnerMessage}", ex.InnerException.Message);
+            }
             throw;
         }
     }
@@ -1502,6 +1506,59 @@ public class ApplicationDbContextSeeder
             _context.Bobinas.AddRange(
                 new Bobina { Codigo = "BOB-A101", PesoNeto = 45.5m, Metros = 1200, FechaProduccion = DateTime.UtcNow.AddMinutes(-45), Turno = "Matutino", PaletId = palet.Id, TenantId = defaultTenantId },
                 new Bobina { Codigo = "BOB-A102", PesoNeto = 46.2m, Metros = 1210, FechaProduccion = DateTime.UtcNow.AddMinutes(-10), Turno = "Matutino", PaletId = palet.Id, TenantId = defaultTenantId }
+            );
+            await _context.SaveChangesAsync(default);
+        }
+
+        // Extrusiones
+        if (!await _context.Extrusiones.AnyAsync())
+        {
+            var extrusora = await _context.Extrusoras.FirstOrDefaultAsync() ?? new Extrusora { Nombre = "Extrusora 1", TenantId = defaultTenantId };
+            var turno = await _context.Turnos.FirstOrDefaultAsync() ?? new Turno { Nombre = "1er Turno", TenantId = defaultTenantId };
+            var operario = await _context.Operarios.FirstOrDefaultAsync() ?? new Operario { Nombre = "Juan Pérez", TenantId = defaultTenantId };
+            
+            if (_context.Entry(extrusora).State == EntityState.Detached) _context.Extrusoras.Add(extrusora);
+            if (_context.Entry(turno).State == EntityState.Detached) _context.Turnos.Add(turno);
+            if (_context.Entry(operario).State == EntityState.Detached) _context.Operarios.Add(operario);
+            await _context.SaveChangesAsync(default);
+
+            _context.Extrusiones.AddRange(
+                new Extrusion 
+                { 
+                    Fecha = DateTime.UtcNow, 
+                    ExtrusoraId = extrusora.Id, 
+                    TurnoId = turno.Id, 
+                    Producto = "Película PEBD 20um", 
+                    OperarioId = operario.Id, 
+                    Programado = 5000, 
+                    Status = ExtrusionStatus.Programada,
+                    TenantId = defaultTenantId 
+                },
+                new Extrusion 
+                { 
+                    Fecha = DateTime.UtcNow.AddHours(-1), 
+                    ExtrusoraId = extrusora.Id, 
+                    TurnoId = turno.Id, 
+                    Producto = "Bolsa Camiseta Bio", 
+                    OperarioId = operario.Id, 
+                    Producido = 1250, 
+                    EnCurso = true,
+                    Status = ExtrusionStatus.EnProceso,
+                    ExtrusionIdLegacy = 10542,
+                    TenantId = defaultTenantId 
+                },
+                new Extrusion 
+                { 
+                    Fecha = DateTime.UtcNow.AddDays(-1), 
+                    ExtrusoraId = extrusora.Id, 
+                    TurnoId = turno.Id, 
+                    Producto = "Stretch Film 18\"", 
+                    OperarioId = operario.Id, 
+                    Producido = 8000, 
+                    Status = ExtrusionStatus.Terminada,
+                    ExtrusionIdLegacy = 10540,
+                    TenantId = defaultTenantId 
+                }
             );
             await _context.SaveChangesAsync(default);
         }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HiCone.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260512231333_InitialBaseline")]
-    partial class InitialBaseline
+    [Migration("20260513214720_InitialProductionBaseline")]
+    partial class InitialProductionBaseline
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -581,8 +581,8 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("namespace");
 
-                    b.Property<int?>("OperadorId")
-                        .HasColumnType("int")
+                    b.Property<Guid?>("OperadorId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("operador_id");
 
                     b.Property<DateTime?>("PasswordExpiresAt")
@@ -1549,6 +1549,10 @@ namespace HiCone.Persistence.Migrations
                     b.Property<decimal>("Programado")
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("programado");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")
