@@ -50,6 +50,15 @@ export interface ExistenciaSiloDto {
   loteVirgen?: string;
 }
 
+export interface ExistenciaHistorico {
+  id: string;
+  fecha: string;
+  hora: string;
+  usuario: string;
+  observaciones: string;
+  estado: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -91,5 +100,21 @@ export class InventarioService {
 
   updateExistenciasSilos(ajustes: ExistenciaSiloDto[]): Observable<any> {
     return this.http.post(`${this.apiUrl}/existencia-silo/guardar`, ajustes);
+  }
+
+  // --- Existencias Histórico (Cierres) ---
+  getHistorialCierres(): Observable<ExistenciaHistorico[]> {
+    return this.http.get<ExistenciaHistorico[]>(`http://localhost:5007/api/v1/ExistenciasHistorico`);
+  }
+
+  crearNuevoCierre(usuario: string, observaciones: string): Observable<string> {
+    return this.http.post<string>(`http://localhost:5007/api/v1/ExistenciasHistorico/Cierre`, {
+      usuario,
+      observaciones
+    });
+  }
+
+  completarCierre(id: string, ajustes: ExistenciaSiloDto[]): Observable<any> {
+    return this.http.put(`http://localhost:5007/api/v1/ExistenciasHistorico/${id}/Completar`, ajustes);
   }
 }

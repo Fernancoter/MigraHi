@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { InventarioService, ExistenciaSiloDto } from '../../../core/services/inventario';
 import { PdfExportService } from '../../../core/services/pdf-export.service';
 
@@ -183,10 +184,13 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
 export class ExistenciasComponent implements OnInit {
   private inventarioService = inject(InventarioService);
   private pdfService = inject(PdfExportService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
   activeTab = 'silos';
   showExportSelector = false;
   
-  // Placeholder ID for existence record, in a real app this would be chosen or created
+  // ID of the snapshot
   currentExistenciaId = '00000000-0000-0000-0000-000000000000'; 
   
   silosInventory: ExistenciaSiloDto[] = [];
@@ -199,25 +203,41 @@ export class ExistenciasComponent implements OnInit {
   ];
 
   ngOnInit() {
-    this.loadSilosInventory();
+    this.route.queryParams.subscribe(params => {
+      if (params['id']) {
+        this.currentExistenciaId = params['id'];
+      }
+      this.loadSilosInventory();
+    });
   }
 
   loadSilosInventory() {
-    // In actual use, empty Guid gives current state mapping
     this.inventarioService.getExistenciaSilo(this.currentExistenciaId).subscribe(data => {
       this.silosInventory = data;
     });
   }
 
   guardarExistenciasSilos() {
-    if (confirm('¿Estás seguro de que deseas ajustar el stock físico de los silos? Esto sobrescribirá el inventario actual.')) {
-      this.inventarioService.updateExistenciasSilos(this.silosInventory).subscribe({
-        next: () => {
-          alert('✅ Ajuste de inventario guardado correctamente.');
-          this.loadSilosInventory();
-        },
-        error: (err) => alert('❌ Error al guardar existencias: ' + (err.error || err.message))
-      });
+    if (confirm('¿Estás seguro de que deseas confirmar este inventario físico? Esto sobrescribirá el stock del sistema con las cantidades reales.')) {
+      if (this.currentExistenciaId !== '00000000-0000-0000-0000-000000000000') {
+        // Estamos completando un cierre histórico
+        this.inventarioService.completarCierre(this.currentExistenciaId, this.silosInventory).subscribe({
+          next: () => {
+            alert('✅ Cierre de inventario completado. Se han ajustado las existencias del sistema.');
+            this.router.navigate(['/inventario/cierre-mes']);
+          },
+          error: (err) => alert('❌ Error al completar cierre: ' + (err.error || err.message))
+        });
+      } else {
+        // Fallback: Ajuste directo (sin snapshot histórico atado)
+        this.inventarioService.updateExistenciasSilos(this.silosInventory).subscribe({
+          next: () => {
+            alert('✅ Ajuste de inventario guardado correctamente.');
+            this.loadSilosInventory();
+          },
+          error: (err) => alert('❌ Error al guardar existencias: ' + (err.error || err.message))
+        });
+      }
     }
   }
 
