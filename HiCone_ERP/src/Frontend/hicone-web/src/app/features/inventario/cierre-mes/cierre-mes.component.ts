@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { InventarioService, ExistenciaHistorico } from '../../../core/services/inventario';
+import { PdfExportService } from '../../../core/services/pdf-export.service';
 
 @Component({
   selector: 'app-cierre-mes',
@@ -20,6 +21,17 @@ import { InventarioService, ExistenciaHistorico } from '../../../core/services/i
           </nav>
         </div>
         <div class="header-actions">
+          <div class="dropdown-container" style="display: inline-block; margin-right: 0.5rem;">
+            <button class="btn-legacy secondary" (click)="showExportSelector = !showExportSelector">📥 Exportar <span class="arrow">▼</span></button>
+            <div class="column-selector-dropdown shadow-premium" *ngIf="showExportSelector" style="width: 150px; right: 0;">
+              <div class="column-list custom-scroll">
+                <div class="column-group">
+                  <label class="item-label export-item" (click)="exportToCSV(); showExportSelector = false">📄 Excel (CSV)</label>
+                  <label class="item-label export-item" (click)="exportToPDF(); showExportSelector = false">📕 PDF</label>
+                </div>
+              </div>
+            </div>
+          </div>
           <button class="btn-primary-modern" (click)="abrirModalNuevoCierre()">
             <span class="icon">➕</span> Nuevo Cierre
           </button>
@@ -142,15 +154,23 @@ import { InventarioService, ExistenciaHistorico } from '../../../core/services/i
 
     .animate-fade-in { animation: fadeIn 0.4s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .dropdown-container { position: relative; }
+    .column-selector-dropdown { position: absolute; top: 110%; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; z-index: 100; padding: 0.5rem; }
+    .export-item { padding: 0.5rem; cursor: pointer; display: block; font-size: 0.85rem; color: #333; }
+    .export-item:hover { background: #f1f5f9; }
+    .arrow { font-size: 0.7rem; margin-left: 0.5rem; opacity: 0.7; }
   `]
 })
 export class CierreMesComponent implements OnInit {
   private inventarioService = inject(InventarioService);
+  private pdfService = inject(PdfExportService);
   private router = inject(Router);
 
   data: ExistenciaHistorico[] = [];
   
   showModal = false;
+  showExportSelector = false;
   observacionesNuevoCierre = '';
   isSubmitting = false;
 
@@ -159,8 +179,12 @@ export class CierreMesComponent implements OnInit {
   }
 
   cargarHistorial() {
+    console.log('Cargando historial de cierres...');
     this.inventarioService.getHistorialCierres().subscribe({
-      next: (cierres) => this.data = cierres,
+      next: (cierres) => {
+        console.log('Historial cargado:', cierres);
+        this.data = cierres;
+      },
       error: (err) => console.error('Error cargando historial', err)
     });
   }
@@ -189,5 +213,51 @@ export class CierreMesComponent implements OnInit {
 
   verDetalle(id: string) {
     this.router.navigate(['/inventario/existencias'], { queryParams: { id: id } });
+  }
+
+  exportToCSV() {
+    if (this.data.length === 0) return;
+    const headers = ['ID', 'Fecha', 'Hora', 'Usuario', 'Observaciones', 'Estado'];
+    const rows = this.data.map(item => [
+      item.id,
+      item.fecha,
+      item.hora,
+      item.usuario,
+      item.observaciones,
+      item.estado
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `Historial_Cierres_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  exportToPDF() {
+    if (this.data.length === 0) return;
+    const headers = ['ID', 'Fecha', 'Hora', 'Usuario', 'Estado'];
+    const tableData = this.data.map(item => [
+      item.id,
+      item.fecha,
+      item.hora,
+      item.usuario,
+      item.estado
+    ]);
+
+    this.pdfService.exportTable(
+      'Historial de Cierres de Mes',
+      headers,
+      tableData,
+      `Reporte_Cierres_${new Date().toISOString().split('T')[0]}.pdf`
+    );
   }
 }

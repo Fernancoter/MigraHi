@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InventarioService, Silo } from '../../../core/services/inventario';
+import { PdfExportService } from '../../../core/services/pdf-export.service';
 
 @Component({
   selector: 'app-silos',
@@ -22,7 +23,15 @@ import { InventarioService, Silo } from '../../../core/services/inventario';
         <div class="toolbar-premium">
           <div class="btn-group-modern">
             <div class="dropdown-container">
-              <button class="btn-legacy secondary">📥 Exportar <span class="arrow">▼</span></button>
+              <button class="btn-legacy secondary" (click)="showExportSelector = !showExportSelector">📥 Exportar <span class="arrow">▼</span></button>
+              <div class="column-selector-dropdown shadow-premium" *ngIf="showExportSelector" style="width: 150px;">
+                <div class="column-list custom-scroll">
+                  <div class="column-group">
+                    <label class="item-label export-item" (click)="exportToCSV(); showExportSelector = false">📄 Excel (CSV)</label>
+                    <label class="item-label export-item" (click)="exportToPDF(); showExportSelector = false">📕 PDF</label>
+                  </div>
+                </div>
+              </div>
             </div>
             <button class="btn-legacy secondary" (click)="openModal()">Agregar</button>
             
@@ -231,18 +240,19 @@ import { InventarioService, Silo } from '../../../core/services/inventario';
     .search-modern input { width: 100%; padding: 0.5rem 1rem 0.5rem 2.5rem; border: 1px solid #ccc; border-radius: 4px; }
     .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); opacity: 0.4; }
 
-    .text-right { text-align: right; }
-    .text-center { text-align: center; }
-    .font-mono { font-family: monospace; }
-    .font-semibold { font-weight: 600; }
+    .export-item { padding: 0.5rem; cursor: pointer; display: block; font-size: 0.85rem; color: #333; }
+    .export-item:hover { background: #f1f5f9; }
   `]
 })
 export class SilosComponent implements OnInit {
   private inventarioService = inject(InventarioService);
+  private pdfService = inject(PdfExportService);
+  
   searchQuery = '';
   silos: Silo[] = [];
   showModal = false;
   showColumnSelector = false;
+  showExportSelector = false;
   
   newSilo: Partial<Silo> = this.getDefaultSilo();
 
@@ -262,8 +272,16 @@ export class SilosComponent implements OnInit {
   }
 
   loadSilos() {
-    this.inventarioService.getSilos().subscribe(data => {
-      this.silos = data;
+    console.log('Cargando silos desde el servicio...');
+    this.inventarioService.getSilos().subscribe({
+      next: (data) => {
+        console.log('Silos cargados exitosamente:', data);
+        this.silos = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar silos:', err);
+        // Fallback or alert if necessary
+      }
     });
   }
 
@@ -354,7 +372,61 @@ export class SilosComponent implements OnInit {
   }
 
   get filteredSilos() {
-    const q = this.searchQuery.toLowerCase();
-    return this.silos.filter(s => s.nombre.toLowerCase().includes(q) || s.codigo.toLowerCase().includes(q));
+    const q = (this.searchQuery || '').toLowerCase();
+    return this.silos.filter(s => 
+      (s.nombre || '').toLowerCase().includes(q) || 
+      (s.codigo || '').toLowerCase().includes(q)
+    );
+  }
+
+  exportToCSV() {
+    if (this.silos.length === 0) return;
+    const headers = ['Nombre', 'Código', 'Capacidad (kg)', 'Existencia Actual', 'Mínimo (kg)', 'Máximo (kg)', 'Estado Material', 'Tipo Material', 'Activo'];
+    const rows = this.filteredSilos.map(s => [
+      s.nombre || '',
+      s.codigo || '',
+      s.capacidadMaxima?.toString() || '0',
+      s.existenciaActual?.toString() || '0',
+      s.kgMinimo?.toString() || '0',
+      s.kgMaximo?.toString() || '0',
+      s.estadoMaterial || '',
+      s.tipoMaterial || '',
+      s.activo ? 'Si' : 'No'
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `Silos_Export_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  exportToPDF() {
+    if (this.silos.length === 0) return;
+    const headers = ['Nombre', 'Código', 'Capacidad', 'Stock Actual', 'Mínimo', 'Máximo', 'Material'];
+    const data = this.filteredSilos.map(s => [
+      s.nombre || '',
+      s.codigo || '',
+      s.capacidadMaxima?.toString() || '0',
+      s.existenciaActual?.toString() || '0',
+      s.kgMinimo?.toString() || '0',
+      s.kgMaximo?.toString() || '0',
+      s.tipoMaterial || ''
+    ]);
+
+    this.pdfService.exportTable(
+      'Gestión de Silos - Reporte',
+      headers,
+      data,
+      `Silos_Report_${new Date().toISOString().split('T')[0]}.pdf`
+    );
   }
 }

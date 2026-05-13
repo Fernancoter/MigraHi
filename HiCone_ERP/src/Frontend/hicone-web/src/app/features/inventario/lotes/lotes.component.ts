@@ -276,8 +276,21 @@ export class LotesComponent implements OnInit {
   ngOnInit() { this.loadData(); }
 
   loadData() {
-    this.inventarioService.getLotes().subscribe(data => this.lotes = data);
-    this.inventarioService.getSilos().subscribe(data => this.silos = data);
+    console.log('Cargando lotes y silos...');
+    this.inventarioService.getLotes().subscribe({
+      next: (data) => {
+        console.log('Lotes cargados:', data);
+        this.lotes = data;
+      },
+      error: (err) => console.error('Error cargando lotes:', err)
+    });
+    this.inventarioService.getSilos().subscribe({
+      next: (data) => {
+        console.log('Silos cargados para lotes:', data);
+        this.silos = data;
+      },
+      error: (err) => console.error('Error cargando silos:', err)
+    });
   }
 
   getDefaultLote(): Partial<Lote> {
@@ -331,8 +344,11 @@ export class LotesComponent implements OnInit {
   resetColumns() { this.columns.forEach(c => c.visible = true); }
 
   get filteredLotes() {
-    const q = this.searchQuery.toLowerCase();
-    return this.lotes.filter(l => (l.loteEmbarque?.toLowerCase() || '').includes(q));
+    const q = (this.searchQuery || '').toLowerCase();
+    return this.lotes.filter(l => 
+      (l.loteEmbarque || '').toLowerCase().includes(q) ||
+      (l.lotePO || '').toLowerCase().includes(q)
+    );
   }
 
   exportToCSV() {
