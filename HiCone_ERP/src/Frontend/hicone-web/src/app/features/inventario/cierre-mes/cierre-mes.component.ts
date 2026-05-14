@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -21,14 +21,14 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
           </nav>
         </div>
         <div class="header-actions">
-          <div class="dropdown-container" style="display: inline-block; margin-right: 0.5rem;">
+          <div class="dropdown-container" style="display: inline-block; margin-right: 1.2rem;">
             <button class="btn-legacy secondary" (click)="showExportSelector = !showExportSelector">📥 Exportar <span class="arrow">▼</span></button>
-            <div class="column-selector-dropdown shadow-premium" *ngIf="showExportSelector" style="width: 150px; right: 0;">
-              <div class="column-list custom-scroll">
-                <div class="column-group">
-                  <label class="item-label export-item" (click)="exportToCSV(); showExportSelector = false">📄 Excel (CSV)</label>
-                  <label class="item-label export-item" (click)="exportToPDF(); showExportSelector = false">📕 PDF</label>
-                </div>
+            <div class="export-dropdown shadow-premium" *ngIf="showExportSelector">
+              <div class="export-option" (click)="exportToCSV(); showExportSelector = false">
+                📊 Excel (CSV)
+              </div>
+              <div class="export-option" (click)="exportToPDF(); showExportSelector = false">
+                📕 PDF
               </div>
             </div>
           </div>
@@ -144,27 +144,12 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
     .modern-input { border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.95rem; font-family: inherit; transition: all 0.2s; outline: none; background: #f8fafc; width: 100%; box-sizing: border-box; }
     .modern-input:focus { border-color: #16a34a; background: white; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1); }
     .modal-footer { padding: 1.25rem 1.5rem; border-top: 1px solid #f1f5f9; display: flex; justify-content: flex-end; gap: 1rem; background: #f8fafc; }
-    
-    .btn-legacy { padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; font-size: 0.9rem; }
-    .btn-legacy.secondary { background: white; border: 1px solid #cbd5e1; color: #475569; }
-    .btn-legacy.secondary:hover { background: #f1f5f9; }
-    .btn-legacy.primary { background: #166534; color: white; }
-    .btn-legacy.primary:hover { background: #14532d; transform: translateY(-1px); }
-    .btn-legacy:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-    .animate-fade-in { animation: fadeIn 0.4s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    .dropdown-container { position: relative; }
-    .column-selector-dropdown { position: absolute; top: 110%; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; z-index: 100; padding: 0.5rem; }
-    .export-item { padding: 0.5rem; cursor: pointer; display: block; font-size: 0.85rem; color: #333; }
-    .export-item:hover { background: #f1f5f9; }
-    .arrow { font-size: 0.7rem; margin-left: 0.5rem; opacity: 0.7; }
   `]
 })
 export class CierreMesComponent implements OnInit {
   private inventarioService = inject(InventarioService);
   private pdfService = inject(PdfExportService);
+  private cdr = inject(ChangeDetectorRef);
   private router = inject(Router);
 
   data: ExistenciaHistorico[] = [];
@@ -184,6 +169,7 @@ export class CierreMesComponent implements OnInit {
       next: (cierres) => {
         console.log('Historial cargado:', cierres);
         this.data = cierres;
+        this.cdr.detectChanges(); // Renderizado inmediato
       },
       error: (err) => console.error('Error cargando historial', err)
     });

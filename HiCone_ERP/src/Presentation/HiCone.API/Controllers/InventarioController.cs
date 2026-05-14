@@ -35,6 +35,13 @@ namespace HiCone.API.Controllers.v1
             var result = await _inventarioService.UpdateSiloAsync(siloDto);
             return Ok(result);
         }
+        
+        [HttpDelete("silo/{id}")]
+        public async Task<IActionResult> DeleteSilo(Guid id)
+        {
+            var result = await _inventarioService.DeleteSiloAsync(id);
+            return Ok(result);
+        }
 
         [HttpGet("existencia-producto")]
         public async Task<IActionResult> GetExistenciaProducto([FromQuery] Guid existenciaId, [FromQuery] string categoria, [FromQuery] string tipoProducto)
@@ -76,6 +83,14 @@ namespace HiCone.API.Controllers.v1
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        [HttpPut("lote/{id}")]
+        public async Task<IActionResult> UpdateLote(Guid id, [FromBody] LoteDto loteDto)
+        {
+            loteDto.Id = id;
+            var result = await _inventarioService.UpdateLoteAsync(loteDto);
+            return Ok(result);
         }
 
         [HttpDelete("lote/{id}")]

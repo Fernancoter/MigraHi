@@ -18,7 +18,9 @@ namespace HiCone.Application.Services.Inventario
         Task<SiloDto> UpdateSiloAsync(SiloDto siloDto);
         Task<IEnumerable<LoteDto>> GetLotesAsync();
         Task<LoteDto> CreateLoteAsync(LoteDto loteDto);
+        Task<LoteDto> UpdateLoteAsync(LoteDto loteDto);
         Task<bool> DeleteLoteAsync(Guid id);
+        Task<bool> DeleteSiloAsync(Guid id);
         Task<bool> UpdateExistenciasSilosAsync(List<ExistenciaSiloDto> ajustes);
     }
 
@@ -228,12 +230,43 @@ namespace HiCone.Application.Services.Inventario
             return loteDto;
         }
 
+        public async Task<LoteDto> UpdateLoteAsync(LoteDto loteDto)
+        {
+            if (loteDto.Id == null) throw new ArgumentException("Id cannot be null for update");
+
+            var lote = await _context.Lotes.FindAsync(loteDto.Id);
+            if (lote == null || lote.IsDeleted) throw new KeyNotFoundException("Lote not found");
+
+            lote.LoteEmbarque = loteDto.LoteEmbarque ?? lote.LoteEmbarque;
+            lote.LotePO = loteDto.LotePO ?? lote.LotePO;
+            lote.LoteFechaRegistro = loteDto.LoteFechaRegistro ?? lote.LoteFechaRegistro;
+            lote.LoteTrunkNo = loteDto.LoteTrunkNo ?? lote.LoteTrunkNo;
+            lote.LoteTipoMaterial = loteDto.LoteTipoMaterial ?? lote.LoteTipoMaterial;
+            lote.LoteSiloId = loteDto.LoteSiloId ?? lote.LoteSiloId;
+            lote.LoteKg = loteDto.LoteKg;
+            lote.LoteConsumido = loteDto.LoteConsumido;
+            lote.LotePaqueteAditivos = loteDto.LotePaqueteAditivos ?? lote.LotePaqueteAditivos;
+
+            await _context.SaveChangesAsync(default);
+            return loteDto;
+        }
+
         public async Task<bool> DeleteLoteAsync(Guid id)
         {
             var lote = await _context.Lotes.FindAsync(id);
             if (lote == null) return false;
 
             lote.IsDeleted = true;
+            await _context.SaveChangesAsync(default);
+            return true;
+        }
+
+        public async Task<bool> DeleteSiloAsync(Guid id)
+        {
+            var silo = await _context.Silos.FindAsync(id);
+            if (silo == null) return false;
+
+            silo.IsDeleted = true;
             await _context.SaveChangesAsync(default);
             return true;
         }

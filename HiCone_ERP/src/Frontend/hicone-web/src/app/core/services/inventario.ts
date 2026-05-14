@@ -82,12 +82,20 @@ export class InventarioService {
     return this.http.put<Silo>(`${this.apiUrl}/silo/${id}`, silo);
   }
 
+  deleteSilo(id: string): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.apiUrl}/silo/${id}`);
+  }
+
   getLotes(): Observable<Lote[]> {
     return this.http.get<Lote[]>(`${this.apiUrl}/lotes`);
   }
 
   createLote(lote: Partial<Lote>): Observable<Lote> {
     return this.http.post<Lote>(`${this.apiUrl}/lote`, lote);
+  }
+
+  updateLote(id: string, lote: Partial<Lote>): Observable<Lote> {
+    return this.http.put<Lote>(`${this.apiUrl}/lote/${id}`, lote);
   }
 
   deleteLote(id: string): Observable<boolean> {

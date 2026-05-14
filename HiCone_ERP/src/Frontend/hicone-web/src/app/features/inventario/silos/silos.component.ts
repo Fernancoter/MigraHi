@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InventarioService, Silo } from '../../../core/services/inventario';
@@ -70,47 +70,48 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
         </div>
       </div>
 
-      <!-- Modal para Gestionar Silo (Imagen 2) -->
+      <!-- Modal Legacy (Imagen 2) -->
       <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
         <div class="modal-card legacy-card animate-scale-in" (click)="$event.stopPropagation()">
           <div class="modal-header-legacy">
-            <span class="header-icon">🏷️</span> Información General
+            <span class="header-icon">🏗️</span> 
+            {{ modalMode === 'VIEW' ? 'Visualizar Silo' : modalMode === 'EDIT' ? 'Modificar Silo' : modalMode === 'DELETE' ? 'Eliminar Silo' : 'Agregar Silo' }}
           </div>
-          <form (ngSubmit)="saveSilo()">
-            <div class="modal-body-legacy">
-              <div class="form-row">
-                <label class="legacy-label">Id</label>
-                <div class="readonly-val">{{ newSilo.id || '0' }}</div>
+          <form (ngSubmit)="handleModalSubmit()">
+            <div class="modal-body-legacy custom-scroll">
+              
+              <div class="alert-delete" *ngIf="modalMode === 'DELETE'">
+                ⚠️ ¿Está seguro que desea eliminar este silo? Esta acción no se puede deshacer.
               </div>
 
               <div class="form-row">
-                <label class="legacy-label">Silo Activo</label>
-                <input type="checkbox" class="legacy-checkbox" [(ngModel)]="newSilo.activo" name="activo">
+                <label class="legacy-label">Código *</label>
+                <input type="text" class="legacy-input" [(ngModel)]="newSilo.codigo" name="codigo" required [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
               </div>
 
               <div class="form-row">
-                <label class="legacy-label">Nombre</label>
-                <input type="text" class="legacy-input" [(ngModel)]="newSilo.nombre" name="nombre" required>
+                <label class="legacy-label">Nombre *</label>
+                <input type="text" class="legacy-input" [(ngModel)]="newSilo.nombre" name="nombre" required [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
               </div>
 
               <div class="form-row">
                 <label class="legacy-label">Capacidad (kg)</label>
-                <input type="number" class="legacy-input" [(ngModel)]="newSilo.capacidadMaxima" name="capacidad">
+                <input type="number" class="legacy-input" [(ngModel)]="newSilo.capacidadMaxima" name="capacidad" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
               </div>
 
               <div class="form-row">
                 <label class="legacy-label">Mínimo (kg)</label>
-                <input type="number" class="legacy-input" [(ngModel)]="newSilo.kgMinimo" name="minimo">
+                <input type="number" class="legacy-input" [(ngModel)]="newSilo.kgMinimo" name="minimo" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
               </div>
 
               <div class="form-row">
                 <label class="legacy-label">Máximo (kg)</label>
-                <input type="number" class="legacy-input" [(ngModel)]="newSilo.kgMaximo" name="maximo">
+                <input type="number" class="legacy-input" [(ngModel)]="newSilo.kgMaximo" name="maximo" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
               </div>
 
               <div class="form-row">
                 <label class="legacy-label">Estado Material</label>
-                <select class="legacy-select" [(ngModel)]="newSilo.estadoMaterial" name="estadoMat">
+                <select class="legacy-select" [(ngModel)]="newSilo.estadoMaterial" name="estadoMat" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                   <option value="Virgen (pelet)">Virgen (pelet)</option>
                   <option value="Molido">Molido</option>
                   <option value="Mezcla">Mezcla</option>
@@ -118,17 +119,25 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
               </div>
 
               <div class="form-row">
-                <label class="legacy-label">Material</label>
-                <select class="legacy-select" [(ngModel)]="newSilo.tipoMaterial" name="tipoMat">
+                <label class="legacy-label">Tipo de Material</label>
+                <select class="legacy-select" [(ngModel)]="newSilo.tipoMaterial" name="tipoMat" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                   <option value="PCR">PCR</option>
                   <option value="HDPE">HDPE</option>
                   <option value="PP">PP</option>
                 </select>
               </div>
+
+              <div class="form-row">
+                <label class="legacy-label">Activo</label>
+                <input type="checkbox" class="legacy-checkbox" [(ngModel)]="newSilo.activo" name="activo" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+              </div>
+
             </div>
             <div class="modal-footer-legacy">
-              <button type="submit" class="btn-confirm">CONFIRMAR</button>
-              <button type="button" class="btn-cancel" (click)="closeModal()">CANCELAR</button>
+              <button type="submit" class="btn-confirm" *ngIf="modalMode !== 'VIEW'" [class.btn-danger]="modalMode === 'DELETE'">
+                {{ modalMode === 'DELETE' ? 'ELIMINAR' : 'CONFIRMAR' }}
+              </button>
+              <button type="button" class="btn-cancel" (click)="closeModal()">{{ modalMode === 'VIEW' ? 'CERRAR' : 'CANCELAR' }}</button>
             </div>
           </form>
         </div>
@@ -155,7 +164,7 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
             <tbody>
               <tr *ngFor="let s of filteredSilos" class="grid-row">
                 <td class="text-center"><button class="link-btn archive" (click)="archiveSilo(s)">Archivar</button></td>
-                <td class="text-center"><button class="link-btn view">Visualizar</button></td>
+                <td class="text-center"><button class="link-btn view" (click)="openModal('VIEW', s)">Visualizar</button></td>
                 
                 <td *ngIf="isColVisible('nombre')" class="font-semibold">{{ s.nombre }}</td>
                 <td *ngIf="isColVisible('capacidad')" class="text-right font-mono">{{ s.capacidadMaxima | number:'1.2-2' }}</td>
@@ -167,8 +176,8 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
                   <div class="legacy-check-display" [class.checked]="s.activo"></div>
                 </td>
                 
-                <td class="text-center"><button class="link-btn edit" (click)="editSilo(s)">Modificar</button></td>
-                <td class="text-center"><button class="link-btn delete">Eliminar</button></td>
+                <td class="text-center"><button class="link-btn edit" (click)="openModal('EDIT', s)">Modificar</button></td>
+                <td class="text-center"><button class="link-btn delete" (click)="openModal('DELETE', s)">Eliminar</button></td>
               </tr>
             </tbody>
           </table>
@@ -177,86 +186,95 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
     </div>
   `,
   styles: [`
-    .module-page { padding: 2rem; background: #fff; min-height: 100vh; font-family: 'Open Sans', Arial, sans-serif; }
-    
-    .page-header-premium { margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; }
-    .premium-title { font-size: 1.5rem; color: #5cb85c; margin: 0; font-weight: 400; }
-    .breadcrumb-modern { font-size: 0.85rem; color: #999; margin-top: 0.25rem; }
-    .breadcrumb-modern .active { color: #999; }
+    .module-page { padding: 3rem; background: #fdfdfd; min-height: 100vh; font-family: 'Open Sans', Arial, sans-serif; position: relative; }
+    .page-header-premium { margin-bottom: 3rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 1.5rem; }
+    .premium-title { font-size: 2.2rem; color: #2c3e50; margin: 0; font-weight: 700; letter-spacing: -0.5px; }
+    .breadcrumb-modern { font-size: 1rem; color: #7f8c8d; margin-top: 0.5rem; }
 
-    .toolbar-premium { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
-    .btn-group-modern { display: flex; gap: 0.75rem; }
+    .toolbar-premium { 
+      display: flex; justify-content: space-between; align-items: center; 
+      margin-top: 2rem; gap: 1rem; flex-wrap: wrap;
+    }
+    .btn-group-modern { display: flex; gap: 1.2rem; align-items: center; }
     
     .btn-legacy {
-      padding: 0.5rem 1rem; border-radius: 4px; font-size: 0.9rem; cursor: pointer;
-      transition: all 0.2s; border: 1px solid #ccc; background: #fff; color: #5cb85c;
+      padding: 0.8rem 1.6rem; border-radius: 8px; font-size: 1.1rem; cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #dcdde1; 
+      background: #fff; color: #2f3640; font-weight: 600;
+      display: flex; align-items: center; gap: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .btn-legacy:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+      border-color: #5cb85c;
     }
     .btn-legacy.primary { background: #5cb85c; color: white; border-color: #4cae4c; }
-    .btn-legacy.primary:hover { background: #449d44; }
-    .btn-legacy.secondary:hover { background: #f9f9f9; border-color: #adadad; }
-    .btn-legacy .arrow { font-size: 0.7rem; margin-left: 0.5rem; opacity: 0.7; }
-
+    
     .dropdown-container { position: relative; }
-    .column-selector-dropdown {
-      position: absolute; top: 110%; right: 0; width: 250px; background: white;
-      border: 1px solid #ccc; border-radius: 4px; z-index: 100; padding: 1rem;
+    .premium-grid { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #f0f0f0; border-radius: 12px; overflow: hidden; }
+    .premium-grid th { 
+      padding: 1.2rem 1rem; background: #f8f9fa; text-align: left; 
+      font-size: 0.95rem; font-weight: 700; color: #34495e; 
+      border-bottom: 2px solid #edf2f7; text-transform: uppercase; letter-spacing: 0.5px;
     }
-    .dropdown-header { margin-bottom: 1rem; }
-    .search-mini { width: 100%; padding: 0.4rem; border: 1px solid #eee; border-radius: 4px; }
-    .column-list { max-height: 300px; overflow-y: auto; }
-    .column-group { margin-bottom: 0.75rem; }
-    .group-label { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.85rem; color: #333; }
-    .items { padding-left: 1.5rem; display: flex; flex-direction: column; gap: 0.4rem; }
-    .item-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #666; cursor: pointer; }
-    .dropdown-footer { margin-top: 1rem; border-top: 1px solid #eee; padding-top: 0.75rem; display: flex; gap: 0.5rem; }
-    .btn-reset { background: #5cb85c; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; }
-    .btn-update { background: #5cb85c; color: white; border: none; padding: 0.4rem; flex-grow: 1; border-radius: 4px; font-weight: 700; cursor: pointer; }
+    .grid-row { transition: background 0.2s; }
+    .grid-row:hover { background: #f9fbf9 !important; }
+    .grid-row td { padding: 1.2rem 1rem; font-size: 1.05rem; color: #2c3e50; border-bottom: 1px solid #f0f0f0; }
 
-    .premium-grid { width: 100%; border-collapse: collapse; border: 1px solid #eee; }
-    .premium-grid th { padding: 1rem; background: #fff; text-align: left; font-size: 0.85rem; font-weight: 400; color: #333; border: 1px solid #eee; }
-    .grid-row td { padding: 1rem; font-size: 0.85rem; color: #333; border: 1px solid #eee; }
-    .link-btn { background: none; border: none; color: #5cb85c; cursor: pointer; font-size: 0.85rem; text-decoration: none; }
-    .link-btn:hover { text-decoration: underline; }
+    .link-btn { 
+      background: #f1f2f6; border: none; color: #5cb85c; padding: 0.5rem 1rem; 
+      border-radius: 6px; cursor: pointer; font-size: 0.95rem; font-weight: 600;
+      transition: all 0.2s;
+    }
+    .link-btn:hover { background: #5cb85c; color: white; }
 
-    /* Modal Legacy (Imagen 2) */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-    .legacy-card { background: white; width: 90%; max-width: 1000px; border-radius: 4px; border: 1px solid #ccc; }
-    .modal-header-legacy { padding: 1rem; background: #f9f9f9; border-bottom: 1px solid #eee; color: #5cb85c; font-size: 0.9rem; }
-    .modal-body-legacy { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
-    .form-row { border-bottom: 1px solid #eee; padding-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
-    .legacy-label { font-size: 0.8rem; color: #999; }
-    .readonly-val { font-size: 0.9rem; color: #333; }
-    .legacy-input, .legacy-select { border: none; border-bottom: 1px solid #eee; padding: 0.5rem 0; width: 100%; outline: none; font-size: 0.9rem; }
-    .legacy-input:focus { border-bottom-color: #5cb85c; }
-    .legacy-checkbox { width: 1.2rem; height: 1.2rem; cursor: pointer; accent-color: #5cb85c; }
-    .modal-footer-legacy { padding: 1rem; display: flex; gap: 0.5rem; }
-    .btn-confirm { background: #5cb85c; color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 4px; font-size: 0.85rem; cursor: pointer; }
-    .btn-cancel { background: #777; color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 4px; font-size: 0.85rem; cursor: pointer; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
+    .legacy-card { background: white; width: 90%; max-width: 800px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 20px 40px rgba(0,0,0,0.2); overflow: hidden; }
+    .modal-header-legacy { padding: 1.5rem 2rem; background: #fcfcfc; border-bottom: 1px solid #eee; color: #2c3e50; font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 1rem; }
+    .modal-body-legacy { padding: 2.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .form-row { border-bottom: 1px solid #f5f5f5; padding-bottom: 1rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .legacy-label { font-size: 0.9rem; color: #7f8c8d; font-weight: 600; }
+    .legacy-input, .legacy-select { border: 1px solid #edf2f7; background: #f8fafc; border-radius: 8px; padding: 0.8rem 1rem; width: 100%; outline: none; font-size: 1rem; transition: border-color 0.2s; }
+    .legacy-input:focus { border-color: #5cb85c; background: #fff; }
+    .modal-footer-legacy { padding: 1.5rem 2.5rem; background: #fcfcfc; display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid #eee; }
+    
+    .search-modern { position: relative; width: 350px; }
+    .search-modern input { 
+      width: 100%; padding: 0.9rem 1.5rem 0.9rem 3rem; 
+      border: 2px solid #edf2f7; border-radius: 10px; font-size: 1.1rem;
+    }
+    .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1.2rem; opacity: 0.5; }
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+    .arrow { font-size: 0.8rem; margin-left: 0.6rem; transition: transform 0.3s; }
+    .dropdown-container:hover .arrow { transform: rotate(180deg); }
 
-    .legacy-check-display { width: 16px; height: 16px; border: 1px solid #ccc; margin: 0 auto; position: relative; }
-    .legacy-check-display.checked::after { content: '✓'; position: absolute; top: -4px; left: 2px; color: #5cb85c; font-weight: bold; }
-
-    .search-modern { position: relative; width: 250px; }
-    .search-modern input { width: 100%; padding: 0.5rem 1rem 0.5rem 2.5rem; border: 1px solid #ccc; border-radius: 4px; }
-    .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); opacity: 0.4; }
-
-    .export-item { padding: 0.5rem; cursor: pointer; display: block; font-size: 0.85rem; color: #333; }
-    .export-item:hover { background: #f1f5f9; }
+    .alert-delete {
+      background: #fdf2f2; border: 1px solid #f8b4b4; color: #9b1c1c;
+      padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 1rem;
+      font-weight: 600; grid-column: span 2;
+    }
+    .btn-confirm { background: #5cb85c; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; }
+    .btn-cancel { background: #f1f2f6; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; }
+    .btn-danger { background: #d9534f !important; border-color: #d43f3a !important; }
   `]
 })
 export class SilosComponent implements OnInit {
   private inventarioService = inject(InventarioService);
   private pdfService = inject(PdfExportService);
+  private cdr = inject(ChangeDetectorRef);
   
   searchQuery = '';
   silos: Silo[] = [];
   showModal = false;
   showColumnSelector = false;
   showExportSelector = false;
+  modalMode: 'ADD' | 'VIEW' | 'EDIT' | 'DELETE' = 'ADD';
   
   newSilo: Partial<Silo> = this.getDefaultSilo();
 
-  // Configuración de columnas (Imagen 1)
   columns = [
     { id: 'nombre', label: 'Nombre', visible: true },
     { id: 'capacidad', label: 'Capacidad (kg)', visible: true },
@@ -272,16 +290,12 @@ export class SilosComponent implements OnInit {
   }
 
   loadSilos() {
-    console.log('Cargando silos desde el servicio...');
     this.inventarioService.getSilos().subscribe({
       next: (data) => {
-        console.log('Silos cargados exitosamente:', data);
         this.silos = data;
+        this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Error al cargar silos:', err);
-        // Fallback or alert if necessary
-      }
+      error: (err) => console.error('Error al cargar silos:', err)
     });
   }
 
@@ -298,44 +312,65 @@ export class SilosComponent implements OnInit {
     };
   }
 
-  openModal() {
-    this.showModal = true;
+  openModal(mode: 'ADD' | 'VIEW' | 'EDIT' | 'DELETE' = 'ADD', item: Silo | null = null) { 
+    this.modalMode = mode;
+    if (item) {
+      this.newSilo = { ...item };
+    } else {
+      this.newSilo = this.getDefaultSilo();
+    }
+    this.showModal = true; 
+    this.cdr.detectChanges();
   }
 
-  closeModal() {
-    this.showModal = false;
-    this.newSilo = this.getDefaultSilo();
+  closeModal() { 
+    this.showModal = false; 
+    this.newSilo = this.getDefaultSilo(); 
+    this.cdr.detectChanges();
+  }
+
+  handleModalSubmit() {
+    if (this.modalMode === 'VIEW') {
+      this.closeModal();
+      return;
+    }
+    if (this.modalMode === 'DELETE') {
+      this.executeDelete();
+      return;
+    }
+    this.saveSilo();
   }
 
   saveSilo() {
-    if (!this.newSilo.nombre) {
-      alert('El nombre del silo es obligatorio');
-      return;
-    }
+    if (!this.newSilo.nombre) return;
     
-    console.log('Intentando guardar silo:', this.newSilo);
-    
+    const obs = (this.modalMode === 'EDIT' && this.newSilo.id)
+      ? this.inventarioService.updateSilo(this.newSilo.id, this.newSilo)
+      : this.inventarioService.createSilo(this.newSilo);
+
+    obs.subscribe({
+      next: () => { 
+        this.loadSilos(); 
+        this.closeModal(); 
+      },
+      error: (err) => alert('Error: ' + err.message)
+    });
+  }
+
+  executeDelete() {
     if (this.newSilo.id) {
-      this.inventarioService.updateSilo(this.newSilo.id, this.newSilo).subscribe({
-        next: (res) => {
+      this.inventarioService.deleteSilo(this.newSilo.id).subscribe({
+        next: () => {
           this.loadSilos();
           this.closeModal();
         },
-        error: (err) => {
-          alert('Hubo un error al actualizar el silo. Revisa la consola.');
-        }
-      });
-    } else {
-      this.inventarioService.createSilo(this.newSilo).subscribe({
-        next: (res) => {
-          this.loadSilos();
-          this.closeModal();
-        },
-        error: (err) => {
-          alert('Hubo un error al guardar el silo. Revisa la consola.');
-        }
+        error: (err) => alert('Error al eliminar: ' + err.message)
       });
     }
+  }
+
+  deleteSilo(silo: Silo) {
+    this.openModal('DELETE', silo);
   }
 
   editSilo(silo: Silo) {
