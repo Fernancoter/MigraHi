@@ -54,25 +54,11 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - **Modal de Edición**: Actualización del campo de operador a un selector dinámico conectado a la base de datos.
     - **Infraestructura**: Nuevo endpoint PATCH en el backend y método en el servicio para actualizaciones parciales de operadores.
     - **UI/UX**: Refinamiento de estilos para paneles flotantes y alineación inteligente de headers.
-- [x] **Módulo de Producción - Bloque de Información (Bobinas) REFACTORIZADO**:
-    - **Persistencia Visual**: El modal de edición ahora mantiene siempre la estructura de 3 bloques (Fecha, Calibre, Ancho, Longitud, Virgen, Meta, Molido, Estado, Inicio/Fin Proceso, Pares) independientemente de si hay datos.
-    - **Simplificación de Entrada**: Se estandarizó el ingreso de bobinas a un único campo "Pares de bobinas" en lugar de entradas divididas por estación.
-    - **Gestión de Acciones**: Se integraron los botones "Lápiz" (Editar), "X" (Eliminar fila completa) y "!" (Menú de acciones: Exportar, Seleccionar columnas, Agregar manual) directamente en la tabla de operación.
-    - **Modal Seleccionar Columnas**: Implementación funcional en español con checkbox para los 12 campos de bobinas y selector de fijación.
-    - **Backend**: Refuerzo de la API con endpoint de eliminación de extrusión completa y lógica simplificada para adición de pares de bobinas.
-    - **Localización**: Interfaz 100% en español eliminando términos en inglés.
-
-- Documentation:
-    - `init.md`: Guía de inicio rápido con comandos y puertos.
-    - `config_servidores.csv`: Resumen de servidores y comandos en formato Excel/CSV.
-- Frontend: `src/Frontend/hicone-web/src/app`
-    - `core/services/auth.service.ts`
-    - `core/guards/auth.guard.ts`
-    - `features/auth/login/login.component.ts`
-    - `features/seguridad/roles/roles.component.ts`
-- Backend:
-    - `HiCone.Persistence/Seeds/ApplicationDbContextSeeder.cs`
-- Routes: `app.routes.ts`
+- [x] **Módulo de Producción - Bloque de Información (Bobinas) REFACTORIZADO Y CORREGIDO**:
+    - **Estructura por Renglones**: El modal de edición ahora organiza la información en 4 renglones horizontales (R1: Dimensiones, R2: Pesos/Estado, R3: Tiempos, R4: Pares) para una lectura clara.
+    - **Gestión de Acciones Corregida**: Se solucionaron problemas de visibilidad en el menú desplegable "!" y se mejoró la navegación del submenú de exportación (hover estable).
+    - **Eliminación Segura**: Se implementó un modal de confirmación personalizado (UI Premium) que reemplaza la alerta nativa y ejecuta el borrado real en backend y state.
+    - **Localización**: Consolidación total de términos en español.
 
 ## Technical Decisions
 - **Standalone Architecture**: Using Angular Standalone Components for the entire frontend.

@@ -1,5 +1,17 @@
 # Changelog - HiCone ERP Modernization
 
+## [1.4.1] - 2026-05-14
+### Added
+- **Delete Confirmation Modal**: Nuevo modal visual para confirmar la eliminación de registros, reemplazando la alerta nativa.
+
+### Changed
+- **Modal Layout**: Refactorización de la estructura de bobinas a un diseño de 4 renglones horizontales (distribución horizontal de campos).
+- **Dropdown Visibility**: Corregido el recorte del menú de acciones mediante ajustes de `overflow: visible` en el contenedor de la tabla y `z-index`.
+- **Submenu Navigation**: Mejora del área de hover en el submenú de exportación para evitar cierres prematuros mediante solapamiento y padding técnico.
+
+### Fixed
+- **Delete Logic**: Ejecución real del borrado de extrusión en el backend y actualización inmediata del estado en el frontend.
+
 ## [1.4.0] - 2026-05-14
 ### Added
 - **Production Module (Refactor)**: Fila de acciones completa (Editar, Eliminar, Menú de opciones).
