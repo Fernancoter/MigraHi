@@ -21,6 +21,34 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
         </div>
         
         <div class="toolbar-premium">
+          <!-- Barra de Filtros Avanzados (Paridad QA) -->
+          <div class="filter-bar-premium shadow-premium animate-fade-in">
+            <div class="filter-group">
+              <label>Silo</label>
+              <select class="filter-select" [(ngModel)]="filterSiloId">
+                <option value="">-- Todos los Silos --</option>
+                <option *ngFor="let s of silos" [value]="s.id">{{ s.nombre }}</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Desde</label>
+              <input type="date" class="filter-input" [(ngModel)]="filterDateStart">
+            </div>
+            <div class="filter-group">
+              <label>Hasta</label>
+              <input type="date" class="filter-input" [(ngModel)]="filterDateEnd">
+            </div>
+            <div class="filter-group">
+              <label>Estado</label>
+              <select class="filter-select" [(ngModel)]="filterConsumido">
+                <option value="all">Todos</option>
+                <option value="false">En Stock</option>
+                <option value="true">Consumidos</option>
+              </select>
+            </div>
+            <button class="btn-clear-filters" (click)="resetFilters()" title="Limpiar Filtros">🔄</button>
+          </div>
+
           <div class="btn-group-modern">
             <div class="dropdown-container">
               <button class="btn-legacy secondary" (click)="showExportSelector = !showExportSelector">📥 Exportar <span class="arrow">▼</span></button>
@@ -177,7 +205,7 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
             </thead>
             <tbody>
               <tr *ngFor="let item of filteredLotes" class="grid-row" [class.row-consumido]="item.loteConsumido">
-                <td class="text-center"><button class="link-btn archive">Archivar</button></td>
+                <td class="text-center"><button class="link-btn archive" (click)="archiveLote(item)">Archivar</button></td>
                 <td class="text-center"><button class="link-btn view" (click)="openModal('VIEW', item)">Visualizar</button></td>
                 <td *ngIf="isColVisible('loteNo')" class="font-bold text-green-600">{{ item.loteEmbarque }}</td>
                 <td *ngIf="isColVisible('lotePO')">{{ item.lotePO || '---' }}</td>
@@ -286,8 +314,27 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
       padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 1rem;
       font-weight: 600;
     }
-    .btn-danger { background: #d9534f !important; border-color: #d43f3a !important; }
     .btn-danger:hover { background: #c9302c !important; }
+
+    /* Estilos Filtros Avanzados */
+    .filter-bar-premium {
+      background: white; border-radius: 12px; padding: 1.2rem; margin-bottom: 1.5rem;
+      display: flex; gap: 1.5rem; align-items: flex-end; border: 1px solid #f0f0f0;
+      flex-wrap: wrap;
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .filter-group label { font-size: 0.85rem; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .filter-select, .filter-input {
+      padding: 0.7rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px;
+      font-size: 0.95rem; background: #f8fafc; color: #1e293b; outline: none;
+      min-width: 150px; transition: all 0.2s;
+    }
+    .filter-select:focus, .filter-input:focus { border-color: #5cb85c; background: white; box-shadow: 0 0 0 3px rgba(92,184,92,0.1); }
+    .btn-clear-filters {
+      padding: 0.7rem; background: #f1f5f9; border: none; border-radius: 8px;
+      cursor: pointer; transition: all 0.2s; font-size: 1.1rem;
+    }
+    .btn-clear-filters:hover { background: #e2e8f0; transform: rotate(-90deg); }
   `]
 })
 export class LotesComponent implements OnInit {
@@ -304,6 +351,12 @@ export class LotesComponent implements OnInit {
   showExportSelector = false;
   modalMode: 'ADD' | 'VIEW' | 'EDIT' | 'DELETE' = 'ADD';
   newLote: Partial<Lote> = this.getDefaultLote();
+
+  // Filtros Avanzados (QA Parity)
+  filterSiloId = '';
+  filterDateStart = '';
+  filterDateEnd = '';
+  filterConsumido = 'all';
 
   columns = [
     { id: 'loteNo', label: 'Lote NO.', visible: true },
@@ -425,19 +478,65 @@ export class LotesComponent implements OnInit {
   }
 
   getSiloNombre(id?: string): string { return this.silos.find(s => s.id === id)?.nombre || '---'; }
+
+  get filteredLotes() {
+    const q = (this.searchQuery || '').toLowerCase();
+    return this.lotes.filter(item => {
+      // Búsqueda General
+      const matchesSearch = !q || 
+        (item.loteEmbarque || '').toLowerCase().includes(q) ||
+        (item.lotePO || '').toLowerCase().includes(q) ||
+        (item.loteTrunkNo || '').toLowerCase().includes(q);
+
+      // Filtro Silo
+      const matchesSilo = !this.filterSiloId || item.loteSiloId === this.filterSiloId;
+
+      // Filtro Consumido
+      const matchesConsumido = this.filterConsumido === 'all' || 
+        item.loteConsumido.toString() === this.filterConsumido;
+
+      // Filtro Fecha
+      let matchesDate = true;
+      if (item.loteFechaRegistro) {
+        const itemDate = new Date(item.loteFechaRegistro);
+        if (this.filterDateStart) {
+          const startDate = new Date(this.filterDateStart);
+          if (itemDate < startDate) matchesDate = false;
+        }
+        if (this.filterDateEnd) {
+          const endDate = new Date(this.filterDateEnd);
+          endDate.setHours(23, 59, 59);
+          if (itemDate > endDate) matchesDate = false;
+        }
+      }
+
+      return matchesSearch && matchesSilo && matchesConsumido && matchesDate;
+    });
+  }
+
+  resetFilters() {
+    this.filterSiloId = '';
+    this.filterDateStart = '';
+    this.filterDateEnd = '';
+    this.filterConsumido = 'all';
+    this.searchQuery = '';
+    this.cdr.detectChanges();
+  }
+
+  archiveLote(lote: Lote) {
+    if (confirm(`¿Desea archivar el lote ${lote.loteEmbarque}? El registro permanecerá en el sistema pero no se verá en la lista activa.`)) {
+      if (lote.id) {
+        this.inventarioService.deleteLote(lote.id).subscribe(() => this.loadData());
+      }
+    }
+  }
+
   toggleColumnSelector() { this.showColumnSelector = !this.showColumnSelector; }
   isColVisible(id: string): boolean { return this.columns.find(c => c.id === id)?.visible || false; }
   allColsVisible(): boolean { return this.columns.every(c => c.visible); }
   toggleAllCols() { const target = !this.allColsVisible(); this.columns.forEach(c => c.visible = target); }
   resetColumns() { this.columns.forEach(c => c.visible = true); }
 
-  get filteredLotes() {
-    const q = (this.searchQuery || '').toLowerCase();
-    return this.lotes.filter(l => 
-      (l.loteEmbarque || '').toLowerCase().includes(q) ||
-      (l.lotePO || '').toLowerCase().includes(q)
-    );
-  }
 
   exportToCSV() {
     if (this.lotes.length === 0) return;
