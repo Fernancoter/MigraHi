@@ -100,6 +100,17 @@ public class ProduccionController : ControllerBase
         });
     }
 
+    /// <summary>Actualiza únicamente el operario asignado a una extrusión</summary>
+    [HttpPatch("extrusion/{id}/operador")]
+    public async Task<IActionResult> PatchExtrusionOperador(Guid id, [FromBody] PatchOperadorDto dto)
+    {
+        var e = await _context.Extrusiones.FindAsync(id);
+        if (e == null) return NotFound();
+        e.OperarioId = dto.OperarioId;
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
     /// <summary>Retorna el tablero de prensado: programación + operación en curso</summary>
     [HttpGet("tablero/prensado")]
     public async Task<ActionResult<object>> GetTableroPrensado()
@@ -255,3 +266,5 @@ public class ProduccionController : ControllerBase
         return NoContent();
     }
 }
+
+public record PatchOperadorDto(Guid? OperarioId);

@@ -46,10 +46,60 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
                     <th (click)="toggleSort('prog', 'fecha')">
                       Fecha Extrusora <span class="sort-icon">{{ sortDirProg() === 'asc' ? '↑' : '↓' }}</span>
                     </th>
-                    <th><span class="th-inner">Turno <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-                    <th><span class="th-inner">Producto <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-                    <th><span class="th-inner">Operador <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-                    <th><span class="th-inner">Programado <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
+                    <th (click)="toggleFilter('prog-turno', $event)">
+                      <span class="th-inner">Turno <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'prog-turno') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [value]="filterSearch()" (input)="filterSearch.set($any($event.target).value)">
+                            <div class="suggestions">
+                              <span class="suggestion-label">Sugerencias</span>
+                              <div class="suggestion-item">Mañana</div>
+                              <div class="suggestion-item">Tarde</div>
+                              <div class="suggestion-item">Noche</div>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('prog-producto', $event)">
+                      <span class="th-inner">Producto <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'prog-producto') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [value]="filterSearch()" (input)="filterSearch.set($any($event.target).value)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('prog-operador', $event)">
+                      <span class="th-inner">Operador <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'prog-operador') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [value]="filterSearch()" (input)="filterSearch.set($any($event.target).value)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('prog-programado', $event)">
+                      <span class="th-inner">Programado <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'prog-programado') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="range-group">
+                            <div class="range-field"><label>Desde</label><input type="number" class="search-input" [value]="filterDesde()" (input)="filterDesde.set($any($event.target).value)"></div>
+                            <div class="range-field"><label>Hasta</label><input type="number" class="search-input" [value]="filterHasta()" (input)="filterHasta.set($any($event.target).value)"></div>
+                            <button class="btn-search-filter">Buscar</button>
+                          </div>
+                        </div>
+                      }
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -92,16 +142,105 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
                     <th class="header-empty"></th>
                     <th class="header-empty"></th>
                     <th class="header-empty"></th>
-                    <th (click)="toggleSort('oper', 'extrusora')">
+                    <th (click)="toggleFilter('oper-extrusora', $event)">
                       Extrusora <span class="sort-icon">{{ sortDirOper() === 'asc' ? '↑' : '↓' }}</span>
+                      @if (activeFilter() === 'oper-extrusora') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [value]="filterSearch()" (input)="filterSearch.set($any($event.target).value)">
+                          </div>
+                        </div>
+                      }
                     </th>
-                    <th><span class="th-inner">Turno <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-                    <th><span class="th-inner">Producto <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-                    <th><span class="th-inner">Operador <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-                    <th class="text-right"><span class="th-inner">Producido <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-                    <th class="text-right"><span class="th-inner">Tiempo Interrupción (min) <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-                    <th><span class="th-inner">En Curso <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-                    <th><span class="th-inner">Extrusión ID <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
+                    <th (click)="toggleFilter('oper-turno', $event)">
+                      <span class="th-inner">Turno <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-turno') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [value]="filterSearch()" (input)="filterSearch.set($any($event.target).value)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('oper-producto', $event)">
+                      <span class="th-inner">Producto <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-producto') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [value]="filterSearch()" (input)="filterSearch.set($any($event.target).value)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('oper-operador', $event)">
+                      <span class="th-inner">Operador <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-operador') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [value]="filterSearch()" (input)="filterSearch.set($any($event.target).value)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th class="text-right" (click)="toggleFilter('oper-producido', $event)">
+                      <span class="th-inner">Producido <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-producido') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="range-group">
+                            <div class="range-field"><label>Desde</label><input type="number" class="search-input" [value]="filterDesde()" (input)="filterDesde.set($any($event.target).value)"></div>
+                            <div class="range-field"><label>Hasta</label><input type="number" class="search-input" [value]="filterHasta()" (input)="filterHasta.set($any($event.target).value)"></div>
+                            <button class="btn-search-filter">Buscar</button>
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th class="text-right" (click)="toggleFilter('oper-interrupcion', $event)">
+                      <span class="th-inner">Tiempo Interrupción (min) <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-interrupcion') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="range-group">
+                            <div class="range-field"><label>Desde</label><input type="number" class="search-input" [value]="filterDesde()" (input)="filterDesde.set($any($event.target).value)"></div>
+                            <div class="range-field"><label>Hasta</label><input type="number" class="search-input" [value]="filterHasta()" (input)="filterHasta.set($any($event.target).value)"></div>
+                            <button class="btn-search-filter">Buscar</button>
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('oper-encurso', $event)">
+                      <span class="th-inner">En Curso <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-encurso') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <label class="boolean-option"><input type="radio" name="encurso"> Marcado</label>
+                            <label class="boolean-option"><input type="radio" name="encurso"> Desmarcado</label>
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('oper-extid', $event)">
+                      <span class="th-inner">Extrusión ID <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-extid') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <div class="range-group" style="margin-top: 0.5rem; border-top: 1px solid #f1f5f9; padding-top: 0.5rem;">
+                              <div class="range-field"><label>Desde</label><input type="number" class="search-input"></div>
+                              <div class="range-field"><label>Hasta</label><input type="number" class="search-input"></div>
+                              <button class="btn-search-filter">Buscar</button>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -172,7 +311,12 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
 
               <div class="sub-section">
                 <h4>Operador</h4>
-                <p class="operador-name">{{ selectedExtrusion()?.operador || 'Sin asignar' }}</p>
+                <select class="op-selector" [value]="selectedExtrusion()?.operadorId || ''" (change)="updateOperador($event)">
+                  <option value="">Sin asignar</option>
+                  @for (op of operariosDisponibles(); track op.id) {
+                    <option [value]="op.id">{{ op.nombre }}</option>
+                  }
+                </select>
               </div>
             </div>
           </div>
@@ -270,6 +414,27 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* FILTROS POP OVER */
+    .filter-popover { position: absolute; background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); padding: 1rem; width: 220px; z-index: 100; margin-top: 0.5rem; text-transform: none; }
+    .filter-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .sort-btn { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; border-radius: 8px; border: 1px solid #f1f5f9; background: white; font-size: 0.8rem; font-weight: 700; color: #475569; cursor: pointer; transition: all 0.2s; width: 100%; text-align: left; }
+    .sort-btn:hover { background: #f8fafc; color: #10b981; border-color: #10b981; }
+    .search-input { width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.85rem; outline: none; }
+    .search-input:focus { border-color: #10b981; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1); }
+    .suggestions { margin-top: 0.5rem; }
+    .suggestion-label { font-size: 0.65rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 0.4rem; display: block; }
+    .suggestion-item { font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 6px; cursor: pointer; color: #64748b; }
+    .suggestion-item:hover { background: #f1f5f9; color: #1e293b; }
+    .range-group { display: grid; gap: 0.75rem; }
+    .range-field label { font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 0.25rem; display: block; }
+    .btn-search-filter { background: #10b981; color: white; border: none; padding: 0.6rem; border-radius: 8px; font-weight: 800; font-size: 0.8rem; cursor: pointer; width: 100%; }
+    .boolean-option { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; cursor: pointer; border-radius: 8px; font-size: 0.85rem; color: #475569; }
+    .boolean-option:hover { background: #f8fafc; }
+
+    /* SELECTOR EN MODAL */
+    .op-selector { width: 100%; padding: 0.75rem; border-radius: 10px; border: 2px solid #f1f5f9; background: #f8fafc; color: #0f172a; font-size: 1rem; font-weight: 700; outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.25rem; }
+    .op-selector:focus { border-color: #10b981; background-color: white; }
   `]
 })
 export class TableroProduccionComponent implements OnInit {
@@ -286,8 +451,22 @@ export class TableroProduccionComponent implements OnInit {
 
   showModal = signal(false);
   selectedExtrusion = signal<any>(null);
+  operariosDisponibles = signal<any[]>([]);
 
-  ngOnInit() { this.loadExtrusion(); }
+  // Filtros dinámicos
+  activeFilter = signal<string | null>(null); // 'tabla-columna'
+  filterSearch = signal<string>('');
+  filterDesde  = signal<number | null>(null);
+  filterHasta  = signal<number | null>(null);
+
+  ngOnInit() { 
+    this.loadExtrusion(); 
+    this.loadOperarios();
+  }
+
+  loadOperarios() {
+    this.svc.getOperarios().subscribe(res => this.operariosDisponibles.set(res));
+  }
 
   setTab(tab: 'extrusion' | 'prensado') {
     this.activeTab.set(tab);
@@ -336,6 +515,28 @@ export class TableroProduccionComponent implements OnInit {
       this.showModal.set(true);
     });
   }
+
+  toggleFilter(id: string, event: MouseEvent) {
+    event.stopPropagation();
+    if (this.activeFilter() === id) {
+      this.activeFilter.set(null);
+    } else {
+      this.activeFilter.set(id);
+      this.filterSearch.set('');
+      this.filterDesde.set(null);
+      this.filterHasta.set(null);
+    }
+  }
+
+  updateOperador(event: any) {
+    const newId = event.target.value;
+    const extrusionId = this.selectedExtrusion().id;
+    this.svc.patchExtrusionOperador(extrusionId, newId || null).subscribe(() => {
+      this.loadExtrusion();
+      this.selectedExtrusion.set({ ...this.selectedExtrusion(), operadorId: newId });
+    });
+  }
+
 
   closeModal() {
     this.showModal.set(false);

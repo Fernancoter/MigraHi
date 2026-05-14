@@ -49,6 +49,9 @@ export class ProduccionConfigService {
   getExtrusionProgramacion() { return this.http.get<ExtrusionProgramacion[]>(`${this.base}/extrusion/programacion`); }
   getExtrusionOperacion()   { return this.http.get<ExtrusionOperacion[]>(`${this.base}/extrusion/operacion`); }
   getExtrusionDetail(id: string) { return this.http.get<any>(`${this.base}/extrusion/${id}`); }
+  patchExtrusionOperador(id: string, operarioId: string | null) {
+    return this.http.patch(`${this.base}/extrusion/${id}/operador`, { operarioId });
+  }
   
   getTableroPrensado()  { return this.http.get<{ operacion: PrensadoItem[]  }>(`${this.base}/tablero/prensado`);  }
 

@@ -43,12 +43,11 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - Migrated global theme in `styles.scss` from blue to corporate green (`#10b981`).
     - Ajusted shadows, glows, and interactive elements to harmonize with the new brand palette.
 - [x] **Generación de Reporte de Estructura**: Se analizó el entorno heredado (`HiCone6`) identificando que la lógica existe como metadatos encriptados/comprimidos (base de datos `.mdf` y `kb.data`) exclusivos para el IDE de GeneXus. El reporte fue guardado como `reporteEstructura.md`.
-- [x] **Módulo de Producción - Extrusión (Inicio) FINALIZADO**:
-    - **Backend**: Implementación de controladores para Programación y Operación.
-    - **Database**: Recreación de esquema limpio y generación de `InitialProductionBaseline` para resolver conflictos de tipos (Guid vs Int).
-    - **Seeder**: Lógica de inserción robusta para datos maestros de producción y registros semilla.
-    - **Frontend**: Dashboard con dos tablas interactivas, ordenamiento, filtrado (placeholder) y modales de edición.
-    - **UI/UX**: Reemplazo de iconos literales por SVG chevrons y alineación flexbox para headers multilínea.
+- [x] **Módulo de Producción - Extrusión (Segunda Etapa) COMPLETADO**:
+    - **Filtros Dinámicos**: Implementación de 4 tipos de popovers en encabezados (Ordenamiento, Búsqueda, Rangos y Estados Booleanos).
+    - **Modal de Edición**: Actualización del campo de operador a un selector dinámico conectado a la base de datos.
+    - **Infraestructura**: Nuevo endpoint PATCH en el backend y método en el servicio para actualizaciones parciales de operadores.
+    - **UI/UX**: Refinamiento de estilos para paneles flotantes y alineación inteligente de headers.
 
 - Documentation:
     - `init.md`: Guía de inicio rápido con comandos y puertos.
