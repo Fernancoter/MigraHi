@@ -1,5 +1,21 @@
 # Changelog - HiCone ERP Modernization
 
+## [1.4.0] - 2026-05-14
+### Added
+- **Production Module (Refactor)**: Fila de acciones completa (Editar, Eliminar, Menú de opciones).
+- **Manual Entry**: Modal simplificado para agregar bobinas en pares mediante un único input.
+- **Column Selector**: Modal dinámico para personalizar la visibilidad de los 12 campos de bobinas.
+- **Backend API**: Endpoints para eliminación completa de extrusión y adición simplificada de bobinas.
+
+### Changed
+- **Modal Logic**: Persistencia de la estructura visual en el modal de edición (3 bloques) incluso con datos vacíos.
+- **Localization**: Traducción integral al español de todos los componentes de producción.
+- **UI/UX**: Reubicación del botón "Agregar manual" al menú contextual de la fila.
+
+### Fixed
+- **Interpretación de Requerimientos**: Corregido el error de ocultar campos cuando no había información registrada.
+- **Estructura de Datos**: Alineación del campo "Pares de bobinas" con la visualización 000/000.
+
 ## [1.3.0] - 2026-05-13
 ### Added
 - **Production Module (Extrusión)**: Implemented complete dashboard with two tables (Programación & Operación).

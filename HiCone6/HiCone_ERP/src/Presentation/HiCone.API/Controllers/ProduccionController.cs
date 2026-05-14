@@ -136,15 +136,17 @@ public class ProduccionController : ControllerBase
         var e = await _context.Extrusiones.FindAsync(id);
         if (e == null) return NotFound();
 
+        // Si el usuario envía un solo valor para "Pares de bobinas", 
+        // creamos el par A y B con valores por defecto para el resto.
         var bobinaA = new Bobina
         {
             Id = Guid.NewGuid(),
             ExtrusionId = id,
             Station = "A",
-            BobbinNo = dto.BobbinNoA,
-            SerialNo = dto.SerialNoA,
-            Kg = dto.KgA,
-            Codigo = $"B-{dto.BobbinNoA}"
+            BobbinNo = dto.ParesBobinas, // Usamos el input para el número
+            SerialNo = $"S-{dto.ParesBobinas}-A",
+            Kg = 0,
+            Codigo = $"B-{dto.ParesBobinas}-A"
         };
 
         var bobinaB = new Bobina
@@ -152,10 +154,10 @@ public class ProduccionController : ControllerBase
             Id = Guid.NewGuid(),
             ExtrusionId = id,
             Station = "B",
-            BobbinNo = dto.BobbinNoB,
-            SerialNo = dto.SerialNoB,
-            Kg = dto.KgB,
-            Codigo = $"B-{dto.BobbinNoB}"
+            BobbinNo = dto.ParesBobinas,
+            SerialNo = $"S-{dto.ParesBobinas}-B",
+            Kg = 0,
+            Codigo = $"B-{dto.ParesBobinas}-B"
         };
 
         _context.Bobinas.AddRange(bobinaA, bobinaB);
@@ -184,6 +186,21 @@ public class ProduccionController : ControllerBase
         var e = await _context.Extrusiones.FindAsync(id);
         if (e == null) return NotFound();
         e.OperarioId = dto.OperarioId;
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    /// <summary>Elimina una extrusión completa</summary>
+    [HttpDelete("extrusion/{id}")]
+    public async Task<IActionResult> DeleteExtrusion(Guid id)
+    {
+        var e = await _context.Extrusiones.Include(x => x.Bobinas).FirstOrDefaultAsync(x => x.Id == id);
+        if (e == null) return NotFound();
+
+        if (e.Bobinas != null && e.Bobinas.Any())
+            _context.Bobinas.RemoveRange(e.Bobinas);
+
+        _context.Extrusiones.Remove(e);
         await _context.SaveChangesAsync(default);
         return NoContent();
     }
@@ -346,7 +363,4 @@ public class ProduccionController : ControllerBase
 
 public record PatchOperadorDto(Guid? OperarioId);
 
-public record AddBobinasDto(
-    long BobbinNoA, string SerialNoA, decimal KgA,
-    long BobbinNoB, string SerialNoB, decimal KgB
-);
+public record AddBobinasDto(long ParesBobinas);

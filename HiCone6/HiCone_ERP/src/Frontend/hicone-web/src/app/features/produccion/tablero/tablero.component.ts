@@ -256,14 +256,34 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
                             {{ item.status }}
                           </span>
                         </td>
-                        <td>
-                          <button class="btn-icon-edit" (click)="openEditModal(item.id)">
-                            <span class="icon">✎</span>
-                          </button>
+                        <td class="actions-cell">
+                          <div class="actions-flex">
+                            <button class="btn-icon-edit" title="Editar" (click)="openEditModal(item.id)">
+                              <span class="icon">✎</span>
+                            </button>
+                            <button class="btn-icon-delete" title="Eliminar fila completa" (click)="deleteExtrusion(item.id)">
+                              <span class="icon">×</span>
+                            </button>
+                            <div class="warning-dropdown-container">
+                              <button class="btn-icon-warn" title="Menú de acciones" (click)="toggleMainRowDropdown(item.id, $event)">
+                                <span class="icon">!</span>
+                              </button>
+                              @if (activeMainRowDropdownId() === item.id) {
+                                <div class="warning-dropdown main-row-dropdown animate-fade-in" (click)="$event.stopPropagation()">
+                                  <div class="wd-item has-submenu">
+                                    Exportar <span class="arrow">▶</span>
+                                    <div class="wd-submenu">
+                                      <div class="wd-item">CSV</div>
+                                      <div class="wd-item">PDF</div>
+                                    </div>
+                                  </div>
+                                  <div class="wd-item" (click)="openSelectColumns(item.id)">Seleccionar columnas</div>
+                                  <div class="wd-item" (click)="openAddManually(item.id)">Agregar manual</div>
+                                </div>
+                              }
+                            </div>
+                          </div>
                         </td>
-                        <td class="td-empty"></td>
-                        <td class="td-empty"></td>
-                        <td class="td-empty"></td>
                         <td><strong>{{ item.extrusora }}</strong></td>
                         <td>{{ item.turno }}</td>
                         <td>{{ item.producto }}</td>
@@ -323,29 +343,28 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
               <div class="sub-section">
                 <div class="flex-between align-center mb-4">
                   <h4>Información de Bobinas</h4>
-                  <button class="btn-primary-small" (click)="openAddManually()">+ Agregar</button>
                 </div>
 
-                @if (selectedExtrusion()?.bobinas?.length > 0) {
-                  <div class="bobbins-list">
+                <!-- SIEMPRE SE MUESTRA LA ESTRUCTURA, aunque no haya bobinas -->
+                <div class="bobbins-list">
+                  @if (selectedExtrusion()?.bobinas?.length > 0) {
                     @for (b of selectedExtrusion()?.bobinas; track b.id) {
                       <div class="bobbin-card">
-                        
-                        <!-- Block 1 -->
+                        <!-- Bloque 1 -->
                         <div class="bc-block">
-                          <div class="bc-item"><label>Date</label><span>{{ selectedExtrusion()?.fecha | date:'dd/MM/yy HH:mm' }}</span></div>
-                          <div class="bc-item"><label>Gauge</label><span>{{ selectedExtrusion()?.calibre || '0.00' }}</span></div>
-                          <div class="bc-item"><label>Width</label><span>{{ selectedExtrusion()?.ancho || '000/000' }}</span></div>
-                          <div class="bc-item"><label>Length</label><span>{{ selectedExtrusion()?.longitud || '0' }}</span></div>
+                          <div class="bc-item"><label>Fecha</label><span>{{ selectedExtrusion()?.fecha | date:'dd/MM/yy HH:mm' }}</span></div>
+                          <div class="bc-item"><label>Calibre</label><span>{{ selectedExtrusion()?.calibre || '0.00' }}</span></div>
+                          <div class="bc-item"><label>Ancho</label><span>{{ selectedExtrusion()?.ancho || '000/000' }}</span></div>
+                          <div class="bc-item"><label>Longitud</label><span>{{ selectedExtrusion()?.longitud || '0' }}</span></div>
                         </div>
                         
-                        <!-- Block 2 -->
+                        <!-- Bloque 2 -->
                         <div class="bc-block">
-                          <div class="bc-item"><label>Virgin kg</label><span>{{ selectedExtrusion()?.kgVirgen || '0.00' }}</span></div>
-                          <div class="bc-item"><label>Target</label><span>{{ selectedExtrusion()?.target || '0.00' }}</span></div>
-                          <div class="bc-item"><label>Ground kg</label><span>{{ selectedExtrusion()?.kgMolido || '0.00' }}</span></div>
+                          <div class="bc-item"><label>Virgen kg</label><span>{{ selectedExtrusion()?.kgVirgen || '0.00' }}</span></div>
+                          <div class="bc-item"><label>Meta</label><span>{{ selectedExtrusion()?.target || '0.00' }}</span></div>
+                          <div class="bc-item"><label>Molido kg</label><span>{{ selectedExtrusion()?.kgMolido || '0.00' }}</span></div>
                           <div class="bc-item" style="position: relative;">
-                            <label>Status</label>
+                            <label>Estado</label>
                             <select class="status-selector" [value]="selectedExtrusion()?.status">
                               <option value="Programada">Programada</option>
                               <option value="EnProceso">En Proceso</option>
@@ -356,39 +375,37 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
                           </div>
                         </div>
 
-                        <!-- Block 3 -->
+                        <!-- Bloque 3 -->
                         <div class="bc-block relative-block">
-                          <div class="bc-item"><label>Process Start</label><span>{{ selectedExtrusion()?.processStart ? (selectedExtrusion()?.processStart | date:'dd/MM/yy HH:mm') : '---' }}</span></div>
-                          <div class="bc-item"><label>Process End</label><span>{{ selectedExtrusion()?.processEnd ? (selectedExtrusion()?.processEnd | date:'dd/MM/yy HH:mm') : '---' }}</span></div>
-                          
-                          <!-- Side Actions -->
-                          <div class="bc-actions">
-                            <button class="btn-action-x" (click)="deleteBobina(b.id)" title="Remove row">×</button>
-                            <div class="warning-dropdown-container">
-                              <button class="btn-action-warn" (click)="toggleWarningDropdown(b.id, $event)">!</button>
-                              @if (activeDropdownId() === b.id) {
-                                <div class="warning-dropdown animate-fade-in" (click)="$event.stopPropagation()">
-                                  <div class="wd-item has-submenu">
-                                    Export <span class="arrow">▶</span>
-                                    <div class="wd-submenu">
-                                      <div class="wd-item">CSV</div>
-                                      <div class="wd-item">PDF</div>
-                                    </div>
-                                  </div>
-                                  <div class="wd-item" (click)="openSelectColumns()">Select Columns</div>
-                                  <div class="wd-item" (click)="openAddManually()">Add Manually</div>
-                                </div>
-                              }
-                            </div>
-                          </div>
+                          <div class="bc-item"><label>Inicio de proceso</label><span>{{ selectedExtrusion()?.processStart ? (selectedExtrusion()?.processStart | date:'dd/MM/yy HH:mm') : '---' }}</span></div>
+                          <div class="bc-item"><label>Fin de proceso</label><span>{{ selectedExtrusion()?.processEnd ? (selectedExtrusion()?.processEnd | date:'dd/MM/yy HH:mm') : '---' }}</span></div>
+                          <div class="bc-item"><label>Pares de bobinas</label><span>{{ b.bobbinNo || '---' }}</span></div>
                         </div>
-
                       </div>
                     }
-                  </div>
-                } @else {
-                  <div class="empty-state-small">No hay información de bobinas registrada.</div>
-                }
+                  } @else {
+                    <!-- ESTRUCTURA VACÍA VISIBLE -->
+                    <div class="bobbin-card empty-card">
+                        <div class="bc-block">
+                          <div class="bc-item"><label>Fecha</label><span>---</span></div>
+                          <div class="bc-item"><label>Calibre</label><span>---</span></div>
+                          <div class="bc-item"><label>Ancho</label><span>---</span></div>
+                          <div class="bc-item"><label>Longitud</label><span>---</span></div>
+                        </div>
+                        <div class="bc-block">
+                          <div class="bc-item"><label>Virgen kg</label><span>---</span></div>
+                          <div class="bc-item"><label>Meta</label><span>---</span></div>
+                          <div class="bc-item"><label>Molido kg</label><span>---</span></div>
+                          <div class="bc-item"><label>Estado</label><span>---</span></div>
+                        </div>
+                        <div class="bc-block">
+                          <div class="bc-item"><label>Inicio de proceso</label><span>---</span></div>
+                          <div class="bc-item"><label>Fin de proceso</label><span>---</span></div>
+                          <div class="bc-item"><label>Pares de bobinas</label><span>---</span></div>
+                        </div>
+                    </div>
+                  }
+                </div>
               </div>
 
             </div>
@@ -396,50 +413,42 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
         </div>
       }
 
-      <!-- MODAL ADD MANUALLY -->
+      <!-- MODAL AGREGAR MANUAL -->
       @if (showAddManualModal()) {
         <div class="modal-backdrop animate-fade-in" style="z-index: 1050;" (click)="closeAddManual()">
-          <div class="modal-container animate-slide-up" style="max-width: 650px;" (click)="$event.stopPropagation()">
+          <div class="modal-container animate-slide-up" style="max-width: 500px;" (click)="$event.stopPropagation()">
             <header class="modal-header">
-              <h2>Add Manually</h2>
+              <h2>Agregar manual</h2>
               <button class="btn-close" (click)="closeAddManual()">×</button>
             </header>
             <div class="modal-body">
               <div class="manual-add-content">
-                <h3>Add Bobbin</h3>
-                <p class="text-muted" style="margin-top: 0.25rem;">Add bobbin manually to extrusion</p>
-                <div class="alert-info mt-4">Bobbins must be added in pairs, one for Station A and one for Station B</div>
+                <h3>Agregar bobina</h3>
+                <p class="text-muted" style="margin-top: 0.25rem;">Agregar bobina manualmente a extrusión</p>
+                <div class="alert-info mt-4">
+                  Las bobinas se agregan en pares una para la estación A y otra para la estación B
+                </div>
                 
-                <div class="bobbin-pairs-grid mt-4">
-                  <div class="station-col">
-                    <h4 class="station-title">Station A</h4>
-                    <div class="form-group"><label>Bobbin No</label><input type="number" [(ngModel)]="addManualData.bobbinNoA" class="form-input"></div>
-                    <div class="form-group"><label>Serial No</label><input type="text" [(ngModel)]="addManualData.serialNoA" class="form-input"></div>
-                    <div class="form-group"><label>Kg</label><input type="number" [(ngModel)]="addManualData.kgA" class="form-input"></div>
-                  </div>
-                  <div class="station-col">
-                    <h4 class="station-title">Station B</h4>
-                    <div class="form-group"><label>Bobbin No</label><input type="number" [(ngModel)]="addManualData.bobbinNoB" class="form-input"></div>
-                    <div class="form-group"><label>Serial No</label><input type="text" [(ngModel)]="addManualData.serialNoB" class="form-input"></div>
-                    <div class="form-group"><label>Kg</label><input type="number" [(ngModel)]="addManualData.kgB" class="form-input"></div>
-                  </div>
+                <div class="form-group mt-4">
+                  <label>Pares de bobinas</label>
+                  <input type="number" [(ngModel)]="addManualData.paresBobinas" class="form-input" placeholder="0">
                 </div>
               </div>
               <div class="modal-footer">
-                <button class="btn-cancel" (click)="closeAddManual()">Cancel</button>
-                <button class="btn-confirm" (click)="confirmAddManual()">Confirm</button>
+                <button class="btn-cancel" (click)="closeAddManual()">Cancelar</button>
+                <button class="btn-confirm" (click)="confirmAddManual()">Confirmar</button>
               </div>
             </div>
           </div>
         </div>
       }
 
-      <!-- MODAL SELECT COLUMNS -->
+      <!-- MODAL SELECCIONAR COLUMNAS -->
       @if (showSelectColumnsModal()) {
         <div class="modal-backdrop animate-fade-in" style="z-index: 1050;" (click)="closeSelectColumns()">
           <div class="modal-container animate-slide-up" style="max-width: 400px;" (click)="$event.stopPropagation()">
             <header class="modal-header">
-              <h2>Select Columns</h2>
+              <h2>Seleccionar columnas</h2>
               <button class="btn-close" (click)="closeSelectColumns()">×</button>
             </header>
             <div class="modal-body">
@@ -451,10 +460,9 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
                 }
               </div>
               <div class="pin-section mt-4">
-                <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: #475569;">Pin to Right</label>
+                <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: #475569;">Fijas a la derecha</label>
                 <select class="form-select">
-                  <option>None</option>
-                  <option>Actions</option>
+                  <option>Ninguna</option>
                 </select>
               </div>
             </div>
@@ -518,8 +526,18 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
     .status-indicator[data-status="Terminada"] { background: #f1f5f9; color: #475569; }
     .status-indicator[data-status="PorProgramar"] { background: #fee2e2; color: #991b1b; }
 
-    .btn-icon-edit { width: 32px; height: 32px; border-radius: 8px; border: 1px solid #e2e8f0; background: white; color: #3b82f6; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 1rem; }
+    .btn-icon-edit, .btn-icon-delete, .btn-icon-warn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid #e2e8f0; background: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 1rem; }
+    .btn-icon-edit { color: #3b82f6; }
     .btn-icon-edit:hover { background: #3b82f6; color: white; border-color: #3b82f6; transform: scale(1.1); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+    
+    .btn-icon-delete { color: #ef4444; }
+    .btn-icon-delete:hover { background: #ef4444; color: white; border-color: #ef4444; transform: scale(1.1); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
+    
+    .btn-icon-warn { color: #d97706; }
+    .btn-icon-warn:hover { background: #f59e0b; color: white; border-color: #f59e0b; transform: scale(1.1); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
+
+    .actions-cell { width: 140px; }
+    .actions-flex { display: flex; gap: 0.5rem; align-items: center; }
 
     .toggle-status { width: 14px; height: 14px; border-radius: 50%; background: #cbd5e1; margin: 0 auto; transition: all 0.3s; }
     .toggle-status.on { background: #10b981; box-shadow: 0 0 8px #10b981; }
@@ -593,7 +611,7 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
     
     .status-selector { border: none; background: #f8fafc; padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; color: #475569; outline: none; cursor: pointer; }
     
-    .relative-block { position: relative; padding-right: 80px; }
+    .relative-block { position: relative; }
     .bc-actions { position: absolute; right: 0; top: 50%; transform: translateY(-50%); display: flex; gap: 0.5rem; align-items: center; }
     
     .btn-action-x { width: 28px; height: 28px; border-radius: 50%; background: #fee2e2; color: #ef4444; border: none; font-size: 1.2rem; line-height: 1; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
@@ -603,7 +621,8 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
     .btn-action-warn:hover { background: #f59e0b; color: white; transform: scale(1.1); }
 
     .warning-dropdown-container { position: relative; }
-    .warning-dropdown { position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); width: 160px; z-index: 100; padding: 0.5rem; }
+    .warning-dropdown { position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); width: 180px; z-index: 100; padding: 0.5rem; text-transform: none; }
+    .main-row-dropdown { right: auto; left: 0; }
     .wd-item { padding: 0.6rem 0.8rem; font-size: 0.85rem; font-weight: 600; color: #475569; border-radius: 8px; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; position: relative; }
     .wd-item:hover { background: #f1f5f9; color: #1e293b; }
     .arrow { font-size: 0.6rem; color: #94a3b8; }
@@ -612,6 +631,7 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
     .wd-submenu { display: none; position: absolute; right: 100%; top: 0; background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); width: 120px; padding: 0.5rem; margin-right: 0.5rem; }
 
     .empty-state-small { padding: 2rem; text-align: center; color: #94a3b8; font-style: italic; background: #f8fafc; border-radius: 12px; }
+    .empty-card { opacity: 0.5; border-bottom: none; }
 
     /* MANUAL ADD MODAL */
     .text-muted { color: #64748b; font-size: 0.9rem; }
@@ -653,20 +673,21 @@ export class TableroProduccionComponent implements OnInit {
   operariosDisponibles = signal<any[]>([]);
 
   // States para la nueva funcionalidad de Bobinas
+  activeMainRowDropdownId = signal<string | null>(null);
   activeDropdownId = signal<string | null>(null);
   showAddManualModal = signal(false);
   showSelectColumnsModal = signal(false);
+  activeExtrusionId = signal<string | null>(null);
   
   availableColumns = [
-    'Bobbin No', 'Bobbin Serial No', 'Bobbin Kg', 'Bobbin Scrap Kg', 
-    'Bobbin Thickness', 'Bobbin Observations', 'Bobbin Mill Reason', 
-    'Bobbin Product Name', 'Bobbin Reel', 'Bobbin Rest Start', 
-    'Bobbin Rest Minutes', 'Bobbin Mill'
+    'Bobina No', 'Bobina no serie', 'Bobina Kg', 'Bobina merma Kg', 
+    'Bobina espesor', 'Bobina Observaciones', 'Bobina Motivo Molino', 
+    'Bobina Producto Nombre', 'Bobina Carrete', 'Bobina Inicia Reposo', 
+    'Bobina Minutos en Reposo', 'Bobina Molino'
   ];
 
   addManualData = {
-    bobbinNoA: null as number | null, serialNoA: '', kgA: null as number | null,
-    bobbinNoB: null as number | null, serialNoB: '', kgB: null as number | null
+    paresBobinas: null as number | null
   };
 
   // Filtros dinámicos
@@ -760,44 +781,57 @@ export class TableroProduccionComponent implements OnInit {
   }
 
   // --- MÉTODOS PARA BOBINAS ---
+  toggleMainRowDropdown(id: string, event: MouseEvent) {
+    event.stopPropagation();
+    this.activeMainRowDropdownId.set(this.activeMainRowDropdownId() === id ? null : id);
+  }
+
   toggleWarningDropdown(id: string, event: MouseEvent) {
     event.stopPropagation();
     this.activeDropdownId.set(this.activeDropdownId() === id ? null : id);
   }
 
-  openSelectColumns() {
-    this.activeDropdownId.set(null);
+  openSelectColumns(extrusionId: string) {
+    this.activeMainRowDropdownId.set(null);
+    this.activeExtrusionId.set(extrusionId);
     this.showSelectColumnsModal.set(true);
   }
   closeSelectColumns() { this.showSelectColumnsModal.set(false); }
 
-  openAddManually() {
-    this.activeDropdownId.set(null);
-    this.addManualData = { 
-      bobbinNoA: null, serialNoA: '', kgA: null, 
-      bobbinNoB: null, serialNoB: '', kgB: null 
-    };
+  openAddManually(extrusionId: string) {
+    this.activeMainRowDropdownId.set(null);
+    this.activeExtrusionId.set(extrusionId);
+    this.addManualData = { paresBobinas: null };
     this.showAddManualModal.set(true);
   }
   closeAddManual() { this.showAddManualModal.set(false); }
 
   confirmAddManual() {
-    if (!this.selectedExtrusion()) return;
-    this.svc.addBobinasManual(this.selectedExtrusion().id, this.addManualData).subscribe(() => {
+    if (!this.activeExtrusionId()) return;
+    this.svc.addBobinasManual(this.activeExtrusionId()!, this.addManualData).subscribe(() => {
       this.closeAddManual();
-      this.openEditModal(this.selectedExtrusion().id); // Reload data
+      this.loadExtrusion();
     });
   }
 
   deleteBobina(bobinaId: string) {
     if (!this.selectedExtrusion()) return;
     this.svc.deleteBobina(this.selectedExtrusion().id, bobinaId).subscribe(() => {
-      this.openEditModal(this.selectedExtrusion().id); // Reload data
+      this.openEditModal(this.selectedExtrusion().id); // Recargar datos
     });
+  }
+
+  deleteExtrusion(id: string) {
+    if (confirm('¿Estás seguro de que deseas eliminar esta fila completa?')) {
+      this.svc.deleteExtrusion(id).subscribe(() => {
+        this.loadExtrusion();
+      });
+    }
   }
 
   @HostListener('document:click')
   onDocumentClick() {
     this.activeDropdownId.set(null);
+    this.activeMainRowDropdownId.set(null);
   }
 }

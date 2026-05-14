@@ -95,6 +95,9 @@ export class ProduccionConfigService {
   deleteBobina(extrusionId: string, bobinaId: string) {
     return this.http.delete(`${this.base}/extrusion/${extrusionId}/bobinas/${bobinaId}`);
   }
+  deleteExtrusion(id: string) {
+    return this.http.delete(`${this.base}/extrusion/${id}`);
+  }
   
   getTableroPrensado()  { return this.http.get<{ operacion: PrensadoItem[]  }>(`${this.base}/tablero/prensado`);  }
 

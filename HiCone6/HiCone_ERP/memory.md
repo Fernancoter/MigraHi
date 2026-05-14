@@ -3,9 +3,9 @@
 ## Rama Activa
 `configurarProduccion/refactor` — funcional, sincronizada con el nuevo baseline de DB.
 
-## Estado Actual (2026-05-13)
+## Estado Actual (2026-05-14)
 - **Backend:** Operativo (Puerto 5007). Seeder corregido y estable.
-- **Frontend:** Operativo (Puerto 4200). Módulo "Configurar Producción" (Sección Extrusión) completado al 100%.
+- **Frontend:** Operativo (Puerto 4200). Módulo "Configurar Producción" (Sección Extrusión) refactorizado y completado al 100%.
 - **Base de Datos:** `HiCone_ERP_V3` estabilizada mediante `InitialProductionBaseline`.
 
 ✅ **Módulo de Seguridad COMPLETADO** (commit: 3a869aa)
@@ -54,11 +54,13 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - **Modal de Edición**: Actualización del campo de operador a un selector dinámico conectado a la base de datos.
     - **Infraestructura**: Nuevo endpoint PATCH en el backend y método en el servicio para actualizaciones parciales de operadores.
     - **UI/UX**: Refinamiento de estilos para paneles flotantes y alineación inteligente de headers.
-- [x] **Módulo de Producción - Bloque de Información (Bobinas) COMPLETADO**:
-    - **Dominio y Base de Datos**: Extensión de la entidad `Extrusion` con nuevos campos operativos y actualización de la entidad `Bobina` con datos completos de trazabilidad (Station A/B, Scrap, etc.). Migración EF Core generada y aplicada.
-    - **Backend**: Nuevos endpoints en `ProduccionController` para agregar bobinas en pares y eliminarlas.
-    - **UI/UX (Tablero)**: Implementación de un diseño de referencia lógico (sin tabla tradicional) de 3 bloques para la información de las bobinas dentro del modal de edición.
-    - **Acciones y Modales**: Incorporación de botones de eliminación y advertencia interactiva (con submenú Exportar, modal "Select Columns" y modal "Add Manually").
+- [x] **Módulo de Producción - Bloque de Información (Bobinas) REFACTORIZADO**:
+    - **Persistencia Visual**: El modal de edición ahora mantiene siempre la estructura de 3 bloques (Fecha, Calibre, Ancho, Longitud, Virgen, Meta, Molido, Estado, Inicio/Fin Proceso, Pares) independientemente de si hay datos.
+    - **Simplificación de Entrada**: Se estandarizó el ingreso de bobinas a un único campo "Pares de bobinas" en lugar de entradas divididas por estación.
+    - **Gestión de Acciones**: Se integraron los botones "Lápiz" (Editar), "X" (Eliminar fila completa) y "!" (Menú de acciones: Exportar, Seleccionar columnas, Agregar manual) directamente en la tabla de operación.
+    - **Modal Seleccionar Columnas**: Implementación funcional en español con checkbox para los 12 campos de bobinas y selector de fijación.
+    - **Backend**: Refuerzo de la API con endpoint de eliminación de extrusión completa y lógica simplificada para adición de pares de bobinas.
+    - **Localización**: Interfaz 100% en español eliminando términos en inglés.
 
 - Documentation:
     - `init.md`: Guía de inicio rápido con comandos y puertos.
