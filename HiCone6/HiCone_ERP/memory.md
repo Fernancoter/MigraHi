@@ -54,6 +54,11 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - **Modal de Edición**: Actualización del campo de operador a un selector dinámico conectado a la base de datos.
     - **Infraestructura**: Nuevo endpoint PATCH en el backend y método en el servicio para actualizaciones parciales de operadores.
     - **UI/UX**: Refinamiento de estilos para paneles flotantes y alineación inteligente de headers.
+- [x] **Módulo de Producción - Bloque de Información (Bobinas) COMPLETADO**:
+    - **Dominio y Base de Datos**: Extensión de la entidad `Extrusion` con nuevos campos operativos y actualización de la entidad `Bobina` con datos completos de trazabilidad (Station A/B, Scrap, etc.). Migración EF Core generada y aplicada.
+    - **Backend**: Nuevos endpoints en `ProduccionController` para agregar bobinas en pares y eliminarlas.
+    - **UI/UX (Tablero)**: Implementación de un diseño de referencia lógico (sin tabla tradicional) de 3 bloques para la información de las bobinas dentro del modal de edición.
+    - **Acciones y Modales**: Incorporación de botones de eliminación y advertencia interactiva (con submenú Exportar, modal "Select Columns" y modal "Add Manually").
 
 - Documentation:
     - `init.md`: Guía de inicio rápido con comandos y puertos.

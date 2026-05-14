@@ -86,6 +86,7 @@ public class ProduccionController : ControllerBase
             .Include(e => e.Extrusora)
             .Include(e => e.Turno)
             .Include(e => e.Operario)
+            .Include(e => e.Bobinas)
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (e == null) return NotFound();
@@ -96,8 +97,84 @@ public class ProduccionController : ControllerBase
             Extrusora = e.Extrusora.Nombre,
             Turno = e.Turno != null ? e.Turno.Nombre : "",
             e.Producto,
-            Operador = e.Operario != null ? e.Operario.Nombre : ""
+            Operador = e.Operario != null ? e.Operario.Nombre : "",
+            OperadorId = e.OperarioId,
+            e.Fecha,
+            e.Status,
+            e.Calibre,
+            e.Ancho,
+            e.Longitud,
+            e.KgVirgen,
+            e.Target,
+            e.KgMolido,
+            e.ProcessStart,
+            e.ProcessEnd,
+            Bobinas = e.Bobinas.Select(b => new
+            {
+                b.Id,
+                b.BobbinNo,
+                b.SerialNo,
+                b.Kg,
+                b.ScrapKg,
+                b.Thickness,
+                b.Observations,
+                b.MillReason,
+                b.ProductName,
+                b.Reel,
+                b.RestStart,
+                b.RestMinutes,
+                b.Mill,
+                b.Station
+            }).OrderBy(b => b.Station).ToList()
         });
+    }
+
+    /// <summary>Agrega bobinas manualmente (en pares A y B)</summary>
+    [HttpPost("extrusion/{id}/bobinas")]
+    public async Task<IActionResult> AddBobinasManual(Guid id, [FromBody] AddBobinasDto dto)
+    {
+        var e = await _context.Extrusiones.FindAsync(id);
+        if (e == null) return NotFound();
+
+        var bobinaA = new Bobina
+        {
+            Id = Guid.NewGuid(),
+            ExtrusionId = id,
+            Station = "A",
+            BobbinNo = dto.BobbinNoA,
+            SerialNo = dto.SerialNoA,
+            Kg = dto.KgA,
+            Codigo = $"B-{dto.BobbinNoA}"
+        };
+
+        var bobinaB = new Bobina
+        {
+            Id = Guid.NewGuid(),
+            ExtrusionId = id,
+            Station = "B",
+            BobbinNo = dto.BobbinNoB,
+            SerialNo = dto.SerialNoB,
+            Kg = dto.KgB,
+            Codigo = $"B-{dto.BobbinNoB}"
+        };
+
+        _context.Bobinas.AddRange(bobinaA, bobinaB);
+        await _context.SaveChangesAsync(default);
+
+        return Ok(new { Message = "Bobinas agregadas correctamente" });
+    }
+
+    /// <summary>Elimina una bobina por Id</summary>
+    [HttpDelete("extrusion/{extrusionId}/bobinas/{bobinaId}")]
+    public async Task<IActionResult> DeleteBobina(Guid extrusionId, Guid bobinaId)
+    {
+        var b = await _context.Bobinas.FirstOrDefaultAsync(x => x.Id == bobinaId && x.ExtrusionId == extrusionId);
+        if (b == null) return NotFound();
+
+        _context.Bobinas.Remove(b);
+        await _context.SaveChangesAsync(default);
+
+        return NoContent();
     }
 
     /// <summary>Actualiza únicamente el operario asignado a una extrusión</summary>
@@ -268,3 +345,8 @@ public class ProduccionController : ControllerBase
 }
 
 public record PatchOperadorDto(Guid? OperarioId);
+
+public record AddBobinasDto(
+    long BobbinNoA, string SerialNoA, decimal KgA,
+    long BobbinNoB, string SerialNoB, decimal KgB
+);

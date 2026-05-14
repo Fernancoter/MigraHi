@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HiCone.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0f96ea0d63def993886219ef7170dbe30132bc6b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fdbabff6879890b78dd5c0a769b30df96efb8d44")]
 [assembly: System.Reflection.AssemblyProductAttribute("HiCone.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HiCone.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -186,6 +186,18 @@ public class Extrusion : TenantEntity
 
     public decimal Programado { get; set; }
     public ExtrusionStatus Status { get; set; } = ExtrusionStatus.PorProgramar;
+
+    // Nuevos campos para el bloque de información
+    public decimal Calibre { get; set; }
+    public string Ancho { get; set; } = "000/000";
+    public int Longitud { get; set; }
+    public decimal KgVirgen { get; set; }
+    public decimal Target { get; set; }
+    public decimal KgMolido { get; set; }
+    public DateTime? ProcessStart { get; set; }
+    public DateTime? ProcessEnd { get; set; }
+
+    public virtual ICollection<Bobina> Bobinas { get; set; } = [];
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

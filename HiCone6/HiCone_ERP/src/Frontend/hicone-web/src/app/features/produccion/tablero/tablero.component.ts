@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } from '../../../core/services/produccion-config.service';
@@ -318,6 +318,145 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
                   }
                 </select>
               </div>
+
+              <!-- BLOQUE DE INFORMACIÓN (BOBINAS) -->
+              <div class="sub-section">
+                <div class="flex-between align-center mb-4">
+                  <h4>Información de Bobinas</h4>
+                  <button class="btn-primary-small" (click)="openAddManually()">+ Agregar</button>
+                </div>
+
+                @if (selectedExtrusion()?.bobinas?.length > 0) {
+                  <div class="bobbins-list">
+                    @for (b of selectedExtrusion()?.bobinas; track b.id) {
+                      <div class="bobbin-card">
+                        
+                        <!-- Block 1 -->
+                        <div class="bc-block">
+                          <div class="bc-item"><label>Date</label><span>{{ selectedExtrusion()?.fecha | date:'dd/MM/yy HH:mm' }}</span></div>
+                          <div class="bc-item"><label>Gauge</label><span>{{ selectedExtrusion()?.calibre || '0.00' }}</span></div>
+                          <div class="bc-item"><label>Width</label><span>{{ selectedExtrusion()?.ancho || '000/000' }}</span></div>
+                          <div class="bc-item"><label>Length</label><span>{{ selectedExtrusion()?.longitud || '0' }}</span></div>
+                        </div>
+                        
+                        <!-- Block 2 -->
+                        <div class="bc-block">
+                          <div class="bc-item"><label>Virgin kg</label><span>{{ selectedExtrusion()?.kgVirgen || '0.00' }}</span></div>
+                          <div class="bc-item"><label>Target</label><span>{{ selectedExtrusion()?.target || '0.00' }}</span></div>
+                          <div class="bc-item"><label>Ground kg</label><span>{{ selectedExtrusion()?.kgMolido || '0.00' }}</span></div>
+                          <div class="bc-item" style="position: relative;">
+                            <label>Status</label>
+                            <select class="status-selector" [value]="selectedExtrusion()?.status">
+                              <option value="Programada">Programada</option>
+                              <option value="EnProceso">En Proceso</option>
+                              <option value="Intermedia">Intermedia</option>
+                              <option value="Terminada">Terminada</option>
+                              <option value="PorProgramar">Por Programar</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <!-- Block 3 -->
+                        <div class="bc-block relative-block">
+                          <div class="bc-item"><label>Process Start</label><span>{{ selectedExtrusion()?.processStart ? (selectedExtrusion()?.processStart | date:'dd/MM/yy HH:mm') : '---' }}</span></div>
+                          <div class="bc-item"><label>Process End</label><span>{{ selectedExtrusion()?.processEnd ? (selectedExtrusion()?.processEnd | date:'dd/MM/yy HH:mm') : '---' }}</span></div>
+                          
+                          <!-- Side Actions -->
+                          <div class="bc-actions">
+                            <button class="btn-action-x" (click)="deleteBobina(b.id)" title="Remove row">×</button>
+                            <div class="warning-dropdown-container">
+                              <button class="btn-action-warn" (click)="toggleWarningDropdown(b.id, $event)">!</button>
+                              @if (activeDropdownId() === b.id) {
+                                <div class="warning-dropdown animate-fade-in" (click)="$event.stopPropagation()">
+                                  <div class="wd-item has-submenu">
+                                    Export <span class="arrow">▶</span>
+                                    <div class="wd-submenu">
+                                      <div class="wd-item">CSV</div>
+                                      <div class="wd-item">PDF</div>
+                                    </div>
+                                  </div>
+                                  <div class="wd-item" (click)="openSelectColumns()">Select Columns</div>
+                                  <div class="wd-item" (click)="openAddManually()">Add Manually</div>
+                                </div>
+                              }
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <div class="empty-state-small">No hay información de bobinas registrada.</div>
+                }
+              </div>
+
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- MODAL ADD MANUALLY -->
+      @if (showAddManualModal()) {
+        <div class="modal-backdrop animate-fade-in" style="z-index: 1050;" (click)="closeAddManual()">
+          <div class="modal-container animate-slide-up" style="max-width: 650px;" (click)="$event.stopPropagation()">
+            <header class="modal-header">
+              <h2>Add Manually</h2>
+              <button class="btn-close" (click)="closeAddManual()">×</button>
+            </header>
+            <div class="modal-body">
+              <div class="manual-add-content">
+                <h3>Add Bobbin</h3>
+                <p class="text-muted" style="margin-top: 0.25rem;">Add bobbin manually to extrusion</p>
+                <div class="alert-info mt-4">Bobbins must be added in pairs, one for Station A and one for Station B</div>
+                
+                <div class="bobbin-pairs-grid mt-4">
+                  <div class="station-col">
+                    <h4 class="station-title">Station A</h4>
+                    <div class="form-group"><label>Bobbin No</label><input type="number" [(ngModel)]="addManualData.bobbinNoA" class="form-input"></div>
+                    <div class="form-group"><label>Serial No</label><input type="text" [(ngModel)]="addManualData.serialNoA" class="form-input"></div>
+                    <div class="form-group"><label>Kg</label><input type="number" [(ngModel)]="addManualData.kgA" class="form-input"></div>
+                  </div>
+                  <div class="station-col">
+                    <h4 class="station-title">Station B</h4>
+                    <div class="form-group"><label>Bobbin No</label><input type="number" [(ngModel)]="addManualData.bobbinNoB" class="form-input"></div>
+                    <div class="form-group"><label>Serial No</label><input type="text" [(ngModel)]="addManualData.serialNoB" class="form-input"></div>
+                    <div class="form-group"><label>Kg</label><input type="number" [(ngModel)]="addManualData.kgB" class="form-input"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn-cancel" (click)="closeAddManual()">Cancel</button>
+                <button class="btn-confirm" (click)="confirmAddManual()">Confirm</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- MODAL SELECT COLUMNS -->
+      @if (showSelectColumnsModal()) {
+        <div class="modal-backdrop animate-fade-in" style="z-index: 1050;" (click)="closeSelectColumns()">
+          <div class="modal-container animate-slide-up" style="max-width: 400px;" (click)="$event.stopPropagation()">
+            <header class="modal-header">
+              <h2>Select Columns</h2>
+              <button class="btn-close" (click)="closeSelectColumns()">×</button>
+            </header>
+            <div class="modal-body">
+              <div class="columns-list">
+                @for (col of availableColumns; track col) {
+                  <label class="checkbox-row">
+                    <input type="checkbox" checked> {{ col }}
+                  </label>
+                }
+              </div>
+              <div class="pin-section mt-4">
+                <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: #475569;">Pin to Right</label>
+                <select class="form-select">
+                  <option>None</option>
+                  <option>Actions</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -435,6 +574,66 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
     /* SELECTOR EN MODAL */
     .op-selector { width: 100%; padding: 0.75rem; border-radius: 10px; border: 2px solid #f1f5f9; background: #f8fafc; color: #0f172a; font-size: 1rem; font-weight: 700; outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.25rem; }
     .op-selector:focus { border-color: #10b981; background-color: white; }
+
+    /* NUEVO BLOQUE BOBINAS (NO TABLA) */
+    .flex-between { display: flex; justify-content: space-between; }
+    .align-center { align-items: center; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mt-4 { margin-top: 1.5rem; }
+    
+    .btn-primary-small { background: #10b981; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
+    .btn-primary-small:hover { background: #059669; }
+
+    .bobbin-card { display: flex; gap: 2rem; padding: 1.25rem 0; border-bottom: 1px dashed #cbd5e1; position: relative; }
+    .bobbin-card:last-child { border-bottom: none; }
+    .bc-block { display: flex; gap: 1.5rem; flex: 1; }
+    .bc-item { display: flex; flex-direction: column; gap: 0.25rem; min-width: 80px; }
+    .bc-item label { font-size: 0.65rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
+    .bc-item span { font-size: 0.9rem; font-weight: 600; color: #334155; }
+    
+    .status-selector { border: none; background: #f8fafc; padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; color: #475569; outline: none; cursor: pointer; }
+    
+    .relative-block { position: relative; padding-right: 80px; }
+    .bc-actions { position: absolute; right: 0; top: 50%; transform: translateY(-50%); display: flex; gap: 0.5rem; align-items: center; }
+    
+    .btn-action-x { width: 28px; height: 28px; border-radius: 50%; background: #fee2e2; color: #ef4444; border: none; font-size: 1.2rem; line-height: 1; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .btn-action-x:hover { background: #ef4444; color: white; transform: scale(1.1); }
+    
+    .btn-action-warn { width: 28px; height: 28px; border-radius: 50%; background: #fef3c7; color: #d97706; border: 1px solid #fde68a; font-size: 1rem; line-height: 1; cursor: pointer; font-weight: 900; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .btn-action-warn:hover { background: #f59e0b; color: white; transform: scale(1.1); }
+
+    .warning-dropdown-container { position: relative; }
+    .warning-dropdown { position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); width: 160px; z-index: 100; padding: 0.5rem; }
+    .wd-item { padding: 0.6rem 0.8rem; font-size: 0.85rem; font-weight: 600; color: #475569; border-radius: 8px; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; position: relative; }
+    .wd-item:hover { background: #f1f5f9; color: #1e293b; }
+    .arrow { font-size: 0.6rem; color: #94a3b8; }
+    
+    .has-submenu:hover .wd-submenu { display: block; }
+    .wd-submenu { display: none; position: absolute; right: 100%; top: 0; background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); width: 120px; padding: 0.5rem; margin-right: 0.5rem; }
+
+    .empty-state-small { padding: 2rem; text-align: center; color: #94a3b8; font-style: italic; background: #f8fafc; border-radius: 12px; }
+
+    /* MANUAL ADD MODAL */
+    .text-muted { color: #64748b; font-size: 0.9rem; }
+    .alert-info { background: #e0f2fe; color: #0369a1; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; }
+    .bobbin-pairs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .station-title { color: #1e293b; font-weight: 800; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.4rem; }
+    .form-input { width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 0.9rem; }
+    .form-input:focus { border-color: #10b981; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1); }
+    
+    .modal-footer { border-top: 1px solid #f1f5f9; padding-top: 1.5rem; margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem; }
+    .btn-cancel { background: transparent; border: 1px solid #cbd5e1; color: #475569; padding: 0.6rem 1.25rem; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-cancel:hover { background: #f1f5f9; }
+    .btn-confirm { background: #10b981; color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-confirm:hover { background: #059669; }
+
+    /* SELECT COLUMNS MODAL */
+    .columns-list { display: flex; flex-direction: column; gap: 0.6rem; max-height: 300px; overflow-y: auto; padding-right: 1rem; }
+    .checkbox-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #334155; font-weight: 600; cursor: pointer; }
+    .checkbox-row input { accent-color: #10b981; width: 16px; height: 16px; cursor: pointer; }
+    .form-select { width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 0.9rem; }
   `]
 })
 export class TableroProduccionComponent implements OnInit {
@@ -452,6 +651,23 @@ export class TableroProduccionComponent implements OnInit {
   showModal = signal(false);
   selectedExtrusion = signal<any>(null);
   operariosDisponibles = signal<any[]>([]);
+
+  // States para la nueva funcionalidad de Bobinas
+  activeDropdownId = signal<string | null>(null);
+  showAddManualModal = signal(false);
+  showSelectColumnsModal = signal(false);
+  
+  availableColumns = [
+    'Bobbin No', 'Bobbin Serial No', 'Bobbin Kg', 'Bobbin Scrap Kg', 
+    'Bobbin Thickness', 'Bobbin Observations', 'Bobbin Mill Reason', 
+    'Bobbin Product Name', 'Bobbin Reel', 'Bobbin Rest Start', 
+    'Bobbin Rest Minutes', 'Bobbin Mill'
+  ];
+
+  addManualData = {
+    bobbinNoA: null as number | null, serialNoA: '', kgA: null as number | null,
+    bobbinNoB: null as number | null, serialNoB: '', kgB: null as number | null
+  };
 
   // Filtros dinámicos
   activeFilter = signal<string | null>(null); // 'tabla-columna'
@@ -541,5 +757,47 @@ export class TableroProduccionComponent implements OnInit {
   closeModal() {
     this.showModal.set(false);
     this.selectedExtrusion.set(null);
+  }
+
+  // --- MÉTODOS PARA BOBINAS ---
+  toggleWarningDropdown(id: string, event: MouseEvent) {
+    event.stopPropagation();
+    this.activeDropdownId.set(this.activeDropdownId() === id ? null : id);
+  }
+
+  openSelectColumns() {
+    this.activeDropdownId.set(null);
+    this.showSelectColumnsModal.set(true);
+  }
+  closeSelectColumns() { this.showSelectColumnsModal.set(false); }
+
+  openAddManually() {
+    this.activeDropdownId.set(null);
+    this.addManualData = { 
+      bobbinNoA: null, serialNoA: '', kgA: null, 
+      bobbinNoB: null, serialNoB: '', kgB: null 
+    };
+    this.showAddManualModal.set(true);
+  }
+  closeAddManual() { this.showAddManualModal.set(false); }
+
+  confirmAddManual() {
+    if (!this.selectedExtrusion()) return;
+    this.svc.addBobinasManual(this.selectedExtrusion().id, this.addManualData).subscribe(() => {
+      this.closeAddManual();
+      this.openEditModal(this.selectedExtrusion().id); // Reload data
+    });
+  }
+
+  deleteBobina(bobinaId: string) {
+    if (!this.selectedExtrusion()) return;
+    this.svc.deleteBobina(this.selectedExtrusion().id, bobinaId).subscribe(() => {
+      this.openEditModal(this.selectedExtrusion().id); // Reload data
+    });
+  }
+
+  @HostListener('document:click')
+  onDocumentClick() {
+    this.activeDropdownId.set(null);
   }
 }

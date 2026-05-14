@@ -39,6 +39,43 @@ export interface ExtrusionOperacion {
   extrusionId: number;
 }
 
+export interface Bobina {
+  id: string;
+  bobbinNo: number;
+  serialNo: string;
+  kg: number;
+  scrapKg: number;
+  thickness: number;
+  observations: string;
+  millReason: string;
+  productName: string;
+  reel: string;
+  restStart: string;
+  restMinutes: number;
+  mill: string;
+  station: string;
+}
+
+export interface ExtrusionDetail {
+  id: string;
+  extrusora: string;
+  turno: string;
+  producto: string;
+  operador: string;
+  operadorId: string;
+  fecha: string;
+  status: string;
+  calibre: number;
+  ancho: string;
+  longitud: number;
+  kgVirgen: number;
+  target: number;
+  kgMolido: number;
+  processStart: string;
+  processEnd: string;
+  bobinas: Bobina[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class ProduccionConfigService {
   private http = inject(HttpClient);
@@ -48,9 +85,15 @@ export class ProduccionConfigService {
   // ── TABLERO / EXTRUSIÓN ───────────────────────────────────────────────────
   getExtrusionProgramacion() { return this.http.get<ExtrusionProgramacion[]>(`${this.base}/extrusion/programacion`); }
   getExtrusionOperacion()   { return this.http.get<ExtrusionOperacion[]>(`${this.base}/extrusion/operacion`); }
-  getExtrusionDetail(id: string) { return this.http.get<any>(`${this.base}/extrusion/${id}`); }
+  getExtrusionDetail(id: string) { return this.http.get<ExtrusionDetail>(`${this.base}/extrusion/${id}`); }
   patchExtrusionOperador(id: string, operarioId: string | null) {
     return this.http.patch(`${this.base}/extrusion/${id}/operador`, { operarioId });
+  }
+  addBobinasManual(extrusionId: string, data: any) {
+    return this.http.post(`${this.base}/extrusion/${extrusionId}/bobinas`, data);
+  }
+  deleteBobina(extrusionId: string, bobinaId: string) {
+    return this.http.delete(`${this.base}/extrusion/${extrusionId}/bobinas/${bobinaId}`);
   }
   
   getTableroPrensado()  { return this.http.get<{ operacion: PrensadoItem[]  }>(`${this.base}/tablero/prensado`);  }
