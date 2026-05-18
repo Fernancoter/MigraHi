@@ -1,5 +1,21 @@
 # Changelog - HiCone ERP Modernization
 
+## [1.5.0] - 2026-05-18
+### Added
+- **Catálogo de Productos (`productos.component.ts`)**: Creado nuevo catálogo independiente de Productos con visuales premium idénticos a los de Operarios.
+- **Selector de Producto SAE**: Implementado input-select interactivo con desplegable de códigos SAE simulados y autocompletado en el modal de Información General.
+- **Categoría en Producto**: Selector dinámico para asociar categorías cargadas en tiempo real desde el servicio API.
+
+### Changed
+- **Catálogo de Operarios (`operarios.component.ts`)**: Refactorizado por completo a un catálogo dinámico premium con grilla de 5 columnas.
+- **Cabecera Activo Interactiva**: Añadida cabecera para "Activo" con desplegable interactivo conteniendo ordenación A-Z/Z-A, fijación de columnas e indicadores visuales de estado.
+- **Modales de Operario**: Modal dinámico unificado que soporta el modo solo lectura (`Ver`) y modo edición (`Editar`/`Crear`), incorporando soporte para `fotografia` y `userGuid`.
+- **Paginación Dinámica**: Implementación de lógica de ventana deslizante ("Sliding Window") para navegación reactiva de registros.
+- **Limpieza de Inicio Extrusión (`tablero.component.ts`)**: Se revirtieron todos los cambios incorrectamente ubicados en la pantalla de extrusión de inicio, dejándola limpia en su estado nativo de monitoreo en tiempo real.
+
+### Fixed
+- **Exportación a PDF en Extrusión**: Corregido error en tiempo de ejecución de `jspdf-autotable` migrando al estándar ESM (`import autoTable`).
+
 ## [1.4.1] - 2026-05-14
 ### Added
 - **Delete Confirmation Modal**: Nuevo modal visual para confirmar la eliminación de registros, reemplazando la alerta nativa.
