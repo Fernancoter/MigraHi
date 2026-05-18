@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface Operario   { id: string; nombre: string; activo: boolean; }
+export interface Operario   { id: string; nombre: string; activo: boolean; fotografia?: string; userGuid?: string; }
 export interface Turno      { id: string; nombre: string; horaInicio: string; horaFin: string; }
 export interface Extrusora  { id: string; nombre: string; }
 export interface Prensa     { id: string; nombre: string; marca?: string; modelo?: string; }

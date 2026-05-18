@@ -6,7 +6,6 @@ import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-
 @Component({
   selector: 'app-tablero-produccion',
   standalone: true,
@@ -136,233 +135,167 @@ import autoTable from 'jspdf-autotable';
               <span class="badge-live pulse">En Vivo</span>
             </div>
             
-            <!-- BARRA DE ACCIONES SUPERIOR (TOP ACTION BAR) -->
-            <div class="actions-toolbar" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #ffffff; border-bottom: 1px solid #e2e8f0; gap: 1rem; flex-wrap: wrap;">
-              <!-- Left Side -->
-              <div class="left-actions" style="display: flex; gap: 0.75rem; align-items: center;">
-                <!-- 1. Export -->
-                <div class="dropdown-wrapper" style="position: relative;">
-                  <button class="btn btn-secondary" (click)="toggleTopExportDropdown()" style="display: flex; align-items: center; gap: 0.4rem;">
-                    <span>⬇️</span> Exportar
-                  </button>
-                  @if (showTopExportDropdown()) {
-                    <div class="column-selector-popover animate-slide-up" style="position: absolute; left: 0; top: 110%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; width: 150px; z-index: 100;">
-                      <div class="dropdown-item" (click)="exportToExcel('extrusion'); showTopExportDropdown.set(false);" style="padding: 0.6rem 1rem; font-size: 0.85rem; color: #334155; cursor: pointer; transition: background 0.15s;">Excel</div>
-                      <div class="dropdown-item" (click)="exportToPDF('extrusion'); showTopExportDropdown.set(false);" style="padding: 0.6rem 1rem; font-size: 0.85rem; color: #334155; cursor: pointer; transition: background 0.15s; border-top: 1px solid #f1f5f9;">PDF</div>
-                    </div>
-                  }
-                </div>
-
-                <!-- 2. Add -->
-                <button class="btn btn-primary" style="display: flex; align-items: center; gap: 0.3rem;">
-                  <span>+</span> Agregar
-                </button>
-
-                <!-- 3. Select Columns -->
-                <div class="dropdown-wrapper" style="position: relative;">
-                  <button class="btn btn-secondary" (click)="toggleTopColumnsDropdown()" style="display: flex; align-items: center; gap: 0.4rem;">
-                    <span>📊</span> Seleccionar columnas <span style="font-size: 0.75rem;">▼</span>
-                  </button>
-                  @if (showTopColumnsDropdown()) {
-                    <div class="column-selector-popover animate-slide-up" (click)="$event.stopPropagation()" style="position: absolute; left: 0; top: 110%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 1rem; width: 220px; z-index: 100;">
-                      <!-- Search Bar -->
-                      <input 
-                        type="text" 
-                        class="field-input" 
-                        placeholder="Buscar columna..." 
-                        style="width: 100%; margin-bottom: 0.75rem; font-size: 0.8rem; padding: 0.4rem 0.6rem;"
-                        [ngModel]="colSearchText()"
-                        (ngModelChange)="colSearchText.set($event)"
-                      />
-                      
-                      <!-- Checkbox Options -->
-                      <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 180px; overflow-y: auto; margin-bottom: 0.75rem;">
-                        @if (shouldShowColOption('Nombre')) {
-                          <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #334155; cursor: pointer;">
-                            <input type="checkbox" [checked]="isColVisible('nombre')" (change)="toggleCol('nombre')">
-                            <span>👤</span> Nombre
-                          </label>
-                        }
-                        @if (shouldShowColOption('Fotografía')) {
-                          <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #334155; cursor: pointer;">
-                            <input type="checkbox" [checked]="isColVisible('fotografia')" (change)="toggleCol('fotografia')">
-                            <span>🖼️</span> Fotografía
-                          </label>
-                        }
-                        @if (shouldShowColOption('Activo')) {
-                          <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #334155; cursor: pointer;">
-                            <input type="checkbox" [checked]="isColVisible('activo')" (change)="toggleCol('activo')">
-                            <span>⚡</span> Activo
-                          </label>
-                        }
-                      </div>
-
-                      <!-- Update Button -->
-                      <button class="btn btn-primary" (click)="showTopColumnsDropdown.set(false)" style="width: 100%; padding: 0.4rem; font-size: 0.8rem;">
-                        Actualizar
-                      </button>
-                    </div>
-                  }
-                </div>
-              </div>
-
-              <!-- Right Side -->
-              <div class="right-actions" style="display: flex; gap: 0.75rem; align-items: center; margin-left: auto;">
-                <!-- Filter Icon -->
-                <div class="dropdown-wrapper" style="position: relative;">
-                  <button class="btn btn-secondary" (click)="toggleTopFilterMenu()" style="padding: 0.5rem 0.75rem; display: flex; align-items: center; justify-content: center;" title="Filtros">
-                    <span>🔍⚙️</span>
-                  </button>
-                  @if (showTopFilterMenu()) {
-                    <div class="column-selector-popover animate-slide-up" style="position: absolute; right: 0; top: 110%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; width: 180px; z-index: 100;">
-                      <div class="dropdown-item" (click)="clearAllExtrusionFilters()" style="padding: 0.6rem 1rem; font-size: 0.85rem; color: #334155; cursor: pointer; transition: background 0.15s; display: flex; align-items: center; gap: 0.5rem;">
-                        <span>🗑️</span> Limpiar filtros
-                      </div>
-                      <div class="dropdown-item" (click)="saveFiltersAs()" style="padding: 0.6rem 1rem; font-size: 0.85rem; color: #334155; cursor: pointer; transition: background 0.15s; border-top: 1px solid #f1f5f9; display: flex; align-items: center; gap: 0.5rem;">
-                        <span>💾</span> Guardar filtros como
-                      </div>
-                    </div>
-                  }
-                </div>
-
-                <!-- Search Bar -->
-                <div class="search-box" style="position: relative;">
-                  <span class="search-icon" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.85rem;">🔍</span>
-                  <input 
-                    class="field-input" 
-                    type="text" 
-                    style="padding-left: 2.2rem; width: 200px; font-size: 0.85rem; padding-top: 0.4rem; padding-bottom: 0.4rem;" 
-                    placeholder="Buscar..." 
-                    [ngModel]="generalSearchText()" 
-                    (ngModelChange)="generalSearchText.set($event)"
-                  />
-                </div>
-              </div>
-            </div>
-            
             <div class="table-wrapper">
               <table class="premium-table">
                 <thead>
                   <tr>
+                    <th class="header-empty"></th> <!-- Estado -->
+                    <th class="header-empty"></th> <!-- Editar -->
                     <th class="header-empty"></th>
                     <th class="header-empty"></th>
                     <th class="header-empty"></th>
-                    @if (isColVisible('nombre')) {
-                      <th (click)="toggleNameHeaderDropdown($event)" style="cursor: pointer; position: relative;">
-                        <span class="th-inner" style="display: flex; align-items: center; gap: 0.25rem;">Nombre <span style="font-size: 0.75rem;">▼</span></span>
-                        @if (showNameHeaderDropdown()) {
-                          <!-- Dropdown Modal for Name Header -->
-                          <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()" style="position: absolute; left: 0; top: 110%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 0.8rem; width: 220px; z-index: 100; font-weight: normal; text-align: left;">
-                            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
-                              <button class="sort-btn" (click)="sortName('asc')" style="background: none; border: none; text-align: left; padding: 0.4rem; font-size: 0.85rem; color: #334155; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; width: 100%;">
-                                <span>⬆️</span> Ordenar A-Z
-                              </button>
-                              <button class="sort-btn" (click)="sortName('desc')" style="background: none; border: none; text-align: left; padding: 0.4rem; font-size: 0.85rem; color: #334155; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; width: 100%;">
-                                <span>⬇️</span> Ordenar Z-A
-                              </button>
-                              <button class="sort-btn" (click)="pinColumn('left')" style="background: none; border: none; text-align: left; padding: 0.4rem; font-size: 0.85rem; color: #334155; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; width: 100%; border-top: 1px solid #f1f5f9;">
-                                <span>📌</span> Fijar a la izquierda
-                              </button>
-                              <button class="sort-btn" (click)="pinColumn('right')" style="background: none; border: none; text-align: left; padding: 0.4rem; font-size: 0.85rem; color: #334155; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; width: 100%;">
-                                <span>📌</span> Fijar a la derecha
-                              </button>
-                              
-                              <input 
-                                type="text" 
-                                class="field-input" 
-                                placeholder="Buscar..." 
-                                style="width: 100%; margin-top: 0.5rem; margin-bottom: 0.5rem; font-size: 0.8rem; padding: 0.4rem 0.6rem;"
-                                [ngModel]="nameSearchText()" 
-                                (ngModelChange)="nameSearchText.set($event)"
-                              />
-                              
-                              <div style="margin-top: 0.25rem;">
-                                <span style="font-size: 0.75rem; font-weight: bold; color: #94a3b8; text-transform: uppercase;">Más usados</span>
-                                <div style="display: flex; flex-direction: column; gap: 0.25rem; margin-top: 0.25rem;">
-                                  @for (opt of nameMostUsedOptions(); track opt) {
-                                    <div (click)="selectNameFilter(opt)" style="padding: 0.3rem 0.5rem; font-size: 0.8rem; color: #475569; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; border-radius: 6px; transition: background 0.15s;">
-                                      <span>🏷️</span> {{ opt }}
-                                    </div>
-                                  }
-                                </div>
-                              </div>
+                    <th (click)="toggleFilter('oper-extrusora', $event)">
+                      Extrusora <span class="sort-icon">{{ sortDirOper() === 'asc' ? '↑' : '↓' }}</span>
+                      @if (activeFilter() === 'oper-extrusora') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [value]="filterSearch()" (input)="filterSearch.set($any($event.target).value)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('oper-turno', $event)">
+                      <span class="th-inner">Turno <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-turno') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [value]="filterSearch()" (input)="filterSearch.set($any($event.target).value)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('oper-producto', $event)">
+                      <span class="th-inner">Producto <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-producto') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [value]="filterSearch()" (input)="filterSearch.set($any($event.target).value)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('oper-operador', $event)">
+                      <span class="th-inner">Operador <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-operador') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [value]="filterSearch()" (input)="filterSearch.set($any($event.target).value)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th class="text-right" (click)="toggleFilter('oper-producido', $event)">
+                      <span class="th-inner">Producido <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-producido') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="range-group">
+                            <div class="range-field"><label>Desde</label><input type="number" class="search-input" [value]="filterDesde()" (input)="filterDesde.set($any($event.target).value)"></div>
+                            <div class="range-field"><label>Hasta</label><input type="number" class="search-input" [value]="filterHasta()" (input)="filterHasta.set($any($event.target).value)"></div>
+                            <button class="btn-search-filter">Buscar</button>
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th class="text-right" (click)="toggleFilter('oper-interrupcion', $event)">
+                      <span class="th-inner">Tiempo Interrupción (min) <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-interrupcion') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="range-group">
+                            <div class="range-field"><label>Desde</label><input type="number" class="search-input" [value]="filterDesde()" (input)="filterDesde.set($any($event.target).value)"></div>
+                            <div class="range-field"><label>Hasta</label><input type="number" class="search-input" [value]="filterHasta()" (input)="filterHasta.set($any($event.target).value)"></div>
+                            <button class="btn-search-filter">Buscar</button>
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('oper-encurso', $event)">
+                      <span class="th-inner">En Curso <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-encurso') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <label class="boolean-option"><input type="radio" name="encurso"> Marcado</label>
+                            <label class="boolean-option"><input type="radio" name="encurso"> Desmarcado</label>
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('oper-extid', $event)">
+                      <span class="th-inner">Extrusión ID <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-extid') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <div class="range-group" style="margin-top: 0.5rem; border-top: 1px solid #f1f5f9; padding-top: 0.5rem;">
+                              <div class="range-field"><label>Desde</label><input type="number" class="search-input"></div>
+                              <div class="range-field"><label>Hasta</label><input type="number" class="search-input"></div>
+                              <button class="btn-search-filter">Buscar</button>
                             </div>
                           </div>
-                        }
-                      </th>
-                    }
-                    @if (isColVisible('activo')) {
-                      <th (click)="toggleActiveHeaderDropdown($event)" style="cursor: pointer; position: relative;">
-                        <span class="th-inner" style="display: flex; align-items: center; gap: 0.25rem;">Activo <span style="font-size: 0.75rem;">▼</span></span>
-                        @if (showActiveHeaderDropdown()) {
-                          <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()" style="position: absolute; left: 0; top: 110%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 0.8rem; width: 160px; z-index: 100; font-weight: normal; text-align: left;">
-                            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
-                              <button class="sort-btn" (click)="filterActiveState('all')" style="background: none; border: none; text-align: left; padding: 0.4rem; font-size: 0.85rem; color: #334155; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; width: 100%;">
-                                <span>🔄</span> Todos
-                              </button>
-                              <button class="sort-btn" (click)="filterActiveState('active')" style="background: none; border: none; text-align: left; padding: 0.4rem; font-size: 0.85rem; color: #334155; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; width: 100%;">
-                                <span>🟩</span> Activos
-                              </button>
-                              <button class="sort-btn" (click)="filterActiveState('inactive')" style="background: none; border: none; text-align: left; padding: 0.4rem; font-size: 0.85rem; color: #334155; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; width: 100%;">
-                                <span>🟥</span> Inactivos
-                              </button>
-                            </div>
-                          </div>
-                        }
-                      </th>
-                    }
+                        </div>
+                      }
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   @if (loading()) {
-                    <tr><td colspan="5" class="loading-cell">Cargando operación...</td></tr>
-                  } @else if (filteredOperacionExtNew().length === 0) {
-                    <tr><td colspan="5" class="empty-cell">Sin registros.</td></tr>
+                    <tr><td colspan="13" class="loading-cell">Cargando operación...</td></tr>
+                  } @else if (filteredOperacionExt().length === 0) {
+                    <tr><td colspan="13" class="empty-cell">Sin registros en curso.</td></tr>
                   } @else {
-                    @for (item of filteredOperacionExtNew(); track item.id) {
+                    @for (item of filteredOperacionExt(); track item.id) {
                       <tr [class.row-active]="item.enCurso">
-                        <!-- View Column -->
-                        <td style="width: 70px; text-align: center; padding-right: 0.25rem;">
-                          <button class="action-btn view" (click)="openViewModal(item.id)" style="background: #e0f2fe; color: #0369a1; border: none; padding: 0.3rem 0.8rem; border-radius: 6px; font-weight: 600; font-size: 0.78rem; cursor: pointer;">
-                            Ver
-                          </button>
+                        <td>
+                          <span class="status-indicator" [attr.data-status]="item.status">
+                            {{ item.status }}
+                          </span>
                         </td>
-                        <!-- Edit Column -->
-                        <td style="width: 70px; text-align: center; padding-left: 0.25rem; padding-right: 0.25rem;">
-                          <button class="action-btn edit" (click)="openEditModal(item.id)" style="background: #fef3c7; color: #92400e; border: none; padding: 0.3rem 0.8rem; border-radius: 6px; font-weight: 600; font-size: 0.78rem; cursor: pointer;">
-                            Editar
-                          </button>
-                        </td>
-                        <!-- Delete Column -->
-                        <td style="width: 70px; text-align: center; padding-left: 0.25rem;">
-                          <button class="action-btn delete" (click)="deleteExtrusion(item.id)" style="background: #fee2e2; color: #991b1b; border: none; padding: 0.3rem 0.8rem; border-radius: 6px; font-weight: 600; font-size: 0.78rem; cursor: pointer;">
-                            Borrar
-                          </button>
-                        </td>
-                        <!-- Name Column (Corresponding Information) -->
-                        @if (isColVisible('nombre')) {
-                          <td style="font-weight: 700; color: #1e293b;">
-                            <div style="display: flex; align-items: center; gap: 0.5rem; height: 100%;">
-                              @if (isColVisible('fotografia')) {
-                                <div class="photo-avatar" style="width: 28px; height: 28px; border-radius: 6px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; border: 1px solid #cbd5e1; flex-shrink: 0;">
-                                  ⚙️
+                        <td class="actions-cell">
+                          <div class="actions-flex">
+                            <button class="btn-icon-edit" title="Editar" (click)="openEditModal(item.id)">
+                              <span class="icon">✎</span>
+                            </button>
+                            <button class="btn-icon-delete" title="Eliminar fila completa" (click)="deleteExtrusion(item.id)">
+                              <span class="icon">×</span>
+                            </button>
+                            <div class="warning-dropdown-container">
+                              <button class="btn-icon-warn" title="Menú de acciones" (click)="toggleMainRowDropdown(item.id, $event)">
+                                <span class="icon">!</span>
+                              </button>
+                              @if (activeMainRowDropdownId() === item.id) {
+                                <div class="warning-dropdown main-row-dropdown animate-fade-in" (click)="$event.stopPropagation()">
+                                  <div class="wd-item has-submenu">
+                                    Exportar <span class="arrow">▶</span>
+                                    <div class="wd-submenu">
+                                      <div class="wd-item" (click)="exportToExcel('extrusion')">Excel</div>
+                                      <div class="wd-item" (click)="exportToPDF('extrusion')">PDF</div>
+                                    </div>
+                                  </div>
+                                  <div class="wd-item" (click)="openSelectColumns(item.id)">Seleccionar columnas</div>
+                                  <div class="wd-item" (click)="openAddManually(item.id)">Agregar manual</div>
                                 </div>
                               }
-                              <span>{{ item.extrusora }}</span>
                             </div>
-                          </td>
-                        }
-                        <!-- Active Column (Checkbox) -->
-                        @if (isColVisible('activo')) {
-                          <td style="width: 80px; text-align: center;">
-                            <input 
-                              type="checkbox" 
-                              [checked]="item.enCurso" 
-                              (change)="toggleRowActiveState(item.id, $any($event.target).checked)" 
-                              style="width: 16px; height: 16px; cursor: pointer; accent-color: #10b981;"
-                            />
-                          </td>
-                        }
+                          </div>
+                        </td>
+                        <td><strong>{{ item.extrusora }}</strong></td>
+                        <td>{{ item.turno }}</td>
+                        <td>{{ item.producto }}</td>
+                        <td>{{ item.operador }}</td>
+                        <td class="text-right font-bold">{{ item.producido | number }}</td>
+                        <td class="text-right">{{ item.tiempoInterrupcion }}</td>
+                        <td class="text-center">
+                          <div class="toggle-status" [class.on]="item.enCurso"></div>
+                        </td>
+                        <td><code class="id-tag">{{ item.extrusionId }}</code></td>
                       </tr>
                     }
                   }
@@ -400,7 +333,7 @@ import autoTable from 'jspdf-autotable';
 
               <div class="sub-section">
                 <h4>Operador</h4>
-                <select class="op-selector" [value]="selectedExtrusion()?.operadorId || ''" (change)="updateOperador($event)" [disabled]="modalReadOnly()">
+                <select class="op-selector" [value]="selectedExtrusion()?.operadorId || ''" (change)="updateOperador($event)">
                   <option value="">Sin asignar</option>
                   @for (op of operariosDisponibles(); track op.id) {
                     <option [value]="op.id">{{ op.nombre }}</option>
@@ -434,7 +367,7 @@ import autoTable from 'jspdf-autotable';
                           <div class="bc-item"><label>Molido kg</label><span>{{ selectedExtrusion()?.kgMolido || '0.00' }}</span></div>
                           <div class="bc-item">
                             <label>Estado</label>
-                            <select class="status-selector" [value]="selectedExtrusion()?.status" [disabled]="modalReadOnly()">
+                            <select class="status-selector" [value]="selectedExtrusion()?.status">
                               <option value="Programada">Programada</option>
                               <option value="EnProceso">En Proceso</option>
                               <option value="Intermedia">Intermedia</option>
@@ -1292,29 +1225,6 @@ export class TableroProduccionComponent implements OnInit {
   operExtEnCurso = signal<boolean | null>(null);
   operExtId = signal<string>('');
 
-  // Upper Actions / Columns selector for Extrusion table
-  showTopExportDropdown = signal(false);
-  showTopColumnsDropdown = signal(false);
-  showTopFilterMenu = signal(false);
-  colSearchText = signal('');
-  generalSearchText = signal('');
-  
-  // Columns visibility: nombre, fotografia, activo
-  extrusionVisibleCols = signal<string[]>(['nombre', 'fotografia', 'activo']);
-  
-  // Header Dropdowns
-  showNameHeaderDropdown = signal(false);
-  showActiveHeaderDropdown = signal(false);
-  nameSearchText = signal('');
-  activeFilterState = signal<'all' | 'active' | 'inactive'>('all');
-  
-  // Read Only state for modal
-  modalReadOnly = signal(false);
-  
-  // Suggested options for Name Header
-  nameMostUsedOptions = signal(['Extrusora 1', 'Extrusora 2', 'Extrusora 3']);
-
-
   // Sort signals para Extrusión
   progExtSortCol = signal<string>('fecha');
   progExtSortDir = signal<'asc' | 'desc'>('asc');
@@ -1471,37 +1381,6 @@ export class TableroProduccionComponent implements OnInit {
           return sortDir === 'asc' ? (valA - valB) : (valB - valA);
         }
       });
-    }
-    
-    return list;
-  });
-
-  filteredOperacionExtNew = computed(() => {
-    let list = this.filteredOperacionExt();
-    
-    // General Search
-    const gSearch = this.generalSearchText().trim().toLowerCase();
-    if (gSearch) {
-      list = list.filter(item => 
-        item.extrusora.toLowerCase().includes(gSearch) ||
-        item.turno.toLowerCase().includes(gSearch) ||
-        item.producto.toLowerCase().includes(gSearch) ||
-        (item.operador || '').toLowerCase().includes(gSearch)
-      );
-    }
-    
-    // Name Search
-    const nSearch = this.nameSearchText().trim().toLowerCase();
-    if (nSearch) {
-      list = list.filter(item => item.extrusora.toLowerCase().includes(nSearch));
-    }
-    
-    // Active State Filter
-    const aState = this.activeFilterState();
-    if (aState === 'active') {
-      list = list.filter(item => item.enCurso);
-    } else if (aState === 'inactive') {
-      list = list.filter(item => !item.enCurso);
     }
     
     return list;
@@ -1758,7 +1637,7 @@ export class TableroProduccionComponent implements OnInit {
     let filename = '';
     
     if (tableType === 'extrusion') {
-      const list = this.filteredOperacionExtNew();
+      const list = this.filteredOperacionExt();
       data = list.map(item => ({
         'Estado': item.status,
         'Extrusora': item.extrusora,
@@ -1802,7 +1681,7 @@ export class TableroProduccionComponent implements OnInit {
     if (tableType === 'extrusion') {
       title = 'Reporte de Extrusión - Operación';
       headers = [['Estado', 'Extrusora', 'Turno', 'Producto', 'Operador', 'Producido (Kg)', 'Tiempo Interrupción', 'En Curso', 'Extrusión ID']];
-      rows = this.filteredOperacionExtNew().map(item => [
+      rows = this.filteredOperacionExt().map(item => [
         item.status,
         item.extrusora,
         item.turno,
@@ -1864,7 +1743,6 @@ export class TableroProduccionComponent implements OnInit {
     doc.save(filename);
   }
 
-
   toggleSort(table: 'prog' | 'oper' | 'progPren' | 'operPren', column: string) {
     if (table === 'prog') {
       const dir = this.progExtSortCol() === column && this.progExtSortDir() === 'asc' ? 'desc' : 'asc';
@@ -1885,122 +1763,12 @@ export class TableroProduccionComponent implements OnInit {
     }
   }
 
-  toggleTopExportDropdown() {
-    this.showTopExportDropdown.update(v => !v);
-    this.showTopColumnsDropdown.set(false);
-    this.showTopFilterMenu.set(false);
-  }
-
-  toggleTopColumnsDropdown() {
-    this.showTopColumnsDropdown.update(v => !v);
-    this.showTopExportDropdown.set(false);
-    this.showTopFilterMenu.set(false);
-  }
-
-  toggleTopFilterMenu() {
-    this.showTopFilterMenu.update(v => !v);
-    this.showTopExportDropdown.set(false);
-    this.showTopColumnsDropdown.set(false);
-  }
-
-  isColVisible(colName: string): boolean {
-    return this.extrusionVisibleCols().includes(colName);
-  }
-
-  toggleCol(colName: string) {
-    this.extrusionVisibleCols.update(cols => {
-      if (cols.includes(colName)) {
-        return cols.filter(c => c !== colName);
-      } else {
-        return [...cols, colName];
-      }
-    });
-  }
-
-  shouldShowColOption(label: string): boolean {
-    return label.toLowerCase().includes(this.colSearchText().toLowerCase());
-  }
-
-  clearAllExtrusionFilters() {
-    this.generalSearchText.set('');
-    this.nameSearchText.set('');
-    this.activeFilterState.set('all');
-    this.operExtExtrusora.set('');
-    this.operExtTurno.set('');
-    this.operExtProducto.set('');
-    this.operExtOperador.set('');
-    this.operExtProducidoDesde.set(null);
-    this.operExtProducidoHasta.set(null);
-    this.operExtInterrupcionDesde.set(null);
-    this.operExtInterrupcionHasta.set(null);
-    this.operExtEnCurso.set(null);
-    this.operExtId.set('');
-    this.showTopFilterMenu.set(false);
-  }
-
-  saveFiltersAs() {
-    this.showTopFilterMenu.set(false);
-    const name = prompt('Guardar filtros como:');
-    if (name) {
-      alert(`Filtro "${name}" guardado exitosamente.`);
-    }
-  }
-
-  toggleNameHeaderDropdown(event: MouseEvent) {
-    event.stopPropagation();
-    this.showNameHeaderDropdown.update(v => !v);
-    this.showActiveHeaderDropdown.set(false);
-  }
-
-  toggleActiveHeaderDropdown(event: MouseEvent) {
-    event.stopPropagation();
-    this.showActiveHeaderDropdown.update(v => !v);
-    this.showNameHeaderDropdown.set(false);
-  }
-
-  sortName(dir: 'asc' | 'desc') {
-    this.operExtSortCol.set('extrusora');
-    this.operExtSortDir.set(dir);
-    this.showNameHeaderDropdown.set(false);
-  }
-
-  pinColumn(dir: 'left' | 'right') {
-    alert(`Columna fijada a la ${dir === 'left' ? 'izquierda' : 'derecha'}.`);
-    this.showNameHeaderDropdown.set(false);
-  }
-
-  filterActiveState(state: 'all' | 'active' | 'inactive') {
-    this.activeFilterState.set(state);
-    this.showActiveHeaderDropdown.set(false);
-  }
-
-  selectNameFilter(opt: string) {
-    this.nameSearchText.set(opt);
-    this.showNameHeaderDropdown.set(false);
-  }
-
-  toggleRowActiveState(id: string, checked: boolean) {
-    this.operacionExt.update(items => 
-      items.map(item => item.id === id ? { ...item, enCurso: checked } : item)
-    );
-  }
-
-  openViewModal(id: string) {
-    this.svc.getExtrusionDetail(id).subscribe(res => {
-      this.selectedExtrusion.set(res);
-      this.modalReadOnly.set(true);
-      this.showModal.set(true);
-    });
-  }
-
   openEditModal(id: string) {
     this.svc.getExtrusionDetail(id).subscribe(res => {
       this.selectedExtrusion.set(res);
-      this.modalReadOnly.set(false);
       this.showModal.set(true);
     });
   }
-
 
   toggleFilter(id: string, event: MouseEvent) {
     event.stopPropagation();

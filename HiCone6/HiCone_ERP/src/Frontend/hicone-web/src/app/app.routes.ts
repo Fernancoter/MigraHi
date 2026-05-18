@@ -26,6 +26,7 @@ import { ExtrusorasCatalogoComponent } from './features/produccion/catalogos/ext
 import { PrensasCatalogoComponent } from './features/produccion/catalogos/prensas/prensas.component';
 import { SilosCatalogoComponent } from './features/produccion/catalogos/silos/silos.component';
 import { OperariosCatalogoComponent } from './features/produccion/catalogos/operarios/operarios.component';
+import { ProductosCatalogoComponent } from './features/produccion/catalogos/productos/productos.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -65,6 +66,7 @@ export const routes: Routes = [
       { path: 'produccion/catalogos/prensas', component: PrensasCatalogoComponent },
       { path: 'produccion/catalogos/silos', component: SilosCatalogoComponent },
       { path: 'produccion/operarios', component: OperariosCatalogoComponent },
+      { path: 'produccion/productos', component: ProductosCatalogoComponent },
       { path: 'produccion/extrusion', component: ProduccionListComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]

@@ -1,10 +1,10 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProduccionConfigService, Operario } from '../../../../core/services/produccion-config.service';
+import { ProduccionConfigService, Producto, Categoria } from '../../../../core/services/produccion-config.service';
 
 @Component({
-  selector: 'app-operarios-catalogo',
+  selector: 'app-productos-catalogo',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
@@ -12,8 +12,8 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
       <!-- Encabezado del Módulo -->
       <header class="module-header">
         <div class="title-area">
-          <nav class="breadcrumb">Producción › Catálogos › Operarios</nav>
-          <h1>Catálogo de Operarios</h1>
+          <nav class="breadcrumb">Producción › Catálogos › Productos</nav>
+          <h1>Catálogo de Productos</h1>
         </div>
         
         <!-- Barra de Acciones Premium -->
@@ -25,7 +25,7 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
             <input 
               class="field-input" 
               type="text" 
-              placeholder="Buscar operario..." 
+              placeholder="Buscar producto..." 
               [ngModel]="searchText()" 
               (ngModelChange)="searchText.set($event); currentPage.set(1)"
             />
@@ -52,7 +52,13 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
                 <h4>Columnas Visibles</h4>
                 <div class="column-list">
                   <label>
+                    <input type="checkbox" [checked]="isColVisible('clave')" (change)="toggleCol('clave')"> Clave
+                  </label>
+                  <label>
                     <input type="checkbox" [checked]="isColVisible('nombre')" (change)="toggleCol('nombre')"> Nombre
+                  </label>
+                  <label>
+                    <input type="checkbox" [checked]="isColVisible('categoria')" (change)="toggleCol('categoria')"> Categoría
                   </label>
                   <label>
                     <input type="checkbox" [checked]="isColVisible('activo')" (change)="toggleCol('activo')"> Activo
@@ -88,8 +94,14 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
               <th style="width: 70px;"></th> <!-- Ver -->
               <th style="width: 70px;"></th> <!-- Editar -->
               <th style="width: 70px;"></th> <!-- Borrar -->
+              @if (isColVisible('clave')) {
+                <th>Clave</th>
+              }
               @if (isColVisible('nombre')) {
                 <th>Nombre</th>
+              }
+              @if (isColVisible('categoria')) {
+                <th>Categoría</th>
               }
               @if (isColVisible('activo')) {
                 <th class="header-with-dropdown">
@@ -132,10 +144,10 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
           </thead>
           <tbody>
             @if (loading()) { 
-              <tr><td colspan="5" class="empty-state">Cargando operarios...</td></tr> 
+              <tr><td colspan="7" class="empty-state">Cargando productos...</td></tr> 
             }
             @else if (paginatedItems().length === 0) { 
-              <tr><td colspan="5" class="empty-state">No se encontraron operarios registrados</td></tr> 
+              <tr><td colspan="7" class="empty-state">No se encontraron productos registrados</td></tr> 
             }
             @else {
               @for (item of paginatedItems(); track item.id) {
@@ -149,15 +161,23 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
                   <td style="width: 70px;">
                     <button class="action-btn delete" (click)="del(item)">Borrar</button>
                   </td>
+                  @if (isColVisible('clave')) { 
+                    <td><code class="id-tag" style="background: #f1f5f9; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.78rem; font-weight: 700; color: #475569;">{{ item.clave }}</code></td> 
+                  }
                   @if (isColVisible('nombre')) { 
                     <td class="col-nombre">{{ item.nombre }}</td> 
+                  }
+                  @if (isColVisible('categoria')) { 
+                    <td>
+                      <span class="category-badge">{{ item.categoria || 'Sin Categoría' }}</span>
+                    </td> 
                   }
                   @if (isColVisible('activo')) {
                     <td style="width: 120px;">
                       <label class="checkbox-container">
                         <input 
                           type="checkbox" 
-                          [checked]="item.activo" 
+                          [checked]="item.isActive" 
                           (change)="toggleRowActiveState(item.id, $any($event.target).checked)"
                         />
                         <span class="checkmark"></span>
@@ -194,19 +214,66 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
         </div>
       }
 
-      <!-- Modal de Operario -->
+      <!-- Modal de Producto -->
       @if (showModal()) {
         <div class="modal-overlay" (click)="closeModal()">
           <div class="modal-card" (click)="$event.stopPropagation()">
             <div class="modal-header">
-              <h3>Operador</h3>
+              <h3>Información General</h3>
               <button class="modal-close" (click)="closeModal()">✕</button>
             </div>
             
             <div class="modal-body">
+              <!-- SAE Product Selector/Input Bar -->
               <div class="form-row">
-                <label class="field-label">ID</label>
-                <input class="field-input" type="text" [value]="form.id || 'Nuevo'" disabled style="background: #f1f5f9; cursor: not-allowed;" />
+                <label class="field-label">SAE Product</label>
+                <div class="sae-selector-wrapper" [class.disabled]="modalReadOnly()">
+                  <div class="sae-select-bar" (click)="!modalReadOnly() && toggleSaeDropdown($event)">
+                    <span class="sae-value">{{ form.productoSAE || 'Ninguno' }}</span>
+                    <span class="sae-arrow">▼</span>
+                  </div>
+                  @if (showSaeDropdown()) {
+                    <div class="sae-dropdown animate-slide-up" (click)="$event.stopPropagation()">
+                      <div class="sae-dropdown-header">Códigos SAE Disponibles</div>
+                      @if (saeCodes().length === 0) {
+                        <div class="sae-empty">No hay registros Aspel SAE disponibles</div>
+                      } @else {
+                        @for (code of saeCodes(); track code.code) {
+                          <div class="sae-item" (click)="selectSaeCode(code)">
+                            <span class="sae-code">{{ code.code }}</span>
+                            <span class="sae-name">{{ code.name }}</span>
+                          </div>
+                        }
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Category Dropdown Selector -->
+              <div class="form-row">
+                <label class="field-label">Categoría</label>
+                <select 
+                  class="field-input" 
+                  [(ngModel)]="form.categoriaId" 
+                  [disabled]="modalReadOnly()"
+                >
+                  <option [value]="undefined">Ninguno</option>
+                  @for (cat of categories(); track cat.id) {
+                    <option [value]="cat.id">{{ cat.nombre }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label class="field-label">Clave *</label>
+                <input 
+                  class="field-input" 
+                  type="text" 
+                  [(ngModel)]="form.clave" 
+                  [disabled]="modalReadOnly() || form.id !== undefined" 
+                  placeholder="Ej: MP-001" 
+                />
               </div>
 
               <div class="form-row">
@@ -216,48 +283,36 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
                   type="text" 
                   [(ngModel)]="form.nombre" 
                   [disabled]="modalReadOnly()" 
-                  placeholder="Nombre completo del operario..." 
+                  placeholder="Nombre completo del producto..." 
                 />
               </div>
 
               <div class="form-row">
-                <label class="field-label">Fotografía</label>
-                <input 
+                <label class="field-label">Descripción</label>
+                <textarea 
                   class="field-input" 
-                  type="text" 
-                  [(ngModel)]="form.fotografia" 
+                  rows="2"
+                  [(ngModel)]="form.descripcion" 
                   [disabled]="modalReadOnly()" 
-                  placeholder="URL de la fotografía del operario..." 
-                />
+                  placeholder="Descripción detallada del producto..."
+                ></textarea>
               </div>
 
-              <div class="form-row">
-                <label class="field-label">User GUID</label>
-                <input 
-                  class="field-input" 
-                  type="text" 
-                  [(ngModel)]="form.userGuid" 
-                  [disabled]="modalReadOnly()" 
-                  placeholder="GUID de usuario asociado..." 
-                />
-              </div>
-              
               <div class="form-row" style="margin-top: 0.5rem;">
                 <label class="checkbox-container" style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; color: #475569;">
                   <input 
                     type="checkbox" 
-                    [(ngModel)]="form.activo" 
+                    [(ngModel)]="form.isActive" 
                     [disabled]="modalReadOnly()" 
                   />
                   <span class="checkmark"></span>
-                  <span>Operario Activo</span>
+                  <span>Producto Activo</span>
                 </label>
               </div>
             </div>
 
             <div class="modal-footer">
               @if (modalReadOnly()) { 
-                <!-- En modo solo lectura, estrictamente solo este botón -->
                 <button class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
               } @else {
                 <button class="btn btn-primary" (click)="save()">Confirmar</button> 
@@ -293,6 +348,7 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
     .empty-state { text-align: center; padding: 3.5rem; color: #94a3b8; font-style: italic; }
     
     .col-nombre { font-weight: 700; color: #1e293b; }
+    .category-badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 6px; background: rgba(16, 185, 129, 0.08); color: #059669; font-weight: 700; font-size: 0.78rem; }
     
     .action-btn { padding: .35rem .9rem; border-radius: 6px; border: none; cursor: pointer; font-size: .78rem; font-weight: 700; transition: all .15s; text-align: center; }
     .action-btn.view { background: rgba(14, 165, 233, 0.08); color: #0284c7; }
@@ -313,6 +369,21 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
     .popover-item .icon { font-size: 0.95rem; }
     .popover-divider { height: 1px; background: #e2e8f0; margin: 0.4rem 0; }
     
+    /* SAE Product selector input */
+    .sae-selector-wrapper { position: relative; width: 100%; }
+    .sae-select-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: .65rem .875rem; border-radius: 8px; border: 1px solid #e2e8f0; font-size: .875rem; background: white; cursor: pointer; user-select: none; box-sizing: border-box; font-weight: 600; color: #334155; transition: border-color 0.2s; }
+    .sae-select-bar:hover { border-color: #cbd5e1; }
+    .sae-selector-wrapper.disabled .sae-select-bar { background: #f8fafc; color: #64748b; cursor: not-allowed; border-color: #e2e8f0; }
+    .sae-arrow { font-size: 0.65rem; color: #94a3b8; }
+    .sae-dropdown { position: absolute; left: 0; top: 105%; width: 100%; background: white; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); z-index: 200; overflow: hidden; padding: 0.4rem 0; }
+    .sae-dropdown-header { font-size: 0.72rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; padding: 0.5rem 1rem; border-bottom: 1px solid #f1f5f9; letter-spacing: 0.05em; }
+    .sae-empty { padding: 1rem; font-size: 0.85rem; color: #94a3b8; text-align: center; font-style: italic; }
+    .sae-item { display: flex; flex-direction: column; padding: 0.6rem 1rem; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid #f8fafc; }
+    .sae-item:last-child { border-bottom: none; }
+    .sae-item:hover { background: #f1f5f9; }
+    .sae-code { font-weight: 800; font-size: 0.8rem; color: #10b981; }
+    .sae-name { font-size: 0.85rem; color: #475569; font-weight: 500; }
+
     /* Checkbox Premium */
     .checkbox-container { display: block; position: relative; padding-left: 1.8rem; cursor: pointer; user-select: none; height: 1.15rem; }
     .checkbox-container input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
@@ -364,14 +435,24 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
     @keyframes zoomIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
   `]
 })
-export class OperariosCatalogoComponent implements OnInit {
+export class ProductosCatalogoComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
   
-  items = signal<Operario[]>([]);
+  items = signal<Producto[]>([]);
+  categories = signal<Categoria[]>([]);
   loading = signal(true);
   showModal = signal(false);
   modalReadOnly = signal(false);
-  form: Partial<Operario> = {};
+  showSaeDropdown = signal(false);
+  form: Partial<Producto> = {};
+
+  // Mock Aspel SAE Codes
+  saeCodes = signal<{ code: string; name: string }[]>([
+    { code: 'SAE-PROD-001', name: 'Bobina de Película Polietileno 80cm' },
+    { code: 'SAE-PROD-002', name: 'Tubo de Plástico Flexible 1/2' },
+    { code: 'SAE-PROD-003', name: 'Perfil Extruido Industrial PVC' },
+    { code: 'SAE-PROD-004', name: 'Bobina Plástica Termoencogible' }
+  ]);
 
   // Actions & Popover States
   searchText = signal<string>('');
@@ -382,7 +463,7 @@ export class OperariosCatalogoComponent implements OnInit {
   showExportOptions = signal<boolean>(false);
   showActiveHeaderDropdown = signal<boolean>(false);
   
-  visibleColumns = signal<string[]>(['nombre', 'activo']);
+  visibleColumns = signal<string[]>(['clave', 'nombre', 'categoria', 'activo']);
 
   // Pagination Signals
   currentPage = signal<number>(1);
@@ -390,19 +471,18 @@ export class OperariosCatalogoComponent implements OnInit {
 
   ngOnInit() {
     this.load();
+    this.loadCategories();
+  }
+
+  loadCategories() {
+    this.svc.getCategorias().subscribe(res => this.categories.set(res));
   }
 
   load() {
     this.loading.set(true);
-    this.svc.getOperarios().subscribe({
+    this.svc.getProductos().subscribe({
       next: data => {
-        // Hydrate mock properties if missing on existing items
-        const list = data.map(op => ({
-          ...op,
-          fotografia: op.fotografia || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
-          userGuid: op.userGuid || `usr_${op.id.substring(0, 8)}`
-        }));
-        this.items.set(list);
+        this.items.set(data);
         this.loading.set(false);
       },
       error: () => this.loading.set(false)
@@ -415,25 +495,27 @@ export class OperariosCatalogoComponent implements OnInit {
     // Text Search
     const search = this.searchText().trim().toLowerCase();
     if (search) {
-      list = list.filter(op => op.nombre.toLowerCase().includes(search));
+      list = list.filter(p => 
+        p.nombre.toLowerCase().includes(search) || 
+        p.clave.toLowerCase().includes(search) ||
+        (p.categoria || '').toLowerCase().includes(search)
+      );
     }
 
     // Active State Filter
     const filter = this.activeFilterState();
     if (filter === 'active') {
-      list = list.filter(op => op.activo);
+      list = list.filter(p => p.isActive);
     } else if (filter === 'inactive') {
-      list = list.filter(op => !op.activo);
+      list = list.filter(p => !p.isActive);
     }
 
     // Active State Sorting
     const sort = this.sortActiveState();
     if (sort === 'asc') {
-      // Unchecked/Inactive first
-      list = [...list].sort((a, b) => (a.activo === b.activo ? 0 : a.activo ? 1 : -1));
+      list = [...list].sort((a, b) => (a.isActive === b.isActive ? 0 : a.isActive ? 1 : -1));
     } else if (sort === 'desc') {
-      // Checked/Active first
-      list = [...list].sort((a, b) => (a.activo === b.activo ? 0 : a.activo ? -1 : 1));
+      list = [...list].sort((a, b) => (a.isActive === b.isActive ? 0 : a.isActive ? -1 : 1));
     }
 
     return list;
@@ -516,11 +598,11 @@ export class OperariosCatalogoComponent implements OnInit {
 
   toggleRowActiveState(id: string, checked: boolean) {
     this.items.update(list => 
-      list.map(item => item.id === id ? { ...item, activo: checked } : item)
+      list.map(item => item.id === id ? { ...item, isActive: checked } : item)
     );
     const updatedItem = this.items().find(i => i.id === id);
     if (updatedItem) {
-      this.svc.updateOperario(id, { activo: checked }).subscribe();
+      this.svc.updateProducto(id, { isActive: checked }).subscribe();
     }
   }
 
@@ -568,20 +650,34 @@ export class OperariosCatalogoComponent implements OnInit {
     return pages;
   }
 
+  // SAE Dropdown actions
+  toggleSaeDropdown(event: Event) {
+    event.stopPropagation();
+    this.showSaeDropdown.update(v => !v);
+  }
+
+  selectSaeCode(code: { code: string; name: string }) {
+    this.form.productoSAE = code.code;
+    this.form.nombre = code.name; // Auto-populate product name!
+    this.showSaeDropdown.set(false);
+  }
+
   // CRUD Actions
-  openViewModal(item: Operario) {
+  openViewModal(item: Producto) {
     this.form = { ...item };
     this.modalReadOnly.set(true);
     this.showModal.set(true);
+    this.showSaeDropdown.set(false);
     this.showColumnSelector.set(false);
     this.showExportOptions.set(false);
     this.showActiveHeaderDropdown.set(false);
   }
 
-  openEditModal(item: Operario) {
+  openEditModal(item: Producto) {
     this.form = { ...item };
     this.modalReadOnly.set(false);
     this.showModal.set(true);
+    this.showSaeDropdown.set(false);
     this.showColumnSelector.set(false);
     this.showExportOptions.set(false);
     this.showActiveHeaderDropdown.set(false);
@@ -589,13 +685,15 @@ export class OperariosCatalogoComponent implements OnInit {
 
   openCreate() {
     this.form = { 
+      clave: '',
       nombre: '', 
-      activo: true, 
-      fotografia: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
-      userGuid: 'usr_new_operator'
+      isActive: true, 
+      productoSAE: 'Ninguno',
+      precioUnitario: 0
     };
     this.modalReadOnly.set(false);
     this.showModal.set(true);
+    this.showSaeDropdown.set(false);
     this.showColumnSelector.set(false);
     this.showExportOptions.set(false);
     this.showActiveHeaderDropdown.set(false);
@@ -607,32 +705,52 @@ export class OperariosCatalogoComponent implements OnInit {
   }
 
   save() {
+    if (!this.form.clave || !this.form.clave.trim()) {
+      alert('El campo Clave es requerido.');
+      return;
+    }
     if (!this.form.nombre || !this.form.nombre.trim()) {
       alert('El campo Nombre es requerido.');
       return;
     }
     
+    // Fill category name if selected
+    if (this.form.categoriaId) {
+      const cat = this.categories().find(c => c.id === this.form.categoriaId);
+      if (cat) {
+        this.form.categoria = cat.nombre;
+      }
+    } else {
+      this.form.categoria = undefined;
+    }
+
     const payload = {
+      clave: this.form.clave,
       nombre: this.form.nombre,
-      activo: this.form.activo
+      descripcion: this.form.descripcion,
+      categoriaId: this.form.categoriaId,
+      categoria: this.form.categoria,
+      isActive: this.form.isActive,
+      productoSAE: this.form.productoSAE === 'Ninguno' ? undefined : this.form.productoSAE,
+      precioUnitario: this.form.precioUnitario || 0
     };
 
     if (!this.form.id) {
-      this.svc.createOperario(payload).subscribe(() => {
+      this.svc.createProducto(payload).subscribe(() => {
         this.closeModal();
         this.load();
       });
     } else {
-      this.svc.updateOperario(this.form.id, payload).subscribe(() => {
+      this.svc.updateProducto(this.form.id, payload).subscribe(() => {
         this.closeModal();
         this.load();
       });
     }
   }
 
-  del(item: Operario) {
-    if (confirm(`¿Está seguro de que desea eliminar al operario "${item.nombre}"?`)) {
-      this.svc.deleteOperario(item.id).subscribe(() => {
+  del(item: Producto) {
+    if (confirm(`¿Está seguro de que desea eliminar al producto "${item.nombre}"?`)) {
+      this.svc.deleteProducto(item.id).subscribe(() => {
         this.load();
         if (this.currentPage() > this.totalPages()) {
           this.currentPage.set(this.totalPages());
@@ -644,16 +762,16 @@ export class OperariosCatalogoComponent implements OnInit {
   // Export options
   exportCSV() {
     this.showExportOptions.set(false);
-    let csvContent = '\uFEFFID;Nombre;Fotografía;UserGUID;Estado\n';
-    this.filteredItems().forEach(op => {
-      csvContent += `${op.id};${op.nombre};${op.fotografia};${op.userGuid};${op.activo ? 'Activo' : 'Inactivo'}\n`;
+    let csvContent = '\uFEFFID;Clave;Nombre;Categoría;SAE;Estado\n';
+    this.filteredItems().forEach(p => {
+      csvContent += `${p.id};${p.clave};${p.nombre};${p.categoria || 'N/A'};${p.productoSAE || 'Ninguno'};${p.isActive ? 'Activo' : 'Inactivo'}\n`;
     });
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `operarios_reporte_${new Date().toISOString().slice(0,10)}.csv`);
+    link.setAttribute('download', `productos_reporte_${new Date().toISOString().slice(0,10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -665,20 +783,21 @@ export class OperariosCatalogoComponent implements OnInit {
     if (!printWindow) return;
 
     let tableRows = '';
-    this.filteredItems().forEach(op => {
+    this.filteredItems().forEach(p => {
       tableRows += `
         <tr>
-          <td>${op.id.substring(0,8)}</td>
-          <td>${op.nombre}</td>
-          <td>${op.userGuid}</td>
-          <td>${op.activo ? 'Activo' : 'Inactivo'}</td>
+          <td>${p.clave}</td>
+          <td>${p.nombre}</td>
+          <td>${p.categoria || 'Sin Categoría'}</td>
+          <td>${p.productoSAE || 'Ninguno'}</td>
+          <td>${p.isActive ? 'Activo' : 'Inactivo'}</td>
         </tr>`;
     });
 
     printWindow.document.write(`
       <html>
         <head>
-          <title>Reporte de Operarios</title>
+          <title>Reporte de Productos</title>
           <style>
             body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 2rem; color: #1e293b; background-color: #f8fafc; }
             h1 { color: #10b981; margin-bottom: 0.2rem; font-size: 1.8rem; }
@@ -690,14 +809,15 @@ export class OperariosCatalogoComponent implements OnInit {
           </style>
         </head>
         <body>
-          <h1>Reporte de Operarios</h1>
+          <h1>Reporte de Productos</h1>
           <p>Generado el: ${new Date().toLocaleString()}</p>
           <table>
             <thead>
               <tr>
-                <th>ID Corto</th>
+                <th>Clave</th>
                 <th>Nombre</th>
-                <th>User GUID</th>
+                <th>Categoría</th>
+                <th>SAE Product</th>
                 <th>Estado</th>
               </tr>
             </thead>
