@@ -204,6 +204,16 @@ public class Extrusion : TenantEntity
 // PRENSADO (Tablero de Inicio)
 // ─────────────────────────────────────────────────────────────────────────────
 
+public enum PrensadoStatus
+{
+    Programada,
+    EnProceso,
+    Intermedia,
+    Parada,
+    Terminada,
+    PorProgramar
+}
+
 /// <summary>Registro de prensado en curso (PDF: Tablero > Prensado)</summary>
 public class Prensado : TenantEntity
 {
@@ -222,6 +232,11 @@ public class Prensado : TenantEntity
     public int TiempoInterrupcionMin { get; set; }
     public bool EnCurso { get; set; }
     public decimal Programado { get; set; }
+    public PrensadoStatus Status { get; set; } = PrensadoStatus.PorProgramar;
+
+    public decimal Calibre { get; set; }
+    public string Ancho { get; set; } = "0000/00";
+    public int Longitud { get; set; }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

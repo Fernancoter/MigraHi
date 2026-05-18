@@ -1562,5 +1562,66 @@ public class ApplicationDbContextSeeder
             );
             await _context.SaveChangesAsync(default);
         }
+
+        // Prensas y Prensados
+        if (!await _context.Prensados.AnyAsync())
+        {
+            var prensa1 = await _context.Prensas.FirstOrDefaultAsync() ?? new Prensa { Nombre = "Prensa 1", TenantId = defaultTenantId };
+            var prensa2 = new Prensa { Nombre = "Prensa 2", TenantId = defaultTenantId };
+            
+            if (_context.Entry(prensa1).State == EntityState.Detached) _context.Prensas.Add(prensa1);
+            _context.Prensas.Add(prensa2);
+            await _context.SaveChangesAsync(default);
+
+            var turno = await _context.Turnos.FirstOrDefaultAsync() ?? new Turno { Nombre = "1er Turno", TenantId = defaultTenantId };
+            var operario = await _context.Operarios.FirstOrDefaultAsync() ?? new Operario { Nombre = "Juan Pérez", TenantId = defaultTenantId };
+
+            _context.Prensados.AddRange(
+                new Prensado 
+                { 
+                    Fecha = DateTime.UtcNow, 
+                    PrensaId = prensa1.Id, 
+                    TurnoId = turno.Id, 
+                    Producto = "Bobina Prensada 40um", 
+                    OperarioId = operario.Id, 
+                    Programado = 8000, 
+                    Status = PrensadoStatus.Programada,
+                    Calibre = 0.040m,
+                    Ancho = "1200/02",
+                    Longitud = 2000,
+                    TenantId = defaultTenantId 
+                },
+                new Prensado 
+                { 
+                    Fecha = DateTime.UtcNow.AddHours(-1), 
+                    PrensaId = prensa1.Id, 
+                    TurnoId = turno.Id, 
+                    Producto = "Bobina Prensada 60um", 
+                    OperarioId = operario.Id, 
+                    Producido = 3500, 
+                    EnCurso = true,
+                    Status = PrensadoStatus.EnProceso,
+                    Calibre = 0.060m,
+                    Ancho = "1500/03",
+                    Longitud = 3000,
+                    TenantId = defaultTenantId 
+                },
+                new Prensado 
+                { 
+                    Fecha = DateTime.UtcNow.AddDays(-1), 
+                    PrensaId = prensa2.Id, 
+                    TurnoId = turno.Id, 
+                    Producto = "Bobina Prensada 80um", 
+                    OperarioId = operario.Id, 
+                    Producido = 10000, 
+                    Status = PrensadoStatus.Terminada,
+                    Calibre = 0.080m,
+                    Ancho = "1800/04",
+                    Longitud = 4000,
+                    TenantId = defaultTenantId 
+                }
+            );
+            await _context.SaveChangesAsync(default);
+        }
     }
 }

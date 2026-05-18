@@ -1,7 +1,10 @@
-import { Component, OnInit, inject, signal, HostListener } from '@angular/core';
+import { Component, OnInit, inject, signal, HostListener, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } from '../../../core/services/produccion-config.service';
+import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion, PrensadoProgramacion, PrensadoOperacion } from '../../../core/services/produccion-config.service';
+import * as XLSX from 'xlsx';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
 
 @Component({
   selector: 'app-tablero-produccion',
@@ -43,22 +46,22 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
               <table class="premium-table">
                 <thead>
                   <tr>
-                    <th (click)="toggleSort('prog', 'fecha')">
-                      Fecha Extrusora <span class="sort-icon">{{ sortDirProg() === 'asc' ? '↑' : '↓' }}</span>
+                    <th (click)="progExtSortCol.set('fecha'); progExtSortDir.set(progExtSortDir() === 'asc' ? 'desc' : 'asc')">
+                      Fecha Extrusora <span class="sort-icon">{{ progExtSortCol() === 'fecha' ? (progExtSortDir() === 'asc' ? '↑' : '↓') : '' }}</span>
                     </th>
                     <th (click)="toggleFilter('prog-turno', $event)">
                       <span class="th-inner">Turno <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                       @if (activeFilter() === 'prog-turno') {
                         <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
                           <div class="filter-group">
-                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
-                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
-                            <input type="text" class="search-input" placeholder="Buscar..." [value]="filterSearch()" (input)="filterSearch.set($any($event.target).value)">
+                            <button class="sort-btn" (click)="progExtSortCol.set('turno'); progExtSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn" (click)="progExtSortCol.set('turno'); progExtSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="progExtTurno()" (ngModelChange)="progExtTurno.set($event)">
                             <div class="suggestions">
                               <span class="suggestion-label">Sugerencias</span>
-                              <div class="suggestion-item">Mañana</div>
-                              <div class="suggestion-item">Tarde</div>
-                              <div class="suggestion-item">Noche</div>
+                              <div class="suggestion-item" (click)="progExtTurno.set('Mañana')">Mañana</div>
+                              <div class="suggestion-item" (click)="progExtTurno.set('Tarde')">Tarde</div>
+                              <div class="suggestion-item" (click)="progExtTurno.set('Noche')">Noche</div>
                             </div>
                           </div>
                         </div>
@@ -69,9 +72,9 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
                       @if (activeFilter() === 'prog-producto') {
                         <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
                           <div class="filter-group">
-                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
-                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
-                            <input type="text" class="search-input" placeholder="Buscar..." [value]="filterSearch()" (input)="filterSearch.set($any($event.target).value)">
+                            <button class="sort-btn" (click)="progExtSortCol.set('producto'); progExtSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn" (click)="progExtSortCol.set('producto'); progExtSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="progExtProducto()" (ngModelChange)="progExtProducto.set($event)">
                           </div>
                         </div>
                       }
@@ -81,9 +84,9 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
                       @if (activeFilter() === 'prog-operador') {
                         <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
                           <div class="filter-group">
-                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
-                            <button class="sort-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
-                            <input type="text" class="search-input" placeholder="Buscar..." [value]="filterSearch()" (input)="filterSearch.set($any($event.target).value)">
+                            <button class="sort-btn" (click)="progExtSortCol.set('operador'); progExtSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn" (click)="progExtSortCol.set('operador'); progExtSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="progExtOperador()" (ngModelChange)="progExtOperador.set($event)">
                           </div>
                         </div>
                       }
@@ -93,9 +96,8 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
                       @if (activeFilter() === 'prog-programado') {
                         <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
                           <div class="range-group">
-                            <div class="range-field"><label>Desde</label><input type="number" class="search-input" [value]="filterDesde()" (input)="filterDesde.set($any($event.target).value)"></div>
-                            <div class="range-field"><label>Hasta</label><input type="number" class="search-input" [value]="filterHasta()" (input)="filterHasta.set($any($event.target).value)"></div>
-                            <button class="btn-search-filter">Buscar</button>
+                            <div class="range-field"><label>Desde</label><input type="number" class="search-input" [ngModel]="progExtProgramadoDesde()" (ngModelChange)="progExtProgramadoDesde.set($event)"></div>
+                            <div class="range-field"><label>Hasta</label><input type="number" class="search-input" [ngModel]="progExtProgramadoHasta()" (ngModelChange)="progExtProgramadoHasta.set($event)"></div>
                           </div>
                         </div>
                       }
@@ -105,10 +107,10 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
                 <tbody>
                   @if (loading()) {
                     <tr><td colspan="5" class="loading-cell">Cargando programación...</td></tr>
-                  } @else if (programacionExt().length === 0) {
-                    <tr><td colspan="5" class="empty-cell">No hay órdenes programadas.</td></tr>
+                  } @else if (filteredProgramacionExt().length === 0) {
+                    <tr><td colspan="5" class="empty-cell">No hay órdenes programadas que coincidan con los filtros.</td></tr>
                   } @else {
-                    @for (item of programacionExt(); track item.id) {
+                    @for (item of filteredProgramacionExt(); track item.id) {
                       <tr>
                         <td>{{ item.fechaExtrusora | date:'dd/MM/yyyy' }}</td>
                         <td><span class="turno-badge">{{ item.turno }}</span></td>
@@ -511,10 +513,382 @@ import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion } fr
         </div>
       }
 
-      <!-- TAB PRENSADO (Placeholder) -->
+      <!-- TAB PRENSADO -->
       @if (activeTab() === 'prensado') {
         <div class="tab-content animate-move-up">
-          <div class="empty-state">Módulo de Prensado en desarrollo.</div>
+          
+          <!-- TABLA 1: PROGRAMACIÓN -->
+          <div class="section-card mb-6">
+            <div class="section-header">
+              <div class="header-title">
+                <span class="dot-indicator blue"></span>
+                <h3>Programación</h3>
+              </div>
+            </div>
+            
+            <div class="table-wrapper">
+              <table class="premium-table">
+                <thead>
+                  <tr>
+                    <th class="header-empty"></th>
+                    <th class="header-empty"></th>
+                    <th class="header-empty"></th>
+                    <th (click)="progPrenSortCol.set('fecha'); progPrenSortDir.set(progPrenSortDir() === 'asc' ? 'desc' : 'asc')">
+                      Fecha Prensado <span class="sort-icon">{{ progPrenSortCol() === 'fecha' ? (progPrenSortDir() === 'asc' ? '↑' : '↓') : '' }}</span>
+                    </th>
+                    <th (click)="toggleFilter('prog-prensa-filter', $event)">
+                      <span class="th-inner">Prensa <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'prog-prensa-filter') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn" (click)="progPrenSortCol.set('prensa'); progPrenSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn" (click)="progPrenSortCol.set('prensa'); progPrenSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="progPrenPrensa()" (ngModelChange)="progPrenPrensa.set($event)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('prog-turno-filter', $event)">
+                      <span class="th-inner">Turno <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'prog-turno-filter') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn" (click)="progPrenSortCol.set('turno'); progPrenSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn" (click)="progPrenSortCol.set('turno'); progPrenSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="progPrenTurno()" (ngModelChange)="progPrenTurno.set($event)">
+                            <div class="suggestions">
+                              <span class="suggestion-label">Sugerencias</span>
+                              <div class="suggestion-item" (click)="progPrenTurno.set('Mañana')">Mañana</div>
+                              <div class="suggestion-item" (click)="progPrenTurno.set('Tarde')">Tarde</div>
+                              <div class="suggestion-item" (click)="progPrenTurno.set('Noche')">Noche</div>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('prog-producto-filter', $event)">
+                      <span class="th-inner">Producto <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'prog-producto-filter') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn" (click)="progPrenSortCol.set('producto'); progPrenSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn" (click)="progPrenSortCol.set('producto'); progPrenSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="progPrenProducto()" (ngModelChange)="progPrenProducto.set($event)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('prog-operador-filter', $event)">
+                      <span class="th-inner">Operador <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'prog-operador-filter') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn" (click)="progPrenSortCol.set('operador'); progPrenSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn" (click)="progPrenSortCol.set('operador'); progPrenSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="progPrenOperador()" (ngModelChange)="progPrenOperador.set($event)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('prog-programado-filter', $event)">
+                      <span class="th-inner">Programado <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'prog-programado-filter') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="range-group">
+                            <div class="range-field"><label>Desde</label><input type="number" class="search-input" [ngModel]="progPrenProgramadoDesde()" (ngModelChange)="progPrenProgramadoDesde.set($event)"></div>
+                            <div class="range-field"><label>Hasta</label><input type="number" class="search-input" [ngModel]="progPrenProgramadoHasta()" (ngModelChange)="progPrenProgramadoHasta.set($event)"></div>
+                          </div>
+                        </div>
+                      }
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if (loading()) {
+                    <tr><td colspan="9" class="loading-cell">Cargando programación...</td></tr>
+                  } @else if (filteredProgramacionPren().length === 0) {
+                    <tr><td colspan="9" class="empty-cell">No hay órdenes programadas que coincidan con los filtros.</td></tr>
+                  } @else {
+                    @for (item of filteredProgramacionPren(); track item.id) {
+                      <tr>
+                        <td class="td-empty"></td>
+                        <td class="td-empty"></td>
+                        <td class="td-empty"></td>
+                        <td>{{ item.fecha | date:'dd/MM/yyyy' }}</td>
+                        <td><strong>{{ item.prensa }}</strong></td>
+                        <td><span class="turno-badge">{{ item.turno }}</span></td>
+                        <td><strong>{{ item.producto }}</strong></td>
+                        <td>{{ item.operador || 'Sin asignar' }}</td>
+                        <td class="font-bold">{{ item.programado | number }}</td>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TABLA 2: OPERACIÓN -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="header-title">
+                <span class="dot-indicator green"></span>
+                <h3>Operación</h3>
+              </div>
+              <span class="badge-live pulse">En Vivo</span>
+            </div>
+            
+            <div class="table-wrapper">
+              <table class="premium-table">
+                <thead>
+                  <tr>
+                    <th class="header-empty"></th> <!-- Estado -->
+                    <th class="header-empty"></th> <!-- Editar -->
+                    <th class="header-empty"></th> <!-- Eliminar -->
+                    <th class="header-empty"></th> <!-- Warning dropdown -->
+                    <th (click)="toggleFilter('oper-prensa-filter', $event)">
+                      Prensa <span class="sort-icon">{{ operPrenSortCol() === 'prensa' ? (operPrenSortDir() === 'asc' ? '↑' : '↓') : '' }}</span>
+                      @if (activeFilter() === 'oper-prensa-filter') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn" (click)="operPrenSortCol.set('prensa'); operPrenSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn" (click)="operPrenSortCol.set('prensa'); operPrenSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="operPrenPrensa()" (ngModelChange)="operPrenPrensa.set($event)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('oper-turno-filter', $event)">
+                      <span class="th-inner">Turno <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-turno-filter') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn" (click)="operPrenSortCol.set('turno'); operExtSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn" (click)="operPrenSortCol.set('turno'); operExtSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="operPrenTurno()" (ngModelChange)="operPrenTurno.set($event)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('oper-producto-filter', $event)">
+                      <span class="th-inner">Producto <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-producto-filter') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn" (click)="operPrenSortCol.set('producto'); operPrenSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn" (click)="operPrenSortCol.set('producto'); operPrenSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="operPrenProducto()" (ngModelChange)="operPrenProducto.set($event)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th (click)="toggleFilter('oper-operador-filter', $event)">
+                      <span class="th-inner">Operador <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-operador-filter') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="filter-group">
+                            <button class="sort-btn" (click)="operPrenSortCol.set('operador'); operPrenSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn" (click)="operPrenSortCol.set('operador'); operPrenSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="operPrenOperador()" (ngModelChange)="operPrenOperador.set($event)">
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th class="text-right" (click)="toggleFilter('oper-producido-filter', $event)">
+                      <span class="th-inner">Producido <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-producido-filter') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="range-group">
+                            <div class="range-field"><label>Desde</label><input type="number" class="search-input" [ngModel]="operPrenProducidoDesde()" (ngModelChange)="operPrenProducidoDesde.set($event)"></div>
+                            <div class="range-field"><label>Hasta</label><input type="number" class="search-input" [ngModel]="operPrenProducidoHasta()" (ngModelChange)="operPrenProducidoHasta.set($event)"></div>
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th class="text-right" (click)="toggleFilter('oper-interrupcion-filter', $event)">
+                      <span class="th-inner">Tiempo Interrupción <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-interrupcion-filter') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="range-group">
+                            <div class="range-field"><label>Desde</label><input type="number" class="search-input" [ngModel]="operPrenInterrupcionDesde()" (ngModelChange)="operPrenInterrupcionDesde.set($event)"></div>
+                            <div class="range-field"><label>Hasta</label><input type="number" class="search-input" [ngModel]="operPrenInterrupcionHasta()" (ngModelChange)="operPrenInterrupcionHasta.set($event)"></div>
+                          </div>
+                        </div>
+                      }
+                    </th>
+                    <th>En Curso</th>
+                    <th>Prensa ID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if (loading()) {
+                    <tr><td colspan="12" class="loading-cell">Cargando operación...</td></tr>
+                  } @else if (filteredOperacionPren().length === 0) {
+                    <tr><td colspan="12" class="empty-cell">Sin registros en curso que coincidan con los filtros.</td></tr>
+                  } @else {
+                    @for (item of filteredOperacionPren(); track item.id) {
+                      <tr [class.row-active]="item.enCurso">
+                        <td>
+                          <span class="status-indicator" [attr.data-status]="item.status">
+                            {{ item.status }}
+                          </span>
+                        </td>
+                        <td class="actions-cell" style="width: auto;">
+                          <button class="btn-icon-edit" title="Editar" (click)="openPrensadoEditModal(item.id)">
+                            <span class="icon">✎</span>
+                          </button>
+                        </td>
+                        <td class="actions-cell" style="width: auto;">
+                          <button class="btn-icon-delete" title="Eliminar" (click)="deletePrensado(item.id)">
+                            <span class="icon">×</span>
+                          </button>
+                        </td>
+                        <td class="actions-cell" style="width: auto;">
+                          <div class="warning-dropdown-container">
+                            <button class="btn-icon-warn" title="Menú de acciones" (click)="toggleMainRowDropdown(item.id, $event)">
+                              <span class="icon">!</span>
+                            </button>
+                            @if (activeMainRowDropdownId() === item.id) {
+                              <div class="warning-dropdown main-row-dropdown animate-fade-in" (click)="$event.stopPropagation()">
+                                <div class="wd-item has-submenu">
+                                  Exportar <span class="arrow">▶</span>
+                                  <div class="wd-submenu">
+                                    <div class="wd-item" (click)="exportToExcel('prensado')">Excel</div>
+                                    <div class="wd-item" (click)="exportToPDF('prensado')">PDF</div>
+                                  </div>
+                                </div>
+                                <div class="wd-item" (click)="openSelectColumns(item.id)">Seleccionar columnas</div>
+                              </div>
+                            }
+                          </div>
+                        </td>
+                        <td><strong>{{ item.prensa }}</strong></td>
+                        <td>{{ item.turno }}</td>
+                        <td>{{ item.producto }}</td>
+                        <td>{{ item.operador || 'Sin asignar' }}</td>
+                        <td class="text-right font-bold">{{ item.producido | number }}</td>
+                        <td class="text-right">{{ item.tiempoInterrupcion }}</td>
+                        <td class="text-center">
+                          <div class="toggle-status" [class.on]="item.enCurso"></div>
+                        </td>
+                        <td><code class="id-tag">{{ item.id.substring(0, 8) }}</code></td>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- MODAL DE EDICIÓN PRENSADO -->
+      @if (showPrensadoModal()) {
+        <div class="modal-backdrop animate-fade-in" (click)="closePrensadoModal()">
+          <div class="modal-container animate-slide-up" (click)="$event.stopPropagation()">
+            <header class="modal-header">
+              <h2>Información general</h2>
+              <button class="btn-close" (click)="closePrensadoModal()">×</button>
+            </header>
+            
+            <div class="modal-body" *ngIf="selectedPrensado()">
+              <!-- Top borderless grid section -->
+              <div class="info-grid borderless" style="margin-bottom: 2rem;">
+                <div class="info-col">
+                  <label>Prensa</label>
+                  <p>{{ selectedPrensado()?.prensa || '---' }}</p>
+                </div>
+                <div class="info-col">
+                  <label>Turno</label>
+                  <p>{{ selectedPrensado()?.turno || '---' }}</p>
+                </div>
+                <div class="info-col">
+                  <label>Producto</label>
+                  <p>{{ selectedPrensado()?.producto || '---' }}</p>
+                </div>
+              </div>
+
+              <!-- Operator Section -->
+              <div class="sub-section">
+                <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Operador</label>
+                <select class="op-selector" [ngModel]="selectedPrensado()?.operadorId || ''" (ngModelChange)="selectedPrensado().operadorId = $event">
+                  <option value="">Sin asignar</option>
+                  @for (op of operariosDisponibles(); track op.id) {
+                    <option [value]="op.id">{{ op.nombre }}</option>
+                  }
+                </select>
+              </div>
+
+              <!-- Status Section -->
+              <div class="sub-section" style="margin-top: 1.5rem;">
+                <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Estado</label>
+                <select class="op-selector" [ngModel]="selectedPrensado()?.status || ''" (ngModelChange)="selectedPrensado().status = $event">
+                  <option value="Programada">Programada</option>
+                  <option value="EnProceso">En Proceso</option>
+                  <option value="Intermedia">Intermedia</option>
+                  <option value="Parada">Parada</option>
+                  <option value="Terminada">Terminada</option>
+                  <option value="PorProgramar">Por Programar</option>
+                </select>
+              </div>
+
+              <!-- Bottom section borderless table -->
+              <div class="sub-section" style="margin-top: 1.5rem;">
+                <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Detalles de Producción</label>
+                <div class="bobbin-card" style="border: none; padding-top: 0.5rem;">
+                  <!-- Renglón 1: Fecha e input interactivo con calendario -->
+                  <div class="bc-block">
+                    <div class="bc-item">
+                      <label>Fecha de Producción 📅</label>
+                      <input type="date" class="form-input" [ngModel]="selectedPrensado()?.fecha | date:'yyyy-MM-dd'" (ngModelChange)="onPressingDateChange($event)">
+                    </div>
+                    <div class="bc-item">
+                      <label>Calibre (Gauge)</label>
+                      <input type="number" step="0.001" class="form-input" [ngModel]="selectedPrensado()?.calibre" (ngModelChange)="selectedPrensado().calibre = $event" placeholder="0.000">
+                    </div>
+                  </div>
+
+                  <!-- Renglón 2: Ancho y Largo -->
+                  <div class="bc-block" style="margin-top: 1rem;">
+                    <div class="bc-item">
+                      <label>Ancho (Width)</label>
+                      <input type="text" class="form-input" [ngModel]="selectedPrensado()?.ancho" (ngModelChange)="selectedPrensado().ancho = $event" placeholder="0000/00">
+                    </div>
+                    <div class="bc-item">
+                      <label>Largo (Length)</label>
+                      <input type="number" class="form-input" [ngModel]="selectedPrensado()?.longitud" (ngModelChange)="selectedPrensado().longitud = $event" placeholder="00000">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal-footer" style="border: none; margin-top: 2rem; padding: 0;">
+                <button class="btn-cancel" (click)="closePrensadoModal()">Cancelar</button>
+                <button class="btn-confirm" (click)="savePrensado()">Guardar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- MODAL CONFIRMAR ELIMINACIÓN PRENSADO -->
+      @if (showDeleteConfirmModalPrensado()) {
+        <div class="modal-backdrop animate-fade-in" style="z-index: 1060;" (click)="closeDeleteConfirmPrensado()">
+          <div class="modal-container animate-slide-up" style="max-width: 400px;" (click)="$event.stopPropagation()">
+            <header class="modal-header">
+              <h2 style="color: #ef4444;">Eliminar registro</h2>
+              <button class="btn-close" (click)="closeDeleteConfirmPrensado()">×</button>
+            </header>
+            <div class="modal-body text-center">
+              <div class="delete-icon-large">⚠</div>
+              <h3 style="margin: 1rem 0;">¿Estás seguro?</h3>
+              <p class="text-muted">Esta acción eliminará el registro de prensado seleccionado de forma permanente. No se puede deshacer.</p>
+              <div class="modal-footer" style="justify-content: center; border: none; margin-top: 2rem;">
+                <button class="btn-cancel" (click)="closeDeleteConfirmPrensado()">Cancelar</button>
+                <button class="btn-confirm" style="background: #ef4444;" (click)="confirmDeletePrensado()">Eliminar</button>
+              </div>
+            </div>
+          </div>
         </div>
       }
     </div>
@@ -708,6 +1082,64 @@ export class TableroProduccionComponent implements OnInit {
   programacionExt = signal<ExtrusionProgramacion[]>([]);
   operacionExt    = signal<ExtrusionOperacion[]>([]);
   
+  // Filtros activos para Extrusión Programación
+  progExtTurno = signal<string>('');
+  progExtProducto = signal<string>('');
+  progExtOperador = signal<string>('');
+  progExtProgramadoDesde = signal<number | null | string>(null);
+  progExtProgramadoHasta = signal<number | null | string>(null);
+
+  // Filtros activos para Extrusión Operación
+  operExtExtrusora = signal<string>('');
+  operExtTurno = signal<string>('');
+  operExtProducto = signal<string>('');
+  operExtOperador = signal<string>('');
+  operExtProducidoDesde = signal<number | null | string>(null);
+  operExtProducidoHasta = signal<number | null | string>(null);
+  operExtInterrupcionDesde = signal<number | null | string>(null);
+  operExtInterrupcionHasta = signal<number | null | string>(null);
+  operExtEnCurso = signal<boolean | null>(null);
+  operExtId = signal<string>('');
+
+  // Sort signals para Extrusión
+  progExtSortCol = signal<string>('fecha');
+  progExtSortDir = signal<'asc' | 'desc'>('asc');
+  operExtSortCol = signal<string>('extrusora');
+  operExtSortDir = signal<'asc' | 'desc'>('asc');
+
+  // Filtros activos para Prensado Programación
+  progPrenPrensa = signal<string>('');
+  progPrenTurno = signal<string>('');
+  progPrenProducto = signal<string>('');
+  progPrenOperador = signal<string>('');
+  progPrenProgramadoDesde = signal<number | null | string>(null);
+  progPrenProgramadoHasta = signal<number | null | string>(null);
+
+  // Filtros activos para Prensado Operación
+  operPrenPrensa = signal<string>('');
+  operPrenStatus = signal<string>('');
+  operPrenTurno = signal<string>('');
+  operPrenProducto = signal<string>('');
+  operPrenOperador = signal<string>('');
+  operPrenProducidoDesde = signal<number | null | string>(null);
+  operPrenProducidoHasta = signal<number | null | string>(null);
+  operPrenInterrupcionDesde = signal<number | null | string>(null);
+  operPrenInterrupcionHasta = signal<number | null | string>(null);
+
+  // Sort signals para Prensado
+  progPrenSortCol = signal<string>('fecha');
+  progPrenSortDir = signal<'asc' | 'desc'>('asc');
+  operPrenSortCol = signal<string>('prensa');
+  operPrenSortDir = signal<'asc' | 'desc'>('asc');
+
+  // Prensado arrays
+  programacionPren = signal<PrensadoProgramacion[]>([]);
+  operacionPren = signal<PrensadoOperacion[]>([]);
+  selectedPrensado = signal<any>(null);
+  showPrensadoModal = signal(false);
+  showDeleteConfirmModalPrensado = signal(false);
+  activePrensadoId = signal<string | null>(null);
+
   sortDirProg = signal<'asc' | 'desc'>('asc');
   sortDirOper = signal<'asc' | 'desc'>('asc');
 
@@ -740,8 +1172,188 @@ export class TableroProduccionComponent implements OnInit {
   filterDesde  = signal<number | null>(null);
   filterHasta  = signal<number | null>(null);
 
+  filteredProgramacionExt = computed(() => {
+    let list = this.programacionExt();
+    
+    // Apply filters
+    const turno = this.progExtTurno();
+    if (turno) list = list.filter(item => item.turno.toLowerCase().includes(turno.toLowerCase()));
+    
+    const producto = this.progExtProducto();
+    if (producto) list = list.filter(item => item.producto.toLowerCase().includes(producto.toLowerCase()));
+    
+    const operador = this.progExtOperador();
+    if (operador) list = list.filter(item => (item.operador || '').toLowerCase().includes(operador.toLowerCase()));
+    
+    const desde = this.progExtProgramadoDesde();
+    if (desde !== null && desde !== undefined && desde !== '') list = list.filter(item => item.programado >= Number(desde));
+    
+    const hasta = this.progExtProgramadoHasta();
+    if (hasta !== null && hasta !== undefined && hasta !== '') list = list.filter(item => item.programado <= Number(hasta));
+
+    // Apply sorting
+    const sortCol = this.progExtSortCol();
+    const sortDir = this.progExtSortDir();
+    if (sortCol) {
+      list = [...list].sort((a: any, b: any) => {
+        let valA = a[sortCol === 'fecha' ? 'fechaExtrusora' : sortCol];
+        let valB = b[sortCol === 'fecha' ? 'fechaExtrusora' : sortCol];
+        if (typeof valA === 'string') {
+          return sortDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        } else {
+          return sortDir === 'asc' ? (valA - valB) : (valB - valA);
+        }
+      });
+    }
+    
+    return list;
+  });
+
+  filteredOperacionExt = computed(() => {
+    let list = this.operacionExt();
+    
+    const extrusora = this.operExtExtrusora();
+    if (extrusora) list = list.filter(item => item.extrusora.toLowerCase().includes(extrusora.toLowerCase()));
+    
+    const turno = this.operExtTurno();
+    if (turno) list = list.filter(item => item.turno.toLowerCase().includes(turno.toLowerCase()));
+    
+    const producto = this.operExtProducto();
+    if (producto) list = list.filter(item => item.producto.toLowerCase().includes(producto.toLowerCase()));
+    
+    const operador = this.operExtOperador();
+    if (operador) list = list.filter(item => (item.operador || '').toLowerCase().includes(operador.toLowerCase()));
+    
+    const prodDesde = this.operExtProducidoDesde();
+    if (prodDesde !== null && prodDesde !== undefined && prodDesde !== '') list = list.filter(item => item.producido >= Number(prodDesde));
+    
+    const prodHasta = this.operExtProducidoHasta();
+    if (prodHasta !== null && prodHasta !== undefined && prodHasta !== '') list = list.filter(item => item.producido <= Number(prodHasta));
+    
+    const intDesde = this.operExtInterrupcionDesde();
+    if (intDesde !== null && intDesde !== undefined && intDesde !== '') list = list.filter(item => item.tiempoInterrupcion >= Number(intDesde));
+    
+    const intHasta = this.operExtInterrupcionHasta();
+    if (intHasta !== null && intHasta !== undefined && intHasta !== '') list = list.filter(item => item.tiempoInterrupcion <= Number(intHasta));
+    
+    const enCurso = this.operExtEnCurso();
+    if (enCurso !== null) list = list.filter(item => item.enCurso === enCurso);
+    
+    const extId = this.operExtId();
+    if (extId) list = list.filter(item => String(item.extrusionId).toLowerCase().includes(extId.toLowerCase()));
+
+    // Apply sorting
+    const sortCol = this.operExtSortCol();
+    const sortDir = this.operExtSortDir();
+    if (sortCol) {
+      list = [...list].sort((a: any, b: any) => {
+        let valA = a[sortCol];
+        let valB = b[sortCol];
+        if (typeof valA === 'string') {
+          return sortDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        } else if (typeof valA === 'boolean') {
+          return sortDir === 'asc' ? (valA === valB ? 0 : valA ? 1 : -1) : (valA === valB ? 0 : valA ? -1 : 1);
+        } else {
+          return sortDir === 'asc' ? (valA - valB) : (valB - valA);
+        }
+      });
+    }
+    
+    return list;
+  });
+
+  filteredProgramacionPren = computed(() => {
+    let list = this.programacionPren();
+    
+    const prensa = this.progPrenPrensa();
+    if (prensa) list = list.filter(item => item.prensa.toLowerCase().includes(prensa.toLowerCase()));
+    
+    const turno = this.progPrenTurno();
+    if (turno) list = list.filter(item => item.turno.toLowerCase().includes(turno.toLowerCase()));
+    
+    const producto = this.progPrenProducto();
+    if (producto) list = list.filter(item => item.producto.toLowerCase().includes(producto.toLowerCase()));
+    
+    const operador = this.progPrenOperador();
+    if (operador) list = list.filter(item => (item.operador || '').toLowerCase().includes(operador.toLowerCase()));
+    
+    const desde = this.progPrenProgramadoDesde();
+    if (desde !== null && desde !== undefined && desde !== '') list = list.filter(item => item.programado >= Number(desde));
+    
+    const hasta = this.progPrenProgramadoHasta();
+    if (hasta !== null && hasta !== undefined && hasta !== '') list = list.filter(item => item.programado <= Number(hasta));
+
+    // Apply sorting
+    const sortCol = this.progPrenSortCol();
+    const sortDir = this.progPrenSortDir();
+    if (sortCol) {
+      list = [...list].sort((a: any, b: any) => {
+        let valA = a[sortCol];
+        let valB = b[sortCol];
+        if (typeof valA === 'string') {
+          return sortDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        } else {
+          return sortDir === 'asc' ? (valA - valB) : (valB - valA);
+        }
+      });
+    }
+    
+    return list;
+  });
+
+  filteredOperacionPren = computed(() => {
+    let list = this.operacionPren();
+    
+    const prensa = this.operPrenPrensa();
+    if (prensa) list = list.filter(item => item.prensa.toLowerCase().includes(prensa.toLowerCase()));
+    
+    const status = this.operPrenStatus();
+    if (status) list = list.filter(item => item.status.toLowerCase().includes(status.toLowerCase()));
+    
+    const turno = this.operPrenTurno();
+    if (turno) list = list.filter(item => item.turno.toLowerCase().includes(turno.toLowerCase()));
+    
+    const producto = this.operPrenProducto();
+    if (producto) list = list.filter(item => item.producto.toLowerCase().includes(producto.toLowerCase()));
+    
+    const operador = this.operPrenOperador();
+    if (operador) list = list.filter(item => (item.operador || '').toLowerCase().includes(operador.toLowerCase()));
+    
+    const prodDesde = this.operPrenProducidoDesde();
+    if (prodDesde !== null && prodDesde !== undefined && prodDesde !== '') list = list.filter(item => item.producido >= Number(prodDesde));
+    
+    const prodHasta = this.operPrenProducidoHasta();
+    if (prodHasta !== null && prodHasta !== undefined && prodHasta !== '') list = list.filter(item => item.producido <= Number(prodHasta));
+    
+    const intDesde = this.operPrenInterrupcionDesde();
+    if (intDesde !== null && intDesde !== undefined && intDesde !== '') list = list.filter(item => item.tiempoInterrupcion >= Number(intDesde));
+    
+    const intHasta = this.operPrenInterrupcionHasta();
+    if (intHasta !== null && intHasta !== undefined && intHasta !== '') list = list.filter(item => item.tiempoInterrupcion <= Number(intHasta));
+
+    // Apply sorting
+    const sortCol = this.operPrenSortCol();
+    const sortDir = this.operPrenSortDir();
+    if (sortCol) {
+      list = [...list].sort((a: any, b: any) => {
+        let valA = a[sortCol];
+        let valB = b[sortCol];
+        if (typeof valA === 'string') {
+          return sortDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        } else if (typeof valA === 'boolean') {
+          return sortDir === 'asc' ? (valA === valB ? 0 : valA ? 1 : -1) : (valA === valB ? 0 : valA ? -1 : 1);
+        } else {
+          return sortDir === 'asc' ? (valA - valB) : (valB - valA);
+        }
+      });
+    }
+    
+    return list;
+  });
+
   ngOnInit() { 
     this.loadExtrusion(); 
+    this.loadPrensado();
     this.loadOperarios();
   }
 
@@ -752,6 +1364,7 @@ export class TableroProduccionComponent implements OnInit {
   setTab(tab: 'extrusion' | 'prensado') {
     this.activeTab.set(tab);
     if (tab === 'extrusion') this.loadExtrusion();
+    if (tab === 'prensado') this.loadPrensado();
   }
 
   loadExtrusion() {
@@ -770,23 +1383,224 @@ export class TableroProduccionComponent implements OnInit {
     });
   }
 
-  toggleSort(table: 'prog' | 'oper', column: string) {
-    if (table === 'prog') {
-      const dir = this.sortDirProg() === 'asc' ? 'desc' : 'asc';
-      this.sortDirProg.set(dir);
-      this.programacionExt.update(items => [...items].sort((a, b) => {
-        const valA = a.fechaExtrusora;
-        const valB = b.fechaExtrusora;
-        return dir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+  loadPrensado() {
+    this.loading.set(true);
+    this.svc.getPrensadoProgramacion().subscribe({
+      next: res => this.programacionPren.set(res),
+      error: ()  => this.loading.set(false)
+    });
+
+    this.svc.getPrensadoOperacion().subscribe({
+      next: res => { 
+        this.operacionPren.set(res); 
+        this.loading.set(false); 
+      },
+      error: ()  => this.loading.set(false)
+    });
+  }
+
+  openPrensadoEditModal(id: string) {
+    this.svc.getPrensadoDetail(id).subscribe(res => {
+      this.selectedPrensado.set(res);
+      this.showPrensadoModal.set(true);
+    });
+  }
+
+  closePrensadoModal() {
+    this.showPrensadoModal.set(false);
+    this.selectedPrensado.set(null);
+  }
+
+  onPressingDateChange(newDateStr: string) {
+    if (!newDateStr || !this.selectedPrensado()) return;
+    const current = new Date(this.selectedPrensado().fecha);
+    const parts = newDateStr.split('-');
+    current.setFullYear(Number(parts[0]));
+    current.setMonth(Number(parts[1]) - 1);
+    current.setDate(Number(parts[2]));
+    this.selectedPrensado().fecha = current.toISOString();
+  }
+
+  savePrensado() {
+    const p = this.selectedPrensado();
+    if (!p) return;
+    const body = {
+      fecha: p.fecha,
+      calibre: Number(p.calibre),
+      ancho: p.ancho,
+      longitud: Number(p.longitud),
+      status: p.status,
+      operarioId: p.operadorId || null
+    };
+    this.svc.updatePrensado(p.id, body).subscribe({
+      next: () => {
+        this.closePrensadoModal();
+        this.loadPrensado();
+      },
+      error: err => {
+        console.error('Error al guardar prensado:', err);
+        alert('Error al guardar los cambios.');
+      }
+    });
+  }
+
+  deletePrensado(id: string) {
+    this.activePReportPrensadoId(id);
+  }
+
+  activePReportPrensadoId(id: string) {
+    this.activePrensadoId.set(id);
+    this.showDeleteConfirmModalPrensado.set(true);
+  }
+
+  closeDeleteConfirmPrensado() {
+    this.showDeleteConfirmModalPrensado.set(false);
+    this.activePrensadoId.set(null);
+  }
+
+  confirmDeletePrensado() {
+    const id = this.activePrensadoId();
+    if (!id) return;
+    this.svc.deletePrensado(id).subscribe({
+      next: () => {
+        this.closeDeleteConfirmPrensado();
+        this.loadPrensado();
+      },
+      error: err => {
+        console.error('Error al eliminar:', err);
+        alert('Error al eliminar el registro.');
+      }
+    });
+  }
+
+  exportToExcel(tableType: 'extrusion' | 'prensado') {
+    let data: any[] = [];
+    let filename = '';
+    
+    if (tableType === 'extrusion') {
+      const list = this.filteredOperacionExt();
+      data = list.map(item => ({
+        'Estado': item.status,
+        'Extrusora': item.extrusora,
+        'Turno': item.turno,
+        'Producto': item.producto,
+        'Operador': item.operador,
+        'Producido (Kg)': item.producido,
+        'Tiempo Interrupción (min)': item.tiempoInterrupcion,
+        'En Curso': item.enCurso ? 'Sí' : 'No',
+        'Extrusión ID': item.extrusionId
       }));
+      filename = `Reporte_Extrusion_Operacion_${new Date().toISOString().split('T')[0]}.xlsx`;
     } else {
-      const dir = this.sortDirOper() === 'asc' ? 'desc' : 'asc';
-      this.sortDirOper.set(dir);
-      this.operacionExt.update(items => [...items].sort((a, b) => {
-        const valA = a.extrusora;
-        const valB = b.extrusora;
-        return dir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+      const list = this.filteredOperacionPren();
+      data = list.map(item => ({
+        'Estado': item.status,
+        'Prensa': item.prensa,
+        'Turno': item.turno,
+        'Producto': item.producto,
+        'Operador': item.operador,
+        'Producido (Kg)': item.producido,
+        'Tiempo Interrupción (min)': item.tiempoInterrupcion,
+        'En Curso': item.enCurso ? 'Sí' : 'No',
+        'Prensa ID': item.id
       }));
+      filename = `Reporte_Prensado_Operacion_${new Date().toISOString().split('T')[0]}.xlsx`;
+    }
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Operacion');
+    XLSX.writeFile(wb, filename);
+  }
+
+  exportToPDF(tableType: 'extrusion' | 'prensado') {
+    const doc = new jsPDF({ orientation: 'landscape' });
+    let title = '';
+    let headers: string[][] = [];
+    let rows: any[][] = [];
+    
+    if (tableType === 'extrusion') {
+      title = 'Reporte de Extrusión - Operación';
+      headers = [['Estado', 'Extrusora', 'Turno', 'Producto', 'Operador', 'Producido (Kg)', 'Tiempo Interrupción', 'En Curso', 'Extrusión ID']];
+      rows = this.filteredOperacionExt().map(item => [
+        item.status,
+        item.extrusora,
+        item.turno,
+        item.producto,
+        item.operador,
+        item.producido,
+        item.tiempoInterrupcion,
+        item.enCurso ? 'Sí' : 'No',
+        item.extrusionId
+      ]);
+    } else {
+      title = 'Reporte de Prensado - Operación';
+      headers = [['Estado', 'Prensa', 'Turno', 'Producto', 'Operador', 'Producido (Kg)', 'Tiempo Interrupción', 'En Curso', 'Prensa ID']];
+      rows = this.filteredOperacionPren().map(item => [
+        item.status,
+        item.prensa,
+        item.turno,
+        item.producto,
+        item.operador,
+        item.producido,
+        item.tiempoInterrupcion,
+        item.enCurso ? 'Sí' : 'No',
+        item.id.substring(0, 8)
+      ]);
+    }
+
+    doc.setFont('Helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.setTextColor(26, 54, 93);
+    doc.text(title, 14, 15);
+    
+    doc.setFont('Helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Generado el: ${new Date().toLocaleString()}`, 14, 22);
+
+    (doc as any).autoTable({
+      head: headers,
+      body: rows,
+      startY: 26,
+      theme: 'grid',
+      styles: {
+        fontSize: 9,
+        cellPadding: 3,
+        overflow: 'linebreak',
+        halign: 'left'
+      },
+      headStyles: {
+        fillColor: [26, 54, 93],
+        textColor: [255, 255, 255],
+        fontStyle: 'bold'
+      },
+      alternateRowStyles: {
+        fillColor: [248, 250, 252]
+      }
+    });
+
+    const filename = `${title.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(filename);
+  }
+
+  toggleSort(table: 'prog' | 'oper' | 'progPren' | 'operPren', column: string) {
+    if (table === 'prog') {
+      const dir = this.progExtSortCol() === column && this.progExtSortDir() === 'asc' ? 'desc' : 'asc';
+      this.progExtSortCol.set(column);
+      this.progExtSortDir.set(dir);
+    } else if (table === 'oper') {
+      const dir = this.operExtSortCol() === column && this.operExtSortDir() === 'asc' ? 'desc' : 'asc';
+      this.operExtSortCol.set(column);
+      this.operExtSortDir.set(dir);
+    } else if (table === 'progPren') {
+      const dir = this.progPrenSortCol() === column && this.progPrenSortDir() === 'asc' ? 'desc' : 'asc';
+      this.progPrenSortCol.set(column);
+      this.progPrenSortDir.set(dir);
+    } else if (table === 'operPren') {
+      const dir = this.operPrenSortCol() === column && this.operPrenSortDir() === 'asc' ? 'desc' : 'asc';
+      this.operPrenSortCol.set(column);
+      this.operPrenSortDir.set(dir);
     }
   }
 

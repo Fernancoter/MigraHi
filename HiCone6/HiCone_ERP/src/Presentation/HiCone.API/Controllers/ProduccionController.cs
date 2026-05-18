@@ -233,6 +233,123 @@ public class ProduccionController : ControllerBase
         return Ok(new { operacion });
     }
 
+    [HttpGet("prensado/programacion")]
+    public async Task<ActionResult<IEnumerable<object>>> GetPrensadoProgramacion()
+    {
+        var items = await _context.Prensados
+            .Include(p => p.Prensa)
+            .Include(p => p.Turno)
+            .Include(p => p.Operario)
+            .Where(p => p.Status == PrensadoStatus.Programada || p.Status == PrensadoStatus.PorProgramar)
+            .OrderByDescending(p => p.Fecha)
+            .Select(p => new
+            {
+                p.Id,
+                p.Fecha,
+                Prensa = p.Prensa.Nombre,
+                Turno = p.Turno != null ? p.Turno.Nombre : "",
+                p.Producto,
+                Operador = p.Operario != null ? p.Operario.Nombre : "",
+                p.Programado
+            })
+            .ToListAsync();
+        return Ok(items);
+    }
+
+    [HttpGet("prensado/operacion")]
+    public async Task<ActionResult<IEnumerable<object>>> GetPrensadoOperacion()
+    {
+        var items = await _context.Prensados
+            .Include(p => p.Prensa)
+            .Include(p => p.Turno)
+            .Include(p => p.Operario)
+            .Where(p => p.Status != PrensadoStatus.Programada && p.Status != PrensadoStatus.PorProgramar)
+            .OrderByDescending(p => p.Fecha)
+            .Select(p => new
+            {
+                p.Id,
+                Status = p.Status.ToString(),
+                Prensa = p.Prensa.Nombre,
+                Turno = p.Turno != null ? p.Turno.Nombre : "",
+                p.Producto,
+                Operador = p.Operario != null ? p.Operario.Nombre : "",
+                p.Producido,
+                TiempoInterrupcion = p.TiempoInterrupcionMin,
+                p.EnCurso
+            })
+            .ToListAsync();
+        return Ok(items);
+    }
+
+    [HttpGet("prensado/{id}")]
+    public async Task<ActionResult<object>> GetPrensadoDetail(Guid id)
+    {
+        var p = await _context.Prensados
+            .Include(p => p.Prensa)
+            .Include(p => p.Turno)
+            .Include(p => p.Operario)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (p == null) return NotFound();
+
+        return Ok(new
+        {
+            p.Id,
+            Prensa = p.Prensa.Nombre,
+            Turno = p.Turno != null ? p.Turno.Nombre : "",
+            p.Producto,
+            Operador = p.Operario != null ? p.Operario.Nombre : "",
+            OperadorId = p.OperarioId,
+            p.Fecha,
+            Status = p.Status.ToString(),
+            p.Calibre,
+            p.Ancho,
+            p.Longitud,
+            p.Programado,
+            p.Producido,
+            p.TiempoInterrupcionMin,
+            p.EnCurso
+        });
+    }
+
+    [HttpPatch("prensado/{id}/operador")]
+    public async Task<IActionResult> PatchPrensadoOperador(Guid id, [FromBody] PatchOperadorDto dto)
+    {
+        var p = await _context.Prensados.FindAsync(id);
+        if (p == null) return NotFound();
+        p.OperarioId = dto.OperarioId;
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    [HttpPut("prensado/{id}")]
+    public async Task<IActionResult> UpdatePrensado(Guid id, [FromBody] UpdatePrensadoDto dto)
+    {
+        var p = await _context.Prensados.FindAsync(id);
+        if (p == null) return NotFound();
+
+        p.Fecha = dto.Fecha;
+        p.Calibre = dto.Calibre;
+        p.Ancho = dto.Ancho;
+        p.Longitud = dto.Longitud;
+        p.Status = dto.Status;
+        p.OperarioId = dto.OperarioId;
+
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    [HttpDelete("prensado/{id}")]
+    public async Task<IActionResult> DeletePrensado(Guid id)
+    {
+        var p = await _context.Prensados.FindAsync(id);
+        if (p == null) return NotFound();
+
+        _context.Prensados.Remove(p);
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // OPERARIOS (Operadores de producción)
     // ─────────────────────────────────────────────────────────────────────────
@@ -364,3 +481,12 @@ public class ProduccionController : ControllerBase
 public record PatchOperadorDto(Guid? OperarioId);
 
 public record AddBobinasDto(long ParesBobinas);
+
+public record UpdatePrensadoDto(
+    DateTime Fecha,
+    decimal Calibre,
+    string Ancho,
+    int Longitud,
+    PrensadoStatus Status,
+    Guid? OperarioId
+);

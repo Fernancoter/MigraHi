@@ -59,12 +59,23 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - **Gestión de Acciones Corregida**: Se solucionaron problemas de visibilidad en el menú desplegable "!" y se mejoró la navegación del submenú de exportación (hover estable).
     - **Eliminación Segura**: Se implementó un modal de confirmación personalizado (UI Premium) que reemplaza la alerta nativa y ejecuta el borrado real en backend y state.
     - **Localización**: Consolidación total de términos en español.
+- [x] **Módulo de Producción - Prensado (Tercera Etapa) COMPLETADO**:
+    - **Tablero de Prensado**: Desarrollo completo de las tablas de Programación y Operación.
+    - **Programación Prensado**: Columnas con 3 espacios iniciales vacíos, Fecha Prensado, Prensa, Turno, Producto, Operador y Cantidad Programada. Filtros dinámicos interactivos y ordenación habilitada.
+    - **Operación Prensado**: Visualización en vivo con columnas para Estado, Acciones (Editar/Eliminar), Menú "!" (Hover con Submenú de Exportación y Selección de Columnas), Turno, Producto, Operador, Programado, Prensa, Producido, Tiempo Interrupción y En Curso.
+    - **Modal de Edición Prensado**: Selector dinámico para Prensa y Operador conectados al catálogo del servicio, con estados de carga e interactividad premium.
+    - **Menú de Acciones "!"**: Hover de exportación estable y modal de confirmación de borrado de Prensado integrado y funcional.
+- [x] **Funcionalidad de Exportación (Excel y PDF) CORREGIDA Y COMPLETADA**:
+    - **Exportar a Excel**: Generación de archivos `.xlsx` estructurados con SheetJS (`xlsx`). Respeta de forma precisa los filtros aplicados en las tablas y mantiene cabeceras en español bien formateadas.
+    - **Exportar a PDF**: Generación de reportes estéticos en `.pdf` con `jsPDF` y `jspdf-autotable`. Columnas alineadas, tipografía corporativa y aplicación inmediata de los filtros actuales en pantalla.
+    - **Descarga Automática**: Flujo de descarga nativa instantánea para ambos formatos al hacer clic desde el menú desplegable "!".
 
 ## Technical Decisions
 - **Standalone Architecture**: Using Angular Standalone Components for the entire frontend.
 - **Session Management**: Currently simulated with LocalStorage persistence for developer preview; ready for JWT integration.
 - **Validation**: Using Reactive Forms for real-time feedback and server-simulated error messages.
 - **Reactivity**: Converted `allPermissions` to Angular Signals in the Roles component for improved performance and real-time UI updates.
+- **Bundle Optimization**: Increased the initial bundle budget in `angular.json` to 3MB to accommodate large libraries (xlsx, jspdf) for correct production building.
 
 ## Next Steps
 - [ ] Integración final de permisos con el backend real cuando se ejecute el seeder en producción.
@@ -76,3 +87,4 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
 - La arquitectura ahora permite escalar a múltiples aplicaciones compartiendo el mismo catálogo de permisos.
 - Se renombró el módulo legacy "GAM" a "GAM Backoffice" para mayor claridad.
 - Se forzó la recreación de la base de datos para aplicar el cambio estructural.
+- El proyecto compila al 100% de manera exitosa y limpia (`exit code: 0`).

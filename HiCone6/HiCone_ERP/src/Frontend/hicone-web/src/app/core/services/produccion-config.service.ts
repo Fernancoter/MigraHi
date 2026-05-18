@@ -17,6 +17,46 @@ export interface ConfiguracionSistema { id: string; key: string; valor: string; 
 export interface ExtrusionItem { id: string; extrusora: string; turno: string; producto: string; operador: string; producido: number; tiempoInterrupcion: number; enCurso: boolean; extrusionId: number; fecha: string; programado: number; }
 export interface PrensadoItem  { id: string; prensa: string; turno: string; producto: string; operador: string; producido: number; tiempoInterrupcion: number; enCurso: boolean; fecha: string; programado: number; }
 
+export interface PrensadoProgramacion {
+  id: string;
+  fecha: string;
+  prensa: string;
+  turno: string;
+  producto: string;
+  operador: string;
+  programado: number;
+}
+
+export interface PrensadoOperacion {
+  id: string;
+  status: string;
+  prensa: string;
+  turno: string;
+  producto: string;
+  operador: string;
+  producido: number;
+  tiempoInterrupcion: number;
+  enCurso: boolean;
+}
+
+export interface PrensadoDetail {
+  id: string;
+  prensa: string;
+  turno: string;
+  producto: string;
+  operador: string;
+  operadorId: string | null;
+  fecha: string;
+  status: string;
+  calibre: number;
+  ancho: string;
+  longitud: number;
+  programado: number;
+  producido: number;
+  tiempoInterrupcionMin: number;
+  enCurso: boolean;
+}
+
 export interface ExtrusionProgramacion {
   id: string;
   fechaExtrusora: string;
@@ -100,6 +140,19 @@ export class ProduccionConfigService {
   }
   
   getTableroPrensado()  { return this.http.get<{ operacion: PrensadoItem[]  }>(`${this.base}/tablero/prensado`);  }
+
+  getPrensadoProgramacion() { return this.http.get<PrensadoProgramacion[]>(`${this.base}/prensado/programacion`); }
+  getPrensadoOperacion()   { return this.http.get<PrensadoOperacion[]>(`${this.base}/prensado/operacion`); }
+  getPrensadoDetail(id: string) { return this.http.get<PrensadoDetail>(`${this.base}/prensado/${id}`); }
+  patchPrensadoOperador(id: string, operarioId: string | null) {
+    return this.http.patch(`${this.base}/prensado/${id}/operador`, { operarioId });
+  }
+  updatePrensado(id: string, data: any) {
+    return this.http.put(`${this.base}/prensado/${id}`, data);
+  }
+  deletePrensado(id: string) {
+    return this.http.delete(`${this.base}/prensado/${id}`);
+  }
 
   // ── OPERARIOS ──────────────────────────────────────────────────────────────
   getOperarios(search = '')   { return this.http.get<Operario[]>(`${this.base}/operarios?search=${search}`); }
