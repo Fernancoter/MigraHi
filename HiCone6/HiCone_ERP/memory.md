@@ -1,12 +1,12 @@
 # Project Memory: HiCone ERP Modernization
 
 ## Rama Activa
-`configurarProduccion/refactor` — funcional, sincronizada con el nuevo baseline de DB.
+`configurarProduccion/refactor` — funcional, sincronizada con el nuevo baseline de DB y migración de Prensado aplicada.
 
-## Estado Actual (2026-05-14)
-- **Backend:** Operativo (Puerto 5007). Seeder corregido y estable.
-- **Frontend:** Operativo (Puerto 4200). Módulo "Configurar Producción" (Sección Extrusión) refactorizado y completado al 100%.
-- **Base de Datos:** `HiCone_ERP_V3` estabilizada mediante `InitialProductionBaseline`.
+## Estado Actual (2026-05-18)
+- **Backend:** Operativo (Puerto 5007, levantado en segundo plano). Controladores de Prensado y Operadores integrados con persistencia real en base de datos.
+- **Frontend:** Operativo (Puerto 4200, levantado en segundo plano). Módulos "Extrusión", "Prensado" y "Operadores" refactorizados y completados al 100%.
+- **Base de Datos:** Migración `AddPrensadoAdditionalProperties` aplicada exitosamente sobre `HiCone_ERP_V3`.
 
 ✅ **Módulo de Seguridad COMPLETADO** (commit: 3a869aa)
 ✅ **Vibe Coding Infrastructure** (commit: d38f43d)
@@ -69,6 +69,15 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - **Exportar a Excel**: Generación de archivos `.xlsx` estructurados con SheetJS (`xlsx`). Respeta de forma precisa los filtros aplicados en las tablas y mantiene cabeceras en español bien formateadas.
     - **Exportar a PDF**: Generación de reportes estéticos en `.pdf` con `jsPDF` y `jspdf-autotable`. Columnas alineadas, tipografía corporativa y aplicación inmediata de los filtros actuales en pantalla.
     - **Descarga Automática**: Flujo de descarga nativa instantánea para ambos formatos al hacer clic desde el menú desplegable "!".
+- [x] **Ajustes y Desarrollo Continuo del Módulo de Prensado**:
+    - **Idioma y Terminología**: Traducción total de términos a español (`Ancho`, `Calibre`, `Longitud`) y renombrado estricto de `Largo` a `Longitud`.
+    - **Ampliación de Persistencia Real (SQL Server)**: Se agregaron `KgVirgen`, `Target`, `KgMolido`, `ProcessStart`, `ProcessEnd` y `LoteSilo` a la entidad `Prensado`, actualizando DTOs, endpoint y aplicando la migración Entity Framework Core.
+    - **Modal de Edición Renovado**: Estructuración del modal con Renglón de Información Adicional (Virgen Kg, Meta, Molido Kg, Estado), Renglón de Tiempos de Proceso (Inicia Proceso, Fin Proceso) y Lote Silo.
+    - **Subtabla Expandible "Carreras Registradas"**: Activada con el icono `!` en la columna 4. Renderiza columnas `Bobina`, `Reposo (Hr)`, `Carreras`, `En Proceso`, `Terminadas`, `Validadas` y `Carretes`. Habilitados accesos directos de exportación local en subtabla.
+    - **Popovers Dinámicos de Cabecera**: Prensa, Turno, Producto y Operario incluyen inputs de búsqueda y sugerencias rápidas autoejecutables. Campos numéricos de rango (Producido, Tiempo Interrupción) incorporan botón explícito `Buscar`.
+- [x] **Nueva Pantalla de Catálogo de Operarios**:
+    - **Vista Premium**: Diseñada de forma independiente en `/produccion/operarios` con consumo de servicio API real de la base de datos.
+    - **Barra de Acciones**: Exportar (CSV/PDF), Seleccionar columnas (popover reactivo con checkboxes), Agregar (+) y buscador interactivo en vivo.
 
 ## Technical Decisions
 - **Standalone Architecture**: Using Angular Standalone Components for the entire frontend.

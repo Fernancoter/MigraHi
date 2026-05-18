@@ -308,7 +308,13 @@ public class ProduccionController : ControllerBase
             p.Programado,
             p.Producido,
             p.TiempoInterrupcionMin,
-            p.EnCurso
+            p.EnCurso,
+            VirgenKg = p.KgVirgen,
+            Meta = p.Target,
+            MolidoKg = p.KgMolido,
+            IniciaProceso = p.ProcessStart,
+            FinProceso = p.ProcessEnd,
+            LoteSilo = p.LoteSilo
         });
     }
 
@@ -334,6 +340,12 @@ public class ProduccionController : ControllerBase
         p.Longitud = dto.Longitud;
         p.Status = dto.Status;
         p.OperarioId = dto.OperarioId;
+        p.KgVirgen = dto.KgVirgen;
+        p.Target = dto.Target;
+        p.KgMolido = dto.KgMolido;
+        p.ProcessStart = dto.ProcessStart;
+        p.ProcessEnd = dto.ProcessEnd;
+        p.LoteSilo = dto.LoteSilo;
 
         await _context.SaveChangesAsync(default);
         return NoContent();
@@ -488,5 +500,11 @@ public record UpdatePrensadoDto(
     string Ancho,
     int Longitud,
     PrensadoStatus Status,
-    Guid? OperarioId
+    Guid? OperarioId,
+    decimal KgVirgen,
+    decimal Target,
+    decimal KgMolido,
+    DateTime? ProcessStart,
+    DateTime? ProcessEnd,
+    string? LoteSilo
 );

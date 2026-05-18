@@ -237,6 +237,12 @@ public class Prensado : TenantEntity
     public decimal Calibre { get; set; }
     public string Ancho { get; set; } = "0000/00";
     public int Longitud { get; set; }
+    public decimal KgVirgen { get; set; }
+    public decimal Target { get; set; }
+    public decimal KgMolido { get; set; }
+    public DateTime? ProcessStart { get; set; }
+    public DateTime? ProcessEnd { get; set; }
+    public string? LoteSilo { get; set; }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

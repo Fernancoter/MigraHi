@@ -248,10 +248,10 @@ import 'jspdf-autotable';
                 <tbody>
                   @if (loading()) {
                     <tr><td colspan="13" class="loading-cell">Cargando operación...</td></tr>
-                  } @else if (operacionExt().length === 0) {
+                  } @else if (filteredOperacionExt().length === 0) {
                     <tr><td colspan="13" class="empty-cell">Sin registros en curso.</td></tr>
                   } @else {
-                    @for (item of operacionExt(); track item.id) {
+                    @for (item of filteredOperacionExt(); track item.id) {
                       <tr [class.row-active]="item.enCurso">
                         <td>
                           <span class="status-indicator" [attr.data-status]="item.status">
@@ -275,8 +275,8 @@ import 'jspdf-autotable';
                                   <div class="wd-item has-submenu">
                                     Exportar <span class="arrow">▶</span>
                                     <div class="wd-submenu">
-                                      <div class="wd-item">CSV</div>
-                                      <div class="wd-item">PDF</div>
+                                      <div class="wd-item" (click)="exportToExcel('extrusion')">Excel</div>
+                                      <div class="wd-item" (click)="exportToPDF('extrusion')">PDF</div>
                                     </div>
                                   </div>
                                   <div class="wd-item" (click)="openSelectColumns(item.id)">Seleccionar columnas</div>
@@ -644,8 +644,8 @@ import 'jspdf-autotable';
                   <tr>
                     <th class="header-empty"></th> <!-- Estado -->
                     <th class="header-empty"></th> <!-- Editar -->
-                    <th class="header-empty"></th> <!-- Eliminar -->
-                    <th class="header-empty"></th> <!-- Warning dropdown -->
+                    <th class="header-action text-center" style="width: 32px; color: #ef4444; font-weight: 800; cursor: default;" title="Eliminar fila">×</th>
+                    <th class="header-action text-center" style="width: 32px; color: #10b981; font-weight: 800; cursor: default;" title="Detalles y Carreras">!</th>
                     <th (click)="toggleFilter('oper-prensa-filter', $event)">
                       Prensa <span class="sort-icon">{{ operPrenSortCol() === 'prensa' ? (operPrenSortDir() === 'asc' ? '↑' : '↓') : '' }}</span>
                       @if (activeFilter() === 'oper-prensa-filter') {
@@ -654,6 +654,12 @@ import 'jspdf-autotable';
                             <button class="sort-btn" (click)="operPrenSortCol.set('prensa'); operPrenSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
                             <button class="sort-btn" (click)="operPrenSortCol.set('prensa'); operPrenSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
                             <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="operPrenPrensa()" (ngModelChange)="operPrenPrensa.set($event)">
+                            <div class="suggestions">
+                              <span class="suggestion-label">Sugerencias</span>
+                              <div class="suggestion-item" (click)="operPrenPrensa.set('Prensa 1'); activeFilter.set(null)">Prensa 1</div>
+                              <div class="suggestion-item" (click)="operPrenPrensa.set('Prensa 2'); activeFilter.set(null)">Prensa 2</div>
+                              <div class="suggestion-item" (click)="operPrenPrensa.set('Prensa 3'); activeFilter.set(null)">Prensa 3</div>
+                            </div>
                           </div>
                         </div>
                       }
@@ -663,9 +669,15 @@ import 'jspdf-autotable';
                       @if (activeFilter() === 'oper-turno-filter') {
                         <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
                           <div class="filter-group">
-                            <button class="sort-btn" (click)="operPrenSortCol.set('turno'); operExtSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
-                            <button class="sort-btn" (click)="operPrenSortCol.set('turno'); operExtSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
+                            <button class="sort-btn" (click)="operPrenSortCol.set('turno'); operPrenSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
+                            <button class="sort-btn" (click)="operPrenSortCol.set('turno'); operPrenSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
                             <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="operPrenTurno()" (ngModelChange)="operPrenTurno.set($event)">
+                            <div class="suggestions">
+                              <span class="suggestion-label">Sugerencias</span>
+                              <div class="suggestion-item" (click)="operPrenTurno.set('Mañana'); activeFilter.set(null)">Mañana</div>
+                              <div class="suggestion-item" (click)="operPrenTurno.set('Tarde'); activeFilter.set(null)">Tarde</div>
+                              <div class="suggestion-item" (click)="operPrenTurno.set('Noche'); activeFilter.set(null)">Noche</div>
+                            </div>
                           </div>
                         </div>
                       }
@@ -678,6 +690,11 @@ import 'jspdf-autotable';
                             <button class="sort-btn" (click)="operPrenSortCol.set('producto'); operPrenSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
                             <button class="sort-btn" (click)="operPrenSortCol.set('producto'); operPrenSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
                             <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="operPrenProducto()" (ngModelChange)="operPrenProducto.set($event)">
+                            <div class="suggestions">
+                              <span class="suggestion-label">Sugerencias</span>
+                              <div class="suggestion-item" (click)="operPrenProducto.set('Bobina'); activeFilter.set(null)">Bobina</div>
+                              <div class="suggestion-item" (click)="operPrenProducto.set('Carrete'); activeFilter.set(null)">Carrete</div>
+                            </div>
                           </div>
                         </div>
                       }
@@ -690,6 +707,11 @@ import 'jspdf-autotable';
                             <button class="sort-btn" (click)="operPrenSortCol.set('operador'); operPrenSortDir.set('asc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4M7 20V4M11 8l4-4 4 4M15 4v16"/></svg> A a Z</button>
                             <button class="sort-btn" (click)="operPrenSortCol.set('operador'); operPrenSortDir.set('desc')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4-4 4 4M7 4v16M11 16l4 4 4-4M15 20V4"/></svg> Z a A</button>
                             <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="operPrenOperador()" (ngModelChange)="operPrenOperador.set($event)">
+                            <div class="suggestions">
+                              <span class="suggestion-label">Sugerencias</span>
+                              <div class="suggestion-item" (click)="operPrenOperador.set('Juan Pérez'); activeFilter.set(null)">Juan Pérez</div>
+                              <div class="suggestion-item" (click)="operPrenOperador.set('María López'); activeFilter.set(null)">María López</div>
+                            </div>
                           </div>
                         </div>
                       }
@@ -701,6 +723,7 @@ import 'jspdf-autotable';
                           <div class="range-group">
                             <div class="range-field"><label>Desde</label><input type="number" class="search-input" [ngModel]="operPrenProducidoDesde()" (ngModelChange)="operPrenProducidoDesde.set($event)"></div>
                             <div class="range-field"><label>Hasta</label><input type="number" class="search-input" [ngModel]="operPrenProducidoHasta()" (ngModelChange)="operPrenProducidoHasta.set($event)"></div>
+                            <button class="sort-btn" style="background: #10b981; color: white; margin-top: 0.5rem; justify-content: center; font-weight: bold;" (click)="activeFilter.set(null)">Buscar</button>
                           </div>
                         </div>
                       }
@@ -712,6 +735,7 @@ import 'jspdf-autotable';
                           <div class="range-group">
                             <div class="range-field"><label>Desde</label><input type="number" class="search-input" [ngModel]="operPrenInterrupcionDesde()" (ngModelChange)="operPrenInterrupcionDesde.set($event)"></div>
                             <div class="range-field"><label>Hasta</label><input type="number" class="search-input" [ngModel]="operPrenInterrupcionHasta()" (ngModelChange)="operPrenInterrupcionHasta.set($event)"></div>
+                            <button class="sort-btn" style="background: #10b981; color: white; margin-top: 0.5rem; justify-content: center; font-weight: bold;" (click)="activeFilter.set(null)">Buscar</button>
                           </div>
                         </div>
                       }
@@ -744,23 +768,9 @@ import 'jspdf-autotable';
                           </button>
                         </td>
                         <td class="actions-cell" style="width: auto;">
-                          <div class="warning-dropdown-container">
-                            <button class="btn-icon-warn" title="Menú de acciones" (click)="toggleMainRowDropdown(item.id, $event)">
-                              <span class="icon">!</span>
-                            </button>
-                            @if (activeMainRowDropdownId() === item.id) {
-                              <div class="warning-dropdown main-row-dropdown animate-fade-in" (click)="$event.stopPropagation()">
-                                <div class="wd-item has-submenu">
-                                  Exportar <span class="arrow">▶</span>
-                                  <div class="wd-submenu">
-                                    <div class="wd-item" (click)="exportToExcel('prensado')">Excel</div>
-                                    <div class="wd-item" (click)="exportToPDF('prensado')">PDF</div>
-                                  </div>
-                                </div>
-                                <div class="wd-item" (click)="openSelectColumns(item.id)">Seleccionar columnas</div>
-                              </div>
-                            }
-                          </div>
+                          <button class="btn-icon-warn" [class.active-expand]="isPrensadoRowExpanded(item.id)" title="Ver Carreras y Detalles" (click)="togglePrensadoRow(item.id, $event)" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 6px;">
+                            <span class="icon" style="font-weight: bold;">!</span>
+                          </button>
                         </td>
                         <td><strong>{{ item.prensa }}</strong></td>
                         <td>{{ item.turno }}</td>
@@ -773,6 +783,68 @@ import 'jspdf-autotable';
                         </td>
                         <td><code class="id-tag">{{ item.id.substring(0, 8) }}</code></td>
                       </tr>
+
+                      <!-- BLOQUE EXPANDIBLE DE DETALLES Y CARRERAS -->
+                      @if (isPrensadoRowExpanded(item.id)) {
+                        <tr class="expanded-row-tr">
+                          <td colspan="12" class="expanded-row-td" style="padding: 1.5rem 2rem; background: rgba(248, 250, 252, 0.6); border-bottom: 1.5px solid #e2e8f0;">
+                            <div class="expanded-detail-container animate-slide-up" style="display: flex; flex-direction: column; gap: 1rem;">
+                              
+                              <!-- Header & Export Toolbar -->
+                              <div class="expand-header-row" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div class="expand-title" style="display: flex; align-items: center; gap: 0.5rem;">
+                                  <span style="font-size: 1.1rem;">🏃‍♂️</span>
+                                  <h4 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.05em;">Carreras Registradas</h4>
+                                </div>
+                                <div class="expand-toolbar" style="display: flex; gap: 0.5rem;">
+                                  <button class="btn-export-sub" style="background: #10b981; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.3rem;" (click)="exportToExcel('prensado')">
+                                    <span>📊 Excel</span>
+                                  </button>
+                                  <button class="btn-export-sub" style="background: #ef4444; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.3rem;" (click)="exportToPDF('prensado')">
+                                    <span>📄 PDF</span>
+                                  </button>
+                                </div>
+                              </div>
+
+                              <!-- Carreras Grid -->
+                              @if (getCarrerasForPrensado(item).length > 0) {
+                                <div class="sub-table-wrapper" style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: white;">
+                                  <table class="sub-table" style="width: 100%; border-collapse: collapse; font-size: 0.825rem;">
+                                    <thead>
+                                      <tr style="background: #f1f5f9; border-bottom: 1px solid #e2e8f0;">
+                                        <th style="padding: 0.6rem 0.8rem; text-align: left; color: #475569; font-weight: 700;">Bobina</th>
+                                        <th style="padding: 0.6rem 0.8rem; text-align: right; color: #475569; font-weight: 700;">Reposo (Hr)</th>
+                                        <th style="padding: 0.6rem 0.8rem; text-align: right; color: #475569; font-weight: 700;">Carreras</th>
+                                        <th style="padding: 0.6rem 0.8rem; text-align: right; color: #475569; font-weight: 700;">En Proceso</th>
+                                        <th style="padding: 0.6rem 0.8rem; text-align: right; color: #475569; font-weight: 700;">Terminadas</th>
+                                        <th style="padding: 0.6rem 0.8rem; text-align: right; color: #475569; font-weight: 700;">Validadas</th>
+                                        <th style="padding: 0.6rem 0.8rem; text-align: left; color: #475569; font-weight: 700;">Carretes</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      @for (c of getCarrerasForPrensado(item); track c.bobina) {
+                                        <tr style="border-bottom: 1px solid #f1f5f9; transition: all 0.15s;">
+                                          <td style="padding: 0.5rem 0.8rem; font-weight: 700; color: #0f172a;">{{ c.bobina }}</td>
+                                          <td style="padding: 0.5rem 0.8rem; text-align: right; color: #334155;">{{ c.reposoHr }}</td>
+                                          <td style="padding: 0.5rem 0.8rem; text-align: right; font-weight: 600; color: #10b981;">{{ c.carreras }}</td>
+                                          <td style="padding: 0.5rem 0.8rem; text-align: right; color: #64748b;">{{ c.enProceso }}</td>
+                                          <td style="padding: 0.5rem 0.8rem; text-align: right; font-weight: 600; color: #0f172a;">{{ c.terminadas }}</td>
+                                          <td style="padding: 0.5rem 0.8rem; text-align: right; font-weight: 600; color: #10b981;">{{ c.validadas }}</td>
+                                          <td style="padding: 0.5rem 0.8rem; color: #475569;"><span class="carretes-tag" style="background: #f1f5f9; padding: 0.2rem 0.4rem; border-radius: 4px; font-weight: 600;">{{ c.carretes }}</span></td>
+                                        </tr>
+                                      }
+                                    </tbody>
+                                  </table>
+                                </div>
+                              } @else {
+                                <div class="empty-carreras-box" style="padding: 1.25rem; background: white; border: 1px dashed #cbd5e1; border-radius: 8px; text-align: center; color: #94a3b8; font-style: italic;">
+                                  Prensado seleccionado sin carreras registradas
+                                </div>
+                              }
+                            </div>
+                          </td>
+                        </tr>
+                      }
                     }
                   }
                 </tbody>
@@ -835,7 +907,7 @@ import 'jspdf-autotable';
               <!-- Bottom section borderless table -->
               <div class="sub-section" style="margin-top: 1.5rem;">
                 <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Detalles de Producción</label>
-                <div class="bobbin-card" style="border: none; padding-top: 0.5rem;">
+                <div class="bobbin-card" style="border: none; padding-top: 0.5rem; display: flex; flex-direction: column; gap: 1rem;">
                   <!-- Renglón 1: Fecha e input interactivo con calendario -->
                   <div class="bc-block">
                     <div class="bc-item">
@@ -843,20 +915,72 @@ import 'jspdf-autotable';
                       <input type="date" class="form-input" [ngModel]="selectedPrensado()?.fecha | date:'yyyy-MM-dd'" (ngModelChange)="onPressingDateChange($event)">
                     </div>
                     <div class="bc-item">
-                      <label>Calibre (Gauge)</label>
+                      <label>Calibre</label>
                       <input type="number" step="0.001" class="form-input" [ngModel]="selectedPrensado()?.calibre" (ngModelChange)="selectedPrensado().calibre = $event" placeholder="0.000">
                     </div>
                   </div>
 
-                  <!-- Renglón 2: Ancho y Largo -->
-                  <div class="bc-block" style="margin-top: 1rem;">
+                  <!-- Renglón 2: Ancho y Longitud -->
+                  <div class="bc-block">
                     <div class="bc-item">
-                      <label>Ancho (Width)</label>
+                      <label>Ancho</label>
                       <input type="text" class="form-input" [ngModel]="selectedPrensado()?.ancho" (ngModelChange)="selectedPrensado().ancho = $event" placeholder="0000/00">
                     </div>
                     <div class="bc-item">
-                      <label>Largo (Length)</label>
+                      <label>Longitud</label>
                       <input type="number" class="form-input" [ngModel]="selectedPrensado()?.longitud" (ngModelChange)="selectedPrensado().longitud = $event" placeholder="00000">
+                    </div>
+                  </div>
+
+                  <!-- Renglón 3: Información Adicional (Virgen Kg, Meta, Molido Kg, Estado) -->
+                  <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.5rem;">Información Adicional</label>
+                  <div class="bc-block">
+                    <div class="bc-item">
+                      <label>Virgen Kg</label>
+                      <input type="number" step="0.01" class="form-input" [ngModel]="selectedPrensado()?.virgenKg" (ngModelChange)="selectedPrensado().virgenKg = $event" placeholder="00.00">
+                    </div>
+                    <div class="bc-item">
+                      <label>Meta</label>
+                      <input type="number" class="form-input" [ngModel]="selectedPrensado()?.meta" (ngModelChange)="selectedPrensado().meta = $event" placeholder="0000">
+                    </div>
+                  </div>
+                  <div class="bc-block">
+                    <div class="bc-item">
+                      <label>Molido Kg</label>
+                      <input type="number" step="0.01" class="form-input" [ngModel]="selectedPrensado()?.molidoKg" (ngModelChange)="selectedPrensado().molidoKg = $event" placeholder="00.00">
+                    </div>
+                    <div class="bc-item">
+                      <label>Estado</label>
+                      <select class="form-select" [ngModel]="selectedPrensado()?.status" (ngModelChange)="selectedPrensado().status = $event">
+                        <option value="Programada">Programada</option>
+                        <option value="EnProceso">En Proceso</option>
+                        <option value="Intermedia">Intermedia</option>
+                        <option value="Parada">Parada</option>
+                        <option value="Terminada">Terminada</option>
+                        <option value="PorProgramar">Por Programar</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Renglón 4: Tiempos de Proceso (Inicia Proceso, Fin Proceso) -->
+                  <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.5rem;">Tiempos de Proceso</label>
+                  <div class="bc-block">
+                    <div class="bc-item">
+                      <label>Inicia Proceso</label>
+                      <input type="datetime-local" class="form-input" [ngModel]="selectedPrensado()?.iniciaProceso | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="selectedPrensado().iniciaProceso = $event">
+                    </div>
+                    <div class="bc-item">
+                      <label>Fin Proceso</label>
+                      <input type="datetime-local" class="form-input" [ngModel]="selectedPrensado()?.finProceso | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="selectedPrensado().finProceso = $event">
+                    </div>
+                  </div>
+
+                  <!-- Renglón 5: Lote Silo -->
+                  <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.5rem;">Lote Silo</label>
+                  <div class="bc-block">
+                    <div class="bc-item" style="flex: 1;">
+                      <label>Lote Silo</label>
+                      <input type="text" class="form-input" [ngModel]="selectedPrensado()?.loteSilo" (ngModelChange)="selectedPrensado().loteSilo = $event" placeholder="Información del lote de silo...">
                     </div>
                   </div>
                 </div>
@@ -864,7 +988,7 @@ import 'jspdf-autotable';
 
               <div class="modal-footer" style="border: none; margin-top: 2rem; padding: 0;">
                 <button class="btn-cancel" (click)="closePrensadoModal()">Cancelar</button>
-                <button class="btn-confirm" (click)="savePrensado()">Guardar</button>
+                <button class="btn-confirm" (click)="savePrensado()">Confirmar</button>
               </div>
             </div>
           </div>
@@ -1406,6 +1530,35 @@ export class TableroProduccionComponent implements OnInit {
     });
   }
 
+  expandedPrensadoRows = signal<Set<string>>(new Set<string>());
+
+  togglePrensadoRow(id: string, event: Event) {
+    event.stopPropagation();
+    this.expandedPrensadoRows.update(set => {
+      const newSet = new Set(set);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  }
+
+  isPrensadoRowExpanded(id: string): boolean {
+    return this.expandedPrensadoRows().has(id);
+  }
+
+  getCarrerasForPrensado(item: any): any[] {
+    if (item.producido > 300) {
+      return [
+        { bobina: "B-202605-A", reposoHr: 24, carreras: 3, enProceso: 1, terminadas: 2, validadas: 2, carretes: "C-01, C-02" },
+        { bobina: "B-202605-B", reposoHr: 20, carreras: 2, enProceso: 0, terminadas: 2, validadas: 2, carretes: "C-03, C-04" }
+      ];
+    }
+    return [];
+  }
+
   closePrensadoModal() {
     this.showPrensadoModal.set(false);
     this.selectedPrensado.set(null);
@@ -1430,7 +1583,13 @@ export class TableroProduccionComponent implements OnInit {
       ancho: p.ancho,
       longitud: Number(p.longitud),
       status: p.status,
-      operarioId: p.operadorId || null
+      operarioId: p.operadorId || null,
+      kgVirgen: Number(p.virgenKg || 0),
+      target: Number(p.meta || 0),
+      kgMolido: Number(p.molidoKg || 0),
+      processStart: p.iniciaProceso || null,
+      processEnd: p.finProceso || null,
+      loteSilo: p.loteSilo || null
     };
     this.svc.updatePrensado(p.id, body).subscribe({
       next: () => {

@@ -55,6 +55,12 @@ export interface PrensadoDetail {
   producido: number;
   tiempoInterrupcionMin: number;
   enCurso: boolean;
+  virgenKg?: number;
+  meta?: number;
+  molidoKg?: number;
+  iniciaProceso?: string;
+  finProceso?: string;
+  loteSilo?: string;
 }
 
 export interface ExtrusionProgramacion {
