@@ -78,6 +78,12 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
 - [x] **Nueva Pantalla de Catálogo de Operarios**:
     - **Vista Premium**: Diseñada de forma independiente en `/produccion/operarios` con consumo de servicio API real de la base de datos.
     - **Barra de Acciones**: Exportar (CSV/PDF), Seleccionar columnas (popover reactivo con checkboxes), Agregar (+) y buscador interactivo en vivo.
+- [x] **Ajustes y Reestructuración de la Sección de Inicio del Módulo de Extrusión**:
+    - **Exportación a PDF Corregida**: Se migró `jspdf-autotable` a la importación ESM estándar `import autoTable from 'jspdf-autotable'` y se actualizó la llamada para solucionar el error en tiempo de ejecución.
+    - **Barra de Acciones Superior Premium**: Implementada con orden y visuales exactos, desplegables interactivos de exportar (Excel/PDF), seleccionar columnas con buscador y filtro rápido en el lado derecho.
+    - **Estructura de 5 Columnas y Modos de Modal**: Se simplificó la grilla a 3 columnas vacías de acción (`Ver`, `Editar`, `Borrar`) y columnas dinámicas `Nombre` y `Activo`. Se implementó un estado de solo lectura (`modalReadOnly`) para deshabilitar selectores al presionar "Ver".
+    - **Cabeceras Interactivas**: Añadidas cabeceras con popovers interactivos para Nombre (ordenación A-Z/Z-A, fijación, buscador y más usados) y Activo (filtrado reactivo de todos/activos/inactivos).
+
 
 ## Technical Decisions
 - **Standalone Architecture**: Using Angular Standalone Components for the entire frontend.
