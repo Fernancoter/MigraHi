@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProduccionList } from './produccion-list';
+import { ProduccionListComponent } from './produccion-list';
 
-describe('ProduccionList', () => {
-  let component: ProduccionList;
-  let fixture: ComponentFixture<ProduccionList>;
+describe('ProduccionListComponent', () => {
+  let component: ProduccionListComponent;
+  let fixture: ComponentFixture<ProduccionListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProduccionList],
+      imports: [ProduccionListComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ProduccionList);
+    fixture = TestBed.createComponent(ProduccionListComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
@@ -20,3 +20,4 @@ describe('ProduccionList', () => {
     expect(component).toBeTruthy();
   });
 });
+

@@ -10,73 +10,82 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
   template: `
     <div class="module-page animate-move-up">
       <!-- Encabezado del Módulo -->
-      <header class="module-header">
+      <header class="module-header-container" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
         <div class="title-area">
           <nav class="breadcrumb">Producción › Catálogos › Operarios</nav>
           <h1>Catálogo de Operarios</h1>
         </div>
         
         <!-- Barra de Acciones Premium -->
-        <div class="actions-toolbar">
+        <div class="actions-toolbar" style="display: flex; width: 100%; align-items: center;">
           
-          <!-- Filtro de Búsqueda -->
-          <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input 
-              class="field-input" 
-              type="text" 
-              placeholder="Buscar operario..." 
-              [ngModel]="searchText()" 
-              (ngModelChange)="searchText.set($event); currentPage.set(1)"
-            />
-          </div>
-
-          <!-- Toggle de Filtros de Estado Rápido -->
-          <button 
-            class="btn btn-secondary" 
-            [class.active-filter]="activeFilterState() !== 'all'" 
-            (click)="cycleActiveFilterState()"
-            title="Filtrar por estado activo"
-            style="display: flex; align-items: center; gap: 0.4rem;"
-          >
-            <span>🔄</span> Estado: {{ activeFilterState() === 'all' ? 'Todos' : activeFilterState() === 'active' ? 'Activos' : 'Inactivos' }}
-          </button>
-
-          <!-- Selector de Columnas -->
-          <div class="dropdown-wrapper">
-            <button class="btn btn-secondary" (click)="toggleColumnDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem;">
-              <span>📊</span> Columnas
-            </button>
-            @if (showColumnSelector()) {
-              <div class="column-selector-popover animate-slide-up" (click)="$event.stopPropagation()">
-                <h4>Columnas Visibles</h4>
-                <div class="column-list">
-                  <label>
-                    <input type="checkbox" [checked]="isColVisible('nombre')" (change)="toggleCol('nombre')"> Nombre
-                  </label>
-                  <label>
-                    <input type="checkbox" [checked]="isColVisible('activo')" (change)="toggleCol('activo')"> Activo
-                  </label>
+          <!-- LEFT SIDE -->
+          <div class="toolbar-left" style="display: flex; gap: 0.75rem; align-items: center;">
+            <!-- Dropdown de Exportar -->
+            <div class="dropdown-wrapper">
+              <button class="btn btn-secondary" (click)="toggleExportDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem;">
+                <span>⬇️</span> Exportar
+              </button>
+              @if (showExportOptions()) {
+                <div class="column-selector-popover animate-slide-up">
+                  <div class="dropdown-item" (click)="exportCSV()">Excel (CSV)</div>
+                  <div class="dropdown-item" (click)="exportPDF()">PDF</div>
                 </div>
-              </div>
-            }
+              }
+            </div>
+
+            <!-- Botón Agregar -->
+            <button class="btn btn-primary" (click)="openCreate()">+ Agregar</button>
+
+            <!-- Selector de Columnas -->
+            <div class="dropdown-wrapper">
+              <button class="btn btn-secondary" (click)="toggleColumnDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem;">
+                <span>📊</span> Select Columns
+              </button>
+              @if (showColumnSelector()) {
+                <div class="column-selector-popover animate-slide-up" (click)="$event.stopPropagation()">
+                  <h4>Columnas Visibles</h4>
+                  <div class="column-list">
+                    <label>
+                      <input type="checkbox" [checked]="isColVisible('nombre')" (change)="toggleCol('nombre')"> Nombre
+                    </label>
+                    <label>
+                      <input type="checkbox" [checked]="isColVisible('activo')" (change)="toggleCol('activo')"> Activo
+                    </label>
+                  </div>
+                </div>
+              }
+            </div>
           </div>
 
-          <!-- Dropdown de Exportar -->
-          <div class="dropdown-wrapper">
-            <button class="btn btn-secondary" (click)="toggleExportDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem;">
-              <span>⬇️</span> Exportar
+          <!-- FLEXIBLE SPACE -->
+          <div class="toolbar-spacer" style="flex: 1;"></div>
+
+          <!-- RIGHT SIDE -->
+          <div class="toolbar-right" style="display: flex; gap: 0.75rem; align-items: center;">
+            <!-- Toggle de Filtros de Estado Rápido -->
+            <button 
+              class="btn btn-secondary" 
+              [class.active-filter]="activeFilterState() !== 'all'" 
+              (click)="cycleActiveFilterState()"
+              title="Filtrar por estado activo"
+              style="display: flex; align-items: center; gap: 0.4rem;"
+            >
+              <span>🔄</span> Filter: {{ activeFilterState() === 'all' ? 'Todos' : activeFilterState() === 'active' ? 'Activos' : 'Inactivos' }}
             </button>
-            @if (showExportOptions()) {
-              <div class="column-selector-popover animate-slide-up">
-                <div class="dropdown-item" (click)="exportCSV()">Excel (CSV)</div>
-                <div class="dropdown-item" (click)="exportPDF()">PDF</div>
-              </div>
-            }
-          </div>
 
-          <!-- Botón Agregar -->
-          <button class="btn btn-primary" (click)="openCreate()">+ Agregar</button>
+            <!-- Filtro de Búsqueda -->
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input 
+                class="field-input" 
+                type="text" 
+                placeholder="Buscar operario..." 
+                [ngModel]="searchText()" 
+                (ngModelChange)="searchText.set($event); currentPage.set(1)"
+              />
+            </div>
+          </div>
         </div>
       </header>
 
@@ -273,7 +282,6 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
     .module-page { padding: 1.5rem 2.5rem; }
     .breadcrumb { font-size: .75rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; margin-bottom: .25rem; }
     h1 { font-size: 1.8rem; font-weight: 800; color: #1e293b; margin: 0; }
-    .module-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; }
     .actions-toolbar { display: flex; gap: 0.75rem; align-items: center; }
     .btn { padding: .55rem 1.25rem; border-radius: 8px; border: none; cursor: pointer; font-size: .875rem; font-weight: 600; transition: all .2s; }
     .btn-primary { background: #10b981; color: white; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); }

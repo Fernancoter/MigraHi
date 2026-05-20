@@ -10,79 +10,71 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
   template: `
     <div class="module-page animate-move-up">
       <!-- Encabezado del Módulo -->
-      <header class="module-header">
+      <header class="module-header-container" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
         <div class="title-area">
           <nav class="breadcrumb">Producción › Catálogos › Productos</nav>
           <h1>Catálogo de Productos</h1>
         </div>
         
         <!-- Barra de Acciones Premium -->
-        <div class="actions-toolbar">
+        <div class="actions-toolbar" style="display: flex; width: 100%; align-items: center;">
           
-          <!-- Filtro de Búsqueda -->
-          <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input 
-              class="field-input" 
-              type="text" 
-              placeholder="Buscar producto..." 
-              [ngModel]="searchText()" 
-              (ngModelChange)="searchText.set($event); currentPage.set(1)"
-            />
-          </div>
-
-          <!-- Toggle de Filtros de Estado Rápido -->
-          <button 
-            class="btn btn-secondary" 
-            [class.active-filter]="activeFilterState() !== 'all'" 
-            (click)="cycleActiveFilterState()"
-            title="Filtrar por estado activo"
-            style="display: flex; align-items: center; gap: 0.4rem;"
-          >
-            <span>🔄</span> Estado: {{ activeFilterState() === 'all' ? 'Todos' : activeFilterState() === 'active' ? 'Activos' : 'Inactivos' }}
-          </button>
-
-          <!-- Selector de Columnas -->
-          <div class="dropdown-wrapper">
-            <button class="btn btn-secondary" (click)="toggleColumnDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem;">
-              <span>📊</span> Columnas
-            </button>
-            @if (showColumnSelector()) {
-              <div class="column-selector-popover animate-slide-up" (click)="$event.stopPropagation()">
-                <h4>Columnas Visibles</h4>
-                <div class="column-list">
-                  <label>
-                    <input type="checkbox" [checked]="isColVisible('clave')" (change)="toggleCol('clave')"> Clave
-                  </label>
-                  <label>
-                    <input type="checkbox" [checked]="isColVisible('nombre')" (change)="toggleCol('nombre')"> Nombre
-                  </label>
-                  <label>
-                    <input type="checkbox" [checked]="isColVisible('categoria')" (change)="toggleCol('categoria')"> Categoría
-                  </label>
-                  <label>
-                    <input type="checkbox" [checked]="isColVisible('activo')" (change)="toggleCol('activo')"> Activo
-                  </label>
+          <!-- LEFT SIDE -->
+          <div class="toolbar-left" style="display: flex; gap: 0.75rem; align-items: center;">
+            <!-- Dropdown de Exportar -->
+            <div class="dropdown-wrapper">
+              <button class="btn btn-secondary" (click)="toggleExportDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem;">
+                <span>⬇️</span> Exportar
+              </button>
+              @if (showExportOptions()) {
+                <div class="column-selector-popover animate-slide-up">
+                  <div class="dropdown-item" (click)="exportCSV()">Excel (CSV)</div>
+                  <div class="dropdown-item" (click)="exportPDF()">PDF</div>
                 </div>
-              </div>
-            }
-          </div>
+              }
+            </div>
 
-          <!-- Dropdown de Exportar -->
-          <div class="dropdown-wrapper">
-            <button class="btn btn-secondary" (click)="toggleExportDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem;">
-              <span>⬇️</span> Exportar
+            <!-- Botón Agregar -->
+            <button class="btn btn-primary" (click)="openCreate()">+ Agregar</button>
+
+            <!-- Selector de Columnas -->
+            <button class="btn btn-secondary" (click)="showColumnModal.set(true)" style="display: flex; align-items: center; gap: 0.4rem;">
+              <span>📊</span> Select Columns
             </button>
-            @if (showExportOptions()) {
-              <div class="column-selector-popover animate-slide-up">
-                <div class="dropdown-item" (click)="exportCSV()">Excel (CSV)</div>
-                <div class="dropdown-item" (click)="exportPDF()">PDF</div>
-              </div>
-            }
           </div>
 
-          <!-- Botón Agregar -->
-          <button class="btn btn-primary" (click)="openCreate()">+ Agregar</button>
+          <!-- FLEXIBLE SPACE -->
+          <div class="toolbar-spacer" style="flex: 1;"></div>
+
+          <!-- RIGHT SIDE -->
+          <div class="toolbar-right" style="display: flex; gap: 0.75rem; align-items: center;">
+            <!-- Filter Button -->
+            <div class="dropdown-wrapper">
+              <button class="btn btn-secondary" (click)="toggleFilterDropdown($event)" style="display: flex; align-items: center; justify-content: center; padding: 0.55rem 0.75rem;" title="Filtrar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                </svg>
+              </button>
+              @if (showFilterDropdown()) {
+                <div class="column-selector-popover animate-slide-up" style="width: 160px; right: 0;" (click)="$event.stopPropagation()">
+                  <div class="dropdown-item" (click)="clearFilters()">Clear filters</div>
+                  <div class="dropdown-item" (click)="saveFilterAs()">Save filter as...</div>
+                </div>
+              }
+            </div>
+
+            <!-- Filtro de Búsqueda -->
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input 
+                class="field-input" 
+                type="text" 
+                placeholder="Buscar producto..." 
+                [ngModel]="searchText()" 
+                (ngModelChange)="searchText.set($event); currentPage.set(1)"
+              />
+            </div>
+          </div>
         </div>
       </header>
 
@@ -102,6 +94,18 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
               }
               @if (isColVisible('categoria')) {
                 <th>Categoría</th>
+              }
+              @if (isColVisible('productoBase')) {
+                <th>Base Product</th>
+              }
+              @if (isColVisible('descripcion')) {
+                <th>Descripción</th>
+              }
+              @if (isColVisible('precioUnitario')) {
+                <th>Precio Unitario</th>
+              }
+              @if (isColVisible('inventarioActual')) {
+                <th>Inventario Actual</th>
               }
               @if (isColVisible('activo')) {
                 <th class="header-with-dropdown">
@@ -144,10 +148,10 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
           </thead>
           <tbody>
             @if (loading()) { 
-              <tr><td colspan="7" class="empty-state">Cargando productos...</td></tr> 
+              <tr><td colspan="12" class="empty-state">Cargando productos...</td></tr> 
             }
             @else if (paginatedItems().length === 0) { 
-              <tr><td colspan="7" class="empty-state">No se encontraron productos registrados</td></tr> 
+              <tr><td colspan="12" class="empty-state">No se encontraron productos registrados</td></tr> 
             }
             @else {
               @for (item of paginatedItems(); track item.id) {
@@ -171,6 +175,18 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
                     <td>
                       <span class="category-badge">{{ item.categoria || 'Sin Categoría' }}</span>
                     </td> 
+                  }
+                  @if (isColVisible('productoBase')) { 
+                    <td>{{ $any(item).productoBase || 'N/A' }}</td> 
+                  }
+                  @if (isColVisible('descripcion')) { 
+                    <td>{{ item.descripcion || '' }}</td> 
+                  }
+                  @if (isColVisible('precioUnitario')) { 
+                    <td>{{ item.precioUnitario ? ('$' + item.precioUnitario.toFixed(2)) : '$0.00' }}</td> 
+                  }
+                  @if (isColVisible('inventarioActual')) { 
+                    <td>{{ $any(item).inventarioActual || 0 }}</td> 
                   }
                   @if (isColVisible('activo')) {
                     <td style="width: 120px;">
@@ -217,37 +233,27 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
       <!-- Modal de Producto -->
       @if (showModal()) {
         <div class="modal-overlay" (click)="closeModal()">
-          <div class="modal-card" (click)="$event.stopPropagation()">
+          <div class="modal-card" (click)="$event.stopPropagation()" style="max-height: 90vh; overflow-y: auto;">
             <div class="modal-header">
               <h3>Información General</h3>
               <button class="modal-close" (click)="closeModal()">✕</button>
             </div>
             
             <div class="modal-body">
-              <!-- SAE Product Selector/Input Bar -->
+              <!-- SAE Product -->
               <div class="form-row">
                 <label class="field-label">SAE Product</label>
-                <div class="sae-selector-wrapper" [class.disabled]="modalReadOnly()">
-                  <div class="sae-select-bar" (click)="!modalReadOnly() && toggleSaeDropdown($event)">
-                    <span class="sae-value">{{ form.productoSAE || 'Ninguno' }}</span>
-                    <span class="sae-arrow">▼</span>
-                  </div>
-                  @if (showSaeDropdown()) {
-                    <div class="sae-dropdown animate-slide-up" (click)="$event.stopPropagation()">
-                      <div class="sae-dropdown-header">Códigos SAE Disponibles</div>
-                      @if (saeCodes().length === 0) {
-                        <div class="sae-empty">No hay registros Aspel SAE disponibles</div>
-                      } @else {
-                        @for (code of saeCodes(); track code.code) {
-                          <div class="sae-item" (click)="selectSaeCode(code)">
-                            <span class="sae-code">{{ code.code }}</span>
-                            <span class="sae-name">{{ code.name }}</span>
-                          </div>
-                        }
-                      }
-                    </div>
+                <select 
+                  class="field-input" 
+                  [(ngModel)]="form.productoSAE" 
+                  [disabled]="modalReadOnly()"
+                  style="appearance: auto; padding-right: 2rem;"
+                >
+                  <option [value]="undefined"></option>
+                  @for (code of saeCodes(); track code.code) {
+                    <option [value]="code.code">{{ code.code }} - {{ code.name }}</option>
                   }
-                </div>
+                </select>
               </div>
 
               <!-- Category Dropdown Selector -->
@@ -255,13 +261,13 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
                 <label class="field-label">Categoría</label>
                 <select 
                   class="field-input" 
-                  [(ngModel)]="form.categoriaId" 
+                  [(ngModel)]="form.categoria" 
                   [disabled]="modalReadOnly()"
+                  style="appearance: auto; padding-right: 2rem;"
                 >
-                  <option [value]="undefined">Ninguno</option>
-                  @for (cat of categories(); track cat.id) {
-                    <option [value]="cat.id">{{ cat.nombre }}</option>
-                  }
+                  <option [value]="undefined"></option>
+                  <option value="Bobina">Bobina</option>
+                  <option value="Reel">Reel</option>
                 </select>
               </div>
 
@@ -272,7 +278,6 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
                   type="text" 
                   [(ngModel)]="form.clave" 
                   [disabled]="modalReadOnly() || form.id !== undefined" 
-                  placeholder="Ej: MP-001" 
                 />
               </div>
 
@@ -283,7 +288,6 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
                   type="text" 
                   [(ngModel)]="form.nombre" 
                   [disabled]="modalReadOnly()" 
-                  placeholder="Nombre completo del producto..." 
                 />
               </div>
 
@@ -294,8 +298,66 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
                   rows="2"
                   [(ngModel)]="form.descripcion" 
                   [disabled]="modalReadOnly()" 
-                  placeholder="Descripción detallada del producto..."
                 ></textarea>
+              </div>
+
+              <!-- Precio Unitario (Unit Price) -->
+              <div class="form-row">
+                <label class="field-label">Precio Unitario</label>
+                <input 
+                  class="field-input" 
+                  type="text" 
+                  [(ngModel)]="form.precioUnitarioFormat" 
+                  (blur)="formatPrice()"
+                  [disabled]="modalReadOnly()" 
+                  placeholder="$00.00"
+                />
+              </div>
+
+              <!-- Inventario Actual (Current Inventory) -->
+              <div class="form-row">
+                <label class="field-label">Inventario Actual</label>
+                <input 
+                  class="field-input" 
+                  type="number" 
+                  [(ngModel)]="form.inventarioActual" 
+                  [disabled]="modalReadOnly()" 
+                />
+              </div>
+
+              <!-- Clave Externa (External Key) -->
+              <div class="form-row">
+                <label class="field-label">Clave Externa</label>
+                <input 
+                  class="field-input" 
+                  type="text" 
+                  [(ngModel)]="form.claveExterna" 
+                  [disabled]="modalReadOnly()" 
+                />
+              </div>
+
+              <!-- Tipo de Material (Material Type) -->
+              <div class="form-row">
+                <label class="field-label">Tipo de Material</label>
+                <select 
+                  class="field-input" 
+                  [(ngModel)]="form.tipoMaterial" 
+                  [disabled]="modalReadOnly()"
+                  style="appearance: auto; padding-right: 2rem;"
+                >
+                  <option [value]="undefined"></option>
+                  <option value="PCR">PCR</option>
+                  <option value="DOW">DOW</option>
+                  <option value="PCR 100%">PCR 100%</option>
+                </select>
+              </div>
+
+              <!-- Imagen (Image) -->
+              <div class="form-row">
+                <label class="field-label">Imagen</label>
+                <div class="image-upload-placeholder" style="border: 2px dashed #cbd5e1; border-radius: 8px; padding: 1.5rem; text-align: center; color: #94a3b8; background: #f8fafc; font-size: 0.85rem;">
+                  <span>Visual Only - Upload not implemented</span>
+                </div>
               </div>
 
               <div class="form-row" style="margin-top: 0.5rem;">
@@ -306,9 +368,45 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
                     [disabled]="modalReadOnly()" 
                   />
                   <span class="checkmark"></span>
-                  <span>Producto Activo</span>
+                  <span>Activo</span>
                 </label>
               </div>
+              
+              <!-- Second Header: Producto Base -->
+              <h3 style="margin-top: 1rem; margin-bottom: 0.5rem; font-size: 1.15rem; font-weight: 800; color: #1e293b; letter-spacing: -0.02em; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem;">
+                Producto Base
+              </h3>
+
+              <!-- Base Product Category -->
+              <div class="form-row">
+                <label class="field-label">Categoría de Producto Base</label>
+                <select 
+                  class="field-input" 
+                  [(ngModel)]="form.categoriaProductoBase" 
+                  [disabled]="modalReadOnly()"
+                  style="appearance: auto; padding-right: 2rem;"
+                >
+                  <option [value]="undefined"></option>
+                  <option value="Bobina">Bobina</option>
+                  <option value="Reel">Reel</option>
+                </select>
+              </div>
+
+              <!-- Base Product -->
+              <div class="form-row">
+                <label class="field-label">Producto Base</label>
+                <select 
+                  class="field-input" 
+                  [(ngModel)]="form.productoBase" 
+                  [disabled]="modalReadOnly()"
+                  style="appearance: auto; padding-right: 2rem;"
+                >
+                  <option [value]="undefined"></option>
+                  <option value="Base 1">Base 1</option>
+                  <option value="Base 2">Base 2</option>
+                </select>
+              </div>
+
             </div>
 
             <div class="modal-footer">
@@ -322,13 +420,82 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
           </div>
         </div>
       }
+      <!-- Modal de Select Columns -->
+      @if (showColumnModal()) {
+        <div class="modal-overlay" (click)="closeColumnModal()">
+          <div class="modal-card" (click)="$event.stopPropagation()" style="width: 400px;">
+            <div class="modal-header">
+              <h3>Select Columns</h3>
+              <button class="modal-close" (click)="closeColumnModal()">✕</button>
+            </div>
+            
+            <div class="modal-body">
+              <div class="column-group">
+                <h4 style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: #1e293b; font-weight: 800;">Fixed to the Left</h4>
+                <div style="padding-left: 1rem; color: #94a3b8; font-size: 0.85rem; font-style: italic; margin-bottom: 1rem;">
+                  (none)
+                </div>
+              </div>
+              
+              <div class="column-group">
+                <h4 style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: #1e293b; font-weight: 800;">Not Fixed</h4>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; padding-left: 1rem;">
+                  <label class="checkbox-container" style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; color: #475569;">
+                    <input type="checkbox" [checked]="isColVisible('categoria')" (change)="toggleCol('categoria')" />
+                    <span class="checkmark"></span>
+                    <span>Category</span>
+                  </label>
+                  <label class="checkbox-container" style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; color: #475569;">
+                    <input type="checkbox" [checked]="isColVisible('productoBase')" (change)="toggleCol('productoBase')" />
+                    <span class="checkmark"></span>
+                    <span>Base Product</span>
+                  </label>
+                  <label class="checkbox-container" style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; color: #475569;">
+                    <input type="checkbox" [checked]="isColVisible('clave')" (change)="toggleCol('clave')" />
+                    <span class="checkmark"></span>
+                    <span>Key</span>
+                  </label>
+                  <label class="checkbox-container" style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; color: #475569;">
+                    <input type="checkbox" [checked]="isColVisible('nombre')" (change)="toggleCol('nombre')" />
+                    <span class="checkmark"></span>
+                    <span>Name</span>
+                  </label>
+                  <label class="checkbox-container" style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; color: #475569;">
+                    <input type="checkbox" [checked]="isColVisible('descripcion')" (change)="toggleCol('descripcion')" />
+                    <span class="checkmark"></span>
+                    <span>Description</span>
+                  </label>
+                  <label class="checkbox-container" style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; color: #475569;">
+                    <input type="checkbox" [checked]="isColVisible('precioUnitario')" (change)="toggleCol('precioUnitario')" />
+                    <span class="checkmark"></span>
+                    <span>Unit Price</span>
+                  </label>
+                  <label class="checkbox-container" style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; color: #475569;">
+                    <input type="checkbox" [checked]="isColVisible('inventarioActual')" (change)="toggleCol('inventarioActual')" />
+                    <span class="checkmark"></span>
+                    <span>Current Inventory</span>
+                  </label>
+                  <label class="checkbox-container" style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; color: #475569;">
+                    <input type="checkbox" [checked]="isColVisible('activo')" (change)="toggleCol('activo')" />
+                    <span class="checkmark"></span>
+                    <span>Activo</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer" style="justify-content: center;">
+              <button class="btn btn-primary" style="width: 100%;" (click)="closeColumnModal()">Update</button>
+            </div>
+          </div>
+        </div>
+      }
     </div>
   `,
   styles: [`
     .module-page { padding: 1.5rem 2.5rem; }
     .breadcrumb { font-size: .75rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; margin-bottom: .25rem; }
     h1 { font-size: 1.8rem; font-weight: 800; color: #1e293b; margin: 0; }
-    .module-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; }
     .actions-toolbar { display: flex; gap: 0.75rem; align-items: center; }
     .btn { padding: .55rem 1.25rem; border-radius: 8px; border: none; cursor: pointer; font-size: .875rem; font-weight: 600; transition: all .2s; }
     .btn-primary { background: #10b981; color: white; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); }
@@ -444,7 +611,18 @@ export class ProductosCatalogoComponent implements OnInit {
   showModal = signal(false);
   modalReadOnly = signal(false);
   showSaeDropdown = signal(false);
-  form: Partial<Producto> = {};
+  showColumnModal = signal(false);
+  showFilterDropdown = signal(false);
+
+  form: Partial<Producto> & { 
+    precioUnitarioFormat?: string; 
+    inventarioActual?: number;
+    claveExterna?: string;
+    tipoMaterial?: string;
+    imagenUrl?: string;
+    categoriaProductoBase?: string;
+    productoBase?: string;
+  } = {};
 
   // Mock Aspel SAE Codes
   saeCodes = signal<{ code: string; name: string }[]>([
@@ -544,11 +722,27 @@ export class ProductosCatalogoComponent implements OnInit {
     this.currentPage.set(1);
   }
 
-  toggleColumnDropdown(event: Event) {
+  toggleFilterDropdown(event: Event) {
     event.stopPropagation();
-    this.showColumnSelector.update(v => !v);
+    this.showFilterDropdown.update(v => !v);
     this.showExportOptions.set(false);
     this.showActiveHeaderDropdown.set(false);
+  }
+
+  clearFilters() {
+    this.activeFilterState.set('all');
+    this.searchText.set('');
+    this.showFilterDropdown.set(false);
+    this.currentPage.set(1);
+  }
+
+  saveFilterAs() {
+    alert('Save filter as... not implemented yet');
+    this.showFilterDropdown.set(false);
+  }
+
+  closeColumnModal() {
+    this.showColumnModal.set(false);
   }
 
   toggleExportDropdown(event: Event) {
@@ -556,6 +750,7 @@ export class ProductosCatalogoComponent implements OnInit {
     this.showExportOptions.update(v => !v);
     this.showColumnSelector.set(false);
     this.showActiveHeaderDropdown.set(false);
+    this.showFilterDropdown.set(false);
   }
 
   toggleActiveHeaderDropdown(event: Event) {
@@ -563,6 +758,7 @@ export class ProductosCatalogoComponent implements OnInit {
     this.showActiveHeaderDropdown.update(v => !v);
     this.showColumnSelector.set(false);
     this.showExportOptions.set(false);
+    this.showFilterDropdown.set(false);
   }
 
   isColVisible(colName: string): boolean {
@@ -664,7 +860,7 @@ export class ProductosCatalogoComponent implements OnInit {
 
   // CRUD Actions
   openViewModal(item: Producto) {
-    this.form = { ...item };
+    this.form = { ...item, precioUnitarioFormat: item.precioUnitario ? '$' + item.precioUnitario.toFixed(2) : '$0.00' };
     this.modalReadOnly.set(true);
     this.showModal.set(true);
     this.showSaeDropdown.set(false);
@@ -674,7 +870,7 @@ export class ProductosCatalogoComponent implements OnInit {
   }
 
   openEditModal(item: Producto) {
-    this.form = { ...item };
+    this.form = { ...item, precioUnitarioFormat: item.precioUnitario ? '$' + item.precioUnitario.toFixed(2) : '$0.00' };
     this.modalReadOnly.set(false);
     this.showModal.set(true);
     this.showSaeDropdown.set(false);
@@ -688,8 +884,8 @@ export class ProductosCatalogoComponent implements OnInit {
       clave: '',
       nombre: '', 
       isActive: true, 
-      productoSAE: 'Ninguno',
-      precioUnitario: 0
+      precioUnitario: 0,
+      precioUnitarioFormat: '$0.00'
     };
     this.modalReadOnly.set(false);
     this.showModal.set(true);
@@ -704,6 +900,16 @@ export class ProductosCatalogoComponent implements OnInit {
     this.form = {};
   }
 
+  formatPrice() {
+    if (this.form.precioUnitarioFormat) {
+      let numericVal = parseFloat(this.form.precioUnitarioFormat.replace(/[^0-9.-]+/g, ''));
+      if (!isNaN(numericVal)) {
+        this.form.precioUnitarioFormat = '$' + numericVal.toFixed(2);
+        this.form.precioUnitario = numericVal;
+      }
+    }
+  }
+
   save() {
     if (!this.form.clave || !this.form.clave.trim()) {
       alert('El campo Clave es requerido.');
@@ -713,26 +919,20 @@ export class ProductosCatalogoComponent implements OnInit {
       alert('El campo Nombre es requerido.');
       return;
     }
-    
-    // Fill category name if selected
-    if (this.form.categoriaId) {
-      const cat = this.categories().find(c => c.id === this.form.categoriaId);
-      if (cat) {
-        this.form.categoria = cat.nombre;
-      }
-    } else {
-      this.form.categoria = undefined;
-    }
 
-    const payload = {
+    const payload: any = {
       clave: this.form.clave,
       nombre: this.form.nombre,
       descripcion: this.form.descripcion,
-      categoriaId: this.form.categoriaId,
       categoria: this.form.categoria,
       isActive: this.form.isActive,
       productoSAE: this.form.productoSAE === 'Ninguno' ? undefined : this.form.productoSAE,
-      precioUnitario: this.form.precioUnitario || 0
+      precioUnitario: this.form.precioUnitario || 0,
+      inventarioActual: this.form.inventarioActual,
+      claveExterna: this.form.claveExterna,
+      tipoMaterial: this.form.tipoMaterial,
+      categoriaProductoBase: this.form.categoriaProductoBase,
+      productoBase: this.form.productoBase
     };
 
     if (!this.form.id) {
