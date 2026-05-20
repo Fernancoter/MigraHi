@@ -107,3 +107,10 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
 - Se renombró el módulo legacy "GAM" a "GAM Backoffice" para mayor claridad.
 - Se forzó la recreación de la base de datos para aplicar el cambio estructural.
 - El proyecto compila al 100% de manera exitosa y limpia (`exit code: 0`).
+- **Servidores levantados localmente**:
+  - **Backend**: Disponible en `http://localhost:5007` (dotnet run).
+  - **Frontend**: Disponible en `http://localhost:4200` (ng serve).
+- **Pruebas unitarias corregidas y pasando al 100%** (11/11 tests aprobados):
+  - Se configuró `vitest.config.ts` para evitar timeouts en Windows ejecutando en modo single-fork.
+  - Se corrigieron las importaciones rotas de componentes de listas y se mockearon las llamadas HTTP directas en los specs.
+
