@@ -574,29 +574,52 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
           <!-- Acordeón 2: Producto Base -->
           <div class="legacy-accordion" style="margin-top: 0.5rem; border: 1px solid #cbd5e1;">
             <div class="legacy-accordion-header" style="padding: 0.75rem 1rem; border-bottom: 1px solid #cbd5e1; display: flex; align-items: center;">
-              <span class="icon text-green" style="font-weight:bold; color: #10b981; margin-right: 0.5rem;">[+]</span> 
+              @if (modalReadOnly()) {
+                <span class="icon text-green" style="font-weight:bold; color: #10b981; margin-right: 0.5rem;">[+]</span> 
+              } @else {
+                <span class="icon text-white" style="background: #4caf50; border-radius: 2px; display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-right: 0.5rem;">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.41l9 9c.36.36.86.58 1.41.58s1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41s-.22-1.05-.59-1.41zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>
+                </span>
+              }
               <span style="font-weight: 600; color: #475569; font-size: 0.85rem;">Producto Base</span>
             </div>
             <div class="legacy-accordion-body" style="padding: 1rem; display: flex; gap: 2rem; min-height: 80px;">
-              <div style="flex: 1; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; display: flex; align-items: flex-end; position: relative;">
+              <div style="flex: 1; border-bottom: 1px solid #cbd5e1; padding-bottom: 0.2rem; display: flex; flex-direction: column; justify-content: flex-end; position: relative;">
                 <label class="legacy-field-label" style="position: absolute; top: 0; left: 0;">Categoría del producto base</label>
-                <div class="legacy-field-value" style="color: transparent;">---</div>
+                @if (modalReadOnly()) {
+                  <div class="legacy-field-value" style="color: transparent;">---</div>
+                } @else {
+                  <select [(ngModel)]="form.categoriaProductoBase" style="width: 100%; border: none; outline: none; appearance: auto; background: transparent; font-size: 0.85rem; color: #1e293b; margin-top: 1.5rem;">
+                    <option [value]="undefined"></option>
+                    <option value="Bobina">Bobina</option>
+                    <option value="Reel">Reel</option>
+                  </select>
+                }
               </div>
-              <div style="flex: 1; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; display: flex; align-items: flex-end;">
-                <label class="legacy-field-label" style="margin-right: 1rem;">Producto Base</label>
-                <div class="legacy-field-value" style="font-size: 0.8rem; color: #64748b;">Sin Producto Base</div>
+              <div style="flex: 1; border-bottom: 1px solid #cbd5e1; padding-bottom: 0.2rem; display: flex; align-items: flex-end;">
+                <label class="legacy-field-label" style="margin-right: 1rem; flex-shrink: 0;">Producto Base</label>
+                @if (modalReadOnly()) {
+                  <div class="legacy-field-value" style="font-size: 0.8rem; color: #64748b; width: 100%;">Sin Producto Base</div>
+                } @else {
+                  <select [(ngModel)]="form.productoBase" style="width: 100%; border: none; outline: none; appearance: auto; background: transparent; font-size: 0.85rem; color: #1e293b;">
+                    <option [value]="undefined">Sin Producto Base</option>
+                    <option value="Base 1">Base 1</option>
+                    <option value="Base 2">Base 2</option>
+                  </select>
+                }
               </div>
             </div>
           </div>
 
           <!-- Barra de Botones -->
-          <div style="margin-top: 0.5rem; padding: 0.75rem; background: #f8fafc; border: 1px solid #cbd5e1; display: flex; gap: 0.5rem;">
-            <button style="background: #94a3b8; color: white; padding: 0.5rem 1rem; border-radius: 2px; font-weight: bold; font-size: 0.75rem; border: none; cursor: pointer;" (click)="closeModal()">CANCELAR</button>
+          <div style="margin-top: 1rem; padding: 0.5rem 0; display: flex; gap: 0.5rem;">
             @if (!modalReadOnly()) {
-              <button style="background: #10b981; color: white; padding: 0.5rem 1rem; border-radius: 2px; font-weight: bold; font-size: 0.75rem; border: none; cursor: pointer;" (click)="save()">GUARDAR</button>
+              <button style="background: #4caf50; color: white; padding: 0.5rem 1.5rem; border-radius: 4px; font-weight: bold; font-size: 0.8rem; border: none; cursor: pointer;" (click)="save()">CONFIRMAR</button>
             }
+            <button style="background: #9ca3af; color: white; padding: 0.5rem 1.5rem; border-radius: 4px; font-weight: bold; font-size: 0.8rem; border: none; cursor: pointer;" (click)="closeModal()">CANCELAR</button>
           </div>
 
+          @if (modalReadOnly()) {
           <!-- Acordeón 3: Historial Auditoría -->
           <div class="legacy-accordion" style="margin-top: 0.5rem; border: 1px solid #cbd5e1;">
             <div class="legacy-accordion-header" style="padding: 0.75rem 1rem; display: flex; align-items: center;">
@@ -630,7 +653,24 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
 
             </div>
           </div>
+          }
 
+        </div>
+      }
+      
+      <!-- Modal Confirmar Eliminar -->
+      @if (itemToDelete()) {
+        <div class="modal-overlay" style="z-index: 2000;" (click)="itemToDelete.set(null)">
+          <div class="modal-card" style="width: 400px; text-align: center; padding: 2rem;" (click)="$event.stopPropagation()">
+            <h3 style="color: #dc2626; margin-top: 0; font-size: 1.25rem; font-weight: 700;">Confirmar Eliminación</h3>
+            <p style="color: #475569; font-size: 0.95rem; line-height: 1.5; margin: 1rem 0;">
+              ¿Está seguro de que desea eliminar el producto <br><strong>"{{ itemToDelete()?.nombre }}"</strong>?
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem;">
+              <button class="btn btn-secondary" style="padding: 0.5rem 1.5rem;" (click)="itemToDelete.set(null)">Cancelar</button>
+              <button class="btn btn-primary" style="background: #dc2626; border-color: #dc2626; padding: 0.5rem 1.5rem;" (click)="confirmDelete()">Eliminar</button>
+            </div>
+          </div>
         </div>
       }
       <!-- Modal de Select Columns -->
@@ -902,6 +942,7 @@ export class ProductosCatalogoComponent implements OnInit {
   // Header Dropdowns and Filtering
   activeHeaderDropdown = signal<string | null>(null);
   sortState = signal<{col: string, dir: 'asc'|'desc'} | null>(null);
+  itemToDelete = signal<Producto | null>(null);
 
   filterCategoria = signal<string>('');
   filterProductoBase = signal<string>('');
@@ -1294,14 +1335,32 @@ export class ProductosCatalogoComponent implements OnInit {
   }
 
   del(item: Producto) {
-    if (confirm(`¿Está seguro de que desea eliminar al producto "${item.nombre}"?`)) {
-      this.svc.deleteProducto(item.id).subscribe(() => {
+    this.itemToDelete.set(item);
+  }
+
+  confirmDelete() {
+    const item = this.itemToDelete();
+    if (!item) return;
+
+    this.svc.deleteProducto(item.id).subscribe({
+      next: () => {
+        this.itemToDelete.set(null);
         this.load();
         if (this.currentPage() > this.totalPages()) {
           this.currentPage.set(this.totalPages());
         }
-      });
-    }
+      },
+      error: () => {
+        // Fallback for offline/mock data: remove from the current loaded items manually
+        // Since load() injects the dummy data if API fails, deleting won't persist across loads unless we mutate the state locally and DON'T call load().
+        const currentItems = this.items();
+        this.items.set(currentItems.filter(p => p.id !== item.id));
+        this.itemToDelete.set(null);
+        if (this.currentPage() > this.totalPages()) {
+          this.currentPage.set(this.totalPages());
+        }
+      }
+    });
   }
 
   // Export options

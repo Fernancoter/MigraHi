@@ -22,6 +22,7 @@ import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-
 import { TableroProduccionComponent } from './features/produccion/tablero/tablero.component';
 import { CategoriasComponent } from './features/produccion/catalogos/categorias/categorias.component';
 import { TurnosCatalogoComponent } from './features/produccion/catalogos/turnos/turnos.component';
+import { TurnosSemanaComponent } from './features/produccion/turnos-semana/turnos-semana.component';
 import { ExtrusorasCatalogoComponent } from './features/produccion/catalogos/extrusoras/extrusoras.component';
 import { PrensasCatalogoComponent } from './features/produccion/catalogos/prensas/prensas.component';
 import { SilosCatalogoComponent } from './features/produccion/catalogos/silos/silos.component';
@@ -62,6 +63,7 @@ export const routes: Routes = [
       { path: 'produccion/inicio', component: TableroProduccionComponent },
       { path: 'produccion/catalogos/categorias', component: CategoriasComponent },
       { path: 'produccion/catalogos/turnos', component: TurnosCatalogoComponent },
+      { path: 'produccion/turnos-semana', component: TurnosSemanaComponent },
       { path: 'produccion/catalogos/extrusoras', component: ExtrusorasCatalogoComponent },
       { path: 'produccion/catalogos/prensas', component: PrensasCatalogoComponent },
       { path: 'produccion/catalogos/silos', component: SilosCatalogoComponent },
