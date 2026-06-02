@@ -54,6 +54,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Extrusora> Extrusoras => Set<Extrusora>();
     public DbSet<ExtrusoraProducto> ExtrusoraProductos => Set<ExtrusoraProducto>();
     public DbSet<ExtrusoraMezcladora> ExtrusoraMezcladoras => Set<ExtrusoraMezcladora>();
+    public DbSet<ExtrusoraOperario> ExtrusoraOperarios => Set<ExtrusoraOperario>();
     public DbSet<Prensa> Prensas => Set<Prensa>();
     public DbSet<PrensaProducto> PrensaProductos => Set<PrensaProducto>();
     public DbSet<Troquel> Troqueles => Set<Troquel>();

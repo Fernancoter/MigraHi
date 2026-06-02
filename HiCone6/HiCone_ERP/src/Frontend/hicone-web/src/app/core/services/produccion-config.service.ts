@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 
 export interface Operario   { id: string; nombre: string; activo: boolean; fotografia?: string; userGuid?: string; }
 export interface Turno      { id: string; nombre: string; horaInicio: string; horaFin: string; }
-export interface Extrusora  { id: string; nombre: string; }
+export interface Extrusora  { id: string; nombre: string; numeroExtrusora: string; imagen?: string; }
+export interface ExtrusoraOperarioRow { id?: string; turnoId: string; turno: string; operarioId?: string; operario?: string; }
 export interface Prensa     { id: string; nombre: string; marca?: string; modelo?: string; }
 export interface Silo       { id: string; nombre: string; capacidadKg: number; minimoKg: number; maximoKg: number; estadoMaterial?: string; tipoMaterial?: string; siloActivo: boolean; }
 export interface Categoria  { id: string; nombre: string; }
@@ -190,9 +191,12 @@ export class ProduccionConfigService {
   deleteTurno(id: string)  { return this.http.delete(`${this.base}/catalogos/turnos/${id}`); }
 
   getExtrusoras(search = '')   { return this.http.get<Extrusora[]>(`${this.base}/catalogos/extrusoras?search=${search}`); }
-  createExtrusora(e: Partial<Extrusora>) { return this.http.post<string>(`${this.base}/catalogos/extrusoras`, e); }
-  updateExtrusora(id: string, e: Partial<Extrusora>) { return this.http.put(`${this.base}/catalogos/extrusoras/${id}`, e); }
+  getExtrusora(id: string)      { return this.http.get<any>(`${this.base}/catalogos/extrusoras/${id}`); }
+  createExtrusora(e: { nombre: string; numeroExtrusora: string; imagen?: string; tenantId: string }) { return this.http.post<string>(`${this.base}/catalogos/extrusoras`, e); }
+  updateExtrusora(id: string, e: { nombre: string; numeroExtrusora: string; imagen?: string; tenantId: string }) { return this.http.put(`${this.base}/catalogos/extrusoras/${id}`, e); }
   deleteExtrusora(id: string)  { return this.http.delete(`${this.base}/catalogos/extrusoras/${id}`); }
+  getExtrusoraOperarios(extrusoraId: string) { return this.http.get<ExtrusoraOperarioRow[]>(`${this.base}/catalogos/extrusoras/${extrusoraId}/operarios`); }
+  upsertExtrusoraOperario(extrusoraId: string, turnoId: string, dto: { operarioId?: string; tenantId: string }) { return this.http.put(`${this.base}/catalogos/extrusoras/${extrusoraId}/operarios/${turnoId}`, dto); }
 
   getPrensas(search = '')  { return this.http.get<Prensa[]>(`${this.base}/catalogos/prensas?search=${search}`); }
   createPrensa(p: Partial<Prensa>) { return this.http.post<string>(`${this.base}/catalogos/prensas`, p); }

@@ -149,32 +149,56 @@ public class CatalogosController : ControllerBase
 
         var items = await query
             .OrderBy(e => e.Nombre)
-            .Select(e => new { e.Id, e.Nombre })
+            .Select(e => new { e.Id, e.Nombre, e.NumeroExtrusora, e.Imagen })
             .ToListAsync();
         return Ok(items);
     }
 
     [HttpGet("extrusoras/{id}")]
-    public async Task<ActionResult<Extrusora>> GetExtrusora(Guid id)
+    public async Task<ActionResult<object>> GetExtrusora(Guid id)
     {
-        var item = await _context.Extrusoras.FindAsync(id);
-        return item is null ? NotFound() : Ok(item);
+        var item = await _context.Extrusoras
+            .Include(e => e.ExtrusoraOperarios)
+                .ThenInclude(eo => eo.Turno)
+            .Include(e => e.ExtrusoraOperarios)
+                .ThenInclude(eo => eo.Operario)
+            .FirstOrDefaultAsync(e => e.Id == id);
+        if (item is null) return NotFound();
+        return Ok(new
+        {
+            item.Id, item.Nombre, item.NumeroExtrusora, item.Imagen,
+            Operarios = item.ExtrusoraOperarios.Select(eo => new
+            {
+                eo.Id, TurnoId = eo.TurnoId, Turno = eo.Turno?.Nombre,
+                OperarioId = eo.OperarioId, Operario = eo.Operario?.Nombre
+            })
+        });
     }
 
     [HttpPost("extrusoras")]
-    public async Task<ActionResult<Guid>> CreateExtrusora([FromBody] Extrusora entity)
+    public async Task<ActionResult<Guid>> CreateExtrusora([FromBody] ExtrusoraDto dto)
     {
-        entity.Id = Guid.NewGuid();
+        var entity = new Extrusora
+        {
+            Id = Guid.NewGuid(),
+            Nombre = dto.Nombre,
+            NumeroExtrusora = dto.NumeroExtrusora,
+            Imagen = dto.Imagen,
+            TenantId = dto.TenantId
+        };
         _context.Extrusoras.Add(entity);
         await _context.SaveChangesAsync(default);
         return CreatedAtAction(nameof(GetExtrusora), new { id = entity.Id }, entity.Id);
     }
 
     [HttpPut("extrusoras/{id}")]
-    public async Task<IActionResult> UpdateExtrusora(Guid id, [FromBody] Extrusora entity)
+    public async Task<IActionResult> UpdateExtrusora(Guid id, [FromBody] ExtrusoraDto dto)
     {
-        if (id != entity.Id) return BadRequest();
-        _context.Extrusoras.Entry(entity).State = EntityState.Modified;
+        var entity = await _context.Extrusoras.FindAsync(id);
+        if (entity is null) return NotFound();
+        entity.Nombre = dto.Nombre;
+        entity.NumeroExtrusora = dto.NumeroExtrusora;
+        entity.Imagen = dto.Imagen;
         await _context.SaveChangesAsync(default);
         return NoContent();
     }
@@ -185,6 +209,58 @@ public class CatalogosController : ControllerBase
         var item = await _context.Extrusoras.FindAsync(id);
         if (item is null) return NotFound();
         _context.Extrusoras.Remove(item);
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    // ExtrusoraOperario endpoints
+    [HttpGet("extrusoras/{extrusoraId}/operarios")]
+    public async Task<ActionResult<IEnumerable<object>>> GetExtrusoraOperarios(Guid extrusoraId)
+    {
+        var turnos = await _context.Turnos.OrderBy(t => t.HoraInicio).ToListAsync();
+        var operarios = await _context.ExtrusoraOperarios
+            .Where(eo => eo.ExtrusoraId == extrusoraId)
+            .Include(eo => eo.Turno)
+            .Include(eo => eo.Operario)
+            .ToListAsync();
+
+        // Devuelve un registro por turno (aunque no tenga operario asignado)
+        var result = turnos.Select(t =>
+        {
+            var eo = operarios.FirstOrDefault(o => o.TurnoId == t.Id);
+            return new
+            {
+                Id = eo?.Id,
+                TurnoId = t.Id,
+                Turno = t.Nombre,
+                OperarioId = eo?.OperarioId,
+                Operario = eo?.Operario?.Nombre
+            };
+        });
+        return Ok(result);
+    }
+
+    [HttpPut("extrusoras/{extrusoraId}/operarios/{turnoId}")]
+    public async Task<IActionResult> UpsertExtrusoraOperario(Guid extrusoraId, Guid turnoId, [FromBody] ExtrusoraOperarioDto dto)
+    {
+        var existing = await _context.ExtrusoraOperarios
+            .FirstOrDefaultAsync(eo => eo.ExtrusoraId == extrusoraId && eo.TurnoId == turnoId);
+
+        if (existing is null)
+        {
+            _context.ExtrusoraOperarios.Add(new ExtrusoraOperario
+            {
+                Id = Guid.NewGuid(),
+                ExtrusoraId = extrusoraId,
+                TurnoId = turnoId,
+                OperarioId = dto.OperarioId,
+                TenantId = dto.TenantId
+            });
+        }
+        else
+        {
+            existing.OperarioId = dto.OperarioId;
+        }
         await _context.SaveChangesAsync(default);
         return NoContent();
     }
@@ -304,3 +380,5 @@ public class CatalogosController : ControllerBase
 // DTOs
 // ─────────────────────────────────────────────────────────────────────────────
 public record TurnoDto(string Nombre, string HoraInicio, string HoraFin, Guid TenantId);
+public record ExtrusoraDto(string Nombre, string NumeroExtrusora, string? Imagen, Guid TenantId);
+public record ExtrusoraOperarioDto(Guid? OperarioId, Guid TenantId);

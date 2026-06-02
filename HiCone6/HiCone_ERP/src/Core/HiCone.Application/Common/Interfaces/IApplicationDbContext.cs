@@ -45,6 +45,7 @@ public interface IApplicationDbContext
     DbSet<Extrusora> Extrusoras { get; }
     DbSet<ExtrusoraProducto> ExtrusoraProductos { get; }
     DbSet<ExtrusoraMezcladora> ExtrusoraMezcladoras { get; }
+    DbSet<ExtrusoraOperario> ExtrusoraOperarios { get; }
     DbSet<Prensa> Prensas { get; }
     DbSet<PrensaProducto> PrensaProductos { get; }
     DbSet<Troquel> Troqueles { get; }

@@ -26,10 +26,16 @@ public class Extrusora : TenantEntity
 {
     public string Nombre { get; set; } = null!;
 
+    /// <summary>Clave visible para el operador: UNO, DOS, TRES, etc.</summary>
+    public string NumeroExtrusora { get; set; } = null!;
+
+    public string? Imagen { get; set; }
+
     // Relaciones
     public virtual ICollection<ExtrusoraProducto> ExtrusoraProductos { get; set; } = [];
     public virtual ICollection<ExtrusoraMezcladora> ExtrusoraMezcladoras { get; set; } = [];
     public virtual ICollection<Extrusion> Extrusiones { get; set; } = [];
+    public virtual ICollection<ExtrusoraOperario> ExtrusoraOperarios { get; set; } = [];
 }
 
 /// <summary>Prensa (PDF: Catálogos > Prensas — Prensa 1 a 5)</summary>
@@ -109,6 +115,19 @@ public class ProductoTerminado : TenantEntity
 // ─────────────────────────────────────────────────────────────────────────────
 // REFERENCIAS EXTRUSORA
 // ─────────────────────────────────────────────────────────────────────────────
+
+/// <summary>Operador predeterminado por Extrusora y Turno</summary>
+public class ExtrusoraOperario : TenantEntity
+{
+    public Guid ExtrusoraId { get; set; }
+    public virtual Extrusora Extrusora { get; set; } = null!;
+
+    public Guid TurnoId { get; set; }
+    public virtual Turno Turno { get; set; } = null!;
+
+    public Guid? OperarioId { get; set; }
+    public virtual Operario? Operario { get; set; }
+}
 
 /// <summary>Relación Extrusora-Producto con tiempos (PDF: Referencias > Extrusora Producto)</summary>
 public class ExtrusoraProducto : TenantEntity
