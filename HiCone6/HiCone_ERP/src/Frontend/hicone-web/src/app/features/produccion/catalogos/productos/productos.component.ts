@@ -11,20 +11,21 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
     <div class="module-page animate-move-up">
       <!-- Encabezado del Módulo -->
       <header class="module-header-container" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
-        <div class="title-area">
-          <nav class="breadcrumb">Producción › Catálogos › Productos</nav>
-          <h1>Catálogo de Productos</h1>
-        </div>
-        
-        <!-- Barra de Acciones Premium -->
-        <div class="actions-toolbar" style="display: flex; width: 100%; align-items: center;">
+        @if (!showModal()) {
+          <div class="title-area">
+            <nav class="breadcrumb">Producción > Productos</nav>
+            <h1>Producto</h1>
+          </div>
+          
+          <!-- Barra de Acciones Premium -->
+          <div class="actions-toolbar" style="display: flex; width: 100%; align-items: center;">
           
           <!-- LEFT SIDE -->
           <div class="toolbar-left" style="display: flex; gap: 0.75rem; align-items: center;">
             <!-- Dropdown de Exportar -->
             <div class="dropdown-wrapper">
-              <button class="btn btn-secondary" (click)="toggleExportDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem;">
-                <span>⬇️</span> Exportar
+              <button class="btn btn-outline-green" (click)="toggleExportDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem;">
+                <span style="font-size: 1.1rem; color: #10b981;">⬇</span> Exportar
               </button>
               @if (showExportOptions()) {
                 <div class="column-selector-popover animate-slide-up">
@@ -35,11 +36,11 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
             </div>
 
             <!-- Botón Agregar -->
-            <button class="btn btn-primary" (click)="openCreate()">+ Agregar</button>
+            <button class="btn btn-outline-green" (click)="openCreate()">Agregar</button>
 
             <!-- Selector de Columnas -->
-            <button class="btn btn-secondary" (click)="showColumnModal.set(true)" style="display: flex; align-items: center; gap: 0.4rem;">
-              <span>📊</span> Select Columns
+            <button class="btn btn-outline-green" (click)="showColumnModal.set(true)" style="display: flex; align-items: center; gap: 0.4rem;">
+              Selecciona columnas <span style="font-size: 0.7rem; color: #10b981;">▼</span>
             </button>
           </div>
 
@@ -48,36 +49,32 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
 
           <!-- RIGHT SIDE -->
           <div class="toolbar-right" style="display: flex; gap: 0.75rem; align-items: center;">
-            <!-- Filter Button -->
-            <div class="dropdown-wrapper">
-              <button class="btn btn-secondary" (click)="toggleFilterDropdown($event)" style="display: flex; align-items: center; justify-content: center; padding: 0.55rem 0.75rem;" title="Filtrar">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Filtro de Búsqueda Estilo Legacy -->
+            <div class="legacy-search-container">
+              <span class="legacy-filter-icon" title="Filtrar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                 </svg>
-              </button>
-              @if (showFilterDropdown()) {
-                <div class="column-selector-popover animate-slide-up" style="width: 160px; right: 0;" (click)="$event.stopPropagation()">
-                  <div class="dropdown-item" (click)="clearFilters()">Clear filters</div>
-                  <div class="dropdown-item" (click)="saveFilterAs()">Save filter as...</div>
-                </div>
-              }
-            </div>
-
-            <!-- Filtro de Búsqueda -->
-            <div class="search-box">
-              <span class="search-icon">🔍</span>
+              </span>
               <input 
-                class="field-input" 
+                class="legacy-search-input" 
                 type="text" 
-                placeholder="Buscar producto..." 
+                placeholder="Buscar" 
                 [ngModel]="searchText()" 
                 (ngModelChange)="searchText.set($event); currentPage.set(1)"
               />
             </div>
           </div>
         </div>
+        } @else {
+          <div class="title-area-legacy" style="margin-bottom: 1rem;">
+            <h1 style="color: #65a30d; font-weight: normal; font-size: 1.5rem; margin: 0;">gestionar Producto</h1>
+            <nav class="breadcrumb" style="font-size: 0.8rem; margin-top: 0.2rem; display: flex; align-items: center; gap: 0.4rem; color: #94a3b8; font-weight: 600;">Producción <span style="font-size: 1.2rem; color: #10b981;">></span> Productos</nav>
+          </div>
+        }
       </header>
 
+      @if (!showModal()) {
       <!-- Tabla de Datos Premium -->
       <div class="content-card" style="margin-top: 1rem; position: relative; min-height: 300px;">
         <table class="data-table">
@@ -86,59 +83,241 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
               <th style="width: 70px;"></th> <!-- Ver -->
               <th style="width: 70px;"></th> <!-- Editar -->
               <th style="width: 70px;"></th> <!-- Borrar -->
-              @if (isColVisible('clave')) {
-                <th>Clave</th>
-              }
-              @if (isColVisible('nombre')) {
-                <th>Nombre</th>
-              }
               @if (isColVisible('categoria')) {
-                <th>Categoría</th>
+                <th class="header-with-dropdown">
+                  <div class="header-cell-content" (click)="toggleHeaderDropdown('categoria', $event)">
+                    <span>Categoría</span>
+                    <span class="dropdown-arrow-icon">▼</span>
+                  </div>
+                  @if (activeHeaderDropdown() === 'categoria') {
+                    <div class="header-popover-menu animate-slide-up" (click)="$event.stopPropagation()">
+                      <div class="popover-item" (click)="sortBy('categoria', 'asc')"><span class="icon">⬆️</span> Ordenar A-Z</div>
+                      <div class="popover-item" (click)="sortBy('categoria', 'desc')"><span class="icon">⬇️</span> Ordenar Z-A</div>
+                      <div class="popover-divider"></div>
+                      <div class="popover-item" (click)="pinColumn('categoria', 'izquierda')"><span class="icon">📌</span> Fijar a la izquierda</div>
+                      <div class="popover-item" (click)="pinColumn('categoria', 'derecha')"><span class="icon">📌</span> Fijar a la derecha</div>
+                      <div class="popover-divider"></div>
+                      <div style="padding: 0 1rem 0.5rem 1rem;">
+                        <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="filterCategoria()" (ngModelChange)="filterCategoria.set($event)">
+                        <div class="suggestions">
+                          <span class="suggestion-label">Sugerencias</span>
+                          @for (val of getTop3Frequent('categoria'); track val) {
+                            <div class="suggestion-item" (click)="filterCategoria.set(val); activeHeaderDropdown.set(null)">{{ val }}</div>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </th>
               }
               @if (isColVisible('productoBase')) {
-                <th>Base Product</th>
+                <th class="header-with-dropdown">
+                  <div class="header-cell-content" (click)="toggleHeaderDropdown('productoBase', $event)">
+                    <span>Producto Base</span>
+                    <span class="dropdown-arrow-icon">▼</span>
+                  </div>
+                  @if (activeHeaderDropdown() === 'productoBase') {
+                    <div class="header-popover-menu animate-slide-up" (click)="$event.stopPropagation()">
+                      <div class="popover-item" (click)="sortBy('productoBase', 'asc')"><span class="icon">⬆️</span> Ordenar A-Z</div>
+                      <div class="popover-item" (click)="sortBy('productoBase', 'desc')"><span class="icon">⬇️</span> Ordenar Z-A</div>
+                      <div class="popover-divider"></div>
+                      <div class="popover-item" (click)="pinColumn('productoBase', 'izquierda')"><span class="icon">📌</span> Fijar a la izquierda</div>
+                      <div class="popover-item" (click)="pinColumn('productoBase', 'derecha')"><span class="icon">📌</span> Fijar a la derecha</div>
+                      <div class="popover-divider"></div>
+                      <div style="padding: 0 1rem 0.5rem 1rem;">
+                        <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="filterProductoBase()" (ngModelChange)="filterProductoBase.set($event)">
+                        <div class="suggestions">
+                          <span class="suggestion-label">Sugerencias</span>
+                          @for (val of getTop3Frequent('productoBase'); track val) {
+                            <div class="suggestion-item" (click)="filterProductoBase.set(val); activeHeaderDropdown.set(null)">{{ val }}</div>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </th>
+              }
+              @if (isColVisible('clave')) {
+                <th class="header-with-dropdown">
+                  <div class="header-cell-content" (click)="toggleHeaderDropdown('clave', $event)">
+                    <span>Clave</span>
+                    <span class="dropdown-arrow-icon">▼</span>
+                  </div>
+                  @if (activeHeaderDropdown() === 'clave') {
+                    <div class="header-popover-menu animate-slide-up" (click)="$event.stopPropagation()">
+                      <div class="popover-item" (click)="sortBy('clave', 'asc')"><span class="icon">⬆️</span> Ordenar A-Z</div>
+                      <div class="popover-item" (click)="sortBy('clave', 'desc')"><span class="icon">⬇️</span> Ordenar Z-A</div>
+                      <div class="popover-divider"></div>
+                      <div class="popover-item" (click)="pinColumn('clave', 'izquierda')"><span class="icon">📌</span> Fijar a la izquierda</div>
+                      <div class="popover-item" (click)="pinColumn('clave', 'derecha')"><span class="icon">📌</span> Fijar a la derecha</div>
+                      <div class="popover-divider"></div>
+                      <div style="padding: 0 1rem 0.5rem 1rem;">
+                        <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="filterClave()" (ngModelChange)="filterClave.set($event)">
+                        <div class="suggestions">
+                          <span class="suggestion-label">Sugerencias</span>
+                          @for (val of getTop3Frequent('clave'); track val) {
+                            <div class="suggestion-item" (click)="filterClave.set(val); activeHeaderDropdown.set(null)">{{ val }}</div>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </th>
+              }
+              @if (isColVisible('nombre')) {
+                <th class="header-with-dropdown">
+                  <div class="header-cell-content" (click)="toggleHeaderDropdown('nombre', $event)">
+                    <span>Nombre</span>
+                    <span class="dropdown-arrow-icon">▼</span>
+                  </div>
+                  @if (activeHeaderDropdown() === 'nombre') {
+                    <div class="header-popover-menu animate-slide-up" (click)="$event.stopPropagation()">
+                      <div class="popover-item" (click)="sortBy('nombre', 'asc')"><span class="icon">⬆️</span> Ordenar A-Z</div>
+                      <div class="popover-item" (click)="sortBy('nombre', 'desc')"><span class="icon">⬇️</span> Ordenar Z-A</div>
+                      <div class="popover-divider"></div>
+                      <div class="popover-item" (click)="pinColumn('nombre', 'izquierda')"><span class="icon">📌</span> Fijar a la izquierda</div>
+                      <div class="popover-item" (click)="pinColumn('nombre', 'derecha')"><span class="icon">📌</span> Fijar a la derecha</div>
+                      <div class="popover-divider"></div>
+                      <div style="padding: 0 1rem 0.5rem 1rem;">
+                        <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="filterNombre()" (ngModelChange)="filterNombre.set($event)">
+                        <div class="suggestions">
+                          <span class="suggestion-label">Sugerencias</span>
+                          @for (val of getTop3Frequent('nombre'); track val) {
+                            <div class="suggestion-item" (click)="filterNombre.set(val); activeHeaderDropdown.set(null)">{{ val }}</div>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </th>
               }
               @if (isColVisible('descripcion')) {
-                <th>Descripción</th>
+                <th class="header-with-dropdown">
+                  <div class="header-cell-content" (click)="toggleHeaderDropdown('descripcion', $event)">
+                    <span>Descripción</span>
+                    <span class="dropdown-arrow-icon">▼</span>
+                  </div>
+                  @if (activeHeaderDropdown() === 'descripcion') {
+                    <div class="header-popover-menu animate-slide-up" (click)="$event.stopPropagation()">
+                      <div class="popover-item" (click)="sortBy('descripcion', 'asc')"><span class="icon">⬆️</span> Ordenar A-Z</div>
+                      <div class="popover-item" (click)="sortBy('descripcion', 'desc')"><span class="icon">⬇️</span> Ordenar Z-A</div>
+                      <div class="popover-divider"></div>
+                      <div class="popover-item" (click)="pinColumn('descripcion', 'izquierda')"><span class="icon">📌</span> Fijar a la izquierda</div>
+                      <div class="popover-item" (click)="pinColumn('descripcion', 'derecha')"><span class="icon">📌</span> Fijar a la derecha</div>
+                      <div class="popover-divider"></div>
+                      <div style="padding: 0 1rem 0.5rem 1rem;">
+                        <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="filterDescripcion()" (ngModelChange)="filterDescripcion.set($event)">
+                        <div class="suggestions">
+                          <span class="suggestion-label">Sugerencias</span>
+                          @for (val of getTop3Frequent('descripcion'); track val) {
+                            <div class="suggestion-item" (click)="filterDescripcion.set(val); activeHeaderDropdown.set(null)">{{ val }}</div>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </th>
               }
               @if (isColVisible('precioUnitario')) {
-                <th>Precio Unitario</th>
+                <th class="header-with-dropdown">
+                  <div class="header-cell-content" (click)="toggleHeaderDropdown('precioUnitario', $event)">
+                    <span>Precio Unitario</span>
+                    <span class="dropdown-arrow-icon">▼</span>
+                  </div>
+                  @if (activeHeaderDropdown() === 'precioUnitario') {
+                    <div class="header-popover-menu animate-slide-up" (click)="$event.stopPropagation()">
+                      <div class="popover-item" (click)="sortBy('precioUnitario', 'asc')"><span class="icon">⬆️</span> Menor a Mayor</div>
+                      <div class="popover-item" (click)="sortBy('precioUnitario', 'desc')"><span class="icon">⬇️</span> Mayor a Menor</div>
+                      <div class="popover-divider"></div>
+                      <div class="popover-item" (click)="pinColumn('precioUnitario', 'izquierda')"><span class="icon">📌</span> Fijar a la izquierda</div>
+                      <div class="popover-item" (click)="pinColumn('precioUnitario', 'derecha')"><span class="icon">📌</span> Fijar a la derecha</div>
+                      <div class="popover-divider"></div>
+                      <div style="padding: 0 1rem 0.5rem 1rem;">
+                        <div class="range-group">
+                          <div class="range-field">
+                            <label>Desde</label>
+                            <input type="number" class="search-input" style="margin-bottom:0;" placeholder="Mínimo" [ngModel]="filterPrecioMin()" (ngModelChange)="filterPrecioMin.set($event)">
+                          </div>
+                          <div class="range-field" style="margin-top:0.5rem;">
+                            <label>Hasta</label>
+                            <input type="number" class="search-input" style="margin-bottom:0;" placeholder="Máximo" [ngModel]="filterPrecioMax()" (ngModelChange)="filterPrecioMax.set($event)">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </th>
               }
-              @if (isColVisible('inventarioActual')) {
-                <th>Inventario Actual</th>
+              @if (isColVisible('tipoMaterial')) {
+                <th class="header-with-dropdown">
+                  <div class="header-cell-content" (click)="toggleHeaderDropdown('tipoMaterial', $event)">
+                    <span>Tipo Material</span>
+                    <span class="dropdown-arrow-icon">▼</span>
+                  </div>
+                  @if (activeHeaderDropdown() === 'tipoMaterial') {
+                    <div class="header-popover-menu animate-slide-up" (click)="$event.stopPropagation()">
+                      <div class="popover-item" (click)="sortBy('tipoMaterial', 'asc')"><span class="icon">⬆️</span> Ordenar A-Z</div>
+                      <div class="popover-item" (click)="sortBy('tipoMaterial', 'desc')"><span class="icon">⬇️</span> Ordenar Z-A</div>
+                      <div class="popover-divider"></div>
+                      <div class="popover-item" (click)="pinColumn('tipoMaterial', 'izquierda')"><span class="icon">📌</span> Fijar a la izquierda</div>
+                      <div class="popover-item" (click)="pinColumn('tipoMaterial', 'derecha')"><span class="icon">📌</span> Fijar a la derecha</div>
+                      <div class="popover-divider"></div>
+                      <div style="padding: 0 1rem 0.5rem 1rem;">
+                        <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="filterTipoMaterial()" (ngModelChange)="filterTipoMaterial.set($event)">
+                        <div class="suggestions">
+                          <span class="suggestion-label">Sugerencias</span>
+                          @for (val of getTop3Frequent('tipoMaterial'); track val) {
+                            <div class="suggestion-item" (click)="filterTipoMaterial.set(val); activeHeaderDropdown.set(null)">{{ val }}</div>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </th>
               }
               @if (isColVisible('activo')) {
                 <th class="header-with-dropdown">
-                  <div class="header-cell-content" (click)="toggleActiveHeaderDropdown($event)">
+                  <div class="header-cell-content" (click)="toggleHeaderDropdown('activo', $event)">
                     <span>Activo</span>
                     <span class="dropdown-arrow-icon">▼</span>
                   </div>
-                  
-                  <!-- Dropdown para cabecera Activo -->
-                  @if (showActiveHeaderDropdown()) {
+                  @if (activeHeaderDropdown() === 'activo') {
                     <div class="header-popover-menu animate-slide-up" (click)="$event.stopPropagation()">
-                      <div class="popover-item" (click)="sortActive('desc')">
-                        <span class="icon">⬆️</span> Ordenar A-Z (Activos primero)
-                      </div>
-                      <div class="popover-item" (click)="sortActive('asc')">
-                        <span class="icon">⬇️</span> Ordenar Z-A (Inactivos primero)
-                      </div>
+                      <div class="popover-item" (click)="sortBy('isActive', 'desc')"><span class="icon">⬆️</span> Activos primero</div>
+                      <div class="popover-item" (click)="sortBy('isActive', 'asc')"><span class="icon">⬇️</span> Inactivos primero</div>
                       <div class="popover-divider"></div>
-                      <div class="popover-item" (click)="pinColumn('izquierda')">
-                        <span class="icon">📌</span> Fijar a la izquierda
-                      </div>
-                      <div class="popover-item" (click)="pinColumn('derecha')">
-                        <span class="icon">📌</span> Fijar a la derecha
-                      </div>
+                      <div class="popover-item" (click)="pinColumn('activo', 'izquierda')"><span class="icon">📌</span> Fijar a la izquierda</div>
+                      <div class="popover-item" (click)="pinColumn('activo', 'derecha')"><span class="icon">📌</span> Fijar a la derecha</div>
                       <div class="popover-divider"></div>
-                      <div class="popover-item" (click)="filterActiveState('active')">
-                        <span class="icon">🟩</span> Checked (Solo Activos)
-                      </div>
-                      <div class="popover-item" (click)="filterActiveState('inactive')">
-                        <span class="icon">🟥</span> Unchecked (Solo Inactivos)
-                      </div>
-                      <div class="popover-item" (click)="filterActiveState('all')">
-                        <span class="icon">🔄</span> Mostrar Todos
+                      <div class="popover-item" (click)="filterActiveState('active')"><span class="icon">🟩</span> Solo Activos</div>
+                      <div class="popover-item" (click)="filterActiveState('inactive')"><span class="icon">🟥</span> Solo Inactivos</div>
+                      <div class="popover-item" (click)="filterActiveState('all')"><span class="icon">🔄</span> Mostrar Todos</div>
+                    </div>
+                  }
+                </th>
+              }
+              @if (isColVisible('productoSAE')) {
+                <th class="header-with-dropdown">
+                  <div class="header-cell-content" (click)="toggleHeaderDropdown('productoSAE', $event)">
+                    <span>Producto SAE</span>
+                    <span class="dropdown-arrow-icon">▼</span>
+                  </div>
+                  @if (activeHeaderDropdown() === 'productoSAE') {
+                    <div class="header-popover-menu animate-slide-up" (click)="$event.stopPropagation()">
+                      <div class="popover-item" (click)="sortBy('productoSAE', 'asc')"><span class="icon">⬆️</span> Ordenar A-Z</div>
+                      <div class="popover-item" (click)="sortBy('productoSAE', 'desc')"><span class="icon">⬇️</span> Ordenar Z-A</div>
+                      <div class="popover-divider"></div>
+                      <div class="popover-item" (click)="pinColumn('productoSAE', 'izquierda')"><span class="icon">📌</span> Fijar a la izquierda</div>
+                      <div class="popover-item" (click)="pinColumn('productoSAE', 'derecha')"><span class="icon">📌</span> Fijar a la derecha</div>
+                      <div class="popover-divider"></div>
+                      <div style="padding: 0 1rem 0.5rem 1rem;">
+                        <input type="text" class="search-input" placeholder="Buscar..." [ngModel]="filterSAE()" (ngModelChange)="filterSAE.set($event)">
+                        <div class="suggestions">
+                          <span class="suggestion-label">Sugerencias</span>
+                          @for (val of getTop3Frequent('productoSAE'); track val) {
+                            <div class="suggestion-item" (click)="filterSAE.set(val); activeHeaderDropdown.set(null)">{{ val }}</div>
+                          }
+                        </div>
                       </div>
                     </div>
                   }
@@ -156,40 +335,38 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
             @else {
               @for (item of paginatedItems(); track item.id) {
                 <tr>
-                  <td style="width: 70px;">
-                    <button class="action-btn view" (click)="openViewModal(item)">Ver</button>
+                  <td style="width: 70px; text-align: center;">
+                    <a class="action-link text-green" (click)="openViewModal(item)">Visualizar</a>
                   </td>
-                  <td style="width: 70px;">
-                    <button class="action-btn edit" (click)="openEditModal(item)">Editar</button>
+                  <td style="width: 70px; text-align: center;">
+                    <a class="action-link text-green" (click)="openEditModal(item)">Modificar</a>
                   </td>
-                  <td style="width: 70px;">
-                    <button class="action-btn delete" (click)="del(item)">Borrar</button>
+                  <td style="width: 70px; text-align: center;">
+                    <a class="action-link text-green" (click)="del(item)">Eliminar</a>
                   </td>
-                  @if (isColVisible('clave')) { 
-                    <td><code class="id-tag" style="background: #f1f5f9; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.78rem; font-weight: 700; color: #475569;">{{ item.clave }}</code></td> 
-                  }
-                  @if (isColVisible('nombre')) { 
-                    <td class="col-nombre">{{ item.nombre }}</td> 
-                  }
                   @if (isColVisible('categoria')) { 
-                    <td>
-                      <span class="category-badge">{{ item.categoria || 'Sin Categoría' }}</span>
-                    </td> 
+                    <td>{{ item.categoria || '' }}</td> 
                   }
                   @if (isColVisible('productoBase')) { 
-                    <td>{{ $any(item).productoBase || 'N/A' }}</td> 
+                    <td>{{ $any(item).productoBase || '' }}</td> 
+                  }
+                  @if (isColVisible('clave')) { 
+                    <td>{{ item.clave }}</td> 
+                  }
+                  @if (isColVisible('nombre')) { 
+                    <td>{{ item.nombre }}</td> 
                   }
                   @if (isColVisible('descripcion')) { 
                     <td>{{ item.descripcion || '' }}</td> 
                   }
                   @if (isColVisible('precioUnitario')) { 
-                    <td>{{ item.precioUnitario ? ('$' + item.precioUnitario.toFixed(2)) : '$0.00' }}</td> 
+                    <td>{{ item.precioUnitario ? ('$ ' + item.precioUnitario.toFixed(2)) : '$ 0.00' }}</td> 
                   }
-                  @if (isColVisible('inventarioActual')) { 
-                    <td>{{ $any(item).inventarioActual || 0 }}</td> 
+                  @if (isColVisible('tipoMaterial')) { 
+                    <td>{{ $any(item).tipoMaterial || '' }}</td> 
                   }
                   @if (isColVisible('activo')) {
-                    <td style="width: 120px;">
+                    <td style="width: 80px;">
                       <label class="checkbox-container">
                         <input 
                           type="checkbox" 
@@ -200,6 +377,9 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
                       </label>
                     </td>
                   }
+                  @if (isColVisible('productoSAE')) {
+                    <td>{{ item.productoSAE || '' }}</td>
+                  }
                 </tr>
               }
             }
@@ -208,216 +388,249 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
       </div>
 
       <!-- Paginación Premium -->
-      @if (totalPages() > 1) {
-        <div class="pagination-container animate-move-up">
-          <button class="pag-btn" [disabled]="currentPage() === 1" (click)="prevPage()">‹</button>
-          
-          @for (p of getPages(currentPage(), totalPages()); track $index) {
-            @if (p === '...') {
-              <span class="pag-dots">...</span>
-            } @else {
-              <button 
-                class="pag-btn page-num" 
-                [class.active]="currentPage() === p" 
-                (click)="setPage($any(p))"
-              >
-                {{ p }}
-              </button>
-            }
-          }
-          
-          <button class="pag-btn" [disabled]="currentPage() === totalPages()" (click)="nextPage()">›</button>
+      <!-- Scroll indicator legacy -->
+      <div class="legacy-scroll-bar">
+        <div class="scroll-track">
+          <div class="scroll-thumb"></div>
         </div>
-      }
+      </div>
+
+      <!-- Footer Premium con estilo Legacy -->
+      <div class="legacy-footer-container animate-move-up">
+        <div class="footer-left">
+          <span>Página {{ currentPage() }} de {{ totalPages() }}</span>
+        </div>
+        <div class="footer-right">
+          @if (searchText()) {
+            <span class="filtering-text">Filtrando por Clave</span>
+          }
+          <div class="pagination-container-legacy">
+            <button class="pag-btn-legacy" [disabled]="currentPage() === 1" (click)="prevPage()">Ant</button>
+            
+            @for (p of getPages(currentPage(), totalPages()); track $index) {
+              @if (p === '...') {
+                <span class="pag-dots">...</span>
+              } @else {
+                <button 
+                  class="pag-btn-legacy page-num" 
+                  [class.active]="currentPage() === p" 
+                  (click)="setPage($any(p))"
+                >
+                  {{ p }}
+                </button>
+              }
+            }
+            
+            <button class="pag-btn-legacy" [disabled]="currentPage() === totalPages()" (click)="nextPage()">Sig</button>
+          </div>
+        </div>
+      </div>
 
       <!-- Modal de Producto -->
-      @if (showModal()) {
-        <div class="modal-overlay" (click)="closeModal()">
-          <div class="modal-card" (click)="$event.stopPropagation()" style="max-height: 90vh; overflow-y: auto;">
-            <div class="modal-header">
-              <h3>Información General</h3>
-              <button class="modal-close" (click)="closeModal()">✕</button>
+      } @else {
+        <!-- Formulario gestionar Producto (Legacy Screen) -->
+        <div class="legacy-form-container animate-fade-in" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem; margin-bottom: 2rem;">
+          
+          <!-- Acordeón 1: Información General -->
+          <div class="legacy-accordion" style="border: 1px solid #cbd5e1;">
+            <div class="legacy-accordion-header" style="padding: 0.75rem 1rem; display: flex; align-items: center;">
+              <span class="icon text-green" style="font-weight:bold; color: #10b981; margin-right: 0.5rem;">[+]</span> 
+              <span style="font-weight: 600; color: #475569; font-size: 0.85rem;">Información General</span>
             </div>
-            
-            <div class="modal-body">
-              <!-- SAE Product -->
-              <div class="form-row">
-                <label class="field-label">SAE Product</label>
-                <select 
-                  class="field-input" 
-                  [(ngModel)]="form.productoSAE" 
-                  [disabled]="modalReadOnly()"
-                  style="appearance: auto; padding-right: 2rem;"
-                >
-                  <option [value]="undefined"></option>
-                  @for (code of saeCodes(); track code.code) {
-                    <option [value]="code.code">{{ code.code }} - {{ code.name }}</option>
+            <div class="legacy-accordion-body" style="padding: 0 1rem;">
+              
+              <!-- Producto SAE -->
+              <div class="legacy-field-row">
+                <label class="legacy-field-label">Producto SAE</label>
+                <div class="legacy-field-value">
+                  @if (modalReadOnly()) {
+                    {{ form.productoSAE || '(Ninguno)' }}
+                  } @else {
+                    <select class="field-input" [(ngModel)]="form.productoSAE" style="width: 100%; appearance: auto; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;">
+                      <option [value]="undefined">(Ninguno)</option>
+                      @for (code of saeCodes(); track code.code) {
+                        <option [value]="code.code">{{ code.code }} - {{ code.name }}</option>
+                      }
+                    </select>
                   }
-                </select>
-              </div>
-
-              <!-- Category Dropdown Selector -->
-              <div class="form-row">
-                <label class="field-label">Categoría</label>
-                <select 
-                  class="field-input" 
-                  [(ngModel)]="form.categoria" 
-                  [disabled]="modalReadOnly()"
-                  style="appearance: auto; padding-right: 2rem;"
-                >
-                  <option [value]="undefined"></option>
-                  <option value="Bobina">Bobina</option>
-                  <option value="Reel">Reel</option>
-                </select>
-              </div>
-
-              <div class="form-row">
-                <label class="field-label">Clave *</label>
-                <input 
-                  class="field-input" 
-                  type="text" 
-                  [(ngModel)]="form.clave" 
-                  [disabled]="modalReadOnly() || form.id !== undefined" 
-                />
-              </div>
-
-              <div class="form-row">
-                <label class="field-label">Nombre *</label>
-                <input 
-                  class="field-input" 
-                  type="text" 
-                  [(ngModel)]="form.nombre" 
-                  [disabled]="modalReadOnly()" 
-                />
-              </div>
-
-              <div class="form-row">
-                <label class="field-label">Descripción</label>
-                <textarea 
-                  class="field-input" 
-                  rows="2"
-                  [(ngModel)]="form.descripcion" 
-                  [disabled]="modalReadOnly()" 
-                ></textarea>
-              </div>
-
-              <!-- Precio Unitario (Unit Price) -->
-              <div class="form-row">
-                <label class="field-label">Precio Unitario</label>
-                <input 
-                  class="field-input" 
-                  type="text" 
-                  [(ngModel)]="form.precioUnitarioFormat" 
-                  (blur)="formatPrice()"
-                  [disabled]="modalReadOnly()" 
-                  placeholder="$00.00"
-                />
-              </div>
-
-              <!-- Inventario Actual (Current Inventory) -->
-              <div class="form-row">
-                <label class="field-label">Inventario Actual</label>
-                <input 
-                  class="field-input" 
-                  type="number" 
-                  [(ngModel)]="form.inventarioActual" 
-                  [disabled]="modalReadOnly()" 
-                />
-              </div>
-
-              <!-- Clave Externa (External Key) -->
-              <div class="form-row">
-                <label class="field-label">Clave Externa</label>
-                <input 
-                  class="field-input" 
-                  type="text" 
-                  [(ngModel)]="form.claveExterna" 
-                  [disabled]="modalReadOnly()" 
-                />
-              </div>
-
-              <!-- Tipo de Material (Material Type) -->
-              <div class="form-row">
-                <label class="field-label">Tipo de Material</label>
-                <select 
-                  class="field-input" 
-                  [(ngModel)]="form.tipoMaterial" 
-                  [disabled]="modalReadOnly()"
-                  style="appearance: auto; padding-right: 2rem;"
-                >
-                  <option [value]="undefined"></option>
-                  <option value="PCR">PCR</option>
-                  <option value="DOW">DOW</option>
-                  <option value="PCR 100%">PCR 100%</option>
-                </select>
-              </div>
-
-              <!-- Imagen (Image) -->
-              <div class="form-row">
-                <label class="field-label">Imagen</label>
-                <div class="image-upload-placeholder" style="border: 2px dashed #cbd5e1; border-radius: 8px; padding: 1.5rem; text-align: center; color: #94a3b8; background: #f8fafc; font-size: 0.85rem;">
-                  <span>Visual Only - Upload not implemented</span>
                 </div>
               </div>
 
-              <div class="form-row" style="margin-top: 0.5rem;">
-                <label class="checkbox-container" style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; color: #475569;">
-                  <input 
-                    type="checkbox" 
-                    [(ngModel)]="form.isActive" 
-                    [disabled]="modalReadOnly()" 
-                  />
-                  <span class="checkmark"></span>
-                  <span>Activo</span>
-                </label>
-              </div>
-              
-              <!-- Second Header: Producto Base -->
-              <h3 style="margin-top: 1rem; margin-bottom: 0.5rem; font-size: 1.15rem; font-weight: 800; color: #1e293b; letter-spacing: -0.02em; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem;">
-                Producto Base
-              </h3>
-
-              <!-- Base Product Category -->
-              <div class="form-row">
-                <label class="field-label">Categoría de Producto Base</label>
-                <select 
-                  class="field-input" 
-                  [(ngModel)]="form.categoriaProductoBase" 
-                  [disabled]="modalReadOnly()"
-                  style="appearance: auto; padding-right: 2rem;"
-                >
-                  <option [value]="undefined"></option>
-                  <option value="Bobina">Bobina</option>
-                  <option value="Reel">Reel</option>
-                </select>
+              <!-- Categoría -->
+              <div class="legacy-field-row">
+                <label class="legacy-field-label">Categoría</label>
+                <div class="legacy-field-value">
+                  @if (modalReadOnly()) {
+                    {{ form.categoria || '(Ninguno)' }}
+                  } @else {
+                    <select class="field-input" [(ngModel)]="form.categoria" style="width: 100%; appearance: auto; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;">
+                      <option [value]="undefined">(Ninguno)</option>
+                      <option value="Bobina">Bobina</option>
+                      <option value="Reel">Reel</option>
+                    </select>
+                  }
+                </div>
               </div>
 
-              <!-- Base Product -->
-              <div class="form-row">
-                <label class="field-label">Producto Base</label>
-                <select 
-                  class="field-input" 
-                  [(ngModel)]="form.productoBase" 
-                  [disabled]="modalReadOnly()"
-                  style="appearance: auto; padding-right: 2rem;"
-                >
-                  <option [value]="undefined"></option>
-                  <option value="Base 1">Base 1</option>
-                  <option value="Base 2">Base 2</option>
-                </select>
+              <!-- Clave -->
+              <div class="legacy-field-row">
+                <label class="legacy-field-label">Clave</label>
+                <div class="legacy-field-value">
+                  @if (modalReadOnly()) {
+                    {{ form.clave || '' }}
+                  } @else {
+                    <input class="field-input" type="text" [(ngModel)]="form.clave" style="width: 100%; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;" [disabled]="form.id !== undefined" />
+                  }
+                </div>
               </div>
 
-            </div>
+              <!-- Nombre -->
+              <div class="legacy-field-row">
+                <label class="legacy-field-label">Nombre</label>
+                <div class="legacy-field-value">
+                  @if (modalReadOnly()) {
+                    {{ form.nombre || '' }}
+                  } @else {
+                    <input class="field-input" type="text" [(ngModel)]="form.nombre" style="width: 100%; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;" />
+                  }
+                </div>
+              </div>
 
-            <div class="modal-footer">
-              @if (modalReadOnly()) { 
-                <button class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
-              } @else {
-                <button class="btn btn-primary" (click)="save()">Confirmar</button> 
-                <button class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
-              }
+              <!-- Descripción -->
+              <div class="legacy-field-row">
+                <label class="legacy-field-label">Descripción</label>
+                <div class="legacy-field-value">
+                  @if (modalReadOnly()) {
+                    {{ form.descripcion || '' }}
+                  } @else {
+                    <textarea class="field-input" rows="2" [(ngModel)]="form.descripcion" style="width: 100%; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;"></textarea>
+                  }
+                </div>
+              </div>
+
+              <!-- Precio Unitario -->
+              <div class="legacy-field-row">
+                <label class="legacy-field-label">Precio Unitario</label>
+                <div class="legacy-field-value">
+                  @if (modalReadOnly()) {
+                    {{ form.precioUnitarioFormat || '$ 0.00' }}
+                  } @else {
+                    <input class="field-input" type="text" [(ngModel)]="form.precioUnitarioFormat" (blur)="formatPrice()" style="width: 100%; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;" />
+                  }
+                </div>
+              </div>
+
+              <!-- Inventario Inicial -->
+              <div class="legacy-field-row">
+                <label class="legacy-field-label">Inventario Inicial</label>
+                <div class="legacy-field-value">0</div>
+              </div>
+
+              <!-- Clave Paleta -->
+              <div class="legacy-field-row">
+                <label class="legacy-field-label">Clave Paleta</label>
+                <div class="legacy-field-value">0</div>
+              </div>
+
+              <!-- Tipo Material -->
+              <div class="legacy-field-row">
+                <label class="legacy-field-label">Tipo Material</label>
+                <div class="legacy-field-value" style="display: flex; align-items: center; justify-content: space-between;">
+                  @if (modalReadOnly()) {
+                    <span>{{ form.tipoMaterial || '' }}</span>
+                    <span style="color: #64748b; font-size: 1.2rem;">▼</span>
+                  } @else {
+                    <select class="field-input" [(ngModel)]="form.tipoMaterial" style="width: 100%; appearance: auto; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;">
+                      <option [value]="undefined"></option>
+                      <option value="PCR">PCR</option>
+                      <option value="DOW">DOW</option>
+                      <option value="PCR 100%">PCR 100%</option>
+                    </select>
+                  }
+                </div>
+              </div>
+
+              <!-- Imagen -->
+              <div class="legacy-field-row">
+                <label class="legacy-field-label">Imagen</label>
+                <div class="legacy-field-value" style="height: 2rem;"></div>
+              </div>
+
+              <!-- Activo -->
+              <div class="legacy-field-row" style="border-bottom: none; padding-bottom: 1rem;">
+                <label class="legacy-field-label">Activo</label>
+                <div class="legacy-field-value" style="padding-top: 0.2rem;">
+                  @if (modalReadOnly()) {
+                    <input type="checkbox" [checked]="form.isActive" disabled />
+                  } @else {
+                    <input type="checkbox" [(ngModel)]="form.isActive" />
+                  }
+                </div>
+              </div>
+
             </div>
           </div>
+
+          <!-- Acordeón 2: Producto Base -->
+          <div class="legacy-accordion" style="margin-top: 0.5rem; border: 1px solid #cbd5e1;">
+            <div class="legacy-accordion-header" style="padding: 0.75rem 1rem; border-bottom: 1px solid #cbd5e1; display: flex; align-items: center;">
+              <span class="icon text-green" style="font-weight:bold; color: #10b981; margin-right: 0.5rem;">[+]</span> 
+              <span style="font-weight: 600; color: #475569; font-size: 0.85rem;">Producto Base</span>
+            </div>
+            <div class="legacy-accordion-body" style="padding: 1rem; display: flex; gap: 2rem; min-height: 80px;">
+              <div style="flex: 1; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; display: flex; align-items: flex-end; position: relative;">
+                <label class="legacy-field-label" style="position: absolute; top: 0; left: 0;">Categoría del producto base</label>
+                <div class="legacy-field-value" style="color: transparent;">---</div>
+              </div>
+              <div style="flex: 1; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; display: flex; align-items: flex-end;">
+                <label class="legacy-field-label" style="margin-right: 1rem;">Producto Base</label>
+                <div class="legacy-field-value" style="font-size: 0.8rem; color: #64748b;">Sin Producto Base</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Barra de Botones -->
+          <div style="margin-top: 0.5rem; padding: 0.75rem; background: #f8fafc; border: 1px solid #cbd5e1; display: flex; gap: 0.5rem;">
+            <button style="background: #94a3b8; color: white; padding: 0.5rem 1rem; border-radius: 2px; font-weight: bold; font-size: 0.75rem; border: none; cursor: pointer;" (click)="closeModal()">CANCELAR</button>
+            @if (!modalReadOnly()) {
+              <button style="background: #10b981; color: white; padding: 0.5rem 1rem; border-radius: 2px; font-weight: bold; font-size: 0.75rem; border: none; cursor: pointer;" (click)="save()">GUARDAR</button>
+            }
+          </div>
+
+          <!-- Acordeón 3: Historial Auditoría -->
+          <div class="legacy-accordion" style="margin-top: 0.5rem; border: 1px solid #cbd5e1;">
+            <div class="legacy-accordion-header" style="padding: 0.75rem 1rem; display: flex; align-items: center;">
+              <span class="icon text-green" style="font-weight:bold; color: #10b981; margin-right: 0.5rem;">[+]</span> 
+              <span style="font-weight: 600; color: #475569; font-size: 0.85rem;">Historial Auditoría</span>
+            </div>
+            <div class="legacy-accordion-body" style="padding: 1rem; display: flex; gap: 1rem;">
+              
+              <div style="flex: 2; border: 1px solid #cbd5e1; min-height: 120px; background: white;">
+                <div style="padding: 0.5rem; border-bottom: 1px solid #cbd5e1; display: flex; align-items: center;">
+                  <span class="icon text-green" style="font-weight:bold; color: #10b981; margin-right: 0.5rem;">[+]</span> 
+                  <span style="font-weight: 600; color: #475569; font-size: 0.8rem;">Change Log</span>
+                </div>
+                <div style="display: flex; justify-content: center; border-bottom: 1px solid #e2e8f0; padding: 0.25rem 0; gap: 2rem;">
+                  <span style="font-size: 0.7rem; color: #64748b;">Date</span>
+                  <span style="font-size: 0.7rem; color: #64748b;">User</span>
+                </div>
+                <div style="height: 60px;"></div>
+                <div style="border-top: 1px solid #e2e8f0; padding: 0.25rem 0.5rem; display: flex; justify-content: flex-end; gap: 0.25rem;">
+                  <button style="border: 1px solid #cbd5e1; background: white; font-size: 0.6rem; color: #94a3b8; padding: 0.1rem 0.4rem; cursor: pointer;">Ant</button>
+                  <button style="border: 1px solid #cbd5e1; background: white; font-size: 0.6rem; color: #94a3b8; padding: 0.1rem 0.4rem; cursor: pointer;">Sig</button>
+                </div>
+              </div>
+
+              <div style="flex: 1; border: 1px solid #cbd5e1; min-height: 120px; background: white;">
+                <div style="padding: 0.5rem; border-bottom: 1px solid #cbd5e1; display: flex; align-items: center;">
+                  <span class="icon text-green" style="font-weight:bold; color: #10b981; margin-right: 0.5rem;">[+]</span> 
+                  <span style="font-weight: 600; color: #475569; font-size: 0.8rem;">Detail</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
         </div>
       }
       <!-- Modal de Select Columns -->
@@ -502,10 +715,20 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
     .btn-primary:hover { background: #059669; transform: translateY(-1px); }
     .btn-secondary { background: white; color: #475569; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
     .btn-secondary:hover { background: #f8fafc; border-color: #cbd5e1; }
+    
+    .btn-outline-green { background: white; color: #10b981; border: 1px solid #10b981; }
+    .btn-outline-green:hover { background: rgba(16, 185, 129, 0.05); }
     .active-filter { background: rgba(16, 185, 129, 0.1) !important; color: #10b981 !important; border-color: rgba(16, 185, 129, 0.25) !important; }
     .search-box { position: relative; }
     .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.9rem; }
     .search-box .field-input { padding-left: 2.2rem; width: 240px; }
+    
+    /* Legacy Search */
+    .legacy-search-container { display: flex; align-items: flex-end; gap: 0.5rem; margin-right: 1rem; }
+    .legacy-filter-icon { color: #475569; display: flex; align-items: center; padding-bottom: 0.2rem; }
+    .legacy-search-input { border: none; border-bottom: 1px solid #10b981; background: transparent; padding: 0.3rem 0; font-size: 0.85rem; width: 180px; outline: none; color: #334155; font-weight: 500; transition: border-color 0.2s; }
+    .legacy-search-input:focus { border-bottom: 2px solid #059669; }
+
     .content-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: visible; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
     
     .data-table { width: 100%; border-collapse: collapse; }
@@ -524,7 +747,30 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
     .action-btn.edit:hover { background: rgba(245, 158, 11, 0.15); }
     .action-btn.delete { background: rgba(239, 68, 68, 0.08); color: #dc2626; }
     .action-btn.delete:hover { background: rgba(239, 68, 68, 0.15); }
+
+    /* Legacy Action Links */
+    .action-link { font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+    .action-link:hover { opacity: 0.7; text-decoration: underline; }
+    .text-green { color: #10b981; }
     
+    .legacy-header-icon { font-size: 0.6rem; color: #64748b; margin-left: 0.3rem; }
+    
+    /* Legacy Footer & Pagination */
+    .legacy-scroll-bar { margin: 0 1rem; padding: 0.5rem 0; display: flex; align-items: center; }
+    .scroll-track { height: 10px; background: #e2e8f0; border-radius: 10px; width: 100%; position: relative; display: flex; align-items: center; padding: 0 2px; }
+    .scroll-thumb { height: 6px; width: 40%; background: #94a3b8; border-radius: 6px; position: absolute; left: 2px; }
+    
+    .legacy-footer-container { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; }
+    .footer-left { font-size: 0.85rem; color: #64748b; font-weight: 500; }
+    .footer-right { display: flex; align-items: center; gap: 1.5rem; }
+    .filtering-text { font-size: 0.8rem; color: #64748b; }
+    
+    .pagination-container-legacy { display: flex; align-items: center; gap: 0.3rem; }
+    .pag-btn-legacy { padding: 0.3rem 0.6rem; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 4px; color: #475569; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .pag-btn-legacy:hover:not(:disabled) { border-color: #cbd5e1; background: #f1f5f9; }
+    .pag-btn-legacy:disabled { opacity: 0.5; cursor: not-allowed; }
+    .pag-btn-legacy.active { background: #10b981; color: white; border-color: #10b981; }
+
     .header-with-dropdown { position: relative; cursor: pointer; user-select: none; }
     .header-cell-content { display: flex; align-items: center; gap: 0.4rem; width: fit-content; }
     .dropdown-arrow-icon { font-size: 0.65rem; color: #94a3b8; transition: color 0.15s; }
@@ -569,6 +815,24 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
     .column-list label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #334155; cursor: pointer; font-weight: 600; }
     .dropdown-item { padding: 0.65rem 1rem; font-size: 0.85rem; color: #334155; cursor: pointer; transition: background 0.15s; font-weight: 600; }
     .dropdown-item:hover { background: #f1f5f9; }
+    
+    /* Popover Filters */
+    .search-input { width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8rem; margin-bottom: 0.5rem; box-sizing: border-box; }
+    .search-input:focus { outline: none; border-color: #10b981; }
+    .suggestions { margin-top: 0.5rem; }
+    .suggestion-label { font-size: 0.65rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 0.4rem; display: block; }
+    .suggestion-item { font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 6px; cursor: pointer; color: #64748b; }
+    .suggestion-item:hover { background: #f1f5f9; color: #1e293b; }
+    .range-group { display: grid; gap: 0.75rem; }
+    .range-field label { font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 0.25rem; display: block; }
+
+    /* Legacy Form Screen */
+    .legacy-form-container { background: #fff; display: flex; flex-direction: column; }
+    .legacy-field-row { display: flex; flex-direction: column; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0; }
+    .legacy-field-label { font-size: 0.7rem; color: #94a3b8; margin-bottom: 0.2rem; font-weight: 600; text-transform: capitalize; }
+    .legacy-field-value { font-size: 0.85rem; color: #1e293b; min-height: 1.2rem; }
+    .legacy-field-value input[type="text"], .legacy-field-value input[type="number"], .legacy-field-value select, .legacy-field-value textarea { border: 1px solid #cbd5e1; padding: 0.4rem; border-radius: 4px; font-size: 0.85rem; color: #1e293b; box-sizing: border-box; }
+    .legacy-field-value input:focus, .legacy-field-value select:focus, .legacy-field-value textarea:focus { outline: none; border-color: #10b981; }
     
     /* Modals */
     .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.35); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; animation: fadeIn 0.25s ease; }
@@ -634,14 +898,26 @@ export class ProductosCatalogoComponent implements OnInit {
 
   // Actions & Popover States
   searchText = signal<string>('');
-  activeFilterState = signal<'all' | 'active' | 'inactive'>('all');
-  sortActiveState = signal<'asc' | 'desc' | null>(null);
+  
+  // Header Dropdowns and Filtering
+  activeHeaderDropdown = signal<string | null>(null);
+  sortState = signal<{col: string, dir: 'asc'|'desc'} | null>(null);
+
+  filterCategoria = signal<string>('');
+  filterProductoBase = signal<string>('');
+  filterClave = signal<string>('');
+  filterNombre = signal<string>('');
+  filterDescripcion = signal<string>('');
+  filterTipoMaterial = signal<string>('');
+  filterSAE = signal<string>('');
+  filterPrecioMin = signal<number | null>(null);
+  filterPrecioMax = signal<number | null>(null);
+  activeFilterState = signal<'all' | 'active' | 'inactive'>('all'); // Re-used for Activo column
   
   showColumnSelector = signal<boolean>(false);
   showExportOptions = signal<boolean>(false);
-  showActiveHeaderDropdown = signal<boolean>(false);
   
-  visibleColumns = signal<string[]>(['clave', 'nombre', 'categoria', 'activo']);
+  visibleColumns = signal<string[]>(['categoria', 'productoBase', 'clave', 'nombre', 'descripcion', 'precioUnitario', 'tipoMaterial', 'activo', 'productoSAE']);
 
   // Pagination Signals
   currentPage = signal<number>(1);
@@ -658,48 +934,121 @@ export class ProductosCatalogoComponent implements OnInit {
 
   load() {
     this.loading.set(true);
+
+    const testData: any[] = [
+      { id: 't1', categoria: 'Materia Prima', productoBase: 'Resina', clave: 'MP001', nombre: 'Industrial Transparent Resin', descripcion: 'Resina base', tipoMaterial: 'Polímero', isActive: true, productoSAE: 'SAE-001', precioUnitario: 125.50 },
+      { id: 't2', categoria: 'Materia Prima', productoBase: 'Pigmento', clave: 'MP002', nombre: 'Industrial Blue Pigment', descripcion: 'Pigmento azul oscuro', tipoMaterial: 'Colorante', isActive: true, productoSAE: 'SAE-002', precioUnitario: 89.75 },
+      { id: 't3', categoria: 'Empaque', productoBase: 'Cartón', clave: 'EM003', nombre: 'Caja Standard 50x50', descripcion: 'Caja corrugada', tipoMaterial: 'Cartón', isActive: true, productoSAE: 'SAE-003', precioUnitario: 15.20 },
+      { id: 't4', categoria: 'Consumible', productoBase: 'Cinta', clave: 'CO004', nombre: 'Cinta Adhesiva Industrial', descripcion: 'Cinta 3M', tipoMaterial: 'Adhesivo', isActive: false, productoSAE: 'SAE-004', precioUnitario: 45.00 },
+      { id: 't5', categoria: 'Materia Prima', productoBase: 'Resina', clave: 'MP005', nombre: 'Resina Blanca', descripcion: 'Resina base blanca', tipoMaterial: 'Polímero', isActive: true, productoSAE: 'SAE-001', precioUnitario: 130.00 },
+      { id: 't6', categoria: 'Empaque', productoBase: 'Plástico', clave: 'EM006', nombre: 'Bolsa de polietileno', descripcion: 'Bolsa transparente', tipoMaterial: 'Polímero', isActive: true, productoSAE: 'SAE-005', precioUnitario: 5.50 },
+      { id: 't7', categoria: 'Herramienta', productoBase: 'Acero', clave: 'HE007', nombre: 'Cuchilla de corte', descripcion: 'Repuesto de cuchilla', tipoMaterial: 'Metal', isActive: true, productoSAE: 'SAE-006', precioUnitario: 450.00 },
+      { id: 't8', categoria: 'Materia Prima', productoBase: 'Pigmento', clave: 'MP008', nombre: 'Pigmento Rojo', descripcion: 'Pigmento en polvo', tipoMaterial: 'Colorante', isActive: true, productoSAE: 'SAE-002', precioUnitario: 95.00 },
+      { id: 't9', categoria: 'Materia Prima', productoBase: 'Pigmento', clave: 'MP009', nombre: 'Pigmento Verde', descripcion: 'Para extrusión', tipoMaterial: 'Colorante', isActive: false, productoSAE: 'SAE-002', precioUnitario: 92.50 },
+      { id: 't10', categoria: 'Empaque', productoBase: 'Cartón', clave: 'EM010', nombre: 'Caja Reforzada', descripcion: 'Caja triple corrugado', tipoMaterial: 'Cartón', isActive: true, productoSAE: 'SAE-003', precioUnitario: 28.00 },
+      { id: 't11', categoria: 'Consumible', productoBase: 'Lubricante', clave: 'CO011', nombre: 'Aceite Hidráulico', descripcion: 'Tambor 20L', tipoMaterial: 'Químico', isActive: true, productoSAE: 'SAE-007', precioUnitario: 1200.00 },
+      { id: 't12', categoria: 'Materia Prima', productoBase: 'Resina', clave: 'MP012', nombre: 'Resina Reciclada', descripcion: 'Polímero mixto', tipoMaterial: 'Polímero', isActive: true, productoSAE: 'SAE-001', precioUnitario: 85.00 },
+      { id: 't13', categoria: 'Herramienta', productoBase: 'Aluminio', clave: 'HE013', nombre: 'Soporte extruidor', descripcion: 'Pieza de repuesto', tipoMaterial: 'Metal', isActive: true, productoSAE: 'SAE-006', precioUnitario: 850.00 },
+      { id: 't14', categoria: 'Consumible', productoBase: 'Cinta', clave: 'CO014', nombre: 'Cinta Doble Cara', descripcion: 'Rollo 50m', tipoMaterial: 'Adhesivo', isActive: true, productoSAE: 'SAE-004', precioUnitario: 75.00 },
+      { id: 't15', categoria: 'Materia Prima', productoBase: 'Aditivo', clave: 'MP015', nombre: 'Aditivo UV', descripcion: 'Protección solar', tipoMaterial: 'Químico', isActive: true, productoSAE: 'SAE-008', precioUnitario: 340.00 }
+    ];
+
     this.svc.getProductos().subscribe({
       next: data => {
-        this.items.set(data);
+        let mergedData = [...(data || [])];
+        testData.forEach(testItem => {
+          if (!mergedData.find(p => p.clave === testItem.clave)) {
+            mergedData.push(testItem);
+          }
+        });
+        this.items.set(mergedData);
         this.loading.set(false);
       },
-      error: () => this.loading.set(false)
+      error: (err) => {
+        console.warn('API Error, loading fallback test data', err);
+        this.items.set(testData);
+        this.loading.set(false);
+      }
     });
+  }
+
+  getTop3Frequent(field: string): string[] {
+    const counts = new Map<string, number>();
+    this.items().forEach(item => {
+      const val = (item as any)[field];
+      if (val !== undefined && val !== null && val !== '') {
+        const strVal = String(val);
+        counts.set(strVal, (counts.get(strVal) || 0) + 1);
+      }
+    });
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(e => e[0]);
   }
 
   filteredItems = computed(() => {
     let list = this.items();
 
-    // Text Search
     const search = this.searchText().trim().toLowerCase();
     if (search) {
-      list = list.filter(p => 
-        p.nombre.toLowerCase().includes(search) || 
-        p.clave.toLowerCase().includes(search) ||
-        (p.categoria || '').toLowerCase().includes(search)
-      );
+      list = list.filter(op => op.nombre.toLowerCase().includes(search) || op.clave.toLowerCase().includes(search));
     }
 
-    // Active State Filter
+    const fCat = this.filterCategoria().trim().toLowerCase();
+    if (fCat) list = list.filter(item => (item.categoria || '').toLowerCase().includes(fCat));
+
+    const fBase = this.filterProductoBase().trim().toLowerCase();
+    if (fBase) list = list.filter(item => (item as any).productoBase?.toLowerCase().includes(fBase));
+
+    const fClave = this.filterClave().trim().toLowerCase();
+    if (fClave) list = list.filter(item => (item.clave || '').toLowerCase().includes(fClave));
+
+    const fNombre = this.filterNombre().trim().toLowerCase();
+    if (fNombre) list = list.filter(item => (item.nombre || '').toLowerCase().includes(fNombre));
+
+    const fDesc = this.filterDescripcion().trim().toLowerCase();
+    if (fDesc) list = list.filter(item => (item.descripcion || '').toLowerCase().includes(fDesc));
+
+    const fMat = this.filterTipoMaterial().trim().toLowerCase();
+    if (fMat) list = list.filter(item => (item as any).tipoMaterial?.toLowerCase().includes(fMat));
+
+    const fSAE = this.filterSAE().trim().toLowerCase();
+    if (fSAE) list = list.filter(item => (item.productoSAE || '').toLowerCase().includes(fSAE));
+
+    const pMin = this.filterPrecioMin();
+    if (pMin !== null) list = list.filter(item => (item.precioUnitario || 0) >= pMin);
+
+    const pMax = this.filterPrecioMax();
+    if (pMax !== null) list = list.filter(item => (item.precioUnitario || 0) <= pMax);
+
     const filter = this.activeFilterState();
     if (filter === 'active') {
-      list = list.filter(p => p.isActive);
+      list = list.filter(op => op.isActive);
     } else if (filter === 'inactive') {
-      list = list.filter(p => !p.isActive);
+      list = list.filter(op => !op.isActive);
     }
 
-    // Active State Sorting
-    const sort = this.sortActiveState();
-    if (sort === 'asc') {
-      list = [...list].sort((a, b) => (a.isActive === b.isActive ? 0 : a.isActive ? 1 : -1));
-    } else if (sort === 'desc') {
-      list = [...list].sort((a, b) => (a.isActive === b.isActive ? 0 : a.isActive ? -1 : 1));
+    const sort = this.sortState();
+    if (sort) {
+      list = [...list].sort((a: any, b: any) => {
+        const valA = a[sort.col];
+        const valB = b[sort.col];
+        if (sort.col === 'isActive') {
+           return sort.dir === 'asc' ? (valA === valB ? 0 : valA ? 1 : -1) : (valA === valB ? 0 : valA ? -1 : 1);
+        }
+        if (typeof valA === 'number' && typeof valB === 'number') {
+          return sort.dir === 'asc' ? valA - valB : valB - valA;
+        }
+        const strA = String(valA || '').toLowerCase();
+        const strB = String(valB || '').toLowerCase();
+        return sort.dir === 'asc' ? strA.localeCompare(strB) : strB.localeCompare(strA);
+      });
     }
 
     return list;
   });
 
-  // Pagination computed properties
   paginatedItems = computed(() => {
     const start = (this.currentPage() - 1) * this.pageSize();
     return this.filteredItems().slice(start, start + this.pageSize());
@@ -709,35 +1058,18 @@ export class ProductosCatalogoComponent implements OnInit {
     return Math.ceil(this.filteredItems().length / this.pageSize()) || 1;
   });
 
-  // Toggles and cycle filters
-  cycleActiveFilterState() {
-    const current = this.activeFilterState();
-    if (current === 'all') {
-      this.activeFilterState.set('active');
-    } else if (current === 'active') {
-      this.activeFilterState.set('inactive');
-    } else {
-      this.activeFilterState.set('all');
-    }
-    this.currentPage.set(1);
-  }
-
   toggleFilterDropdown(event: Event) {
     event.stopPropagation();
     this.showFilterDropdown.update(v => !v);
     this.showExportOptions.set(false);
-    this.showActiveHeaderDropdown.set(false);
+    this.activeHeaderDropdown.set(null);
   }
 
   clearFilters() {
-    this.activeFilterState.set('all');
     this.searchText.set('');
-    this.showFilterDropdown.set(false);
+    this.activeFilterState.set('all');
+    this.sortState.set(null);
     this.currentPage.set(1);
-  }
-
-  saveFilterAs() {
-    alert('Save filter as... not implemented yet');
     this.showFilterDropdown.set(false);
   }
 
@@ -745,20 +1077,34 @@ export class ProductosCatalogoComponent implements OnInit {
     this.showColumnModal.set(false);
   }
 
+  saveFilterAs() {
+    alert('Save filter as... not implemented yet');
+    this.showFilterDropdown.set(false);
+  }
+
+  toggleColumnDropdown(event: Event) {
+    event.stopPropagation();
+    this.showColumnSelector.update(v => !v);
+    this.showExportOptions.set(false);
+    this.activeHeaderDropdown.set(null);
+  }
+
   toggleExportDropdown(event: Event) {
     event.stopPropagation();
     this.showExportOptions.update(v => !v);
     this.showColumnSelector.set(false);
-    this.showActiveHeaderDropdown.set(false);
-    this.showFilterDropdown.set(false);
+    this.activeHeaderDropdown.set(null);
   }
 
-  toggleActiveHeaderDropdown(event: Event) {
+  toggleHeaderDropdown(col: string, event: Event) {
     event.stopPropagation();
-    this.showActiveHeaderDropdown.update(v => !v);
-    this.showColumnSelector.set(false);
-    this.showExportOptions.set(false);
-    this.showFilterDropdown.set(false);
+    if (this.activeHeaderDropdown() === col) {
+      this.activeHeaderDropdown.set(null);
+    } else {
+      this.activeHeaderDropdown.set(col);
+      this.showColumnSelector.set(false);
+      this.showExportOptions.set(false);
+    }
   }
 
   isColVisible(colName: string): boolean {
@@ -775,20 +1121,19 @@ export class ProductosCatalogoComponent implements OnInit {
     });
   }
 
-  // Header Dropdown Actions
-  sortActive(dir: 'asc' | 'desc') {
-    this.sortActiveState.set(dir);
-    this.showActiveHeaderDropdown.set(false);
+  sortBy(col: string, dir: 'asc' | 'desc') {
+    this.sortState.set({ col, dir });
+    this.activeHeaderDropdown.set(null);
   }
 
-  pinColumn(dir: string) {
-    alert(`Columna de Activo fijada a la ${dir} exitosamente.`);
-    this.showActiveHeaderDropdown.set(false);
+  pinColumn(col: string, dir: string) {
+    alert(`Columna ${col} fijada a la ${dir} exitosamente.`);
+    this.activeHeaderDropdown.set(null);
   }
 
   filterActiveState(state: 'all' | 'active' | 'inactive') {
     this.activeFilterState.set(state);
-    this.showActiveHeaderDropdown.set(false);
+    this.activeHeaderDropdown.set(null);
     this.currentPage.set(1);
   }
 
@@ -866,7 +1211,7 @@ export class ProductosCatalogoComponent implements OnInit {
     this.showSaeDropdown.set(false);
     this.showColumnSelector.set(false);
     this.showExportOptions.set(false);
-    this.showActiveHeaderDropdown.set(false);
+    this.activeHeaderDropdown.set(null);
   }
 
   openEditModal(item: Producto) {
@@ -876,7 +1221,7 @@ export class ProductosCatalogoComponent implements OnInit {
     this.showSaeDropdown.set(false);
     this.showColumnSelector.set(false);
     this.showExportOptions.set(false);
-    this.showActiveHeaderDropdown.set(false);
+    this.activeHeaderDropdown.set(null);
   }
 
   openCreate() {
@@ -892,7 +1237,7 @@ export class ProductosCatalogoComponent implements OnInit {
     this.showSaeDropdown.set(false);
     this.showColumnSelector.set(false);
     this.showExportOptions.set(false);
-    this.showActiveHeaderDropdown.set(false);
+    this.activeHeaderDropdown.set(null);
   }
 
   closeModal() {

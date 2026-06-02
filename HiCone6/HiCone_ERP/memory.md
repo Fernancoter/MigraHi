@@ -84,6 +84,7 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
     - **Ubicación**: Creado en `/produccion/productos` y registrado en `app.routes.ts`.
     - **Estructura Premium**: Réplica exacta de la grilla de Operarios con barra superior, selector de columnas y exportación a Excel (CSV)/PDF.
     - **Modal Información General**: Implementa campos "SAE Product" (con selector interactivo y lista desplegable de códigos SAE simulados que autocompletan el nombre) y "Categoría" (cargada dinámicamente desde el backend).
+    - **Filtros e Interactividad en Cabeceras**: Se incorporó el sistema de Popovers Dinámicos (búsquedas en vivo, ordenamiento, filtrado por rangos de precio unitario y cálculo autogenerado de valores más frecuentes) idéntico a la experiencia del Tablero de Extrusión para absolutamente todas las columnas.
 - [x] **Ajustes y Reestructuración de la Sección de Inicio del Módulo de Extrusión**:
     - **Exportación a PDF Corregida**: Se migró `jspdf-autotable` a la importación ESM estándar `import autoTable from 'jspdf-autotable'` y se actualizó la llamada para solucionar el error en tiempo de ejecución.
     - **Limpieza Estructural**: Se removieron todos los elementos agregados por error del submódulo de Operarios de la pantalla de inicio, dejándola limpia en su estado nativo de monitoreo.
