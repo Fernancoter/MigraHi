@@ -127,7 +127,7 @@ import { CommonModule } from '@angular/common';
           </div>
           
           <!-- Action button -->
-          <button style="background: #4caf50; color: white; font-weight: 600; padding: 0.6rem 1.5rem; border: none; border-radius: 2px; margin-bottom: 2rem; cursor: pointer; font-size: 0.75rem; text-transform: uppercase;">PROGRAMAR O CONSULTAR</button>
+          <button (click)="showTables.set(true)" style="background: #4caf50; color: white; font-weight: 600; padding: 0.6rem 1.5rem; border: none; border-radius: 2px; margin-bottom: 2rem; cursor: pointer; font-size: 0.75rem; text-transform: uppercase;">PROGRAMAR O CONSULTAR</button>
           
           <!-- Inner Tabs -->
           <div class="inner-tabs-container" style="border: 1px solid #cbd5e1; border-radius: 2px;">
@@ -161,7 +161,72 @@ import { CommonModule } from '@angular/common';
               }
             </div>
             <div class="inner-tab-content" style="min-height: 80px; background: white;">
-              <!-- Empty space as in screenshot -->
+              @if (showTables()) {
+                <div style="padding: 1.5rem;">
+                  @for (turno of [
+                    { name: '1er Turno', time: '00:00', op: 'LUIS CESAR OROPEZA ORTEGA', idStart: 22440 },
+                    { name: '2do Turno', time: '08:00', op: 'GUADALUPE ROMERO TORRES', idStart: 22447 },
+                    { name: '3er Turno', time: '15:00', op: 'FILEMON VILCHIS ROMERO', idStart: 22454 }
+                  ]; track turno.name) {
+                    <div style="border: 1px solid #cbd5e1; border-radius: 2px; margin-bottom: 1.5rem;">
+                      <div style="padding: 0.5rem; display: flex; align-items: center; border-bottom: 1px solid #cbd5e1;">
+                        <span class="icon" style="background: #4caf50; padding: 0.1rem 0.3rem; border-radius: 2px; color: white; margin-right: 0.5rem; font-size: 0.6rem;">◆</span>
+                        <span style="color: #475569; font-weight: 600; font-size: 0.8rem;">{{ turno.name }}</span>
+                      </div>
+                      <div style="padding: 1rem; overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; min-width: 800px; font-size: 0.75rem; color: #475569;">
+                          <thead>
+                            <tr style="border-bottom: 2px solid #f1f5f9; text-align: left;">
+                              <th style="padding: 0.5rem; font-weight: bold;">Extrusión ID</th>
+                              <th style="padding: 0.5rem; font-weight: bold;">Estado</th>
+                              <th style="padding: 0.5rem; font-weight: bold;">Fecha</th>
+                              <th style="padding: 0.5rem; font-weight: bold;">Hora</th>
+                              <th style="padding: 0.5rem; font-weight: bold;">Día</th>
+                              <th style="padding: 0.5rem; font-weight: bold;">Producto</th>
+                              <th style="padding: 0.5rem; font-weight: bold; text-align: center;">Plan</th>
+                              <th style="padding: 0.5rem; font-weight: bold; text-align: center;">Producido</th>
+                              <th style="padding: 0.5rem; font-weight: bold;">Operador</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            @for (dia of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']; track dia; let i = $index) {
+                              <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 0.6rem 0.5rem;">{{ turno.idStart + i }}</td>
+                                <td style="padding: 0.6rem 0.5rem;">Por Programar</td>
+                                <td style="padding: 0.6rem 0.5rem;">0{{ i + 1 }}/06/26 {{ turno.time }}</td>
+                                <td style="padding: 0.6rem 0.5rem;">
+                                  <div style="display: flex; align-items: center; border-bottom: 1px solid #cbd5e1; width: max-content;">
+                                    <span style="margin-right: 0.5rem;">{{ turno.time }}</span>
+                                    <span style="color: #cbd5e1; font-size: 0.9rem;">📅</span>
+                                  </div>
+                                </td>
+                                <td style="padding: 0.6rem 0.5rem;">{{ dia }}</td>
+                                <td style="padding: 0.6rem 0.5rem;">
+                                  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #cbd5e1; width: 100px;">
+                                    <span>74757</span>
+                                    <span style="font-size: 0.5rem;">▼</span>
+                                  </div>
+                                </td>
+                                <td style="padding: 0.6rem 0.5rem; text-align: center;">0</td>
+                                <td style="padding: 0.6rem 0.5rem; text-align: center;">0</td>
+                                <td style="padding: 0.6rem 0.5rem;">
+                                  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #cbd5e1; width: max-content; gap: 0.5rem;">
+                                    <span>{{ turno.op }}</span>
+                                    <span style="font-size: 0.5rem;">▼</span>
+                                  </div>
+                                </td>
+                              </tr>
+                            }
+                          </tbody>
+                        </table>
+                        <div style="margin-top: 1rem;">
+                          <button style="background: #4caf50; color: white; font-weight: 600; padding: 0.5rem 1.5rem; border: none; border-radius: 2px; cursor: pointer; font-size: 0.75rem;">GUARDAR</button>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
             </div>
           </div>
           
@@ -268,6 +333,7 @@ export class TurnosSemanaComponent {
   
   showGridMenu = signal(false);
   showCalendarMenu = signal<'inicio' | 'fin' | null>(null);
+  showTables = signal(false);
 
   setMainTab(tab: 'extrusoras' | 'prensas', event?: Event) {
     if (event) event.stopPropagation();
