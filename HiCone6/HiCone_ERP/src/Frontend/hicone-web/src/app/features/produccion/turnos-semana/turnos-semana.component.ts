@@ -33,11 +33,40 @@ import { CommonModule } from '@angular/common';
         <div class="tab-content" style="padding: 1.5rem;">
           
           <!-- Info banner -->
-          <div class="info-banner" style="display: flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 2px; padding: 1.2rem; margin-bottom: 2rem;">
-            <span class="icon text-white" style="background: #4caf50; border-radius: 2px; display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-right: 0.8rem;">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.41l9 9c.36.36.86.58 1.41.58s1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41s-.22-1.05-.59-1.41zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>
-            </span>
-            <span style="color: #475569; font-weight: 500; font-size: 0.85rem;">Seleccione el inicio de semana para generar la plantilla de turnos</span>
+          <div class="info-banner" style="border: 1px solid #cbd5e1; border-radius: 2px; padding: 1.2rem; margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+              <span class="icon text-white" style="background: #4caf50; border-radius: 2px; display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-right: 0.8rem;">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.41l9 9c.36.36.86.58 1.41.58s1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41s-.22-1.05-.59-1.41zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>
+              </span>
+              <span style="color: #475569; font-weight: 500; font-size: 0.85rem;">Seleccione el inicio de semana para generar la plantilla de turnos</span>
+            </div>
+            
+            <!-- Legacy Grid Header -->
+            <div class="legacy-grid-header" style="max-width: 500px; font-family: Arial, sans-serif; border: 1px solid #cbd5e1;">
+              <!-- Grouping area -->
+              <div style="background: #94a3b8; color: #1e293b; padding: 0.3rem 0.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem;">
+                <span>Arrastre los filtros aquí</span>
+                <span style="font-size: 1.1rem; cursor: pointer; color: #334155; font-weight: bold;">≡</span>
+              </div>
+              <!-- Column headers -->
+              <div style="display: flex; background: #005a70; color: white; font-size: 0.75rem; font-weight: bold;">
+                <div style="flex: 1.5; padding: 0.3rem 0.5rem; border-right: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: space-between;">
+                  Producto <span style="font-size: 0.5rem;">▲</span>
+                </div>
+                <div style="flex: 1.2; padding: 0.3rem 0.5rem; border-right: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: space-between;">
+                  Extrusora <span style="font-size: 0.5rem;">▲</span>
+                </div>
+                <div style="flex: 1.3; padding: 0.3rem 0.5rem; border-right: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center;">
+                  Programado
+                </div>
+                <div style="flex: 1; padding: 0.3rem 0.5rem; border-right: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center;">
+                  Fabricado
+                </div>
+                <div style="flex: 1; padding: 0.3rem 0.5rem; display: flex; align-items: center; justify-content: center;">
+                  Diferencia
+                </div>
+              </div>
+            </div>
           </div>
           
           <!-- Date fields -->
