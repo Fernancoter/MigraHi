@@ -88,6 +88,15 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
 - [x] **Ajustes y Reestructuración de la Sección de Inicio del Módulo de Extrusión**:
     - **Exportación a PDF Corregida**: Se migró `jspdf-autotable` a la importación ESM estándar `import autoTable from 'jspdf-autotable'` y se actualizó la llamada para solucionar el error en tiempo de ejecución.
     - **Limpieza Estructural**: Se removieron todos los elementos agregados por error del submódulo de Operarios de la pantalla de inicio, dejándola limpia en su estado nativo de monitoreo.
+- [x] **Refactor de Catálogo de Productos (Vista Legacy)**:
+    - **Rediseño Full-Page**: Eliminación del modal flotante y migración de "Visualizar/Modificar" a una vista de formulario a pantalla completa con navegación interna.
+    - **Estructura Clásica**: Maquetación de la cabecera invertida, acordeón interactivo de Información General con diseño grid nativo.
+    - **Auditoría visual**: Maquetación de las tablas de "Historial de Auditoría" (Change Log y Detail).
+- [x] **Nuevo Módulo Front-End: Turnos por Semana**:
+    - **Enrutamiento**: Pantalla accesible en `/produccion/turnos-semana` y enlazada correctamente en la barra lateral.
+    - **Gestión de Pestañas**: Sistema dinámico entre "Extrusoras" y "Prensas" con actualización en tiempo real de cabeceras de tablas.
+    - **Interactividad Flotante**: Se integraron paneles tipo popover para el Calendario (selección de Fecha Inicio/Fin) y menú de Acciones del Grid (Exportación y ocultamiento de columnas).
+    - **Distribución de Turnos**: Maquetación de las tres parrillas (1er, 2do y 3er Turno) con soporte para selectores de operadores y controles semanales (Lunes a Domingo).
 
 
 ## Technical Decisions
