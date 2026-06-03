@@ -1,0 +1,45 @@
+# Excluir archivos de base de datos SQL Server de GeneXus (Muy pesados)
+*.mdf
+*.ldf
+
+# Excluir archivos temporales y empaquetados locales
+*.lock
+*.tmp
+*.zip
+*.log
+OutputLogs/
+Locks/
+IndexLocks/
+IndexProps/
+
+# Excluir carpetas de extracción temporal
+HiCone3_extracted/
+xpz_extracted/
+xpz_extracted_full/
+
+# Excluir carpetas de generación y compilación de GeneXus
+CodigosHi/
+FCO/
+FTIndex/
+GXSPC*/
+xpz_content/
+
+# Excluir carpetas de compilación de .NET (C#)
+**/bin/
+**/obj/
+
+# Excluir dependencias y compilación de Angular
+**/node_modules/
+**/.angular/
+**/.vs/
+**/.idea/
+**/.vscode/
+dist/
+
+# Archivos de entorno sensibles
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+

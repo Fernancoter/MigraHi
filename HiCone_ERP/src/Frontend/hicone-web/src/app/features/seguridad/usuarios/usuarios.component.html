@@ -1,0 +1,547 @@
+<div class="module-page animate-fade-in">
+  <div *ngIf="viewState() === 'main'">
+  <!-- Header -->
+  <header class="module-header">
+    <div class="title-area">
+      <nav class="breadcrumb">Seguridad › Usuarios</nav>
+      <h1>👥 Gestión de Usuarios</h1>
+      <p>Administra las cuentas de acceso al sistema Hi-Cone ERP.</p>
+    </div>
+    
+    <div class="header-actions">
+      <!-- Barra de Búsqueda Clásica -->
+      <div class="search-container">
+        <input type="text" placeholder="Buscar usuario..." class="search-input"
+               [value]="activeFilters().search"
+               (input)="onSearch($event)">
+      </div>
+
+      <!-- Botón Gestor de Filtros (Funnel) -->
+      <button class="btn-icon-square" [class.active]="showFilterPanel()" (click)="toggleFilterPanel()" title="Filtros Avanzados">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+      </button>
+
+      <!-- Agrupar Elementos -->
+      <div class="dropdown-container">
+        <button class="btn-secondary dropdown-toggle" (click)="toggleGroupMenu()">
+          Agrupar ▾
+        </button>
+        <div class="dropdown-menu" *ngIf="showGroupMenu()">
+          <button class="dropdown-item" (click)="setGrouping('none')">Desagrupar</button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" (click)="setGrouping('gender')">Por Género</button>
+          <button class="dropdown-item" (click)="setGrouping('auth')">Por Autenticación</button>
+          <button class="dropdown-item" (click)="setGrouping('role')">Por Rol</button>
+        </div>
+      </div>
+
+      <!-- Importar/Exportar -->
+      <div class="dropdown-container">
+        <button class="btn-secondary dropdown-toggle" (click)="toggleImportMenu()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" *ngIf="showImportMenu()">
+          <button class="dropdown-item" (click)="importExcel()">Importar desde Excel</button>
+          <button class="dropdown-item" (click)="exportExcel()">Exportar a Excel</button>
+        </div>
+      </div>
+
+      <button class="btn-primary" (click)="openModal()">+ Nuevo Usuario</button>
+    </div>
+  </header>
+
+  <!-- Panel de Filtros Robustos -->
+  <div class="filter-panel animate-scale-up" *ngIf="showFilterPanel()">
+    <div class="filter-panel-header">
+      <h3>Filtros Avanzados</h3>
+      <button class="btn-text-danger" (click)="clearFilters()">Limpiar Filtros</button>
+    </div>
+    
+    <div class="filter-grid-robust">
+      <div class="filter-group-robust">
+        <label>Estado de Cuenta</label>
+        <select class="form-control" [value]="activeFilters().status" (change)="onFilterChange('status', $event)">
+          <option value="">Todos</option>
+          <option value="active">Activos</option>
+          <option value="inactive">Inactivos</option>
+          <option value="locked">Bloqueados</option>
+        </select>
+      </div>
+
+      <div class="filter-group-robust">
+        <label>Género</label>
+        <select class="form-control" [value]="activeFilters().gender" (change)="onFilterChange('gender', $event)">
+          <option value="">Todos</option>
+          <option value="none">Sin especificar</option>
+          <option value="F">Femenino</option>
+          <option value="M">Masculino</option>
+        </select>
+      </div>
+
+      <div class="filter-group-robust">
+        <label>Tipo Autenticación</label>
+        <select class="form-control" [value]="activeFilters().auth" (change)="onFilterChange('auth', $event)">
+          <option value="">Todos</option>
+          <option value="Local">Local</option>
+          <option value="GAM">GAM</option>
+          <option value="LDAP">LDAP</option>
+        </select>
+      </div>
+
+      <div class="filter-group-robust">
+        <label>Rol</label>
+        <select class="form-control" [value]="activeFilters().role" (change)="onFilterChange('role', $event)">
+          <option value="">Todos</option>
+          <option value="Sin rol">Sin rol</option>
+          <option *ngFor="let r of availableRoles" [value]="r.name">{{ r.name }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group-robust">
+        <label>Debe cambiar contraseña</label>
+        <select class="form-control" [value]="activeFilters().mustChangePwd" (change)="onFilterChange('mustChangePwd', $event)">
+          <option value="">Cualquiera</option>
+          <option value="true">Sí</option>
+          <option value="false">No</option>
+        </select>
+      </div>
+
+      <div class="filter-group-robust">
+        <label>ID Operador (Legado)</label>
+        <input type="text" class="form-control" placeholder="Ej. 123" [value]="activeFilters().operadorId" (input)="onFilterChange('operadorId', $event)">
+      </div>
+    </div>
+  </div>
+
+  <!-- Alertas -->
+  <div class="alert alert-error" *ngIf="errorMsg()">⚠️ {{ errorMsg() }}</div>
+  <div class="alert alert-success" *ngIf="successMsg()">✅ {{ successMsg() }}</div>
+
+  <!-- Contenedor Principal (Tabla) -->
+  <div class="data-container">
+    <div class="table-toolbar">
+      <span class="record-count">{{ filteredUsers().length }} registros encontrados</span>
+    </div>
+
+    <div class="loading-state" *ngIf="isLoading()">
+      <span class="spinner"></span> Cargando usuarios...
+    </div>
+
+    <ng-container *ngIf="!isLoading()">
+      <!-- Sin Agrupación -->
+      <table class="data-table gam-table" *ngIf="currentGrouping() === 'none'">
+        <ng-container *ngTemplateOutlet="tableHeaderTemplate"></ng-container>
+        <tbody>
+          <ng-container *ngTemplateOutlet="tableRowsTemplate; context: { $implicit: paginatedUsers() }"></ng-container>
+          <tr *ngIf="paginatedUsers().length === 0">
+            <td [attr.colspan]="visibleColumnCount()" class="empty-row">No se encontraron usuarios que coincidan con los filtros.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Paginador -->
+      <div class="pagination-controls" *ngIf="currentGrouping() === 'none' && totalPages() > 1" style="display: flex; justify-content: center; padding: 1rem; gap: 1rem; align-items: center; border-top: 1px solid #e2e8f0;">
+        <button class="btn-secondary" (click)="prevPage()" [disabled]="currentPage() === 1" style="padding: 0.4rem 0.8rem;">Ant</button>
+        <span style="font-size: 0.85rem; color: #64748b; font-weight: 600;">Página {{ currentPage() }} de {{ totalPages() }}</span>
+        <button class="btn-secondary" (click)="nextPage()" [disabled]="currentPage() === totalPages()" style="padding: 0.4rem 0.8rem;">Sig</button>
+      </div>
+
+      <!-- Con Agrupación -->
+      <div class="grouped-tables" *ngIf="currentGrouping() !== 'none'">
+         <div class="group-section" *ngFor="let group of groupedUsers()">
+            <h3 class="group-header">{{ group.key || 'No especificado' }} <span class="group-count">({{ group.users.length }})</span></h3>
+            <table class="data-table gam-table">
+              <ng-container *ngTemplateOutlet="tableHeaderTemplate"></ng-container>
+              <tbody>
+                <ng-container *ngTemplateOutlet="tableRowsTemplate; context: { $implicit: group.users }"></ng-container>
+              </tbody>
+            </table>
+         </div>
+         <div class="empty-row" *ngIf="groupedUsers().length === 0">No se encontraron usuarios.</div>
+      </div>
+    </ng-container>
+  </div>
+  </div>
+
+  <!-- Sub-vista: Permisos de Usuario -->
+  <div class="sub-view-container animate-fade-in" *ngIf="viewState() === 'permisos'">
+    <header class="module-header sub-header">
+      <div class="title-area">
+        <nav class="breadcrumb">Seguridad › Usuarios › Permisos</nav>
+        <h1>🔒 Permisos del Usuario</h1>
+        <p>Gestiona los permisos directos para el usuario: <strong>{{ selectedUserContext()?.username }}</strong></p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-secondary" (click)="closeSubView()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Volver a Usuarios
+        </button>
+      </div>
+    </header>
+
+    <div class="data-container">
+      <div class="table-toolbar" style="display: flex; justify-content: space-between; align-items: center;">
+        <span class="record-count">Asignación Directa de Permisos (Simulado)</span>
+        <div class="search-container">
+          <input type="text" placeholder="Buscar permiso..." class="search-input" [value]="searchPermisosQuery()" (input)="searchPermisosQuery.set($any($event.target).value)">
+        </div>
+      </div>
+      <table class="data-table gam-table">
+        <thead>
+          <tr>
+            <th class="icon-col"></th>
+            <th>Nombre</th>
+            <th>Código</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="4" class="empty-row text-muted">
+              Esta sección requiere endpoints específicos para la asignación de permisos a usuarios.<br>
+              Actualmente los permisos se obtienen a través de los Roles.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Templates para la tabla -->
+<ng-template #tableHeaderTemplate>
+  <thead>
+    <tr>
+      <!-- Selector de Columnas (Menú Hamburguesa) -->
+      <th class="icon-col">
+        <div class="dropdown-container">
+          <button class="gam-icon-btn column-selector-btn" (click)="toggleColumnMenu()" title="Seleccionar Columnas">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <div class="dropdown-menu columns-menu" *ngIf="showColumnMenu()">
+            <div class="menu-title">Columnas Visibles</div>
+            <label class="dropdown-item checkbox-item" *ngFor="let col of availableColumns">
+              <input type="checkbox" [checked]="col.visible" (change)="toggleColumn(col)"> {{ col.label }}
+            </label>
+          </div>
+        </div>
+      </th>
+      
+      <!-- Acciones Adicionales -->
+      <th class="icon-col"></th>
+      <th class="icon-col"></th>
+      <th *ngIf="isColVisible('roles')" class="icon-col-header" title="Roles">⚙️</th>
+      <th *ngIf="isColVisible('permisos')" class="icon-col-header" title="Permisos">🔒</th>
+      <th *ngIf="isColVisible('contrasena')" class="icon-col-header" title="Contraseña">🔑</th>
+      
+      <!-- Datos -->
+      <th *ngIf="isColVisible('login')">Nombre ▾</th>
+      <th *ngIf="isColVisible('nombre')">Nombre ▾</th>
+      <th *ngIf="isColVisible('apellido')">Apellido ▾</th>
+      <th *ngIf="isColVisible('email')">Email</th>
+      <th *ngIf="isColVisible('genero')">Género</th>
+      <th *ngIf="isColVisible('auth')">Auth</th>
+    </tr>
+  </thead>
+</ng-template>
+
+<ng-template #tableRowsTemplate let-users>
+  <tr *ngFor="let u of users">
+    <!-- Acciones Iconos -->
+    <td class="icon-cell"><button class="gam-icon-btn" (click)="openModal(u, true)" title="Visualizar">🔍</button></td>
+    <td class="icon-cell"><button class="gam-icon-btn edit-btn" (click)="openModal(u)" title="Editar">✏️</button></td>
+    <td class="icon-cell"><button class="gam-icon-btn del-btn" (click)="openDeleteModal(u)" title="Eliminar">❌</button></td>
+    <td class="icon-cell" *ngIf="isColVisible('roles')">
+      <div class="dropdown-container">
+        <button class="gam-icon-btn" (click)="toggleConfigMenu(u.id, $event)" title="Configuración">⚙️</button>
+        <div class="dropdown-menu config-menu" *ngIf="showUserConfigId() === u.id">
+          <div class="menu-title">Configuración de {{ u.username }}</div>
+          
+          <!-- Lógica de Operador -->
+          <ng-container *ngIf="u.operadorId">
+            <button class="dropdown-item" (click)="toggleOperatorStatus(u)">
+              {{ isOperatorActive(u) ? '🛑 Deshabilitar Operador' : '✅ Habilitar Operador' }}
+            </button>
+          </ng-container>
+          
+          <button class="dropdown-item" (click)="openPermisos(u)">🔒 Gestionar Permisos</button>
+          <button class="dropdown-item" (click)="openPasswordModal(u)">🔑 Cambiar Contraseña</button>
+        </div>
+      </div>
+    </td>
+    <td class="icon-cell" *ngIf="isColVisible('permisos')"><button class="gam-icon-btn" (click)="openPermisos(u)" title="Permisos">🔒</button></td>
+    <td class="icon-cell" *ngIf="isColVisible('contrasena')"><button class="gam-icon-btn" (click)="openPasswordModal(u)" title="Contraseña">🔑</button></td>
+    
+    <!-- Datos -->
+    <td *ngIf="isColVisible('login')"><a class="gam-link" href="javascript:void(0)" (click)="openModal(u, true)">{{ u.username }}</a></td>
+    <td *ngIf="isColVisible('nombre')">{{ u.firstName }}</td>
+    <td *ngIf="isColVisible('apellido')">{{ u.lastName }}</td>
+    <td *ngIf="isColVisible('email')" class="text-muted">{{ u.email }}</td>
+    <td *ngIf="isColVisible('genero')">{{ u.gender || '-' }}</td>
+    <td *ngIf="isColVisible('auth')">{{ u.authenticationType || 'Local' }}</td>
+  </tr>
+</ng-template>
+
+<!-- Modal CRUD -->
+<div class="modal-overlay" *ngIf="showModal()" (click)="closeModalOnOverlay($event)">
+  <div class="modal-box animate-scale-up" id="user-modal">
+    <div class="modal-header">
+      <h2>{{ editingUser ? 'Editar Usuario' : 'Nuevo Usuario' }}</h2>
+      <button class="modal-close" (click)="closeModal()">✕</button>
+    </div>
+
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="modal-form">
+      <!-- Avatar Section -->
+      <div class="avatar-section" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+        <img *ngIf="userForm.get('avatarUrl')?.value" [src]="userForm.get('avatarUrl')?.value" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0;">
+        <div *ngIf="!userForm.get('avatarUrl')?.value" style="width: 80px; height: 80px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #94a3b8; border: 2px solid #e2e8f0;">👤</div>
+        <div class="avatar-controls" *ngIf="!isViewMode()">
+          <label class="btn-secondary" style="cursor: pointer; padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+            📷 Cambiar Foto
+            <input type="file" style="display: none;" accept="image/*" (change)="onFileSelected($event)">
+          </label>
+        </div>
+      </div>
+
+      <!-- Layout a dos columnas replicando GAM -->
+      <div class="gam-form-layout">
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="gam-col">
+          <div class="form-group" *ngIf="editingUser">
+            <label>GUID</label>
+            <input type="text" class="form-control" [value]="editingUser.id" disabled>
+          </div>
+
+          <div class="form-group">
+            <label>Espacio de nombres</label>
+            <input type="text" formControlName="namespace" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>Nombre de usuario</label>
+            <input type="text" formControlName="username" class="form-control">
+            <span class="field-error" *ngIf="isInvalid('username')">Requerido</span>
+          </div>
+
+          <div class="form-group" *ngIf="!editingUser && !isViewMode()">
+            <label>Contraseña Inicial *</label>
+            <input type="password" formControlName="password" class="form-control">
+            <span class="field-error" *ngIf="isInvalid('password')">Mínimo 6 caracteres</span>
+          </div>
+
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" formControlName="firstName" class="form-control">
+            <span class="field-error" *ngIf="isInvalid('firstName')">Requerido</span>
+          </div>
+
+          <div class="form-group">
+            <label>Apellido</label>
+            <input type="text" formControlName="lastName" class="form-control">
+            <span class="field-error" *ngIf="isInvalid('lastName')">Requerido</span>
+          </div>
+
+          <div class="form-group">
+            <label>Género</label>
+            <select formControlName="gender" class="form-control">
+              <option value="">Seleccione...</option>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+              <option value="O">Otro</option>
+            </select>
+          </div>
+
+          <div class="form-group-checkbox">
+            <label class="checkbox-item">
+              <input type="checkbox" formControlName="cannotChangePassword">
+              No puede cambiar la contraseña
+            </label>
+          </div>
+
+          <div class="form-group-checkbox">
+            <label class="checkbox-item">
+              <input type="checkbox" formControlName="passwordNeverExpires">
+              La contraseña nunca expira
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>Política de seguridad</label>
+            <select formControlName="securityPolicyId" class="form-control">
+              <option value="">(Ninguna)</option>
+              <!-- Aquí irían las políticas cargadas -->
+            </select>
+          </div>
+
+          <div class="form-group" *ngIf="editingUser">
+            <label>Fecha de activación</label>
+            <input type="date" formControlName="activationDate" class="form-control">
+          </div>
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <div class="gam-col">
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" formControlName="email" class="form-control">
+            <span class="field-error" *ngIf="isInvalid('email')">Inválido</span>
+          </div>
+
+          <div class="form-group">
+            <label>Company Id</label>
+            <input type="number" formControlName="companyId" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>Operador Vinculado</label>
+            <select formControlName="operadorId" class="form-control">
+              <option [ngValue]="null">Seleccione un operador...</option>
+              <option *ngFor="let op of availableOperadores()" [value]="op.id">{{ op.operadorNombre }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="text" formControlName="phoneNumber" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>ID externo</label>
+            <input type="text" formControlName="externalId" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>Cumpleaños</label>
+            <input type="date" formControlName="birthday" class="form-control">
+          </div>
+
+          <div class="form-group-checkbox">
+            <label class="checkbox-item">
+              <input type="checkbox" formControlName="isActive">
+              ¿Está activo?
+            </label>
+          </div>
+
+          <div class="form-group-checkbox">
+            <label class="checkbox-item">
+              <input type="checkbox" formControlName="receivesInformation">
+              No quiero recibir información
+            </label>
+          </div>
+
+          <div class="form-group-checkbox">
+            <label class="checkbox-item">
+              <input type="checkbox" formControlName="mustChangePassword">
+              Debe cambiar la contraseña
+            </label>
+          </div>
+
+          <div class="form-group-checkbox">
+            <label class="checkbox-item">
+              <input type="checkbox" formControlName="isLockedOut">
+              ¿Está bloqueado?
+            </label>
+          </div>
+
+          <div class="form-group-checkbox">
+            <label class="checkbox-item">
+              <input type="checkbox" formControlName="isRepositoryEnabled">
+              ¿Está habilitado en el repositorio?
+            </label>
+          </div>
+          
+          <div class="form-group">
+            <label>Tipo Autenticación (Sistema)</label>
+            <select formControlName="authenticationType" class="form-control">
+              <option value="Local">Local</option>
+              <option value="GAM">GAM</option>
+              <option value="LDAP">LDAP</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Roles (Abajo de las dos columnas) -->
+      <div class="form-group full-width mt-3">
+        <label>Roles Asignados</label>
+        <div class="roles-checklist" [class.disabled-look]="isViewMode()">
+          <label class="role-check" *ngFor="let role of availableRoles">
+            <input type="checkbox" [value]="role.id"
+              [checked]="selectedRoleIds().includes(role.id)"
+              [disabled]="isViewMode()"
+              (change)="toggleRole(role.id, $event)">
+            <span>{{ role.name }}</span>
+          </label>
+          <span class="text-muted" *ngIf="availableRoles.length === 0">Sin roles disponibles.</span>
+        </div>
+      </div>
+
+      <!-- Botonera -->
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" (click)="closeModal()">
+          {{ isViewMode() ? 'Cerrar' : 'Cancelar' }}
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="isSaving()" *ngIf="!isViewMode()">
+          {{ isSaving() ? 'Guardando...' : (editingUser ? 'Guardar Cambios' : 'Confirmar') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Eliminar Usuario -->
+<div class="modal-overlay" *ngIf="deletingUser()" (click)="$event.target === $event.currentTarget && closeDeleteModal()">
+  <div class="modal-box animate-scale-up" style="max-width: 400px; text-align: center;">
+    <div class="modal-header" style="justify-content: center; border: none; padding-bottom: 0;">
+      <h2 style="color: #b91c1c;">Eliminar Usuario</h2>
+    </div>
+    <div style="padding: 1.5rem;">
+      <p style="margin-bottom: 1rem; color: #334155;">¿Estás seguro de que deseas eliminar este usuario?</p>
+      <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: left;">
+        <strong>{{ deletingUser()?.firstName }} {{ deletingUser()?.lastName }}</strong><br>
+        <span class="text-muted">{{ deletingUser()?.email }}</span><br>
+        <span class="text-muted">Login: {{ deletingUser()?.username }}</span>
+      </div>
+      <div class="modal-actions" style="justify-content: center; border: none; padding-top: 0;">
+        <button class="btn-secondary" (click)="closeDeleteModal()">Cancelar</button>
+        <button class="btn-primary" style="background: #ef4444; border-color: #ef4444;" (click)="confirmDeleteUser()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cambiar Contraseña -->
+<div class="modal-overlay" *ngIf="changingPasswordUser()" (click)="$event.target === $event.currentTarget && closePasswordModal()">
+  <div class="modal-box animate-scale-up" style="max-width: 400px;">
+    <div class="modal-header">
+      <h2>Cambiar Contraseña</h2>
+      <button class="modal-close" (click)="closePasswordModal()">✕</button>
+    </div>
+    <form [formGroup]="passwordForm" (ngSubmit)="submitPasswordChange()" class="modal-form">
+      <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; color: #166534;">
+        Estableciendo nueva contraseña para: <strong>{{ changingPasswordUser()?.username }}</strong>
+      </div>
+      
+      <div class="form-group">
+        <label>Nueva Contraseña *</label>
+        <input type="password" formControlName="newPassword" class="form-control" placeholder="Mínimo 6 caracteres">
+        <span class="field-error" *ngIf="isPasswordInvalid('newPassword')">Mínimo 6 caracteres</span>
+      </div>
+      <div class="form-group">
+        <label>Confirmar Contraseña *</label>
+        <input type="password" formControlName="confirmPassword" class="form-control" placeholder="Confirma la contraseña">
+        <span class="field-error" *ngIf="isPasswordInvalid('confirmPassword')">Requerido</span>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" (click)="closePasswordModal()">Cancelar</button>
+        <button type="submit" class="btn-primary" [disabled]="isSaving()">
+          {{ isSaving() ? 'Actualizando...' : 'Actualizar Contraseña' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

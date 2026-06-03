@@ -1,0 +1,713 @@
+<div class="extrusion-container">
+  <!-- Cabecera de Módulo Premium -->
+  <header class="panel-header">
+    <div class="header-info">
+      <span class="badge-module">PRODUCCIÓN</span>
+      <h1>🎛️ Consola de Operación de Extrusión</h1>
+      <p class="subtitle">Panel de inauguración de órdenes y registro dual side-by-side de bobinas con control transaccional de stock.</p>
+    </div>
+    
+    <!-- Botón de Cierre de Extrusión (visible solo si hay orden activa) -->
+    <div class="header-actions" *ngIf="extrusionActiva">
+      <button class="btn-danger-modern pulse-btn" (click)="abrirCierre()">
+        <span>🏁 FINALIZAR ORDEN Y TURNO</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Alertas de Estado -->
+  <div class="alert-container" *ngIf="errorMessage || successMessage">
+    <div class="alert alert-error" *ngIf="errorMessage">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-content">
+        <span class="alert-title">Error de validación o stock</span>
+        <p>{{ errorMessage }}</p>
+      </div>
+    </div>
+    <div class="alert alert-success" *ngIf="successMessage">
+      <div class="alert-icon">✓</div>
+      <div class="alert-content">
+        <span class="alert-title">Transacción procesada</span>
+        <p>{{ successMessage }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paso 1: Selección de Extrusora -->
+  <section class="section-card selection-section" *ngIf="!extrusoraSeleccionada">
+    <h2 class="section-title">🔌 1. Seleccione Extrusora de Trabajo</h2>
+    <div class="extrusoras-grid">
+      <div *ngFor="let ext of extrusoras" 
+           class="extrusora-card" 
+           [class.active]="extrusoraSeleccionada?.id === ext.id"
+           (click)="seleccionarExtrusora(ext)">
+        <div class="card-status" [class.in-use]="ext.estado === 'EnProceso' || ext.estado === '2'"></div>
+        <div class="card-icon">⚡</div>
+        <h3 class="card-title">{{ ext.nombre }}</h3>
+        <p class="card-code">Código: {{ ext.codigo }}</p>
+        <span class="card-badge" [class.in-process]="ext.estado === 'EnProceso' || ext.estado === '2'">
+          {{ (ext.estado === 'EnProceso' || ext.estado === '2') ? 'En Proceso' : 'Disponible' }}
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Barra de navegación rápida de extrusoras cuando ya se seleccionó una -->
+  <div class="active-machine-bar" *ngIf="extrusoraSeleccionada">
+    <span class="bar-label">MÁQUINA ACTIVA:</span>
+    <span class="bar-value">⚡ {{ extrusoraSeleccionada.nombre }} ({{ extrusoraSeleccionada.codigo }})</span>
+    <button class="btn-change-machine" (click)="extrusoraSeleccionada = null; extrusionActiva = null">
+      🔄 Cambiar Máquina
+    </button>
+  </div>
+
+  <!-- Paso 2: Flujo condicional (Inauguración vs Consola Activa) -->
+  <ng-container *ngIf="extrusoraSeleccionada">
+    
+    <!-- A. Formulario de Inauguración de Orden (Si no hay orden activa) -->
+    <section class="section-card form-section" *ngIf="!extrusionActiva">
+      <div class="section-header-row">
+        <h2 class="section-title">📂 Inauguración de Nueva Orden de Extrusión</h2>
+        <span class="badge-status open">Registrar Parámetros de Inauguración</span>
+      </div>
+
+      <form (submit)="inaugurarOrden(); $event.preventDefault()" class="inauguracion-form">
+        <div class="form-grid">
+          
+          <!-- Operario y Turno -->
+          <div class="form-group">
+            <label for="operario">👨‍🏭 Operario a Cargo</label>
+            <select id="operario" [(ngModel)]="inauguracion.operarioId" name="operarioId" required class="form-select">
+              <option value="" disabled selected>-- Seleccione Operario --</option>
+              <option *ngFor="let op of operarios" [value]="op.id">{{ op.nombreCompleto }} ({{ op.numeroEmpleado }})</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="turno">⏰ Turno de Producción</label>
+            <select id="turno" [(ngModel)]="inauguracion.turnoId" name="turnoId" required class="form-select">
+              <option value="" disabled selected>-- Seleccione Turno --</option>
+              <option *ngFor="let t of turnos" [value]="t.id">{{ t.nombre }} ({{ t.horaInicio }} - {{ t.horaFin }})</option>
+            </select>
+          </div>
+
+          <!-- Producto y Meta -->
+          <div class="form-group">
+            <label for="producto">📦 Artículo a Producir</label>
+            <select id="producto" [(ngModel)]="inauguracion.productoId" name="productoId" required class="form-select" (change)="cargarSiguienteConsecutivo()">
+              <option value="" disabled selected>-- Seleccione Producto --</option>
+              <option *ngFor="let p of productos" [value]="p.id">{{ p.nombre }} (Calibre: {{ p.calibre }} mm)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="meta">🎯 Meta de Producción (Kg)</label>
+            <input type="number" id="meta" [(ngModel)]="inauguracion.metaKg" name="metaKg" min="1" required class="form-input" />
+          </div>
+
+          <!-- Silo Virgen y Consumo -->
+          <div class="form-group full-row-mobile card-subgroup">
+            <div class="subgroup-title">Silo Virgen (Materia Prima Inicial)</div>
+            <div class="subgroup-grid">
+              <div class="form-group">
+                <label for="siloVirgen">🏺 Silo Virgen</label>
+                <select id="siloVirgen" [(ngModel)]="inauguracion.siloVirgenId" name="siloVirgenId" required class="form-select">
+                  <option value="" disabled selected>-- Seleccione Silo Virgen --</option>
+                  <option *ngFor="let s of getSilosVirgenes()" [value]="s.id">
+                    {{ s.nombre }} - Stock: {{ s.existenciaActual | number:'1.0-2' }} Kg
+                  </option>
+                </select>
+                <span class="stock-indicator" *ngIf="inauguracion.siloVirgenId">
+                  Existencia Actual: <strong>{{ getSiloExistencia(inauguracion.siloVirgenId) }} Kg</strong>
+                </span>
+              </div>
+              <div class="form-group">
+                <label for="virgenKg">⚖️ Cantidad a Consumir (Kg)</label>
+                <input type="number" id="virgenKg" [(ngModel)]="inauguracion.virgenKg" name="virgenKg" min="0.1" step="0.1" required class="form-input" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Silo Molido y Consumo (Opcional) -->
+          <div class="form-group full-row-mobile card-subgroup molido-subgroup">
+            <div class="subgroup-title">Silo Molido (Material Reprocesado - Opcional)</div>
+            <div class="subgroup-grid">
+              <div class="form-group">
+                <label for="siloMolido">🏺 Silo Molido</label>
+                <select id="siloMolido" [(ngModel)]="inauguracion.siloMolidoId" name="siloMolidoId" class="form-select">
+                  <option value="">-- No Utilizar Molido --</option>
+                  <option *ngFor="let s of getSilosMolidos()" [value]="s.id">
+                    {{ s.nombre }} - Stock: {{ s.existenciaActual | number:'1.0-2' }} Kg
+                  </option>
+                </select>
+                <span class="stock-indicator" *ngIf="inauguracion.siloMolidoId">
+                  Existencia Actual: <strong>{{ getSiloExistencia(inauguracion.siloMolidoId) }} Kg</strong>
+                </span>
+              </div>
+              <div class="form-group">
+                <label for="molidoKg">⚖️ Cantidad a Consumir (Kg)</label>
+                <input type="number" id="molidoKg" [(ngModel)]="inauguracion.molidoKg" name="molidoKg" min="0" step="0.1" class="form-input" [disabled]="!inauguracion.siloMolidoId" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Revoluciones Husillo -->
+          <div class="form-group">
+            <label for="revHusilloVirgen">⚙️ RPM Husillo Virgen</label>
+            <input type="number" id="revHusilloVirgen" [(ngModel)]="inauguracion.revHusilloVirgen" name="revHusilloVirgen" step="0.1" class="form-input" />
+          </div>
+
+          <div class="form-group">
+            <label for="revHusilloMolido">⚙️ RPM Husillo Molido</label>
+            <input type="number" id="revHusilloMolido" [(ngModel)]="inauguracion.revHusilloMolido" name="revHusilloMolido" step="0.1" class="form-input" [disabled]="!inauguracion.siloMolidoId" />
+          </div>
+
+          <!-- Lote Aditivos y Observaciones -->
+          <div class="form-group">
+            <label for="loteAditivos">🏷️ Lote Paquete Aditivos</label>
+            <input type="text" id="loteAditivos" [(ngModel)]="inauguracion.lotePaqueteAditivos" name="lotePaqueteAditivos" placeholder="Ej. AD-2026-X" class="form-input" />
+          </div>
+
+          <div class="form-group">
+            <label for="observaciones">📝 Observaciones Iniciales</label>
+            <input type="text" id="observaciones" [(ngModel)]="inauguracion.observaciones" name="observaciones" placeholder="Detalles de inauguración..." class="form-input" />
+          </div>
+
+        </div>
+
+        <div class="form-submit-row">
+          <button type="submit" class="btn-primary-modern" [disabled]="saving">
+            <span *ngIf="!saving">⚡ INAUGURAR ORDEN Y DESCONTAR INVENTARIO</span>
+            <span *ngIf="saving">⏳ Procesando Deducción Transaccional...</span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- B. Consola Dual (Si la orden de extrusión ya está En Proceso) -->
+    <div class="active-console-layout" *ngIf="extrusionActiva">
+      
+      <!-- Panel de Detalles de la Orden Activa -->
+      <section class="order-summary-panel">
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="label">Código de Orden</span>
+            <span class="value code">{{ extrusionActiva.codigo }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Producto</span>
+            <span class="value">{{ extrusionActiva.producto?.nombre }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Calibre Nominal</span>
+            <span class="value">{{ extrusionActiva.producto?.calibre }} mm</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Operario</span>
+            <span class="value">{{ extrusionActiva.operario?.nombreCompleto }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Turno</span>
+            <span class="value">{{ extrusionActiva.turno?.nombre }}</span>
+          </div>
+          <div class="summary-item next-bobina">
+            <span class="label">Siguiente Secuencial (Estación A)</span>
+            <span class="value">Roll No. {{ siguienteBobinaNo }}</span>
+          </div>
+          <div class="summary-item action-item" style="display: flex; align-items: center; justify-content: center;">
+            <button class="btn-change-machine" type="button" (click)="abrirRecalibrar()" style="background-color: var(--neon-cyan); color: var(--deep-bg); border: none; padding: 0.6rem 1rem; font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+              📐 Recalibrar Medidas
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel Dual: Estación A y Estación B Side-by-Side -->
+      <div class="dual-stations-grid">
+        
+        <!-- ESTACIÓN A -->
+        <div class="station-card station-a">
+          <div class="station-card-header">
+            <div class="status-indicator-pulsing active"></div>
+            <h3>Estación de Bobinado A</h3>
+            <span class="badge-station">ORIGEN A</span>
+          </div>
+          
+          <div class="station-card-body">
+            <div class="form-group">
+              <label>⚖️ Peso Bruto Registrado (Kg)</label>
+              <input type="number" [(ngModel)]="estacionA.peso" name="pesoA" min="0.1" step="0.1" class="form-input large-number" placeholder="0.0" />
+            </div>
+
+            <div class="form-group">
+              <label>📐 Calibre/Espesor Medido (mm)</label>
+              <input type="number" [(ngModel)]="estacionA.calibre" name="calibreA" min="0.001" step="0.001" class="form-input" />
+            </div>
+
+            <div class="form-group">
+              <label>📊 Desviación Estándar (mm)</label>
+              <input type="number" [(ngModel)]="estacionA.desviacion" name="desviacionA" min="0" step="0.0001" class="form-input" />
+            </div>
+
+            <div class="form-group">
+              <label>🎨 Color de Estación Asignado</label>
+              <select [(ngModel)]="estacionA.color" name="colorA" class="form-select">
+                <option [value]="1">Rojo 🔴</option>
+                <option [value]="2">Azul 🔵</option>
+                <option [value]="3">Verde 🟢</option>
+                <option [value]="4">Amarillo 🟡</option>
+                <option [value]="5">Naranja 🟠</option>
+                <option [value]="6">Blanco ⚪</option>
+              </select>
+            </div>
+
+            <!-- Switch Enviar a Molino (Merma) -->
+            <div class="molino-switch-group">
+              <label class="switch-container">
+                <input type="checkbox" [(ngModel)]="estacionA.enviarMolino" name="enviarMolinoA">
+                <span class="switch-slider"></span>
+              </label>
+              <span class="switch-label text-warning">❌ Descartar y Enviar a Molino</span>
+            </div>
+
+            <!-- Campos condicionales de Merma -->
+            <div class="molino-conditional-fields animate-dropdown" *ngIf="estacionA.enviarMolino">
+              <div class="form-group">
+                <label>⚖️ Kilos de Merma para Reciclaje</label>
+                <input type="number" [(ngModel)]="estacionA.mermaKg" name="mermaKgA" min="0.1" step="0.1" class="form-input text-warning" placeholder="Kilos de descarte..." />
+              </div>
+              <div class="form-group">
+                <label>💬 Motivo del Descarte</label>
+                <select [(ngModel)]="estacionA.motivo" name="motivoA" class="form-select text-warning">
+                  <option [value]="1">Defecto Calibre</option>
+                  <option [value]="2">Defecto Bobina</option>
+                  <option [value]="3">Defecto Carrete</option>
+                  <option [value]="4">Fuera de Peso</option>
+                  <option [value]="5">Daño Físico</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>📝 Observaciones de Bobina</label>
+              <input type="text" [(ngModel)]="estacionA.observaciones" name="observacionesA" placeholder="Observaciones opcionales..." class="form-input" />
+            </div>
+          </div>
+
+          <div class="station-card-footer">
+            <button class="btn-station-save save-a" (click)="guardarEstacion('A')" [disabled]="saving">
+              <span>💾 REGISTRAR ROLL NO. {{ siguienteBobinaNo }}A</span>
+            </button>
+
+            <!-- Resumen del último registro -->
+            <div class="last-registry-box" *ngIf="ultimaBobinaA">
+              <div class="box-title">Último Rollo Registrado en A:</div>
+              <div class="box-details">
+                <span class="no-serie">{{ ultimaBobinaA.noSerie }}</span>
+                <span>Peso: <strong>{{ ultimaBobinaA.kg }} Kg</strong></span>
+                <span>Calibre: <strong>{{ ultimaBobinaA.espesor }} mm</strong></span>
+                <span class="status-pill" [class.molino]="ultimaBobinaA.estado === 'Molido' || ultimaBobinaA.estado === 6">
+                  {{ (ultimaBobinaA.estado === 'Molido' || ultimaBobinaA.estado === 6) ? 'Molino: ' + getMotivoName(ultimaBobinaA.motivoMolino) : 'Listo (En Reposo)' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ESTACIÓN B -->
+        <div class="station-card station-b">
+          <div class="station-card-header">
+            <div class="status-indicator-pulsing active"></div>
+            <h3>Estación de Bobinado B</h3>
+            <span class="badge-station">ORIGEN B</span>
+          </div>
+          
+          <div class="station-card-body">
+            <div class="form-group">
+              <label>⚖️ Peso Bruto Registrado (Kg)</label>
+              <input type="number" [(ngModel)]="estacionB.peso" name="pesoB" min="0.1" step="0.1" class="form-input large-number" placeholder="0.0" />
+            </div>
+
+            <div class="form-group">
+              <label>📐 Calibre/Espesor Medido (mm)</label>
+              <input type="number" [(ngModel)]="estacionB.calibre" name="calibreB" min="0.001" step="0.001" class="form-input" />
+            </div>
+
+            <div class="form-group">
+              <label>📊 Desviación Estándar (mm)</label>
+              <input type="number" [(ngModel)]="estacionB.desviacion" name="desviacionB" min="0" step="0.0001" class="form-input" />
+            </div>
+
+            <div class="form-group">
+              <label>🎨 Color de Estación Asignado</label>
+              <select [(ngModel)]="estacionB.color" name="colorB" class="form-select">
+                <option [value]="1">Rojo 🔴</option>
+                <option [value]="2">Azul 🔵</option>
+                <option [value]="3">Verde 🟢</option>
+                <option [value]="4">Amarillo 🟡</option>
+                <option [value]="5">Naranja 🟠</option>
+                <option [value]="6">Blanco ⚪</option>
+              </select>
+            </div>
+
+            <!-- Switch Enviar a Molino (Merma) -->
+            <div class="molino-switch-group">
+              <label class="switch-container">
+                <input type="checkbox" [(ngModel)]="estacionB.enviarMolino" name="enviarMolinoB">
+                <span class="switch-slider"></span>
+              </label>
+              <span class="switch-label text-warning">❌ Descartar y Enviar a Molino</span>
+            </div>
+
+            <!-- Campos condicionales de Merma -->
+            <div class="molino-conditional-fields animate-dropdown" *ngIf="estacionB.enviarMolino">
+              <div class="form-group">
+                <label>⚖️ Kilos de Merma para Reciclaje</label>
+                <input type="number" [(ngModel)]="estacionB.mermaKg" name="mermaKgB" min="0.1" step="0.1" class="form-input text-warning" placeholder="Kilos de descarte..." />
+              </div>
+              <div class="form-group">
+                <label>💬 Motivo del Descarte</label>
+                <select [(ngModel)]="estacionB.motivo" name="motivoB" class="form-select text-warning">
+                  <option [value]="1">Defecto Calibre</option>
+                  <option [value]="2">Defecto Bobina</option>
+                  <option [value]="3">Defecto Carrete</option>
+                  <option [value]="4">Fuera de Peso</option>
+                  <option [value]="5">Daño Físico</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>📝 Observaciones de Bobina</label>
+              <input type="text" [(ngModel)]="estacionB.observaciones" name="observacionesB" placeholder="Observaciones opcionales..." class="form-input" />
+            </div>
+          </div>
+
+          <div class="station-card-footer">
+            <button class="btn-station-save save-b" (click)="guardarEstacion('B')" [disabled]="saving">
+              <span>💾 REGISTRAR ROLL NO. {{ siguienteBobinaNo }}B</span>
+            </button>
+
+            <!-- Resumen del último registro -->
+            <div class="last-registry-box" *ngIf="ultimaBobinaB">
+              <div class="box-title">Último Rollo Registrado en B:</div>
+              <div class="box-details">
+                <span class="no-serie">{{ ultimaBobinaB.noSerie }}</span>
+                <span>Peso: <strong>{{ ultimaBobinaB.kg }} Kg</strong></span>
+                <span>Calibre: <strong>{{ ultimaBobinaB.espesor }} mm</strong></span>
+                <span class="status-pill" [class.molino]="ultimaBobinaB.estado === 'Molido' || ultimaBobinaB.estado === 6">
+                  {{ (ultimaBobinaB.estado === 'Molido' || ultimaBobinaB.estado === 6) ? 'Molino: ' + getMotivoName(ultimaBobinaB.motivoMolino) : 'Listo (En Reposo)' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECCIÓN: Historial de Bobinas en la Extrusión Activa -->
+        <section class="section-card bobinas-list-section" style="margin-top: 2rem; border: 1px solid rgba(0, 242, 254, 0.2); box-shadow: 0 0 20px rgba(0, 242, 254, 0.05);">
+          <h2 class="section-title" style="color: var(--neon-cyan); font-size: 1.4rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 0.75rem;">📜 Historial de Bobinas en esta Orden</h2>
+          <div class="table-responsive" style="margin-top: 1rem; overflow-x: auto;">
+            <table class="premium-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+              <thead>
+                <tr style="border-bottom: 2px solid rgba(0, 242, 254, 0.3); color: var(--neon-cyan); font-size: 0.9rem;">
+                  <th style="padding: 0.75rem;">No. Serie</th>
+                  <th style="padding: 0.75rem;">Rollo No.</th>
+                  <th style="padding: 0.75rem;">Origen</th>
+                  <th style="padding: 0.75rem;">Peso (Kg)</th>
+                  <th style="padding: 0.75rem;">Calibre (mm)</th>
+                  <th style="padding: 0.75rem;">Color</th>
+                  <th style="padding: 0.75rem;">Estado</th>
+                  <th style="padding: 0.75rem;">Fecha Registro</th>
+                  <th style="padding: 0.75rem;">Acciones Transaccionales</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let bob of bobinasExtrusion" [class.row-molido]="bob.estado === 'Molido' || bob.estado === 6" style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='rgba(0, 242, 254, 0.02)'" onmouseout="this.style.backgroundColor='transparent'">
+                  <td class="bold code" style="padding: 0.75rem; font-weight: bold; color: var(--neon-cyan); font-family: monospace;">{{ bob.noSerie }}</td>
+                  <td style="padding: 0.75rem;">{{ bob.bobinaNo }}{{ bob.bobinaOrigen }}</td>
+                  <td style="padding: 0.75rem;"><span class="badge-station" style="background: rgba(0, 242, 254, 0.1); color: var(--neon-cyan); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: bold; border: 1px solid rgba(0, 242, 254, 0.2);">{{ bob.bobinaOrigen }}</span></td>
+                  <td style="padding: 0.75rem;"><strong>{{ bob.kg }} Kg</strong></td>
+                  <td style="padding: 0.75rem;">{{ bob.espesor }} mm</td>
+                  <td style="padding: 0.75rem;">{{ getColorName(bob.colorEstacion) }}</td>
+                  <td style="padding: 0.75rem;">
+                    <span class="status-pill" [class.reposo]="bob.estado === 'EnReposo' || bob.estado === 2"
+                          [class.proceso]="bob.estado === 'EnProceso' || bob.estado === 1"
+                          [class.molido]="bob.estado === 'Molido' || bob.estado === 6"
+                          [class.disponible]="bob.estado === 'Disponible' || bob.estado === 12"
+                          [class.pausada]="bob.estado === 'Pausada' || bob.estado === 7"
+                          [class.rechazada]="bob.estado === 'Rechazada' || bob.estado === 5"
+                          style="padding: 0.25rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">
+                      {{ getEstadoBobinaName(bob.estado) }}
+                    </span>
+                  </td>
+                  <td style="padding: 0.75rem; font-size: 0.85rem; color: rgba(255, 255, 255, 0.6);">{{ bob.fechaProduccion | date:'dd/MM/yyyy HH:mm' }}</td>
+                  <td class="actions-cell" style="padding: 0.75rem; display: flex; gap: 6px; flex-wrap: wrap;">
+                    <!-- Pausar (solo si está en proceso o en reposo) -->
+                    <button *ngIf="bob.estado !== 'Pausada' && bob.estado !== 7 && bob.estado !== 'Molido' && bob.estado !== 6" 
+                            class="btn-action pause" (click)="pausarBobina(bob)" title="Pausar Bobina" style="background-color: var(--neon-orange); color: var(--deep-bg); border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: bold; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">⏸️ Pausar</button>
+                    <!-- Validar (para quitar pausa o reposo e ir a Disponible) -->
+                    <button *ngIf="bob.estado !== 'Disponible' && bob.estado !== 12 && bob.estado !== 'Molido' && bob.estado !== 6" 
+                            class="btn-action validate" (click)="validarBobina(bob)" title="Validar Bobina" style="background-color: var(--neon-green); color: var(--deep-bg); border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: bold; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">✔️ Validar</button>
+                    <!-- Rechazar (enviar a molino) -->
+                    <button *ngIf="bob.estado !== 'Molido' && bob.estado !== 6" 
+                            class="btn-action reject" (click)="abrirRechazarBobina(bob)" title="Rechazar Bobina" style="background-color: var(--neon-red); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: bold; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">❌ Rechazar</button>
+                    <!-- Transferir -->
+                    <button *ngIf="bob.estado !== 'Molido' && bob.estado !== 6" 
+                            class="btn-action transfer" (click)="abrirTransferirBobina(bob)" title="Reasignar a otro turno/extrusión" style="background-color: var(--neon-cyan); color: var(--deep-bg); border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: bold; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔄 Reasignar</button>
+                  </td>
+                </tr>
+                <tr *ngIf="bobinasExtrusion.length === 0">
+                  <td colspan="9" class="text-center" style="padding: 3rem; text-align: center; color: rgba(255, 255, 255, 0.4);">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📁</div>
+                    No se han registrado bobinas en esta orden aún.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+  </ng-container>
+</div>
+
+<!-- ================= STICKER DE CÓDIGO DE BARRAS INTERACTIVO ================= -->
+<div class="sticker-overlay" *ngIf="stickerBobina">
+  <div class="sticker-container-card">
+    <div class="sticker-header">
+      <div class="sticker-logo">🏷️ HICONE ERP LABEL</div>
+      <button class="btn-close-sticker" (click)="cerrarSticker()">✖️</button>
+    </div>
+    
+    <div class="sticker-body-sticker" id="barcode-sticker">
+      <div class="sticker-machine-title">MÁQUINA: {{ extrusoraSeleccionada?.nombre }}</div>
+      
+      <div class="sticker-barcode-code">
+        {{ stickerBobina.noSerie }}
+      </div>
+      
+      <!-- Representación visual de código de barras cyberpunk -->
+      <div class="sticker-barcode-visual">
+        <div class="line small"></div>
+        <div class="line medium"></div>
+        <div class="line large"></div>
+        <div class="line small"></div>
+        <div class="line medium"></div>
+        <div class="line large"></div>
+        <div class="line small"></div>
+        <div class="line medium"></div>
+        <div class="line large"></div>
+        <div class="line small"></div>
+        <div class="line medium"></div>
+        <div class="line large"></div>
+      </div>
+      
+      <div class="sticker-info-grid">
+        <div class="info-cell">
+          <span class="title">ROLLO NO</span>
+          <span class="data bold">{{ stickerBobina.bobinaNo }}{{ stickerEstacion }}</span>
+        </div>
+        <div class="info-cell">
+          <span class="title">PESO NETO</span>
+          <span class="data bold">{{ stickerBobina.kg }} Kg</span>
+        </div>
+        <div class="info-cell">
+          <span class="title">ESPESOR</span>
+          <span class="data bold">{{ stickerBobina.espesor }} mm</span>
+        </div>
+        <div class="info-cell">
+          <span class="title">COLOR</span>
+          <span class="data">{{ getColorName(stickerBobina.colorEstacion) }}</span>
+        </div>
+        <div class="info-cell full-width">
+          <span class="title">ARTÍCULO</span>
+          <span class="data">{{ extrusionActiva?.producto?.nombre }}</span>
+        </div>
+        <div class="info-cell">
+          <span class="title">OPERARIO</span>
+          <span class="data">{{ extrusionActiva?.operario?.nombreCompleto }}</span>
+        </div>
+        <div class="info-cell">
+          <span class="title">FECHA</span>
+          <span class="data">{{ stickerBobina.fechaProduccion | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+      </div>
+      
+      <div class="sticker-footer">
+        ** CONFIRMADO PARIDAD 1:1 QA **
+      </div>
+    </div>
+    
+    <div class="sticker-actions">
+      <button class="btn-print" (click)="imprimirSticker()">🖨️ IMPRIMIR ETIQUETA ADHESIVA</button>
+      <button class="btn-cancel" (click)="cerrarSticker()">CERRAR PREVISUALIZACIÓN</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL DE CIERRE Y KPIs FINALES ================= -->
+<div class="sticker-overlay" *ngIf="mostrarModalCierre">
+  <div class="sticker-container-card kpi-modal-card">
+    <div class="sticker-header">
+      <h3>🏁 Finalizar Orden y Turno de Extrusión</h3>
+      <button class="btn-close-sticker" (click)="cancelarCierre()">✖️</button>
+    </div>
+
+    <div class="kpi-modal-body">
+      <p class="description-text">Al finalizar la orden, se consolidarán los consumos y mediciones registradas. La extrusora volverá a quedar <strong>Disponible</strong>.</p>
+      
+      <div class="kpi-banner">
+        <div class="kpi-stat">
+          <span class="value">{{ kpis.totalBobinas }}</span>
+          <span class="label">Rollos Totales</span>
+        </div>
+        <div class="kpi-stat text-warning">
+          <span class="value">{{ kpis.totalBobinasMolidas }}</span>
+          <span class="label">Descartados a Molino</span>
+        </div>
+        <div class="kpi-stat text-success">
+          <span class="value">{{ kpis.kgProducidos | number:'1.0-1' }} Kg</span>
+          <span class="label">Producido Bruto</span>
+        </div>
+        <div class="kpi-stat text-danger">
+          <span class="value">{{ kpis.kgMerma | number:'1.0-1' }} Kg</span>
+          <span class="label">Merma Acumulada</span>
+        </div>
+      </div>
+
+      <!-- Barra de Eficiencia -->
+      <div class="efficiency-container">
+        <div class="efficiency-label-row">
+          <span>Eficiencia de Producción en el Turno:</span>
+          <strong>{{ kpis.eficiencia }}%</strong>
+        </div>
+        <div class="efficiency-bar-bg">
+          <div class="efficiency-bar-fill" [style.width.%]="kpis.eficiencia"></div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top: 1.5rem;">
+        <label for="observacionesFinales">📝 Observaciones de Cierre / Fin de Turno</label>
+        <textarea id="observacionesFinales" [(ngModel)]="cierreObservaciones" name="cierreObservaciones" class="form-input textarea" placeholder="Escriba aquí motivos de finalización anticipada, detalles de mermas, reportes de turnos o problemas operativos..."></textarea>
+      </div>
+    </div>
+
+    <div class="sticker-actions">
+      <button class="btn-confirm-cierre" (click)="confirmarCierre()" [disabled]="saving">
+        <span *ngIf="!saving">✅ COMPLETAR CIERRE DE ORDEN Y TURNO</span>
+        <span *ngIf="saving">⏳ Consolidando transacciones finales...</span>
+      </button>
+      <button class="btn-cancel" (click)="cancelarCierre()">VOLVER AL PANEL</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL DE RECALIBRACIÓN DE EXTRUSIÓN ================= -->
+<div class="sticker-overlay" *ngIf="mostrarModalRecalibrar">
+  <div class="sticker-container-card kpi-modal-card" style="max-width: 500px;">
+    <div class="sticker-header">
+      <h3>📐 Recalibrar Medidas Nominales</h3>
+      <button class="btn-close-sticker" (click)="mostrarModalRecalibrar = false">✖️</button>
+    </div>
+    <div class="kpi-modal-body" style="padding: 1.5rem 0;">
+      <p class="description-text" style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.4;">
+        Ajuste las dimensiones nominales del producto que se está extrayendo actualmente. Las siguientes bobinas y mediciones se evaluarán con estos nuevos valores de paridad.
+      </p>
+      <div class="form-grid" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.4rem;">
+          <label style="font-weight: bold; font-size: 0.9rem;">📐 Calibre Nominal (mm)</label>
+          <input type="number" [(ngModel)]="recalibracion.calibre" name="calibreRec" class="form-input" min="0.001" step="0.001" placeholder="Ej. 1.25" style="width: 100%; box-sizing: border-box;" />
+        </div>
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.4rem;">
+          <label style="font-weight: bold; font-size: 0.9rem;">📏 Ancho Nominal (mm)</label>
+          <input type="number" [(ngModel)]="recalibracion.ancho" name="anchoRec" class="form-input" min="1" placeholder="Ej. 600" style="width: 100%; box-sizing: border-box;" />
+        </div>
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.4rem;">
+          <label style="font-weight: bold; font-size: 0.9rem;">📏 Longitud Nominal (m)</label>
+          <input type="number" [(ngModel)]="recalibracion.longitud" name="longitudRec" class="form-input" min="1" placeholder="Ej. 3000" style="width: 100%; box-sizing: border-box;" />
+        </div>
+      </div>
+    </div>
+    <div class="sticker-actions" style="margin-top: 1.5rem;">
+      <button class="btn-confirm-cierre" (click)="guardarRecalibracion()" [disabled]="saving" style="background-color: var(--neon-cyan); color: var(--deep-bg);">
+        <span *ngIf="!saving">📐 APLICAR RECALIBRACIÓN</span>
+        <span *ngIf="saving">⏳ Procesando Recalibración...</span>
+      </button>
+      <button class="btn-cancel" (click)="mostrarModalRecalibrar = false">CANCELAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL DE RECHAZAR BOBINA ================= -->
+<div class="sticker-overlay" *ngIf="mostrarModalRechazar">
+  <div class="sticker-container-card kpi-modal-card" style="max-width: 500px; border: 1px solid rgba(255, 0, 85, 0.3);">
+    <div class="sticker-header">
+      <h3 style="color: var(--neon-red);">❌ Descartar y Enviar Bobina a Molino</h3>
+      <button class="btn-close-sticker" (click)="mostrarModalRechazar = false">✖️</button>
+    </div>
+    <div class="kpi-modal-body" style="padding: 1.5rem 0;">
+      <p class="description-text" *ngIf="bobinaAProcesar" style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.4;">
+        Está a punto de rechazar y triturar la bobina <strong style="color: var(--neon-cyan); font-family: monospace;">{{ bobinaAProcesar.noSerie }}</strong> en el molino. Esta acción es irreversible y sumará el peso total de la bobina al silo de molido/reproceso asignado.
+      </p>
+      <div class="form-grid" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.4rem;">
+          <label style="font-weight: bold; font-size: 0.9rem; color: var(--neon-red);">💬 Motivo del Rechazo / Descarte</label>
+          <select [(ngModel)]="motivoRechazo" name="motivoRechazoVal" class="form-select text-warning" style="width: 100%; box-sizing: border-box;">
+            <option [value]="1">Defecto Calibre</option>
+            <option [value]="2">Defecto Bobina</option>
+            <option [value]="3">Defecto Carrete</option>
+            <option [value]="4">Fuera de Peso</option>
+            <option [value]="5">Daño Físico</option>
+          </select>
+        </div>
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.4rem;">
+          <label style="font-weight: bold; font-size: 0.9rem;">📝 Observaciones / Reporte de Calidad</label>
+          <input type="text" [(ngModel)]="observacionesRechazo" name="obsRechazoVal" placeholder="Describa el defecto detalladamente..." class="form-input" style="width: 100%; box-sizing: border-box;" />
+        </div>
+      </div>
+    </div>
+    <div class="sticker-actions" style="margin-top: 1.5rem;">
+      <button class="btn-confirm-cierre" (click)="confirmarRechazoBob()" [disabled]="saving" style="background-color: var(--neon-red); color: white;">
+        <span *ngIf="!saving">❌ DESMEDIR Y ENVIAR AL MOLINO</span>
+        <span *ngIf="saving">⏳ Triturando Bobina...</span>
+      </button>
+      <button class="btn-cancel" (click)="mostrarModalRechazar = false">CANCELAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL DE REASIGNAR BOBINA A OTRA ORDEN ================= -->
+<div class="sticker-overlay" *ngIf="mostrarModalTransferir">
+  <div class="sticker-container-card kpi-modal-card" style="max-width: 500px;">
+    <div class="sticker-header">
+      <h3>🔄 Reasignar Bobina a Otra Orden Activa</h3>
+      <button class="btn-close-sticker" (click)="mostrarModalTransferir = false">✖️</button>
+    </div>
+    <div class="kpi-modal-body" style="padding: 1.5rem 0;">
+      <p class="description-text" *ngIf="bobinaAProcesar" style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.4;">
+        Seleccione la orden de extrusión de destino a la cual desea transferir y reasignar la bobina <strong style="color: var(--neon-cyan); font-family: monospace;">{{ bobinaAProcesar.noSerie }}</strong>.
+      </p>
+      <div class="form-group" style="display: flex; flex-direction: column; gap: 0.4rem;">
+        <label style="font-weight: bold; font-size: 0.9rem;">📂 Orden de Extrusión Activa de Destino</label>
+        <select [(ngModel)]="extrusionDestinoId" name="extDestinoVal" class="form-select" style="width: 100%; box-sizing: border-box;">
+          <option value="" disabled selected>-- Seleccione Orden de Destino --</option>
+          <option *ngFor="let ext of extrusionesDisponibles" [value]="ext.id">
+            Orden: {{ ext.codigo }} - {{ ext.producto?.nombre }} (Turno: {{ ext.turno?.nombre }} - Maq: {{ ext.extrusora?.nombre }})
+          </option>
+        </select>
+        <p *ngIf="extrusionesDisponibles.length === 0" style="color: var(--neon-red); font-size: 0.8rem; margin-top: 0.4rem;">
+          ⚠️ No hay otras órdenes de extrusión activas en este momento.
+        </p>
+      </div>
+    </div>
+    <div class="sticker-actions" style="margin-top: 1.5rem;">
+      <button class="btn-confirm-cierre" (click)="confirmarTransferenciaBob()" [disabled]="saving || !extrusionDestinoId" style="background-color: var(--neon-cyan); color: var(--deep-bg);">
+        <span *ngIf="!saving">🔄 APLICAR REASIGNACIÓN DE ORDEN</span>
+        <span *ngIf="saving">⏳ Transferiendo Bobina...</span>
+      </button>
+      <button class="btn-cancel" (click)="mostrarModalTransferir = false">CANCELAR</button>
+    </div>
+  </div>
+</div>

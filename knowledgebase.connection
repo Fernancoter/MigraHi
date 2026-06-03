@@ -1,0 +1,11 @@
+﻿<ConnectionInformation>
+	<DBName>GX_KB_HiCone6</DBName>
+	<IntegratedSecurity>True</IntegratedSecurity>
+	<ServerInstance>(LocalDB)\MSSQLLocalDB</ServerInstance>
+	<CreateDbInKbFolder>True</CreateDbInKbFolder>
+	<Directory>C:\KBs\HiCone6</Directory>
+	<DataFile>GX_KB_HiCone6.mdf</DataFile>
+	<LogFile>GX_KB_HiCone6_log.ldf</LogFile>
+	<HostName>DESKTOP-76E33NQ</HostName>
+	<DetachOnClose>False</DetachOnClose>
+</ConnectionInformation>
