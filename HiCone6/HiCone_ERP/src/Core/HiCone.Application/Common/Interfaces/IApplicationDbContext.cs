@@ -55,6 +55,9 @@ public interface IApplicationDbContext
     DbSet<CausaInterrupcion> CausasInterrupcion { get; }
     DbSet<SiloProduccion> SilosProduccion { get; }
     DbSet<ConfiguracionSistema> ConfiguracionesSistema { get; }
+    DbSet<CatalogoClave> CatalogoClaves { get; }
+    DbSet<CatEstadoMaterial> CatEstadosMaterial { get; }
+    DbSet<CatTipoMaterial> CatTiposMaterial { get; }
 
     // ── Produccion — Catálogos Productos ─────────────────────────────────
     DbSet<Producto> Productos { get; }

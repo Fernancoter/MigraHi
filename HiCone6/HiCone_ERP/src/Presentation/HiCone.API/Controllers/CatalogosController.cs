@@ -78,6 +78,20 @@ public class CatalogosController : ControllerBase
     }
 
     // ─────────────────────────────────────────────────────────────────────────
+    // CLAVES (opciones UNO / DOS / TRES ordenadas)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [HttpGet("claves")]
+    public async Task<ActionResult<IEnumerable<object>>> GetClaves()
+    {
+        var items = await _context.CatalogoClaves
+            .OrderBy(c => c.Orden)
+            .Select(c => new { c.Id, c.Valor })
+            .ToListAsync();
+        return Ok(items);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
     // TURNOS
     // ─────────────────────────────────────────────────────────────────────────
 
@@ -86,7 +100,7 @@ public class CatalogosController : ControllerBase
     {
         var items = await _context.Turnos
             .OrderBy(t => t.HoraInicio)
-            .Select(t => new { t.Id, t.Nombre, HoraInicio = t.HoraInicio.ToString("HH:mm"), HoraFin = t.HoraFin.ToString("HH:mm") })
+            .Select(t => new { t.Id, t.Nombre, t.Clave, HoraInicio = t.HoraInicio.ToString("HH:mm"), HoraFin = t.HoraFin.ToString("HH:mm") })
             .ToListAsync();
         return Ok(items);
     }
@@ -105,6 +119,7 @@ public class CatalogosController : ControllerBase
         {
             Id = Guid.NewGuid(),
             Nombre = dto.Nombre,
+            Clave = dto.Clave,
             HoraInicio = TimeOnly.Parse(dto.HoraInicio),
             HoraFin = TimeOnly.Parse(dto.HoraFin),
             TenantId = dto.TenantId
@@ -120,6 +135,7 @@ public class CatalogosController : ControllerBase
         var entity = await _context.Turnos.FindAsync(id);
         if (entity is null) return NotFound();
         entity.Nombre = dto.Nombre;
+        entity.Clave = dto.Clave;
         entity.HoraInicio = TimeOnly.Parse(dto.HoraInicio);
         entity.HoraFin = TimeOnly.Parse(dto.HoraFin);
         await _context.SaveChangesAsync(default);
@@ -213,7 +229,6 @@ public class CatalogosController : ControllerBase
         return NoContent();
     }
 
-    // ExtrusoraOperario endpoints
     [HttpGet("extrusoras/{extrusoraId}/operarios")]
     public async Task<ActionResult<IEnumerable<object>>> GetExtrusoraOperarios(Guid extrusoraId)
     {
@@ -224,7 +239,6 @@ public class CatalogosController : ControllerBase
             .Include(eo => eo.Operario)
             .ToListAsync();
 
-        // Devuelve un registro por turno (aunque no tenga operario asignado)
         var result = turnos.Select(t =>
         {
             var eo = operarios.FirstOrDefault(o => o.TurnoId == t.Id);
@@ -278,7 +292,7 @@ public class CatalogosController : ControllerBase
 
         var items = await query
             .OrderBy(p => p.Nombre)
-            .Select(p => new { p.Id, p.Nombre, p.Marca, p.Modelo })
+            .Select(p => new { p.Id, p.NumeroPrensa, p.Nombre, p.Imagen, p.Marca, p.Modelo })
             .ToListAsync();
         return Ok(items);
     }
@@ -291,19 +305,33 @@ public class CatalogosController : ControllerBase
     }
 
     [HttpPost("prensas")]
-    public async Task<ActionResult<Guid>> CreatePrensa([FromBody] Prensa entity)
+    public async Task<ActionResult<Guid>> CreatePrensa([FromBody] PrensaDto dto)
     {
-        entity.Id = Guid.NewGuid();
+        var entity = new Prensa
+        {
+            Id = Guid.NewGuid(),
+            NumeroPrensa = dto.NumeroPrensa,
+            Nombre = dto.Nombre,
+            Imagen = dto.Imagen,
+            Marca = dto.Marca,
+            Modelo = dto.Modelo,
+            TenantId = dto.TenantId
+        };
         _context.Prensas.Add(entity);
         await _context.SaveChangesAsync(default);
         return CreatedAtAction(nameof(GetPrensa), new { id = entity.Id }, entity.Id);
     }
 
     [HttpPut("prensas/{id}")]
-    public async Task<IActionResult> UpdatePrensa(Guid id, [FromBody] Prensa entity)
+    public async Task<IActionResult> UpdatePrensa(Guid id, [FromBody] PrensaDto dto)
     {
-        if (id != entity.Id) return BadRequest();
-        _context.Prensas.Entry(entity).State = EntityState.Modified;
+        var entity = await _context.Prensas.FindAsync(id);
+        if (entity is null) return NotFound();
+        entity.NumeroPrensa = dto.NumeroPrensa;
+        entity.Nombre = dto.Nombre;
+        entity.Imagen = dto.Imagen;
+        entity.Marca = dto.Marca;
+        entity.Modelo = dto.Modelo;
         await _context.SaveChangesAsync(default);
         return NoContent();
     }
@@ -325,7 +353,7 @@ public class CatalogosController : ControllerBase
     [HttpGet("silos")]
     public async Task<ActionResult<IEnumerable<object>>> GetSilos([FromQuery] bool? activo = null)
     {
-        var query = _context.SilosProduccion.AsQueryable();
+        var query = _context.SilosProduccion.Where(s => !s.IsArchived);
         if (activo.HasValue)
             query = query.Where(s => s.SiloActivo == activo.Value);
 
@@ -374,11 +402,46 @@ public class CatalogosController : ControllerBase
         await _context.SaveChangesAsync(default);
         return NoContent();
     }
+
+    [HttpPut("silos/{id}/archivar")]
+    public async Task<IActionResult> ArchivarSilo(Guid id)
+    {
+        var item = await _context.SilosProduccion.FindAsync(id);
+        if (item is null) return NotFound();
+        item.IsArchived = true;
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // CATÁLOGOS MATERIALES
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [HttpGet("material-estados")]
+    public async Task<ActionResult<IEnumerable<object>>> GetEstadoMateriales()
+    {
+        var items = await _context.CatEstadosMaterial
+            .OrderBy(c => c.Nombre)
+            .Select(c => new { c.Id, c.Nombre })
+            .ToListAsync();
+        return Ok(items);
+    }
+
+    [HttpGet("material-tipos")]
+    public async Task<ActionResult<IEnumerable<object>>> GetTipoMateriales()
+    {
+        var items = await _context.CatTiposMaterial
+            .OrderBy(c => c.Nombre)
+            .Select(c => new { c.Id, c.Nombre })
+            .ToListAsync();
+        return Ok(items);
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DTOs
 // ─────────────────────────────────────────────────────────────────────────────
-public record TurnoDto(string Nombre, string HoraInicio, string HoraFin, Guid TenantId);
+public record TurnoDto(string Nombre, string? Clave, string HoraInicio, string HoraFin, Guid TenantId);
 public record ExtrusoraDto(string Nombre, string NumeroExtrusora, string? Imagen, Guid TenantId);
 public record ExtrusoraOperarioDto(Guid? OperarioId, Guid TenantId);
+public record PrensaDto(string? NumeroPrensa, string Nombre, string? Imagen, string? Marca, string? Modelo, Guid TenantId);

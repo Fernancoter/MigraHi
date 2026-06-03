@@ -16,6 +16,7 @@ public class Operario : TenantEntity
 /// <summary>Turno de producción: 1er, 2do, 3er Turno (PDF: Catálogos > Turnos)</summary>
 public class Turno : TenantEntity
 {
+    public string? Clave { get; set; }                 // Opciones desde CatalogoClave: "UNO", "DOS", etc.
     public string Nombre { get; set; } = null!;        // "1er Turno", "2do Turno", "3er Turno"
     public TimeOnly HoraInicio { get; set; }
     public TimeOnly HoraFin { get; set; }
@@ -41,7 +42,9 @@ public class Extrusora : TenantEntity
 /// <summary>Prensa (PDF: Catálogos > Prensas — Prensa 1 a 5)</summary>
 public class Prensa : TenantEntity
 {
-    public string Nombre { get; set; } = null!;        // "Prensa 1" ... "Prensa 5"
+    public string? NumeroPrensa { get; set; }     // Clave visible para el operador: UNO, DOS, TRES
+    public string Nombre { get; set; } = null!;  // "Prensa 1" ... "Prensa 5"
+    public string? Imagen { get; set; }
     public string? Marca { get; set; }
     public string? Modelo { get; set; }
 
@@ -59,6 +62,17 @@ public class SiloProduccion : TenantEntity
     public string? EstadoMaterial { get; set; }
     public string? TipoMaterial { get; set; }
     public bool SiloActivo { get; set; } = true;
+    public bool IsArchived { get; set; } = false;
+}
+
+public class CatEstadoMaterial : TenantEntity
+{
+    public string Nombre { get; set; } = null!;
+}
+
+public class CatTipoMaterial : TenantEntity
+{
+    public string Nombre { get; set; } = null!;
 }
 
 /// <summary>Categoría de producto (PDF: Catálogos > Categorías — Bobina, Carrete)</summary>
@@ -75,6 +89,13 @@ public class ConfiguracionSistema : TenantEntity
 {
     public string Key { get; set; } = null!;
     public string Valor { get; set; } = null!;
+}
+
+/// <summary>Catálogo genérico de Claves numéricas en texto ("UNO", "DOS", "TRES", etc.)</summary>
+public class CatalogoClave : TenantEntity
+{
+    public string Valor { get; set; } = null!;
+    public int Orden { get; set; }               // Orden de visualización: 1=UNO, 2=DOS, 3=TRES
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

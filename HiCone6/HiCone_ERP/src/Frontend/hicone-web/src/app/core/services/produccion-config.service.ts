@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Operario   { id: string; nombre: string; activo: boolean; fotografia?: string; userGuid?: string; }
-export interface Turno      { id: string; nombre: string; horaInicio: string; horaFin: string; }
+export interface Turno      { id: string; nombre: string; clave?: string; horaInicio: string; horaFin: string; }
 export interface Extrusora  { id: string; nombre: string; numeroExtrusora: string; imagen?: string; }
 export interface ExtrusoraOperarioRow { id?: string; turnoId: string; turno: string; operarioId?: string; operario?: string; }
-export interface Prensa     { id: string; nombre: string; marca?: string; modelo?: string; }
+export interface Prensa     { id: string; numeroPrensa?: string; nombre: string; imagen?: string; marca?: string; modelo?: string; }
 export interface Silo       { id: string; nombre: string; capacidadKg: number; minimoKg: number; maximoKg: number; estadoMaterial?: string; tipoMaterial?: string; siloActivo: boolean; }
 export interface Categoria  { id: string; nombre: string; }
 export interface Producto   { id: string; categoriaId?: string; categoria?: string; productoBase?: string; clave: string; nombre: string; descripcion?: string; precioUnitario: number; tipoMaterial?: string; isActive: boolean; productoSAE?: string; }
@@ -186,7 +186,8 @@ export class ProduccionConfigService {
   deleteCategoria(id: string)  { return this.http.delete(`${this.base}/catalogos/categorias/${id}`); }
 
   getTurnos()    { return this.http.get<Turno[]>(`${this.base}/catalogos/turnos`); }
-  createTurno(t: { nombre: string; horaInicio: string; horaFin: string; tenantId: string }) { return this.http.post<string>(`${this.base}/catalogos/turnos`, t); }
+  getCatalogosClaves() { return this.http.get<{id: string, valor: string}[]>(`${this.base}/catalogos/claves`); }
+  createTurno(t: { nombre: string; clave?: string; horaInicio: string; horaFin: string; tenantId: string }) { return this.http.post<string>(`${this.base}/catalogos/turnos`, t); }
   updateTurno(id: string, t: any) { return this.http.put(`${this.base}/catalogos/turnos/${id}`, t); }
   deleteTurno(id: string)  { return this.http.delete(`${this.base}/catalogos/turnos/${id}`); }
 
@@ -207,4 +208,8 @@ export class ProduccionConfigService {
   createSilo(s: Partial<Silo>) { return this.http.post<string>(`${this.base}/catalogos/silos`, s); }
   updateSilo(id: string, s: Partial<Silo>) { return this.http.put(`${this.base}/catalogos/silos/${id}`, s); }
   deleteSilo(id: string)      { return this.http.delete(`${this.base}/catalogos/silos/${id}`); }
+  archivarSilo(id: string)    { return this.http.put(`${this.base}/catalogos/silos/${id}/archivar`, {}); }
+
+  getMaterialEstados() { return this.http.get<{id: string, nombre: string}[]>(`${this.base}/catalogos/material-estados`); }
+  getMaterialTipos() { return this.http.get<{id: string, nombre: string}[]>(`${this.base}/catalogos/material-tipos`); }
 }

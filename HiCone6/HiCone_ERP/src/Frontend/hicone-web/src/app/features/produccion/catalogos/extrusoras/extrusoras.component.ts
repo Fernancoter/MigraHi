@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProduccionConfigService, Extrusora, ExtrusoraOperarioRow, Operario } from '../../../../core/services/produccion-config.service';
+import { ProduccionConfigService, Extrusora, ExtrusoraOperarioRow, Operario, Turno } from '../../../../core/services/produccion-config.service';
 
 @Component({
   selector: 'app-extrusoras-catalogo',
@@ -204,9 +204,9 @@ import { ProduccionConfigService, Extrusora, ExtrusoraOperarioRow, Operario } fr
                   <div class="erp-select-wrapper">
                     <select class="erp-select" [(ngModel)]="form.numeroExtrusora">
                       <option value="">-- Seleccionar --</option>
-                      <option value="UNO">UNO</option>
-                      <option value="DOS">DOS</option>
-                      <option value="TRES">TRES</option>
+                      @for (c of claves(); track c.id) {
+                        <option [value]="c.valor">{{ c.valor }}</option>
+                      }
                     </select>
                   </div>
                 </div>
@@ -249,7 +249,7 @@ import { ProduccionConfigService, Extrusora, ExtrusoraOperarioRow, Operario } fr
                       <td>
                         <select class="inner-select" [(ngModel)]="row.operarioId">
                           <option value="">-- Sin asignar --</option>
-                          @for (op of operarios(); track op.id) {
+                          @for (op of operariosList(); track op.id) {
                             <option [value]="op.id">{{ op.nombre }}</option>
                           }
                         </select>
@@ -535,10 +535,13 @@ import { ProduccionConfigService, Extrusora, ExtrusoraOperarioRow, Operario } fr
 export class ExtrusorasCatalogoComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
 
-  items    = signal<Extrusora[]>([]);
-  loading  = signal(true);
-  operarios  = signal<Operario[]>([]);
+  items = signal<Extrusora[]>([]);
+  claves = signal<{id: string, valor: string}[]>([]);
+  operariosList = signal<Operario[]>([]);
+  turnosList    = signal<Turno[]>([]);
   operariosRows = signal<ExtrusoraOperarioRow[]>([]);
+
+  loading  = signal(true);
 
   showModal     = signal(false);
   modalReadOnly = signal(false);
@@ -561,10 +564,26 @@ export class ExtrusorasCatalogoComponent implements OnInit {
   currentPage = signal<number>(1);
   pageSize    = signal<number>(8);
 
-  ngOnInit() { this.load(); this.loadOperarios(); }
+  ngOnInit() { this.load(); }
 
   load() {
     this.loading.set(true);
+
+    this.svc.getCatalogosClaves().subscribe({
+      next: c => this.claves.set(c),
+      error: e => console.error('Error cargando claves', e)
+    });
+
+    this.svc.getOperarios().subscribe({
+      next: ops => this.operariosList.set(ops),
+      error: e => console.error(e)
+    });
+
+    this.svc.getTurnos().subscribe({
+      next: t => this.turnosList.set(t),
+      error: e => console.error(e)
+    });
+
     this.svc.getExtrusoras().subscribe({
       next: data => { this.items.set(data); this.loading.set(false); },
       error: ()   => this.loading.set(false)
@@ -572,7 +591,7 @@ export class ExtrusorasCatalogoComponent implements OnInit {
   }
 
   loadOperarios() {
-    this.svc.getOperarios().subscribe({ next: d => this.operarios.set(d), error: () => {} });
+    this.svc.getOperarios().subscribe({ next: d => this.operariosList.set(d), error: () => {} });
   }
 
   filteredItems = computed(() => {
@@ -710,12 +729,11 @@ export class ExtrusorasCatalogoComponent implements OnInit {
       imagen:          this.form.imagen,
       tenantId:        '00000000-0000-0000-0000-000000000001'
     };
-
     if (!this.form.id) {
       this.svc.createExtrusora(dto).subscribe({
-        next: (newId: string) => {
+        next: (id: string) => {
           // Save operario rows
-          this.saveOperarioRows(newId);
+          this.saveOperarioRows(id);
           this.closeModal();
           this.load();
         },

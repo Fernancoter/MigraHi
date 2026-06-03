@@ -124,3 +124,10 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
   - Se configuró `vitest.config.ts` para evitar timeouts en Windows ejecutando en modo single-fork.
   - Se corrigieron las importaciones rotas de componentes de listas y se mockearon las llamadas HTTP directas en los specs.
 
+
+## 2026-06-02: Implementación de Catálogo de Silos y Catálogos Materiales
+- Se rediseñó e implementó el catálogo de **Silos** en el Frontend (Angular) bajo los nuevos estándares de diseño.
+- Se implementaron los catálogos en BD para CatEstadoMaterial (Virgen, Molido, Polvo) y CatTipoMaterial (PCR, HDPE, LDPE).
+- Se configuraron los dropdowns en la vista de Silos enlazados dinámicamente con los catálogos del backend.
+- Se implementó la funcionalidad 'Archivar' (soft delete u ocultamiento de listas) para el catálogo de Silos en Backend y Frontend.
+- Los submódulos completados a la fecha son: Turnos, Prensas, Extrusoras, Operarios, Productos, Categorías y Silos.

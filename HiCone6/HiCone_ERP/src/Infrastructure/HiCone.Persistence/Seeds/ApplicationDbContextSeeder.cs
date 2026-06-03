@@ -1510,7 +1510,40 @@ public class ApplicationDbContextSeeder
             await _context.SaveChangesAsync(default);
         }
 
-        // Extrusiones
+        if (!await _context.CatalogoClaves.AnyAsync(c => c.Valor == "UNO"))
+        {
+            await _context.CatalogoClaves.AddRangeAsync(
+                new CatalogoClave { Valor = "UNO", Orden = 1, TenantId = defaultTenantId },
+                new CatalogoClave { Valor = "DOS", Orden = 2, TenantId = defaultTenantId },
+                new CatalogoClave { Valor = "TRES", Orden = 3, TenantId = defaultTenantId }
+            );
+            await _context.SaveChangesAsync(default);
+        }
+        else
+        {
+            // Corregir el campo Orden si ya existen pero no tienen orden asignado
+            var claves = await _context.CatalogoClaves.ToListAsync();
+            var orderMap = new Dictionary<string, int> { ["UNO"] = 1, ["DOS"] = 2, ["TRES"] = 3 };
+            bool changed = false;
+            foreach (var c in claves)
+            {
+                if (orderMap.TryGetValue(c.Valor, out var orden) && c.Orden != orden)
+                {
+                    c.Orden = orden;
+                    changed = true;
+                }
+            }
+            if (changed) await _context.SaveChangesAsync(default);
+        }
+
+        // Cleanup erroneously added values
+        var wrongClaves = await _context.CatalogoClaves.Where(c => c.Valor == "CUATRO" || c.Valor == "CINCO").ToListAsync();
+        if (wrongClaves.Any())
+        {
+            _context.CatalogoClaves.RemoveRange(wrongClaves);
+            await _context.SaveChangesAsync(default);
+        }
+
         if (!await _context.Extrusiones.AnyAsync())
         {
             var extrusora = await _context.Extrusoras.FirstOrDefaultAsync() ?? new Extrusora { Nombre = "Extrusora 1", TenantId = defaultTenantId };

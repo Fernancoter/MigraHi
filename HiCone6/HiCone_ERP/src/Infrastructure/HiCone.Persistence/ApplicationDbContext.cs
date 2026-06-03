@@ -64,6 +64,9 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<CausaInterrupcion> CausasInterrupcion => Set<CausaInterrupcion>();
     public DbSet<SiloProduccion> SilosProduccion => Set<SiloProduccion>();
     public DbSet<ConfiguracionSistema> ConfiguracionesSistema => Set<ConfiguracionSistema>();
+    public DbSet<CatalogoClave> CatalogoClaves => Set<CatalogoClave>();
+    public DbSet<CatEstadoMaterial> CatEstadosMaterial => Set<CatEstadoMaterial>();
+    public DbSet<CatTipoMaterial> CatTiposMaterial => Set<CatTipoMaterial>();
 
     // ── Produccion — Catálogos Productos ─────────────────────────────────
     public DbSet<Producto> Productos => Set<Producto>();

@@ -86,6 +86,7 @@ import { ProduccionConfigService, Silo } from '../../../../core/services/producc
             <tr>
               <th style="width: 70px;"></th> <!-- Ver -->
               <th style="width: 70px;"></th> <!-- Editar -->
+              <th style="width: 70px;"></th> <!-- Archivar -->
               <th style="width: 70px;"></th> <!-- Borrar -->
               @if (isColVisible('nombre')) { <th>Nombre</th> }
               @if (isColVisible('capacidadKg')) { <th>Capacidad</th> }
@@ -111,6 +112,9 @@ import { ProduccionConfigService, Silo } from '../../../../core/services/producc
                   </td>
                   <td style="width: 70px;">
                     <button class="action-btn edit" (click)="openEditModal(item)">Modificar</button>
+                  </td>
+                  <td style="width: 70px;">
+                    <button class="action-btn" style="background: rgba(100, 116, 139, 0.1); color: #475569;" (click)="archivar(item)">Archivar</button>
                   </td>
                   <td style="width: 70px;">
                     <button class="action-btn delete" (click)="del(item)">Eliminar</button>
@@ -190,15 +194,25 @@ import { ProduccionConfigService, Silo } from '../../../../core/services/producc
                 <input class="field-input" type="number" [(ngModel)]="form.maximoKg" [disabled]="modalReadOnly()" placeholder="Ej. 9000" />
               </div>
 
-              <!-- Readonly Fields as per user rules -->
+              <!-- Selects for Material -->
               <div class="form-row">
                 <label class="field-label">Estado Material</label>
-                <input class="field-input" type="text" [(ngModel)]="form.estadoMaterial" disabled placeholder="Estado actual..." />
+                <select class="field-input" [(ngModel)]="form.estadoMaterial" [disabled]="modalReadOnly()">
+                  <option [ngValue]="null">-- Seleccione Estado --</option>
+                  @for (es of estadosMaterial(); track es.id) {
+                    <option [ngValue]="es.nombre">{{ es.nombre }}</option>
+                  }
+                </select>
               </div>
 
               <div class="form-row">
                 <label class="field-label">Tipo Material</label>
-                <input class="field-input" type="text" [(ngModel)]="form.tipoMaterial" disabled placeholder="Tipo de material..." />
+                <select class="field-input" [(ngModel)]="form.tipoMaterial" [disabled]="modalReadOnly()">
+                  <option [ngValue]="null">-- Seleccione Tipo --</option>
+                  @for (tm of tiposMaterial(); track tm.id) {
+                    <option [ngValue]="tm.nombre">{{ tm.nombre }}</option>
+                  }
+                </select>
               </div>
             </div>
 
@@ -303,8 +317,13 @@ export class SilosCatalogoComponent implements OnInit {
   currentPage = signal<number>(1);
   pageSize = signal<number>(8);
 
+  estadosMaterial = signal<{id: string, nombre: string}[]>([]);
+  tiposMaterial = signal<{id: string, nombre: string}[]>([]);
+
   ngOnInit() {
     this.load();
+    this.svc.getMaterialEstados().subscribe(res => this.estadosMaterial.set(res));
+    this.svc.getMaterialTipos().subscribe(res => this.tiposMaterial.set(res));
   }
 
   load() {
@@ -424,10 +443,18 @@ export class SilosCatalogoComponent implements OnInit {
   }
 
   del(item: Silo) {
-    if (confirm(`¿Está seguro de que desea eliminar el silo "${item.nombre}"?`)) {
+    if (confirm(`¿Está seguro de que desea eliminar el silo "${item.nombre}" permanentemente?`)) {
       this.svc.deleteSilo(item.id).subscribe(() => {
         this.load();
         if (this.currentPage() > this.totalPages()) this.currentPage.set(this.totalPages());
+      });
+    }
+  }
+
+  archivar(item: Silo) {
+    if (confirm(`¿Está seguro de archivar el silo "${item.nombre}"? Dejará de verse en este listado.`)) {
+      this.svc.archivarSilo(item.id).subscribe(() => {
+        this.load();
       });
     }
   }

@@ -270,14 +270,14 @@ import { ProduccionConfigService, Turno } from '../../../../core/services/produc
               </div>
               <div class="erp-panel-body">
 
-                <!-- Clave (se carga del listado real de turnos existentes o NUEVO) -->
+                <!-- Clave (opciones desde la BD) -->
                 <div class="erp-field">
                   <label class="erp-label">Clave</label>
                   <div class="erp-select-wrapper">
-                    <select class="erp-select" [(ngModel)]="selectedClaveId" (change)="onClaveChange()">
-                      <option value="">-- NUEVO --</option>
-                      @for (t of items(); track t.id) {
-                        <option [value]="t.id">{{ t.nombre }}</option>
+                    <select class="erp-select" [(ngModel)]="form.clave">
+                      <option value="">-- Seleccionar --</option>
+                      @for (c of claves(); track c.id) {
+                        <option [value]="c.valor">{{ c.valor }}</option>
                       }
                     </select>
                   </div>
@@ -296,9 +296,9 @@ import { ProduccionConfigService, Turno } from '../../../../core/services/produc
                   <label class="erp-label erp-label-blue">Hora Inicio</label>
                   <div class="erp-time-wrapper">
                     <input #horaInicioInput id="horaInicioInput" class="erp-input erp-input-blue"
-                      type="time" [(ngModel)]="form.horaInicio" />
+                      type="time" [(ngModel)]="form.horaInicio" (click)="openPicker(horaInicioInput)" style="cursor:pointer;" />
                     <button class="erp-cal-btn" type="button"
-                      (click)="horaInicioInput.showPicker ? horaInicioInput.showPicker() : horaInicioInput.focus()"
+                      (click)="openPicker(horaInicioInput)"
                       title="Seleccionar hora">📅</button>
                   </div>
                 </div>
@@ -308,9 +308,9 @@ import { ProduccionConfigService, Turno } from '../../../../core/services/produc
                   <label class="erp-label erp-label-blue">Hora Fin</label>
                   <div class="erp-time-wrapper">
                     <input #horaFinInput id="horaFinInput" class="erp-input erp-input-blue"
-                      type="time" [(ngModel)]="form.horaFin" />
+                      type="time" [(ngModel)]="form.horaFin" (click)="openPicker(horaFinInput)" style="cursor:pointer;" />
                     <button class="erp-cal-btn" type="button"
-                      (click)="horaFinInput.showPicker ? horaFinInput.showPicker() : horaFinInput.focus()"
+                      (click)="openPicker(horaFinInput)"
                       title="Seleccionar hora">📅</button>
                   </div>
                 </div>
@@ -566,6 +566,7 @@ export class TurnosCatalogoComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
 
   items    = signal<Turno[]>([]);
+  claves = signal<{id: string, valor: string}[]>([]);
   loading  = signal(true);
 
   showModal     = signal(false);
@@ -599,6 +600,10 @@ export class TurnosCatalogoComponent implements OnInit {
 
   load() {
     this.loading.set(true);
+    this.svc.getCatalogosClaves().subscribe({
+      next: c => this.claves.set(c),
+      error: e => console.error('Error cargando claves', e)
+    });
     this.svc.getTurnos().subscribe({
       next: data => { this.items.set(data); this.loading.set(false); },
       error: ()   => this.loading.set(false)
@@ -707,7 +712,7 @@ export class TurnosCatalogoComponent implements OnInit {
   }
 
   openCreate() {
-    this.form = { nombre: '', horaInicio: '00:00', horaFin: '00:00' };
+    this.form = { nombre: '', clave: '', horaInicio: '00:00', horaFin: '00:00' };
     this.selectedClaveId = '';
     this.modalReadOnly.set(false);
     this.showModal.set(true);
@@ -731,13 +736,16 @@ export class TurnosCatalogoComponent implements OnInit {
 
   closeModal() { this.showModal.set(false); this.form = {}; this.selectedClaveId = ''; }
 
-  // When user picks an existing record from "Clave" dropdown, load its data
-  onClaveChange() {
-    if (!this.selectedClaveId) {
-      this.form = { nombre: '', horaInicio: '00:00', horaFin: '00:00' };
-    } else {
-      const found = this.items().find(t => t.id === this.selectedClaveId);
-      if (found) this.form = { ...found };
+  openPicker(input: any) {
+    try {
+      if (typeof input.showPicker === 'function') {
+        input.showPicker();
+      } else {
+        input.focus();
+        input.click();
+      }
+    } catch (e) {
+      input.focus();
     }
   }
 
@@ -763,11 +771,11 @@ export class TurnosCatalogoComponent implements OnInit {
     if (!this.form.horaFin)        { alert('Hora Fin es requerida.'); return; }
 
     if (!this.form.id) {
-      // Crear nuevo
       this.svc.createTurno({
-        nombre:     this.form.nombre,
-        horaInicio: this.form.horaInicio,
-        horaFin:    this.form.horaFin,
+        nombre:     this.form.nombre!,
+        clave:      this.form.clave,
+        horaInicio: this.form.horaInicio!,
+        horaFin:    this.form.horaFin!,
         tenantId:   '00000000-0000-0000-0000-000000000001'
       }).subscribe({
         next: () => { this.closeModal(); this.load(); },
@@ -775,9 +783,10 @@ export class TurnosCatalogoComponent implements OnInit {
       });
     } else {
       this.svc.updateTurno(this.form.id, {
-        nombre:     this.form.nombre,
-        horaInicio: this.form.horaInicio,
-        horaFin:    this.form.horaFin,
+        nombre:     this.form.nombre!,
+        clave:      this.form.clave,
+        horaInicio: this.form.horaInicio!,
+        horaFin:    this.form.horaFin!,
         tenantId:   '00000000-0000-0000-0000-000000000001'
       }).subscribe({
         next: () => { this.closeModal(); this.load(); },
