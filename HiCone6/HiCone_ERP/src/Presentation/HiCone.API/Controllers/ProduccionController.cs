@@ -50,6 +50,74 @@ public class ProduccionController : ControllerBase
         return Ok(items);
     }
 
+    [HttpPost("extrusion/programacion/batch")]
+    public async Task<IActionResult> SaveProgramacionExtrusionBatch([FromBody] ProgramacionBatchDto batch)
+    {
+        foreach (var dto in batch.Dias)
+        {
+            var existing = await _context.Extrusiones.FirstOrDefaultAsync(e => e.ExtrusoraId == dto.MaquinaId && e.TurnoId == dto.TurnoId && e.Fecha.Date == dto.Fecha.Date);
+            if (existing != null)
+            {
+                existing.Producto = dto.Producto;
+                existing.OperarioId = dto.OperarioId;
+                existing.Programado = dto.Programado;
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(dto.Producto) || dto.OperarioId != null || dto.Programado > 0)
+                {
+                    _context.Extrusiones.Add(new Extrusion
+                    {
+                        Id = Guid.NewGuid(),
+                        ExtrusoraId = dto.MaquinaId,
+                        TurnoId = dto.TurnoId,
+                        Fecha = dto.Fecha.Date,
+                        Producto = dto.Producto,
+                        OperarioId = dto.OperarioId,
+                        Programado = dto.Programado,
+                        Status = ExtrusionStatus.Programada
+                    });
+                }
+            }
+        }
+        await _context.SaveChangesAsync(default);
+        return Ok();
+    }
+
+    [HttpPost("prensado/programacion/batch")]
+    public async Task<IActionResult> SaveProgramacionPrensadoBatch([FromBody] ProgramacionBatchDto batch)
+    {
+        foreach (var dto in batch.Dias)
+        {
+            var existing = await _context.Prensados.FirstOrDefaultAsync(e => e.PrensaId == dto.MaquinaId && e.TurnoId == dto.TurnoId && e.Fecha.Date == dto.Fecha.Date);
+            if (existing != null)
+            {
+                existing.Producto = dto.Producto;
+                existing.OperarioId = dto.OperarioId;
+                existing.Programado = dto.Programado;
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(dto.Producto) || dto.OperarioId != null || dto.Programado > 0)
+                {
+                    _context.Prensados.Add(new Prensado
+                    {
+                        Id = Guid.NewGuid(),
+                        PrensaId = dto.MaquinaId,
+                        TurnoId = dto.TurnoId,
+                        Fecha = dto.Fecha.Date,
+                        Producto = dto.Producto,
+                        OperarioId = dto.OperarioId,
+                        Programado = dto.Programado,
+                        Status = PrensadoStatus.Programada
+                    });
+                }
+            }
+        }
+        await _context.SaveChangesAsync(default);
+        return Ok();
+    }
+
     /// <summary>Retorna el listado de operación de extrusión</summary>
     [HttpGet("extrusion/operacion")]
     public async Task<ActionResult<IEnumerable<object>>> GetOperacionExtrusion()
@@ -508,3 +576,18 @@ public record UpdatePrensadoDto(
     DateTime? ProcessEnd,
     string? LoteSilo
 );
+
+public class ProgramacionBatchDto
+{
+    public List<ProgramacionDiaDto> Dias { get; set; } = new();
+}
+
+public class ProgramacionDiaDto
+{
+    public Guid MaquinaId { get; set; }
+    public DateTime Fecha { get; set; }
+    public Guid TurnoId { get; set; }
+    public string? Producto { get; set; }
+    public Guid? OperarioId { get; set; }
+    public decimal Programado { get; set; }
+}

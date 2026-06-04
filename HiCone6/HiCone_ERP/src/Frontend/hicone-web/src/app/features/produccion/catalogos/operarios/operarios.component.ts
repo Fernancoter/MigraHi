@@ -39,19 +39,75 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
 
             <!-- Selector de Columnas -->
             <div class="dropdown-wrapper">
-              <button class="btn btn-secondary" (click)="toggleColumnDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem;">
-                <span>📊</span> Select Columns
+              <button class="btn btn-secondary" (click)="toggleColumnDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem; background: #5cb85c; color: white; border-color: #4cae4c;">
+                Selecciona columnas <span style="font-size: 0.7rem; color: white;">▼</span>
               </button>
               @if (showColumnSelector()) {
-                <div class="column-selector-popover animate-slide-up" (click)="$event.stopPropagation()">
-                  <h4>Columnas Visibles</h4>
-                  <div class="column-list">
-                    <label>
-                      <input type="checkbox" [checked]="isColVisible('nombre')" (change)="toggleCol('nombre')"> Nombre
-                    </label>
-                    <label>
-                      <input type="checkbox" [checked]="isColVisible('activo')" (change)="toggleCol('activo')"> Activo
-                    </label>
+                <div class="column-selector-popover animate-slide-up" (click)="$event.stopPropagation()" style="width: 220px; padding: 0.75rem;">
+                  <input type="text" placeholder="" style="width: 100%; border: 1px solid #10b981; border-radius: 4px; padding: 0.4rem; margin-bottom: 0.75rem; outline: none; box-sizing: border-box;" />
+                  
+                  <div class="column-list" style="gap: 0.2rem;">
+                    <!-- Fijas a la izquierda -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: #475569;">
+                      <label style="display: flex; align-items: center; gap: 0.4rem; font-weight: normal; cursor: pointer;">
+                        <input type="checkbox" checked />
+                        Fijas a la izquierda
+                      </label>
+                      <span style="font-size: 0.6rem; cursor: pointer;">▼</span>
+                    </div>
+                    <div style="padding-left: 1.5rem; margin-bottom: 0.4rem;">
+                      <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: #475569; font-weight: normal; cursor: pointer;">
+                        <input type="checkbox" checked />
+                        <span style="color: #3b82f6;">(Ninguna)</span>
+                      </label>
+                    </div>
+
+                    <!-- No fijas -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: #475569;">
+                      <label style="display: flex; align-items: center; gap: 0.4rem; font-weight: normal; cursor: pointer;">
+                        <input type="checkbox" />
+                        No fijas
+                      </label>
+                      <span style="font-size: 0.6rem; cursor: pointer;">▼</span>
+                    </div>
+                    <div style="padding-left: 1.5rem; margin-bottom: 0.4rem; display: flex; flex-direction: column; gap: 0.3rem;">
+                      <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: #475569; font-weight: normal; cursor: pointer;">
+                        <input type="checkbox" [checked]="isColVisible('nombre')" (change)="toggleCol('nombre')" />
+                        Nombre
+                      </label>
+                      <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: #475569; font-weight: normal; cursor: pointer;">
+                        <input type="checkbox" [checked]="isColVisible('fotografia')" (change)="toggleCol('fotografia')" />
+                        Fotografia
+                      </label>
+                      <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: #475569; font-weight: normal; cursor: pointer;">
+                        <input type="checkbox" [checked]="isColVisible('activo')" (change)="toggleCol('activo')" />
+                        Activo
+                      </label>
+                    </div>
+
+                    <!-- Fijas a la derecha -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: #475569;">
+                      <label style="display: flex; align-items: center; gap: 0.4rem; font-weight: normal; cursor: pointer;">
+                        <input type="checkbox" checked />
+                        Fijas a la derecha
+                      </label>
+                      <span style="font-size: 0.6rem; cursor: pointer;">▼</span>
+                    </div>
+                    <div style="padding-left: 1.5rem; margin-bottom: 0.4rem;">
+                      <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: #475569; font-weight: normal; cursor: pointer;">
+                        <input type="checkbox" checked />
+                        <span style="color: #3b82f6;">(Ninguna)</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e2e8f0;">
+                    <button class="btn" style="background: #5cb85c; color: white; padding: 0.4rem 0.6rem; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; width: 35px;" title="Restaurar" (click)="visibleColumns.set(['nombre', 'activo'])">
+                      ↺
+                    </button>
+                    <button class="btn" style="background: #5cb85c; color: white; padding: 0.4rem 1rem; border-radius: 4px; font-size: 0.85rem; font-weight: bold; width: calc(100% - 45px);" (click)="toggleColumnDropdown($event)">
+                      Actualizar
+                    </button>
                   </div>
                 </div>
               }
@@ -161,6 +217,9 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
                   @if (isColVisible('nombre')) { 
                     <td class="col-nombre">{{ item.nombre }}</td> 
                   }
+                  @if (isColVisible('fotografia')) { 
+                    <td><img [src]="item.fotografia || ''" style="max-width: 40px; border-radius: 4px;" alt="Foto"></td> 
+                  }
                   @if (isColVisible('activo')) {
                     <td style="width: 120px;">
                       <label class="checkbox-container">
@@ -213,10 +272,8 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
             </div>
             
             <div class="modal-body">
-              <div class="form-row">
-                <label class="field-label">ID</label>
-                <input class="field-input" type="text" [value]="form.id || 'Nuevo'" disabled style="background: #f1f5f9; cursor: not-allowed;" />
-              </div>
+              <!-- ID and User GUID hidden as requested -->
+
 
               <div class="form-row">
                 <label class="field-label">Nombre *</label>
@@ -240,16 +297,7 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
                 />
               </div>
 
-              <div class="form-row">
-                <label class="field-label">User GUID</label>
-                <input 
-                  class="field-input" 
-                  type="text" 
-                  [(ngModel)]="form.userGuid" 
-                  [disabled]="modalReadOnly()" 
-                  placeholder="GUID de usuario asociado..." 
-                />
-              </div>
+
               
               <div class="form-row" style="margin-top: 0.5rem;">
                 <label class="checkbox-container" style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; color: #475569;">
@@ -407,7 +455,7 @@ export class OperariosCatalogoComponent implements OnInit {
         // Hydrate mock properties if missing on existing items
         const list = data.map(op => ({
           ...op,
-          fotografia: op.fotografia || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
+          fotografia: op.fotografia || '',
           userGuid: op.userGuid || `usr_${op.id.substring(0, 8)}`
         }));
         this.items.set(list);
@@ -599,8 +647,8 @@ export class OperariosCatalogoComponent implements OnInit {
     this.form = { 
       nombre: '', 
       activo: true, 
-      fotografia: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
-      userGuid: 'usr_new_operator'
+      fotografia: '',
+      userGuid: `usr_new_${Math.floor(Math.random()*10000)}`
     };
     this.modalReadOnly.set(false);
     this.showModal.set(true);

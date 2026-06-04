@@ -1,10 +1,12 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ProduccionConfigService, Turno, Extrusora, Prensa, Producto, Operario } from '../../../core/services/produccion-config.service';
 
 @Component({
   selector: 'app-turnos-semana',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="module-page animate-move-up">
       <header class="module-header-container" style="display: flex; flex-direction: column; margin-bottom: 1.5rem;">
@@ -107,21 +109,21 @@ import { CommonModule } from '@angular/common';
             <div class="date-field" style="flex: 1; border-bottom: 1px solid #cbd5e1; padding-bottom: 0.3rem; position: relative;">
               <label style="display: block; font-size: 0.75rem; color: #475569; font-weight: 600; margin-bottom: 0.5rem;">Fecha Inicio *</label>
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <input type="text" value="01/06/26" style="border: none; outline: none; background: transparent; font-size: 0.95rem; color: #475569; width: 100%;" />
+                <input type="text" [value]="fechaInicio()" (input)="updateFecha('inicio', $event)" style="border: none; outline: none; background: transparent; font-size: 0.95rem; color: #475569; width: 100%;" />
                 <span style="color: #cbd5e1; font-size: 1.1rem; cursor: pointer;" (click)="toggleCalendar('inicio', $event)">📅</span>
               </div>
               @if (showCalendarMenu() === 'inicio') {
-                <ng-container *ngTemplateOutlet="calendarTemplate"></ng-container>
+                <ng-container *ngTemplateOutlet="calendarTemplate; context: { type: 'inicio' }"></ng-container>
               }
             </div>
             <div class="date-field" style="flex: 1; border-bottom: 1px solid #cbd5e1; padding-bottom: 0.3rem; position: relative;">
               <label style="display: block; font-size: 0.75rem; color: #475569; font-weight: 600; margin-bottom: 0.5rem;">Fecha Fin *</label>
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <input type="text" value="07/06/26" style="border: none; outline: none; background: transparent; font-size: 0.95rem; color: #475569; width: 100%;" />
+                <input type="text" [value]="fechaFin()" (input)="updateFecha('fin', $event)" style="border: none; outline: none; background: transparent; font-size: 0.95rem; color: #475569; width: 100%;" />
                 <span style="color: #cbd5e1; font-size: 1.1rem; cursor: pointer;" (click)="toggleCalendar('fin', $event)">📅</span>
               </div>
               @if (showCalendarMenu() === 'fin') {
-                <ng-container *ngTemplateOutlet="calendarTemplate"></ng-container>
+                <ng-container *ngTemplateOutlet="calendarTemplate; context: { type: 'fin' }"></ng-container>
               }
             </div>
           </div>
@@ -133,45 +135,32 @@ import { CommonModule } from '@angular/common';
           <div class="inner-tabs-container" style="border: 1px solid #cbd5e1; border-radius: 2px;">
             <div class="inner-tabs" style="display: flex; border-bottom: 1px solid #cbd5e1; padding: 0 1rem; background: white; flex-wrap: wrap;">
               @if (activeMainTab() === 'extrusoras') {
-                <div class="inner-tab" 
-                     [class.active]="activeInnerTab() === 'extrusora1'"
-                     (click)="activeInnerTab.set('extrusora1')">Extrusora 1</div>
-                <div class="inner-tab" 
-                     [class.active]="activeInnerTab() === 'extrusora2'"
-                     (click)="activeInnerTab.set('extrusora2')">Extrusora 2</div>
-                <div class="inner-tab" 
-                     [class.active]="activeInnerTab() === 'extrusora3'"
-                     (click)="activeInnerTab.set('extrusora3')">Extrusora 3</div>
+                @for (maq of extrusoras(); track maq.id) {
+                  <div class="inner-tab" 
+                       [class.active]="activeInnerTab() === maq.id"
+                       (click)="activeInnerTab.set(maq.id)">{{ maq.nombre }}</div>
+                }
               } @else {
-                <div class="inner-tab" 
-                     [class.active]="activeInnerTab() === 'prensa1'"
-                     (click)="activeInnerTab.set('prensa1')">Prensa 1</div>
-                <div class="inner-tab" 
-                     [class.active]="activeInnerTab() === 'prensa2'"
-                     (click)="activeInnerTab.set('prensa2')">Prensa 2</div>
-                <div class="inner-tab" 
-                     [class.active]="activeInnerTab() === 'prensa3'"
-                     (click)="activeInnerTab.set('prensa3')">Prensa 3</div>
-                <div class="inner-tab" 
-                     [class.active]="activeInnerTab() === 'prensa4'"
-                     (click)="activeInnerTab.set('prensa4')">Prensa 4</div>
-                <div class="inner-tab" 
-                     [class.active]="activeInnerTab() === 'prensa5'"
-                     (click)="activeInnerTab.set('prensa5')">Prensa 5</div>
+                @for (maq of prensas(); track maq.id) {
+                  <div class="inner-tab" 
+                       [class.active]="activeInnerTab() === maq.id"
+                       (click)="activeInnerTab.set(maq.id)">{{ maq.nombre }}</div>
+                }
               }
             </div>
             <div class="inner-tab-content" style="min-height: 80px; background: white;">
               @if (showTables()) {
                 <div style="padding: 1.5rem;">
-                  @for (turno of [
-                    { name: '1er Turno', time: '00:00', op: 'LUIS CESAR OROPEZA ORTEGA', idStart: 22440 },
-                    { name: '2do Turno', time: '08:00', op: 'GUADALUPE ROMERO TORRES', idStart: 22447 },
-                    { name: '3er Turno', time: '15:00', op: 'FILEMON VILCHIS ROMERO', idStart: 22454 }
-                  ]; track turno.name) {
+                  @if (turnos().length === 0) {
+                    <div style="padding: 2rem; text-align: center; color: #94a3b8; font-style: italic; border: 1px dashed #cbd5e1; border-radius: 4px;">
+                      No hay turnos registrados en la base de datos.
+                    </div>
+                  }
+                  @for (turno of turnos(); track turno.id) {
                     <div style="border: 1px solid #cbd5e1; border-radius: 2px; margin-bottom: 1.5rem;">
                       <div style="padding: 0.5rem; display: flex; align-items: center; border-bottom: 1px solid #cbd5e1;">
                         <span class="icon" style="background: #4caf50; padding: 0.1rem 0.3rem; border-radius: 2px; color: white; margin-right: 0.5rem; font-size: 0.6rem;">◆</span>
-                        <span style="color: #475569; font-weight: 600; font-size: 0.8rem;">{{ turno.name }}</span>
+                        <span style="color: #475569; font-weight: 600; font-size: 0.8rem;">{{ turno.nombre }}</span>
                       </div>
                       <div style="padding: 1rem; overflow-x: auto;">
                         <table style="width: 100%; border-collapse: collapse; min-width: 800px; font-size: 0.75rem; color: #475569;">
@@ -189,38 +178,57 @@ import { CommonModule } from '@angular/common';
                             </tr>
                           </thead>
                           <tbody>
-                            @for (dia of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']; track dia; let i = $index) {
+                            @for (dia of weekDays(); track dia.date) {
                               <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 0.6rem 0.5rem;">{{ turno.idStart + i }}</td>
-                                <td style="padding: 0.6rem 0.5rem;">Por Programar</td>
-                                <td style="padding: 0.6rem 0.5rem;">0{{ i + 1 }}/06/26 {{ turno.time }}</td>
+                                <td style="padding: 0.6rem 0.5rem; font-family: monospace; font-size: 0.7rem;">{{ getCelda(activeInnerTab(), dia.date, turno.id).extrusionIdLegacy || '---' }}</td>
+                                <td style="padding: 0.6rem 0.5rem;">
+                                  <span [ngStyle]="{'color': getCelda(activeInnerTab(), dia.date, turno.id).status ? '#005a70' : '#94a3b8'}">
+                                    {{ getCelda(activeInnerTab(), dia.date, turno.id).status || 'PorProgramar' }}
+                                  </span>
+                                </td>
+                                <td style="padding: 0.6rem 0.5rem;">{{ dia.date }}</td>
                                 <td style="padding: 0.6rem 0.5rem;">
                                   <div style="display: flex; align-items: center; border-bottom: 1px solid #cbd5e1; width: max-content;">
-                                    <span style="margin-right: 0.5rem;">{{ turno.time }}</span>
+                                    <span style="margin-right: 0.5rem;">{{ turno.horaInicio }}</span>
                                     <span style="color: #cbd5e1; font-size: 0.9rem;">📅</span>
                                   </div>
                                 </td>
-                                <td style="padding: 0.6rem 0.5rem;">{{ dia }}</td>
+                                <td style="padding: 0.6rem 0.5rem;">{{ dia.name }}</td>
                                 <td style="padding: 0.6rem 0.5rem;">
-                                  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #cbd5e1; width: 100px;">
-                                    <span>74757</span>
-                                    <span style="font-size: 0.5rem;">▼</span>
-                                  </div>
+                                  <select [ngModel]="getCelda(activeInnerTab(), dia.date, turno.id).producto" (ngModelChange)="updateCelda(activeInnerTab(), dia.date, turno.id, 'producto', $event)" style="border: none; outline: none; border-bottom: 1px solid #cbd5e1; width: 100px; background: transparent; font-size: 0.75rem;">
+                                    <option [value]="undefined"></option>
+                                    @for (p of productos(); track p.id) {
+                                      <option [value]="p.nombre">{{ p.nombre }}</option>
+                                    }
+                                  </select>
                                 </td>
-                                <td style="padding: 0.6rem 0.5rem; text-align: center;">0</td>
-                                <td style="padding: 0.6rem 0.5rem; text-align: center;">0</td>
+                                <td style="padding: 0.6rem 0.5rem; text-align: center;">
+                                  <input type="number" [ngModel]="getCelda(activeInnerTab(), dia.date, turno.id).programado" (ngModelChange)="updateCelda(activeInnerTab(), dia.date, turno.id, 'programado', $event)" style="width: 50px; text-align: center; border: 1px solid #e2e8f0; border-radius: 2px; padding: 0.2rem;" />
+                                </td>
+                                <td style="padding: 0.6rem 0.5rem; text-align: center;">
+                                  {{ getCelda(activeInnerTab(), dia.date, turno.id).producido || 0 }}
+                                </td>
                                 <td style="padding: 0.6rem 0.5rem;">
-                                  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #cbd5e1; width: max-content; gap: 0.5rem;">
-                                    <span>{{ turno.op }}</span>
-                                    <span style="font-size: 0.5rem;">▼</span>
-                                  </div>
+                                  <select [ngModel]="getCelda(activeInnerTab(), dia.date, turno.id).operarioId" (ngModelChange)="updateCelda(activeInnerTab(), dia.date, turno.id, 'operarioId', $event)" style="border: none; outline: none; border-bottom: 1px solid #cbd5e1; width: 120px; background: transparent; font-size: 0.75rem;">
+                                    <option [value]="undefined"></option>
+                                    @for (o of operarios(); track o.id) {
+                                      <option [value]="o.id">{{ o.nombre }}</option>
+                                    }
+                                  </select>
+                                </td>
+                              </tr>
+                            }
+                            @if (weekDays().length === 0) {
+                              <tr>
+                                <td colspan="9" style="padding: 2rem; text-align: center; color: #94a3b8; font-style: italic; border: 1px dashed #cbd5e1; border-radius: 4px;">
+                                  Seleccione la fecha de inicio para cargar la programación de la semana
                                 </td>
                               </tr>
                             }
                           </tbody>
                         </table>
                         <div style="margin-top: 1rem;">
-                          <button style="background: #4caf50; color: white; font-weight: 600; padding: 0.5rem 1.5rem; border: none; border-radius: 2px; cursor: pointer; font-size: 0.75rem;">GUARDAR</button>
+                          <button (click)="guardarProgramacion()" style="background: #4caf50; color: white; font-weight: 600; padding: 0.5rem 1.5rem; border: none; border-radius: 2px; cursor: pointer; font-size: 0.75rem;">GUARDAR</button>
                         </div>
                       </div>
                     </div>
@@ -233,19 +241,11 @@ import { CommonModule } from '@angular/common';
         </div>
       </div>
       
-      <!-- Footer -->
-      <footer style="margin-top: 1.5rem; padding-top: 0.5rem; border-top: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #475569; gap: 1rem;">
-        <span style="font-weight: 600; font-size: 0.8rem;">Consultas a partir de la siguiente fecha:</span>
-        <div style="display: flex; align-items: center; border-bottom: 1px solid #cbd5e1; padding-bottom: 0.1rem; gap: 0.5rem; min-width: 80px; justify-content: space-between;">
-          <span style="color: #94a3b8;">01/03/28</span>
-          <span style="color: #cbd5e1; font-size: 1rem; cursor: pointer;">📅</span>
-        </div>
-        <span style="color: #64748b; font-size: 0.75rem; margin-left: 0.5rem;">Copyright 2023</span>
-      </footer>
+
     </div>
 
     <!-- Calendar Template -->
-    <ng-template #calendarTemplate>
+    <ng-template #calendarTemplate let-type="type">
       <div class="calendar-popover" style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #cbd5e1; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 100; width: 250px; font-family: sans-serif; padding: 1rem;" (click)="$event.stopPropagation()">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
           <span style="cursor: pointer; padding: 0.2rem; font-weight: bold;">&lt;</span>
@@ -260,17 +260,17 @@ import { CommonModule } from '@angular/common';
         </div>
         <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 0.85rem; row-gap: 0.8rem; color: #334155;">
           <span style="color: #94a3b8;">31</span>
-          <span style="background: #3b82f6; color: white; border-radius: 4px; padding: 0.2rem;">1</span>
-          <span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
-          <span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span>
-          <span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span><span>20</span>
-          <span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span><span>27</span>
-          <span>28</span><span>29</span><span>30</span>
+          @for (day of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]; track day) {
+            <span class="calendar-day" 
+                  [class.selected-day]="isDaySelected(day, type)"
+                  (click)="selectDate(day, type)">
+              {{ day }}
+            </span>
+          }
           <span style="color: #94a3b8;">1</span><span style="color: #94a3b8;">2</span><span style="color: #94a3b8;">3</span><span style="color: #94a3b8;">4</span>
-          <span style="color: #94a3b8;">5</span><span style="color: #94a3b8;">6</span><span style="color: #94a3b8;">7</span><span style="color: #94a3b8;">8</span><span style="color: #94a3b8;">9</span><span style="color: #94a3b8;">10</span><span style="color: #94a3b8;">11</span>
         </div>
         <div style="margin-top: 1rem; border-top: 1px solid #e2e8f0; padding-top: 0.5rem; text-align: right;">
-          <button style="border: 1px solid #cbd5e1; background: white; padding: 0.3rem 0.8rem; border-radius: 2px; cursor: pointer; font-size: 0.8rem; color: #475569;">Limpiar</button>
+          <button (click)="limpiar(type)" style="border: 1px solid #cbd5e1; background: white; padding: 0.3rem 0.8rem; border-radius: 2px; cursor: pointer; font-size: 0.8rem; color: #475569;">Limpiar</button>
         </div>
       </div>
     </ng-template>
@@ -324,10 +324,27 @@ import { CommonModule } from '@angular/common';
       height: 14px;
       cursor: pointer;
     }
+    .calendar-day {
+      cursor: pointer;
+      padding: 0.2rem;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .calendar-day:hover {
+      background: #e2e8f0;
+    }
+    .selected-day {
+      background: #3b82f6 !important;
+      color: white;
+    }
   `],
   host: { '(click)': 'closeMenus()' }
 })
-export class TurnosSemanaComponent {
+export class TurnosSemanaComponent implements OnInit {
+  private svc = inject(ProduccionConfigService);
+  
+  turnos = signal<Turno[]>([]);
+  
   activeMainTab = signal<'extrusoras' | 'prensas'>('extrusoras');
   activeInnerTab = signal<string>('extrusora1');
   
@@ -335,13 +352,113 @@ export class TurnosSemanaComponent {
   showCalendarMenu = signal<'inicio' | 'fin' | null>(null);
   showTables = signal(false);
 
+  fechaInicio = signal('');
+  fechaFin = signal('');
+
+  weekDays = computed(() => {
+    const inicio = this.fechaInicio();
+    if (!inicio) return [];
+    
+    const parts = inicio.split('/');
+    if (parts.length !== 3) return [];
+    
+    let day = parseInt(parts[0], 10);
+    const daysName = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    
+    return Array.from({length: 7}).map((_, i) => {
+      const d = day + i;
+      const formattedDay = d < 10 ? '0' + d : d;
+      return { date: `${formattedDay}/${parts[1]}/${parts[2]}`, name: daysName[i % 7] };
+    });
+  });
+
+  extrusoras = signal<Extrusora[]>([]);
+  prensas = signal<Prensa[]>([]);
+  productos = signal<Producto[]>([]);
+  operarios = signal<Operario[]>([]);
+
+  matriz = signal<Record<string, any>>({});
+
+  getCelda(maquinaId: string, fecha: string, turnoId: string) {
+    const key = `${maquinaId}_${fecha}_${turnoId}`;
+    return this.matriz()[key] || { maquinaId, fecha, turnoId, programado: 0 };
+  }
+
+  updateCelda(maquinaId: string, fecha: string, turnoId: string, field: string, value: any) {
+    const key = `${maquinaId}_${fecha}_${turnoId}`;
+    const mat = { ...this.matriz() };
+    if (!mat[key]) mat[key] = { maquinaId, fecha, turnoId, programado: 0 };
+    mat[key][field] = value;
+    this.matriz.set(mat);
+  }
+
+  guardarProgramacion() {
+    const dias = Object.values(this.matriz()).map(c => ({
+      maquinaId: c.maquinaId,
+      // Convert DD/MM/YY or DD/MM/YYYY to YYYY-MM-DD
+      fecha: this.parseDateString(c.fecha),
+      turnoId: c.turnoId,
+      producto: c.producto,
+      operarioId: c.operarioId,
+      programado: c.programado || 0
+    }));
+
+    if (dias.length === 0) return;
+
+    if (this.activeMainTab() === 'extrusoras') {
+      this.svc.saveProgramacionExtrusionBatch({ dias }).subscribe(() => {
+        alert('Programación de extrusoras guardada con éxito');
+      });
+    } else {
+      this.svc.saveProgramacionPrensadoBatch({ dias }).subscribe(() => {
+        alert('Programación de prensas guardada con éxito');
+      });
+    }
+  }
+
+  parseDateString(dateStr: string): string {
+    const parts = dateStr.split('/');
+    if (parts.length === 3) {
+      let y = parts[2];
+      if (y.length === 2) y = '20' + y;
+      return `${y}-${parts[1]}-${parts[0]}`;
+    }
+    return new Date().toISOString().split('T')[0];
+  }
+
+  ngOnInit() {
+    this.svc.getTurnos().subscribe({
+      next: (data: Turno[] | null) => this.turnos.set(data || []),
+      error: (err: any) => {
+        console.warn('Error fetching turnos', err);
+        this.turnos.set([]);
+      }
+    });
+    this.svc.getExtrusoras().subscribe(res => {
+      this.extrusoras.set(res || []);
+      if (res && res.length > 0 && this.activeMainTab() === 'extrusoras') {
+        this.activeInnerTab.set(res[0].id);
+      }
+    });
+    this.svc.getPrensas().subscribe(res => {
+      this.prensas.set(res || []);
+      if (res && res.length > 0 && this.activeMainTab() === 'prensas') {
+        this.activeInnerTab.set(res[0].id);
+      }
+    });
+    this.svc.getProductos({activo: true}).subscribe(res => this.productos.set(res || []));
+    this.svc.getOperarios().subscribe(res => this.operarios.set(res || []));
+  }
+
   setMainTab(tab: 'extrusoras' | 'prensas', event?: Event) {
     if (event) event.stopPropagation();
     this.activeMainTab.set(tab);
     if (tab === 'extrusoras') {
-      this.activeInnerTab.set('extrusora1');
+      const ext = this.extrusoras();
+      if (ext.length > 0) this.activeInnerTab.set(ext[0].id);
     } else {
-      this.activeInnerTab.set('prensa1');
+      const pr = this.prensas();
+      if (pr.length > 0) this.activeInnerTab.set(pr[0].id);
     }
     this.closeMenus();
   }
@@ -360,6 +477,39 @@ export class TurnosSemanaComponent {
       this.showCalendarMenu.set(type);
       this.showGridMenu.set(false);
     }
+  }
+
+  updateFecha(type: 'inicio' | 'fin', event: any) {
+    if (type === 'inicio') {
+      this.fechaInicio.set(event.target.value);
+    } else {
+      this.fechaFin.set(event.target.value);
+    }
+  }
+
+  selectDate(day: number, type: 'inicio' | 'fin') {
+    const formattedDay = day < 10 ? `0${day}` : `${day}`;
+    if (type === 'inicio') {
+      this.fechaInicio.set(`${formattedDay}/06/26`);
+    } else {
+      this.fechaFin.set(`${formattedDay}/06/26`);
+    }
+    this.closeMenus();
+  }
+
+  isDaySelected(day: number, type: 'inicio' | 'fin'): boolean {
+    const formattedDay = day < 10 ? `0${day}` : `${day}`;
+    const val = type === 'inicio' ? this.fechaInicio() : this.fechaFin();
+    return val.startsWith(`${formattedDay}/`);
+  }
+
+  limpiar(type: 'inicio' | 'fin') {
+    if (type === 'inicio') {
+      this.fechaInicio.set('');
+    } else {
+      this.fechaFin.set('');
+    }
+    this.closeMenus();
   }
 
   closeMenus() {

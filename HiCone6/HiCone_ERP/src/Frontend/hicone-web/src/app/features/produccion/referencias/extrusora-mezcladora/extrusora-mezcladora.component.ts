@@ -104,16 +104,5 @@ import { FormsModule } from '@angular/forms';
   `]
 })
 export class ExtrusoraMezcladoraComponent {
-  items = signal([
-    { extrusora: 'Extrusora 1', virgenMin: 18.00, virgenMax: 18.00, molidoMin: 35.00, molidoMax: 35.00, kgVirgen: 7.20, kgMolido: 8.47 },
-    { extrusora: 'Extrusora 1', virgenMin: 20.00, virgenMax: 20.00, molidoMin: 80.00, molidoMax: 80.00, kgVirgen: 3.20, kgMolido: 12.71 },
-    { extrusora: 'Extrusora 1', virgenMin: 25.31, virgenMax: 25.31, molidoMin: 74.68, molidoMax: 74.68, kgVirgen: 4.00, kgMolido: 11.80 },
-    { extrusora: 'Extrusora 1', virgenMin: 29.00, virgenMax: 29.00, molidoMin: 71.00, molidoMax: 71.00, kgVirgen: 3.60, kgMolido: 9.00 },
-    { extrusora: 'Extrusora 1', virgenMin: 30.00, virgenMax: 30.00, molidoMin: 70.00, molidoMax: 70.00, kgVirgen: 4.80, kgMolido: 10.80 },
-    { extrusora: 'Extrusora 1', virgenMin: 35.00, virgenMax: 35.00, molidoMin: 65.00, molidoMax: 65.00, kgVirgen: 5.60, kgMolido: 10.35 },
-    { extrusora: 'Extrusora 1', virgenMin: 38.00, virgenMax: 38.00, molidoMin: 62.00, molidoMax: 62.00, kgVirgen: 5.80, kgMolido: 9.40 },
-    { extrusora: 'Extrusora 1', virgenMin: 40.00, virgenMax: 40.00, molidoMin: 60.00, molidoMax: 60.00, kgVirgen: 5.60, kgMolido: 8.80 },
-    { extrusora: 'Extrusora 1', virgenMin: 40.40, virgenMax: 40.40, molidoMin: 59.50, molidoMax: 59.50, kgVirgen: 6.40, kgMolido: 9.41 },
-    { extrusora: 'Extrusora 1', virgenMin: 45.00, virgenMax: 45.00, molidoMin: 55.00, molidoMax: 55.00, kgVirgen: 7.20, kgMolido: 8.47 }
-  ]);
+  items = signal<any[]>([]);
 }

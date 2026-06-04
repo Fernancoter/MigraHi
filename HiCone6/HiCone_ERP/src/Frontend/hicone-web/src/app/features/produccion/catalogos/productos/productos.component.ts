@@ -463,11 +463,12 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
                   @if (modalReadOnly()) {
                     {{ form.categoria || '(Ninguno)' }}
                   } @else {
-                    <select class="field-input" [(ngModel)]="form.categoria" style="width: 100%; appearance: auto; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;">
-                      <option [value]="undefined">(Ninguno)</option>
-                      <option value="Bobina">Bobina</option>
-                      <option value="Reel">Reel</option>
-                    </select>
+                      <select class="field-input" [(ngModel)]="form.categoriaId" style="width: 100%; appearance: auto; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;">
+                        <option [value]="undefined">(Ninguno)</option>
+                        @for (cat of categories(); track cat.id) {
+                          <option [value]="cat.id">{{ cat.nombre }}</option>
+                        }
+                      </select>
                   }
                 </div>
               </div>
@@ -513,9 +514,12 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
                 <label class="legacy-field-label">Precio Unitario</label>
                 <div class="legacy-field-value">
                   @if (modalReadOnly()) {
-                    {{ form.precioUnitarioFormat || '$ 0.00' }}
+                    <span style="padding: 0.4rem;">$ {{ (form.precioUnitario || 0).toFixed(2) }}</span>
                   } @else {
-                    <input class="field-input" type="text" [(ngModel)]="form.precioUnitarioFormat" (blur)="formatPrice()" style="width: 100%; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;" />
+                    <div style="position: relative; display: flex; align-items: center;">
+                      <span style="position: absolute; left: 0.5rem; color: #64748b; font-weight: bold;">$</span>
+                      <input class="field-input no-spin" type="number" step="0.01" (wheel)="$event.preventDefault()" [(ngModel)]="form.precioUnitario" placeholder="0.00" style="width: 100%; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem 0.4rem 0.4rem 1.5rem;" />
+                    </div>
                   }
                 </div>
               </div>
@@ -523,13 +527,25 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
               <!-- Inventario Inicial -->
               <div class="legacy-field-row">
                 <label class="legacy-field-label">Inventario Inicial</label>
-                <div class="legacy-field-value">0</div>
+                <div class="legacy-field-value">
+                  @if (modalReadOnly()) {
+                    {{ form.inventarioActual || 0 }}
+                  } @else {
+                    <input class="field-input" type="number" [(ngModel)]="form.inventarioActual" style="width: 100%; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;" />
+                  }
+                </div>
               </div>
 
               <!-- Clave Paleta -->
               <div class="legacy-field-row">
                 <label class="legacy-field-label">Clave Paleta</label>
-                <div class="legacy-field-value">0</div>
+                <div class="legacy-field-value">
+                  @if (modalReadOnly()) {
+                    {{ form.claveExterna || '' }}
+                  } @else {
+                    <input class="field-input" type="text" [(ngModel)]="form.claveExterna" style="width: 100%; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;" />
+                  }
+                </div>
               </div>
 
               <!-- Tipo Material -->
@@ -542,9 +558,9 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
                   } @else {
                     <select class="field-input" [(ngModel)]="form.tipoMaterial" style="width: 100%; appearance: auto; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;">
                       <option [value]="undefined"></option>
-                      <option value="PCR">PCR</option>
-                      <option value="DOW">DOW</option>
-                      <option value="PCR 100%">PCR 100%</option>
+                      @for (mat of materialTipos(); track mat.id) {
+                        <option [value]="mat.nombre">{{ mat.nombre }}</option>
+                      }
                     </select>
                   }
                 </div>
@@ -591,8 +607,9 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
                 } @else {
                   <select [(ngModel)]="form.categoriaProductoBase" style="width: 100%; border: none; outline: none; appearance: auto; background: transparent; font-size: 0.85rem; color: #1e293b; margin-top: 1.5rem;">
                     <option [value]="undefined"></option>
-                    <option value="Bobina">Bobina</option>
-                    <option value="Reel">Reel</option>
+                    @for (cat of categories(); track cat.id) {
+                      <option [value]="cat.id">{{ cat.nombre }}</option>
+                    }
                   </select>
                 }
               </div>
@@ -911,6 +928,7 @@ export class ProductosCatalogoComponent implements OnInit {
   
   items = signal<Producto[]>([]);
   categories = signal<Categoria[]>([]);
+  materialTipos = signal<{id: string, nombre: string}[]>([]);
   loading = signal(true);
   showModal = signal(false);
   modalReadOnly = signal(false);
@@ -928,13 +946,8 @@ export class ProductosCatalogoComponent implements OnInit {
     productoBase?: string;
   } = {};
 
-  // Mock Aspel SAE Codes
-  saeCodes = signal<{ code: string; name: string }[]>([
-    { code: 'SAE-PROD-001', name: 'Bobina de Película Polietileno 80cm' },
-    { code: 'SAE-PROD-002', name: 'Tubo de Plástico Flexible 1/2' },
-    { code: 'SAE-PROD-003', name: 'Perfil Extruido Industrial PVC' },
-    { code: 'SAE-PROD-004', name: 'Bobina Plástica Termoencogible' }
-  ]);
+  // SAE Codes
+  saeCodes = signal<{ code: string; name: string }[]>([]);
 
   // Actions & Popover States
   searchText = signal<string>('');
@@ -970,44 +983,31 @@ export class ProductosCatalogoComponent implements OnInit {
   }
 
   loadCategories() {
-    this.svc.getCategorias().subscribe(res => this.categories.set(res));
+    this.svc.getCategorias().subscribe(res => {
+      // Auto-seed si no hay datos
+      if (!res || res.length === 0) {
+        this.svc.createCategoria({nombre: 'Bobina'}).subscribe(() => {
+          this.svc.createCategoria({nombre: 'Reel'}).subscribe(() => {
+            this.svc.getCategorias().subscribe(r => this.categories.set(r));
+          });
+        });
+      } else {
+        this.categories.set(res);
+      }
+    });
+    this.svc.getMaterialTipos().subscribe(res => this.materialTipos.set(res || []));
   }
 
   load() {
     this.loading.set(true);
-
-    const testData: any[] = [
-      { id: 't1', categoria: 'Materia Prima', productoBase: 'Resina', clave: 'MP001', nombre: 'Industrial Transparent Resin', descripcion: 'Resina base', tipoMaterial: 'Polímero', isActive: true, productoSAE: 'SAE-001', precioUnitario: 125.50 },
-      { id: 't2', categoria: 'Materia Prima', productoBase: 'Pigmento', clave: 'MP002', nombre: 'Industrial Blue Pigment', descripcion: 'Pigmento azul oscuro', tipoMaterial: 'Colorante', isActive: true, productoSAE: 'SAE-002', precioUnitario: 89.75 },
-      { id: 't3', categoria: 'Empaque', productoBase: 'Cartón', clave: 'EM003', nombre: 'Caja Standard 50x50', descripcion: 'Caja corrugada', tipoMaterial: 'Cartón', isActive: true, productoSAE: 'SAE-003', precioUnitario: 15.20 },
-      { id: 't4', categoria: 'Consumible', productoBase: 'Cinta', clave: 'CO004', nombre: 'Cinta Adhesiva Industrial', descripcion: 'Cinta 3M', tipoMaterial: 'Adhesivo', isActive: false, productoSAE: 'SAE-004', precioUnitario: 45.00 },
-      { id: 't5', categoria: 'Materia Prima', productoBase: 'Resina', clave: 'MP005', nombre: 'Resina Blanca', descripcion: 'Resina base blanca', tipoMaterial: 'Polímero', isActive: true, productoSAE: 'SAE-001', precioUnitario: 130.00 },
-      { id: 't6', categoria: 'Empaque', productoBase: 'Plástico', clave: 'EM006', nombre: 'Bolsa de polietileno', descripcion: 'Bolsa transparente', tipoMaterial: 'Polímero', isActive: true, productoSAE: 'SAE-005', precioUnitario: 5.50 },
-      { id: 't7', categoria: 'Herramienta', productoBase: 'Acero', clave: 'HE007', nombre: 'Cuchilla de corte', descripcion: 'Repuesto de cuchilla', tipoMaterial: 'Metal', isActive: true, productoSAE: 'SAE-006', precioUnitario: 450.00 },
-      { id: 't8', categoria: 'Materia Prima', productoBase: 'Pigmento', clave: 'MP008', nombre: 'Pigmento Rojo', descripcion: 'Pigmento en polvo', tipoMaterial: 'Colorante', isActive: true, productoSAE: 'SAE-002', precioUnitario: 95.00 },
-      { id: 't9', categoria: 'Materia Prima', productoBase: 'Pigmento', clave: 'MP009', nombre: 'Pigmento Verde', descripcion: 'Para extrusión', tipoMaterial: 'Colorante', isActive: false, productoSAE: 'SAE-002', precioUnitario: 92.50 },
-      { id: 't10', categoria: 'Empaque', productoBase: 'Cartón', clave: 'EM010', nombre: 'Caja Reforzada', descripcion: 'Caja triple corrugado', tipoMaterial: 'Cartón', isActive: true, productoSAE: 'SAE-003', precioUnitario: 28.00 },
-      { id: 't11', categoria: 'Consumible', productoBase: 'Lubricante', clave: 'CO011', nombre: 'Aceite Hidráulico', descripcion: 'Tambor 20L', tipoMaterial: 'Químico', isActive: true, productoSAE: 'SAE-007', precioUnitario: 1200.00 },
-      { id: 't12', categoria: 'Materia Prima', productoBase: 'Resina', clave: 'MP012', nombre: 'Resina Reciclada', descripcion: 'Polímero mixto', tipoMaterial: 'Polímero', isActive: true, productoSAE: 'SAE-001', precioUnitario: 85.00 },
-      { id: 't13', categoria: 'Herramienta', productoBase: 'Aluminio', clave: 'HE013', nombre: 'Soporte extruidor', descripcion: 'Pieza de repuesto', tipoMaterial: 'Metal', isActive: true, productoSAE: 'SAE-006', precioUnitario: 850.00 },
-      { id: 't14', categoria: 'Consumible', productoBase: 'Cinta', clave: 'CO014', nombre: 'Cinta Doble Cara', descripcion: 'Rollo 50m', tipoMaterial: 'Adhesivo', isActive: true, productoSAE: 'SAE-004', precioUnitario: 75.00 },
-      { id: 't15', categoria: 'Materia Prima', productoBase: 'Aditivo', clave: 'MP015', nombre: 'Aditivo UV', descripcion: 'Protección solar', tipoMaterial: 'Químico', isActive: true, productoSAE: 'SAE-008', precioUnitario: 340.00 }
-    ];
-
     this.svc.getProductos().subscribe({
       next: data => {
-        let mergedData = [...(data || [])];
-        testData.forEach(testItem => {
-          if (!mergedData.find(p => p.clave === testItem.clave)) {
-            mergedData.push(testItem);
-          }
-        });
-        this.items.set(mergedData);
+        this.items.set(data || []);
         this.loading.set(false);
       },
       error: (err) => {
-        console.warn('API Error, loading fallback test data', err);
-        this.items.set(testData);
+        console.warn('API Error', err);
+        this.items.set([]);
         this.loading.set(false);
       }
     });
@@ -1310,7 +1310,7 @@ export class ProductosCatalogoComponent implements OnInit {
       clave: this.form.clave,
       nombre: this.form.nombre,
       descripcion: this.form.descripcion,
-      categoria: this.form.categoria,
+      categoriaId: this.form.categoriaId,
       isActive: this.form.isActive,
       productoSAE: this.form.productoSAE === 'Ninguno' ? undefined : this.form.productoSAE,
       precioUnitario: this.form.precioUnitario || 0,
@@ -1322,14 +1322,26 @@ export class ProductosCatalogoComponent implements OnInit {
     };
 
     if (!this.form.id) {
-      this.svc.createProducto(payload).subscribe(() => {
-        this.closeModal();
-        this.load();
+      this.svc.createProducto(payload).subscribe({
+        next: () => {
+          this.closeModal();
+          this.load();
+        },
+        error: (err) => {
+          console.error('Error al crear producto:', err);
+          alert('Error: ' + (err.error?.title || err.error?.message || err.message) + '\n\nAsegúrate de haber llenado todos los campos requeridos correctamente.');
+        }
       });
     } else {
-      this.svc.updateProducto(this.form.id, payload).subscribe(() => {
-        this.closeModal();
-        this.load();
+      this.svc.updateProducto(this.form.id, payload).subscribe({
+        next: () => {
+          this.closeModal();
+          this.load();
+        },
+        error: (err) => {
+          console.error('Error al actualizar producto:', err);
+          alert('Error: ' + (err.error?.title || err.error?.message || err.message));
+        }
       });
     }
   }

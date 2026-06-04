@@ -145,6 +145,9 @@ export class ProduccionConfigService {
   deleteExtrusion(id: string) {
     return this.http.delete(`${this.base}/extrusion/${id}`);
   }
+  saveProgramacionExtrusionBatch(payload: any) {
+    return this.http.post(`${this.base}/extrusion/programacion/batch`, payload);
+  }
   
   getTableroPrensado()  { return this.http.get<{ operacion: PrensadoItem[]  }>(`${this.base}/tablero/prensado`);  }
 
@@ -159,6 +162,9 @@ export class ProduccionConfigService {
   }
   deletePrensado(id: string) {
     return this.http.delete(`${this.base}/prensado/${id}`);
+  }
+  saveProgramacionPrensadoBatch(payload: any) {
+    return this.http.post(`${this.base}/prensado/programacion/batch`, payload);
   }
 
   // ── OPERARIOS ──────────────────────────────────────────────────────────────

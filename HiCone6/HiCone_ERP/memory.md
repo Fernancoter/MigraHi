@@ -131,3 +131,9 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
 - Se configuraron los dropdowns en la vista de Silos enlazados dinámicamente con los catálogos del backend.
 - Se implementó la funcionalidad 'Archivar' (soft delete u ocultamiento de listas) para el catálogo de Silos en Backend y Frontend.
 - Los submódulos completados a la fecha son: Turnos, Prensas, Extrusoras, Operarios, Productos, Categorías y Silos.
+
+## 2026-06-03: Módulo de Referencias y Correcciones en Navegación
+- Se corrigió el bug de navegación y contexto global en 
+avigation.service.ts que redirigía erróneamente 'Silos' a 'Inventario' al interceptar la ruta.
+- Se agregó e integró la pantalla de **Configuración** (/produccion/referencias/configuracion) con un formulario modal para agregar nuevas claves-valor.
+- Se diseñaron e implementaron exitosamente las vistas de **Extrusora Producto** y **Extrusora Mezcladora** en /produccion/referencias utilizando estructuras de datos simuladas alineadas con el diseño visual del sistema.

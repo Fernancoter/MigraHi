@@ -90,14 +90,8 @@ import { FormsModule } from '@angular/forms';
       </div>
       
       <div style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-         <span style="font-size: 0.85rem; color: #64748b;">Página 1 de 4</span>
+         <span style="font-size: 0.85rem; color: #64748b;"></span>
          <div style="display: flex; gap: 0.25rem;">
-            <button style="border: 1px solid #e2e8f0; background: white; color: #64748b; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer;">Ant</button>
-            <button style="border: 1px solid #5cb85c; background: #5cb85c; color: white; padding: 0.25rem 0.75rem; border-radius: 4px; cursor: pointer;">1</button>
-            <button style="border: 1px solid #e2e8f0; background: white; color: #64748b; padding: 0.25rem 0.75rem; border-radius: 4px; cursor: pointer;">2</button>
-            <button style="border: 1px solid #e2e8f0; background: white; color: #64748b; padding: 0.25rem 0.75rem; border-radius: 4px; cursor: pointer;">3</button>
-            <button style="border: 1px solid #e2e8f0; background: white; color: #64748b; padding: 0.25rem 0.75rem; border-radius: 4px; cursor: pointer;">4</button>
-            <button style="border: 1px solid #e2e8f0; background: white; color: #64748b; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer;">Sig</button>
          </div>
       </div>
     </div>
@@ -109,16 +103,5 @@ import { FormsModule } from '@angular/forms';
   `]
 })
 export class ExtrusoraProductoComponent {
-  items = signal([
-    { extrusora: 'Extrusora 1', productoNombre: '74750', productoCalibre: '0.015', productoAncho: '2315/16', productoLongitud: '17950', reposo: 720, proceso: 90 },
-    { extrusora: 'Extrusora 1', productoNombre: '74757', productoCalibre: '0.015', productoAncho: '2315/16', productoLongitud: '17950', reposo: 1440, proceso: 90 },
-    { extrusora: 'Extrusora 1', productoNombre: '80607', productoCalibre: '0.013', productoAncho: '2315/16', productoLongitud: '19400', reposo: 1440, proceso: 90 },
-    { extrusora: 'Extrusora 1', productoNombre: '80630', productoCalibre: '0.015', productoAncho: '2315/16', productoLongitud: '19400', reposo: 720, proceso: 90 },
-    { extrusora: 'Extrusora 1', productoNombre: '80637', productoCalibre: '0.015', productoAncho: '2315/16', productoLongitud: '19400', reposo: 1440, proceso: 90 },
-    { extrusora: 'Extrusora 1', productoNombre: '80680', productoCalibre: '0.013', productoAncho: '2315/16', productoLongitud: '9250', reposo: 720, proceso: 90 },
-    { extrusora: 'Extrusora 1', productoNombre: '80687', productoCalibre: '0.013', productoAncho: '2315/16', productoLongitud: '9250', reposo: 1440, proceso: 90 },
-    { extrusora: 'Extrusora 1', productoNombre: '80950', productoCalibre: '0.013', productoAncho: '2315/16', productoLongitud: '19300', reposo: 720, proceso: 90 },
-    { extrusora: 'Extrusora 1', productoNombre: '80957', productoCalibre: '0.013', productoAncho: '2315/16', productoLongitud: '19300', reposo: 1440, proceso: 90 },
-    { extrusora: 'Extrusora 2', productoNombre: '74750', productoCalibre: '0.015', productoAncho: '2315/16', productoLongitud: '8750', reposo: 720, proceso: 90 }
-  ]);
+  items = signal<any[]>([]);
 }
