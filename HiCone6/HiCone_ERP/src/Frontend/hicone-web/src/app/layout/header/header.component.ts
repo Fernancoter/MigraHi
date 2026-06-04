@@ -139,7 +139,7 @@ export class HeaderComponent {
   showGrid = false;
 
   modules: ModuleItem[] = [
-    { title: 'Silos', icon: '🏺', route: '/inventario/silos' },
+    { title: 'Silos', icon: '🏺', route: '/produccion/catalogos/silos' },
     { title: 'Configurar Producción', icon: '⚙️', route: '/produccion' },
     { title: 'Embarques', icon: '🚚', route: '/embarques' },
     { title: 'Calidad', icon: '✅', route: '/calidad' },

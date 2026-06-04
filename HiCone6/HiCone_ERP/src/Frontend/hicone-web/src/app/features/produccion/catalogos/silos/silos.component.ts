@@ -23,36 +23,57 @@ import { ProduccionConfigService, Silo } from '../../../../core/services/producc
           <div class="toolbar-left" style="display: flex; gap: 0.75rem; align-items: center;">
             <!-- Dropdown de Exportar -->
             <div class="dropdown-wrapper">
-              <button class="btn btn-secondary" (click)="toggleExportDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem;">
-                <span>⬇️</span> Exportar
+              <button class="btn btn-secondary" (click)="toggleExportDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem; border-radius: 4px; padding: 0.4rem 0.8rem; color: #475569; font-weight: 500;">
+                Exportar <span style="font-size: 0.6rem; color: #94a3b8;">▼</span>
               </button>
               @if (showExportOptions()) {
-                <div class="column-selector-popover animate-slide-up">
-                  <div class="dropdown-item" (click)="exportCSV()">Excel (CSV)</div>
-                  <div class="dropdown-item" (click)="exportPDF()">PDF</div>
+                <div class="column-selector-popover animate-slide-up" style="padding: 0.5rem 0; width: 150px; left: 0;">
+                  <div class="dropdown-item" (click)="exportCSV()" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 500;"><span style="color: #10b981; font-size: 1.1rem;">📊</span> Excel (CSV)</div>
+                  <div class="dropdown-item" (click)="exportPDF()" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 500;"><span style="color: #ef4444; font-size: 1.1rem;">📄</span> PDF</div>
                 </div>
               }
             </div>
 
             <!-- Botón Agregar -->
-            <button class="btn btn-primary" (click)="openCreate()">+ Agregar</button>
+            <button class="btn btn-primary" style="background: #5cb85c; border-radius: 4px; padding: 0.4rem 0.8rem;" (click)="openCreate()">Agregar</button>
 
             <!-- Selector de Columnas -->
             <div class="dropdown-wrapper">
-              <button class="btn btn-secondary" (click)="toggleColumnDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem;">
-                <span>📊</span> Selecciona columnas
+              <button class="btn btn-primary" (click)="toggleColumnDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem; background: #5cb85c; border-radius: 4px; padding: 0.4rem 0.8rem;">
+                Selecciona columnas <span style="font-size: 0.6rem;">▼</span>
               </button>
               @if (showColumnSelector()) {
-                <div class="column-selector-popover animate-slide-up" (click)="$event.stopPropagation()" style="width: 200px;">
-                  <h4>Columnas Visibles</h4>
-                  <div class="column-list">
-                    <label><input type="checkbox" [checked]="isColVisible('nombre')" (change)="toggleCol('nombre')"> Nombre</label>
-                    <label><input type="checkbox" [checked]="isColVisible('capacidadKg')" (change)="toggleCol('capacidadKg')"> Capacidad (kg)</label>
-                    <label><input type="checkbox" [checked]="isColVisible('minimoKg')" (change)="toggleCol('minimoKg')"> Mínimo (kg)</label>
-                    <label><input type="checkbox" [checked]="isColVisible('maximoKg')" (change)="toggleCol('maximoKg')"> Máximo (kg)</label>
-                    <label><input type="checkbox" [checked]="isColVisible('estadoMaterial')" (change)="toggleCol('estadoMaterial')"> Estado Material</label>
-                    <label><input type="checkbox" [checked]="isColVisible('tipoMaterial')" (change)="toggleCol('tipoMaterial')"> Tipo Material</label>
-                    <label><input type="checkbox" [checked]="isColVisible('siloActivo')" (change)="toggleCol('siloActivo')"> Activo</label>
+                <div class="column-selector-popover animate-slide-up" (click)="$event.stopPropagation()" style="width: 240px; padding: 0;">
+                  <div style="padding: 0.5rem;">
+                    <input type="text" class="field-input" style="padding: 0.4rem; margin-bottom: 0.5rem;" />
+                    
+                    <div class="column-group">
+                      <label style="font-weight: bold; margin-bottom: 0.3rem;"><input type="checkbox" checked> Fijas a la izquierda</label>
+                      <label style="margin-left: 1.5rem;"><input type="checkbox" checked disabled> (Ninguna)</label>
+                    </div>
+                    
+                    <div class="column-group" style="margin-top: 0.5rem;">
+                      <label style="font-weight: bold; margin-bottom: 0.3rem;"><input type="checkbox" checked> No fijas</label>
+                      <div class="column-list" style="margin-left: 1.5rem; max-height: 200px; overflow-y: auto;">
+                        <label><input type="checkbox" [checked]="isColVisible('nombre')" (change)="toggleCol('nombre')"> Nombre</label>
+                        <label><input type="checkbox" [checked]="isColVisible('capacidadKg')" (change)="toggleCol('capacidadKg')"> Capacidad (kg)</label>
+                        <label><input type="checkbox" [checked]="isColVisible('minimoKg')" (change)="toggleCol('minimoKg')"> Mínimo (kg)</label>
+                        <label><input type="checkbox" [checked]="isColVisible('maximoKg')" (change)="toggleCol('maximoKg')"> Máximo (kg)</label>
+                        <label><input type="checkbox" [checked]="isColVisible('estadoMaterial')" (change)="toggleCol('estadoMaterial')"> Estado de Material</label>
+                        <label><input type="checkbox" [checked]="isColVisible('tipoMaterial')" (change)="toggleCol('tipoMaterial')"> Tipo de Material</label>
+                        <label><input type="checkbox" [checked]="isColVisible('siloActivo')" (change)="toggleCol('siloActivo')"> Silo Activo</label>
+                      </div>
+                    </div>
+                    
+                    <div class="column-group" style="margin-top: 0.5rem;">
+                      <label style="font-weight: bold; margin-bottom: 0.3rem;"><input type="checkbox" checked> Fijas a la derecha</label>
+                      <label style="margin-left: 1.5rem;"><input type="checkbox" checked disabled> (Ninguna)</label>
+                    </div>
+                  </div>
+                  
+                  <div style="display: flex; gap: 0.5rem; padding: 0.5rem; border-top: 1px solid #e2e8f0; background: #f8fafc;">
+                    <button class="btn btn-primary" style="background: #5cb85c; padding: 0.4rem; border-radius: 4px; display: flex; align-items: center; justify-content: center;" (click)="resetCols()">↺</button>
+                    <button class="btn btn-primary" style="background: #5cb85c; flex: 1; border-radius: 4px;" (click)="updateCols()">Actualizar</button>
                   </div>
                 </div>
               }
@@ -64,15 +85,29 @@ import { ProduccionConfigService, Silo } from '../../../../core/services/producc
 
           <!-- RIGHT SIDE -->
           <div class="toolbar-right" style="display: flex; gap: 0.75rem; align-items: center;">
+            <!-- Menú de Filtros -->
+            <div class="dropdown-wrapper">
+              <button class="btn btn-secondary" (click)="toggleFilterDropdown($event)" style="padding: 0.4rem 0.6rem; display: flex; align-items: center; border-radius: 4px; border: 1px solid #e2e8f0; font-size: 1rem; color: #64748b;">
+                <svg viewBox="0 0 24 24" width="16" height="16" style="margin-right: 4px;"><path fill="currentColor" d="M14,12V19.88C14.04,20.18 13.94,20.5 13.71,20.71C13.32,21.1 12.69,21.1 12.3,20.71L10.29,18.7C10.06,18.47 9.96,18.16 10,17.87V12H9.97L4.21,4.62C3.87,4.19 3.95,3.56 4.38,3.22C4.57,3.08 4.78,3 5,3V3H19V3C19.22,3 19.43,3.08 19.62,3.22C20.05,3.56 20.13,4.19 19.79,4.62L14.03,12H14Z" /></svg>
+                <span style="font-size: 0.6rem;">▼</span>
+              </button>
+              @if (showFilterOptions()) {
+                <div class="column-selector-popover animate-slide-up" style="width: auto; right: 0; left: auto; padding: 0.5rem 0;">
+                  <div class="dropdown-item" (click)="clearFilters()" style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #64748b;">✖</span> Limpiar filtros</div>
+                  <div class="dropdown-item" style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #64748b;">💾</span> Guardar filtro como...</div>
+                </div>
+              }
+            </div>
+
             <!-- Filtro de Búsqueda -->
             <div class="search-box">
-              <span class="search-icon">🔍</span>
               <input 
                 class="field-input" 
                 type="text" 
-                placeholder="Buscar silo..." 
+                placeholder="Buscar" 
                 [ngModel]="searchText()" 
                 (ngModelChange)="searchText.set($event); currentPage.set(1)"
+                style="border-radius: 0; border: none; border-bottom: 1px solid #e2e8f0; padding: 0.4rem; box-shadow: none; width: 200px;"
               />
             </div>
           </div>
@@ -99,10 +134,10 @@ import { ProduccionConfigService, Silo } from '../../../../core/services/producc
           </thead>
           <tbody>
             @if (loading()) { 
-              <tr><td colspan="10" class="empty-state">Cargando silos...</td></tr> 
+              <tr><td colspan="11" class="empty-state">Cargando silos...</td></tr> 
             }
             @else if (paginatedItems().length === 0) { 
-              <tr><td colspan="10" class="empty-state">No se encontraron silos registrados</td></tr> 
+              <tr><td colspan="11" class="empty-state">No se encontraron silos registrados</td></tr> 
             }
             @else {
               @for (item of paginatedItems(); track item.id) {
@@ -156,72 +191,83 @@ import { ProduccionConfigService, Silo } from '../../../../core/services/producc
         </div>
       }
 
-      <!-- Modal -->
+      <!-- Modal Agregar / Editar -->
       @if (showModal()) {
         <div class="modal-overlay" (click)="closeModal()">
-          <div class="modal-card" style="width: 600px;" (click)="$event.stopPropagation()">
-            <div class="modal-header">
-              <h3>Silo</h3>
+          <div class="modal-card" style="width: 750px; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;" (click)="$event.stopPropagation()">
+            <div class="modal-header" style="background: white; border-bottom: none; padding: 1.5rem 1.75rem 0 1.75rem;">
+              <h3 style="color: #5cb85c; font-size: 1.4rem; font-weight: normal;">Gestionar Silo</h3>
               <button class="modal-close" (click)="closeModal()">✕</button>
             </div>
+            <div style="padding: 0 1.75rem 1rem 1.75rem; font-size: 0.8rem; color: #94a3b8; display: flex; gap: 0.5rem; align-items: center;">
+              <span>Producción</span> <span style="font-weight: bold;">›</span> <span>Catálogos</span> <span style="font-weight: bold;">›</span> <span>Silos</span>
+            </div>
             
-            <div class="modal-body" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-              <div class="form-row" style="grid-column: span 2;">
-                <label class="field-label">Nombre *</label>
-                <input class="field-input" type="text" [(ngModel)]="form.nombre" [disabled]="modalReadOnly()" placeholder="Nombre del silo..." />
-              </div>
+            <div class="modal-body" style="padding: 0 1.75rem 1.75rem 1.75rem; display: flex; flex-direction: column; gap: 1rem;">
+              <div style="border: 1px solid #e2e8f0; padding: 1rem; background: white;">
+                <h4 style="margin: 0 0 1.5rem 0; display: flex; align-items: center; gap: 0.5rem; color: #64748b; font-size: 0.9rem; font-weight: normal;">
+                  <span style="background: #5cb85c; color: white; width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px;">+</span> 
+                  Información General
+                </h4>
+                
+                <div class="form-row" style="margin-bottom: 0.8rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.4rem;">
+                  <label class="field-label" style="text-transform: none; color: #334155; font-size: 0.8rem; font-weight: normal;">Id</label>
+                  <div style="font-size: 0.85rem; color: #64748b; padding: 0.4rem 0;">{{ form.id ? form.id : '0' }}</div>
+                </div>
+                
+                <div class="form-row" style="margin-bottom: 0.8rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.4rem;">
+                  <label class="field-label" style="text-transform: none; color: #334155; font-size: 0.8rem; font-weight: normal;">Silo Activo</label>
+                  <input type="checkbox" [(ngModel)]="form.siloActivo" [disabled]="modalReadOnly()" style="width: auto; margin-top: 0.4rem;" />
+                </div>
 
-              <div class="form-row">
-                <label class="field-label">Capacidad (kg)</label>
-                <input class="field-input" type="number" [(ngModel)]="form.capacidadKg" [disabled]="modalReadOnly()" placeholder="Ej. 10000" />
-              </div>
+                <div class="form-row" style="margin-bottom: 0.8rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.4rem;">
+                  <label class="field-label" style="text-transform: none; color: #334155; font-size: 0.8rem; font-weight: normal;">Nombre</label>
+                  <input class="field-input-clean" type="text" [(ngModel)]="form.nombre" [disabled]="modalReadOnly()" />
+                </div>
 
-              <div class="form-row">
-                <label class="field-label">Silo Activo</label>
-                <select class="field-input" [(ngModel)]="form.siloActivo" [disabled]="modalReadOnly()">
-                  <option [ngValue]="true">Sí</option>
-                  <option [ngValue]="false">No</option>
-                </select>
-              </div>
+                <div class="form-row" style="margin-bottom: 0.8rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.4rem;">
+                  <label class="field-label" style="text-transform: none; color: #334155; font-size: 0.8rem; font-weight: normal;">Capacidad (kg)</label>
+                  <input class="field-input-clean" type="number" [(ngModel)]="form.capacidadKg" [disabled]="modalReadOnly()" />
+                </div>
 
-              <div class="form-row">
-                <label class="field-label">Mínimo (kg)</label>
-                <input class="field-input" type="number" [(ngModel)]="form.minimoKg" [disabled]="modalReadOnly()" placeholder="Ej. 1000" />
-              </div>
+                <div class="form-row" style="margin-bottom: 0.8rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.4rem;">
+                  <label class="field-label" style="text-transform: none; color: #334155; font-size: 0.8rem; font-weight: normal;">Mínimo (kg)</label>
+                  <input class="field-input-clean" type="number" [(ngModel)]="form.minimoKg" [disabled]="modalReadOnly()" />
+                </div>
 
-              <div class="form-row">
-                <label class="field-label">Máximo (kg)</label>
-                <input class="field-input" type="number" [(ngModel)]="form.maximoKg" [disabled]="modalReadOnly()" placeholder="Ej. 9000" />
-              </div>
+                <div class="form-row" style="margin-bottom: 0.8rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.4rem;">
+                  <label class="field-label" style="text-transform: none; color: #334155; font-size: 0.8rem; font-weight: normal;">Máximo (kg)</label>
+                  <input class="field-input-clean" type="number" [(ngModel)]="form.maximoKg" [disabled]="modalReadOnly()" />
+                </div>
 
-              <!-- Selects for Material -->
-              <div class="form-row">
-                <label class="field-label">Estado Material</label>
-                <select class="field-input" [(ngModel)]="form.estadoMaterial" [disabled]="modalReadOnly()">
-                  <option [ngValue]="null">-- Seleccione Estado --</option>
-                  @for (es of estadosMaterial(); track es.id) {
-                    <option [ngValue]="es.nombre">{{ es.nombre }}</option>
-                  }
-                </select>
-              </div>
+                <div class="form-row" style="margin-bottom: 0.8rem; border-bottom: 2px solid #5cb85c; padding-bottom: 0.4rem;">
+                  <label class="field-label" style="text-transform: none; color: #334155; font-size: 0.8rem; font-weight: normal;">Estado Material</label>
+                  <select class="field-input-clean" [(ngModel)]="form.estadoMaterial" [disabled]="modalReadOnly()">
+                    <option [ngValue]="null"></option>
+                    @for (es of estadosMaterial(); track es.id) {
+                      <option [ngValue]="es.nombre">{{ es.nombre }}</option>
+                    }
+                  </select>
+                </div>
 
-              <div class="form-row">
-                <label class="field-label">Tipo Material</label>
-                <select class="field-input" [(ngModel)]="form.tipoMaterial" [disabled]="modalReadOnly()">
-                  <option [ngValue]="null">-- Seleccione Tipo --</option>
-                  @for (tm of tiposMaterial(); track tm.id) {
-                    <option [ngValue]="tm.nombre">{{ tm.nombre }}</option>
-                  }
-                </select>
+                <div class="form-row" style="margin-bottom: 0.8rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.4rem;">
+                  <label class="field-label" style="text-transform: none; color: #334155; font-size: 0.8rem; font-weight: normal;">Material</label>
+                  <select class="field-input-clean" [(ngModel)]="form.tipoMaterial" [disabled]="modalReadOnly()">
+                    <option [ngValue]="null"></option>
+                    @for (tm of tiposMaterial(); track tm.id) {
+                      <option [ngValue]="tm.nombre">{{ tm.nombre }}</option>
+                    }
+                  </select>
+                </div>
               </div>
             </div>
 
-            <div class="modal-footer">
+            <div class="modal-footer" style="background: white; border-top: none; padding-top: 0; padding-bottom: 1.5rem; justify-content: flex-start; padding-left: 1.75rem;">
               @if (modalReadOnly()) { 
-                <button class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+                <button class="btn btn-primary" style="background: #5cb85c; border-radius: 2px; padding: 0.5rem 1.5rem; border: none; font-size: 0.75rem; font-weight: normal;" (click)="closeModal()">CERRAR</button>
               } @else {
-                <button class="btn btn-primary" (click)="save()">Confirmar</button> 
-                <button class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" style="background: #5cb85c; border-radius: 2px; padding: 0.5rem 1.5rem; border: none; font-size: 0.75rem; font-weight: normal;" (click)="save()">CONFIRMAR</button> 
+                <button class="btn btn-secondary" style="background: #94a3b8; color: white; border: none; border-radius: 2px; padding: 0.5rem 1.5rem; font-size: 0.75rem; font-weight: normal;" (click)="closeModal()">CANCELAR</button>
               }
             </div>
           </div>
@@ -236,12 +282,12 @@ import { ProduccionConfigService, Silo } from '../../../../core/services/producc
     .actions-toolbar { display: flex; gap: 0.75rem; align-items: center; }
     .btn { padding: .55rem 1.25rem; border-radius: 8px; border: none; cursor: pointer; font-size: .875rem; font-weight: 600; transition: all .2s; }
     .btn-primary { background: #10b981; color: white; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); }
-    .btn-primary:hover { background: #059669; transform: translateY(-1px); }
+    .btn-primary:hover { opacity: 0.9; }
     .btn-secondary { background: white; color: #475569; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    .btn-secondary:hover { background: #f8fafc; border-color: #cbd5e1; }
+    .btn-secondary:hover { background: #f8fafc; }
     .search-box { position: relative; }
-    .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.9rem; }
-    .search-box .field-input { padding-left: 2.2rem; width: 240px; }
+    .field-input { width: 100%; padding: .65rem .875rem; border-radius: 8px; border: 1px solid #e2e8f0; font-size: .875rem; outline: none; box-sizing: border-box; font-weight: 500; color: #334155; transition: all 0.2s; }
+    .field-input-clean { width: 100%; border: none; font-size: 0.85rem; outline: none; background: transparent; padding: 0.2rem 0; color: #334155; }
     .content-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: visible; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
     
     .data-table { width: 100%; border-collapse: collapse; }
@@ -264,26 +310,20 @@ import { ProduccionConfigService, Silo } from '../../../../core/services/producc
     .status-badge.active { background: rgba(16, 185, 129, 0.15); color: #059669; }
 
     .dropdown-wrapper { position: relative; }
-    .column-selector-popover { position: absolute; left: 0; top: 110%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 1rem; width: 180px; z-index: 100; }
-    .column-selector-popover h4 { margin: 0 0 0.6rem 0; font-size: 0.78rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
-    .column-list { display: flex; flex-direction: column; gap: 0.5rem; }
-    .column-list label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #334155; cursor: pointer; font-weight: 600; }
-    .dropdown-item { padding: 0.65rem 1rem; font-size: 0.85rem; color: #334155; cursor: pointer; transition: background 0.15s; font-weight: 600; }
+    .column-selector-popover { position: absolute; left: 0; top: 110%; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); padding: 0; width: 180px; z-index: 100; }
+    .column-group { font-size: 0.85rem; color: #334155; }
+    .column-list { display: flex; flex-direction: column; gap: 0.3rem; }
+    .column-list label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #334155; cursor: pointer; }
+    .dropdown-item { padding: 0.65rem 1rem; font-size: 0.85rem; color: #334155; cursor: pointer; transition: background 0.15s; font-weight: 500; }
     .dropdown-item:hover { background: #f1f5f9; }
     
     .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.35); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; animation: fadeIn 0.25s ease; }
     .modal-card { background: white; border-radius: 16px; width: 480px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); overflow: hidden; animation: zoomIn 0.25s ease; border: 1px solid #e2e8f0; }
-    .modal-header { padding: 1.25rem 1.75rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
     .modal-header h3 { margin: 0; font-size: 1.15rem; font-weight: 800; color: #1e293b; letter-spacing: -0.02em; }
     .modal-close { background: none; border: none; font-size: 1.1rem; cursor: pointer; color: #94a3b8; transition: color 0.15s; }
     .modal-close:hover { color: #475569; }
-    .modal-body { padding: 1.75rem; display: flex; flex-direction: column; gap: 1.1rem; }
-    .form-row { display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-row { display: flex; flex-direction: column; gap: 0.15rem; }
     .field-label { font-size: .8rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; }
-    .field-input { width: 100%; padding: .65rem .875rem; border-radius: 8px; border: 1px solid #e2e8f0; font-size: .875rem; outline: none; box-sizing: border-box; font-weight: 500; color: #334155; transition: all 0.2s; }
-    .field-input:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,.12); }
-    .field-input:disabled { background: #f8fafc; border-color: #e2e8f0; color: #64748b; cursor: not-allowed; }
-    .modal-footer { padding: 1.25rem 1.75rem; border-top: 1px solid #e2e8f0; display: flex; gap: .75rem; justify-content: flex-end; background: #f8fafc; }
     
     .pagination-container { display: flex; justify-content: center; align-items: center; gap: 0.4rem; margin-top: 1.5rem; }
     .pag-btn { height: 2.1rem; min-width: 2.1rem; padding: 0 0.5rem; border-radius: 8px; border: 1px solid #e2e8f0; background: white; color: #475569; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
@@ -312,6 +352,7 @@ export class SilosCatalogoComponent implements OnInit {
   searchText = signal<string>('');
   showColumnSelector = signal<boolean>(false);
   showExportOptions = signal<boolean>(false);
+  showFilterOptions = signal<boolean>(false);
   visibleColumns = signal<string[]>(['nombre', 'capacidadKg', 'minimoKg', 'maximoKg', 'estadoMaterial', 'tipoMaterial', 'siloActivo']);
 
   currentPage = signal<number>(1);
@@ -359,11 +400,34 @@ export class SilosCatalogoComponent implements OnInit {
     event.stopPropagation();
     this.showColumnSelector.update(v => !v);
     this.showExportOptions.set(false);
+    this.showFilterOptions.set(false);
   }
 
   toggleExportDropdown(event: Event) {
     event.stopPropagation();
     this.showExportOptions.update(v => !v);
+    this.showColumnSelector.set(false);
+    this.showFilterOptions.set(false);
+  }
+
+  toggleFilterDropdown(event: Event) {
+    event.stopPropagation();
+    this.showFilterOptions.update(v => !v);
+    this.showColumnSelector.set(false);
+    this.showExportOptions.set(false);
+  }
+
+  clearFilters() {
+    this.searchText.set('');
+    this.showFilterOptions.set(false);
+    this.currentPage.set(1);
+  }
+
+  resetCols() {
+    this.visibleColumns.set(['nombre', 'capacidadKg', 'minimoKg', 'maximoKg', 'estadoMaterial', 'tipoMaterial', 'siloActivo']);
+  }
+
+  updateCols() {
     this.showColumnSelector.set(false);
   }
 
@@ -400,6 +464,7 @@ export class SilosCatalogoComponent implements OnInit {
     this.showModal.set(true);
     this.showColumnSelector.set(false);
     this.showExportOptions.set(false);
+    this.showFilterOptions.set(false);
   }
 
   openEditModal(item: Silo) {
@@ -408,6 +473,7 @@ export class SilosCatalogoComponent implements OnInit {
     this.showModal.set(true);
     this.showColumnSelector.set(false);
     this.showExportOptions.set(false);
+    this.showFilterOptions.set(false);
   }
 
   openCreate() {
@@ -416,6 +482,7 @@ export class SilosCatalogoComponent implements OnInit {
     this.showModal.set(true);
     this.showColumnSelector.set(false);
     this.showExportOptions.set(false);
+    this.showFilterOptions.set(false);
   }
 
   closeModal() {
@@ -489,7 +556,7 @@ export class SilosCatalogoComponent implements OnInit {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `silos_reporte_${new Date().toISOString().slice(0,10)}.csv`);
+    link.setAttribute('download', `silos_reporte_\${new Date().toISOString().slice(0,10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -512,13 +579,13 @@ export class SilosCatalogoComponent implements OnInit {
     let tableRows = '';
     this.filteredItems().forEach(op => {
       tableRows += `<tr>`;
-      if (this.isColVisible('nombre')) tableRows += `<td>${op.nombre}</td>`;
-      if (this.isColVisible('capacidadKg')) tableRows += `<td>${op.capacidadKg || 0}</td>`;
-      if (this.isColVisible('minimoKg')) tableRows += `<td>${op.minimoKg || 0}</td>`;
-      if (this.isColVisible('maximoKg')) tableRows += `<td>${op.maximoKg || 0}</td>`;
-      if (this.isColVisible('estadoMaterial')) tableRows += `<td>${op.estadoMaterial || ''}</td>`;
-      if (this.isColVisible('tipoMaterial')) tableRows += `<td>${op.tipoMaterial || ''}</td>`;
-      if (this.isColVisible('siloActivo')) tableRows += `<td>${op.siloActivo ? 'Sí' : 'No'}</td>`;
+      if (this.isColVisible('nombre')) tableRows += `<td>\${op.nombre}</td>`;
+      if (this.isColVisible('capacidadKg')) tableRows += `<td>\${op.capacidadKg || 0}</td>`;
+      if (this.isColVisible('minimoKg')) tableRows += `<td>\${op.minimoKg || 0}</td>`;
+      if (this.isColVisible('maximoKg')) tableRows += `<td>\${op.maximoKg || 0}</td>`;
+      if (this.isColVisible('estadoMaterial')) tableRows += `<td>\${op.estadoMaterial || ''}</td>`;
+      if (this.isColVisible('tipoMaterial')) tableRows += `<td>\${op.tipoMaterial || ''}</td>`;
+      if (this.isColVisible('siloActivo')) tableRows += `<td>\${op.siloActivo ? 'Sí' : 'No'}</td>`;
       tableRows += `</tr>`;
     });
 
@@ -538,10 +605,10 @@ export class SilosCatalogoComponent implements OnInit {
         </head>
         <body>
           <h1>Reporte de Silos</h1>
-          <p>Generado el: ${new Date().toLocaleString()}</p>
+          <p>Generado el: \${new Date().toLocaleString()}</p>
           <table>
-            <thead><tr>${headers}</tr></thead>
-            <tbody>${tableRows}</tbody>
+            <thead><tr>\${headers}</tr></thead>
+            <tbody>\${tableRows}</tbody>
           </table>
           <script>window.onload = function() { window.print(); window.close(); }</script>
         </body>

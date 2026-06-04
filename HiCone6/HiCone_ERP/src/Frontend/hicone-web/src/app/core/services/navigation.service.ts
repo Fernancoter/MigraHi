@@ -38,11 +38,11 @@ export class NavigationService {
   private detectModule(url: string) {
     if (url.includes('/seguridad')) {
       this.activeModuleSubject.next('SEGURIDAD');
-    } else if (url.includes('/inventario') || url.includes('/silos')) {
-      this.activeModuleSubject.next('INVENTARIO');
     } else if (url.includes('/produccion')) {
       // Rutas /produccion/* → módulo PRODUCCIÓN (Configurar Producción)
       this.activeModuleSubject.next('PRODUCCIÓN');
+    } else if (url.includes('/inventario') || url.includes('/silos')) {
+      this.activeModuleSubject.next('INVENTARIO');
     } else if (url.includes('/extrusiones') || url.includes('/bobinas')) {
       // Compatibilidad legacy
       this.activeModuleSubject.next('EXTRUSIÓN');

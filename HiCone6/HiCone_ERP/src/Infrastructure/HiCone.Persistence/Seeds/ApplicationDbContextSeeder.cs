@@ -1656,5 +1656,26 @@ public class ApplicationDbContextSeeder
             );
             await _context.SaveChangesAsync(default);
         }
+
+        // Seed CatEstadosMaterial
+        if (!await _context.CatEstadosMaterial.AnyAsync())
+        {
+            _context.CatEstadosMaterial.AddRange(
+                new CatEstadoMaterial { Id = Guid.NewGuid(), Nombre = "virgen(pallet)", TenantId = defaultTenantId },
+                new CatEstadoMaterial { Id = Guid.NewGuid(), Nombre = "molido", TenantId = defaultTenantId }
+            );
+            await _context.SaveChangesAsync(default);
+        }
+
+        // Seed CatTiposMaterial
+        if (!await _context.CatTiposMaterial.AnyAsync())
+        {
+            _context.CatTiposMaterial.AddRange(
+                new CatTipoMaterial { Id = Guid.NewGuid(), Nombre = "PCR", TenantId = defaultTenantId },
+                new CatTipoMaterial { Id = Guid.NewGuid(), Nombre = "DOW", TenantId = defaultTenantId },
+                new CatTipoMaterial { Id = Guid.NewGuid(), Nombre = "PCR 100%", TenantId = defaultTenantId }
+            );
+            await _context.SaveChangesAsync(default);
+        }
     }
 }

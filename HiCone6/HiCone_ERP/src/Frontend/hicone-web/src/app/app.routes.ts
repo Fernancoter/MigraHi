@@ -70,6 +70,9 @@ export const routes: Routes = [
       { path: 'produccion/operarios', component: OperariosCatalogoComponent },
       { path: 'produccion/productos', component: ProductosCatalogoComponent },
       { path: 'produccion/extrusion', component: ProduccionListComponent },
+      { path: 'produccion/referencias/configuracion', component: ConfiguracionComponent },
+      { path: 'produccion/referencias/extrusora-producto', loadComponent: () => import('./features/produccion/referencias/extrusora-producto/extrusora-producto.component').then(m => m.ExtrusoraProductoComponent) },
+      { path: 'produccion/referencias/extrusora-mezcladora', loadComponent: () => import('./features/produccion/referencias/extrusora-mezcladora/extrusora-mezcladora.component').then(m => m.ExtrusoraMezcladoraComponent) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
