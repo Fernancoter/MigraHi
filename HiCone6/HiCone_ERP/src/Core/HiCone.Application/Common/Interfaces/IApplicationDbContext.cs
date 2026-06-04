@@ -45,6 +45,7 @@ public interface IApplicationDbContext
     DbSet<Extrusora> Extrusoras { get; }
     DbSet<ExtrusoraProducto> ExtrusoraProductos { get; }
     DbSet<ExtrusoraMezcladora> ExtrusoraMezcladoras { get; }
+    DbSet<ExtrusoraOperario> ExtrusoraOperarios { get; }
     DbSet<Prensa> Prensas { get; }
     DbSet<PrensaProducto> PrensaProductos { get; }
     DbSet<Troquel> Troqueles { get; }
@@ -52,6 +53,11 @@ public interface IApplicationDbContext
     DbSet<Operador> Operadores { get; }
     DbSet<Turno> Turnos { get; }
     DbSet<CausaInterrupcion> CausasInterrupcion { get; }
+    DbSet<SiloProduccion> SilosProduccion { get; }
+    DbSet<ConfiguracionSistema> ConfiguracionesSistema { get; }
+    DbSet<CatalogoClave> CatalogoClaves { get; }
+    DbSet<CatEstadoMaterial> CatEstadosMaterial { get; }
+    DbSet<CatTipoMaterial> CatTiposMaterial { get; }
 
     // ── Produccion — Catálogos Productos ─────────────────────────────────
     DbSet<Producto> Productos { get; }

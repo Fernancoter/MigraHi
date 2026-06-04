@@ -54,6 +54,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Extrusora> Extrusoras => Set<Extrusora>();
     public DbSet<ExtrusoraProducto> ExtrusoraProductos => Set<ExtrusoraProducto>();
     public DbSet<ExtrusoraMezcladora> ExtrusoraMezcladoras => Set<ExtrusoraMezcladora>();
+    public DbSet<ExtrusoraOperario> ExtrusoraOperarios => Set<ExtrusoraOperario>();
     public DbSet<Prensa> Prensas => Set<Prensa>();
     public DbSet<PrensaProducto> PrensaProductos => Set<PrensaProducto>();
     public DbSet<Troquel> Troqueles => Set<Troquel>();
@@ -61,6 +62,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Operador> Operadores => Set<Operador>();
     public DbSet<Turno> Turnos => Set<Turno>();
     public DbSet<CausaInterrupcion> CausasInterrupcion => Set<CausaInterrupcion>();
+    public DbSet<SiloProduccion> SilosProduccion => Set<SiloProduccion>();
+    public DbSet<ConfiguracionSistema> ConfiguracionesSistema => Set<ConfiguracionSistema>();
+    public DbSet<CatalogoClave> CatalogoClaves => Set<CatalogoClave>();
+    public DbSet<CatEstadoMaterial> CatEstadosMaterial => Set<CatEstadoMaterial>();
+    public DbSet<CatTipoMaterial> CatTiposMaterial => Set<CatTipoMaterial>();
 
     // ── Produccion — Catálogos Productos ─────────────────────────────────
     public DbSet<Producto> Productos => Set<Producto>();
