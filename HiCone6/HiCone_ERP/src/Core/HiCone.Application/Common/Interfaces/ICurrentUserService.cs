@@ -5,6 +5,6 @@ public interface ICurrentUserService
     string? UserId { get; }
     string? Email { get; }
     Guid? TenantId { get; }
-    Guid? OperadorId { get; }
+    int? OperadorId { get; }
     IEnumerable<string> Permissions { get; }
 }

@@ -1,26 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { VentasListComponent } from './ventas-list';
-import { VentasService } from '../../../core/services/ventas';
 
-describe('VentasListComponent', () => {
-  let component: VentasListComponent;
-  let fixture: ComponentFixture<VentasListComponent>;
-  let mockVentasService: any;
+import { VentasList } from './ventas-list';
+
+describe('VentasList', () => {
+  let component: VentasList;
+  let fixture: ComponentFixture<VentasList>;
 
   beforeEach(async () => {
-    mockVentasService = {
-      getVentas: () => of([])
-    };
-
     await TestBed.configureTestingModule({
-      imports: [VentasListComponent],
-      providers: [
-        { provide: VentasService, useValue: mockVentasService }
-      ]
+      imports: [VentasList],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(VentasListComponent);
+    fixture = TestBed.createComponent(VentasList);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
@@ -29,5 +20,3 @@ describe('VentasListComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-
-

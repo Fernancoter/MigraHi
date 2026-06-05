@@ -13,11 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HiCone.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a2e2df0d24b32710c1de63731984fdf402315c9e")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+53b315443e7d787bb96adb517fb9b336b24b6c5c")]
->>>>>>> origin/configurarProduccion/refactor
 [assembly: System.Reflection.AssemblyProductAttribute("HiCone.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HiCone.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

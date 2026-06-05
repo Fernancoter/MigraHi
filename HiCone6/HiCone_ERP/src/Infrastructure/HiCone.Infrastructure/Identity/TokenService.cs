@@ -30,7 +30,7 @@ public class TokenService : ITokenService
             new Claim("tenantId", user.TenantId.ToString()),
             // Contexto de negocio legado
             new Claim("companyId", user.TenantId.ToString()), 
-            new Claim("operadorId", user.OperadorId?.ToString() ?? string.Empty)
+            new Claim("operadorId", user.OperadorId?.ToString() ?? "0")
         };
 
         foreach (var role in roles)

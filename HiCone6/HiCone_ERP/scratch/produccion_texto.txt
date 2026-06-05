@@ -1,55 +1,0 @@
-Vamos a trabajar ahora con el modulo de configuración producción primero necesito que te 
-cambies de rama y jales desde remoto la rama llamada configuracionProduccion/refactor sobre 
-esa rama vamos a trabajar ahora necesito que la barra lateral tenga las mismas opciones que 
-están señalizadas en la siguiente imagen.
-
-Como puedes ver el modulo de inicio tiene dos opciones extrusión y prensado tenemos que 
-replicar todas estas lógicas. 
-
-La siguiente es la sección de operadores  
-
- 
- 
-La sección de producto 
-
-La sección de turno por semana  
-
- 
- 
-El menú de catalogos es un desplegable su primer campo es catalogo>categorías 
-
-Catalogo>turno 
-
- 
- 
-Catalogo>extrusora 
-
-Catalogo>prensas 
-
- 
- 
-Catalogos>silos 
-
-El campo de referencias también es un menú desplegable  
-
-Referencias>configuración 
-
- 
- 
-Referencia>extrusora producto 
-
-Referencia >extrusora mezcladora 
-
- 
- 
-Referencia>prensa producto 
-
-Referencia >producto terminado 
-
- 
- 
-Por favor hay que ir generando esta migración tanto backend como frond end por favor ya 
-después vamos puliendo los detalles que puedan surgir en el camino. 
-
- 
-

@@ -1,26 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { ClientesListComponent } from './clientes-list';
-import { ClientesService } from '../../../core/services/clientes';
 
-describe('ClientesListComponent', () => {
-  let component: ClientesListComponent;
-  let fixture: ComponentFixture<ClientesListComponent>;
-  let mockClientesService: any;
+import { ClientesList } from './clientes-list';
+
+describe('ClientesList', () => {
+  let component: ClientesList;
+  let fixture: ComponentFixture<ClientesList>;
 
   beforeEach(async () => {
-    mockClientesService = {
-      getClientes: () => of([])
-    };
-
     await TestBed.configureTestingModule({
-      imports: [ClientesListComponent],
-      providers: [
-        { provide: ClientesService, useValue: mockClientesService }
-      ]
+      imports: [ClientesList],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ClientesListComponent);
+    fixture = TestBed.createComponent(ClientesList);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
@@ -29,5 +20,3 @@ describe('ClientesListComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-
-

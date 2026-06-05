@@ -15,11 +15,7 @@ interface UserDto {
   isLockedOut: boolean;
   mustChangePassword: boolean;
   lastLoginAt?: string;
-<<<<<<< HEAD
   operadorId?: string; // Guid
-=======
-  operadorId?: string;
->>>>>>> origin/configurarProduccion/refactor
   gender?: string;
   authenticationType?: string;
   companyId?: number;
