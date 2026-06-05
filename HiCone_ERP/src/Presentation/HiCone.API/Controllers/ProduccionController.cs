@@ -12,10 +12,12 @@ namespace HiCone.API.Controllers;
 public class ProduccionController : ControllerBase
 {
     private readonly IProduccionService _produccionService;
+    private readonly ICierreService _cierreService;
 
-    public ProduccionController(IProduccionService produccionService)
+    public ProduccionController(IProduccionService produccionService, ICierreService cierreService)
     {
         _produccionService = produccionService;
+        _cierreService = cierreService;
     }
 
     // ── Extrusión ─────────────────────────────────────────────────────────
@@ -328,6 +330,17 @@ public class ProduccionController : ControllerBase
     [HttpGet("extrusora-productos")]
     public async Task<ActionResult<IEnumerable<ExtrusoraProducto>>> GetExtrusoraProductos()
         => Ok(await _produccionService.GetExtrusoraProductosAsync());
+
+    // ── Cierre Mensual ─────────────────────────────────────────────────────
+
+    [HttpPost("cierre-mensual")]
+    public async Task<IActionResult> CierreMensual([FromBody] CierreMensualRequest request)
+    {
+        var result = await _cierreService.CierreMensualAsync(request.Anio, request.Mes);
+        return result
+            ? Ok(true)
+            : Conflict(new { message = "No se puede cerrar el mes: existen extrusiones o prensados en proceso del periodo." });
+    }
 }
 
 // ── DTOs ──────────────────────────────────────────────────────────────────
@@ -365,4 +378,5 @@ public record RegistrarInterrupcionRequest(Guid EntidadId, Guid CausaId, string?
 public record RegistrarConsumoRequest(Guid SiloVirgenId, decimal VirgenKg, Guid? SiloMolidoId, decimal MolidoKg);
 public record RechazarBobinaRequest(MotivoMolino Motivo, string? Observaciones);
 public record RecalibrarExtrusionRequest(decimal? Calibre, decimal? Ancho, decimal? Longitud);
+public record CierreMensualRequest(int Anio, int Mes);
 

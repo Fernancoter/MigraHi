@@ -44,7 +44,38 @@ public class CierreService : ICierreService
 
     public async Task<bool> CierreMensualAsync(int anio, int mes)
     {
-        // Lógica masiva: consolidar inventarios, cerrar lotes, generar reportes SAE
-        return await Task.FromResult(true);
+        // a. No debe haber extrusiones en proceso del periodo
+        var extrusionesAbiertas = await _context.Extrusiones
+            .AnyAsync(e => e.Estado == EstadoExtrusion.EnProceso
+                        && e.FechaInicio.Month == mes
+                        && e.FechaInicio.Year == anio);
+        if (extrusionesAbiertas) return false;
+
+        // b. No debe haber prensados en proceso del periodo
+        var prensadosAbiertos = await _context.Prensados
+            .AnyAsync(p => p.Estado == EstadoPrensado.EnProceso
+                        && p.HoraIniciaProceso.Month == mes
+                        && p.HoraIniciaProceso.Year == anio);
+        if (prensadosAbiertos) return false;
+
+        // c. Cerrar los lotes abiertos del periodo
+        var lotes = await _context.Lotes
+            .Where(l => l.Estado == "Abierto"
+                     && l.FechaCreacion.Month == mes
+                     && l.FechaCreacion.Year == anio)
+            .ToListAsync();
+
+        foreach (var lote in lotes)
+        {
+            lote.Estado = "Cerrado";
+        }
+
+        // d. Persistir cambios
+        await _context.SaveChangesAsync(default);
+
+        // e. TODO: consolidación de inventario (snapshot de existencias y silos)
+        // TODO: generación de reportes SAE del cierre mensual
+
+        return true;
     }
 }
