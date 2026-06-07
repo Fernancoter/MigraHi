@@ -1,14 +1,26 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, HostListener, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { InventarioService } from '../../../core/services/inventario.service';
 import { PdfExportService } from '../../../core/services/pdf-export.service';
 
+interface InventarioRecord {
+  id: string;
+  fechaHora: string;
+  turno: string;
+}
+
+interface ColumnDef {
+  id: string;
+  label: string;
+  visible: boolean;
+}
+
 @Component({
-  selector: 'app-existencias',
+  selector: 'app-inventario-index',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div class="page-container animate-fade-in">
       <div class="page-header-modern">
@@ -22,101 +34,176 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
         </div>
       </div>
 
+      <div class="card-premium shadow-2xl">
+        <div class="toolbar-premium">
+          <div class="toolbar-left">
+            <button class="btn-icon add-btn" (click)="abrirModalNuevo()">
+              <span class="icon">+</span>
+            </button>
+            <div class="dropdown-container">
+              <button class="btn-toolbar" (click)="toggleExport($event)">
+                <span class="icon">📤</span> Exportar <span class="arrow">▼</span>
+              </button>
+              <div class="dropdown-menu shadow-premium" *ngIf="showExportSelector" (click)="$event.stopPropagation()">
+                <div class="dropdown-item" (click)="exportToCSV()">📄 Excel (CSV)</div>
+                <div class="dropdown-item" (click)="exportToPDF()">📕 PDF</div>
+              </div>
+            </div>
+            <div class="dropdown-container">
+              <button class="btn-toolbar" (click)="toggleColumns($event)">
+                <span class="icon">📋</span> Selecciona columnas <span class="arrow">▼</span>
+              </button>
+              <div class="dropdown-menu shadow-premium" *ngIf="showColumnSelector" (click)="$event.stopPropagation()">
+                <label class="dropdown-item custom-checkbox" *ngFor="let col of columns">
+                  <input type="checkbox" [(ngModel)]="col.visible" (change)="saveColumnsState()">
+                  <span class="checkmark"></span>
+                  {{ col.label }}
+                </label>
+              </div>
+            </div>
+            <button class="btn-toolbar btn-icon">
+              <span class="icon">📡</span>
+            </button>
+          </div>
+          <div class="toolbar-right">
+            <div class="search-funnel-group">
+              
+              <input type="text" class="search-input" placeholder="Buscar" [(ngModel)]="searchQuery" (input)="aplicarFiltros()">
+            </div>
+          </div>
+        </div>
+
+        <div class="table-modern-container">
+          <table class="table-modern">
+            <thead>
+              <tr>
+                <th class="action-header"></th>
+                <th class="action-header"></th>
+                <th *ngIf="isColVisible('fechaHora')" class="rel-pos">
+                  <div class="header-cell-content">
+                    <span>Fecha Hora</span>
+                    <button class="filter-trigger-btn" [class.active]="activeDropdown === 'fechaHora'" (click)="toggleDropdown('fechaHora', $event)">
+                      {{ sortColumn === 'fechaHora' ? (sortAsc ? '↑' : '↓') : '▼' }}
+                    </button>
+                  </div>
+                  <div class="col-filter-dropdown shadow-premium" *ngIf="activeDropdown === 'fechaHora'" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item-action" (click)="setSort('fechaHora', true)"><span class="icon">↑↓</span> Ordenar Antiguos</div>
+                    <div class="dropdown-item-action" (click)="setSort('fechaHora', false)"><span class="icon">↑↓</span> Ordenar Recientes</div>
+                  </div>
+                </th>
+                <th *ngIf="isColVisible('turno')" class="rel-pos">
+                  <div class="header-cell-content">
+                    <span>Turno</span>
+                    <button class="filter-trigger-btn" [class.active]="activeDropdown === 'turno'" (click)="toggleDropdown('turno', $event)">
+                      {{ sortColumn === 'turno' ? (sortAsc ? '↑' : '↓') : '▼' }}
+                    </button>
+                  </div>
+                  <div class="col-filter-dropdown shadow-premium text-left" *ngIf="activeDropdown === 'turno'" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item-action" (click)="setSort('turno', true)"><span class="icon">↑↓</span> Ordenar A-Z</div>
+                    <div class="dropdown-item-action" (click)="setSort('turno', false)"><span class="icon">↑↓</span> Ordenar Z-A</div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of paginatedRegistros">
+                <td class="action-cell">
+                  <div class="dropdown-container">
+                    <button class="btn-hamburger" (click)="toggleActionMenu(item.id, $event)">☰</button>
+                    <div class="dropdown-menu action-menu shadow-premium" *ngIf="openActionMenuId === item.id" (click)="$event.stopPropagation()">
+                      <div class="dropdown-item-action" (click)="irADetalle(item.id)">✏️ Modificar</div>
+                      <div class="dropdown-item-action del" (click)="eliminarRegistro(item.id)">❌ Eliminar</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="action-cell">
+                  <a class="action-link-gx" (click)="irADetalle(item.id)">Inventario</a>
+                </td>
+                <td *ngIf="isColVisible('fechaHora')"><span class="datetime-cell">{{ item.fechaHora }}</span></td>
+                <td *ngIf="isColVisible('turno')"><span class="turno-cell">{{ item.turno }}</span></td>
+              </tr>
+              <tr *ngIf="filteredRegistros.length === 0">
+                <td colspan="4" class="text-center empty-row-premium">
+                  🛸 No se encontraron registros de inventario.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination-container-premium" *ngIf="filteredRegistros.length > 0">
+          <div class="pagination-info">
+            Página {{ currentPage }} de {{ totalPages }}
+          </div>
+          <div class="pagination-buttons">
+            <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Ant</button>
+            <button *ngFor="let p of getPagesList()" class="btn-page number" [class.active]="currentPage === p" (click)="goToPage(p)">{{ p }}</button>
+            <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Sig</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alertas -->
       <div class="alert-container-fixed" *ngIf="successMessage || errorMessage">
         <div class="alert-premium success animate-fade-in" *ngIf="successMessage">
           <span class="icon">✓</span>
-          <div class="content"><strong>¡Éxito!</strong><p>{{ successMessage }}</p></div>
+          <div class="content">
+            <strong>¡Éxito!</strong>
+            <p>{{ successMessage }}</p>
+          </div>
         </div>
         <div class="alert-premium error animate-fade-in" *ngIf="errorMessage">
           <span class="icon">⚠️</span>
-          <div class="content"><strong>Error</strong><p>{{ errorMessage }}</p></div>
+          <div class="content">
+            <strong>Error</strong>
+            <p>{{ errorMessage }}</p>
+          </div>
         </div>
       </div>
 
-      <div class="subtitle-text">
-        {{ currentFechaHora }} {{ currentTurno }}
-      </div>
-
-      <div class="card-premium shadow-2xl relative-card">
-        <div class="card-tabs">
-          <button class="tab-btn" [class.active]="activeTab === 'bobinas'" (click)="selectTab('bobinas')">Bobinas</button>
-          <button class="tab-btn" [class.active]="activeTab === 'pallets'" (click)="selectTab('pallets')">Pallets</button>
-          <button class="tab-btn" [class.active]="activeTab === 'silos'" (click)="selectTab('silos')">Silos</button>
-        </div>
-
-        <!-- TABLA: Bobinas / Pallets -->
-        <div class="table-modern-container" *ngIf="activeTab === 'bobinas' || activeTab === 'pallets'">
-          <div class="loading-overlay" *ngIf="loading">⏳ Cargando datos...</div>
-          <table class="table-modern" *ngIf="!loading">
-            <thead>
-              <tr>
-                <th>Producto Nombre</th>
-                <th class="text-right">Existencia Producto Cantidad</th>
-                <th class="text-right">Existencia Producto Cantidad Sistema</th>
-                <th class="text-right">Producido en Turno</th>
-                <th class="text-right">En Turno Según Sistema</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of (activeTab === 'bobinas' ? bobinasInventory : palletsInventory)">
-                <td><span class="product-name">{{item.productoNombre}}</span></td>
-                <td class="text-right">
-                   <input type="number" class="modern-input text-right" [(ngModel)]="item.cantidadReal">
-                </td>
-                <td class="text-right font-mono">{{item.cantidadSistema | number:'1.0-0'}}</td>
-                <td class="text-right">
-                   <input type="number" class="modern-input text-right bg-readonly" [ngModel]="0" readonly>
-                </td>
-                <td class="text-right font-mono">0</td>
-              </tr>
-              <tr *ngIf="(activeTab === 'bobinas' ? bobinasInventory : palletsInventory).length === 0">
-                <td colspan="5" class="text-center empty-row">No se encontraron productos.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- TABLA: Silos -->
-        <div class="table-modern-container" *ngIf="activeTab === 'silos'">
-          <div class="loading-overlay" *ngIf="loading">⏳ Cargando datos...</div>
-          <table class="table-modern" *ngIf="!loading">
-            <thead>
-              <tr>
-                <th>Silo</th>
-                <th>Tipo Material</th>
-                <th>Estado Material</th>
-                <th>Lote</th>
-                <th class="text-right">Cantidad</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of silosInventory">
-                <td>{{item.siloNombre}}</td>
-                <td>{{item.tipoMaterial}}</td>
-                <td>{{item.estadoMaterial}}</td>
-                <td>{{item.loteVirgen || 'N/A'}}</td>
-                <td class="text-right">
-                   <input type="number" class="modern-input text-right" [(ngModel)]="item.cantidadReal">
-                </td>
-              </tr>
-              <tr *ngIf="silosInventory.length === 0">
-                <td colspan="5" class="text-center empty-row">No se encontraron registros de silos.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="card-footer-buttons">
-          <button class="btn-primary-modern confirm-btn" (click)="guardarExistencias()" [disabled]="saving">
-            {{ saving ? 'GUARDANDO...' : 'CONFIRMAR' }}
-          </button>
+      <!-- Modal Eliminar -->
+      <div class="modal-overlay" *ngIf="showModal && modalMode === 'DELETE'" (click)="showModal = false">
+        <div class="legacy-card-premium animate-scale-in" (click)="$event.stopPropagation()">
+          <div class="modal-header-legacy bg-danger">
+            Eliminar Inventario
+          </div>
+          <div class="modal-body-legacy">
+            <p class="modal-info text-danger" style="font-size: 1rem; color: #b91c1c; font-weight: 500;">¿Está completamente seguro de que desea eliminar este registro?</p>
+            <p class="modal-info">Esta acción realizará un borrado lógico (Soft-Delete).</p>
+          </div>
+          <div class="modal-footer-legacy">
+            <button class="btn-legacy secondary" (click)="showModal = false">Cancelar</button>
+            <button class="btn-legacy danger" (click)="confirmarEliminar()" [disabled]="isSubmitting">
+              {{ isSubmitting ? 'Eliminando...' : 'Eliminar Permanentemente' }}
+            </button>
+          </div>
         </div>
       </div>
-      
-      <div class="page-footer-actions">
-        <button class="btn-primary-modern report-btn" (click)="exportToPDF()">
-          REPORTE INVENTARIO
-        </button>
+
+      <!-- Modal Agregar -->
+      <div class="modal-overlay" *ngIf="showModal && modalMode === 'ADD'" (click)="showModal = false">
+        <div class="legacy-card-premium animate-scale-in" (click)="$event.stopPropagation()">
+          <div class="modal-header-legacy">
+            Iniciar Nuevo Inventario
+          </div>
+          <div class="modal-body-legacy">
+            <p class="modal-info">Seleccione el turno correspondiente para iniciar la captura de inventario.</p>
+            <div class="form-row-modern-modal">
+              <label class="legacy-label">Turno</label>
+              <select class="legacy-input" [(ngModel)]="nuevoTurno">
+                <option value="1er Turno">1er Turno</option>
+                <option value="2do Turno">2do Turno</option>
+                <option value="3er Turno">3er Turno</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer-legacy">
+            <button class="btn-legacy secondary" (click)="showModal = false">Cancelar</button>
+            <button class="btn-legacy" (click)="crearInventario()" [disabled]="isSubmitting">
+              {{ isSubmitting ? 'Iniciando...' : 'Comenzar Captura' }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   `,
@@ -582,97 +669,202 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
     }
   `]
 })
-export class ExistenciasComponent implements OnInit {
-  private inventarioService = inject(InventarioService);
-  private pdfService = inject(PdfExportService);
-  private route = inject(ActivatedRoute);
+export class InventarioIndexComponent implements OnInit {
   private router = inject(Router);
+  
+  registros: InventarioRecord[] = [];
+  filteredRegistros: InventarioRecord[] = [];
+  paginatedRegistros: InventarioRecord[] = [];
 
-  activeTab = 'bobinas';
-  loading = false;
-  saving = false;
-  errorMessage = '';
+  columns: ColumnDef[] = [
+    { id: 'fechaHora', label: 'Fecha Hora', visible: true },
+    { id: 'turno', label: 'Turno', visible: true }
+  ];
+
+  currentPage = 1;
+  pageSize = 10;
+  totalPages = 1;
+
+  searchQuery = '';
+  activeDropdown: string | null = null;
+  sortColumn = '';
+  sortAsc = true;
+
+  showExportSelector = false;
+  showColumnSelector = false;
+  openActionMenuId: string | null = null;
+
+  showModal = false;
+  modalMode: 'ADD' | 'DELETE' = 'ADD';
+  itemToDelete: string | null = null;
+  nuevoTurno = '1er Turno';
+  isSubmitting = false;
+
   successMessage = '';
-  
-  currentExistenciaId = '00000000-0000-0000-0000-000000000000'; 
-  currentFechaHora = '13/07/25';
-  currentTurno = '1er Turno';
-  
-  silosInventory: any[] = [];
-  bobinasInventory: any[] = [];
-  palletsInventory: any[] = [];
+  errorMessage = '';
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if (id) {
-        this.currentExistenciaId = id;
-      }
-      this.loadAllData();
-    });
+    this.cargarMockData();
   }
 
-  selectTab(tab: string) {
-    this.activeTab = tab;
-    this.errorMessage = '';
-    this.successMessage = '';
+  cargarMockData() {
+    this.registros = [
+      { id: '655', fechaHora: '24/07/25', turno: '2do Turno' },
+      { id: '654', fechaHora: '22/07/25', turno: '2do Turno' },
+      { id: '653', fechaHora: '21/07/25', turno: '2do Turno' },
+      { id: '652', fechaHora: '13/07/25', turno: '1er Turno' },
+      { id: '651', fechaHora: '12/07/25', turno: '1er Turno' },
+      { id: '650', fechaHora: '10/07/25', turno: '1er Turno' },
+      { id: '649', fechaHora: '10/07/25', turno: '2do Turno' }
+    ];
+    this.aplicarFiltros();
   }
 
-  loadAllData() {
-    this.loading = true;
-    setTimeout(() => {
-      this.bobinasInventory = [
-        { productoNombre: '74757', cantidadSistema: 1346, cantidadReal: 98 },
-        { productoNombre: '80637', cantidadSistema: 37, cantidadReal: 0 },
-        { productoNombre: '80687', cantidadSistema: 11, cantidadReal: 0 },
-        { productoNombre: '80957', cantidadSistema: 394, cantidadReal: 36 },
-        { productoNombre: '80617', cantidadSistema: 166, cantidadReal: 0 },
-        { productoNombre: '8063C2', cantidadSistema: 2204, cantidadReal: 59 },
-        { productoNombre: '8095C2', cantidadSistema: 8, cantidadReal: 0 },
-        { productoNombre: '8067C2', cantidadSistema: 0, cantidadReal: 0 }
-      ];
-      this.palletsInventory = [
-        { productoNombre: '747572000', cantidadSistema: 156, cantidadReal: 43 },
-        { productoNombre: '805972000', cantidadSistema: 0, cantidadReal: 0 },
-        { productoNombre: '806072000', cantidadSistema: 0, cantidadReal: 0 },
-        { productoNombre: '806372000', cantidadSistema: 53, cantidadReal: 0 },
-        { productoNombre: '806872000', cantidadSistema: 40, cantidadReal: 30 },
-        { productoNombre: '809572000', cantidadSistema: 16, cantidadReal: 22 },
-        { productoNombre: '806372LHV', cantidadSistema: 0, cantidadReal: 0 }
-      ];
-      this.silosInventory = [
-        { siloNombre: 'Silo 1', tipoMaterial: 'PCR', estadoMaterial: 'Virgen (pelet)', loteVirgen: '625NP0884N', cantidadReal: 21428 },
-        { siloNombre: 'Silo 2', tipoMaterial: 'PCR', estadoMaterial: 'Molido', loteVirgen: 'N/A', cantidadReal: 30820 },
-        { siloNombre: 'Silo 4', tipoMaterial: 'PCR', estadoMaterial: 'Molido', loteVirgen: 'N/A', cantidadReal: 20552 },
-        { siloNombre: 'Silo 5', tipoMaterial: 'PCR', estadoMaterial: 'Molido', loteVirgen: 'N/A', cantidadReal: 5174 },
-        { siloNombre: 'CAJA 55% PCR', tipoMaterial: 'PCR', estadoMaterial: 'Virgen (pelet)', loteVirgen: '624J7607N', cantidadReal: 0 },
-        { siloNombre: 'Silo 3', tipoMaterial: 'PCR', estadoMaterial: 'Molido', loteVirgen: 'N/A', cantidadReal: 48027 },
-        { siloNombre: 'Silo 7', tipoMaterial: 'PCR', estadoMaterial: 'Virgen (pelet)', loteVirgen: '625N7123N', cantidadReal: 49787 }
-      ];
-      this.loading = false;
-    }, 500);
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    this.openActionMenuId = null;
+    this.showExportSelector = false;
+    this.showColumnSelector = false;
+    this.activeDropdown = null;
   }
 
-  guardarExistencias() {
-    this.errorMessage = '';
-    this.successMessage = '';
-    if (!confirm('¿Estás seguro de que deseas confirmar este inventario físico?')) {
-      return;
+  toggleExport(event: Event) {
+    event.stopPropagation();
+    this.showExportSelector = !this.showExportSelector;
+    this.showColumnSelector = false;
+    this.openActionMenuId = null;
+    this.activeDropdown = null;
+  }
+
+  toggleColumns(event: Event) {
+    event.stopPropagation();
+    this.showColumnSelector = !this.showColumnSelector;
+    this.showExportSelector = false;
+    this.openActionMenuId = null;
+    this.activeDropdown = null;
+  }
+
+  toggleActionMenu(id: string, event: Event) {
+    event.stopPropagation();
+    this.openActionMenuId = this.openActionMenuId === id ? null : id;
+    this.showExportSelector = false;
+    this.showColumnSelector = false;
+    this.activeDropdown = null;
+  }
+
+  toggleDropdown(col: string, event: Event) {
+    event.stopPropagation();
+    this.activeDropdown = this.activeDropdown === col ? null : col;
+    this.openActionMenuId = null;
+  }
+
+  setSort(col: string, asc: boolean) {
+    this.sortColumn = col;
+    this.sortAsc = asc;
+    this.activeDropdown = null;
+    this.aplicarFiltros();
+  }
+
+  aplicarFiltros() {
+    let result = [...this.registros];
+    
+    if (this.searchQuery) {
+      const query = this.searchQuery.toLowerCase();
+      result = result.filter(r => 
+        r.fechaHora.toLowerCase().includes(query) || 
+        r.turno.toLowerCase().includes(query)
+      );
     }
-    this.saving = true;
-    setTimeout(() => {
-      this.successMessage = '¡Inventario guardado con éxito!';
-      this.saving = false;
-      setTimeout(() => {
-        this.successMessage = '';
-      }, 3000);
-    }, 800);
+
+    if (this.sortColumn) {
+      result.sort((a, b) => {
+        const valA = (a as any)[this.sortColumn];
+        const valB = (b as any)[this.sortColumn];
+        if (valA < valB) return this.sortAsc ? -1 : 1;
+        if (valA > valB) return this.sortAsc ? 1 : -1;
+        return 0;
+      });
+    }
+
+    this.filteredRegistros = result;
+    this.currentPage = 1;
+    this.recalcularPaginacion();
   }
 
-  exportToPDF() {
-    this.successMessage = 'Generando Reporte PDF...';
+  recalcularPaginacion() {
+    this.totalPages = Math.ceil(this.filteredRegistros.length / this.pageSize) || 1;
+    this.updatePaginatedList();
+  }
+
+  updatePaginatedList() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    this.paginatedRegistros = this.filteredRegistros.slice(start, start + this.pageSize);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedList();
+    }
+  }
+
+  getPagesList(): number[] {
+    const pages: number[] = [];
+    for (let i = 1; i <= this.totalPages; i++) pages.push(i);
+    return pages;
+  }
+
+  isColVisible(id: string): boolean {
+    return this.columns.find(c => c.id === id)?.visible ?? false;
+  }
+
+  saveColumnsState() {}
+
+  irADetalle(id: string) {
+    this.router.navigate(['/inventario/existencias/detalle', id]);
+  }
+
+  abrirModalNuevo() {
+    this.modalMode = 'ADD';
+    this.nuevoTurno = '1er Turno';
+    this.showModal = true;
+  }
+
+  crearInventario() {
+    this.isSubmitting = true;
+    setTimeout(() => {
+      this.isSubmitting = false;
+      this.showModal = false;
+      this.irADetalle('new-' + Date.now());
+    }, 600);
+  }
+
+  eliminarRegistro(id: string) {
+    this.itemToDelete = id;
+    this.modalMode = 'DELETE';
+    this.showModal = true;
+  }
+
+  confirmarEliminar() {
+    this.isSubmitting = true;
+    setTimeout(() => {
+      this.registros = this.registros.filter(r => r.id !== this.itemToDelete);
+      this.aplicarFiltros();
+      this.isSubmitting = false;
+      this.showModal = false;
+      this.showTransactionAlert('Registro eliminado correctamente.', 'success');
+    }, 600);
+  }
+
+  showTransactionAlert(msg: string, type: 'success' | 'error') {
+    if (type === 'success') this.successMessage = msg;
+    else this.errorMessage = msg;
     setTimeout(() => {
       this.successMessage = '';
-    }, 2000);
+      this.errorMessage = '';
+    }, 3000);
   }
+
+  exportToCSV() {}
+  exportToPDF() {}
 }
