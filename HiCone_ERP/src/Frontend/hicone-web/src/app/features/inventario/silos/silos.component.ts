@@ -126,7 +126,7 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
 
       <!-- Modal Legacy (Imagen 2) -->
       <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
-        <div class="legacy-card-premium animate-scale-in" (click)="$event.stopPropagation()">
+        <div class="modal-card legacy-card animate-scale-in" (click)="$event.stopPropagation()">
           <div class="modal-header-legacy">
             
             {{ modalMode === 'VIEW' ? 'Visualizar Silo' : modalMode === 'EDIT' ? 'Modificar Silo' : modalMode === 'DELETE' ? 'Eliminar Silo' : modalMode === 'CONSUMO' ? 'Registrar Salida' : 'Agregar Silo' }}

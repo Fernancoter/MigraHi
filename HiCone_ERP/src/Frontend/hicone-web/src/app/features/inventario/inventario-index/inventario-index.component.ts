@@ -41,7 +41,7 @@ interface ColumnDef {
               <span class="icon">+</span>
             </button>
             <div class="dropdown-container">
-              <button class="btn-toolbar" (click)="toggleExport($event)">
+              <button class="btn-legacy" (click)="toggleExport($event)">
                 <span class="icon">📤</span> Exportar <span class="arrow">▼</span>
               </button>
               <div class="dropdown-menu shadow-premium" *ngIf="showExportSelector" (click)="$event.stopPropagation()">
@@ -50,7 +50,7 @@ interface ColumnDef {
               </div>
             </div>
             <div class="dropdown-container">
-              <button class="btn-toolbar" (click)="toggleColumns($event)">
+              <button class="btn-legacy" (click)="toggleColumns($event)">
                 <span class="icon">📋</span> Selecciona columnas <span class="arrow">▼</span>
               </button>
               <div class="dropdown-menu shadow-premium" *ngIf="showColumnSelector" (click)="$event.stopPropagation()">
@@ -61,7 +61,7 @@ interface ColumnDef {
                 </label>
               </div>
             </div>
-            <button class="btn-toolbar btn-icon">
+            <button class="btn-legacy">
               <span class="icon">📡</span>
             </button>
           </div>
@@ -182,26 +182,36 @@ interface ColumnDef {
 
       <!-- Modal Agregar -->
       <div class="modal-overlay" *ngIf="showModal && modalMode === 'ADD'" (click)="showModal = false">
-        <div class="legacy-card-premium animate-scale-in" (click)="$event.stopPropagation()">
-          <div class="modal-header-legacy">
-            Iniciar Nuevo Inventario
-          </div>
-          <div class="modal-body-legacy">
-            <p class="modal-info">Seleccione el turno correspondiente para iniciar la captura de inventario.</p>
-            <div class="form-row-modern-modal">
-              <label class="legacy-label">Turno</label>
-              <select class="legacy-input" [(ngModel)]="nuevoTurno">
-                <option value="1er Turno">1er Turno</option>
-                <option value="2do Turno">2do Turno</option>
-                <option value="3er Turno">3er Turno</option>
-              </select>
+        <div class="legacy-card animate-scale-in" (click)="$event.stopPropagation()" style="background: white; border-radius: 8px;">
+          <div class="modal-body-legacy" style="padding: 1.5rem; border-radius: 8px;">
+            <div class="section-title" style="background: #5cb85c; color: white; padding: 0.8rem 1rem; border-radius: 6px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
+              <span class="icon">🏷️</span> Información General
             </div>
-          </div>
-          <div class="modal-footer-legacy">
-            <button class="btn-legacy secondary" (click)="showModal = false">Cancelar</button>
-            <button class="btn-legacy" (click)="crearInventario()" [disabled]="isSubmitting">
-              {{ isSubmitting ? 'Iniciando...' : 'Comenzar Captura' }}
-            </button>
+            
+            <div class="form-row-modern-modal" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+              <div>
+                <label class="legacy-label" style="display: block; margin-bottom: 0.5rem;">Fecha Hora</label>
+                <input type="date" class="legacy-input" style="width: 100%;" [(ngModel)]="nuevaFecha" name="fecha">
+              </div>
+              <div>
+                <label class="legacy-label" style="display: block; margin-bottom: 0.5rem;">Turno</label>
+                <select class="legacy-input" style="width: 100%;" [(ngModel)]="nuevoTurno">
+                  <option value="" disabled>-- Seleccione --</option>
+                  <option value="1er Turno">1er Turno</option>
+                  <option value="2do Turno">2do Turno</option>
+                  <option value="3er Turno">3er Turno</option>
+                </select>
+              </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+              <button class="btn-legacy primary" (click)="crearInventario()" [disabled]="isSubmitting" style="background: #5cb85c; color: white; border: none; font-weight: bold; border-radius: 4px; padding: 0.8rem 1.6rem; cursor: pointer;">
+                CONFIRMAR
+              </button>
+              <button class="btn-legacy secondary" (click)="showModal = false" style="background: #95a5a6; color: white; border: none; font-weight: bold; border-radius: 4px; padding: 0.8rem 1.6rem; cursor: pointer;">
+                CANCELAR
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -698,6 +708,7 @@ export class InventarioIndexComponent implements OnInit {
   modalMode: 'ADD' | 'DELETE' = 'ADD';
   itemToDelete: string | null = null;
   nuevoTurno = '1er Turno';
+  nuevaFecha = '';
   isSubmitting = false;
 
   successMessage = '';
