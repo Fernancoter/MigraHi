@@ -2,11 +2,13 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Operario } from '../../../../core/services/produccion-config.service';
+import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-operarios-catalogo',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ClickOutsideDirective],
   template: `
     <div class="module-page animate-move-up">
       <!-- Encabezado del Módulo -->
@@ -28,7 +30,7 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
               </button>
               @if (showExportOptions()) {
                 <div class="column-selector-popover animate-slide-up">
-                  <div class="dropdown-item" (click)="exportCSV()">Excel (CSV)</div>
+                  <div class="dropdown-item" (click)="exportCSV()">Excel</div>
                   <div class="dropdown-item" (click)="exportPDF()">PDF</div>
                 </div>
               }
@@ -38,7 +40,7 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
             <button class="btn btn-primary" (click)="openCreate()">+ Agregar</button>
 
             <!-- Selector de Columnas -->
-            <div class="dropdown-wrapper">
+            <div class="dropdown-wrapper" (clickOutside)="closeColumnDropdown()">
               <button class="btn btn-secondary" (click)="toggleColumnDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem; background: #5cb85c; color: white; border-color: #4cae4c;">
                 Selecciona columnas <span style="font-size: 0.7rem; color: white;">▼</span>
               </button>
@@ -119,16 +121,25 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
 
           <!-- RIGHT SIDE -->
           <div class="toolbar-right" style="display: flex; gap: 0.75rem; align-items: center;">
-            <!-- Toggle de Filtros de Estado Rápido -->
-            <button 
-              class="btn btn-secondary" 
-              [class.active-filter]="activeFilterState() !== 'all'" 
-              (click)="cycleActiveFilterState()"
-              title="Filtrar por estado activo"
-              style="display: flex; align-items: center; gap: 0.4rem;"
-            >
-              <span>🔄</span> Filter: {{ activeFilterState() === 'all' ? 'Todos' : activeFilterState() === 'active' ? 'Activos' : 'Inactivos' }}
-            </button>
+            <!-- Filter Dropdown Trigger -->
+            <div style="position: relative;" (click)="toggleFilterMenu()" (clickOutside)="isFilterMenuOpen = false">
+              <button 
+                class="btn btn-secondary" 
+                [class.active-filter]="activeFilterState() !== 'all'" 
+                title="Filtrar"
+                style="display: flex; align-items: center; gap: 0.4rem;"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                Filter: {{ activeFilterState() === 'all' ? 'Todos' : activeFilterState() === 'active' ? 'Activos' : 'Inactivos' }}
+              </button>
+              
+              <!-- Filter Dropdown -->
+              <div *ngIf="isFilterMenuOpen" style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 50; width: 200px; padding: 0.5rem; margin-top: 0.5rem;">
+                <button (click)="cycleActiveFilterState(); $event.stopPropagation()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Alternar Estado Activo/Inactivo</button>
+                <button (click)="clearFilters(); $event.stopPropagation()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Limpiar Filtros</button>
+                <button style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Guardar Filtro como...</button>
+              </div>
+            </div>
 
             <!-- Filtro de Búsqueda -->
             <div class="search-box">
@@ -437,6 +448,7 @@ export class OperariosCatalogoComponent implements OnInit {
   showColumnSelector = signal<boolean>(false);
   showExportOptions = signal<boolean>(false);
   showActiveHeaderDropdown = signal<boolean>(false);
+  isFilterMenuOpen = false;
   
   visibleColumns = signal<string[]>(['nombre', 'activo']);
 
@@ -518,11 +530,18 @@ export class OperariosCatalogoComponent implements OnInit {
     this.currentPage.set(1);
   }
 
+  closeColumnDropdown() {
+    if (this.showColumnSelector()) {
+      this.showColumnSelector.set(false);
+    }
+  }
+
   toggleColumnDropdown(event: Event) {
     event.stopPropagation();
     this.showColumnSelector.update(v => !v);
     this.showExportOptions.set(false);
     this.showActiveHeaderDropdown.set(false);
+    this.isFilterMenuOpen = false;
   }
 
   toggleExportDropdown(event: Event) {
@@ -530,6 +549,7 @@ export class OperariosCatalogoComponent implements OnInit {
     this.showExportOptions.update(v => !v);
     this.showColumnSelector.set(false);
     this.showActiveHeaderDropdown.set(false);
+    this.isFilterMenuOpen = false;
   }
 
   toggleActiveHeaderDropdown(event: Event) {
@@ -537,6 +557,21 @@ export class OperariosCatalogoComponent implements OnInit {
     this.showActiveHeaderDropdown.update(v => !v);
     this.showColumnSelector.set(false);
     this.showExportOptions.set(false);
+    this.isFilterMenuOpen = false;
+  }
+
+  toggleFilterMenu() {
+    this.isFilterMenuOpen = !this.isFilterMenuOpen;
+    this.showColumnSelector.set(false);
+    this.showExportOptions.set(false);
+    this.showActiveHeaderDropdown.set(false);
+  }
+
+  clearFilters() {
+    this.searchText.set('');
+    this.activeFilterState.set('all');
+    this.isFilterMenuOpen = false;
+    this.currentPage.set(1);
   }
 
   isColVisible(colName: string): boolean {
@@ -700,19 +735,23 @@ export class OperariosCatalogoComponent implements OnInit {
   // Export options
   exportCSV() {
     this.showExportOptions.set(false);
-    let csvContent = '\uFEFFID;Nombre;Fotografía;UserGUID;Estado\n';
-    this.filteredItems().forEach(op => {
-      csvContent += `${op.id};${op.nombre};${op.fotografia};${op.userGuid};${op.activo ? 'Activo' : 'Inactivo'}\n`;
-    });
+    
+    // Transformar los datos para el Excel
+    const dataToExport = this.filteredItems().map(op => ({
+      ID: op.id,
+      Nombre: op.nombre,
+      Fotografía: op.fotografia,
+      UserGUID: op.userGuid,
+      Estado: op.activo ? 'Activo' : 'Inactivo'
+    }));
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `operarios_reporte_${new Date().toISOString().slice(0,10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Crear la hoja de trabajo y el libro
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Operarios');
+
+    // Escribir el archivo
+    XLSX.writeFile(wb, `operarios_reporte_${new Date().toISOString().slice(0,10)}.xlsx`);
   }
 
   exportPDF() {

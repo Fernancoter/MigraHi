@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Silo } from '../../../../core/services/produccion-config.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-silos-catalogo',
@@ -28,7 +29,7 @@ import { ProduccionConfigService, Silo } from '../../../../core/services/producc
               </button>
               @if (showExportOptions()) {
                 <div class="column-selector-popover animate-slide-up" style="padding: 0.5rem 0; width: 150px; left: 0;">
-                  <div class="dropdown-item" (click)="exportCSV()" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 500;"><span style="color: #10b981; font-size: 1.1rem;">📊</span> Excel (CSV)</div>
+                  <div class="dropdown-item" (click)="exportCSV()" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 500;"><span style="color: #10b981; font-size: 1.1rem;">📊</span> Excel</div>
                   <div class="dropdown-item" (click)="exportPDF()" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 500;"><span style="color: #ef4444; font-size: 1.1rem;">📄</span> PDF</div>
                 </div>
               }
@@ -528,38 +529,23 @@ export class SilosCatalogoComponent implements OnInit {
 
   exportCSV() {
     this.showExportOptions.set(false);
-    let csvContent = '\uFEFF';
     
-    const headers = [];
-    if (this.isColVisible('nombre')) headers.push('Silo');
-    if (this.isColVisible('capacidadKg')) headers.push('Capacidad');
-    if (this.isColVisible('minimoKg')) headers.push('Mínimo');
-    if (this.isColVisible('maximoKg')) headers.push('Máximo');
-    if (this.isColVisible('estadoMaterial')) headers.push('Estado Material');
-    if (this.isColVisible('tipoMaterial')) headers.push('Tipo Material');
-    if (this.isColVisible('siloActivo')) headers.push('Activo');
-    csvContent += headers.join(';') + '\n';
-    
-    this.filteredItems().forEach(op => {
-      const row = [];
-      if (this.isColVisible('nombre')) row.push(op.nombre);
-      if (this.isColVisible('capacidadKg')) row.push(op.capacidadKg || 0);
-      if (this.isColVisible('minimoKg')) row.push(op.minimoKg || 0);
-      if (this.isColVisible('maximoKg')) row.push(op.maximoKg || 0);
-      if (this.isColVisible('estadoMaterial')) row.push(op.estadoMaterial || '');
-      if (this.isColVisible('tipoMaterial')) row.push(op.tipoMaterial || '');
-      if (this.isColVisible('siloActivo')) row.push(op.siloActivo ? 'Sí' : 'No');
-      csvContent += row.join(';') + '\n';
-    });
+    const dataToExport = this.filteredItems().map(item => ({
+      ID: item.id,
+      Nombre: item.nombre,
+      Capacidad: item.capacidadKg || 0,
+      Mínimo: item.minimoKg || 0,
+      Máximo: item.maximoKg || 0,
+      EstadoMaterial: item.estadoMaterial || '',
+      TipoMaterial: item.tipoMaterial || '',
+      Activo: item.siloActivo ? 'Sí' : 'No'
+    }));
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `silos_reporte_\${new Date().toISOString().slice(0,10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Silos');
+
+    XLSX.writeFile(wb, `silos_${new Date().toISOString().slice(0,10)}.xlsx`);
   }
 
   exportPDF() {

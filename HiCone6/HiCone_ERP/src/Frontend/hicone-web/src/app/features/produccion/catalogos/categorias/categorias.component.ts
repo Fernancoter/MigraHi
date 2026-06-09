@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Categoria } from '../../../../core/services/produccion-config.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-categorias-catalogo',
@@ -28,7 +29,7 @@ import { ProduccionConfigService, Categoria } from '../../../../core/services/pr
               </button>
               @if (showExportOptions()) {
                 <div class="column-selector-popover animate-slide-up">
-                  <div class="dropdown-item" (click)="exportCSV()">Excel (CSV)</div>
+                  <div class="dropdown-item" (click)="exportCSV()">Excel</div>
                   <div class="dropdown-item" (click)="exportPDF()">PDF</div>
                 </div>
               }
@@ -694,21 +695,17 @@ export class CategoriasComponent implements OnInit {
   /* ------------------- EXPORT ------------------- */
   exportCSV() {
     this.showExportOptions.set(false);
-    let csvContent = '\uFEFFNombre\n';
-    this.filteredItems().forEach(op => {
-      if (this.isColVisible('nombre')) {
-        csvContent += `${op.nombre}\n`;
-      }
-    });
+    
+    const dataToExport = this.filteredItems().map(item => ({
+      ID: item.id,
+      Nombre: item.nombre
+    }));
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `categorias_reporte_${new Date().toISOString().slice(0,10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Categorias');
+
+    XLSX.writeFile(wb, `categorias_${new Date().toISOString().slice(0,10)}.xlsx`);
   }
 
   exportPDF() {

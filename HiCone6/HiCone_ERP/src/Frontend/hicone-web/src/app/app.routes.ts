@@ -74,6 +74,7 @@ export const routes: Routes = [
       { path: 'produccion/referencias/extrusora-producto', loadComponent: () => import('./features/produccion/referencias/extrusora-producto/extrusora-producto.component').then(m => m.ExtrusoraProductoComponent) },
       { path: 'produccion/referencias/extrusora-mezcladora', loadComponent: () => import('./features/produccion/referencias/extrusora-mezcladora/extrusora-mezcladora.component').then(m => m.ExtrusoraMezcladoraComponent) },
       { path: 'produccion/referencias/prensa-producto', loadComponent: () => import('./features/produccion/referencias/prensa-producto/prensa-producto.component').then(m => m.PrensaProductoComponent) },
+      { path: 'produccion/referencias/producto-terminado', loadComponent: () => import('./features/produccion/referencias/producto-terminado/producto-terminado.component').then(m => m.ProductoTerminadoComponent) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Extrusora, ExtrusoraOperarioRow, Operario, Turno } from '../../../../core/services/produccion-config.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-extrusoras-catalogo',
@@ -26,7 +27,7 @@ import { ProduccionConfigService, Extrusora, ExtrusoraOperarioRow, Operario, Tur
               <button class="btn btn-secondary" (click)="toggleExportDropdown($event)">⬇️ Exportar</button>
               @if (showExportOptions()) {
                 <div class="col-popover animate-slide-up">
-                  <div class="dd-item" (click)="exportCSV()">Excel (CSV)</div>
+                  <div class="dd-item" (click)="exportCSV()">Excel</div>
                   <div class="dd-item" (click)="exportPDF()">PDF</div>
                 </div>
               }
@@ -766,24 +767,19 @@ export class ExtrusorasCatalogoComponent implements OnInit {
   /* ── Export ───────────────────────────────────────── */
   exportCSV() {
     this.showExportOptions.set(false);
-    const cols: string[] = [];
-    if (this.isColVisible('nombre')) cols.push('Extrusora');
-    if (this.isColVisible('imagen')) cols.push('Imagen');
-    let csv = '\uFEFF' + cols.join(';') + '\n';
-    this.filteredItems().forEach(e => {
-      const row: string[] = [];
-      if (this.isColVisible('nombre')) row.push(e.nombre);
-      if (this.isColVisible('imagen')) row.push(e.imagen || '');
-      csv += row.join(';') + '\n';
-    });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `extrusoras_${new Date().toISOString().slice(0,10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    
+    const dataToExport = this.filteredItems().map(item => ({
+      ID: item.id,
+      NúmeroExtrusora: item.numeroExtrusora || '',
+      Extrusora: item.nombre,
+      Imagen: item.imagen || ''
+    }));
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Extrusoras');
+
+    XLSX.writeFile(wb, `extrusoras_${new Date().toISOString().slice(0,10)}.xlsx`);
   }
 
   exportPDF() {

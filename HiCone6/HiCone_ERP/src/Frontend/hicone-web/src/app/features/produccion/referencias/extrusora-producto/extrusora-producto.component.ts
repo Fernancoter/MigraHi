@@ -2,6 +2,8 @@ import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
+import * as XLSX from 'xlsx';
 
 export interface ExtrusoraProducto {
   id?: string;
@@ -28,7 +30,7 @@ export interface Producto {
 @Component({
   selector: 'app-extrusora-producto',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ClickOutsideDirective],
   template: `
     <div class="module-page animate-move-up" style="padding: 1.5rem 2.5rem; background: #fff; min-height: calc(100vh - 64px); position: relative;">
       <header style="margin-bottom: 2rem;">
@@ -46,8 +48,8 @@ export interface Producto {
               <span>⬇️</span> Exportar <span style="font-size: 0.6rem;">▼</span>
             </button>
             <div *ngIf="isExportMenuOpen" style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 50; width: 120px; padding: 0.5rem; margin-top: 0.5rem;">
+              <button (click)="exportCSV()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Excel</button>
               <button style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">PDF</button>
-              <button style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Excel</button>
             </div>
           </div>
 
@@ -55,7 +57,7 @@ export interface Producto {
           <button (click)="openModal(undefined, false)" style="background: white; color: #5cb85c; border: 1px solid #5cb85c; padding: 0.5rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Agregar</button>
 
           <!-- Selecciona Columnas -->
-          <div style="position: relative;">
+          <div style="position: relative;" (clickOutside)="isColumnsMenuOpen = false">
             <button (click)="toggleColumnsMenu()" style="background: #5cb85c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
               Selecciona columnas <span style="font-size: 0.6rem;">▼</span>
             </button>
@@ -86,8 +88,10 @@ export interface Producto {
         <!-- Derecha: Filtro, Buscar -->
         <div style="display: flex; gap: 1rem; align-items: center;">
           <!-- Filter Dropdown Trigger -->
-          <div style="position: relative;" (click)="toggleFilterMenu()">
-            <button style="background: none; border: none; font-size: 1.2rem; color: #64748b; cursor: pointer; padding-right: 0.5rem;">⚙️</button>
+          <div style="position: relative;" (click)="toggleFilterMenu()" (clickOutside)="isFilterMenuOpen = false">
+            <button style="background: none; border: none; color: #64748b; cursor: pointer; padding-right: 0.5rem; display: flex; align-items: center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            </button>
             
             <!-- Filter Dropdown -->
             <div *ngIf="isFilterMenuOpen" style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 50; width: 200px; padding: 0.5rem;">
@@ -435,5 +439,25 @@ export class ExtrusoraProductoComponent implements OnInit {
     if (current < total - 2) pages.push('...');
     if (total > 1) pages.push(total);
     return pages;
+  }
+
+  exportCSV() {
+    this.isExportMenuOpen = false;
+    const dataToExport = this.paginatedItems().map(item => {
+      const row: any = { Extrusora: item.extrusoraNombre };
+      if (this.columns[0].visible) row[this.columns[0].label] = item.productoNombre;
+      if (this.columns[1].visible) row[this.columns[1].label] = item.productoCalibre;
+      if (this.columns[2].visible) row[this.columns[2].label] = item.productoAncho;
+      if (this.columns[3].visible) row[this.columns[3].label] = item.productoLongitud;
+      if (this.columns[4].visible) row[this.columns[4].label] = item.reposoMin;
+      if (this.columns[5].visible) row[this.columns[5].label] = item.procesoMin;
+      return row;
+    });
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'ExtrusoraProducto');
+
+    XLSX.writeFile(wb, `extrusora_producto_${new Date().toISOString().slice(0,10)}.xlsx`);
   }
 }

@@ -1,6 +1,9 @@
-import { Component, signal, computed, OnInit } from '@angular/core';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
+import * as XLSX from 'xlsx';
 
 export interface PrensaProducto {
   id?: string;
@@ -13,7 +16,7 @@ export interface PrensaProducto {
 @Component({
   selector: 'app-prensa-producto',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ClickOutsideDirective],
   template: `
     <div class="module-page animate-move-up" style="padding: 1.5rem 2.5rem; background: #fff; min-height: calc(100vh - 64px); position: relative;">
       <header style="margin-bottom: 2rem;">
@@ -31,8 +34,8 @@ export interface PrensaProducto {
               <span>⬇️</span> Exportar <span style="font-size: 0.6rem;">▼</span>
             </button>
             <div *ngIf="isExportMenuOpen" style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 50; width: 120px; padding: 0.5rem; margin-top: 0.5rem;">
+              <button (click)="exportCSV()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Excel</button>
               <button style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">PDF</button>
-              <button style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Excel</button>
             </div>
           </div>
 
@@ -40,8 +43,8 @@ export interface PrensaProducto {
           <button (click)="openModal(null, false)" style="background: white; color: #5cb85c; border: 1px solid #5cb85c; padding: 0.5rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Agregar</button>
 
           <!-- Selecciona Columnas -->
-          <div style="position: relative;">
-            <button (click)="toggleColumnsMenu()" style="background: white; color: #5cb85c; border: 1px solid #5cb85c; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+          <div style="position: relative;" (clickOutside)="isColumnsMenuOpen = false">
+            <button (click)="toggleColumnsMenu()" style="background: #5cb85c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
               Selecciona columnas <span style="font-size: 0.6rem;">▼</span>
             </button>
             <div *ngIf="isColumnsMenuOpen" style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 50; width: 250px; padding: 1rem; margin-top: 0.5rem;">
@@ -81,8 +84,10 @@ export interface PrensaProducto {
         <!-- Derecha: Filtro, Buscar -->
         <div style="display: flex; gap: 1rem; align-items: center;">
           <!-- Filter Dropdown Trigger -->
-          <div style="position: relative;" (click)="toggleFilterMenu()">
-            <button style="background: none; border: none; font-size: 1.2rem; color: #64748b; cursor: pointer; padding-right: 0.5rem;">⚙️</button>
+          <div style="position: relative;" (click)="toggleFilterMenu()" (clickOutside)="isFilterMenuOpen = false">
+            <button style="background: none; border: none; color: #64748b; cursor: pointer; padding-right: 0.5rem; display: flex; align-items: center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            </button>
             
             <!-- Filter Dropdown -->
             <div *ngIf="isFilterMenuOpen" style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 50; width: 200px; padding: 0.5rem;">
@@ -114,7 +119,9 @@ export interface PrensaProducto {
             </tr>
           </thead>
           <tbody>
-            @if (paginatedItems().length === 0) {
+            @if (isLoading()) {
+              <tr><td colspan="4" style="text-align:center; padding:2rem; color:#94a3b8;">Cargando...</td></tr>
+            } @else if (paginatedItems().length === 0) {
               <tr><td [attr.colspan]="visibleColsCount + 1" style="text-align:center; padding:2rem; color:#94a3b8; font-style:italic;">No se encontraron resultados.</td></tr>
             } @else {
               @for (item of paginatedItems(); track item.id) {
@@ -127,7 +134,7 @@ export interface PrensaProducto {
 
                   <td *ngIf="columns[0].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.prensa }}</td>
                   <td *ngIf="columns[1].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.item }}</td>
-                  <td *ngIf="columns[2].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.carrete }}</td>
+                  <td *ngIf="columns[2].visible" style="padding: 1px; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.carrete }}</td>
                 </tr>
               }
             }
@@ -268,11 +275,14 @@ export interface PrensaProducto {
   `]
 })
 export class PrensaProductoComponent implements OnInit {
+  private http = inject(HttpClient);
+  private apiUrl = 'api/prensa-producto';
+
   searchText = signal<string>('');
   currentPage = signal<number>(1);
   pageSize = signal<number>(10);
+  isLoading = signal<boolean>(false);
 
-  // Datos simulados
   items = signal<PrensaProducto[]>([]);
 
   isFilterMenuOpen = false;
@@ -310,18 +320,22 @@ export class PrensaProductoComponent implements OnInit {
   form: PrensaProducto = this.getEmptyForm();
 
   ngOnInit() {
-    // Generar datos falsos para que la tabla coincida con img2
-    this.items.set([
-      { id: '1', prensa: 'Prensa 1', item: '74750', carrete: '747502000', aplicarFiltro: false },
-      { id: '2', prensa: 'Prensa 1', item: '74757', carrete: '747572000', aplicarFiltro: false },
-      { id: '3', prensa: 'Prensa 1', item: '80600', carrete: '806002000', aplicarFiltro: false },
-      { id: '4', prensa: 'Prensa 1', item: '80607', carrete: '806072000', aplicarFiltro: false },
-      { id: '5', prensa: 'Prensa 1', item: '80630', carrete: '806302000', aplicarFiltro: false },
-      { id: '6', prensa: 'Prensa 1', item: '80637', carrete: '806372000', aplicarFiltro: false },
-      { id: '7', prensa: 'Prensa 1', item: '80680', carrete: '806802000', aplicarFiltro: false },
-      { id: '8', prensa: 'Prensa 1', item: '80687', carrete: '806872000', aplicarFiltro: false },
-      { id: '9', prensa: 'Prensa 1', item: '80950', carrete: '809502000', aplicarFiltro: false }
-    ]);
+    this.loadData();
+  }
+
+  loadData() {
+    this.isLoading.set(true);
+    this.http.get<PrensaProducto[]>(this.apiUrl).subscribe({
+      next: (data) => {
+        this.items.set(data);
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.warn('Endpoint no disponible, inicializando vacío.', err);
+        this.items.set([]);
+        this.isLoading.set(false);
+      }
+    });
   }
 
   getEmptyForm(): PrensaProducto {
@@ -379,7 +393,6 @@ export class PrensaProductoComponent implements OnInit {
   }
 
   saveModal() {
-    // Si estamos editando y tiene ID
     if (this.form.id) {
       const current = this.items();
       const index = current.findIndex(x => x.id === this.form.id);
@@ -388,7 +401,6 @@ export class PrensaProductoComponent implements OnInit {
         this.items.set([...current]);
       }
     } else {
-      // Es un registro nuevo
       const newItem = { ...this.form, id: Date.now().toString() };
       this.items.set([newItem, ...this.items()]);
     }
@@ -415,5 +427,22 @@ export class PrensaProductoComponent implements OnInit {
     if (current < total - 2) pages.push('...');
     if (total > 1) pages.push(total);
     return pages;
+  }
+
+  exportCSV() {
+    this.isExportMenuOpen = false;
+    const dataToExport = this.paginatedItems().map(item => {
+      const row: any = {};
+      if (this.columns[0].visible) row[this.columns[0].label] = item.prensa;
+      if (this.columns[1].visible) row[this.columns[1].label] = item.item;
+      if (this.columns[2].visible) row[this.columns[2].label] = item.carrete;
+      return row;
+    });
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'PrensaProducto');
+
+    XLSX.writeFile(wb, `prensa_producto_${new Date().toISOString().slice(0,10)}.xlsx`);
   }
 }

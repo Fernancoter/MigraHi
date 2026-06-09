@@ -138,3 +138,12 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
 - Se diseñaron e implementaron exitosamente las vistas de **Extrusora Producto** y **Extrusora Mezcladora** en /produccion/referencias utilizando estructuras de datos simuladas alineadas con el diseño visual del sistema.
 - Se implementó la vista de **Prensa Producto** con su modal de información general e historial de auditoría estático, registrándose exitosamente en las rutas principales.
 - Se resolvieron errores de guardado en Extrusora Producto reiniciando el servicio Backend, y se ajustó el layout de tablas (botones de acciones a la izquierda) y modos readonly ("Visualizar") en todos los submódulos de Referencias implementados hoy.
+
+## 2026-06-09: Estandarización UI/UX y Exportación del Módulo de Producción
+- **Exportación Excel Auténtica**: Integración global de `xlsx` (SheetJS) en los 10 módulos de catálogos y referencias (Productos, Categorías, Turnos, Extrusoras, Prensas, Silos, Extrusora Producto, Extrusora Mezcladora, Prensa Producto, Producto Terminado). Ahora generan archivos `.xlsx` reales con celdas delimitadas correctamente.
+- **Limpieza de Datos**: Se erradicaron los datos hardcodeados (`getMockData`) de las vistas de referencias (Extrusora Mezcladora, Prensa Producto y Producto Terminado), enlazándolos a la carga desde las APIs correspondientes y mejorando las pantallas de carga vacías.
+- **Estandarización UI**: 
+  - Todos los botones de filtro ahora utilizan uniformemente el icono de **embudo** (SVG) en sustitución del engrane.
+  - Las acciones de las tablas (Visualizar, Modificar, Eliminar) se trasladaron a la izquierda (fijas) en Producto Terminado, con diseño en tres columnas.
+  - Implementación global de directiva de colapso automático (`ClickOutsideDirective`) en menús contextuales y selectores de columnas.
+- **Fijación de Errores TypeScript**: Se resolvieron problemas de tipado durante el build (NG5002 y TS2339) para garantizar la compilación 100% exitosa del Frontend.

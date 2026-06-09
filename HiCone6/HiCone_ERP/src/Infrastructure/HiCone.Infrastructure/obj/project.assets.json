@@ -2556,11 +2556,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Infrastructure\\HiCone.Infrastructure.csproj",
+      "projectUniqueName": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Infrastructure\\HiCone.Infrastructure.csproj",
       "projectName": "HiCone.Infrastructure",
-      "projectPath": "c:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Infrastructure\\HiCone.Infrastructure.csproj",
+      "projectPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Infrastructure\\HiCone.Infrastructure.csproj",
       "packagesPath": "C:\\Users\\Ronny\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Infrastructure\\obj\\",
+      "outputPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Infrastructure\\HiCone.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "centralPackageVersionsManagementEnabled": true,
       "configFilePaths": [
@@ -2576,8 +2576,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "c:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj": {
-              "projectPath": "c:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj"
+            "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj": {
+              "projectPath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj"
             }
           }
         }
