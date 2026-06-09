@@ -2,27 +2,23 @@ import { Component, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-export interface ExtrusoraMezcladora {
+export interface PrensaProducto {
   id?: string;
-  extrusoraId: string;
-  extrusora: string;
-  virgenMin: number;
-  virgenMax: number;
-  molidoMin: number;
-  molidoMax: number;
-  kgVirgen: number;
-  kgMolido: number;
+  prensa: string;
+  item: string;
+  carrete: string;
+  aplicarFiltro: boolean;
 }
 
 @Component({
-  selector: 'app-extrusora-mezcladora',
+  selector: 'app-prensa-producto',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
     <div class="module-page animate-move-up" style="padding: 1.5rem 2.5rem; background: #fff; min-height: calc(100vh - 64px); position: relative;">
       <header style="margin-bottom: 2rem;">
-        <h1 style="font-size: 1.6rem; font-weight: normal; color: #1e293b; margin: 0 0 0.2rem 0;">Extrusora Mezcladora</h1>
-        <nav style="font-size: 0.75rem; color: #94a3b8;">Producción › Referencias › Extrusora Mezcladora</nav>
+        <h1 style="font-size: 1.6rem; font-weight: normal; color: #1e293b; margin: 0 0 0.2rem 0;">Prensa Producto</h1>
+        <nav style="font-size: 0.75rem; color: #5cb85c;">Producción › Referencias › Prensa Producto</nav>
       </header>
 
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; margin-bottom: 1rem; padding-bottom: 0.5rem;">
@@ -45,7 +41,7 @@ export interface ExtrusoraMezcladora {
 
           <!-- Selecciona Columnas -->
           <div style="position: relative;">
-            <button (click)="toggleColumnsMenu()" style="background: #5cb85c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+            <button (click)="toggleColumnsMenu()" style="background: white; color: #5cb85c; border: 1px solid #5cb85c; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
               Selecciona columnas <span style="font-size: 0.6rem;">▼</span>
             </button>
             <div *ngIf="isColumnsMenuOpen" style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 50; width: 250px; padding: 1rem; margin-top: 0.5rem;">
@@ -104,7 +100,7 @@ export interface ExtrusoraMezcladora {
       </div>
 
       <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; min-width: 1000px;">
+        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; min-width: 800px;">
           <thead>
             <tr>
               <!-- Acciones a la izquierda -->
@@ -112,7 +108,7 @@ export interface ExtrusoraMezcladora {
               
               <ng-container *ngFor="let col of columns">
                 <th *ngIf="col.visible" style="text-align: left; padding: 1rem; color: #334155; font-size: 0.85rem; font-weight: bold; border-bottom: 1px solid #e2e8f0;">
-                  {{ col.label }} <span *ngIf="col.key === 'extrusora'" style="color: #94a3b8; font-size: 0.7rem; margin-left: 0.3rem;">⚙️</span>
+                  {{ col.label }} <span style="color: #94a3b8; font-size: 0.7rem; margin-left: 0.3rem;">▼</span>
                 </th>
               </ng-container>
             </tr>
@@ -129,13 +125,9 @@ export interface ExtrusoraMezcladora {
                     <button (click)="eliminar(item)" style="background: none; border: none; color: #5cb85c; cursor: pointer; font-size: 0.85rem;">Eliminar</button>
                   </td>
 
-                  <td *ngIf="columns[0].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.extrusora }}</td>
-                  <td *ngIf="columns[1].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #5cb85c; font-size: 0.85rem;">{{ item.virgenMin | number:'1.2-2' }}</td>
-                  <td *ngIf="columns[2].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.virgenMax | number:'1.2-2' }}</td>
-                  <td *ngIf="columns[3].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.molidoMin | number:'1.2-2' }}</td>
-                  <td *ngIf="columns[4].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.molidoMax | number:'1.2-2' }}</td>
-                  <td *ngIf="columns[5].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.kgVirgen | number:'1.2-2' }}</td>
-                  <td *ngIf="columns[6].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.kgMolido | number:'1.2-2' }}</td>
+                  <td *ngIf="columns[0].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.prensa }}</td>
+                  <td *ngIf="columns[1].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.item }}</td>
+                  <td *ngIf="columns[2].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.carrete }}</td>
                 </tr>
               }
             }
@@ -156,8 +148,8 @@ export interface ExtrusoraMezcladora {
       }
 
       <!-- Modal Agregar/Modificar/Visualizar -->
-      <div *ngIf="isModalOpen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;">
-        <div class="animate-move-up" style="background: white; border-radius: 4px; width: 800px; max-width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden;">
+      <div *ngIf="isModalOpen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; overflow-y: auto; padding: 2rem 0;">
+        <div class="animate-move-up" style="background: #f8fafc; border-radius: 4px; width: 900px; max-width: 95%; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; margin: auto;">
           
           <!-- Header Modal -->
           <div style="background: white; padding: 1rem; border-bottom: 1px solid #e2e8f0;">
@@ -167,64 +159,98 @@ export interface ExtrusoraMezcladora {
           </div>
           
           <!-- Body Modal -->
-          <div style="padding: 2rem;">
-            <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem;">
+          <div style="padding: 2rem; background: white;">
+            
+            <div style="display: flex; flex-direction: column; gap: 2rem; margin-bottom: 2rem;">
               
-              <!-- Fila 1 -->
+              <!-- Prensa text -->
               <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <label style="font-size: 0.85rem; color: #475569; font-weight: 500;">Extrusora Id</label>
-                <input type="text" [(ngModel)]="form.extrusoraId" [readonly]="isViewing" style="padding: 0.5rem 0; border: none; border-bottom: 1px solid #5cb85c; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box;" [ngStyle]="{'color': isViewing ? '#94a3b8' : '#334155'}">
+                <label style="font-size: 0.8rem; color: #64748b; font-weight: 500;">Prensa</label>
+                <div style="font-size: 1rem; color: #475569; padding-bottom: 0.5rem; border-bottom: 1px solid #e2e8f0;">
+                  <ng-container *ngIf="isViewing || form.id">{{ form.prensa || 'Prensa 1' }}</ng-container>
+                  <input *ngIf="!isViewing && !form.id" type="text" [(ngModel)]="form.prensa" placeholder="Prensa 1" style="border: none; outline: none; width: 100%; font-size: 1rem; color: #475569;">
+                </div>
               </div>
 
-              <!-- Fila 2 -->
-              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <label style="font-size: 0.85rem; color: #475569; font-weight: 500;">Extrusora</label>
-                <input type="text" [(ngModel)]="form.extrusora" [readonly]="isViewing" style="padding: 0.5rem 0; border: none; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box;" [ngStyle]="{'color': isViewing ? '#94a3b8' : '#334155'}">
-              </div>
-
-              <!-- Fila 3 -->
+              <!-- Inputs central -->
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                  <label style="font-size: 0.85rem; color: #475569; font-weight: 500;">Virgen Min</label>
-                  <input type="number" [(ngModel)]="form.virgenMin" [readonly]="isViewing" style="padding: 0.5rem 0; border: none; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box;" [ngStyle]="{'color': isViewing ? '#94a3b8' : '#334155'}">
+                <!-- Columna Izquierda -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                  <div style="display: flex; align-items: flex-end; gap: 1rem;">
+                    <label style="font-size: 0.8rem; color: #64748b; font-weight: 500; min-width: 120px; text-align: right;">Producto/Bobina</label>
+                    <input type="text" [(ngModel)]="form.item" [readonly]="isViewing" style="padding: 0.2rem 0; border: none; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; outline: none; flex-grow: 1;" [ngStyle]="{'color': isViewing ? '#94a3b8' : '#334155'}">
+                  </div>
+                  
+                  <div style="display: flex; align-items: flex-end; gap: 1rem; margin-left: 2rem;">
+                    <label style="font-size: 0.8rem; color: #64748b; font-weight: 500; min-width: 120px; text-align: right;">Producto/Carrete</label>
+                    <input type="text" [(ngModel)]="form.carrete" [readonly]="isViewing" style="padding: 0.2rem 0; border: none; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; outline: none; flex-grow: 1;" [ngStyle]="{'color': isViewing ? '#94a3b8' : '#334155'}">
+                  </div>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                  <label style="font-size: 0.85rem; color: #475569; font-weight: 500;">Virgen Max</label>
-                  <input type="number" [(ngModel)]="form.virgenMax" [readonly]="isViewing" style="padding: 0.5rem 0; border: none; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box;" [ngStyle]="{'color': isViewing ? '#94a3b8' : '#334155'}">
+
+                <!-- Columna Derecha -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                  <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <label style="font-size: 0.8rem; color: #64748b; font-weight: 500;">Aplicar filtros para dependencia de Producto</label>
+                    <div>
+                      <input type="checkbox" [(ngModel)]="form.aplicarFiltro" [disabled]="isViewing" style="width: 1rem; height: 1rem; border: 1px solid #cbd5e1;">
+                    </div>
+                  </div>
                 </div>
               </div>
+            </div>
+            
+          </div>
+          
+          <div style="padding: 1rem 2rem; background: #fff; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
+            <button *ngIf="!isViewing" (click)="saveModal()" style="background: #5cb85c; color: white; border: none; padding: 0.5rem 2rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-right: 1rem;">CONFIRMAR</button>
+            <button (click)="closeModal()" style="background: #94a3b8; color: white; border: none; padding: 0.5rem 2rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">{{ isViewing ? 'CERRAR' : 'CANCELAR' }}</button>
+          </div>
 
-              <!-- Fila 4 -->
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                  <label style="font-size: 0.85rem; color: #475569; font-weight: 500;">Molido Min</label>
-                  <input type="number" [(ngModel)]="form.molidoMin" [readonly]="isViewing" style="padding: 0.5rem 0; border: none; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box;" [ngStyle]="{'color': isViewing ? '#94a3b8' : '#334155'}">
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                  <label style="font-size: 0.85rem; color: #475569; font-weight: 500;">Molido Max</label>
-                  <input type="number" [(ngModel)]="form.molidoMax" [readonly]="isViewing" style="padding: 0.5rem 0; border: none; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box;" [ngStyle]="{'color': isViewing ? '#94a3b8' : '#334155'}">
+          <!-- Historial Auditoria -->
+          <div style="background: white; padding: 1rem; border-bottom: 1px solid #e2e8f0; margin-top: 1rem;">
+            <h2 style="margin: 0; font-size: 1rem; color: #334155; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="color: #5cb85c; font-size: 1.2rem;">🏷️</span> Historial Auditoria
+            </h2>
+          </div>
+          
+          <div style="padding: 1rem 2rem 2rem 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; background: #f8fafc;">
+            <!-- Change Log -->
+            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 4px;">
+              <div style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #475569;">
+                <span style="color: #5cb85c;">🏷️</span> Change Log
+              </div>
+              <div style="padding: 1rem;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 3rem;">
+                  <thead>
+                    <tr>
+                      <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #334155;">Date</th>
+                      <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #334155;">User</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="2" style="padding: 1rem; text-align: center; color: #94a3b8; font-style: italic;">No changes</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                  <button style="border: 1px solid #e2e8f0; background: white; padding: 0.2rem 0.8rem; font-size: 0.8rem; color: #94a3b8; border-radius: 2px;">Ant</button>
+                  <button style="border: 1px solid #e2e8f0; background: white; padding: 0.2rem 0.8rem; font-size: 0.8rem; color: #5cb85c; border-radius: 2px;">Sig</button>
                 </div>
               </div>
-
-              <!-- Fila 5 -->
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                  <label style="font-size: 0.85rem; color: #475569; font-weight: 500;">Kg Virgen</label>
-                  <input type="number" [(ngModel)]="form.kgVirgen" [readonly]="isViewing" style="padding: 0.5rem 0; border: none; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box;" [ngStyle]="{'color': isViewing ? '#94a3b8' : '#334155'}">
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                  <label style="font-size: 0.85rem; color: #475569; font-weight: 500;">Kg Molido</label>
-                  <input type="number" [(ngModel)]="form.kgMolido" [readonly]="isViewing" style="padding: 0.5rem 0; border: none; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box;" [ngStyle]="{'color': isViewing ? '#94a3b8' : '#334155'}">
-                </div>
-              </div>
-
             </div>
 
-            <div style="display: flex; gap: 1rem;">
-              <button *ngIf="!isViewing" (click)="saveModal()" style="background: #5cb85c; color: white; border: none; padding: 0.5rem 2rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">CONFIRMAR</button>
-              <button (click)="closeModal()" style="background: #94a3b8; color: white; border: none; padding: 0.5rem 2rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">{{ isViewing ? 'CERRAR' : 'CANCELAR' }}</button>
+            <!-- Detail -->
+            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 4px;">
+              <div style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #475569;">
+                <span style="color: #5cb85c;">🏷️</span> Detail
+              </div>
+              <div style="padding: 1rem;">
+                <!-- Vacío en la imagen -->
+              </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -241,26 +267,22 @@ export interface ExtrusoraMezcladora {
     .pag-dots { font-size:.85rem; color:#94a3b8; font-weight:700; padding:0 .2rem; }
   `]
 })
-export class ExtrusoraMezcladoraComponent implements OnInit {
+export class PrensaProductoComponent implements OnInit {
   searchText = signal<string>('');
   currentPage = signal<number>(1);
   pageSize = signal<number>(10);
 
-  // Datos simulados por ahora
-  items = signal<ExtrusoraMezcladora[]>([]);
+  // Datos simulados
+  items = signal<PrensaProducto[]>([]);
 
   isFilterMenuOpen = false;
   isColumnsMenuOpen = false;
   isExportMenuOpen = false;
 
   columns = [
-    { key: 'extrusora', label: 'Extrusora', visible: true },
-    { key: 'virgenMin', label: 'Virgen Min', visible: true },
-    { key: 'virgenMax', label: 'Virgen Max', visible: true },
-    { key: 'molidoMin', label: 'Molido Min', visible: true },
-    { key: 'molidoMax', label: 'Molido Max', visible: true },
-    { key: 'kgVirgen', label: 'Kg Virgen', visible: true },
-    { key: 'kgMolido', label: 'Kg Molido', visible: true }
+    { key: 'prensa', label: 'Prensa', visible: true },
+    { key: 'item', label: 'Item', visible: true },
+    { key: 'carrete', label: 'Carrete', visible: true }
   ];
 
   get visibleColsCount() {
@@ -271,7 +293,7 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
     let list = this.items();
     const s = this.searchText().trim().toLowerCase();
     if (s) {
-      list = list.filter(e => e.extrusora?.toLowerCase().includes(s));
+      list = list.filter(e => e.item?.toLowerCase().includes(s) || e.carrete?.toLowerCase().includes(s) || e.prensa?.toLowerCase().includes(s));
     }
     return list;
   });
@@ -285,27 +307,29 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
 
   isModalOpen = false;
   isViewing = false;
-  form: ExtrusoraMezcladora = this.getEmptyForm();
+  form: PrensaProducto = this.getEmptyForm();
 
   ngOnInit() {
-    // Generar datos falsos para que la tabla no se vea vacía según la imagen de referencia (Opcional, pero para diseño ayuda)
+    // Generar datos falsos para que la tabla coincida con img2
     this.items.set([
-      { id: '1', extrusoraId: '0', extrusora: 'Extrusora 1', virgenMin: 18.00, virgenMax: 18.00, molidoMin: 35.00, molidoMax: 35.00, kgVirgen: 7.20, kgMolido: 8.47 },
-      { id: '2', extrusoraId: '0', extrusora: 'Extrusora 1', virgenMin: 20.00, virgenMax: 20.00, molidoMin: 80.00, molidoMax: 80.00, kgVirgen: 3.20, kgMolido: 12.71 },
-      { id: '3', extrusoraId: '0', extrusora: 'Extrusora 1', virgenMin: 25.31, virgenMax: 25.31, molidoMin: 74.68, molidoMax: 74.68, kgVirgen: 4.00, kgMolido: 11.80 }
+      { id: '1', prensa: 'Prensa 1', item: '74750', carrete: '747502000', aplicarFiltro: false },
+      { id: '2', prensa: 'Prensa 1', item: '74757', carrete: '747572000', aplicarFiltro: false },
+      { id: '3', prensa: 'Prensa 1', item: '80600', carrete: '806002000', aplicarFiltro: false },
+      { id: '4', prensa: 'Prensa 1', item: '80607', carrete: '806072000', aplicarFiltro: false },
+      { id: '5', prensa: 'Prensa 1', item: '80630', carrete: '806302000', aplicarFiltro: false },
+      { id: '6', prensa: 'Prensa 1', item: '80637', carrete: '806372000', aplicarFiltro: false },
+      { id: '7', prensa: 'Prensa 1', item: '80680', carrete: '806802000', aplicarFiltro: false },
+      { id: '8', prensa: 'Prensa 1', item: '80687', carrete: '806872000', aplicarFiltro: false },
+      { id: '9', prensa: 'Prensa 1', item: '80950', carrete: '809502000', aplicarFiltro: false }
     ]);
   }
 
-  getEmptyForm(): ExtrusoraMezcladora {
+  getEmptyForm(): PrensaProducto {
     return {
-      extrusoraId: '0',
-      extrusora: '',
-      virgenMin: 0.00,
-      virgenMax: 0.00,
-      molidoMin: 0.00,
-      molidoMax: 0.00,
-      kgVirgen: 0.00,
-      kgMolido: 0.00
+      prensa: 'Prensa 1',
+      item: '',
+      carrete: '',
+      aplicarFiltro: false
     };
   }
 
@@ -337,7 +361,7 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
     this.currentPage.set(1);
   }
 
-  openModal(item: ExtrusoraMezcladora | null, isViewing: boolean) {
+  openModal(item: PrensaProducto | null, isViewing: boolean) {
     this.isViewing = isViewing;
     if (item) {
       this.form = { ...item };
@@ -371,8 +395,8 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
     this.closeModal();
   }
 
-  eliminar(item: ExtrusoraMezcladora) {
-    if (confirm(`¿Estás seguro de eliminar el registro de ${item.extrusora}?`)) {
+  eliminar(item: PrensaProducto) {
+    if (confirm(`¿Estás seguro de eliminar el registro de la prensa ${item.prensa}?`)) {
       const current = this.items().filter(x => x.id !== item.id);
       this.items.set(current);
     }

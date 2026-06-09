@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qRDqh3WWZpw4x8IlTuJOapMURQufn23rOki/bFEaEDK067S9MO9EgC166fKdEeAaPvWsRj5IcLMU2GchzClBeQ==",
+  "dgSpecHash": "3geupe+M5nPbAGj4Eb2mA8v7AkMZQUC4/l74os/c1xKqaYDSCewkrqX5fZ5sWW8itZIDhJktjSOy09tsxktCNA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj",
+  "projectFilePath": "c:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Core\\HiCone.Application\\HiCone.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Ronny\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\Ronny\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

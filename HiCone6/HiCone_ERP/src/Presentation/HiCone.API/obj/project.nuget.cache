@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HP8xIvtbFuwH+eQoKi9fttPoK4MPrGN0OdA5k64tj3CYN1sguOTK7SB4CX77zRNwHefdMwsT5VKRQpPwbfzLFA==",
+  "dgSpecHash": "ztKRM6pvCI+ALv4BOlmupNB9qfLrwkJ2UZCgkDgOaKXGobJzU6doqvwW5mHLt9A0bmm3QYmbF9PbO+RqqGoLsA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Presentation\\HiCone.API\\HiCone.API.csproj",
+  "projectFilePath": "c:\\Users\\Ronny\\Desktop\\HICONE\\MigraHi\\HiCone6\\HiCone_ERP\\src\\Presentation\\HiCone.API\\HiCone.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Ronny\\.nuget\\packages\\asp.versioning.abstractions\\8.1.0\\asp.versioning.abstractions.8.1.0.nupkg.sha512",
     "C:\\Users\\Ronny\\.nuget\\packages\\asp.versioning.http\\8.1.0\\asp.versioning.http.8.1.0.nupkg.sha512",

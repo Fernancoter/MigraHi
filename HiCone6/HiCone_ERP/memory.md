@@ -133,7 +133,8 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
 - Los submódulos completados a la fecha son: Turnos, Prensas, Extrusoras, Operarios, Productos, Categorías y Silos.
 
 ## 2026-06-03: Módulo de Referencias y Correcciones en Navegación
-- Se corrigió el bug de navegación y contexto global en 
-avigation.service.ts que redirigía erróneamente 'Silos' a 'Inventario' al interceptar la ruta.
+- Se corrigió el bug de navegación y contexto global en navigation.service.ts que redirigía erróneamente 'Silos' a 'Inventario' al interceptar la ruta.
 - Se agregó e integró la pantalla de **Configuración** (/produccion/referencias/configuracion) con un formulario modal para agregar nuevas claves-valor.
 - Se diseñaron e implementaron exitosamente las vistas de **Extrusora Producto** y **Extrusora Mezcladora** en /produccion/referencias utilizando estructuras de datos simuladas alineadas con el diseño visual del sistema.
+- Se implementó la vista de **Prensa Producto** con su modal de información general e historial de auditoría estático, registrándose exitosamente en las rutas principales.
+- Se resolvieron errores de guardado en Extrusora Producto reiniciando el servicio Backend, y se ajustó el layout de tablas (botones de acciones a la izquierda) y modos readonly ("Visualizar") en todos los submódulos de Referencias implementados hoy.
