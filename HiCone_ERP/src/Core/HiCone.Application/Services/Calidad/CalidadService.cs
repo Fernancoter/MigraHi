@@ -184,6 +184,29 @@ public class CalidadService : ICalidadService
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<Reclamo>> GetReclamosAsync()
+    {
+        return await _context.Reclamos
+            .Include(r => r.Detalles)
+            .OrderByDescending(r => r.Fecha)
+            .ToListAsync();
+    }
+
+    public async Task<Reclamo?> GetReclamoByIdAsync(Guid id)
+    {
+        return await _context.Reclamos
+            .Include(r => r.Detalles)
+            .FirstOrDefaultAsync(r => r.Id == id);
+    }
+
+    public async Task<IEnumerable<CarreteDefecto>> GetDefectosAsync()
+    {
+        return await _context.CarreteDefectos
+            .OrderByDescending(d => d.FechaReporte)
+            .ToListAsync();
+    }
+
+
     public async Task<object?> GetTrazabilidadCarreteAsync(string noSerieCarrete)
     {
         var carrete = await _context.Carretes

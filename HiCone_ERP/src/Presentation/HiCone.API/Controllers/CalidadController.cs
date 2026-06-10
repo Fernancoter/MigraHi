@@ -50,6 +50,22 @@ public class CalidadController : ControllerBase
     public async Task<ActionResult<IEnumerable<Reclamo>>> GetActivos()
         => Ok(await _calidadService.GetReclamosActivosAsync());
 
+    [HttpGet("reclamos")]
+    public async Task<ActionResult<IEnumerable<Reclamo>>> GetReclamos()
+        => Ok(await _calidadService.GetReclamosAsync());
+
+    [HttpGet("reclamos/{id}")]
+    public async Task<ActionResult<Reclamo>> GetReclamoById(Guid id)
+    {
+        var result = await _calidadService.GetReclamoByIdAsync(id);
+        return result != null ? Ok(result) : NotFound();
+    }
+
+    [HttpGet("defectos")]
+    public async Task<ActionResult<IEnumerable<CarreteDefecto>>> GetDefectos()
+        => Ok(await _calidadService.GetDefectosAsync());
+
+
     [HttpGet("trazabilidad/{noSerie}")]
     public async Task<IActionResult> GetTrazabilidad(string noSerie)
     {

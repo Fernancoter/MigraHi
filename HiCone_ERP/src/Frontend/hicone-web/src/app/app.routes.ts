@@ -58,6 +58,9 @@ export const routes: Routes = [
       { path: 'embarques', component: EmbarquesComponent },
       { path: 'embarques/carga/:id', loadComponent: () => import('./features/embarques/carga-camion/carga-camion').then(m => m.CargaCamionComponent) },
       { path: 'calidad', component: CalidadComponent },
+      { path: 'calidad/defectos', loadComponent: () => import('./features/calidad/defectos-list.component').then(m => m.DefectosListComponent) },
+      { path: 'calidad/reclamos', loadComponent: () => import('./features/calidad/reclamos-list.component').then(m => m.ReclamosListComponent) },
+      { path: 'calidad/consultar', loadComponent: () => import('./features/calidad/consultar-carrete.component').then(m => m.ConsultarCarreteComponent) },
       {
         path: 'seguridad',
         component: SeguridadComponent,
