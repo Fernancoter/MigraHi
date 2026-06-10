@@ -60,6 +60,7 @@ export const routes: Routes = [
       { path: 'calidad', component: CalidadComponent },
       { path: 'calidad/defectos', loadComponent: () => import('./features/calidad/defectos-list.component').then(m => m.DefectosListComponent) },
       { path: 'calidad/reclamos', loadComponent: () => import('./features/calidad/reclamos-list.component').then(m => m.ReclamosListComponent) },
+      { path: 'calidad/reclamos/:id', loadComponent: () => import('./features/calidad/reclamo-detail.component').then(m => m.ReclamoDetailComponent) },
       { path: 'calidad/consultar', loadComponent: () => import('./features/calidad/consultar-carrete.component').then(m => m.ConsultarCarreteComponent) },
       {
         path: 'seguridad',
