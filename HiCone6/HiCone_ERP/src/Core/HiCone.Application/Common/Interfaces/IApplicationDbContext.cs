@@ -7,6 +7,7 @@ using HiCone.Domain.Entities.Produccion;
 using HiCone.Domain.Entities.SAE;
 using HiCone.Domain.Entities.Tenant;
 using HiCone.Domain.Entities.Ventas;
+using HiCone.Domain.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace HiCone.Application.Common.Interfaces;
@@ -25,6 +26,7 @@ public interface IApplicationDbContext
     DbSet<UserRole> UserRoles { get; }
     DbSet<UserTenant> UserTenants { get; }
     DbSet<RefreshToken> RefreshTokens { get; }
+    DbSet<AuditLog> AuditLogs { get; }
 
     // ── Inventario ────────────────────────────────────────────────────────
     DbSet<Articulo> Articulos { get; }
@@ -49,6 +51,7 @@ public interface IApplicationDbContext
     DbSet<PrensaProducto> PrensaProductos { get; }
     DbSet<Troquel> Troqueles { get; }
     DbSet<PrensaTroquel> PrensaTroqueles { get; }
+    DbSet<Operario> Operarios { get; }
     DbSet<Operador> Operadores { get; }
     DbSet<Turno> Turnos { get; }
     DbSet<CausaInterrupcion> CausasInterrupcion { get; }
@@ -95,6 +98,16 @@ public interface IApplicationDbContext
     DbSet<SaeRemission> SaeRemissions { get; }
     DbSet<SaeCustomer> SaeCustomers { get; }
     DbSet<SaeProduct> SaeProducts { get; }
+    DbSet<SaeBudget> SaeBudgets { get; }
+    DbSet<SaeSalesPerson> SaeSalesPersons { get; }
+
+    // Retrocompatibilidad con el módulo de configuración de producción
+    DbSet<SiloProduccion> SilosProduccion { get; }
+    DbSet<CatEstadoMaterial> CatEstadosMaterial { get; }
+    DbSet<CatTipoMaterial> CatTiposMaterial { get; }
+    DbSet<CatalogoClave> CatalogoClaves { get; }
+    DbSet<ExtrusoraOperario> ExtrusoraOperarios { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
+

@@ -104,8 +104,18 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<SaeRemission> SaeRemissions => Set<SaeRemission>();
     public DbSet<SaeCustomer> SaeCustomers => Set<SaeCustomer>();
     public DbSet<SaeProduct> SaeProducts => Set<SaeProduct>();
+    public DbSet<SaeBudget> SaeBudgets => Set<SaeBudget>();
+    public DbSet<SaeSalesPerson> SaeSalesPersons => Set<SaeSalesPerson>();
+
+    // Retrocompatibilidad con el módulo de configuración de producción
+    public DbSet<SiloProduccion> SilosProduccion => Set<SiloProduccion>();
+    public DbSet<CatEstadoMaterial> CatEstadosMaterial => Set<CatEstadoMaterial>();
+    public DbSet<CatTipoMaterial> CatTiposMaterial => Set<CatTipoMaterial>();
+    public DbSet<CatalogoClave> CatalogoClaves => Set<CatalogoClave>();
+    public DbSet<ExtrusoraOperario> ExtrusoraOperarios => Set<ExtrusoraOperario>();
 
     // ── Retrocompatibilidad con Maquina ────────────────────────────────────
+
     public DbSet<Maquina> Maquinas => Set<Maquina>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -129,3 +139,5 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         }
     }
 }
+
+
