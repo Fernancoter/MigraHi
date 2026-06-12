@@ -139,6 +139,13 @@ public class ProduccionController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost("prensado/{id}/montar-bobina")]
+    public async Task<IActionResult> MontarBobina(Guid id, [FromBody] Guid bobinaId)
+    {
+        var result = await _produccionService.MontarBobinaEnPrensadoAsync(id, bobinaId);
+        return result ? Ok() : BadRequest();
+    }
+
     [HttpPost("prensado/{id}/iniciar-carrera")]
     public async Task<ActionResult<Carrera>> IniciarCarrera(Guid id)
     {
