@@ -28,6 +28,7 @@ import { PrensasCatalogoComponent } from './features/produccion/catalogos/prensa
 import { SilosCatalogoComponent } from './features/produccion/catalogos/silos/silos.component';
 import { OperariosCatalogoComponent } from './features/produccion/catalogos/operarios/operarios.component';
 import { ProductosCatalogoComponent } from './features/produccion/catalogos/productos/productos.component';
+import { ReportesPlaceholderComponent } from './features/reportes-hc/placeholder/reportes-placeholder.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -75,6 +76,55 @@ export const routes: Routes = [
       { path: 'produccion/referencias/extrusora-mezcladora', loadComponent: () => import('./features/produccion/referencias/extrusora-mezcladora/extrusora-mezcladora.component').then(m => m.ExtrusoraMezcladoraComponent) },
       { path: 'produccion/referencias/prensa-producto', loadComponent: () => import('./features/produccion/referencias/prensa-producto/prensa-producto.component').then(m => m.PrensaProductoComponent) },
       { path: 'produccion/referencias/producto-terminado', loadComponent: () => import('./features/produccion/referencias/producto-terminado/producto-terminado.component').then(m => m.ProductoTerminadoComponent) },
+      
+      // Reportes HC
+      { 
+        path: 'reportes-hc/inicio', 
+        component: ReportesPlaceholderComponent, 
+        data: { titulo: 'Reportes HC', breadcrumb: 'Reportes HC' } 
+      },
+      { 
+        path: 'reportes-hc/observaciones/causas-interrupcion', 
+        loadComponent: () => import('./features/reportes-hc/observaciones/causas-interrupcion/causas-interrupcion.component').then(m => m.CausasInterrupcionComponent) 
+      },
+      { 
+        path: 'reportes-hc/observaciones/extrusoras', 
+        loadComponent: () => import('./features/reportes-hc/observaciones/extrusoras/extrusoras-observacion.component').then(m => m.ExtrusorasObservacionComponent) 
+      },
+      { 
+        path: 'reportes-hc/observaciones/prensas', 
+        loadComponent: () => import('./features/reportes-hc/observaciones/prensas/prensas-observacion.component').then(m => m.PrensasObservacionComponent) 
+      },
+      { 
+        path: 'reportes-hc/descargables/drr', 
+        component: ReportesPlaceholderComponent, 
+        data: { titulo: 'DRR', breadcrumb: 'Reportes HC › Descargables › DRR' } 
+      },
+      { 
+        path: 'reportes-hc/descargables/pallet-embarque', 
+        component: ReportesPlaceholderComponent, 
+        data: { titulo: 'Pallet Embarque', breadcrumb: 'Reportes HC › Descargables › Pallet_Embarque' } 
+      },
+      { 
+        path: 'reportes-hc/descargables/carrete-pallet', 
+        component: ReportesPlaceholderComponent, 
+        data: { titulo: 'Carrete Pallet', breadcrumb: 'Reportes HC › Descargables › Carrete_Pallet' } 
+      },
+      { 
+        path: 'reportes-hc/resumenes/extrusion', 
+        component: ReportesPlaceholderComponent, 
+        data: { titulo: 'Resumen Extrusión', breadcrumb: 'Reportes HC › Resúmenes › Extrusión' } 
+      },
+      { 
+        path: 'reportes-hc/resumenes/prensado', 
+        component: ReportesPlaceholderComponent, 
+        data: { titulo: 'Resumen Prensado', breadcrumb: 'Reportes HC › Resúmenes › Prensado' } 
+      },
+      { 
+        path: 'reportes-hc/etiquetado/ordenes', 
+        component: ReportesPlaceholderComponent, 
+        data: { titulo: 'Órdenes de Etiquetado', breadcrumb: 'Reportes HC › Etiquetado › Órdenes' } 
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
