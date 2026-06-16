@@ -3,7 +3,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-export type ModuleType = 'INVENTARIO' | 'EXTRUSIÓN' | 'PRODUCCIÓN' | 'SISTEMA' | 'SEGURIDAD' | null;
+export type ModuleType = 'INVENTARIO' | 'EXTRUSIÓN' | 'PRODUCCIÓN' | 'SISTEMA' | 'SEGURIDAD' | 'REPORTES HC' | null;
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +36,9 @@ export class NavigationService {
   }
 
   private detectModule(url: string) {
-    if (url.includes('/seguridad')) {
+    if (url.includes('/reportes-hc')) {
+      this.activeModuleSubject.next('REPORTES HC');
+    } else if (url.includes('/seguridad')) {
       this.activeModuleSubject.next('SEGURIDAD');
     } else if (url.includes('/produccion')) {
       // Rutas /produccion/* → módulo PRODUCCIÓN (Configurar Producción)

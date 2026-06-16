@@ -146,7 +146,8 @@ export class HeaderComponent {
     { title: 'Seguridad', icon: '🛡️', route: '/seguridad' },
     { title: 'Cierre Mes', icon: '📆', route: '/reportes-sae' },
     { title: 'Reportes SAE', icon: '📊', route: '/reportes-sae' },
-    { title: 'Catálogos SAE', icon: '📂', route: '/catalogos-sae' }
+    { title: 'Catálogos SAE', icon: '📂', route: '/catalogos-sae' },
+    { title: 'Informes Operativos', icon: '📋', route: '/reportes-hc/inicio' }
   ];
 
   constructor(private authService: AuthService, private router: Router, private navService: NavigationService) {}
