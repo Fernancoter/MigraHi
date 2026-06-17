@@ -1,9 +1,10 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ProduccionConfigService } from '../../../../core/services/produccion-config.service';
 
 interface CausaInterrupcion {
-  id: number;
+  id: string | number;
   nombre: string;
   prensa: boolean;
   extrusora: boolean;
@@ -76,21 +77,9 @@ interface CausaInterrupcion {
                       </div>
                       @if (colNoFijasExpanded) {
                         <div class="col-group-body">
-                          @if (!colSearch || 'nombre'.includes(colSearch.toLowerCase())) {
-                            <label class="col-item">
-                              <input type="checkbox" [checked]="isTempColVisible('nombre')" (change)="toggleTempCol('nombre')"> Nombre
-                            </label>
-                          }
-                          @if (!colSearch || 'prensa'.includes(colSearch.toLowerCase())) {
-                            <label class="col-item">
-                              <input type="checkbox" [checked]="isTempColVisible('prensa')" (change)="toggleTempCol('prensa')"> Prensa
-                            </label>
-                          }
-                          @if (!colSearch || 'extrusora'.includes(colSearch.toLowerCase())) {
-                            <label class="col-item">
-                              <input type="checkbox" [checked]="isTempColVisible('extrusora')" (change)="toggleTempCol('extrusora')"> Extrusora
-                            </label>
-                          }
+                          <label class="col-item"><input type="checkbox" [checked]="isTempColVisible('nombre')" (change)="toggleTempCol('nombre')"> Nombre</label>
+                          <label class="col-item"><input type="checkbox" [checked]="isTempColVisible('prensa')" (change)="toggleTempCol('prensa')"> Prensa</label>
+                          <label class="col-item"><input type="checkbox" [checked]="isTempColVisible('extrusora')" (change)="toggleTempCol('extrusora')"> Extrusora</label>
                         </div>
                       }
                     </div>
@@ -118,62 +107,34 @@ interface CausaInterrupcion {
                 </div>
               }
             </div>
+
+            <!-- Botón Filtro -->
+            <button class="btn-filter" (click)="toggleFilterDropdown($event)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.4rem;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              Filtro
+            </button>
           </div>
 
-          <!-- FLEXIBLE SPACE -->
-          <div class="toolbar-spacer" style="flex: 1;"></div>
-
           <!-- RIGHT SIDE -->
-          <div class="toolbar-right" style="display: flex; gap: 0.5rem; align-items: center;">
-
-            <!-- Botón de Filtros -->
-            <div class="dropdown-wrapper">
-              <button class="btn btn-filter" (click)="toggleFilterDropdown($event)" title="Filtros avanzados">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-                <span class="chevron" style="font-size: 0.7rem; margin-left: 0.2rem;">▾</span>
-              </button>
-              @if (showFilterOptions()) {
-                <div class="column-selector-popover filter-popover animate-slide-up" style="width: 200px; right: 0; left: auto;">
-                  <div class="dropdown-item" (click)="clearFilters()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                    Limpiar filtros
-                  </div>
-                  <div class="dropdown-item" (click)="showFilterOptions.set(false)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                    Guardar filtro como...
-                  </div>
-                </div>
-              }
-            </div>
-
-            <!-- Filtro de Búsqueda -->
+          <div class="toolbar-right" style="margin-left: auto;">
             <div class="search-box">
               <span class="search-icon">🔍</span>
-              <input
-                class="field-input"
-                type="text"
-                placeholder="Buscar..."
-                [ngModel]="searchText()"
-                (ngModelChange)="searchText.set($event); currentPage.set(1)"
-              />
+              <input type="text" placeholder="Buscar..." [ngModel]="searchText()" (ngModelChange)="searchText.set($event); currentPage.set(1)" class="field-input" />
             </div>
           </div>
         </div>
       </header>
 
       <!-- Tabla de Datos -->
-      <div class="content-card" style="margin-top: 1rem; position: relative; min-height: 300px;">
+      <div class="content-card">
         <table class="data-table">
           <thead>
             <tr>
               <th style="width: 50px;"></th>
               <th style="width: 50px;"></th>
               @if (isColVisible('nombre')) {
-                <th (click)="toggleSort('nombre')" class="sortable-th">
-                  Nombre
-                  @if (sortColumn() === 'nombre') {
-                    <span class="sort-indicator">{{ sortDirection() === 'asc' ? '▲' : '▼' }}</span>
-                  }
+                <th (click)="toggleSort('nombre')" style="cursor: pointer; user-select: none;">
+                  Nombre @if (sortColumn() === 'nombre') { <span>{{ sortDirection() === 'asc' ? '▲' : '▼' }}</span> }
                 </th>
               }
               @if (isColVisible('prensa')) {
@@ -185,29 +146,39 @@ interface CausaInterrupcion {
             </tr>
           </thead>
           <tbody>
-            @if (paginatedItems().length === 0) {
-              <tr><td [attr.colspan]="2 + visibleColumnCount()" class="empty-state">No se encontraron registros</td></tr>
+            @if (loading()) {
+              <tr>
+                <td [attr.colspan]="visibleColumnCount() + 2" class="empty-state">Cargando registros...</td>
+              </tr>
+            } @else if (paginatedItems().length === 0) {
+              <tr>
+                <td [attr.colspan]="visibleColumnCount() + 2" class="empty-state">No se encontraron registros</td>
+              </tr>
             } @else {
               @for (item of paginatedItems(); track item.id) {
                 <tr>
-                  <td style="width: 50px;">
+                  <td>
                     <button class="action-btn edit" title="Editar">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                     </button>
                   </td>
-                  <td style="width: 50px;">
+                  <td>
                     <button class="action-btn delete" title="Eliminar">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                     </button>
                   </td>
                   @if (isColVisible('nombre')) {
                     <td class="col-nombre">{{ item.nombre }}</td>
                   }
                   @if (isColVisible('prensa')) {
-                    <td class="col-checkbox"><input type="checkbox" [checked]="item.prensa" disabled /></td>
+                    <td>
+                      <input type="checkbox" [checked]="item.prensa" disabled style="cursor: not-allowed;" />
+                    </td>
                   }
                   @if (isColVisible('extrusora')) {
-                    <td class="col-checkbox"><input type="checkbox" [checked]="item.extrusora" disabled /></td>
+                    <td>
+                      <input type="checkbox" [checked]="item.extrusora" disabled style="cursor: not-allowed;" />
+                    </td>
                   }
                 </tr>
               }
@@ -217,22 +188,18 @@ interface CausaInterrupcion {
       </div>
 
       <!-- Paginación -->
-      <div class="pagination-container animate-move-up">
-        <span class="pag-info">Página {{ currentPage() }} de {{ totalPages() }}</span>
+      <div class="pagination-container">
+        <div class="pag-info">
+          Página {{ currentPage() }} de {{ totalPages() }}
+        </div>
         <div class="pag-buttons">
           <button class="pag-btn" [disabled]="currentPage() === 1" (click)="prevPage()">Ant</button>
-
-          @for (p of getPages(currentPage(), totalPages()); track $index) {
+          
+          @for (p of getPages(currentPage(), totalPages()); track p) {
             @if (p === '...') {
               <span class="pag-dots">...</span>
             } @else {
-              <button
-                class="pag-btn page-num"
-                [class.active]="currentPage() === p"
-                (click)="setPage($any(p))"
-              >
-                {{ p }}
-              </button>
+              <button class="pag-btn" [class.active]="currentPage() === p" (click)="setPage(+p)">{{ p }}</button>
             }
           }
 
@@ -247,49 +214,42 @@ interface CausaInterrupcion {
     .breadcrumb { font-size: .75rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; margin-bottom: .25rem; }
     h1 { font-size: 1.8rem; font-weight: 800; color: #1e293b; margin: 0; }
     .actions-toolbar { display: flex; gap: 0.75rem; align-items: center; }
-
+    
     .btn { padding: .55rem 1.25rem; border-radius: 6px; border: none; cursor: pointer; font-size: .85rem; font-weight: 600; transition: all .2s; }
-    .btn-sm { padding: .35rem .8rem; font-size: .75rem; }
     .btn-primary { background: #1e40af; color: white; box-shadow: 0 2px 4px rgba(30, 64, 175, 0.2); }
     .btn-primary:hover { background: #1e3a8a; }
     .btn-secondary { background: white; color: #475569; border: 1px solid #cbd5e1; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
     .btn-secondary:hover { background: #f8fafc; border-color: #94a3b8; }
     .btn-success { background: #5cb85c; color: white; border: 1px solid #4cae4c; }
     .btn-success:hover { background: #449d44; border-color: #398439; }
-
+    
     .btn-filter { background: white; color: #475569; border: 1px solid #e2e8f0; padding: 0.55rem 0.75rem; border-radius: 6px; display: flex; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: pointer; }
     .btn-filter:hover { background: #f8fafc; }
-
+    
     .search-box { position: relative; }
     .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.9rem; }
     .search-box .field-input { padding-left: 2.2rem; width: 220px; border-radius: 0; border: none; border-bottom: 1px solid #cbd5e1; background: transparent; padding-top: 0.5rem; padding-bottom: 0.5rem; }
     .search-box .field-input:focus { border-bottom-color: #1e40af; box-shadow: none; outline: none; }
-
+    
     .content-card { background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow: visible; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
-
+    
     .data-table { width: 100%; border-collapse: collapse; }
     .data-table th { text-align: left; padding: 1rem; background: #f8fafc; color: #64748b; font-size: .75rem; font-weight: 800; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; position: relative; }
     .data-table td { padding: .85rem 1rem; border-bottom: 1px solid #f1f5f9; font-size: .875rem; color: #334155; }
     .data-table tr:hover td { background: #f8fafc; }
     .empty-state { text-align: center; padding: 3.5rem; color: #94a3b8; font-style: italic; }
-
-    .sortable-th { cursor: pointer; user-select: none; }
-    .sortable-th:hover { color: #1e40af; }
-    .sort-indicator { font-size: 0.65rem; margin-left: 0.3rem; }
-
+    
     .col-nombre { font-weight: 700; color: #1e293b; }
-    .col-checkbox { text-align: center; }
-    .col-checkbox input[type="checkbox"] { width: 16px; height: 16px; accent-color: #16a34a; cursor: default; }
-
-    .action-btn { padding: 0; border: none; cursor: pointer; font-size: .8rem; font-weight: 600; background: transparent; text-decoration: none; transition: color 0.15s; display: flex; align-items: center; justify-content: center; }
+    
+    .action-btn { padding: 0; border: none; cursor: pointer; font-size: .8rem; font-weight: 600; background: transparent; text-decoration: none; transition: color 0.15s; }
     .action-btn.edit { color: #d97706; }
     .action-btn.edit:hover { color: #b45309; }
-    .action-btn.delete { color: #dc2626; }
-    .action-btn.delete:hover { color: #b91c1c; }
-
+    .action-btn.delete { color: #ef4444; }
+    .action-btn.delete:hover { color: #dc2626; }
+    
     .dropdown-wrapper { position: relative; }
     .column-selector-popover { position: absolute; left: 0; top: 110%; background: white; border: 1px solid #cbd5e1; border-radius: 4px; box-shadow: 0 6px 16px rgba(0,0,0,0.12); z-index: 100; min-width: 150px; }
-
+    
     /* Advanced Column Selector */
     .advanced-column-selector { width: 260px; padding: 0; display: flex; flex-direction: column; }
     .col-search-box { padding: 0.5rem; border-bottom: 1px solid #e2e8f0; }
@@ -308,13 +268,13 @@ interface CausaInterrupcion {
     .flex-1 { flex: 1; }
     .chevron { transition: transform 0.2s; font-size: 0.9rem; }
     .chevron.rotated { transform: rotate(180deg); }
-
+    
     .dropdown-item { padding: 0.65rem 1rem; font-size: 0.85rem; color: #334155; cursor: pointer; transition: background 0.15s; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; }
     .dropdown-item:hover { background: #f1f5f9; color: #0f172a; }
-
+    
     .field-input { width: 100%; padding: .55rem .75rem; border-radius: 4px; border: 1px solid #cbd5e1; font-size: .875rem; outline: none; box-sizing: border-box; transition: all 0.2s; }
     .field-input:focus { border-color: #1e40af; }
-
+    
     .pagination-container { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding: 0 0.5rem; }
     .pag-info { font-size: 0.85rem; color: #64748b; font-weight: 500; }
     .pag-buttons { display: flex; gap: 0.4rem; align-items: center; }
@@ -323,28 +283,33 @@ interface CausaInterrupcion {
     .pag-btn:disabled { opacity: 0.4; cursor: not-allowed; }
     .pag-btn.active { background: #1e40af; border-color: #1e40af; color: white; }
     .pag-dots { font-size: 0.85rem; color: #94a3b8; font-weight: 700; padding: 0 0.2rem; }
-
+    
     .animate-move-up { animation: moveUp .3s ease-out; }
     .animate-slide-up { animation: slideUp .15s ease-out; }
     @keyframes moveUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   `]
 })
-export class CausasInterrupcionComponent {
+export class CausasInterrupcionComponent implements OnInit {
+  private svc = inject(ProduccionConfigService);
 
-  // Static mock data
-  items = signal<CausaInterrupcion[]>([
-    { id: 1, nombre: 'Ajustes máquina', prensa: true, extrusora: true },
-    { id: 2, nombre: 'Arranque', prensa: true, extrusora: true },
-    { id: 3, nombre: 'Calidad', prensa: true, extrusora: true },
-    { id: 4, nombre: 'Cambio de cuchillas', prensa: true, extrusora: false },
-    { id: 5, nombre: 'Cambio de producto', prensa: true, extrusora: true },
-    { id: 6, nombre: 'Centros bobina', prensa: false, extrusora: true },
-    { id: 7, nombre: 'Chillers', prensa: false, extrusora: true },
-    { id: 8, nombre: 'Colton', prensa: false, extrusora: true },
-    { id: 9, nombre: 'Covid', prensa: false, extrusora: true },
-    { id: 10, nombre: 'Drive', prensa: false, extrusora: true },
-  ]);
+  items = signal<CausaInterrupcion[]>([]);
+  loading = signal(true);
+
+  ngOnInit() {
+    this.load();
+  }
+
+  load() {
+    this.loading.set(true);
+    this.svc.getCausasInterrupcion().subscribe({
+      next: data => {
+        this.items.set(data);
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false)
+    });
+  }
 
   // Search & Filters
   searchText = signal<string>('');

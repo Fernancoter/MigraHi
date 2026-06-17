@@ -436,6 +436,61 @@ public class CatalogosController : ControllerBase
             .ToListAsync();
         return Ok(items);
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // CAUSAS INTERRUPCIÓN
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [HttpGet("causas-interrupcion")]
+    public async Task<ActionResult<IEnumerable<object>>> GetCausasInterrupcion()
+    {
+        var items = await _context.CausasInterrupcion
+            .OrderBy(c => c.Descripcion)
+            .Select(c => new { id = c.Id, nombre = c.Descripcion, prensa = true, extrusora = true })
+            .ToListAsync();
+        return Ok(items);
+    }
+
+    [HttpGet("causas-interrupcion/{id}")]
+    public async Task<ActionResult<CausaInterrupcion>> GetCausaInterrupcion(Guid id)
+    {
+        var item = await _context.CausasInterrupcion.FindAsync(id);
+        return item is null ? NotFound() : Ok(item);
+    }
+
+    [HttpPost("causas-interrupcion")]
+    public async Task<ActionResult<Guid>> CreateCausaInterrupcion([FromBody] CausaInterrupcionDto dto)
+    {
+        var entity = new CausaInterrupcion
+        {
+            Id = Guid.NewGuid(),
+            Descripcion = dto.Nombre,
+            TenantId = dto.TenantId
+        };
+        _context.CausasInterrupcion.Add(entity);
+        await _context.SaveChangesAsync(default);
+        return CreatedAtAction(nameof(GetCausaInterrupcion), new { id = entity.Id }, entity.Id);
+    }
+
+    [HttpPut("causas-interrupcion/{id}")]
+    public async Task<IActionResult> UpdateCausaInterrupcion(Guid id, [FromBody] CausaInterrupcionDto dto)
+    {
+        var entity = await _context.CausasInterrupcion.FindAsync(id);
+        if (entity is null) return NotFound();
+        entity.Descripcion = dto.Nombre;
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    [HttpDelete("causas-interrupcion/{id}")]
+    public async Task<IActionResult> DeleteCausaInterrupcion(Guid id)
+    {
+        var item = await _context.CausasInterrupcion.FindAsync(id);
+        if (item is null) return NotFound();
+        _context.CausasInterrupcion.Remove(item);
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -445,3 +500,5 @@ public record TurnoDto(string Nombre, string? Clave, string HoraInicio, string H
 public record ExtrusoraDto(string Nombre, string NumeroExtrusora, string? Imagen, Guid TenantId);
 public record ExtrusoraOperarioDto(Guid? OperarioId, Guid TenantId);
 public record PrensaDto(string? NumeroPrensa, string Nombre, string? Imagen, string? Marca, string? Modelo, Guid TenantId);
+public record CausaInterrupcionDto(string Nombre, Guid TenantId);
+

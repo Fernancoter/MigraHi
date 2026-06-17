@@ -1,9 +1,10 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ProduccionConfigService } from '../../../../core/services/produccion-config.service';
 
 interface ExtrusoraObservacion {
-  id: number;
+  id: string | number;
   fecha: string;
   extrusora: string;
   turno: string;
@@ -110,48 +111,27 @@ interface ExtrusoraObservacion {
                 </div>
               }
             </div>
-          </div>
 
-          <!-- FLEXIBLE SPACE -->
-          <div class="toolbar-spacer" style="flex: 1;"></div>
+            <!-- Botón Filtro -->
+            <button class="btn-filter" (click)="toggleFilterDropdown($event)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.4rem;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              Filtro
+            </button>
+          </div>
 
           <!-- RIGHT SIDE -->
-          <div class="toolbar-right" style="display: flex; gap: 0.5rem; align-items: center;">
-            <div class="dropdown-wrapper">
-              <button class="btn btn-filter" (click)="toggleFilterDropdown($event)" title="Filtros avanzados">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-                <span class="chevron" style="font-size: 0.7rem; margin-left: 0.2rem;">▾</span>
-              </button>
-              @if (showFilterOptions()) {
-                <div class="column-selector-popover filter-popover animate-slide-up" style="width: 200px; right: 0; left: auto;">
-                  <div class="dropdown-item" (click)="clearFilters()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                    Limpiar filtros
-                  </div>
-                  <div class="dropdown-item" (click)="showFilterOptions.set(false)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                    Guardar filtro como...
-                  </div>
-                </div>
-              }
-            </div>
-
+          <div class="toolbar-right" style="margin-left: auto;">
             <div class="search-box">
               <span class="search-icon">🔍</span>
-              <input
-                class="field-input"
-                type="text"
-                placeholder="Buscar..."
-                [ngModel]="searchText()"
-                (ngModelChange)="searchText.set($event); currentPage.set(1)"
-              />
+              <input type="text" placeholder="Buscar..." [ngModel]="searchText()" (ngModelChange)="searchText.set($event); currentPage.set(1)" class="field-input" />
             </div>
           </div>
+
         </div>
       </header>
 
       <!-- Tabla de Datos -->
-      <div class="content-card" style="margin-top: 1rem; position: relative; min-height: 300px;">
+      <div class="content-card">
         <table class="data-table">
           <thead>
             <tr>
@@ -166,18 +146,57 @@ interface ExtrusoraObservacion {
             </tr>
           </thead>
           <tbody>
-            <tr><td [attr.colspan]="2 + visibleColumnCount()" class="empty-state">No se encontraron registros</td></tr>
+            @if (loading()) {
+              <tr>
+                <td [attr.colspan]="visibleColumnCount() + 2" class="empty-state">Cargando observaciones...</td>
+              </tr>
+            } @else if (paginatedItems().length === 0) {
+              <tr>
+                <td [attr.colspan]="visibleColumnCount() + 2" class="empty-state">No se encontraron registros</td>
+              </tr>
+            } @else {
+              @for (item of paginatedItems(); track item.id) {
+                <tr>
+                  <td>
+                    <button class="action-btn edit" title="Editar">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                    </button>
+                  </td>
+                  <td>
+                    <button class="action-btn delete" title="Eliminar">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                    </button>
+                  </td>
+                  @if (isColVisible('fecha')) { <td>{{ item.fecha | date:'dd/MM/yy' }}</td> }
+                  @if (isColVisible('extrusora')) { <td class="col-nombre">{{ item.extrusora }}</td> }
+                  @if (isColVisible('turno')) { <td>{{ item.turno }}</td> }
+                  @if (isColVisible('interrupcion')) { <td>{{ item.interrupcion }}</td> }
+                  @if (isColVisible('tiempo')) { <td>{{ item.tiempo }}</td> }
+                  @if (isColVisible('descripcion')) { <td>{{ item.descripcion }}</td> }
+                </tr>
+              }
+            }
           </tbody>
         </table>
       </div>
 
       <!-- Paginación -->
-      <div class="pagination-container animate-move-up">
-        <span class="pag-info">Página {{ currentPage() }} de {{ totalPages() }}</span>
+      <div class="pagination-container">
+        <div class="pag-info">
+          Página {{ currentPage() }} de {{ totalPages() }}
+        </div>
         <div class="pag-buttons">
-          <button class="pag-btn" disabled>Ant</button>
-          <button class="pag-btn page-num active">1</button>
-          <button class="pag-btn" disabled>Sig</button>
+          <button class="pag-btn" [disabled]="currentPage() === 1" (click)="prevPage()">Ant</button>
+          
+          @for (p of getPages(currentPage(), totalPages()); track p) {
+            @if (p === '...') {
+              <span class="pag-dots">...</span>
+            } @else {
+              <button class="pag-btn" [class.active]="currentPage() === p" (click)="setPage(+p)">{{ p }}</button>
+            }
+          }
+
+          <button class="pag-btn" [disabled]="currentPage() === totalPages()" (click)="nextPage()">Sig</button>
         </div>
       </div>
 
@@ -225,15 +244,16 @@ interface ExtrusoraObservacion {
     .data-table tr:hover td { background: #f8fafc; }
     .empty-state { text-align: center; padding: 3.5rem; color: #94a3b8; font-style: italic; }
 
-    .action-btn { padding: 0; border: none; cursor: pointer; font-size: .8rem; font-weight: 600; background: transparent; text-decoration: none; transition: color 0.15s; display: flex; align-items: center; justify-content: center; }
+    .action-btn { padding: 0; border: none; cursor: pointer; font-size: .8rem; font-weight: 600; background: transparent; text-decoration: none; transition: color 0.15s; }
     .action-btn.edit { color: #d97706; }
     .action-btn.edit:hover { color: #b45309; }
-    .action-btn.delete { color: #dc2626; }
-    .action-btn.delete:hover { color: #b91c1c; }
+    .action-btn.delete { color: #ef4444; }
+    .action-btn.delete:hover { color: #dc2626; }
 
     .dropdown-wrapper { position: relative; }
     .column-selector-popover { position: absolute; left: 0; top: 110%; background: white; border: 1px solid #cbd5e1; border-radius: 4px; box-shadow: 0 6px 16px rgba(0,0,0,0.12); z-index: 100; min-width: 150px; }
 
+    /* Advanced Column Selector */
     .advanced-column-selector { width: 260px; padding: 0; display: flex; flex-direction: column; }
     .col-search-box { padding: 0.5rem; border-bottom: 1px solid #e2e8f0; }
     .col-search-input { width: 100%; border: 1px solid #cbd5e1; border-radius: 4px; padding: 0.4rem 0.5rem; font-size: 0.8rem; }
@@ -265,6 +285,7 @@ interface ExtrusoraObservacion {
     .pag-btn:hover:not(:disabled) { background: #f8fafc; color: #0f172a; }
     .pag-btn:disabled { opacity: 0.4; cursor: not-allowed; }
     .pag-btn.active { background: #1e40af; border-color: #1e40af; color: white; }
+    .pag-dots { font-size: 0.85rem; color: #94a3b8; font-weight: 700; padding: 0 0.2rem; }
 
     /* Footer */
     .page-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding: 1rem 0.5rem; border-top: 1px solid #e2e8f0; font-size: 0.8rem; color: #94a3b8; }
@@ -278,7 +299,8 @@ interface ExtrusoraObservacion {
     @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   `]
 })
-export class ExtrusorasObservacionComponent {
+export class ExtrusorasObservacionComponent implements OnInit {
+  private svc = inject(ProduccionConfigService);
 
   readonly allColumns = [
     { key: 'fecha', label: 'Fecha' },
@@ -289,8 +311,23 @@ export class ExtrusorasObservacionComponent {
     { key: 'descripcion', label: 'Descripción' },
   ];
 
-  // No data - empty state
   items = signal<ExtrusoraObservacion[]>([]);
+  loading = signal(true);
+
+  ngOnInit() {
+    this.load();
+  }
+
+  load() {
+    this.loading.set(true);
+    this.svc.getExtrusorasObservaciones().subscribe({
+      next: data => {
+        this.items.set(data);
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false)
+    });
+  }
 
   // Search & Filters
   searchText = signal<string>('');
@@ -314,8 +351,26 @@ export class ExtrusorasObservacionComponent {
 
   visibleColumnCount = computed(() => this.visibleColumns().length);
 
+  filteredItems = computed(() => {
+    let list = [...this.items()];
+    const search = this.searchText().trim().toLowerCase();
+    if (search) {
+      list = list.filter(item =>
+        item.descripcion.toLowerCase().includes(search) ||
+        item.extrusora.toLowerCase().includes(search) ||
+        item.turno.toLowerCase().includes(search)
+      );
+    }
+    return list;
+  });
+
+  paginatedItems = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return this.filteredItems().slice(start, start + this.pageSize());
+  });
+
   totalPages = computed(() => {
-    return Math.ceil(this.items().length / this.pageSize()) || 1;
+    return Math.ceil(this.filteredItems().length / this.pageSize()) || 1;
   });
 
   /* ------------------- DROPDOWNS ------------------- */
@@ -374,6 +429,23 @@ export class ExtrusorasObservacionComponent {
     this.searchText.set('');
     this.currentPage.set(1);
     this.showFilterOptions.set(false);
+  }
+
+  /* ------------------- PAGINATION ------------------- */
+  prevPage() { if (this.currentPage() > 1) this.currentPage.update(p => p - 1); }
+  nextPage() { if (this.currentPage() < this.totalPages()) this.currentPage.update(p => p + 1); }
+  setPage(p: number) { this.currentPage.set(p); }
+
+  getPages(current: number, total: number): (number | string)[] {
+    if (total <= 1) return [1];
+    const pages: (number | string)[] = [1];
+    if (current > 3) pages.push('...');
+    const start = Math.max(2, current - 1);
+    const end = Math.min(total - 1, current + 1);
+    for (let i = start; i <= end; i++) pages.push(i);
+    if (current < total - 2) pages.push('...');
+    if (total > 1) pages.push(total);
+    return pages;
   }
 
   closeAllDropdowns() {

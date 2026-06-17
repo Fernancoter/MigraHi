@@ -556,6 +556,52 @@ public class ProduccionController : ControllerBase
         await _context.SaveChangesAsync(default);
         return NoContent();
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // OBSERVACIONES / INTERRUPCIONES
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [HttpGet("observaciones/extrusoras")]
+    public async Task<ActionResult<IEnumerable<object>>> GetExtrusorasObservaciones()
+    {
+        var items = await (from ei in _context.ExtrusionInterrupciones
+                           join e in _context.Extrusiones on ei.ExtrusionId equals e.Id
+                           join ex in _context.Extrusoras on e.ExtrusoraId equals ex.Id
+                           join t in _context.Turnos on e.TurnoId equals t.Id into tGroup
+                           from t in tGroup.DefaultIfEmpty()
+                           select new
+                           {
+                               id = ei.Id,
+                               fecha = e.Fecha,
+                               extrusora = ex.Nombre,
+                               turno = t != null ? t.Nombre : "",
+                               interrupcion = "0.00",
+                               tiempo = (ei.DuracionMin / 60.0).ToString("F2"),
+                               descripcion = ""
+                           }).ToListAsync();
+        return Ok(items);
+    }
+
+    [HttpGet("observaciones/prensas")]
+    public async Task<ActionResult<IEnumerable<object>>> GetPrensasObservaciones()
+    {
+        var items = await (from pi in _context.PrensadoInterrupciones
+                           join p in _context.Prensados on pi.PrensadoId equals p.Id
+                           join pr in _context.Prensas on p.PrensaId equals pr.Id
+                           join t in _context.Turnos on p.TurnoId equals t.Id into tGroup
+                           from t in tGroup.DefaultIfEmpty()
+                           select new
+                           {
+                               id = pi.Id,
+                               fecha = p.Fecha,
+                               prensa = pr.Nombre,
+                               turno = t != null ? t.Nombre : "",
+                               interrupcion = "0.00",
+                               tiempo = (pi.DuracionMin / 60.0).ToString("F2"),
+                               descripcion = ""
+                           }).ToListAsync();
+        return Ok(items);
+    }
 }
 
 public record PatchOperadorDto(Guid? OperarioId);
