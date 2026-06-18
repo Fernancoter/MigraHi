@@ -371,7 +371,7 @@ interface CausaInterrupcion {
     .btn-primary { background: #5cb85c; color: white; border: 1px solid #4cae4c; }
     .btn-primary:hover { background: #449d44; }
 
-    .btn-export, .btn-columns {
+    .btn-export {
       background: white;
       color: #5cb85c;
       border: 1px solid #5cb85c;
@@ -385,10 +385,29 @@ interface CausaInterrupcion {
       cursor: pointer;
       transition: all 0.2s;
     }
-    .btn-export:hover, .btn-columns:hover {
+    .btn-export:hover {
       background: #f8fafc;
       border-color: #4cae4c;
       color: #449d44;
+    }
+
+    .btn-columns {
+      background: #5cb85c;
+      color: white;
+      border: 1px solid #4cae4c;
+      border-radius: 4px;
+      padding: 0.55rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-columns:hover {
+      background: #449d44;
+      border-color: #398439;
     }
 
     .btn-filter {
@@ -772,11 +791,11 @@ export class PrensasObservacionComponent implements OnInit {
     this.form = {
       id: '',
       fecha: today,
-      tiempo: 0.00,
+      tiempo: null as any,
       prensaId: '',
       turnoId: '',
       descripcion: '',
-      motivos: [{ causaId: '' }]
+      motivos: [] as { causaId: string }[]
     };
     this.modalReadOnly.set(false);
     this.showModal.set(true);

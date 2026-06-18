@@ -1677,5 +1677,51 @@ public class ApplicationDbContextSeeder
             );
             await _context.SaveChangesAsync(default);
         }
+
+        // Seed CausasInterrupcion
+        var causas = new List<string>
+        {
+            "Ajustes máquina",
+            "Arranque",
+            "Calidad",
+            "Cambio de cuchillas",
+            "Cambio de producto",
+            "Falla eléctrica",
+            "Falta de personal",
+            "Incapacidad",
+            "Mantto correctivo",
+            "Mantto preventivo",
+            "Mantto troquel",
+            "Molinos",
+            "Operador auxilia etiquetado",
+            "Operador auxilia extrusión",
+            "Operador auxilia prensa",
+            "Otros",
+            "Plantilla incompleta",
+            "Silos",
+            "Sin programa",
+            "Vacaciones"
+        };
+
+        bool anyNewCausa = false;
+        foreach (var desc in causas)
+        {
+            if (!await _context.CausasInterrupcion.AnyAsync(c => c.Descripcion == desc))
+            {
+                _context.CausasInterrupcion.Add(new CausaInterrupcion
+                {
+                    Id = Guid.NewGuid(),
+                    Descripcion = desc,
+                    Prensa = true,
+                    Extrusora = true,
+                    TenantId = defaultTenantId
+                });
+                anyNewCausa = true;
+            }
+        }
+        if (anyNewCausa)
+        {
+            await _context.SaveChangesAsync(default);
+        }
     }
 }
