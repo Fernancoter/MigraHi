@@ -446,7 +446,7 @@ public class CatalogosController : ControllerBase
     {
         var items = await _context.CausasInterrupcion
             .OrderBy(c => c.Descripcion)
-            .Select(c => new { id = c.Id, nombre = c.Descripcion, prensa = true, extrusora = true })
+            .Select(c => new { id = c.Id, nombre = c.Descripcion, prensa = c.Prensa, extrusora = c.Extrusora })
             .ToListAsync();
         return Ok(items);
     }
@@ -465,6 +465,8 @@ public class CatalogosController : ControllerBase
         {
             Id = Guid.NewGuid(),
             Descripcion = dto.Nombre,
+            Prensa = dto.Prensa,
+            Extrusora = dto.Extrusora,
             TenantId = dto.TenantId
         };
         _context.CausasInterrupcion.Add(entity);
@@ -478,6 +480,8 @@ public class CatalogosController : ControllerBase
         var entity = await _context.CausasInterrupcion.FindAsync(id);
         if (entity is null) return NotFound();
         entity.Descripcion = dto.Nombre;
+        entity.Prensa = dto.Prensa;
+        entity.Extrusora = dto.Extrusora;
         await _context.SaveChangesAsync(default);
         return NoContent();
     }
@@ -500,5 +504,5 @@ public record TurnoDto(string Nombre, string? Clave, string HoraInicio, string H
 public record ExtrusoraDto(string Nombre, string NumeroExtrusora, string? Imagen, Guid TenantId);
 public record ExtrusoraOperarioDto(Guid? OperarioId, Guid TenantId);
 public record PrensaDto(string? NumeroPrensa, string Nombre, string? Imagen, string? Marca, string? Modelo, Guid TenantId);
-public record CausaInterrupcionDto(string Nombre, Guid TenantId);
+public record CausaInterrupcionDto(string Nombre, bool Prensa, bool Extrusora, Guid TenantId);
 

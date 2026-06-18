@@ -295,7 +295,12 @@ public class PrensaTroquel : TenantEntity
     public Guid PrensaId { get; set; }
     public Guid TroquelId { get; set; }
 }
-public class CausaInterrupcion : TenantEntity { public string Descripcion { get; set; } = null!; }
+public class CausaInterrupcion : TenantEntity
+{
+    public string Descripcion { get; set; } = null!;
+    public bool Prensa { get; set; } = true;
+    public bool Extrusora { get; set; } = true;
+}
 public class ExtrusionResultado : TenantEntity
 {
     public Guid ExtrusionId { get; set; }
