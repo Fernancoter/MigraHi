@@ -97,8 +97,7 @@ export const routes: Routes = [
       },
       { 
         path: 'reportes-hc/descargables/drr', 
-        component: ReportesPlaceholderComponent, 
-        data: { titulo: 'DRR', breadcrumb: 'Reportes HC › Descargables › DRR' } 
+        loadComponent: () => import('./features/reportes-hc/descargables/drr/drr.component').then(m => m.DrrComponent) 
       },
       { 
         path: 'reportes-hc/descargables/pallet-embarque', 
