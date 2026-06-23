@@ -1,7 +1,7 @@
 # Project Memory: HiCone ERP Modernization
 
 ## Rama Activa
-`configurarProduccion/refactor` — funcional, sincronizada con el nuevo baseline de DB y migración de Prensado aplicada.
+`information_report/refactor` — activa y con los servidores del backend (5007) y frontend (4200) iniciados.
 
 ## Estado Actual (2026-05-18)
 - **Backend:** Operativo (Puerto 5007, levantado en segundo plano). Controladores de Prensado y Operadores integrados con persistencia real en base de datos.
