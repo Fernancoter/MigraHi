@@ -327,11 +327,39 @@ public class PrensadoInterrupcion : TenantEntity
     public int DuracionMin { get; set; }
 }
 public class Carrera : TenantEntity { public int NumeroCarrera { get; set; } }
-public class Carrete : TenantEntity { public string Codigo { get; set; } = null!; }
+
+public class Carrete : TenantEntity
+{
+    public string Codigo { get; set; } = null!;
+    public string NoSerie { get; set; } = string.Empty;
+    public string Observaciones { get; set; } = string.Empty;
+}
+
 public class PaletCarrete : TenantEntity
 {
     public Guid PaletId { get; set; }
+    public virtual Palet Palet { get; set; } = null!;
+    
     public Guid CarreteId { get; set; }
+    public virtual Carrete Carrete { get; set; } = null!;
 }
-public class OrdenEtiquetado : TenantEntity { public DateTime FechaOrden { get; set; } }
+
+public class OrdenEtiquetado : TenantEntity
+{
+    public DateTime FechaOrden { get; set; } = DateTime.UtcNow;
+    public string NoOrden { get; set; } = string.Empty;
+    public DateTime FechaInicio { get; set; } = DateTime.UtcNow;
+    public DateTime FechaTermina { get; set; } = DateTime.UtcNow;
+    public string OperadorNombre { get; set; } = string.Empty;
+    public string TurnoNombre { get; set; } = string.Empty;
+    public int PiezasBuenas { get; set; }
+    public int PiezasMolino { get; set; }
+    public string EtiquetadoraActiva { get; set; } = string.Empty;
+    public string VelLineaUno { get; set; } = string.Empty;
+    public string VelLineaDos { get; set; } = string.Empty;
+    public decimal HorasUtiles { get; set; }
+    public decimal Eficiencia { get; set; }
+    public string Observaciones { get; set; } = string.Empty;
+}
+
 public class Maquina : TenantEntity { public string Nombre { get; set; } = null!; }

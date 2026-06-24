@@ -43,6 +43,7 @@ public class Palet : TenantEntity
     public DateTime? HoraInicioEnsamble { get; set; }
     public DateTime? HoraFinEnsamble { get; set; }
     public string Estado { get; set; } = "En Proceso"; // En Proceso, Terminado, Embarcado
+    public string? ProductoNombre { get; set; }
     
     public virtual ICollection<Bobina> Bobinas { get; set; } = new List<Bobina>();
 }

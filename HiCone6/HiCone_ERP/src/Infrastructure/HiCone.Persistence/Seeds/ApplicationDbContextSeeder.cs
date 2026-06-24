@@ -1,5 +1,6 @@
 using HiCone.Domain.Entities.Identity;
 using HiCone.Domain.Entities.Inventario;
+using HiCone.Domain.Entities.Logistica;
 using HiCone.Domain.Entities.Produccion;
 using HiCone.Domain.Entities.Tenant;
 using Microsoft.EntityFrameworkCore;
@@ -1721,6 +1722,122 @@ public class ApplicationDbContextSeeder
         }
         if (anyNewCausa)
         {
+            await _context.SaveChangesAsync(default);
+        }
+
+        // SEEDING REPORTES OPERATIVOS (Embarques, Pallets, Carretes, Etiquetado)
+        if (!await _context.Embarques.AnyAsync())
+        {
+            var embarques = new List<Embarque>();
+            for (int i = 1; i <= 10; i++)
+            {
+                var emb = new Embarque
+                {
+                    Id = Guid.NewGuid(),
+                    Folio = $"EMB-{202600 + i}",
+                    Fecha = DateTime.UtcNow.AddDays(-i),
+                    ClienteNombre = $"Cliente Industrial {i}",
+                    ClienteGrupo = i % 2 == 0 ? "GRUPO A" : "GRUPO B",
+                    DestinoEnvia = $"Planta Distribuidora Norte #{i}",
+                    TenantId = defaultTenantId
+                };
+                embarques.Add(emb);
+                _context.Embarques.Add(emb);
+            }
+            await _context.SaveChangesAsync(default);
+
+            var palets = new List<Palet>();
+            for (int i = 1; i <= 15; i++)
+            {
+                var pal = new Palet
+                {
+                    Id = Guid.NewGuid(),
+                    Codigo = $"PLT-SR-{1000 + i}",
+                    Tipo = i % 3 == 0 ? "MADERA HICONE" : "PLÁSTICO REFORZADO",
+                    HoraInicioEnsamble = DateTime.UtcNow.AddDays(-i).AddHours(-3),
+                    HoraFinEnsamble = DateTime.UtcNow.AddDays(-i),
+                    Estado = i % 4 == 0 ? "Embarcado" : "Terminado",
+                    ProductoNombre = $"Producto Terminado Grado {i}",
+                    TenantId = defaultTenantId
+                };
+                palets.Add(pal);
+                _context.Palets.Add(pal);
+            }
+            await _context.SaveChangesAsync(default);
+
+            // Seed EmbarquePallets
+            for (int i = 0; i < 10; i++)
+            {
+                var embPal = new EmbarquePallet
+                {
+                    Id = Guid.NewGuid(),
+                    EmbarqueId = embarques[i].Id,
+                    PaletId = palets[i].Id,
+                    NoPallet = $"PALLET-NO-{100 + i}",
+                    TenantId = defaultTenantId
+                };
+                _context.EmbarquePallets.Add(embPal);
+            }
+
+            // Seed Carretes
+            var carretes = new List<Carrete>();
+            for (int i = 1; i <= 40; i++)
+            {
+                var carr = new Carrete
+                {
+                    Id = Guid.NewGuid(),
+                    Codigo = $"CAR-{2000 + i}",
+                    NoSerie = $"CR-SER-{50000 + i}",
+                    Observaciones = i % 5 == 0 ? "Detalle menor en empaque" : "Correcto",
+                    TenantId = defaultTenantId
+                };
+                carretes.Add(carr);
+                _context.Carretes.Add(carr);
+            }
+            await _context.SaveChangesAsync(default);
+
+            // Seed PaletCarretes (each pallet gets 2-3 carretes)
+            int carreteIndex = 0;
+            for (int i = 0; i < palets.Count; i++)
+            {
+                for (int j = 0; j < 2 && carreteIndex < carretes.Count; j++)
+                {
+                    var pc = new PaletCarrete
+                    {
+                        Id = Guid.NewGuid(),
+                        PaletId = palets[i].Id,
+                        CarreteId = carretes[carreteIndex].Id,
+                        TenantId = defaultTenantId
+                    };
+                    _context.PaletCarretes.Add(pc);
+                    carreteIndex++;
+                }
+            }
+
+            // Seed OrdenesEtiquetado
+            for (int i = 1; i <= 12; i++)
+            {
+                var ord = new OrdenEtiquetado
+                {
+                    Id = Guid.NewGuid(),
+                    FechaOrden = DateTime.UtcNow.AddDays(-i),
+                    NoOrden = $"ORD-ETI-{3000 + i}",
+                    FechaInicio = DateTime.UtcNow.AddDays(-i).AddHours(-8),
+                    FechaTermina = DateTime.UtcNow.AddDays(-i),
+                    OperadorNombre = $"Operario Etiquetado {i}",
+                    TurnoNombre = i % 3 == 1 ? "1er Turno" : (i % 3 == 2 ? "2do Turno" : "3er Turno"),
+                    PiezasBuenas = 900 + (i * 25),
+                    PiezasMolino = 5 + (i * 2),
+                    EtiquetadoraActiva = $"Etiquetadora #{(i % 2 == 0 ? "A" : "B")}",
+                    VelLineaUno = $"{(50 + i * 2)} m/min",
+                    VelLineaDos = $"{(45 + i * 2)} m/min",
+                    HorasUtiles = 7.5m,
+                    Eficiencia = 94.5m + (i * 0.3m) > 100m ? 99.8m : 94.5m + (i * 0.3m),
+                    Observaciones = "Turno completado sin paradas críticas",
+                    TenantId = defaultTenantId
+                };
+                _context.OrdenesEtiquetado.Add(ord);
+            }
             await _context.SaveChangesAsync(default);
         }
     }

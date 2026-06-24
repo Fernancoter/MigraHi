@@ -101,28 +101,23 @@ export const routes: Routes = [
       },
       { 
         path: 'reportes-hc/descargables/pallet-embarque', 
-        component: ReportesPlaceholderComponent, 
-        data: { titulo: 'Pallet Embarque', breadcrumb: 'Reportes HC › Descargables › Pallet_Embarque' } 
+        loadComponent: () => import('./features/reportes-hc/descargables/pallet-embarque/pallet-embarque.component').then(m => m.PalletEmbarqueComponent)
       },
       { 
         path: 'reportes-hc/descargables/carrete-pallet', 
-        component: ReportesPlaceholderComponent, 
-        data: { titulo: 'Carrete Pallet', breadcrumb: 'Reportes HC › Descargables › Carrete_Pallet' } 
+        loadComponent: () => import('./features/reportes-hc/descargables/carrete-pallet/carrete-pallet.component').then(m => m.CarretePalletComponent)
       },
       { 
         path: 'reportes-hc/resumenes/extrusion', 
-        component: ReportesPlaceholderComponent, 
-        data: { titulo: 'Resumen Extrusión', breadcrumb: 'Reportes HC › Resúmenes › Extrusión' } 
+        loadComponent: () => import('./features/reportes-hc/resumenes/extrusion/resumen-extrusion.component').then(m => m.ResumenExtrusionComponent)
       },
       { 
         path: 'reportes-hc/resumenes/prensado', 
-        component: ReportesPlaceholderComponent, 
-        data: { titulo: 'Resumen Prensado', breadcrumb: 'Reportes HC › Resúmenes › Prensado' } 
+        loadComponent: () => import('./features/reportes-hc/resumenes/prensado/resumen-prensado.component').then(m => m.ResumenPrensadoComponent)
       },
       { 
         path: 'reportes-hc/etiquetado/ordenes', 
-        component: ReportesPlaceholderComponent, 
-        data: { titulo: 'Órdenes de Etiquetado', breadcrumb: 'Reportes HC › Etiquetado › Órdenes' } 
+        loadComponent: () => import('./features/reportes-hc/etiquetado/ordenes/ordenes-etiquetado.component').then(m => m.OrdenesEtiquetadoComponent)
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
