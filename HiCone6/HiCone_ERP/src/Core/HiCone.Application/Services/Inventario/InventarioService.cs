@@ -15,6 +15,7 @@ namespace HiCone.Application.Services.Inventario
         Task<IEnumerable<ExistenciaSiloDto>> GetExistenciaSiloAsync(Guid existenciaId);
         Task<IEnumerable<SiloDto>> GetSilosAsync();
         Task<SiloDto> CreateSiloAsync(SiloDto siloDto);
+        Task<IEnumerable<ExistenciaDto>> GetExistenciasAsync();
     }
 
     public class InventarioService : IInventarioService
@@ -24,6 +25,21 @@ namespace HiCone.Application.Services.Inventario
         public InventarioService(IApplicationDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<IEnumerable<ExistenciaDto>> GetExistenciasAsync()
+        {
+            return await _context.Existencias
+                .OrderByDescending(e => e.FechaHora)
+                .Select(e => new ExistenciaDto
+                {
+                    Id = e.Id,
+                    FechaHora = e.FechaHora,
+                    Usuario = e.Usuario,
+                    Estado = e.Estado,
+                    Observaciones = e.Observaciones
+                })
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<SiloDto>> GetSilosAsync()
@@ -175,5 +191,14 @@ namespace HiCone.Application.Services.Inventario
         public string TipoMaterial { get; set; }
         public decimal CantidadReal { get; set; }
         public string LoteVirgen { get; set; }
+    }
+
+    public class ExistenciaDto
+    {
+        public Guid Id { get; set; }
+        public DateTime FechaHora { get; set; }
+        public string Usuario { get; set; } = null!;
+        public string Estado { get; set; } = null!;
+        public string? Observaciones { get; set; }
     }
 }

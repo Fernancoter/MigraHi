@@ -41,5 +41,12 @@ namespace HiCone.API.Controllers.v1
             var result = await _inventarioService.GetExistenciaSiloAsync(existenciaId);
             return Ok(result);
         }
+
+        [HttpGet("existencias")]
+        public async Task<IActionResult> GetExistencias()
+        {
+            var result = await _inventarioService.GetExistenciasAsync();
+            return Ok(result);
+        }
     }
 }

@@ -28,6 +28,31 @@ export interface Silo {
   ubicacion: string;
 }
 
+export interface Existencia {
+  id: string;
+  fechaHora: string;
+  usuario: string;
+  estado: string;
+  observaciones?: string;
+}
+
+export interface ExistenciaSilo {
+  siloId: string;
+  siloNombre: string;
+  tipoMaterial: string;
+  cantidadReal: number;
+  loteVirgen: string;
+}
+
+export interface ExistenciaProducto {
+  productoId: string;
+  productoNombre: string;
+  existenciaId: string;
+  cantidadReal: number;
+  cantidadSistema: number;
+  millarSistema: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -45,5 +70,21 @@ export class InventarioService {
 
   createSilo(silo: Partial<Silo>): Observable<Silo> {
     return this.http.post<Silo>(`${this.apiUrl}/inventario/silo`, silo);
+  }
+
+  getExistencias(): Observable<Existencia[]> {
+    return this.http.get<Existencia[]>(`${this.apiUrl}/inventario/existencias`);
+  }
+
+  getExistenciaProducto(existenciaId: string, categoria: string, tipoProducto: string): Observable<ExistenciaProducto[]> {
+    return this.http.get<ExistenciaProducto[]>(`${this.apiUrl}/inventario/existencia-producto`, {
+      params: { existenciaId, categoria, tipoProducto }
+    });
+  }
+
+  getExistenciaSilo(existenciaId: string): Observable<ExistenciaSilo[]> {
+    return this.http.get<ExistenciaSilo[]>(`${this.apiUrl}/inventario/existencia-silo`, {
+      params: { existenciaId }
+    });
   }
 }

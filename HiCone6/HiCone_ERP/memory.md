@@ -3,13 +3,15 @@
 ## Rama Activa
 `information_report/refactor` — activa y con los servidores del backend (5007) y frontend (4200) iniciados.
 
-## Estado Actual (2026-05-18)
-- **Backend:** Operativo (Puerto 5007, levantado en segundo plano). Controladores de Prensado y Operadores integrados con persistencia real en base de datos.
-- **Frontend:** Operativo (Puerto 4200, levantado en segundo plano). Módulos "Extrusión", "Prensado" y "Operadores" refactorizados y completados al 100%.
-- **Base de Datos:** Migración `AddPrensadoAdditionalProperties` aplicada exitosamente sobre `HiCone_ERP_V3`.
+## Estado Actual (2026-06-29)
+- **Backend:** Operativo (Puerto 5007, levantado en segundo plano). Controladores y endpoints de reportes operativos (DRR, Pallet Embarque, Carrete Pallet, Existencias) completamente integrados.
+- **Frontend:** Operativo (Puerto 4200, levantado en segundo plano). Módulo de "Reportes HC" ampliado con la nueva pantalla de "Existencia" y columnas agregadas en el "Resumen de Extrusión".
+- **Base de Datos:** Migración `AddEmbarqueProperties` aplicada exitosamente sobre el servidor local de SQL Server.
 
-✅ **Módulo de Seguridad COMPLETADO** (commit: 3a869aa)
-✅ **Vibe Coding Infrastructure** (commit: d38f43d)
+✅ **Reporte de Existencia y Columnas de Extrusión COMPLETADOS** (2026-06-29)
+- [x] **Backend API**: Implementado listado de cortes (`GET /api/v1/inventario/existencias`) y seeding automatizado de datos de Silos y Existencias.
+- [x] **Reporte Existencia Component**: Creado componente Angular Standalone con filtros de cortes y categorías, y tabs para stock en Silos y Productos.
+- [x] **Resumen Extrusión**: Integradas las columnas `revHusilloMolido` y `revHusilloVirgen` en listados, PDFs y Excel.
 - [x] **Terminal Guardian (The Customs Guard)**: Implementado interceptor de comandos en Node.js para ejecución segura y autónoma.
 - [x] **Gestión de Contexto**: El Guardian mantiene el estado del directorio actual (CWD) para navegaciones complejas.
 - [x] **Whitelist/Blacklist**: Filtro robusto que previene operaciones destructivas (rm, rf, etc.) y permite `dotnet`, `npm` y `git`.

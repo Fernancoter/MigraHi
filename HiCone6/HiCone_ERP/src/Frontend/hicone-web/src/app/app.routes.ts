@@ -100,6 +100,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/reportes-hc/descargables/drr/drr.component').then(m => m.DrrComponent) 
       },
       { 
+        path: 'reportes-hc/existencia', 
+        loadComponent: () => import('./features/reportes-hc/existencia/reporte-existencia.component').then(m => m.ReporteExistenciaComponent) 
+      },
+      { 
         path: 'reportes-hc/descargables/pallet-embarque', 
         loadComponent: () => import('./features/reportes-hc/descargables/pallet-embarque/pallet-embarque.component').then(m => m.PalletEmbarqueComponent)
       },

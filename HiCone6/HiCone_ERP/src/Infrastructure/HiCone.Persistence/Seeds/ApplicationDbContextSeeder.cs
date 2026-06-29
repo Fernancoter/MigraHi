@@ -1840,5 +1840,88 @@ public class ApplicationDbContextSeeder
             }
             await _context.SaveChangesAsync(default);
         }
+
+        // Seed Silos
+        if (!await _context.Silos.AnyAsync())
+        {
+            _context.Silos.AddRange(
+                new Silo 
+                { 
+                    Nombre = "Silo A", 
+                    Codigo = "SIL-A", 
+                    CapacidadMaxima = 10000, 
+                    ExistenciaActual = 6000, 
+                    KgMinimo = 1000, 
+                    KgMaximo = 9500, 
+                    EstadoMaterial = "virgen(pallet)", 
+                    TipoMaterial = "PCR", 
+                    Activo = true, 
+                    Estado = "Operativo", 
+                    Ubicacion = "Zona Norte", 
+                    TenantId = defaultTenantId 
+                },
+                new Silo 
+                { 
+                    Nombre = "Silo B", 
+                    Codigo = "SIL-B", 
+                    CapacidadMaxima = 12000, 
+                    ExistenciaActual = 8000, 
+                    KgMinimo = 1500, 
+                    KgMaximo = 11000, 
+                    EstadoMaterial = "molido", 
+                    TipoMaterial = "DOW", 
+                    Activo = true, 
+                    Estado = "Operativo", 
+                    Ubicacion = "Zona Sur", 
+                    TenantId = defaultTenantId 
+                }
+            );
+            await _context.SaveChangesAsync(default);
+        }
+
+        // Seed Existencias
+        if (!await _context.Existencias.AnyAsync())
+        {
+            var existenciaId = Guid.NewGuid();
+            var ext = new Existencia
+            {
+                Id = existenciaId,
+                FechaHora = DateTime.UtcNow.AddDays(-1),
+                Usuario = "admin",
+                Estado = "Cerrado",
+                Observaciones = "Corte de inventario fin de mes",
+                TenantId = defaultTenantId
+            };
+            _context.Existencias.Add(ext);
+            await _context.SaveChangesAsync(default);
+
+            var silos = await _context.Silos.ToListAsync();
+            foreach (var silo in silos)
+            {
+                _context.ExistenciasSilos.Add(new ExistenciaSilo
+                {
+                    Id = Guid.NewGuid(),
+                    ExistenciaId = existenciaId,
+                    SiloId = silo.Id,
+                    Cantidad = silo.CapacidadMaxima * 0.6m,
+                    TenantId = defaultTenantId
+                });
+            }
+
+            var products = await _context.Productos.Take(5).ToListAsync();
+            foreach (var prod in products)
+            {
+                _context.ExistenciaProductos.Add(new ExistenciaProducto
+                {
+                    Id = Guid.NewGuid(),
+                    ExistenciaId = existenciaId,
+                    ProductoId = prod.Id,
+                    CantidadReal = 500,
+                    CantidadSistema = 480,
+                    TenantId = defaultTenantId
+                });
+            }
+            await _context.SaveChangesAsync(default);
+        }
     }
 }

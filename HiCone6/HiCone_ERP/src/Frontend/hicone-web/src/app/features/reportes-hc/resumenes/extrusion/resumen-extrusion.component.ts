@@ -60,6 +60,7 @@ import * as XLSX from 'xlsx';
               <th>Operario</th>
               <th>Bobinas (Molino/Reposo)</th>
               <th>Vel. (Laminadora/Husillo)</th>
+              <th>Rev. Husillo (Molido/Virgen)</th>
               <th>KG Virgen</th>
               <th>KG Molido</th>
               <th>Merma (KG)</th>
@@ -72,11 +73,11 @@ import * as XLSX from 'xlsx';
           <tbody>
             @if (loading()) {
               <tr>
-                <td colspan="14" class="empty-state">Cargando resultados de extrusión...</td>
+                <td colspan="15" class="empty-state">Cargando resultados de extrusión...</td>
               </tr>
             } @else if (filteredItems().length === 0) {
               <tr>
-                <td colspan="14" class="empty-state">No se encontraron registros de extrusión</td>
+                <td colspan="15" class="empty-state">No se encontraron registros de extrusión</td>
               </tr>
             } @else {
               @for (item of filteredItems(); track item.id) {
@@ -88,6 +89,7 @@ import * as XLSX from 'xlsx';
                   <td>{{ item.operario }}</td>
                   <td>{{ item.bobinasMolino }} / {{ item.bobinasReposo }}</td>
                   <td>{{ item.velLaminadora }} m/min / {{ item.velHusillo }} RPM</td>
+                  <td>{{ item.revHusilloMolido }} RPM / {{ item.revHusilloVirgen }} RPM</td>
                   <td>{{ item.virgenKg | number:'1.2-2' }} kg</td>
                   <td>{{ item.molidoKg | number:'1.2-2' }} kg</td>
                   <td style="color: #ef4444; font-weight: 600;">{{ item.totalMermaKg | number:'1.2-2' }} kg</td>
@@ -271,6 +273,8 @@ export class ResumenExtrusionComponent implements OnInit {
       'Bobinas Reposo': item.bobinasReposo,
       'Vel. Laminadora (m/min)': item.velLaminadora,
       'Vel. Husillo (RPM)': item.velHusillo,
+      'Rev. Husillo Molido (RPM)': item.revHusilloMolido,
+      'Rev. Husillo Virgen (RPM)': item.revHusilloVirgen,
       'KG Virgen': item.virgenKg,
       'KG Molido': item.molidoKg,
       'Merma (KG)': item.totalMermaKg,
@@ -303,6 +307,7 @@ export class ResumenExtrusionComponent implements OnInit {
           <td>${item.operario}</td>
           <td>${item.bobinasMolino}/${item.bobinasReposo}</td>
           <td>${item.velLaminadora}/${item.velHusillo}</td>
+          <td>${item.revHusilloMolido}/${item.revHusilloVirgen}</td>
           <td>${item.totalKg.toFixed(1)}</td>
           <td>${item.totalMermaKg.toFixed(1)}</td>
           <td>${item.siloNombre}(${item.loteSilo})</td>
@@ -340,6 +345,7 @@ export class ResumenExtrusionComponent implements OnInit {
                 <th>Operario</th>
                 <th>Bob. M/R</th>
                 <th>Vel. L/H</th>
+                <th>Rev. M/V</th>
                 <th>Total KG</th>
                 <th>Merma KG</th>
                 <th>Silo (Lote)</th>
@@ -347,7 +353,7 @@ export class ResumenExtrusionComponent implements OnInit {
               </tr>
             </thead>
             <tbody>
-              \${rows ? rows : '<tr><td colspan="11" style="text-align:center; font-style:italic;">No se encontraron registros</td></tr>'}
+              \${rows ? rows : '<tr><td colspan="12" style="text-align:center; font-style:italic;">No se encontraron registros</td></tr>'}
             </tbody>
           </table>
           <script>window.onload = function() { window.print(); window.close(); }</script>
