@@ -11,6 +11,10 @@ namespace HiCone.Application.Services.Produccion;
 
 public class ProduccionService : IProduccionService
 {
+    // Reglas de planta (antes eran números mágicos dispersos en el código).
+    private const int CarretesPorCarrera = 6;       // Una carrera produce 6 carretes (líneas 1-6)
+    private const int CapacidadPaletDefault = 100;  // Carretes esperados por palet cuando no hay default configurado
+
     private readonly IApplicationDbContext _context;
 
     public ProduccionService(IApplicationDbContext context)
@@ -379,6 +383,23 @@ public class ProduccionService : IProduccionService
             Fecha = DateTime.UtcNow.Date
         };
 
+        // Aplicar defaults configurados para esta combinación prensa+producto (Legacy: DPPrensadoDefaults).
+        // Antes se ignoraban; ahora el prensado arranca con la meta y parámetros del catálogo.
+        var defaults = await _context.PrensaProductos
+            .FirstOrDefaultAsync(pp => pp.PrensaId == prensaId && pp.ProductoId == productoId && pp.IsActive);
+        if (defaults != null)
+        {
+            prensado.MetaPallets = (int)defaults.DefaultMetaPallets;
+            prensado.LevasKgEntrada = defaults.DefaultLevasKgEntrada;
+            prensado.LevasKgSalida = defaults.DefaultLevasKgSalida;
+            prensado.LevasGradosEntrada = defaults.DefaultLevasGradosEntrada;
+            prensado.LevasGradosSalida = defaults.DefaultLevasGradosSalida;
+            prensado.RodillosKgEntrada = defaults.DefaultRodillosKgEntrada;
+            prensado.RodillosKgSalida = defaults.DefaultRodillosKgSalida;
+            prensado.RodillosGradosEntrada = defaults.DefaultRodillosGradosEntrada;
+            prensado.RodillosGradosSalida = defaults.DefaultRodillosGradosSalida;
+        }
+
         prensa.Estado = EstadoPrensa.EnProceso;
         _context.Prensados.Add(prensado);
         await _context.SaveChangesAsync(default);
@@ -451,7 +472,7 @@ public class ProduccionService : IProduccionService
         _context.Carreras.Add(carrera);
         await _context.SaveChangesAsync(default);
 
-        for (int i = 1; i <= 6; i++)
+        for (int i = 1; i <= CarretesPorCarrera; i++)
         {
             var carrete = new Carrete
             {
@@ -488,6 +509,131 @@ public class ProduccionService : IProduccionService
         return await _context.SaveChangesAsync(default) > 0;
     }
 
+    // Cierra el prensado y genera sus KPIs. Espeja a FinalizarExtrusionAsync.
+    // Legacy: SDCerrarPrensado + GuardarPrensadoResultado.
+    public async Task<bool> FinalizarPrensadoAsync(Guid prensadoId, string? motivoAnticipado = null)
+    {
+        var prensado = await _context.Prensados
+            .Include(p => p.Carreras)
+            .Include(p => p.Bobinas).ThenInclude(pb => pb.Bobina)
+            .Include(p => p.Palets)
+            .Include(p => p.Interrupciones)
+            .FirstOrDefaultAsync(p => p.Id == prensadoId);
+
+        if (prensado == null) return false;
+
+        prensado.Estado = string.IsNullOrEmpty(motivoAnticipado)
+            ? EstadoPrensado.Finalizado
+            : EstadoPrensado.Anticipado;
+        prensado.HoraFinProceso = DateTime.UtcNow;
+        prensado.MotivoAnticipado = motivoAnticipado;
+
+        // Liberar la prensa
+        var prensa = await _context.Prensas.FindAsync(prensado.PrensaId);
+        if (prensa != null) prensa.Estado = EstadoPrensa.Disponible;
+
+        // Desmontar bobinas activas -> vuelven a reposo
+        foreach (var pb in prensado.Bobinas.Where(b => b.Activa))
+        {
+            pb.Activa = false;
+            pb.HoraFin = DateTime.UtcNow;
+            if (pb.Bobina != null && pb.Bobina.Estado == EstadoBobina.EnPrensado)
+            {
+                pb.Bobina.Estado = EstadoBobina.EnReposo;
+                pb.Bobina.IniciaReposo = DateTime.UtcNow;
+            }
+        }
+
+        // KPIs
+        var totalCarreras = prensado.Carreras.Count;
+        var totalCarrerasValidadas = prensado.Carreras.Count(c =>
+            c.Estado == EstadoCarrera.Validada || c.Estado == EstadoCarrera.Terminada);
+        var totalPalets = prensado.Palets.Count;
+        var tiempoInterrupcion = prensado.Interrupciones
+            .Where(i => i.HoraFin.HasValue)
+            .Sum(i => (int)(i.HoraFin!.Value - i.HoraInicio).TotalMinutes);
+        var bobinasMolidas = prensado.Bobinas.Count(b => b.Bobina != null && b.Bobina.Estado == EstadoBobina.Molido);
+        var eficiencia = prensado.MetaPallets > 0
+            ? Math.Round((decimal)totalPalets / prensado.MetaPallets * 100m, 2)
+            : 0m;
+
+        prensado.TotalPallets = totalPalets;
+        prensado.TiempoInterrupcionMinutos = tiempoInterrupcion;
+
+        var resultado = new PrensadoResultado
+        {
+            PrensadoId = prensadoId,
+            TotalPalets = totalPalets,
+            TotalPaletsMeta = prensado.MetaPallets,
+            TotalCarreras = totalCarreras,
+            TotalCarrerasValidadas = totalCarrerasValidadas,
+            TotalBobinasMolidas = bobinasMolidas,
+            KgMerma = prensado.BobinaMermaKg,
+            TiempoInterrupcionMinutos = tiempoInterrupcion,
+            EficienciaPorc = eficiencia,
+            FechaRegistro = DateTime.UtcNow
+        };
+        _context.PrensadoResultados.Add(resultado);
+
+        return await _context.SaveChangesAsync(default) > 0;
+    }
+
+    // ── Captura desde planta / app móvil (escaneo por NoSerie) ──────────────
+
+    // Legacy: SDEscanearCarrete - localiza el carrete por su etiqueta y actualiza su estado.
+    public async Task<Carrete> RegistrarCarreteEscaneadoAsync(string noSerie, string estado)
+    {
+        if (string.IsNullOrWhiteSpace(noSerie))
+            throw new InvalidOperationException("El NoSerie del carrete es obligatorio.");
+
+        var carrete = await _context.Carretes.FirstOrDefaultAsync(c => c.NoSerie == noSerie);
+        if (carrete == null)
+            throw new InvalidOperationException($"No se encontró un carrete con NoSerie '{noSerie}'.");
+
+        carrete.Estado = ParseEstadoCarrete(estado);
+        await _context.SaveChangesAsync(default);
+        return carrete;
+    }
+
+    // Legacy: SDEscanearPallet - localiza el palet por su etiqueta y actualiza su estatus.
+    public async Task<Palet> RegistrarPaletEscaneadoAsync(string noSerie, string estado)
+    {
+        if (string.IsNullOrWhiteSpace(noSerie))
+            throw new InvalidOperationException("El NoSerie del palet es obligatorio.");
+
+        var palet = await _context.Palets.FirstOrDefaultAsync(p => p.NoSerie == noSerie);
+        if (palet == null)
+            throw new InvalidOperationException($"No se encontró un palet con NoSerie '{noSerie}'.");
+
+        palet.Estatus = ParseEstatusPalet(estado);
+        if (palet.Estatus == EstatusPalet.Terminado && palet.HoraFinEnsamble == null)
+            palet.HoraFinEnsamble = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync(default);
+        return palet;
+    }
+
+    // La app móvil envía "Validado" para un carrete, pero el enum del carrete no lo tiene:
+    // escanear/validar un carrete equivale a marcarlo Terminado.
+    private static EstadoCarrete ParseEstadoCarrete(string? estado)
+    {
+        if (string.IsNullOrWhiteSpace(estado)) return EstadoCarrete.Terminado;
+        return estado.Trim().ToLowerInvariant() switch
+        {
+            "validado" or "validada" or "terminado" or "ok" => EstadoCarrete.Terminado,
+            "rechazado" => EstadoCarrete.Rechazado,
+            "molino" => EstadoCarrete.Molino,
+            "enproceso" => EstadoCarrete.EnProceso,
+            _ => Enum.TryParse<EstadoCarrete>(estado, true, out var e) ? e : EstadoCarrete.Terminado
+        };
+    }
+
+    private static EstatusPalet ParseEstatusPalet(string? estado)
+    {
+        if (string.IsNullOrWhiteSpace(estado)) return EstatusPalet.Terminado;
+        return Enum.TryParse<EstatusPalet>(estado, true, out var e) ? e : EstatusPalet.Terminado;
+    }
+
     public async Task<bool> RegistrarDefectoCarreteAsync(Guid carreteId, TipoDefecto tipo, string descripcion)
     {
         var carrete = await _context.Carretes.FindAsync(carreteId);
@@ -512,6 +658,12 @@ public class ProduccionService : IProduccionService
 
     public async Task<Palet> CrearPaletAsync(Guid productoId, Guid operarioId, Guid prensaId)
     {
+        // Serie secuencial por día (antes usaba Random() -> podía colisionar).
+        var hoy = DateTime.UtcNow.Date;
+        var consecutivo = await _context.Palets.CountAsync(p => p.HoraInicioEnsamble >= hoy) + 1;
+
+        // TODO: la capacidad real (carretes por palet) debería venir del catálogo por producto.
+        // Hoy no existe ese campo; se usa el default hasta que se defina (ver registro 2026-06-08).
         var palet = new Palet
         {
             ProductoId = productoId,
@@ -519,8 +671,8 @@ public class ProduccionService : IProduccionService
             PrensaId = prensaId,
             Estatus = EstatusPalet.EnEnsamble,
             HoraInicioEnsamble = DateTime.UtcNow,
-            NoSerie = $"PAL-{DateTime.Now:yyyyMMdd}-{new Random().Next(100, 999)}",
-            Capacidad = 100
+            NoSerie = $"PAL-{hoy:yyyyMMdd}-{consecutivo:D4}",
+            Capacidad = CapacidadPaletDefault
         };
 
         _context.Palets.Add(palet);
@@ -867,6 +1019,12 @@ public class ProduccionService : IProduccionService
     {
         return await _context.ExtrusionResultados
             .FirstOrDefaultAsync(r => r.ExtrusionId == extrusionId);
+    }
+
+    public async Task<PrensadoResultado?> GetPrensadoResultadoAsync(Guid prensadoId)
+    {
+        return await _context.PrensadoResultados
+            .FirstOrDefaultAsync(r => r.PrensadoId == prensadoId);
     }
 
     // ── Consultas adicionales ──────────────────────────────────────────────

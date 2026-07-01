@@ -160,6 +160,71 @@ public class ProduccionController : ControllerBase
         return result ? Ok() : BadRequest();
     }
 
+    [HttpPost("prensado/{id}/finalizar")]
+    public async Task<IActionResult> FinalizarPrensado(Guid id, [FromBody] string? motivo)
+    {
+        var result = await _produccionService.FinalizarPrensadoAsync(id, motivo);
+        return result ? Ok() : BadRequest("No se pudo finalizar el prensado");
+    }
+
+    [HttpGet("prensado/{id}/resultado")]
+    public async Task<IActionResult> GetPrensadoResultado(Guid id)
+    {
+        var result = await _produccionService.GetPrensadoResultadoAsync(id);
+        if (result == null) return NotFound(new { message = "No se encontró el resultado del prensado." });
+        return Ok(result);
+    }
+
+    // ── Captura desde planta / app móvil (escaneo de etiquetas) ─────────────
+
+    [HttpPost("carrete/registrar")]
+    public async Task<ActionResult<Carrete>> RegistrarCarrete([FromBody] RegistrarCarreteRequest request)
+    {
+        try
+        {
+            var result = await _produccionService.RegistrarCarreteEscaneadoAsync(request.NoSerie, request.Estado);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("pallet/registrar")]
+    public async Task<ActionResult<Palet>> RegistrarPallet([FromBody] RegistrarPalletRequest request)
+    {
+        try
+        {
+            var result = await _produccionService.RegistrarPaletEscaneadoAsync(request.NoSerie, request.Estado);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    // Dispatcher genérico: la app usa este como fallback cuando no distingue el tipo.
+    [HttpPost("captura/registrar")]
+    public async Task<IActionResult> RegistrarCaptura([FromBody] RegistrarCapturaRequest request)
+    {
+        try
+        {
+            var tipo = (request.Tipo ?? "carrete").Trim().ToLowerInvariant();
+            object result = tipo switch
+            {
+                "pallet" or "palet" => await _produccionService.RegistrarPaletEscaneadoAsync(request.NoSerie, request.Estado ?? "Terminado"),
+                _ => await _produccionService.RegistrarCarreteEscaneadoAsync(request.NoSerie, request.Estado ?? "Validado")
+            };
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     // ── Pallets ────────────────────────────────────────────────────────────
 
     [HttpPost("palets")]
@@ -372,4 +437,7 @@ public record RegistrarInterrupcionRequest(Guid EntidadId, Guid CausaId, string?
 public record RegistrarConsumoRequest(Guid SiloVirgenId, decimal VirgenKg, Guid? SiloMolidoId, decimal MolidoKg);
 public record RechazarBobinaRequest(MotivoMolino Motivo, string? Observaciones);
 public record RecalibrarExtrusionRequest(decimal? Calibre, decimal? Ancho, decimal? Longitud);
+public record RegistrarCarreteRequest(string NoSerie, string Estado);
+public record RegistrarPalletRequest(string NoSerie, string Estado);
+public record RegistrarCapturaRequest(string NoSerie, string? Estado, string? Tipo);
 

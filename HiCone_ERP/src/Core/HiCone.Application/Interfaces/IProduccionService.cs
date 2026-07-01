@@ -49,7 +49,14 @@ public interface IProduccionService
     Task<Carrera> IniciarCarreraAsync(Guid prensadoId);
     Task<bool> FinalizarCarreraAsync(Guid carreraId);
     Task<bool> RegistrarDefectoCarreteAsync(Guid carreteId, TipoDefecto tipo, string descripcion);
-    
+    // Cierre del prensado + generación de KPIs (Legacy: SDCerrarPrensado + GuardarPrensadoResultado)
+    Task<bool> FinalizarPrensadoAsync(Guid prensadoId, string? motivoAnticipado = null);
+
+    // ── Captura desde planta / app móvil (escaneo por NoSerie) ──────────────
+    // Legacy: SDEscanearCarrete / SDEscanearPallet
+    Task<Carrete> RegistrarCarreteEscaneadoAsync(string noSerie, string estado);
+    Task<Palet> RegistrarPaletEscaneadoAsync(string noSerie, string estado);
+
     // ── Pallets ────────────────────────────────────────────────────────────
     Task<Palet> CrearPaletAsync(Guid productoId, Guid operarioId, Guid prensaId);
     Task<bool> AgregarCarreteAPaletAsync(Guid paletId, Guid carreteId);
@@ -74,6 +81,7 @@ public interface IProduccionService
 
     // ── Resultado y KPIs (Legacy: ObtenerExtrusionResultado) ──
     Task<ExtrusionResultado?> GetExtrusionResultadoAsync(Guid extrusionId);
+    Task<PrensadoResultado?> GetPrensadoResultadoAsync(Guid prensadoId);
 
     // ── Consultas ──────────────────────────────────────────────────────────
     Task<IEnumerable<Bobina>> GetBobinasDisponiblesParaPrensadoAsync();
