@@ -4,7 +4,11 @@ import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export type ModuleType = 'INVENTARIO' | 'EXTRUSIÓN' | 'SISTEMA' | 'SEGURIDAD' | null;
+=======
+export type ModuleType = 'INVENTARIO' | 'EXTRUSIÓN' | 'PRODUCCIÓN' | 'SISTEMA' | 'SEGURIDAD' | 'REPORTES HC' | null;
+>>>>>>> origin/information_report/refactor
 =======
 export type ModuleType = 'INVENTARIO' | 'EXTRUSIÓN' | 'PRODUCCIÓN' | 'SISTEMA' | 'SEGURIDAD' | 'REPORTES HC' | null;
 >>>>>>> origin/information_report/refactor

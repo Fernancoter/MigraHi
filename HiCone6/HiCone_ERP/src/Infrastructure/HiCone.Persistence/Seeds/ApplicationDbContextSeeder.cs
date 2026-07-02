@@ -1921,6 +1921,9 @@ public class ApplicationDbContextSeeder
             }
             await _context.SaveChangesAsync(default);
         }
+<<<<<<< HEAD
+>>>>>>> origin/information_report/refactor
+=======
 >>>>>>> origin/information_report/refactor
     }
 }

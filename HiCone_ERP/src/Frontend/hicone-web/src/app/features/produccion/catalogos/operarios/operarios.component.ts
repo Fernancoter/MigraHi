@@ -47,7 +47,11 @@ import * as XLSX from 'xlsx';
 
             <!-- Selector de Columnas -->
 <<<<<<< HEAD:HiCone_ERP/src/Frontend/hicone-web/src/app/features/produccion/catalogos/operarios/operarios.component.ts
+<<<<<<< HEAD:HiCone_ERP/src/Frontend/hicone-web/src/app/features/produccion/catalogos/operarios/operarios.component.ts
             <div class="dropdown-wrapper">
+=======
+            <div class="dropdown-wrapper" (clickOutside)="closeColumnDropdown()">
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Frontend/hicone-web/src/app/features/produccion/catalogos/operarios/operarios.component.ts
 =======
             <div class="dropdown-wrapper" (clickOutside)="closeColumnDropdown()">
 >>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Frontend/hicone-web/src/app/features/produccion/catalogos/operarios/operarios.component.ts

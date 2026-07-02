@@ -1,9 +1,12 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 =======
+=======
+>>>>>>> origin/information_report/refactor
 import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +17,9 @@ export interface ConfiguracionSistema {
   key: string;
   valor: string;
 }
+<<<<<<< HEAD
+>>>>>>> origin/information_report/refactor
+=======
 >>>>>>> origin/information_report/refactor
 
 @Component({
@@ -51,6 +57,9 @@ export interface ConfiguracionSistema {
                    placeholder="Key" 
                    class="search-input" />
           </div>
+<<<<<<< HEAD
+>>>>>>> origin/information_report/refactor
+=======
 >>>>>>> origin/information_report/refactor
         </div>
 
@@ -126,6 +135,9 @@ export interface ConfiguracionSistema {
             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
               <label style="font-size: 0.85rem; color: #475569; font-weight: 500;">Key</label>
               <input type="text" [(ngModel)]="form.key" style="padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box;" placeholder="Ej. BaseUrl">
+<<<<<<< HEAD
+>>>>>>> origin/information_report/refactor
+=======
 >>>>>>> origin/information_report/refactor
             </div>
             <div class="setting-item">
@@ -168,6 +180,7 @@ export interface ConfiguracionSistema {
     </div>
   `,
   styles: [`
+<<<<<<< HEAD
 <<<<<<< HEAD
     .module-page { padding: 2rem; max-width: 900px; margin: 0 auto; }
     .module-header { margin-bottom: 3rem; text-align: center; }
@@ -224,6 +237,23 @@ export class ConfiguracionComponent {
     .pag-dots { font-size:.85rem; color:#94a3b8; font-weight:700; padding:0 .2rem; }
   `]
 })
+=======
+    .animate-move-up { animation: moveUp .3s ease-out; }
+    @keyframes moveUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .search-input { border:none; background:transparent; font-size:.9rem; outline:none; padding: 0.5rem; width: 100%; border-bottom: 2px solid transparent; transition: border-color 0.2s; color: #334155; }
+    .search-input:focus { border-bottom-color: #5cb85c; }
+    .search-input::placeholder { color: #94a3b8; }
+
+    .pagination-container { display:flex; justify-content:center; align-items:center; gap:.4rem; margin-top:1.5rem; }
+    .pag-btn { height:2.1rem; min-width:2.1rem; padding:0 .5rem; border-radius:4px; border:1px solid #cbd5e1; background:white; color:#475569; font-weight:600; font-size:.85rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+    .pag-btn:hover:not(:disabled) { background:#f8fafc; color:#0f172a; }
+    .pag-btn:disabled { opacity:.4; cursor:not-allowed; }
+    .pag-btn.active { background:#5cb85c; border-color:#5cb85c; color:white; }
+    .pag-dots { font-size:.85rem; color:#94a3b8; font-weight:700; padding:0 .2rem; }
+  `]
+})
+>>>>>>> origin/information_report/refactor
 export class ConfiguracionComponent implements OnInit {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:5007/api/v1/produccion/referencias/configuracion';
@@ -347,6 +377,9 @@ export class ConfiguracionComponent implements OnInit {
     if (current < total - 2) pages.push('...');
     if (total > 1) pages.push(total);
     return pages;
+<<<<<<< HEAD
+>>>>>>> origin/information_report/refactor
+=======
 >>>>>>> origin/information_report/refactor
   }
 }

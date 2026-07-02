@@ -31,6 +31,9 @@ import { SilosCatalogoComponent } from './features/produccion/catalogos/silos/si
 import { OperariosCatalogoComponent } from './features/produccion/catalogos/operarios/operarios.component';
 import { ProductosCatalogoComponent } from './features/produccion/catalogos/productos/productos.component';
 import { ReportesPlaceholderComponent } from './features/reportes-hc/placeholder/reportes-placeholder.component';
+<<<<<<< HEAD
+>>>>>>> origin/information_report/refactor
+=======
 >>>>>>> origin/information_report/refactor
 
 export const routes: Routes = [
@@ -129,6 +132,9 @@ export const routes: Routes = [
         path: 'reportes-hc/etiquetado/ordenes', 
         loadComponent: () => import('./features/reportes-hc/etiquetado/ordenes/ordenes-etiquetado.component').then(m => m.OrdenesEtiquetadoComponent)
       },
+<<<<<<< HEAD
+>>>>>>> origin/information_report/refactor
+=======
 >>>>>>> origin/information_report/refactor
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]

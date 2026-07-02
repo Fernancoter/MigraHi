@@ -440,6 +440,9 @@ export class SidebarComponent {
   descargablesExpanded = false;
   resumenesExpanded = false;
   etiquetadoExpanded = false;
+<<<<<<< HEAD
+>>>>>>> origin/information_report/refactor
+=======
 >>>>>>> origin/information_report/refactor
 
   constructor(private navService: NavigationService) {
