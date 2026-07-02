@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed, HostListener } from '@angu
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Turno } from '../../../../core/services/produccion-config.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-turnos-catalogo',
@@ -34,7 +35,7 @@ import { ProduccionConfigService, Turno } from '../../../../core/services/produc
               </button>
               @if (showExportOptions()) {
                 <div class="col-popover animate-slide-up">
-                  <div class="dd-item" (click)="exportCSV()">Excel (CSV)</div>
+                  <div class="dd-item" (click)="exportCSV()">Excel</div>
                   <div class="dd-item" (click)="exportPDF()">PDF</div>
                 </div>
               }
@@ -802,26 +803,19 @@ export class TurnosCatalogoComponent implements OnInit {
 
   exportCSV() {
     this.showExportOptions.set(false);
-    const cols: string[] = [];
-    if (this.isColVisible('nombre'))    cols.push('Turno');
-    if (this.isColVisible('horaInicio')) cols.push('Hora Inicio');
-    if (this.isColVisible('horaFin'))   cols.push('Hora Fin');
-    let csv = '\uFEFF' + cols.join(';') + '\n';
-    this.filteredItems().forEach(t => {
-      const row: string[] = [];
-      if (this.isColVisible('nombre'))    row.push(t.nombre);
-      if (this.isColVisible('horaInicio')) row.push(t.horaInicio);
-      if (this.isColVisible('horaFin'))   row.push(t.horaFin);
-      csv += row.join(';') + '\n';
-    });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `turnos_${new Date().toISOString().slice(0,10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    
+    const dataToExport = this.filteredItems().map(item => ({
+      ID: item.id,
+      Turno: item.nombre,
+      HoraInicio: item.horaInicio,
+      HoraFin: item.horaFin
+    }));
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Turnos');
+
+    XLSX.writeFile(wb, `turnos_${new Date().toISOString().slice(0,10)}.xlsx`);
   }
 
   exportPDF() {

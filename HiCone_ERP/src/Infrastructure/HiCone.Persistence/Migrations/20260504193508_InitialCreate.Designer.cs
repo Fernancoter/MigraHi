@@ -1156,6 +1156,7 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.Property<string>("CargaObservaciones")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("carga_observaciones");
@@ -1181,6 +1182,17 @@ namespace HiCone.Persistence.Migrations
                     b.Property<string>("Conductor")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("conductor");
+=======
+                    b.Property<string>("ClienteGrupo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("cliente_grupo");
+
+                    b.Property<string>("ClienteNombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("cliente_nombre");
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
@@ -1194,6 +1206,7 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("deleted_at");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.Property<string>("Destino")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("destino");
@@ -1213,11 +1226,18 @@ namespace HiCone.Persistence.Migrations
                     b.Property<int>("Estatus")
                         .HasColumnType("int")
                         .HasColumnName("estatus");
+=======
+                    b.Property<string>("DestinoEnvia")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("destino_envia");
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.Property<string>("FolioCarga")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("folio_carga");
@@ -1233,6 +1253,12 @@ namespace HiCone.Persistence.Migrations
                     b.Property<DateTime?>("HoraInicio")
                         .HasColumnType("datetime2")
                         .HasColumnName("hora_inicio");
+=======
+                    b.Property<string>("Folio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("folio");
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
@@ -1331,14 +1357,18 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("embarque_id");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.Property<DateTime?>("FechaValidacion")
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_validacion");
 
+=======
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
                         .HasColumnName("is_deleted");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.Property<Guid?>("ProductoId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("producto_id");
@@ -1351,6 +1381,12 @@ namespace HiCone.Persistence.Migrations
                     b.Property<Guid?>("ProductoTerminadoId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("producto_terminado_id");
+=======
+                    b.Property<string>("ProductoNombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("producto_nombre");
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")
@@ -1374,12 +1410,15 @@ namespace HiCone.Persistence.Migrations
                     b.HasIndex("EmbarqueId")
                         .HasDatabaseName("ix_embarque_detalles_embarque_id");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.HasIndex("ProductoId")
                         .HasDatabaseName("ix_embarque_detalles_producto_id");
 
                     b.HasIndex("ProductoTerminadoId")
                         .HasDatabaseName("ix_embarque_detalles_producto_terminado_id");
 
+=======
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
                     b.ToTable("embarque_detalles", (string)null);
                 });
 
@@ -1402,14 +1441,18 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("deleted_at");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.Property<Guid?>("EmbarqueDetalleId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("embarque_detalle_id");
 
+=======
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
                     b.Property<Guid>("EmbarqueId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("embarque_id");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.Property<string>("EscaneadoPor")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("escaneado_por");
@@ -1418,10 +1461,20 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_escaneo");
 
+=======
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
                         .HasColumnName("is_deleted");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
+=======
+                    b.Property<string>("NoPallet")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("no_pallet");
+
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
                     b.Property<Guid>("PaletId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("palet_id");
@@ -1445,9 +1498,12 @@ namespace HiCone.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_embarque_pallets");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.HasIndex("EmbarqueDetalleId")
                         .HasDatabaseName("ix_embarque_pallets_embarque_detalle_id");
 
+=======
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
                     b.HasIndex("EmbarqueId")
                         .HasDatabaseName("ix_embarque_pallets_embarque_id");
 
@@ -1795,22 +1851,230 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("deleted_at");
 
-                    b.Property<string>("Descripcion")
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
+=======
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("NoSerie")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("descripcion");
+                        .HasColumnName("no_serie");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit")
-                        .HasColumnName("is_active");
+                    b.Property<string>("Observaciones")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("observaciones");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_carretes");
+
+                    b.ToTable("carretes", (string)null);
+                });
+
+            modelBuilder.Entity("HiCone.Domain.Entities.Produccion.CatEstadoMaterial", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("deleted_at");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
                         .HasColumnName("is_deleted");
 
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("nombre");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_cat_estados_material");
+
+                    b.ToTable("cat_estados_material", (string)null);
+                });
+
+            modelBuilder.Entity("HiCone.Domain.Entities.Produccion.CatTipoMaterial", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("nombre");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_cat_tipos_material");
+
+                    b.ToTable("cat_tipos_material", (string)null);
+                });
+
+            modelBuilder.Entity("HiCone.Domain.Entities.Produccion.CatalogoClave", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<int>("Orden")
+                        .HasColumnType("int")
+                        .HasColumnName("orden");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<string>("Valor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("valor");
+
+                    b.HasKey("Id")
+                        .HasName("pk_catalogo_claves");
+
+                    b.ToTable("catalogo_claves", (string)null);
+                });
+
+            modelBuilder.Entity("HiCone.Domain.Entities.Produccion.CausaInterrupcion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("deleted_at");
+
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("descripcion");
+
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_active");
+=======
+                    b.Property<bool>("Extrusora")
+                        .HasColumnType("bit")
+                        .HasColumnName("extrusora");
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_deleted");
+
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.Property<int>("OrdenVisual")
                         .HasColumnType("int")
                         .HasColumnName("orden_visual");
+=======
+                    b.Property<bool>("Prensa")
+                        .HasColumnType("bit")
+                        .HasColumnName("prensa");
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")
@@ -2700,7 +2964,24 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("deleted_at");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.Property<DateTime>("Fecha")
+=======
+                    b.Property<decimal>("Eficiencia")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("eficiencia");
+
+                    b.Property<string>("EtiquetadoraActiva")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("etiquetadora_activa");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("fecha_inicio");
+
+                    b.Property<DateTime>("FechaOrden")
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha");
 
@@ -2708,10 +2989,19 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_completada");
 
+                    b.Property<DateTime>("FechaTermina")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("fecha_termina");
+
+                    b.Property<decimal>("HorasUtiles")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("horas_utiles");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
                         .HasColumnName("is_deleted");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.Property<string>("Observaciones")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("observaciones");
@@ -2723,10 +3013,39 @@ namespace HiCone.Persistence.Migrations
                     b.Property<Guid?>("PrensadoId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("prensado_id");
+=======
+                    b.Property<string>("NoOrden")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("no_orden");
+
+                    b.Property<string>("Observaciones")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("observaciones");
+
+                    b.Property<string>("OperadorNombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("operador_nombre");
+
+                    b.Property<int>("PiezasBuenas")
+                        .HasColumnType("int")
+                        .HasColumnName("piezas_buenas");
+
+                    b.Property<int>("PiezasMolino")
+                        .HasColumnType("int")
+                        .HasColumnName("piezas_molino");
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("tenant_id");
+
+                    b.Property<string>("TurnoNombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("turno_nombre");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -2735,6 +3054,16 @@ namespace HiCone.Persistence.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("updated_by");
+
+                    b.Property<string>("VelLineaDos")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("vel_linea_dos");
+
+                    b.Property<string>("VelLineaUno")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("vel_linea_uno");
 
                     b.HasKey("Id")
                         .HasName("pk_ordenes_etiquetado");
@@ -2959,6 +3288,129 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("is_deleted");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
+=======
+                    b.Property<Guid?>("LoteId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("lote_id");
+
+                    b.Property<string>("ProductoNombre")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("producto_nombre");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("tipo");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_palets");
+
+                    b.HasIndex("LoteId")
+                        .HasDatabaseName("ix_palets_lote_id");
+
+                    b.ToTable("palets", (string)null);
+                });
+
+            modelBuilder.Entity("HiCone.Domain.Entities.Produccion.PaletCarrete", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("CarreteId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("carrete_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<Guid>("PaletId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("palet_id");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_palet_carretes");
+
+                    b.HasIndex("CarreteId")
+                        .HasDatabaseName("ix_palet_carretes_carrete_id");
+
+                    b.HasIndex("PaletId")
+                        .HasDatabaseName("ix_palet_carretes_palet_id");
+
+                    b.ToTable("palet_carretes", (string)null);
+                });
+
+            modelBuilder.Entity("HiCone.Domain.Entities.Produccion.Prensa", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<string>("Imagen")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("imagen");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("Marca")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("marca");
+
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
                     b.Property<string>("Modelo")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("modelo");
@@ -4618,12 +5070,17 @@ namespace HiCone.Persistence.Migrations
             modelBuilder.Entity("HiCone.Domain.Entities.Logistica.EmbarqueDetalle", b =>
                 {
                     b.HasOne("HiCone.Domain.Entities.Logistica.Embarque", "Embarque")
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                         .WithMany("Detalles")
+=======
+                        .WithMany()
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
                         .HasForeignKey("EmbarqueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_embarque_detalles_embarques_embarque_id");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.HasOne("HiCone.Domain.Entities.Produccion.Producto", "Producto")
                         .WithMany()
                         .HasForeignKey("ProductoId")
@@ -4639,10 +5096,14 @@ namespace HiCone.Persistence.Migrations
                     b.Navigation("Producto");
 
                     b.Navigation("ProductoTerminado");
+=======
+                    b.Navigation("Embarque");
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
                 });
 
             modelBuilder.Entity("HiCone.Domain.Entities.Logistica.EmbarquePallet", b =>
                 {
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.HasOne("HiCone.Domain.Entities.Logistica.EmbarqueDetalle", "EmbarqueDetalle")
                         .WithMany()
                         .HasForeignKey("EmbarqueDetalleId")
@@ -4650,13 +5111,21 @@ namespace HiCone.Persistence.Migrations
 
                     b.HasOne("HiCone.Domain.Entities.Logistica.Embarque", "Embarque")
                         .WithMany("Pallets")
+=======
+                    b.HasOne("HiCone.Domain.Entities.Logistica.Embarque", "Embarque")
+                        .WithMany()
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
                         .HasForeignKey("EmbarqueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_embarque_pallets_embarques_embarque_id");
 
                     b.HasOne("HiCone.Domain.Entities.Produccion.Palet", "Palet")
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                         .WithMany("EmbarquePallets")
+=======
+                        .WithMany()
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
                         .HasForeignKey("PaletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -4664,8 +5133,11 @@ namespace HiCone.Persistence.Migrations
 
                     b.Navigation("Embarque");
 
+<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260504193508_InitialCreate.Designer.cs
                     b.Navigation("EmbarqueDetalle");
 
+=======
+>>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/ApplicationDbContextModelSnapshot.cs
                     b.Navigation("Palet");
                 });
 
@@ -4936,6 +5408,27 @@ namespace HiCone.Persistence.Migrations
 
                     b.HasOne("HiCone.Domain.Entities.Produccion.Palet", "Palet")
                         .WithMany("PaletCarretes")
+                        .HasForeignKey("PaletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_palet_carretes_palets_palet_id");
+
+                    b.Navigation("Carrete");
+
+                    b.Navigation("Palet");
+                });
+
+            modelBuilder.Entity("HiCone.Domain.Entities.Produccion.PaletCarrete", b =>
+                {
+                    b.HasOne("HiCone.Domain.Entities.Produccion.Carrete", "Carrete")
+                        .WithMany()
+                        .HasForeignKey("CarreteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_palet_carretes_carretes_carrete_id");
+
+                    b.HasOne("HiCone.Domain.Entities.Produccion.Palet", "Palet")
+                        .WithMany()
                         .HasForeignKey("PaletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()

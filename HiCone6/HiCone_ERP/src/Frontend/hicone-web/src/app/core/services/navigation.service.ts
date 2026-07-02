@@ -3,7 +3,11 @@ import { Router, NavigationEnd } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
+<<<<<<< HEAD
 export type ModuleType = 'INVENTARIO' | 'EXTRUSIÓN' | 'SISTEMA' | 'SEGURIDAD' | null;
+=======
+export type ModuleType = 'INVENTARIO' | 'EXTRUSIÓN' | 'PRODUCCIÓN' | 'SISTEMA' | 'SEGURIDAD' | 'REPORTES HC' | null;
+>>>>>>> origin/information_report/refactor
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +40,9 @@ export class NavigationService {
   }
 
   private detectModule(url: string) {
-    if (url.includes('/seguridad')) {
+    if (url.includes('/reportes-hc')) {
+      this.activeModuleSubject.next('REPORTES HC');
+    } else if (url.includes('/seguridad')) {
       this.activeModuleSubject.next('SEGURIDAD');
     } else if (url.includes('/inventario') || url.includes('/silos')) {
       this.activeModuleSubject.next('INVENTARIO');

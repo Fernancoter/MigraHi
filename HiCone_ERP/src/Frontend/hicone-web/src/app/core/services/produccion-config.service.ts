@@ -225,4 +225,14 @@ export class ProduccionConfigService {
 
   getMaterialEstados() { return this.http.get<{id: string, nombre: string}[]>(`${this.base}/catalogos/material-estados`); }
   getMaterialTipos() { return this.http.get<{id: string, nombre: string}[]>(`${this.base}/catalogos/material-tipos`); }
+
+  // ── CAUSAS INTERRUPCIÓN ──────────────────────────────────────────────────────
+  getCausasInterrupcion() { return this.http.get<any[]>(`${this.base}/catalogos/causas-interrupcion`); }
+  createCausaInterrupcion(causa: any) { return this.http.post<string>(`${this.base}/catalogos/causas-interrupcion`, causa); }
+  updateCausaInterrupcion(id: string, causa: any) { return this.http.put(`${this.base}/catalogos/causas-interrupcion/${id}`, causa); }
+  deleteCausaInterrupcion(id: string) { return this.http.delete(`${this.base}/catalogos/causas-interrupcion/${id}`); }
+
+  // ── OBSERVACIONES ────────────────────────────────────────────────────────────
+  getExtrusorasObservaciones() { return this.http.get<any[]>(`${this.base}/observaciones/extrusoras`); }
+  getPrensasObservaciones() { return this.http.get<any[]>(`${this.base}/observaciones/prensas`); }
 }

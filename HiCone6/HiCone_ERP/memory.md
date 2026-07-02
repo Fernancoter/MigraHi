@@ -1,10 +1,29 @@
 # Project Memory: HiCone ERP Modernization
 
 ## Rama Activa
+<<<<<<< HEAD
 `security/refactor` — compilación estable, sincronizada con `main`.
 
 ## Estado Actual
 ✅ **Módulo de Seguridad COMPLETADO** (commit: 3a869aa)
+=======
+`information_report/refactor` — activa y con los servidores del backend (5007) y frontend (4200) iniciados.
+
+## Estado Actual (2026-06-29)
+- **Backend:** Operativo (Puerto 5007, levantado en segundo plano). Controladores y endpoints de reportes operativos (DRR, Pallet Embarque, Carrete Pallet, Existencias) completamente integrados.
+- **Frontend:** Operativo (Puerto 4200, levantado en segundo plano). Módulo de "Reportes HC" ampliado con la nueva pantalla de "Existencia" y columnas agregadas en el "Resumen de Extrusión".
+- **Base de Datos:** Migración `AddEmbarqueProperties` aplicada exitosamente sobre el servidor local de SQL Server.
+
+✅ **Reporte de Existencia y Columnas de Extrusión COMPLETADOS** (2026-06-29)
+- [x] **Backend API**: Implementado listado de cortes (`GET /api/v1/inventario/existencias`) y seeding automatizado de datos de Silos y Existencias.
+- [x] **Reporte Existencia Component**: Creado componente Angular Standalone con filtros de cortes y categorías, y tabs para stock en Silos y Productos.
+- [x] **Resumen Extrusión**: Integradas las columnas `revHusilloMolido` y `revHusilloVirgen` en listados, PDFs y Excel.
+- [x] **Terminal Guardian (The Customs Guard)**: Implementado interceptor de comandos en Node.js para ejecución segura y autónoma.
+- [x] **Gestión de Contexto**: El Guardian mantiene el estado del directorio actual (CWD) para navegaciones complejas.
+- [x] **Whitelist/Blacklist**: Filtro robusto que previene operaciones destructivas (rm, rf, etc.) y permite `dotnet`, `npm` y `git`.
+- [x] **Reinicio de Servidores**: Backend y Frontend operativos bajo supervisión del entorno de trabajo.
+
+>>>>>>> origin/information_report/refactor
 The project is in the initial phase of modernization/migration from a GeneXus-based ERP to a modern Angular + .NET platform. The focus is currently on the **Authentication Module**.
 
 ## Completed Tasks
@@ -72,3 +91,37 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
 - La arquitectura ahora permite escalar a múltiples aplicaciones compartiendo el mismo catálogo de permisos.
 - Se renombró el módulo legacy "GAM" a "GAM Backoffice" para mayor claridad.
 - Se forzó la recreación de la base de datos para aplicar el cambio estructural.
+<<<<<<< HEAD
+=======
+- El proyecto compila al 100% de manera exitosa y limpia (`exit code: 0`).
+- **Servidores levantados localmente**:
+  - **Backend**: Disponible en `http://localhost:5007` (dotnet run).
+  - **Frontend**: Disponible en `http://localhost:4200` (ng serve).
+- **Pruebas unitarias corregidas y pasando al 100%** (11/11 tests aprobados):
+  - Se configuró `vitest.config.ts` para evitar timeouts en Windows ejecutando en modo single-fork.
+  - Se corrigieron las importaciones rotas de componentes de listas y se mockearon las llamadas HTTP directas en los specs.
+
+
+## 2026-06-02: Implementación de Catálogo de Silos y Catálogos Materiales
+- Se rediseñó e implementó el catálogo de **Silos** en el Frontend (Angular) bajo los nuevos estándares de diseño.
+- Se implementaron los catálogos en BD para CatEstadoMaterial (Virgen, Molido, Polvo) y CatTipoMaterial (PCR, HDPE, LDPE).
+- Se configuraron los dropdowns en la vista de Silos enlazados dinámicamente con los catálogos del backend.
+- Se implementó la funcionalidad 'Archivar' (soft delete u ocultamiento de listas) para el catálogo de Silos en Backend y Frontend.
+- Los submódulos completados a la fecha son: Turnos, Prensas, Extrusoras, Operarios, Productos, Categorías y Silos.
+
+## 2026-06-03: Módulo de Referencias y Correcciones en Navegación
+- Se corrigió el bug de navegación y contexto global en navigation.service.ts que redirigía erróneamente 'Silos' a 'Inventario' al interceptar la ruta.
+- Se agregó e integró la pantalla de **Configuración** (/produccion/referencias/configuracion) con un formulario modal para agregar nuevas claves-valor.
+- Se diseñaron e implementaron exitosamente las vistas de **Extrusora Producto** y **Extrusora Mezcladora** en /produccion/referencias utilizando estructuras de datos simuladas alineadas con el diseño visual del sistema.
+- Se implementó la vista de **Prensa Producto** con su modal de información general e historial de auditoría estático, registrándose exitosamente en las rutas principales.
+- Se resolvieron errores de guardado en Extrusora Producto reiniciando el servicio Backend, y se ajustó el layout de tablas (botones de acciones a la izquierda) y modos readonly ("Visualizar") en todos los submódulos de Referencias implementados hoy.
+
+## 2026-06-09: Estandarización UI/UX y Exportación del Módulo de Producción
+- **Exportación Excel Auténtica**: Integración global de `xlsx` (SheetJS) en los 10 módulos de catálogos y referencias (Productos, Categorías, Turnos, Extrusoras, Prensas, Silos, Extrusora Producto, Extrusora Mezcladora, Prensa Producto, Producto Terminado). Ahora generan archivos `.xlsx` reales con celdas delimitadas correctamente.
+- **Limpieza de Datos**: Se erradicaron los datos hardcodeados (`getMockData`) de las vistas de referencias (Extrusora Mezcladora, Prensa Producto y Producto Terminado), enlazándolos a la carga desde las APIs correspondientes y mejorando las pantallas de carga vacías.
+- **Estandarización UI**: 
+  - Todos los botones de filtro ahora utilizan uniformemente el icono de **embudo** (SVG) en sustitución del engrane.
+  - Las acciones de las tablas (Visualizar, Modificar, Eliminar) se trasladaron a la izquierda (fijas) en Producto Terminado, con diseño en tres columnas.
+  - Implementación global de directiva de colapso automático (`ClickOutsideDirective`) en menús contextuales y selectores de columnas.
+- **Fijación de Errores TypeScript**: Se resolvieron problemas de tipado durante el build (NG5002 y TS2339) para garantizar la compilación 100% exitosa del Frontend.
+>>>>>>> origin/information_report/refactor

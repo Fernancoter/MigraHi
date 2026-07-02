@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Prensa } from '../../../../core/services/produccion-config.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-prensas-catalogo',
@@ -34,7 +35,7 @@ import { ProduccionConfigService, Prensa } from '../../../../core/services/produ
               </button>
               @if (showExportOptions()) {
                 <div class="dd-popover animate-slide-up" (click)="$event.stopPropagation()">
-                  <div class="dd-item" (click)="exportCSV()">Excel (CSV)</div>
+                  <div class="dd-item" (click)="exportCSV()">Excel</div>
                   <div class="dd-item" (click)="exportPDF()">PDF</div>
                 </div>
               }
@@ -663,26 +664,21 @@ export class PrensasCatalogoComponent implements OnInit {
 
   exportCSV() {
     this.showExportOptions.set(false);
-    let csv = '\uFEFF';
-    const heads: string[] = [];
-    if (this.isColVisible('nombre')) heads.push('Prensa');
-    if (this.isColVisible('imagen')) heads.push('Imagen');
-    if (this.isColVisible('marca'))  heads.push('Marca');
-    if (this.isColVisible('modelo')) heads.push('Modelo');
-    csv += heads.join(';') + '\n';
-    this.filteredItems().forEach(p => {
-      const row: string[] = [];
-      if (this.isColVisible('nombre')) row.push(p.nombre);
-      if (this.isColVisible('imagen')) row.push((p as any).imagen || '');
-      if (this.isColVisible('marca'))  row.push(p.marca || '');
-      if (this.isColVisible('modelo')) row.push(p.modelo || '');
-      csv += row.join(';') + '\n';
-    });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = `prensas_${new Date().toISOString().slice(0,10)}.csv`;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    
+    const dataToExport = this.filteredItems().map(item => ({
+      ID: item.id,
+      NúmeroPrensa: item.numeroPrensa || '',
+      Prensa: item.nombre,
+      Imagen: item.imagen || '',
+      Marca: item.marca || '',
+      Modelo: item.modelo || ''
+    }));
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Prensas');
+
+    XLSX.writeFile(wb, `prensas_${new Date().toISOString().slice(0,10)}.xlsx`);
   }
 
   exportPDF() {

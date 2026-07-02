@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Producto, Categoria } from '../../../../core/services/produccion-config.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-productos-catalogo',
@@ -35,7 +36,7 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
               </button>
               @if (showExportOptions()) {
                 <div class="column-selector-popover animate-slide-up">
-                  <div class="dropdown-item" (click)="exportCSV()">Excel (CSV)</div>
+                  <div class="dropdown-item" (click)="exportCSV()">Excel</div>
                   <div class="dropdown-item" (click)="exportPDF()">PDF</div>
                 </div>
               }
@@ -1375,22 +1376,29 @@ export class ProductosCatalogoComponent implements OnInit {
     });
   }
 
-  // Export options
+  // Export actions
   exportCSV() {
     this.showExportOptions.set(false);
-    let csvContent = '\uFEFFID;Clave;Nombre;Categoría;SAE;Estado\n';
-    this.filteredItems().forEach(p => {
-      csvContent += `${p.id};${p.clave};${p.nombre};${p.categoria || 'N/A'};${p.productoSAE || 'Ninguno'};${p.isActive ? 'Activo' : 'Inactivo'}\n`;
-    });
+    
+    const dataToExport = this.paginatedItems().map(item => ({
+      ID: item.id,
+      Clave: item.clave,
+      Nombre: item.nombre,
+      Categoría: item.categoria || '',
+      ProductoBase: (item as any).productoBase || '',
+      Descripción: item.descripcion || '',
+      Precio: item.precioUnitario || 0,
+      Inventario: (item as any).inventarioActual || 0,
+      Estado: item.isActive ? 'Activo' : 'Inactivo',
+      SAE: item.productoSAE || '',
+      Externa: (item as any).claveExterna || ''
+    }));
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `productos_reporte_${new Date().toISOString().slice(0,10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Productos');
+
+    XLSX.writeFile(wb, `productos_${new Date().toISOString().slice(0,10)}.xlsx`);
   }
 
   exportPDF() {

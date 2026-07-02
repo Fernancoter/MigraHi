@@ -1,5 +1,6 @@
 using HiCone.Domain.Entities.Identity;
 using HiCone.Domain.Entities.Inventario;
+using HiCone.Domain.Entities.Logistica;
 using HiCone.Domain.Entities.Produccion;
 using HiCone.Domain.Entities.Tenant;
 using Microsoft.EntityFrameworkCore;
@@ -1505,5 +1506,421 @@ public class ApplicationDbContextSeeder
             );
             await _context.SaveChangesAsync(default);
         }
+<<<<<<< HEAD
+=======
+
+        if (!await _context.CatalogoClaves.AnyAsync(c => c.Valor == "UNO"))
+        {
+            await _context.CatalogoClaves.AddRangeAsync(
+                new CatalogoClave { Valor = "UNO", Orden = 1, TenantId = defaultTenantId },
+                new CatalogoClave { Valor = "DOS", Orden = 2, TenantId = defaultTenantId },
+                new CatalogoClave { Valor = "TRES", Orden = 3, TenantId = defaultTenantId }
+            );
+            await _context.SaveChangesAsync(default);
+        }
+        else
+        {
+            // Corregir el campo Orden si ya existen pero no tienen orden asignado
+            var claves = await _context.CatalogoClaves.ToListAsync();
+            var orderMap = new Dictionary<string, int> { ["UNO"] = 1, ["DOS"] = 2, ["TRES"] = 3 };
+            bool changed = false;
+            foreach (var c in claves)
+            {
+                if (orderMap.TryGetValue(c.Valor, out var orden) && c.Orden != orden)
+                {
+                    c.Orden = orden;
+                    changed = true;
+                }
+            }
+            if (changed) await _context.SaveChangesAsync(default);
+        }
+
+        // Cleanup erroneously added values
+        var wrongClaves = await _context.CatalogoClaves.Where(c => c.Valor == "CUATRO" || c.Valor == "CINCO").ToListAsync();
+        if (wrongClaves.Any())
+        {
+            _context.CatalogoClaves.RemoveRange(wrongClaves);
+            await _context.SaveChangesAsync(default);
+        }
+
+        if (!await _context.Extrusiones.AnyAsync())
+        {
+            var extrusora = await _context.Extrusoras.FirstOrDefaultAsync() ?? new Extrusora { Nombre = "Extrusora 1", TenantId = defaultTenantId };
+            var turno = await _context.Turnos.FirstOrDefaultAsync() ?? new Turno { Nombre = "1er Turno", TenantId = defaultTenantId };
+            var operario = await _context.Operarios.FirstOrDefaultAsync() ?? new Operario { Nombre = "Juan Pérez", TenantId = defaultTenantId };
+            
+            if (_context.Entry(extrusora).State == EntityState.Detached) _context.Extrusoras.Add(extrusora);
+            if (_context.Entry(turno).State == EntityState.Detached) _context.Turnos.Add(turno);
+            if (_context.Entry(operario).State == EntityState.Detached) _context.Operarios.Add(operario);
+            await _context.SaveChangesAsync(default);
+
+            _context.Extrusiones.AddRange(
+                new Extrusion 
+                { 
+                    Fecha = DateTime.UtcNow, 
+                    ExtrusoraId = extrusora.Id, 
+                    TurnoId = turno.Id, 
+                    Producto = "Película PEBD 20um", 
+                    OperarioId = operario.Id, 
+                    Programado = 5000, 
+                    Status = ExtrusionStatus.Programada,
+                    TenantId = defaultTenantId 
+                },
+                new Extrusion 
+                { 
+                    Fecha = DateTime.UtcNow.AddHours(-1), 
+                    ExtrusoraId = extrusora.Id, 
+                    TurnoId = turno.Id, 
+                    Producto = "Bolsa Camiseta Bio", 
+                    OperarioId = operario.Id, 
+                    Producido = 1250, 
+                    EnCurso = true,
+                    Status = ExtrusionStatus.EnProceso,
+                    ExtrusionIdLegacy = 10542,
+                    TenantId = defaultTenantId 
+                },
+                new Extrusion 
+                { 
+                    Fecha = DateTime.UtcNow.AddDays(-1), 
+                    ExtrusoraId = extrusora.Id, 
+                    TurnoId = turno.Id, 
+                    Producto = "Stretch Film 18\"", 
+                    OperarioId = operario.Id, 
+                    Producido = 8000, 
+                    Status = ExtrusionStatus.Terminada,
+                    ExtrusionIdLegacy = 10540,
+                    TenantId = defaultTenantId 
+                }
+            );
+            await _context.SaveChangesAsync(default);
+        }
+
+        // Prensas y Prensados
+        if (!await _context.Prensados.AnyAsync())
+        {
+            var prensa1 = await _context.Prensas.FirstOrDefaultAsync() ?? new Prensa { Nombre = "Prensa 1", TenantId = defaultTenantId };
+            var prensa2 = new Prensa { Nombre = "Prensa 2", TenantId = defaultTenantId };
+            
+            if (_context.Entry(prensa1).State == EntityState.Detached) _context.Prensas.Add(prensa1);
+            _context.Prensas.Add(prensa2);
+            await _context.SaveChangesAsync(default);
+
+            var turno = await _context.Turnos.FirstOrDefaultAsync() ?? new Turno { Nombre = "1er Turno", TenantId = defaultTenantId };
+            var operario = await _context.Operarios.FirstOrDefaultAsync() ?? new Operario { Nombre = "Juan Pérez", TenantId = defaultTenantId };
+
+            _context.Prensados.AddRange(
+                new Prensado 
+                { 
+                    Fecha = DateTime.UtcNow, 
+                    PrensaId = prensa1.Id, 
+                    TurnoId = turno.Id, 
+                    Producto = "Bobina Prensada 40um", 
+                    OperarioId = operario.Id, 
+                    Programado = 8000, 
+                    Status = PrensadoStatus.Programada,
+                    Calibre = 0.040m,
+                    Ancho = "1200/02",
+                    Longitud = 2000,
+                    TenantId = defaultTenantId 
+                },
+                new Prensado 
+                { 
+                    Fecha = DateTime.UtcNow.AddHours(-1), 
+                    PrensaId = prensa1.Id, 
+                    TurnoId = turno.Id, 
+                    Producto = "Bobina Prensada 60um", 
+                    OperarioId = operario.Id, 
+                    Producido = 3500, 
+                    EnCurso = true,
+                    Status = PrensadoStatus.EnProceso,
+                    Calibre = 0.060m,
+                    Ancho = "1500/03",
+                    Longitud = 3000,
+                    TenantId = defaultTenantId 
+                },
+                new Prensado 
+                { 
+                    Fecha = DateTime.UtcNow.AddDays(-1), 
+                    PrensaId = prensa2.Id, 
+                    TurnoId = turno.Id, 
+                    Producto = "Bobina Prensada 80um", 
+                    OperarioId = operario.Id, 
+                    Producido = 10000, 
+                    Status = PrensadoStatus.Terminada,
+                    Calibre = 0.080m,
+                    Ancho = "1800/04",
+                    Longitud = 4000,
+                    TenantId = defaultTenantId 
+                }
+            );
+            await _context.SaveChangesAsync(default);
+        }
+
+        // Seed CatEstadosMaterial
+        if (!await _context.CatEstadosMaterial.AnyAsync())
+        {
+            _context.CatEstadosMaterial.AddRange(
+                new CatEstadoMaterial { Id = Guid.NewGuid(), Nombre = "virgen(pallet)", TenantId = defaultTenantId },
+                new CatEstadoMaterial { Id = Guid.NewGuid(), Nombre = "molido", TenantId = defaultTenantId }
+            );
+            await _context.SaveChangesAsync(default);
+        }
+
+        // Seed CatTiposMaterial
+        if (!await _context.CatTiposMaterial.AnyAsync())
+        {
+            _context.CatTiposMaterial.AddRange(
+                new CatTipoMaterial { Id = Guid.NewGuid(), Nombre = "PCR", TenantId = defaultTenantId },
+                new CatTipoMaterial { Id = Guid.NewGuid(), Nombre = "DOW", TenantId = defaultTenantId },
+                new CatTipoMaterial { Id = Guid.NewGuid(), Nombre = "PCR 100%", TenantId = defaultTenantId }
+            );
+            await _context.SaveChangesAsync(default);
+        }
+
+        // Seed CausasInterrupcion
+        var causas = new List<string>
+        {
+            "Ajustes máquina",
+            "Arranque",
+            "Calidad",
+            "Cambio de cuchillas",
+            "Cambio de producto",
+            "Falla eléctrica",
+            "Falta de personal",
+            "Incapacidad",
+            "Mantto correctivo",
+            "Mantto preventivo",
+            "Mantto troquel",
+            "Molinos",
+            "Operador auxilia etiquetado",
+            "Operador auxilia extrusión",
+            "Operador auxilia prensa",
+            "Otros",
+            "Plantilla incompleta",
+            "Silos",
+            "Sin programa",
+            "Vacaciones"
+        };
+
+        bool anyNewCausa = false;
+        foreach (var desc in causas)
+        {
+            if (!await _context.CausasInterrupcion.AnyAsync(c => c.Descripcion == desc))
+            {
+                _context.CausasInterrupcion.Add(new CausaInterrupcion
+                {
+                    Id = Guid.NewGuid(),
+                    Descripcion = desc,
+                    Prensa = true,
+                    Extrusora = true,
+                    TenantId = defaultTenantId
+                });
+                anyNewCausa = true;
+            }
+        }
+        if (anyNewCausa)
+        {
+            await _context.SaveChangesAsync(default);
+        }
+
+        // SEEDING REPORTES OPERATIVOS (Embarques, Pallets, Carretes, Etiquetado)
+        if (!await _context.Embarques.AnyAsync())
+        {
+            var embarques = new List<Embarque>();
+            for (int i = 1; i <= 10; i++)
+            {
+                var emb = new Embarque
+                {
+                    Id = Guid.NewGuid(),
+                    Folio = $"EMB-{202600 + i}",
+                    Fecha = DateTime.UtcNow.AddDays(-i),
+                    ClienteNombre = $"Cliente Industrial {i}",
+                    ClienteGrupo = i % 2 == 0 ? "GRUPO A" : "GRUPO B",
+                    DestinoEnvia = $"Planta Distribuidora Norte #{i}",
+                    TenantId = defaultTenantId
+                };
+                embarques.Add(emb);
+                _context.Embarques.Add(emb);
+            }
+            await _context.SaveChangesAsync(default);
+
+            var palets = new List<Palet>();
+            for (int i = 1; i <= 15; i++)
+            {
+                var pal = new Palet
+                {
+                    Id = Guid.NewGuid(),
+                    Codigo = $"PLT-SR-{1000 + i}",
+                    Tipo = i % 3 == 0 ? "MADERA HICONE" : "PLÁSTICO REFORZADO",
+                    HoraInicioEnsamble = DateTime.UtcNow.AddDays(-i).AddHours(-3),
+                    HoraFinEnsamble = DateTime.UtcNow.AddDays(-i),
+                    Estado = i % 4 == 0 ? "Embarcado" : "Terminado",
+                    ProductoNombre = $"Producto Terminado Grado {i}",
+                    TenantId = defaultTenantId
+                };
+                palets.Add(pal);
+                _context.Palets.Add(pal);
+            }
+            await _context.SaveChangesAsync(default);
+
+            // Seed EmbarquePallets
+            for (int i = 0; i < 10; i++)
+            {
+                var embPal = new EmbarquePallet
+                {
+                    Id = Guid.NewGuid(),
+                    EmbarqueId = embarques[i].Id,
+                    PaletId = palets[i].Id,
+                    NoPallet = $"PALLET-NO-{100 + i}",
+                    TenantId = defaultTenantId
+                };
+                _context.EmbarquePallets.Add(embPal);
+            }
+
+            // Seed Carretes
+            var carretes = new List<Carrete>();
+            for (int i = 1; i <= 40; i++)
+            {
+                var carr = new Carrete
+                {
+                    Id = Guid.NewGuid(),
+                    Codigo = $"CAR-{2000 + i}",
+                    NoSerie = $"CR-SER-{50000 + i}",
+                    Observaciones = i % 5 == 0 ? "Detalle menor en empaque" : "Correcto",
+                    TenantId = defaultTenantId
+                };
+                carretes.Add(carr);
+                _context.Carretes.Add(carr);
+            }
+            await _context.SaveChangesAsync(default);
+
+            // Seed PaletCarretes (each pallet gets 2-3 carretes)
+            int carreteIndex = 0;
+            for (int i = 0; i < palets.Count; i++)
+            {
+                for (int j = 0; j < 2 && carreteIndex < carretes.Count; j++)
+                {
+                    var pc = new PaletCarrete
+                    {
+                        Id = Guid.NewGuid(),
+                        PaletId = palets[i].Id,
+                        CarreteId = carretes[carreteIndex].Id,
+                        TenantId = defaultTenantId
+                    };
+                    _context.PaletCarretes.Add(pc);
+                    carreteIndex++;
+                }
+            }
+
+            // Seed OrdenesEtiquetado
+            for (int i = 1; i <= 12; i++)
+            {
+                var ord = new OrdenEtiquetado
+                {
+                    Id = Guid.NewGuid(),
+                    FechaOrden = DateTime.UtcNow.AddDays(-i),
+                    NoOrden = $"ORD-ETI-{3000 + i}",
+                    FechaInicio = DateTime.UtcNow.AddDays(-i).AddHours(-8),
+                    FechaTermina = DateTime.UtcNow.AddDays(-i),
+                    OperadorNombre = $"Operario Etiquetado {i}",
+                    TurnoNombre = i % 3 == 1 ? "1er Turno" : (i % 3 == 2 ? "2do Turno" : "3er Turno"),
+                    PiezasBuenas = 900 + (i * 25),
+                    PiezasMolino = 5 + (i * 2),
+                    EtiquetadoraActiva = $"Etiquetadora #{(i % 2 == 0 ? "A" : "B")}",
+                    VelLineaUno = $"{(50 + i * 2)} m/min",
+                    VelLineaDos = $"{(45 + i * 2)} m/min",
+                    HorasUtiles = 7.5m,
+                    Eficiencia = 94.5m + (i * 0.3m) > 100m ? 99.8m : 94.5m + (i * 0.3m),
+                    Observaciones = "Turno completado sin paradas críticas",
+                    TenantId = defaultTenantId
+                };
+                _context.OrdenesEtiquetado.Add(ord);
+            }
+            await _context.SaveChangesAsync(default);
+        }
+
+        // Seed Silos
+        if (!await _context.Silos.AnyAsync())
+        {
+            _context.Silos.AddRange(
+                new Silo 
+                { 
+                    Nombre = "Silo A", 
+                    Codigo = "SIL-A", 
+                    CapacidadMaxima = 10000, 
+                    ExistenciaActual = 6000, 
+                    KgMinimo = 1000, 
+                    KgMaximo = 9500, 
+                    EstadoMaterial = "virgen(pallet)", 
+                    TipoMaterial = "PCR", 
+                    Activo = true, 
+                    Estado = "Operativo", 
+                    Ubicacion = "Zona Norte", 
+                    TenantId = defaultTenantId 
+                },
+                new Silo 
+                { 
+                    Nombre = "Silo B", 
+                    Codigo = "SIL-B", 
+                    CapacidadMaxima = 12000, 
+                    ExistenciaActual = 8000, 
+                    KgMinimo = 1500, 
+                    KgMaximo = 11000, 
+                    EstadoMaterial = "molido", 
+                    TipoMaterial = "DOW", 
+                    Activo = true, 
+                    Estado = "Operativo", 
+                    Ubicacion = "Zona Sur", 
+                    TenantId = defaultTenantId 
+                }
+            );
+            await _context.SaveChangesAsync(default);
+        }
+
+        // Seed Existencias
+        if (!await _context.Existencias.AnyAsync())
+        {
+            var existenciaId = Guid.NewGuid();
+            var ext = new Existencia
+            {
+                Id = existenciaId,
+                FechaHora = DateTime.UtcNow.AddDays(-1),
+                Usuario = "admin",
+                Estado = "Cerrado",
+                Observaciones = "Corte de inventario fin de mes",
+                TenantId = defaultTenantId
+            };
+            _context.Existencias.Add(ext);
+            await _context.SaveChangesAsync(default);
+
+            var silos = await _context.Silos.ToListAsync();
+            foreach (var silo in silos)
+            {
+                _context.ExistenciasSilos.Add(new ExistenciaSilo
+                {
+                    Id = Guid.NewGuid(),
+                    ExistenciaId = existenciaId,
+                    SiloId = silo.Id,
+                    Cantidad = silo.CapacidadMaxima * 0.6m,
+                    TenantId = defaultTenantId
+                });
+            }
+
+            var products = await _context.Productos.Take(5).ToListAsync();
+            foreach (var prod in products)
+            {
+                _context.ExistenciaProductos.Add(new ExistenciaProducto
+                {
+                    Id = Guid.NewGuid(),
+                    ExistenciaId = existenciaId,
+                    ProductoId = prod.Id,
+                    CantidadReal = 500,
+                    CantidadSistema = 480,
+                    TenantId = defaultTenantId
+                });
+            }
+            await _context.SaveChangesAsync(default);
+        }
+>>>>>>> origin/information_report/refactor
     }
 }

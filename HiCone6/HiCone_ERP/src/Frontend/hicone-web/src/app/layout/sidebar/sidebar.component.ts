@@ -104,6 +104,99 @@ import { NavigationService } from '../../core/services/navigation.service';
           </a>
         </ng-container>
 
+        <!-- ── REPORTES HC (Informes Operativos) ─────────────────────── -->
+        <ng-container *ngIf="(activeModule$ | async) === 'REPORTES HC'">
+          <!-- Inicio -->
+          <a routerLink="/reportes-hc/inicio" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-item" title="Inicio">
+            <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+            <span class="item-label">Inicio</span>
+          </a>
+
+          <!-- Observaciones (desplegable) -->
+          <div class="collapsible-group">
+            <div class="nav-item group-header" (click)="observacionesExpanded=!observacionesExpanded" [class.expanded]="observacionesExpanded" title="Observaciones">
+              <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+              <span class="item-label">Observaciones</span>
+              <span class="chevron" [class.rotated]="observacionesExpanded">▾</span>
+            </div>
+            <div class="group-items animate-dropdown" *ngIf="observacionesExpanded">
+              <a routerLink="/reportes-hc/observaciones/causas-interrupcion" routerLinkActive="active" class="nav-subitem" title="Causas Interrupción">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg></div>
+                <span class="item-label">Causas Interrupción</span>
+              </a>
+              <a routerLink="/reportes-hc/observaciones/extrusoras" routerLinkActive="active" class="nav-subitem" title="Extrusoras">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg></div>
+                <span class="item-label">Extrusoras</span>
+              </a>
+              <a routerLink="/reportes-hc/observaciones/prensas" routerLinkActive="active" class="nav-subitem" title="Prensas">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+                <span class="item-label">Prensas</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Descargables (desplegable) -->
+          <div class="collapsible-group">
+            <div class="nav-item group-header" (click)="descargablesExpanded=!descargablesExpanded" [class.expanded]="descargablesExpanded" title="Descargables">
+              <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+              <span class="item-label">Descargables</span>
+              <span class="chevron" [class.rotated]="descargablesExpanded">▾</span>
+            </div>
+            <div class="group-items animate-dropdown" *ngIf="descargablesExpanded">
+              <a routerLink="/reportes-hc/descargables/drr" routerLinkActive="active" class="nav-subitem" title="DRR">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+                <span class="item-label">DRR</span>
+              </a>
+              <a routerLink="/reportes-hc/descargables/pallet-embarque" routerLinkActive="active" class="nav-subitem" title="Pallet_Embarque">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+                <span class="item-label">Pallet_Embarque</span>
+              </a>
+              <a routerLink="/reportes-hc/descargables/carrete-pallet" routerLinkActive="active" class="nav-subitem" title="Carrete_Pallet">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+                <span class="item-label">Carrete_Pallet</span>
+              </a>
+              <a routerLink="/reportes-hc/existencia" routerLinkActive="active" class="nav-subitem" title="Existencia">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+                <span class="item-label">Existencia</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Resúmenes (desplegable) -->
+          <div class="collapsible-group">
+            <div class="nav-item group-header" (click)="resumenesExpanded=!resumenesExpanded" [class.expanded]="resumenesExpanded" title="Resúmenes">
+              <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+              <span class="item-label">Resúmenes</span>
+              <span class="chevron" [class.rotated]="resumenesExpanded">▾</span>
+            </div>
+            <div class="group-items animate-dropdown" *ngIf="resumenesExpanded">
+              <a routerLink="/reportes-hc/resumenes/extrusion" routerLinkActive="active" class="nav-subitem" title="Extrusión">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg></div>
+                <span class="item-label">Extrusión</span>
+              </a>
+              <a routerLink="/reportes-hc/resumenes/prensado" routerLinkActive="active" class="nav-subitem" title="Prensado">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+                <span class="item-label">Prensado</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Etiquetado (desplegable) -->
+          <div class="collapsible-group">
+            <div class="nav-item group-header" (click)="etiquetadoExpanded=!etiquetadoExpanded" [class.expanded]="etiquetadoExpanded" title="Etiquetado">
+              <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+              <span class="item-label">Etiquetado</span>
+              <span class="chevron" [class.rotated]="etiquetadoExpanded">▾</span>
+            </div>
+            <div class="group-items animate-dropdown" *ngIf="etiquetadoExpanded">
+              <a routerLink="/reportes-hc/etiquetado/ordenes" routerLinkActive="active" class="nav-subitem" title="Órdenes">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+                <span class="item-label">Órdenes</span>
+              </a>
+            </div>
+          </div>
+        </ng-container>
+
         <!-- Fallback System Menu -->
         <ng-container *ngIf="(activeModule$ | async) === 'SISTEMA'">
           <a routerLink="/dashboard" routerLinkActive="active" class="nav-item" title="Dashboard Global">
@@ -339,6 +432,15 @@ export class SidebarComponent {
   activeModule$;
   isSidebarVisible$;
   operacionExpanded = false;
+<<<<<<< HEAD
+=======
+  catalogosExpanded = false;
+  referenciasExpanded = false;
+  observacionesExpanded = false;
+  descargablesExpanded = false;
+  resumenesExpanded = false;
+  etiquetadoExpanded = false;
+>>>>>>> origin/information_report/refactor
 
   constructor(private navService: NavigationService) {
     this.activeModule$ = this.navService.activeModule$;
