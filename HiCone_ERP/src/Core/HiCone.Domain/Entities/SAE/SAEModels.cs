@@ -42,6 +42,7 @@ public class SaeCustomer : TenantEntity
     public string? Shipping { get; set; }
     public string? Email { get; set; }
     public string? Phone { get; set; }
+    public string? RFC { get; set; }
     public bool IsActive { get; set; } = true;
     public DateTime? FechaSincronizacion { get; set; }
 }
@@ -53,6 +54,31 @@ public class SaeProduct : TenantEntity
     public string ProductName { get; set; } = null!;
     public string? Unit { get; set; }
     public decimal Price { get; set; }
+    public decimal Cost { get; set; }
+    public string? TipoProducto { get; set; }
+    public string? Packaging { get; set; }
+    public string? SubProductType { get; set; }
+    public decimal Exist { get; set; }
+    public string? Group { get; set; }
+    public decimal PiecesPlt { get; set; }
+    public string? Product8020 { get; set; }
+    public int Pallets { get; set; }
     public bool IsActive { get; set; } = true;
     public DateTime? FechaSincronizacion { get; set; }
+}
+
+/// <summary>Presupuesto mensual por cliente y producto.</summary>
+public class SaeBudget : TenantEntity
+{
+    public string CustomerCode { get; set; } = null!;
+    public string? CustomerName { get; set; }
+    public string? ConsolidatedName { get; set; }
+    public string ProductNumber { get; set; } = null!;
+    public int BudgetYear { get; set; }
+    public int BudgetMonth { get; set; }
+    public decimal BudgetEstimated { get; set; }
+    public decimal BudgetReal { get; set; }
+    public decimal BudgetOutlook { get; set; }
+    public decimal BudgetPrice { get; set; }
+    public decimal BudgetPriceOutlook { get; set; }
 }

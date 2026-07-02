@@ -55,6 +55,8 @@ public interface IApplicationDbContext
     DbSet<Operador> Operadores { get; }
     DbSet<Turno> Turnos { get; }
     DbSet<CausaInterrupcion> CausasInterrupcion { get; }
+    DbSet<ConfiguracionSistema> ConfiguracionesSistema { get; }
+
 
     // ── Produccion — Catálogos Productos ─────────────────────────────────
     DbSet<Producto> Productos { get; }
@@ -98,6 +100,16 @@ public interface IApplicationDbContext
     DbSet<SaeRemission> SaeRemissions { get; }
     DbSet<SaeCustomer> SaeCustomers { get; }
     DbSet<SaeProduct> SaeProducts { get; }
+    DbSet<SaeBudget> SaeBudgets { get; }
+    DbSet<SaeSalesPerson> SaeSalesPersons { get; }
+
+    // Retrocompatibilidad con el módulo de configuración de producción
+    DbSet<SiloProduccion> SilosProduccion { get; }
+    DbSet<CatEstadoMaterial> CatEstadosMaterial { get; }
+    DbSet<CatTipoMaterial> CatTiposMaterial { get; }
+    DbSet<CatalogoClave> CatalogoClaves { get; }
+    DbSet<ExtrusoraOperario> ExtrusoraOperarios { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
+

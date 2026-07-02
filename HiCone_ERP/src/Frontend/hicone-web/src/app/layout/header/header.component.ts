@@ -195,13 +195,13 @@ export class HeaderComponent {
     { title: 'Embarques', icon: '🚚', route: '/embarques' },
     { title: 'Calidad', icon: '✅', route: '/calidad' },
     { title: 'Seguridad', icon: '🛡️', route: '/seguridad' },
-    { title: 'Configurar Producción', icon: '🎛️', route: '/configuracion' },
+    { title: 'Configurar Producción', icon: '🎛️', route: '/configurar-produccion/referencias/configuracion' },
     { title: 'Reportes SAE', icon: '📊', route: '/reportes-sae' },
     { title: 'Catálogos SAE', icon: '📂', route: '/catalogos-sae' },
     { title: 'Informes Operativos', icon: '📄', route: '/informes' }
   ];
 
-  constructor(private authService: AuthService, private router: Router, private navService: NavigationService) { 
+  constructor(private authService: AuthService, private router: Router, private navService: NavigationService) {
     this.currentUser$ = this.authService.currentUser$;
   }
 
@@ -243,7 +243,7 @@ export class HeaderComponent {
   onMouseLeave() {
     // Si ya hay un timer, lo limpiamos para no acumular cierres
     if (this.closeTimer) clearTimeout(this.closeTimer);
-    
+
     this.closeTimer = setTimeout(() => {
       this.showGrid = false;
       this.closeTimer = null;
@@ -259,7 +259,7 @@ export class HeaderComponent {
 
   selectModule(module: ModuleItem) {
     this.showGrid = false;
-    
+
     // Mapeo detallado de títulos a tipos de módulo específicos para poblar el sidebar dinámicamente
     if (module.title === 'Inventario') {
       this.navService.setActiveModule('INVENTARIO');
@@ -274,7 +274,7 @@ export class HeaderComponent {
     } else if (module.title === 'Seguridad') {
       this.navService.setActiveModule('SEGURIDAD');
     } else if (module.title === 'Configurar Producción') {
-      this.navService.setActiveModule('CONFIGURACIÓN');
+      this.navService.setActiveModule('CONFIGURACION_PRODUCCION');
     } else if (module.title === 'Reportes SAE') {
       this.navService.setActiveModule('REPORTES_SAE');
     } else if (module.title === 'Catálogos SAE') {
@@ -284,3 +284,5 @@ export class HeaderComponent {
     }
   }
 }
+
+

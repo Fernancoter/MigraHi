@@ -1,0 +1,81 @@
+.page-container {
+  padding: 24px;
+  background-color: #f9fafb;
+  min-height: 100%;
+}
+
+.page-header {
+  margin-bottom: 24px;
+  
+  .page-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #4CAF50; /* GeneXus Green theme */
+    margin: 0 0 8px 0;
+  }
+  
+  .breadcrumb {
+    font-size: 14px;
+    color: #9ca3af;
+  }
+}
+
+.content-section {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #fcfcfc;
+    
+    .section-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4CAF50;
+      margin-right: 8px;
+    }
+    
+    .section-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: #4b5563;
+      margin: 0;
+    }
+  }
+  
+  .section-body {
+    padding: 32px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .empty-state {
+      text-align: center;
+      
+      .empty-icon {
+        color: #d1d5db;
+        margin-bottom: 16px;
+      }
+      
+      .empty-text {
+        font-size: 16px;
+        color: #6b7280;
+        margin: 0 0 8px 0;
+        font-weight: 500;
+      }
+      
+      .empty-subtext {
+        font-size: 14px;
+        color: #9ca3af;
+        margin: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,800 @@
+﻿erDiagram
+    CarreteDefecto {
+        string NoSerieCarrete
+        TipoDefecto TipoDefecto
+        string? Descripcion
+        string? EvidenciaUrl
+        DateTime FechaReporte
+        string? ReportadoPor
+        Guid? ReclamoDetalleId
+    }
+    InspeccionCalidad {
+        string NumeroReporte
+        DateTime FechaInspeccion
+        string Resultado
+        Guid? BobinaId
+        string? Inspector
+        string? Hallazgos
+    }
+    Reclamo {
+        string Codigo
+        DateTime Fecha
+        EstatusReclamo Estatus
+        string? Cliente
+        string? OrderDoc
+        string? RemissionDoc
+        string Descripcion
+        string? AccionCorrectiva
+        string? Observaciones
+        DateTime? FechaCierre
+        string? CerradoPor
+    }
+    ReclamoDetalle {
+        Guid ReclamoId
+        string? NoSeriePallet
+        string? NoSerieCarrete
+        TipoDefecto TipoDefecto
+        int CantidadMillares
+        string? Descripcion
+        bool YaReportado
+        DateTime FechaRegistro
+    }
+    Cliente {
+        string Codigo
+        string Nombre
+        string? Direccion
+        string? Telefono
+        string? Email
+        string? Rfc
+        bool IsActive
+        decimal? LimiteCredito
+    }
+    AuditLog {
+        string EntityName
+        string EntityId
+        string Action
+        string? Username
+        string? ChangesJson
+        DateTime Timestamp
+    }
+    Permission {
+        Guid Id
+        string Module
+        string Name
+        string Code
+        string? Description
+    SecurityApplication {
+        Guid Id
+        string Name
+        string? Description
+    SecurityApplicationPermission {
+        Guid Id
+        Guid SecurityApplicationId
+        Guid PermissionId
+    Role {
+        string Name
+        string? Description
+        bool IsSystem
+        Guid? TenantId
+    RolePermission {
+        Guid Id
+        Guid RoleId
+        Guid PermissionId
+    }
+    User {
+        string Username
+        string Email
+        string PasswordHash
+        string FirstName
+        string LastName
+        string? PhoneNumber
+        string? AvatarUrl
+        bool IsActive
+        bool EmailConfirmed
+        DateTime? LastLoginAt
+        string? Gender
+        string? AuthenticationType
+        Guid? OperadorId
+        int? CompanyId
+        string? Namespace
+        string? ExternalId
+        DateTime? Birthday
+        DateTime? ActivationDate
+        bool ReceivesInformation
+        bool CannotChangePassword
+        bool PasswordNeverExpires
+        string? SecurityPolicyId
+        bool IsRepositoryEnabled
+        bool MustChangePassword
+        DateTime? PasswordExpiresAt
+        int AccessFailedCount
+        bool IsLockedOut
+        DateTime? LockoutEnd
+    UserRole {
+        Guid Id
+        Guid UserId
+        Guid RoleId
+        DateTime AssignedAt
+    UserTenant {
+        Guid Id
+        Guid UserId
+        Guid TenantId
+        bool IsDefault
+        DateTime AssignedAt
+    RefreshToken {
+        Guid Id
+        Guid UserId
+        string Token
+        DateTime ExpiresAt
+        DateTime CreatedAt
+        DateTime? RevokedAt
+        string? ReplacedBy
+        string? DeviceInfo
+    }
+    Articulo {
+        string Codigo
+        string Nombre
+        string? Descripcion
+        decimal Precio
+        decimal Existencia
+    Categoria {
+        string Nombre
+        string? Descripcion
+    }
+    Existencia {
+        DateTime FechaHora
+        string Usuario
+        string Estado
+        string? Observaciones
+    ExistenciaProducto {
+        Guid ExistenciaId
+        Guid ProductoId
+        decimal CantidadReal
+        decimal CantidadSistema
+    }
+    ExistenciaSilo {
+        Guid SiloId
+        Guid? ExistenciaId
+        decimal Cantidad
+        string? LoteVirgen
+        DateTime FechaRegistro
+        string? Observaciones
+    }
+    Silo {
+        string Nombre
+        string Codigo
+        decimal CapacidadMaxima
+        decimal ExistenciaActual
+        decimal KgMinimo
+        decimal KgMaximo
+        string? EstadoMaterial
+        string? TipoMaterial
+        bool Activo
+        Guid? ArticuloId
+        string Estado
+        string? Ubicacion
+    }
+    Embarque {
+        string Codigo
+        EstatusEmbarque Estatus
+        string OrderDoc
+        string RemissionDoc
+        string? FolioCarga
+        string? Cliente
+        string? ClienteGrupo
+        string? ClienteEnvia
+        DateTime Fecha
+        DateTime? OrderDate
+        DateTime? OrderDeliveryDate
+        DateTime? HoraEstimadaInicio
+        DateTime? HoraInicio
+        DateTime? HoraFin
+        int? DiffDiasPedido
+        int? DiffDiasEntrega
+        string? Transporte
+        string? Placas
+        string? Conductor
+        string? Destino
+        string? Recibe
+        string? Elaboro
+        int NoProductos
+        string? Observaciones
+        string? CargaObservaciones
+    }
+    EmbarqueDetalle {
+        Guid EmbarqueId
+        string? ProductoSAE
+        int CantidadPalletsRequerida
+        int CantidadPalletsEscaneados
+        Guid? ProductoTerminadoId
+        Guid? ProductoId
+        bool ConfirmadoPorAdministracion
+        bool Validado
+        DateTime? FechaValidacion
+    }
+    EmbarquePallet {
+        Guid EmbarqueId
+        Guid PaletId
+        Guid? EmbarqueDetalleId
+        DateTime FechaEscaneo
+        bool Validado
+        string? EscaneadoPor
+    }
+    Bobina {
+        string NoSerie
+        int BobinaNo
+        string BobinaOrigen
+        string? Mill
+        string? Station
+        string? Codigo
+        DateTime? RestStart
+        int RestMinutes
+        string? Observations
+        string? MillReason
+        string? ProductName
+        string? Reel
+        decimal Kg
+        decimal MermaKg
+        decimal Espesor
+        decimal DesviacionEstandar
+        DateTime HoraInicio
+        DateTime HoraSalida
+        DateTime? IniciaReposo
+        int MinutosEnReposo
+        DateTime? FechaProduccion
+        EstadoBobina Estado
+        ColorEstacion ColorEstacion
+        MotivoMolino MotivoMolino
+        int Carreras
+        Guid? SiloVirgenId
+        string? LoteVirgen
+        Guid? SiloMolidoId
+        string? Observaciones
+        Guid ExtrusionId
+        Guid? ProductoId
+        Guid? OperarioId
+    }
+    Carrera {
+        int CarreraNo
+        EstadoCarrera Estado
+        DateTime FechaRegistro
+        DateTime? FechaValidacion
+        string? CarreraTroquel
+        bool PaletTerminado
+        Guid PrensadoId
+        Guid InicioPrensadoBobinaId
+        Guid? InterrupcionId
+    }
+    Carrete {
+        string NoSerie
+        int NoLinea
+        EstadoCarrete Estado
+        MolinoCarrete Molino
+        bool TerminaPalet
+        string? PaletSerie
+        string? Observaciones
+        Guid CarreraId
+    }
+    CausaInterrupcion {
+        string Codigo
+        string Descripcion
+        string Tipo
+        bool IsActive
+        int OrdenVisual
+    }
+    SiloProduccion {
+        string Nombre
+        decimal CapacidadKg
+        decimal MinimoKg
+        decimal MaximoKg
+        string? EstadoMaterial
+        string? TipoMaterial
+        bool SiloActivo
+        bool IsArchived
+    CatEstadoMaterial {
+        string Nombre
+    CatTipoMaterial {
+        string Nombre
+    CatalogoClave {
+        string Valor
+        int Orden
+    ExtrusoraOperario {
+        Guid ExtrusoraId
+        Guid OperarioId
+        Guid? TurnoId
+    }
+    Extrusion {
+        string Codigo
+        DateTime Fecha
+        DateTime FechaInicio
+        DateTime? FechaFin
+        EstadoExtrusion Estado
+        decimal Programado
+        string? ProductoNombre
+        decimal Producido
+        int TiempoInterrupcionMin
+        bool EnCurso
+        long ExtrusionIdLegacy
+        decimal Calibre
+        decimal Ancho
+        decimal Longitud
+        decimal MetaKg
+        decimal VirgenKg
+        decimal MolidoKg
+        decimal RevHusilloVirgen
+        decimal RevHusilloMolido
+        int TotalBobinasMeta
+        string? LoteSilo
+        string? LotePaqueteAditivos
+        Guid? SiloVirgenId
+        Guid? SiloMolidoId
+        string? MotivoAnticipado
+        int TiempoInterrupcion
+        bool InterrupcionEnCurso
+        int BobinasTotalesReposo
+        string? Observaciones
+        Guid ExtrusoraId
+        Guid OperarioId
+        Guid TurnoId
+        Guid? ProductoId
+    }
+    ExtrusionInterrupcion {
+        Guid ExtrusionId
+        Guid? CausaId
+        DateTime HoraInicio
+        DateTime? HoraFin
+        bool Concluida
+        string? Descripcion
+        string? Observaciones
+    }
+    ExtrusionResultado {
+        Guid ExtrusionId
+        int TotalBobinas
+        int TotalBobinasMolidas
+        int TotalBobinasRechazadas
+        int TotalBobinasTurno
+        int TotalBobinasSiguienteTurno
+        int TotalBobinasMeta
+        int BobinasTotalesReposo
+        int TiempoInterrupcionMinutos
+        decimal TiempoProcesoHoras
+        decimal EficienciaPorc
+        decimal KgProducidos
+        decimal KgMerma
+        decimal KgMolido
+        string? ObservacionesFinales
+        DateTime FechaRegistro
+    }
+    Extrusora {
+        string Codigo
+        string Nombre
+        string? Modelo
+        string? NumeroSerie
+        bool IsActive
+        EstadoExtrusora Estado
+        string? Imagen
+        decimal CapacidadKgHora
+        int NumeroEstaciones
+        string? Observaciones
+    }
+    ExtrusoraMezcladora {
+        Guid ExtrusoraId
+        string Nombre
+        string? Codigo
+        bool IsActive
+        string? Observaciones
+    }
+    ExtrusoraProducto {
+        Guid ExtrusoraId
+        Guid ProductoId
+        decimal DefaultCalibre
+        decimal DefaultAncho
+        decimal DefaultLongitud
+        decimal DefaultVirgenKg
+        decimal DefaultMolidoKg
+        decimal DefaultRevHusilloVirgen
+        decimal DefaultRevHusilloMolido
+        decimal DefaultMetaKg
+        int DefaultMinutosReposo
+        bool IsActive
+    }
+    Interrupcion {
+        DateTime HoraInicio
+        DateTime? HoraFin
+        string? Motivo
+        string? Descripcion
+        bool Concluida
+        Guid ExtrusionId
+    }
+    Lote {
+        string Codigo
+        DateTime FechaCreacion
+        string? Descripcion
+        string Estado
+        string? LoteEmbarque
+        string? LotePO
+        DateTime? LoteFechaRegistro
+        string? LoteTrunkNo
+        string? LoteTipoMaterial
+        Guid? LoteSiloId
+        decimal LoteKg
+        bool LoteConsumido
+        string? LotePaqueteAditivos
+    }
+    Maquina {
+        string Codigo
+        string Nombre
+        string Tipo
+        string? Modelo
+        string? NumeroSerie
+        bool IsActive
+        string Estado
+    }
+    Operador {
+        string Nombre
+        string? Codigo
+        bool Activo
+        Guid? UserGUID
+    }
+    Operario {
+        string NumeroEmpleado
+        string NombreCompleto
+        string? Especialidad
+        string? TurnoPreferido
+        bool IsActive
+    }
+    OrdenEtiquetado {
+        string Codigo
+        DateTime Fecha
+        bool Completada
+        DateTime? FechaCompletada
+        Guid? PrensadoId
+        Guid? OperarioId
+        string? Observaciones
+    }
+    Palet {
+        string NoSerie
+        TipoPalet Tipo
+        EstatusPalet Estatus
+        int Capacidad
+        int TotalCarretes
+        DateTime HoraInicioEnsamble
+        DateTime? HoraFinEnsamble
+        Guid? ProductoId
+        Guid? ProductoTerminadoId
+        Guid? PrensadoId
+        Guid? OperarioId
+        Guid? PrensaId
+        Guid? PrensadoFinId
+    }
+    PaletCarrete {
+        Guid PaletId
+        Guid CarreteId
+        DateTime FechaEnsamble
+        int PosicionEnPalet
+    }
+    Prensa {
+        string Codigo
+        string Nombre
+        string? Modelo
+        string? NumeroSerie
+        bool IsActive
+        string? Marca
+        EstadoPrensa Estado
+        string? Observaciones
+        string? Imagen
+    }
+    Prensado {
+        DateTime Fecha
+        DateTime HoraIniciaProceso
+        DateTime? HoraFinProceso
+        EstadoPrensado Estado
+        decimal Programado
+        string? LoteSilo
+        decimal Calibre
+        string? Ancho
+        decimal Longitud
+        string? ProductoNombre
+        decimal KgVirgen
+        decimal KgMolido
+        decimal Target
+        decimal Producido
+        int TiempoInterrupcionMin
+        bool EnCurso
+        long PrensadoIdLegacy
+        string LevasUnidadMedida
+        string RodillosUnidadMedida
+        decimal LevasKgEntrada
+        decimal LevasKgSalida
+        decimal LevasGradosEntrada
+        decimal LevasGradosSalida
+        decimal RodillosKgEntrada
+        decimal RodillosKgSalida
+        decimal RodillosGradosEntrada
+        decimal RodillosGradosSalida
+        int MetaPallets
+        int TotalPallets
+        int TiempoInterrupcionMinutos
+        bool InterrupcionEnCurso
+        decimal BobinaMermaKg
+        string? MotivoAnticipado
+        Guid PrensaId
+        Guid TurnoId
+        Guid ProductoId
+        Guid OperarioId
+        Guid? TroquelId
+    }
+    PrensadoBobina {
+        Guid PrensadoId
+        Guid BobinaId
+        int CantCarreras
+        bool Activa
+        DateTime HoraInicio
+        DateTime? HoraFin
+    }
+    PrensadoInterrupcion {
+        Guid PrensadoId
+        Guid? CausaId
+        DateTime HoraInicio
+        DateTime? HoraFin
+        bool Concluida
+        string? Descripcion
+    }
+    PrensadoResultado {
+        Guid PrensadoId
+        int TotalPalets
+        int TotalPaletsMeta
+        int TotalCarreras
+        int TotalCarrerasValidadas
+        int TotalBobinasMolidas
+        decimal KgMerma
+        int TiempoInterrupcionMinutos
+        decimal EficienciaPorc
+        string? ObservacionesFinales
+        DateTime FechaRegistro
+    }
+    PrensaProducto {
+        Guid PrensaId
+        Guid ProductoId
+        decimal DefaultLevasKgEntrada
+        decimal DefaultLevasKgSalida
+        decimal DefaultLevasGradosEntrada
+        decimal DefaultLevasGradosSalida
+        decimal DefaultRodillosKgEntrada
+        decimal DefaultRodillosKgSalida
+        decimal DefaultRodillosGradosEntrada
+        decimal DefaultRodillosGradosSalida
+        decimal DefaultMetaPallets
+        bool IsActive
+    }
+    PrensaTroquel {
+        Guid PrensaId
+        Guid TroquelId
+        DateTime FechaAsignacion
+        DateTime? FechaDesasignacion
+        bool Activo
+        string? Observaciones
+    }
+    Producto {
+        string Codigo
+        string Nombre
+        string? Descripcion
+        string? ProductoBase
+        decimal PrecioUnitario
+        string? ProductoSAE
+        TipoMaterial TipoMaterial
+        decimal Calibre
+        decimal Ancho
+        decimal Longitud
+        int MinutosReposoMinimo
+        Guid? CategoriaId
+        string? ClaveExternaSAE
+        bool IsActive
+        bool Etiquetable
+    }
+    ProductoCategoria {
+        string Nombre
+        string? Descripcion
+        string? ClaveExterna
+        bool IsActive
+    }
+    ProductoTerminado {
+        string Nombre
+        string? Descripcion
+        Guid? ProductoId
+        bool IsActive
+    }
+    Troquel {
+        string Codigo
+        string Nombre
+        EstadoTroquel Estado
+        bool IsActive
+        string? ProductosCompatibles
+        string? Observaciones
+        DateTime? FechaUltimoMantenimiento
+        int CiclosAcumulados
+        int CiclosVideoMantenimiento
+    }
+    Turno {
+        string Nombre
+        TimeSpan HoraInicio
+        TimeSpan HoraFin
+        bool IsActive
+        string? Color
+        string Clave
+    }
+    SaeOrder {
+        string OrderDoc
+        DateTime OrderDate
+        DateTime? OrderDeliveryDate
+        string? CustomerCode
+        string? CustomerName
+        string? SalesPersonCode
+        string? Shipping
+        decimal TotalAmount
+        bool Procesada
+        DateTime? FechaSincronizacion
+    SaeRemission {
+        string RemissionDoc
+        string OrderDoc
+        DateTime RemissionDate
+        string? ProductNumber
+        decimal Quantity
+        string? CustomerCode
+        string? CustomerName
+        string? Shipping
+        string? ConsolidatedName
+        string? CustomerShipping
+        DateTime? FechaSincronizacion
+    SaeCustomer {
+        string CustomerCode
+        string CustomerName
+        string? ConsolidatedName
+        string? Shipping
+        string? Email
+        string? Phone
+        bool IsActive
+        DateTime? FechaSincronizacion
+    SaeProduct {
+        string ProductNumber
+        string ProductName
+        string? Unit
+        decimal Price
+        bool IsActive
+        DateTime? FechaSincronizacion
+    }
+    Tenant {
+        string Name
+        string Slug
+        string? Description
+        bool IsActive
+        string? LogoUrl
+    TenantSetting {
+        Guid TenantId
+        string Key
+        string Value
+        string? DataType
+    }
+    Venta {
+        string Folio
+        DateTime Fecha
+        Guid ClienteId
+        decimal Subtotal
+        decimal Impuesto
+        decimal Total
+        string? Observaciones
+    VentaDetalle {
+        Guid VentaId
+        Guid ArticuloId
+        decimal Cantidad
+        decimal PrecioUnitario
+        decimal Importe
+    }
+    CarreteDefecto }o--|| TipoDefecto : "TipoDefecto"
+    Reclamo }o--|| EstatusReclamo : "Estatus"
+    Reclamo ||--o{ ReclamoDetalle : "System.Collections.Hashtable[4]"
+    ReclamoDetalle }o--|| Reclamo : "Reclamo"
+    ReclamoDetalle }o--|| TipoDefecto : "TipoDefecto"
+    Permission ||--o{ SecurityApplicationPermission : "System.Collections.Hashtable[4]"
+    SecurityApplication ||--o{ SecurityApplicationPermission : "System.Collections.Hashtable[4]"
+    SecurityApplicationPermission }o--|| SecurityApplication : "SecurityApplication"
+    SecurityApplicationPermission }o--|| Permission : "Permission"
+    Role ||--o{ RolePermission : "System.Collections.Hashtable[4]"
+    RolePermission }o--|| Role : "Role"
+    RolePermission }o--|| Permission : "Permission"
+    User ||--o{ UserRole : "System.Collections.Hashtable[4]"
+    User ||--o{ UserTenant : "System.Collections.Hashtable[4]"
+    UserRole }o--|| User : "User"
+    UserRole }o--|| Role : "Role"
+    UserTenant }o--|| User : "User"
+    RefreshToken }o--|| User : "User"
+    Categoria ||--o{ Articulo : "System.Collections.Hashtable[4]"
+    Existencia ||--o{ ExistenciaSilo : "System.Collections.Hashtable[4]"
+    Existencia ||--o{ ExistenciaProducto : "System.Collections.Hashtable[4]"
+    ExistenciaProducto }o--|| Existencia : "Existencia"
+    ExistenciaSilo }o--|| Silo : "Silo"
+    Silo ||--o{ ExistenciaSilo : "System.Collections.Hashtable[4]"
+    Embarque }o--|| EstatusEmbarque : "Estatus"
+    Embarque ||--o{ EmbarqueDetalle : "System.Collections.Hashtable[4]"
+    Embarque ||--o{ EmbarquePallet : "System.Collections.Hashtable[4]"
+    EmbarqueDetalle }o--|| Embarque : "Embarque"
+    EmbarquePallet }o--|| Embarque : "Embarque"
+    EmbarquePallet }o--|| Palet : "Palet"
+    Bobina }o--|| EstadoBobina : "Estado"
+    Bobina }o--|| ColorEstacion : "ColorEstacion"
+    Bobina }o--|| MotivoMolino : "MotivoMolino"
+    Bobina }o--|| Extrusion : "Extrusion"
+    Bobina ||--o{ PrensadoBobina : "System.Collections.Hashtable[4]"
+    Carrera }o--|| EstadoCarrera : "Estado"
+    Carrera }o--|| Prensado : "Prensado"
+    Carrera ||--o{ Carrete : "System.Collections.Hashtable[4]"
+    Carrete }o--|| EstadoCarrete : "Estado"
+    Carrete }o--|| MolinoCarrete : "Molino"
+    Carrete }o--|| Carrera : "Carrera"
+    Carrete ||--o{ PaletCarrete : "System.Collections.Hashtable[4]"
+    ExtrusoraOperario }o--|| Operario : "Operario"
+    Extrusion }o--|| EstadoExtrusion : "Estado"
+    Extrusion }o--|| Extrusora : "Extrusora"
+    Extrusion }o--|| Operario : "Operario"
+    Extrusion }o--|| Turno : "Turno"
+    Extrusion ||--o{ Bobina : "System.Collections.Hashtable[4]"
+    Extrusion ||--o{ ExtrusionInterrupcion : "System.Collections.Hashtable[4]"
+    ExtrusionInterrupcion }o--|| Extrusion : "Extrusion"
+    ExtrusionResultado }o--|| Extrusion : "Extrusion"
+    Extrusora }o--|| EstadoExtrusora : "Estado"
+    Extrusora ||--o{ Extrusion : "System.Collections.Hashtable[4]"
+    Extrusora ||--o{ ExtrusoraProducto : "System.Collections.Hashtable[4]"
+    Extrusora ||--o{ ExtrusoraMezcladora : "System.Collections.Hashtable[4]"
+    Extrusora ||--o{ ExtrusoraOperario : "System.Collections.Hashtable[4]"
+    ExtrusoraMezcladora }o--|| Extrusora : "Extrusora"
+    ExtrusoraProducto }o--|| Extrusora : "Extrusora"
+    ExtrusoraProducto }o--|| Producto : "Producto"
+    Interrupcion }o--|| Extrusion : "Extrusion"
+    Lote ||--o{ Extrusion : "System.Collections.Hashtable[4]"
+    Lote ||--o{ Bobina : "System.Collections.Hashtable[4]"
+    Lote ||--o{ Palet : "System.Collections.Hashtable[4]"
+    Maquina ||--o{ Extrusion : "System.Collections.Hashtable[4]"
+    Operario ||--o{ Extrusion : "System.Collections.Hashtable[4]"
+    Palet }o--|| TipoPalet : "Tipo"
+    Palet }o--|| EstatusPalet : "Estatus"
+    Palet ||--o{ PaletCarrete : "System.Collections.Hashtable[4]"
+    Palet ||--o{ EmbarquePallet : "System.Collections.Hashtable[4]"
+    PaletCarrete }o--|| Palet : "Palet"
+    PaletCarrete }o--|| Carrete : "Carrete"
+    Prensa }o--|| EstadoPrensa : "Estado"
+    Prensa ||--o{ Prensado : "System.Collections.Hashtable[4]"
+    Prensa ||--o{ PrensaProducto : "System.Collections.Hashtable[4]"
+    Prensa ||--o{ PrensaTroquel : "System.Collections.Hashtable[4]"
+    Prensado }o--|| EstadoPrensado : "Estado"
+    Prensado }o--|| Prensa : "Prensa"
+    Prensado }o--|| Turno : "Turno"
+    Prensado }o--|| Producto : "Producto"
+    Prensado }o--|| Operario : "Operario"
+    Prensado ||--o{ PrensadoBobina : "System.Collections.Hashtable[4]"
+    Prensado ||--o{ Carrera : "System.Collections.Hashtable[4]"
+    Prensado ||--o{ PrensadoInterrupcion : "System.Collections.Hashtable[4]"
+    Prensado ||--o{ Palet : "System.Collections.Hashtable[4]"
+    PrensadoBobina }o--|| Prensado : "Prensado"
+    PrensadoBobina }o--|| Bobina : "Bobina"
+    PrensadoInterrupcion }o--|| Prensado : "Prensado"
+    PrensadoResultado }o--|| Prensado : "Prensado"
+    PrensaProducto }o--|| Prensa : "Prensa"
+    PrensaProducto }o--|| Producto : "Producto"
+    PrensaTroquel }o--|| Prensa : "Prensa"
+    PrensaTroquel }o--|| Troquel : "Troquel"
+    Producto }o--|| TipoMaterial : "TipoMaterial"
+    Producto ||--o{ ExtrusoraProducto : "System.Collections.Hashtable[4]"
+    Producto ||--o{ PrensaProducto : "System.Collections.Hashtable[4]"
+    Producto ||--o{ Bobina : "System.Collections.Hashtable[4]"
+    Producto ||--o{ Palet : "System.Collections.Hashtable[4]"
+    ProductoCategoria ||--o{ Producto : "System.Collections.Hashtable[4]"
+    ProductoTerminado ||--o{ Palet : "System.Collections.Hashtable[4]"
+    Troquel }o--|| EstadoTroquel : "Estado"
+    Troquel ||--o{ PrensaTroquel : "System.Collections.Hashtable[4]"
+    Tenant ||--o{ TenantSetting : "System.Collections.Hashtable[4]"
+    TenantSetting }o--|| Tenant : "Tenant"
+    Venta }o--|| Cliente : "Cliente"
+    Venta ||--o{ VentaDetalle : "System.Collections.Hashtable[4]"
+    VentaDetalle }o--|| Venta : "Venta"
+    VentaDetalle }o--|| Articulo : "Articulo"
+

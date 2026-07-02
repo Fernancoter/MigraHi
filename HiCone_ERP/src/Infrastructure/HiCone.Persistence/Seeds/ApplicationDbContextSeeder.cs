@@ -1468,6 +1468,16 @@ public class ApplicationDbContextSeeder
             _context.UserRoles.Add(new UserRole { UserId = adminUser.Id, RoleId = superAdminRole.Id });
             _context.UserTenants.Add(new UserTenant { UserId = adminUser.Id, TenantId = defaultTenantId, IsDefault = true });
         }
+        else
+        {
+            var adminUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == adminEmail);
+            if (adminUser != null)
+            {
+                adminUser.Username = "admin";
+                adminUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword("hicone123");
+                await _context.SaveChangesAsync(default);
+            }
+        }
 
         await _context.SaveChangesAsync(default);
 
@@ -1475,9 +1485,9 @@ public class ApplicationDbContextSeeder
         if (!await _context.Turnos.AnyAsync())
         {
             _context.Turnos.AddRange(
-                new Turno { Nombre = "Matutino", HoraInicio = new TimeSpan(6, 0, 0), HoraFin = new TimeSpan(14, 0, 0), TenantId = defaultTenantId },
-                new Turno { Nombre = "Vespertino", HoraInicio = new TimeSpan(14, 0, 0), HoraFin = new TimeSpan(22, 0, 0), TenantId = defaultTenantId },
-                new Turno { Nombre = "Nocturno", HoraInicio = new TimeSpan(22, 0, 0), HoraFin = new TimeSpan(6, 0, 0), TenantId = defaultTenantId }
+                new Turno { Nombre = "Matutino", Clave = "1", HoraInicio = new TimeSpan(6, 0, 0), HoraFin = new TimeSpan(14, 0, 0), TenantId = defaultTenantId },
+                new Turno { Nombre = "Vespertino", Clave = "2", HoraInicio = new TimeSpan(14, 0, 0), HoraFin = new TimeSpan(22, 0, 0), TenantId = defaultTenantId },
+                new Turno { Nombre = "Nocturno", Clave = "3", HoraInicio = new TimeSpan(22, 0, 0), HoraFin = new TimeSpan(6, 0, 0), TenantId = defaultTenantId }
             );
 
             _context.Operarios.AddRange(
@@ -1489,15 +1499,25 @@ public class ApplicationDbContextSeeder
 
         if (!await _context.Extrusoras.AnyAsync())
         {
+            var ext1Id = Guid.NewGuid();
+            var ext2Id = Guid.NewGuid();
+
             _context.Extrusoras.AddRange(
-                new Extrusora { Codigo = "EXT-01", Nombre = "Extrusora Principal #1", CapacidadKgHora = 150, NumeroEstaciones = 1, Estado = EstadoExtrusora.Disponible, TenantId = defaultTenantId },
-                new Extrusora { Codigo = "EXT-02", Nombre = "Extrusora Secundaria #2", CapacidadKgHora = 120, NumeroEstaciones = 1, Estado = EstadoExtrusora.Disponible, TenantId = defaultTenantId }
+                new Extrusora { Id = ext1Id, Codigo = "EXT-01", Nombre = "Extrusora Principal #1", CapacidadKgHora = 150, NumeroEstaciones = 1, Estado = EstadoExtrusora.Disponible, TenantId = defaultTenantId },
+                new Extrusora { Id = ext2Id, Codigo = "EXT-02", Nombre = "Extrusora Secundaria #2", CapacidadKgHora = 120, NumeroEstaciones = 1, Estado = EstadoExtrusora.Disponible, TenantId = defaultTenantId }
             );
 
             _context.Prensas.AddRange(
                 new Prensa { Codigo = "PRE-A1", Nombre = "Prensa Hidráulica A1", Estado = EstadoPrensa.Disponible, TenantId = defaultTenantId },
                 new Prensa { Codigo = "PRE-B2", Nombre = "Prensa Hidráulica B2", Estado = EstadoPrensa.Disponible, TenantId = defaultTenantId }
             );
+
+            // Seeding legacy Maquinas with identical Guids for FK compatibility
+            _context.Maquinas.AddRange(
+                new Maquina { Id = ext1Id, Codigo = "EXT-01", Nombre = "Extrusora Principal #1", Tipo = "Extrusora", Estado = "Disponible", TenantId = defaultTenantId },
+                new Maquina { Id = ext2Id, Codigo = "EXT-02", Nombre = "Extrusora Secundaria #2", Tipo = "Extrusora", Estado = "Disponible", TenantId = defaultTenantId }
+            );
+
             await _context.SaveChangesAsync(default);
         }
 
@@ -1623,6 +1643,203 @@ public class ApplicationDbContextSeeder
                         TenantId = defaultTenantId 
                     }
                 );
+                await _context.SaveChangesAsync(default);
+            }
+        }
+
+        if (!await _context.Extrusiones.AnyAsync())
+        {
+            var extrusoras = await _context.Extrusoras.ToListAsync();
+            var turnos = await _context.Turnos.ToListAsync();
+            var operarios = await _context.Operarios.ToListAsync();
+            var productos = await _context.Productos.ToListAsync();
+            var causas = await _context.CausasInterrupcion.ToListAsync();
+
+            if (extrusoras.Any() && turnos.Any() && operarios.Any() && productos.Any())
+            {
+                var ext1 = new Extrusion
+                {
+                    Id = Guid.NewGuid(),
+                    Codigo = "EXT-2026-001",
+                    Fecha = DateTime.UtcNow.AddDays(-2).Date,
+                    FechaInicio = DateTime.UtcNow.AddDays(-2).AddHours(-8),
+                    FechaFin = DateTime.UtcNow.AddDays(-2),
+                    Estado = EstadoExtrusion.Finalizada,
+                    ExtrusoraId = extrusoras[0].Id,
+                    TurnoId = turnos[0].Id,
+                    OperarioId = operarios[0].Id,
+                    ProductoId = productos[0].Id,
+                    Calibre = 0.05m,
+                    Ancho = 100,
+                    Longitud = 1000,
+                    MetaKg = 500,
+                    VirgenKg = 400,
+                    MolidoKg = 100,
+                    LoteSilo = "L-SILO-001",
+                    LotePaqueteAditivos = "CCP-07A-164040 L",
+                    ExtrusionIdLegacy = 24470,
+                    Producido = 44.3m,
+                    TiempoInterrupcionMin = 22,
+                    TenantId = defaultTenantId
+                };
+
+                var ext2 = new Extrusion
+                {
+                    Id = Guid.NewGuid(),
+                    Codigo = "EXT-2026-002",
+                    Fecha = DateTime.UtcNow.AddDays(-1).Date,
+                    FechaInicio = DateTime.UtcNow.AddDays(-1).AddHours(-4),
+                    FechaFin = DateTime.UtcNow.AddDays(-1),
+                    Estado = EstadoExtrusion.Finalizada,
+                    ExtrusoraId = extrusoras[0].Id,
+                    TurnoId = turnos[1].Id,
+                    OperarioId = operarios[1].Id,
+                    ProductoId = productos[1].Id,
+                    Calibre = 0.08m,
+                    Ancho = 150,
+                    Longitud = 800,
+                    MetaKg = 600,
+                    VirgenKg = 500,
+                    MolidoKg = 100,
+                    LoteSilo = "L-SILO-002",
+                    LotePaqueteAditivos = "CCP-07B-239483 L",
+                    ExtrusionIdLegacy = 24405,
+                    Producido = 0,
+                    TenantId = defaultTenantId
+                };
+
+                _context.Extrusiones.AddRange(ext1, ext2);
+                await _context.SaveChangesAsync(default);
+
+                // Bobinas para ext1
+                var bobina1 = new Bobina
+                {
+                    Id = Guid.NewGuid(),
+                    ExtrusionId = ext1.Id,
+                    Station = "A",
+                    BobbinNo = 1,
+                    SerialNo = "S-24470-A1",
+                    Kg = 22.5m,
+                    ScrapKg = 1.2m,
+                    Thickness = 0.051m,
+                    Observations = "Bobina normal A",
+                    Codigo = "B-24470-A1",
+                    TenantId = defaultTenantId
+                };
+                var bobina2 = new Bobina
+                {
+                    Id = Guid.NewGuid(),
+                    ExtrusionId = ext1.Id,
+                    Station = "B",
+                    BobbinNo = 1,
+                    SerialNo = "S-24470-B1",
+                    Kg = 21.8m,
+                    ScrapKg = 0.8m,
+                    Thickness = 0.049m,
+                    Observations = "Bobina normal B",
+                    Codigo = "B-24470-B1",
+                    TenantId = defaultTenantId
+                };
+                _context.Bobinas.AddRange(bobina1, bobina2);
+
+                // Interrupciones para ext1
+                if (causas.Any())
+                {
+                    var interrupcion = new ExtrusionInterrupcion
+                    {
+                        Id = Guid.NewGuid(),
+                        ExtrusionId = ext1.Id,
+                        CausaId = causas[0].Id,
+                        HoraInicio = DateTime.UtcNow.AddDays(-2).AddHours(-6),
+                        HoraFin = DateTime.UtcNow.AddDays(-2).AddHours(-6).AddMinutes(22),
+                        Concluida = true,
+                        Descripcion = "Ajuste de rodillos de arrastre",
+                        TenantId = defaultTenantId
+                    };
+                    _context.ExtrusionInterrupciones.Add(interrupcion);
+                }
+
+                await _context.SaveChangesAsync(default);
+            }
+        }
+
+        // Asegurar tres datos de prueba temporales para extrusiones
+        var testCode1 = "TEST-EXT-01";
+        var testCode2 = "TEST-EXT-02";
+        var testCode3 = "TEST-EXT-03";
+        if (!await _context.Extrusiones.AnyAsync(e => e.Codigo == testCode1 || e.Codigo == testCode2 || e.Codigo == testCode3))
+        {
+            var extrusoras = await _context.Extrusoras.ToListAsync();
+            var turnos = await _context.Turnos.ToListAsync();
+            var operarios = await _context.Operarios.ToListAsync();
+            var productos = await _context.Productos.ToListAsync();
+            if (extrusoras.Any() && turnos.Any() && operarios.Any() && productos.Any())
+            {
+                var t1 = new Extrusion
+                {
+                    Id = Guid.NewGuid(),
+                    Codigo = testCode1,
+                    Fecha = DateTime.UtcNow.Date,
+                    FechaInicio = DateTime.UtcNow.AddHours(-2),
+                    Estado = EstadoExtrusion.EnProceso,
+                    ExtrusoraId = extrusoras[0].Id,
+                    TurnoId = turnos[0].Id,
+                    OperarioId = operarios[0].Id,
+                    ProductoId = productos[0].Id,
+                    Calibre = 0.12m,
+                    Ancho = 800,
+                    Longitud = 2000,
+                    MetaKg = 1000,
+                    VirgenKg = 800,
+                    MolidoKg = 200,
+                    LoteSilo = "LOTE-VIRGEN-TEST-01",
+                    LotePaqueteAditivos = "AD-TEST-01",
+                    TenantId = defaultTenantId
+                };
+                var t2 = new Extrusion
+                {
+                    Id = Guid.NewGuid(),
+                    Codigo = testCode2,
+                    Fecha = DateTime.UtcNow.Date,
+                    FechaInicio = DateTime.UtcNow.AddHours(-5),
+                    Estado = EstadoExtrusion.Programada,
+                    ExtrusoraId = extrusoras.Count > 1 ? extrusoras[1].Id : extrusoras[0].Id,
+                    TurnoId = turnos.Count > 1 ? turnos[1].Id : turnos[0].Id,
+                    OperarioId = operarios.Count > 1 ? operarios[1].Id : operarios[0].Id,
+                    ProductoId = productos.Count > 1 ? productos[1].Id : productos[0].Id,
+                    Calibre = 0.08m,
+                    Ancho = 600,
+                    Longitud = 1500,
+                    MetaKg = 800,
+                    VirgenKg = 700,
+                    MolidoKg = 100,
+                    LoteSilo = "LOTE-VIRGEN-TEST-02",
+                    LotePaqueteAditivos = "AD-TEST-02",
+                    TenantId = defaultTenantId
+                };
+                var t3 = new Extrusion
+                {
+                    Id = Guid.NewGuid(),
+                    Codigo = testCode3,
+                    Fecha = DateTime.UtcNow.Date,
+                    FechaInicio = DateTime.UtcNow.AddHours(-10),
+                    FechaFin = DateTime.UtcNow.AddHours(-2),
+                    Estado = EstadoExtrusion.Finalizada,
+                    ExtrusoraId = extrusoras.Count > 2 ? extrusoras[2].Id : extrusoras[0].Id,
+                    TurnoId = turnos.Count > 2 ? turnos[2].Id : turnos[0].Id,
+                    OperarioId = operarios.Count > 2 ? operarios[2].Id : operarios[0].Id,
+                    ProductoId = productos.Count > 2 ? productos[2].Id : productos[0].Id,
+                    Calibre = 0.15m,
+                    Ancho = 1000,
+                    Longitud = 3000,
+                    MetaKg = 1500,
+                    VirgenKg = 1200,
+                    MolidoKg = 300,
+                    LoteSilo = "LOTE-VIRGEN-TEST-03",
+                    LotePaqueteAditivos = "AD-TEST-03",
+                    TenantId = defaultTenantId
+                };
+                _context.Extrusiones.AddRange(t1, t2, t3);
                 await _context.SaveChangesAsync(default);
             }
         }

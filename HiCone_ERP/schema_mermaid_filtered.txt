@@ -1,0 +1,211 @@
+﻿erDiagram
+    Articulo {
+        string Codigo
+        string Nombre
+        string? Descripcion
+        decimal Precio
+        decimal Existencia
+    Categoria {
+        string Nombre
+        string? Descripcion
+    }
+    Existencia {
+        DateTime FechaHora
+        string Usuario
+        string Estado
+        string? Observaciones
+    ExistenciaProducto {
+        Guid ExistenciaId
+        Guid ProductoId
+        decimal CantidadReal
+        decimal CantidadSistema
+    }
+    ExistenciaSilo {
+        Guid SiloId
+        Guid? ExistenciaId
+        decimal Cantidad
+        string? LoteVirgen
+        DateTime FechaRegistro
+        string? Observaciones
+    }
+    Silo {
+        string Nombre
+        string Codigo
+        decimal CapacidadMaxima
+        decimal ExistenciaActual
+        decimal KgMinimo
+        decimal KgMaximo
+        string? EstadoMaterial
+        string? TipoMaterial
+        bool Activo
+        Guid? ArticuloId
+        string Estado
+        string? Ubicacion
+    }
+    Bobina {
+        string NoSerie
+        int BobinaNo
+        string BobinaOrigen
+        string? Mill
+        string? Station
+        string? Codigo
+        DateTime? RestStart
+        int RestMinutes
+        string? Observations
+        string? MillReason
+        string? ProductName
+        string? Reel
+        decimal Kg
+        decimal MermaKg
+        decimal Espesor
+        decimal DesviacionEstandar
+        DateTime HoraInicio
+        DateTime HoraSalida
+        DateTime? IniciaReposo
+        int MinutosEnReposo
+        DateTime? FechaProduccion
+        EstadoBobina Estado
+        ColorEstacion ColorEstacion
+        MotivoMolino MotivoMolino
+        int Carreras
+        Guid? SiloVirgenId
+        string? LoteVirgen
+        Guid? SiloMolidoId
+        string? Observaciones
+        Guid ExtrusionId
+        Guid? ProductoId
+        Guid? OperarioId
+    }
+    Extrusion {
+        string Codigo
+        DateTime Fecha
+        DateTime FechaInicio
+        DateTime? FechaFin
+        EstadoExtrusion Estado
+        decimal Programado
+        string? ProductoNombre
+        decimal Producido
+        int TiempoInterrupcionMin
+        bool EnCurso
+        long ExtrusionIdLegacy
+        decimal Calibre
+        decimal Ancho
+        decimal Longitud
+        decimal MetaKg
+        decimal VirgenKg
+        decimal MolidoKg
+        decimal RevHusilloVirgen
+        decimal RevHusilloMolido
+        int TotalBobinasMeta
+        string? LoteSilo
+        string? LotePaqueteAditivos
+        Guid? SiloVirgenId
+        Guid? SiloMolidoId
+        string? MotivoAnticipado
+        int TiempoInterrupcion
+        bool InterrupcionEnCurso
+        int BobinasTotalesReposo
+        string? Observaciones
+        Guid ExtrusoraId
+        Guid OperarioId
+        Guid TurnoId
+        Guid? ProductoId
+    }
+    ExtrusionInterrupcion {
+        Guid ExtrusionId
+        Guid? CausaId
+        DateTime HoraInicio
+        DateTime? HoraFin
+        bool Concluida
+        string? Descripcion
+        string? Observaciones
+    }
+    ExtrusionResultado {
+        Guid ExtrusionId
+        int TotalBobinas
+        int TotalBobinasMolidas
+        int TotalBobinasRechazadas
+        int TotalBobinasTurno
+        int TotalBobinasSiguienteTurno
+        int TotalBobinasMeta
+        int BobinasTotalesReposo
+        int TiempoInterrupcionMinutos
+        decimal TiempoProcesoHoras
+        decimal EficienciaPorc
+        decimal KgProducidos
+        decimal KgMerma
+        decimal KgMolido
+        string? ObservacionesFinales
+        DateTime FechaRegistro
+    }
+    Extrusora {
+        string Codigo
+        string Nombre
+        string? Modelo
+        string? NumeroSerie
+        bool IsActive
+        EstadoExtrusora Estado
+        string? Imagen
+        decimal CapacidadKgHora
+        int NumeroEstaciones
+        string? Observaciones
+    }
+    ExtrusoraMezcladora {
+        Guid ExtrusoraId
+        string Nombre
+        string? Codigo
+        bool IsActive
+        string? Observaciones
+    }
+    ExtrusoraProducto {
+        Guid ExtrusoraId
+        Guid ProductoId
+        decimal DefaultCalibre
+        decimal DefaultAncho
+        decimal DefaultLongitud
+        decimal DefaultVirgenKg
+        decimal DefaultMolidoKg
+        decimal DefaultRevHusilloVirgen
+        decimal DefaultRevHusilloMolido
+        decimal DefaultMetaKg
+        int DefaultMinutosReposo
+        bool IsActive
+    }
+    PrensadoBobina {
+        Guid PrensadoId
+        Guid BobinaId
+        int CantCarreras
+        bool Activa
+        DateTime HoraInicio
+        DateTime? HoraFin
+    }
+    Categoria ||--o{ Articulo : "System.Collections.Hashtable[4]"
+    Existencia ||--o{ ExistenciaSilo : "System.Collections.Hashtable[4]"
+    Existencia ||--o{ ExistenciaProducto : "System.Collections.Hashtable[4]"
+    ExistenciaProducto }o--|| Existencia : "Existencia"
+    ExistenciaSilo }o--|| Silo : "Silo"
+    Silo ||--o{ ExistenciaSilo : "System.Collections.Hashtable[4]"
+    Bobina }o--|| EstadoBobina : "Estado"
+    Bobina }o--|| ColorEstacion : "ColorEstacion"
+    Bobina }o--|| MotivoMolino : "MotivoMolino"
+    Bobina }o--|| Extrusion : "Extrusion"
+    Bobina ||--o{ PrensadoBobina : "System.Collections.Hashtable[4]"
+    Extrusion }o--|| EstadoExtrusion : "Estado"
+    Extrusion }o--|| Extrusora : "Extrusora"
+    Extrusion }o--|| Operario : "Operario"
+    Extrusion }o--|| Turno : "Turno"
+    Extrusion ||--o{ Bobina : "System.Collections.Hashtable[4]"
+    Extrusion ||--o{ ExtrusionInterrupcion : "System.Collections.Hashtable[4]"
+    ExtrusionInterrupcion }o--|| Extrusion : "Extrusion"
+    ExtrusionResultado }o--|| Extrusion : "Extrusion"
+    Extrusora }o--|| EstadoExtrusora : "Estado"
+    Extrusora ||--o{ Extrusion : "System.Collections.Hashtable[4]"
+    Extrusora ||--o{ ExtrusoraProducto : "System.Collections.Hashtable[4]"
+    Extrusora ||--o{ ExtrusoraMezcladora : "System.Collections.Hashtable[4]"
+    Extrusora ||--o{ ExtrusoraOperario : "System.Collections.Hashtable[4]"
+    ExtrusoraMezcladora }o--|| Extrusora : "Extrusora"
+    ExtrusoraProducto }o--|| Extrusora : "Extrusora"
+    ExtrusoraProducto }o--|| Producto : "Producto"
+    PrensadoBobina }o--|| Prensado : "Prensado"
+    PrensadoBobina }o--|| Bobina : "Bobina"
+

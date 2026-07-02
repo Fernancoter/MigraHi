@@ -1,4 +1,17 @@
 import { Routes } from '@angular/router';
+
+// Módulo Configurar Producción
+import { TableroProduccionComponent } from './features/produccion/tablero/tablero.component';
+import { CategoriasComponent } from './features/produccion/catalogos/categorias/categorias.component';
+import { TurnosCatalogoComponent } from './features/produccion/catalogos/turnos/turnos.component';
+import { ExtrusorasCatalogoComponent } from './features/produccion/catalogos/extrusoras/extrusoras.component';
+import { PrensasCatalogoComponent } from './features/produccion/catalogos/prensas/prensas.component';
+import { SilosCatalogoComponent } from './features/produccion/catalogos/silos/silos.component';
+import { OperariosCatalogoComponent } from './features/produccion/catalogos/operarios/operarios.component';
+import { ProductosCatalogoComponent } from './features/produccion/catalogos/productos/productos.component';
+import { ProduccionConfiguracionComponent } from './features/produccion/referencias/configuracion/configuracion.component';
+import { ExtrusoraProductoComponent } from './features/produccion/referencias/extrusora-producto/extrusora-producto.component';
+import { ExtrusoraMezcladoraComponent } from './features/produccion/referencias/extrusora-mezcladora/extrusora-mezcladora.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { LoginComponent } from './features/auth/login/login.component';
@@ -23,6 +36,7 @@ import { SeguridadComponent } from './features/seguridad/seguridad.component';
 import { LotesComponent } from './features/inventario/lotes/lotes.component';
 import { CierreMesComponent } from './features/inventario/cierre-mes/cierre-mes.component';
 import { ExistenciasComponent } from './features/inventario/existencias/existencias.component';
+import { InventarioIndexComponent } from './features/inventario/inventario-index/inventario-index.component';
 import { authGuard } from './core/guards/auth.guard';
 import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './features/auth/change-password/change-password.component';
@@ -40,11 +54,12 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent },
+      { path: 'inventario/inicio', loadComponent: () => import('./features/inventario/inicio/inicio').then(m => m.Inicio) },
       { path: 'inventario/lotes', component: LotesComponent },
       { path: 'inventario/cierre-mes', component: CierreMesComponent },
-      { path: 'inventario/existencias', component: ExistenciasComponent },
       { path: 'inventario/silos', component: SilosComponent },
-      { path: 'inventario', component: ArticulosListComponent },
+      { path: 'inventario/existencias', component: InventarioIndexComponent },
+      { path: 'inventario/existencias/detalle/:id', component: ExistenciasComponent },
       { path: 'clientes', component: ClientesListComponent },
       { path: 'ventas', component: VentasListComponent },
       { path: 'produccion', component: ProduccionListComponent },
@@ -57,7 +72,16 @@ export const routes: Routes = [
       { path: 'produccion/extrusion/operacion/bobinas', component: BobinasListComponent },
       { path: 'embarques', component: EmbarquesComponent },
       { path: 'embarques/carga/:id', loadComponent: () => import('./features/embarques/carga-camion/carga-camion').then(m => m.CargaCamionComponent) },
-      { path: 'calidad', component: CalidadComponent },
+      {
+        path: 'calidad',
+        children: [
+          { path: '', component: CalidadComponent },
+          { path: 'reclamos', loadComponent: () => import('./features/calidad/reclamos-list.component').then(m => m.ReclamosListComponent) },
+          { path: 'reclamos/:id', loadComponent: () => import('./features/calidad/reclamo-detail.component').then(m => m.ReclamoDetailComponent) },
+          { path: 'defectos', loadComponent: () => import('./features/calidad/defectos-list.component').then(m => m.DefectosListComponent) },
+          { path: 'consultar', loadComponent: () => import('./features/calidad/consultar-carrete.component').then(m => m.ConsultarCarreteComponent) }
+        ]
+      },
       {
         path: 'seguridad',
         component: SeguridadComponent,
@@ -69,8 +93,35 @@ export const routes: Routes = [
       },
       { path: 'configuracion', component: ConfiguracionComponent },
       { path: 'reportes-sae', component: ReportesSaeComponent },
+      { path: 'reportes-sae/orders-price', loadComponent: () => import('./features/reportes-sae/report-orders-price.component').then(m => m.ReportOrdersPriceComponent) },
+      { path: 'reportes-sae/presupuesto', loadComponent: () => import('./features/reportes-sae/edit-budget.component').then(m => m.EditBudgetComponent) },
+      { path: 'reportes-sae/itw-outlook', loadComponent: () => import('./features/reportes-sae/itw-outlook.component').then(m => m.ItwOutlookComponent) },
+      { path: 'reportes-sae/realtime-inventory', loadComponent: () => import('./features/reportes-sae/realtime-inventory.component').then(m => m.RealtimeInventoryComponent) },
       { path: 'catalogos-sae', component: CatalogosSaeComponent },
+      { path: 'catalogos-sae/customer', loadComponent: () => import('./features/catalogos-sae/customer/customer.component').then(m => m.CustomerComponent) },
+      { path: 'catalogos-sae/outlook', loadComponent: () => import('./features/catalogos-sae/outlook/outlook.component').then(m => m.OutlookComponent) },
+      { path: 'catalogos-sae/budget', loadComponent: () => import('./features/catalogos-sae/budget/budget.component').then(m => m.BudgetComponent) },
+      { path: 'catalogos-sae/price', loadComponent: () => import('./features/catalogos-sae/price/price.component').then(m => m.PriceComponent) },
+      { path: 'catalogos-sae/product', loadComponent: () => import('./features/catalogos-sae/product/product.component').then(m => m.ProductComponent) },
+      { path: 'catalogos-sae/salesperson', loadComponent: () => import('./features/catalogos-sae/salesperson/salesperson.component').then(m => m.SalesPersonComponent) },
       { path: 'informes', component: DashboardComponent },
+      
+      // Módulo Configurar Producción
+      { path: 'configurar-produccion', component: TableroProduccionComponent },
+      { path: 'configurar-produccion/turnos-semana', component: TurnosSemanaComponent },
+      { path: 'configurar-produccion/catalogos/categorias', component: CategoriasComponent },
+      { path: 'configurar-produccion/catalogos/turnos', component: TurnosCatalogoComponent },
+      { path: 'configurar-produccion/catalogos/extrusoras', component: ExtrusorasCatalogoComponent },
+      { path: 'configurar-produccion/catalogos/prensas', component: PrensasCatalogoComponent },
+      { path: 'configurar-produccion/catalogos/silos', component: SilosCatalogoComponent },
+      { path: 'configurar-produccion/operarios', component: OperariosCatalogoComponent },
+      { path: 'configurar-produccion/productos', component: ProductosCatalogoComponent },
+      { path: 'configurar-produccion/referencias/configuracion', component: ProduccionConfiguracionComponent },
+      { path: 'configurar-produccion/referencias/extrusora-producto', component: ExtrusoraProductoComponent },
+      { path: 'configurar-produccion/referencias/extrusora-mezcladora', component: ExtrusoraMezcladoraComponent },
+      { path: 'configurar-produccion/referencias/prensa-producto', loadComponent: () => import('./features/produccion/referencias/prensa-producto/prensa-producto.component').then(m => m.PrensaProductoComponent) },
+      { path: 'configurar-produccion/referencias/producto-terminado', loadComponent: () => import('./features/produccion/referencias/producto-terminado/producto-terminado.component').then(m => m.ProductoTerminadoComponent) },
+      
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

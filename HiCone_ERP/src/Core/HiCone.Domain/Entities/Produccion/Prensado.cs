@@ -15,7 +15,27 @@ public class Prensado : TenantEntity
     public DateTime? HoraFinProceso { get; set; }
     public EstadoPrensado Estado { get; set; } = EstadoPrensado.EnProceso;
 
+    // Retrocompatibilidad con el módulo de configuración de producción
+    public decimal Programado { get; set; }
+    public string? LoteSilo { get; set; }
+    public decimal Calibre { get; set; }
+    public string? Ancho { get; set; }
+    public decimal Longitud { get; set; }
+    public string? ProductoNombre { get; set; }
+    public PrensadoStatus Status { get => (PrensadoStatus)Estado; set => Estado = (EstadoPrensado)value; }
+    public decimal KgVirgen { get; set; }
+    public decimal KgMolido { get; set; }
+    public decimal Target { get; set; }
+    public DateTime? ProcessStart { get => HoraIniciaProceso; set { if(value.HasValue) HoraIniciaProceso = value.Value; } }
+    public DateTime? ProcessEnd { get => HoraFinProceso; set => HoraFinProceso = value; }
+    public decimal Producido { get; set; }
+    public int TiempoInterrupcionMin { get; set; }
+    public bool EnCurso { get; set; }
+    public long PrensadoIdLegacy { get; set; }
+
+
     // ── Parámetros de proceso ───────────────────────────────────────────────
+
     public string LevasUnidadMedida { get; set; } = "Kg";
     public string RodillosUnidadMedida { get; set; } = "Kg";
     public decimal LevasKgEntrada { get; set; }

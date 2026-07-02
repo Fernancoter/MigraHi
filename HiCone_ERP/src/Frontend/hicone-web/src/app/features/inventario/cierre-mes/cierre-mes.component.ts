@@ -25,125 +25,125 @@ interface SavedFilter {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="module-page animate-move-up">
+    <div class="module-page animate-fade-in">
       <div class="page-header-premium">
         <div class="title-section">
-          <h1 class="premium-title">📅 Cierre de Mes</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Inventarios</span>
             <span class="sep">></span>
             <span class="active">Cierre de Mes</span>
           </nav>
+          <h1 class="premium-title">Inventario</h1>
+        </div>
+      </div>
+      
+      <div class="toolbar-premium">
+        <div class="btn-group-modern">
+          <!-- Dropdown Exportar -->
+          <div class="dropdown-container">
+            <button class="btn-legacy secondary" (click)="showExportSelector = !showExportSelector">
+              📥 Exportar <span class="arrow">▼</span>
+            </button>
+            <div class="column-selector-dropdown shadow-premium" *ngIf="showExportSelector" style="width: 150px;">
+              <div class="column-list custom-scroll">
+                <div class="column-group">
+                  <label class="item-label export-item" (click)="exportToCSV(); showExportSelector = false">📄 Excel (CSV)</label>
+                  <label class="item-label export-item" (click)="exportToPDF(); showExportSelector = false">📕 PDF</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-legacy primary" (click)="abrirModalNuevoCierre()">Agregar</button>
+
+          <!-- Selector de Columnas -->
+          <div class="dropdown-container">
+            <button class="btn-legacy secondary" (click)="toggleColumnSelector()">
+              Selecciona columnas <span class="arrow">▼</span>
+            </button>
+            <div class="column-selector-dropdown shadow-premium" *ngIf="showColumnSelector">
+              <div class="dropdown-header">
+                <input type="text" placeholder="Filtrar..." class="search-mini">
+              </div>
+              <div class="column-list custom-scroll">
+                <div class="column-group">
+                  <label class="group-label"><input type="checkbox" checked disabled> Fijas a la izquierda</label>
+                  <label class="item-label"><input type="checkbox" checked disabled> Acciones</label>
+                </div>
+                <div class="column-group">
+                  <label class="group-label">No fijas</label>
+                  <div class="items">
+                    <label *ngFor="let col of columns" class="item-label">
+                      <input type="checkbox" [(ngModel)]="col.visible"> {{ col.label }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="dropdown-footer">
+                <button class="btn-reset" (click)="resetColumns()">↺</button>
+                <button class="btn-update" (click)="showColumnSelector = false">Actualizar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón Rápido de Excel (XLS) Verde -->
+          <button class="btn-quick-xls" (click)="exportToCSV()" title="Exportar Rápido a Excel">
+            📊 XLS
+          </button>
         </div>
         
-        <div class="toolbar-premium">
-          <div class="btn-group-modern">
-            <!-- Dropdown Exportar -->
-            <div class="dropdown-container">
-              <button class="btn-legacy secondary" (click)="showExportSelector = !showExportSelector">
-                📥 Exportar <span class="arrow">▼</span>
-              </button>
-              <div class="column-selector-dropdown shadow-premium" *ngIf="showExportSelector" style="width: 150px;">
-                <div class="column-list custom-scroll">
-                  <div class="column-group">
-                    <label class="item-label export-item" (click)="exportToCSV(); showExportSelector = false">📄 Excel (CSV)</label>
-                    <label class="item-label export-item" (click)="exportToPDF(); showExportSelector = false">📕 PDF</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <button class="btn-legacy primary" (click)="abrirModalNuevoCierre()">Agregar</button>
-
-            <!-- Selector de Columnas -->
-            <div class="dropdown-container">
-              <button class="btn-legacy secondary" (click)="toggleColumnSelector()">
-                Selecciona columnas <span class="arrow">▼</span>
-              </button>
-              <div class="column-selector-dropdown shadow-premium" *ngIf="showColumnSelector">
-                <div class="dropdown-header">
-                  <input type="text" placeholder="Filtrar..." class="search-mini">
-                </div>
-                <div class="column-list custom-scroll">
-                  <div class="column-group">
-                    <label class="group-label"><input type="checkbox" checked disabled> Fijas a la izquierda</label>
-                    <label class="item-label"><input type="checkbox" checked disabled> Acciones</label>
-                  </div>
-                  <div class="column-group">
-                    <label class="group-label">No fijas</label>
-                    <div class="items">
-                      <label *ngFor="let col of columns" class="item-label">
-                        <input type="checkbox" [(ngModel)]="col.visible"> {{ col.label }}
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="dropdown-footer">
-                  <button class="btn-reset" (click)="resetColumns()">↺</button>
-                  <button class="btn-update" (click)="showColumnSelector = false">Actualizar</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Botón Rápido de Excel (XLS) Verde -->
-            <button class="btn-quick-xls" (click)="exportToCSV()" title="Exportar Rápido a Excel">
-              📊 XLS
+        <div class="search-funnel-group">
+          <div class="dropdown-container">
+            <button class="btn-funnel-search" (click)="toggleSearchFilterDropdown($event)">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="funnel-icon">
+                <path d="M10,18H14V16H10V18M3,6V8H21V6H3M6,13H18V11H6V13Z" />
+              </svg>
+              <span class="arrow-mini">▼</span>
             </button>
+            
+            <!-- Desplegable del Embudo de Filtros -->
+            <div class="search-filter-dropdown shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()" style="position: absolute; right: 0; z-index: 10; width: 280px; padding: 1rem;">
+              <div class="dropdown-filter-section">
+                <div class="dropdown-filter-group">
+                  <label class="dropdown-filter-label">Consultas a partir de la fecha</label>
+                  <input type="date" class="dropdown-filter-input" [(ngModel)]="filterFechaDesde" (change)="cdr.detectChanges()">
+                </div>
+                <div class="dropdown-filter-group">
+                  <label class="dropdown-filter-label">Hasta la fecha</label>
+                  <input type="date" class="dropdown-filter-input" [(ngModel)]="filterFechaHasta" (change)="cdr.detectChanges()">
+                </div>
+                <div class="dropdown-filter-group">
+                  <label class="dropdown-filter-label">Estado de Cierre</label>
+                  <select class="dropdown-filter-select" [(ngModel)]="filterEstado" (change)="cdr.detectChanges()">
+                    <option value="">-- Todos --</option>
+                    <option value="Abierto">Abierto</option>
+                    <option value="Completado">Completado</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="dropdown-divider"></div>
+              
+              <div class="dropdown-item-action" (click)="clearAllFilters()">
+                <span class="icon-circle-cross">✖</span> Limpiar filtros
+              </div>
+              <div class="dropdown-item-action" (click)="saveActiveFilters()">
+                <span class="icon-floppy">💾</span> Guardar filtro como...
+              </div>
+              
+              <ng-container *ngIf="savedFilters.length > 0">
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-header-saved">Filtros Guardados</div>
+                <div class="dropdown-item-action saved-filter-item" *ngFor="let f of savedFilters" (click)="loadSavedFilter(f)">
+                  <span><span class="icon">📁</span> {{ f.name }}</span>
+                  <span class="btn-delete-saved-filter" (click)="deleteSavedFilter(f, $event)">🗑️</span>
+                </div>
+              </ng-container>
+            </div>
           </div>
           
-          <div class="search-funnel-group">
-            <div class="dropdown-container">
-              <button class="btn-funnel-search" (click)="toggleSearchFilterDropdown($event)">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="funnel-icon">
-                  <path d="M10,18H14V16H10V18M3,6V8H21V6H3M6,13H18V11H6V13Z" />
-                </svg>
-                <span class="arrow-mini">▼</span>
-              </button>
-              
-              <!-- Desplegable del Embudo de Filtros -->
-              <div class="search-filter-dropdown shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()">
-                <div class="dropdown-filter-section">
-                  <div class="dropdown-filter-group">
-                    <label class="dropdown-filter-label">Consultas a partir de la fecha</label>
-                    <input type="date" class="dropdown-filter-input" [(ngModel)]="filterFechaDesde" (change)="cdr.detectChanges()">
-                  </div>
-                  <div class="dropdown-filter-group">
-                    <label class="dropdown-filter-label">Hasta la fecha</label>
-                    <input type="date" class="dropdown-filter-input" [(ngModel)]="filterFechaHasta" (change)="cdr.detectChanges()">
-                  </div>
-                  <div class="dropdown-filter-group">
-                    <label class="dropdown-filter-label">Estado de Cierre</label>
-                    <select class="dropdown-filter-select" [(ngModel)]="filterEstado" (change)="cdr.detectChanges()">
-                      <option value="">-- Todos --</option>
-                      <option value="Abierto">Abierto</option>
-                      <option value="Completado">Completado</option>
-                    </select>
-                  </div>
-                </div>
-                
-                <div class="dropdown-divider"></div>
-                
-                <div class="dropdown-item-action" (click)="clearAllFilters()">
-                  <span class="icon-circle-cross">✖</span> Limpiar filtros
-                </div>
-                <div class="dropdown-item-action" (click)="saveActiveFilters()">
-                  <span class="icon-floppy">💾</span> Guardar filtro como...
-                </div>
-                
-                <ng-container *ngIf="savedFilters.length > 0">
-                  <div class="dropdown-divider"></div>
-                  <div class="dropdown-header-saved">Filtros Guardados</div>
-                  <div class="dropdown-item-action saved-filter-item" *ngFor="let f of savedFilters" (click)="loadSavedFilter(f)">
-                    <span><span class="icon">📁</span> {{ f.name }}</span>
-                    <span class="btn-delete-saved-filter" (click)="deleteSavedFilter(f, $event)">🗑️</span>
-                  </div>
-                </ng-container>
-              </div>
-            </div>
-            
-            <div class="search-modern-underline">
-              <input type="text" placeholder="Buscar..." [(ngModel)]="searchQuery" (input)="onSearchQueryChange()">
-            </div>
+          <div class="search-modern-underline">
+            <input type="text" placeholder="Buscar..." [(ngModel)]="searchQuery" (input)="onSearchQueryChange()">
           </div>
         </div>
       </div>
@@ -169,8 +169,35 @@ interface SavedFilter {
                 <th class="action-header"></th>
                 <th class="action-header"></th>
                 
-                <th *ngIf="isColVisible('fecha')">Fecha Hora de Reinicio de Consecutivo</th>
-                <th *ngIf="isColVisible('inicio')">Inicio Consecutivo</th>
+                <th *ngIf="isColVisible('fecha')" class="rel-pos">
+                  <div class="header-cell-content">
+                    <span>Fecha Hora de Reinicio de Consecutivo</span>
+                    <button class="filter-trigger-btn" [class.active]="activeDropdown === 'fecha'" (click)="toggleDropdown('fecha', $event)">
+                      {{ sortColumn === 'fecha' ? (sortAsc ? '↑' : '↓') : '▼' }}
+                    </button>
+                  </div>
+                  <div class="col-filter-dropdown shadow-premium" *ngIf="activeDropdown === 'fecha'" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item-action" (click)="setSort('fecha', true)"><span class="icon">↑↓</span> Ordenar Antiguos</div>
+                    <div class="dropdown-item-action" (click)="setSort('fecha', false)"><span class="icon">↑↓</span> Ordenar Recientes</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="text-filter-box">
+                      <input type="date" [(ngModel)]="filterFechaDesde" (change)="aplicarFiltros()" class="text-filter-input" style="margin-bottom:5px;">
+                      <input type="date" [(ngModel)]="filterFechaHasta" (change)="aplicarFiltros()" class="text-filter-input">
+                    </div>
+                  </div>
+                </th>
+                <th *ngIf="isColVisible('inicio')" class="rel-pos">
+                  <div class="header-cell-content">
+                    <span>Inicio Consecutivo</span>
+                    <button class="filter-trigger-btn" [class.active]="activeDropdown === 'inicio'" (click)="toggleDropdown('inicio', $event)">
+                      {{ sortColumn === 'inicio' ? (sortAsc ? '↑' : '↓') : '▼' }}
+                    </button>
+                  </div>
+                  <div class="col-filter-dropdown shadow-premium text-left" *ngIf="activeDropdown === 'inicio'" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item-action" (click)="setSort('inicio', true)"><span class="icon">↑↓</span> Ordenar de A a Z</div>
+                    <div class="dropdown-item-action" (click)="setSort('inicio', false)"><span class="icon">↑↓</span> Ordenar de Z a A</div>
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -228,20 +255,28 @@ interface SavedFilter {
       <!-- Modal para Nuevo Cierre -->
       <div class="modal-overlay" *ngIf="showModal" (click)="showModal = false">
         <div class="modal-card legacy-card animate-scale-in" (click)="$event.stopPropagation()">
-          <div class="modal-header-legacy">
-            <span class="header-icon">📅</span> Generar Nuevo Cierre de Mes
+          <div class="modal-header-legacy" [ngClass]="{'bg-danger': modalMode === 'DELETE'}">
+            <span class="header-icon">{{ modalMode === 'ADD' ? '📅' : '⚠️' }}</span> 
+            {{ modalMode === 'ADD' ? 'Generar Nuevo Cierre de Mes' : 'Eliminar Cierre de Mes' }}
           </div>
           <div class="modal-body-legacy">
-            <p class="modal-info">Esta acción tomará una fotografía instantánea del stock actual del sistema para todos los silos y artículos.</p>
-            <div class="form-row-modern-modal">
-              <label class="legacy-label">Observaciones o Motivo (Opcional)</label>
-              <textarea class="legacy-textarea" [(ngModel)]="observacionesNuevoCierre" rows="3" placeholder="Ej. Cierre fin de semana, Auditoría interna..."></textarea>
-            </div>
+            <ng-container *ngIf="modalMode === 'ADD'">
+              <p class="modal-info">Esta acción tomará una fotografía instantánea del stock actual del sistema para todos los silos y artículos.</p>
+              <div class="form-row-modern-modal">
+                <label class="legacy-label">Observaciones o Motivo (Opcional)</label>
+                <textarea class="legacy-textarea" [(ngModel)]="observacionesNuevoCierre" rows="3" placeholder="Ej. Cierre fin de semana, Auditoría interna..."></textarea>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="modalMode === 'DELETE'">
+              <p class="modal-info text-danger" style="font-size: 1rem; color: #b91c1c; font-weight: 500;">¿Está completamente seguro de que desea eliminar este cierre de mes?</p>
+              <p class="modal-info">Esta acción realizará un borrado lógico (Soft-Delete) y no se mostrará en los reportes posteriores. La información base quedará archivada en la base de datos por razones de auditoría.</p>
+            </ng-container>
           </div>
           <div class="modal-footer-legacy">
             <button class="btn-legacy secondary" (click)="showModal = false">Cancelar</button>
-            <button class="btn-legacy primary" (click)="crearCierreYContinuar()" [disabled]="isSubmitting">
-              {{ isSubmitting ? 'Generando...' : 'Crear y Capturar Físico' }}
+            <button class="btn-legacy" [ngClass]="modalMode === 'ADD' ? 'primary' : 'danger'" (click)="modalMode === 'ADD' ? crearCierreYContinuar() : false" [disabled]="isSubmitting">
+              <span *ngIf="modalMode === 'ADD'">{{ isSubmitting ? 'Generando...' : 'Crear y Capturar Físico' }}</span>
+              <span *ngIf="modalMode === 'DELETE'">{{ isSubmitting ? 'Eliminando...' : 'Eliminar Permanentemente' }}</span>
             </button>
           </div>
         </div>
@@ -266,6 +301,9 @@ interface SavedFilter {
     }
     .btn-legacy.primary { background: #166534; color: white; }
     .btn-legacy.primary:hover { background: #14532d; transform: translateY(-1px); }
+    .btn-legacy.danger { background: #dc2626; color: white; }
+    .btn-legacy.danger:hover { background: #b91c1c; transform: translateY(-1px); }
+    .bg-danger { background: #fef2f2 !important; color: #991b1b !important; }
     .btn-legacy.secondary { background: white; color: #334155; border-color: #cbd5e1; }
     .btn-legacy.secondary:hover { background: #f8fafc; border-color: #94a3b8; }
     
@@ -325,6 +363,17 @@ interface SavedFilter {
     .btn-delete-saved-filter { cursor: pointer; opacity: 0.6; padding: 2px; }
     .btn-delete-saved-filter:hover { opacity: 1; color: #ef4444; }
 
+    
+    .rel-pos { position: relative; }
+    .header-cell-content { display: flex; align-items: center; gap: 0.4rem; justify-content: space-between; width: 100%; }
+    .filter-trigger-btn { background: none; border: none; color: #a0aec0; cursor: pointer; padding: 0.1rem 0.3rem; font-size: 0.7rem; border-radius: 3px; transition: all 0.2s; }
+    .filter-trigger-btn:hover { background: #e2e8f0; color: #4a5568; }
+    .filter-trigger-btn.active { color: #166534; font-weight: bold; background: #dcfce7; }
+    .col-filter-dropdown { position: absolute; top: calc(100% + 5px); left: 0; background: white; border: 1px solid #e2e8f0; border-radius: 8px; z-index: 1000; min-width: 220px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 0.5rem 0; animation: fadeInDropdown 0.2s ease-out; }
+    .col-filter-dropdown.text-left { left: auto; right: 0; }
+    .text-filter-box { padding: 0.5rem 1rem; }
+    .text-filter-input { width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
+    
     /* Alertas */
     .alert-container-premium { margin-bottom: 1.5rem; }
     .alert-premium { padding: 1rem; border-radius: 12px; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; font-weight: 600; }
@@ -379,7 +428,7 @@ interface SavedFilter {
     .modal-info { font-size: 0.875rem; color: #64748b; line-height: 1.4; margin-bottom: 1.25rem; }
     .form-row-modern-modal { display: flex; flex-direction: column; gap: 0.4rem; }
     .legacy-label { font-size: 0.8rem; font-weight: 700; color: #475569; text-transform: uppercase; }
-    .legacy-textarea { border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.6rem 0.8rem; font-size: 0.95rem; font-family: inherit; transition: all 0.2s; outline: none; background: #f8fafc; resize: vertical; box-sizing: border-box; width: 100%; }
+    .legacy-textarea { border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.6rem 0.8/em; font-size: 0.95rem; font-family: inherit; transition: all 0.2s; outline: none; background: #f8fafc; resize: vertical; box-sizing: border-box; width: 100%; }
     .legacy-textarea:focus { border-color: #16a34a; background: white; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1); }
     .modal-footer-legacy { padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 0.75rem; background: #f8fafc; }
   `]
@@ -400,6 +449,27 @@ export class CierreMesComponent implements OnInit {
   pageSize = 10;
   totalPages = 1;
 
+  // Sorting state
+  activeDropdown: string | null = null;
+  sortColumn: string = '';
+  sortAsc: boolean = true;
+
+  toggleDropdown(col: string, event: Event) {
+    event.stopPropagation();
+    this.activeDropdown = this.activeDropdown === col ? null : col;
+    this.showSearchFilterDropdown = false;
+    this.showColumnSelector = false;
+    this.showExportSelector = false;
+  }
+
+  setSort(col: string, asc: boolean) {
+    this.sortColumn = col;
+    this.sortAsc = asc;
+    this.activeDropdown = null;
+    this.aplicarFiltros();
+  }
+
+
   // Estado de Menús Desplegables
   showColumnSelector = false;
   showExportSelector = false;
@@ -412,10 +482,10 @@ export class CierreMesComponent implements OnInit {
   filterEstado = '';
 
   // Filtros Guardados
-  savedFilters: SavedFilter[] = [];
+  savedFilters: any[] = [];
 
   // Columnas Configurables
-  columns: ColumnDef[] = [
+  columns: any[] = [
     { id: 'fecha', label: 'Fecha Hora de Reinicio de Consecutivo', visible: true },
     { id: 'inicio', label: 'Inicio Consecutivo', visible: true }
   ];
@@ -424,6 +494,8 @@ export class CierreMesComponent implements OnInit {
   showModal = false;
   observacionesNuevoCierre = '';
   isSubmitting = false;
+  modalMode: 'ADD' | 'DELETE' = 'ADD';
+  itemToDelete: string | null = null;
 
   // Mensajes de Transacción
   successMessage = '';

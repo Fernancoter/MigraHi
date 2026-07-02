@@ -23,4 +23,7 @@ public class ExistenciaProducto : TenantEntity
 
     public decimal CantidadReal { get; set; }
     public decimal CantidadSistema { get; set; }
+    
+    public decimal ProducidoEnTurno { get; set; }
+    public decimal EnTurnoSegunSistema { get; set; }
 }

@@ -10,5 +10,9 @@ public class Operario : TenantEntity
     public string? TurnoPreferido { get; set; }
     public bool IsActive { get; set; } = true;
 
+    // Propiedades de retrocompatibilidad para el módulo de configuración de producción
+    public string Nombre { get => NombreCompleto; set => NombreCompleto = value; }
+    public bool Activo { get => IsActive; set => IsActive = value; }
+
     public virtual ICollection<Extrusion> Extrusiones { get; set; } = new List<Extrusion>();
 }

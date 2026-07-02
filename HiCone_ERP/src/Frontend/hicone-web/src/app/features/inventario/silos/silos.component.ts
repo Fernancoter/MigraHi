@@ -9,76 +9,74 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="module-page animate-move-up">
+    <div class="module-page animate-fade-in">
       <div class="page-header-premium">
         <div class="title-section">
-          <h1 class="premium-title">🏺 Gestión de Silos</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Inventarios</span>
-            <span class="sep">></span>
+            <span class="sep">&rsaquo;</span>
             <span class="active">Silos</span>
           </nav>
+          <h1 class="premium-title">Silo</h1>
         </div>
-        
+      </div>
+      
+      <div class="card-premium" style="margin-bottom: 1rem; border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
         <div class="toolbar-premium">
-          <div class="btn-group-modern">
-            <div class="dropdown-container">
-              <button class="btn-legacy secondary" (click)="showExportSelector = !showExportSelector">📥 Exportar <span class="arrow">▼</span></button>
-              <div class="column-selector-dropdown shadow-premium" *ngIf="showExportSelector" style="width: 150px;">
-                <div class="column-list custom-scroll">
-                  <div class="column-group">
-                    <label class="item-label export-item" (click)="exportToCSV(); showExportSelector = false">📄 Excel (CSV)</label>
-                    <label class="item-label export-item" (click)="exportToPDF(); showExportSelector = false">📕 PDF</label>
-                  </div>
-                </div>
+          <div class="toolbar-left">
+            <div class="dropdown-wrapper">
+              <button class="btn-premium-secondary" (click)="showExportSelector = !showExportSelector">📥 Exportar <span class="chevron-down">▼</span></button>
+              <div class="dropdown-menu-custom shadow-premium" *ngIf="showExportSelector" style="width: 150px; position: absolute; z-index: 10;">
+                <button class="dropdown-item-custom" (click)="exportToCSV(); showExportSelector = false">📊 Excel (CSV)</button>
+                <button class="dropdown-item-custom" (click)="exportToPDF(); showExportSelector = false">📕 PDF</button>
               </div>
             </div>
-            <button class="btn-legacy secondary" (click)="openModal()">Agregar</button>
+            <button class="btn-premium" (click)="openModal()">Agregar</button>
             
             <!-- Selector de Columnas (Imagen 1) -->
-            <div class="dropdown-container">
-              <button class="btn-legacy primary" (click)="toggleColumnSelector()">Selecciona columnas <span class="arrow">▼</span></button>
-              <div class="column-selector-dropdown shadow-premium" *ngIf="showColumnSelector">
-                <div class="dropdown-header">
+            <div class="dropdown-wrapper">
+              <button class="btn-premium-secondary" (click)="toggleColumnSelector()">Selecciona columnas <span class="chevron-down">▼</span></button>
+              <div class="column-selector-popover shadow-premium" *ngIf="showColumnSelector" style="position: absolute; z-index: 10;">
+                <div class="popover-search">
                   <input type="text" placeholder="Filtrar..." class="search-mini">
                 </div>
-                <div class="column-list custom-scroll">
-                  <div class="column-group">
-                    <label class="group-label"><input type="checkbox" checked disabled> Fijas a la izquierda</label>
-                    <label class="item-label"><input type="checkbox" checked disabled> (Ninguna)</label>
+                <div class="popover-sections custom-scroll">
+                  <div class="popover-section">
+                    <div class="section-title"><input type="checkbox" checked disabled> Fijas a la izquierda</div>
+                    <label class="popover-item disabled"><input type="checkbox" checked disabled> (Ninguna)</label>
                   </div>
-                  <div class="column-group">
-                    <label class="group-label"><input type="checkbox" [checked]="allNonFixedVisible()" (change)="toggleAllNonFixed()"> No fijas</label>
-                    <div class="items">
-                      <label *ngFor="let col of columns" class="item-label">
+                  <div class="popover-section">
+                    <div class="section-title"><input type="checkbox" [checked]="allNonFixedVisible()" (change)="toggleAllNonFixed()"> No fijas</div>
+                    <div class="section-list">
+                      <label *ngFor="let col of columns" class="popover-item">
                         <input type="checkbox" [(ngModel)]="col.visible"> {{ col.label }}
                       </label>
                     </div>
                   </div>
                 </div>
-                <div class="dropdown-footer">
-                  <button class="btn-reset" (click)="resetColumns()">↺</button>
-                  <button class="btn-update" (click)="showColumnSelector = false">Actualizar</button>
+                <div class="popover-footer">
+                  <button class="btn-popover-reset" (click)="resetColumns()">↺</button>
+                  <button class="btn-popover-apply" (click)="showColumnSelector = false">Actualizar</button>
                 </div>
               </div>
             </div>
           </div>
           
-          <div class="search-funnel-group">
-            <div class="dropdown-container">
-              <button class="btn-funnel-search" (click)="toggleSearchFilterDropdown($event)">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="funnel-icon">
+          <div class="toolbar-right">
+            <div class="dropdown-wrapper">
+              <button class="btn-premium-secondary" (click)="toggleSearchFilterDropdown($event)">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                   <path d="M10,18H14V16H10V18M3,6V8H21V6H3M6,13H18V11H6V13Z" />
                 </svg>
-                <span class="arrow-mini">▼</span>
+                <span class="chevron-down">▼</span>
               </button>
               
-              <div class="search-filter-dropdown shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()">
+              <div class="column-selector-popover shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()" style="position: absolute; right: 0; z-index: 10; width: 280px; padding: 1rem;">
                 <!-- Sección de Filtros Avanzados Compactos dentro del Embudo -->
-                <div class="dropdown-filter-section">
-                  <div class="dropdown-filter-group">
-                    <label class="dropdown-filter-label">TIPO MATERIAL</label>
-                    <select class="dropdown-filter-select" [(ngModel)]="filterTipoMaterial" (change)="cdr.detectChanges()">
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                  <div class="form-group-premium">
+                    <label>TIPO MATERIAL</label>
+                    <select class="input-premium" [(ngModel)]="filterTipoMaterial" (change)="cdr.detectChanges()">
                       <option value="">-- Todos --</option>
                       <option value="PCR">PCR</option>
                       <option value="HDPE">HDPE</option>
@@ -86,9 +84,9 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
                       <option value="Mezcla">Mezcla</option>
                     </select>
                   </div>
-                  <div class="dropdown-filter-group">
-                    <label class="dropdown-filter-label">ESTADO SILO</label>
-                    <select class="dropdown-filter-select" [(ngModel)]="filterEstadoSilo" (change)="cdr.detectChanges()">
+                  <div class="form-group-premium">
+                    <label>ESTADO SILO</label>
+                    <select class="input-premium" [(ngModel)]="filterEstadoSilo" (change)="cdr.detectChanges()">
                       <option value="all">Todos</option>
                       <option value="true">Activos</option>
                       <option value="false">Inactivos</option>
@@ -98,10 +96,10 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
                 
                 <div class="dropdown-divider"></div>
                 
-                <div class="dropdown-item-action" (click)="clearAllFilters()">
+                <div class="dropdown-item-action" (click)="clearAllFilters()" style="padding: 0.5rem 0;">
                   <span class="icon-circle-cross">✖</span> Limpiar filtros
                 </div>
-                <div class="dropdown-item-action" (click)="saveActiveFilters()">
+                <div class="dropdown-item-action" (click)="saveActiveFilters()" style="padding: 0.5rem 0;">
                   <span class="icon-floppy">💾</span> Guardar filtro como...
                 </div>
                 
@@ -121,15 +119,14 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
             </div>
           </div>
         </div>
-
       </div>
 
-      <!-- Modal Legacy (Imagen 2) -->
-      <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
-        <div class="modal-card legacy-card animate-scale-in" (click)="$event.stopPropagation()">
-          <div class="modal-header-legacy">
-            <span class="header-icon">🏗️</span> 
-            {{ modalMode === 'VIEW' ? 'Visualizar Silo' : modalMode === 'EDIT' ? 'Modificar Silo' : modalMode === 'DELETE' ? 'Eliminar Silo' : modalMode === 'CONSUMO' ? 'Registrar Salida' : 'Agregar Silo' }}
+      <!-- Modal Premium -->
+      <div class="modal-overlay-premium" *ngIf="showModal" (click)="closeModal()">
+        <div class="modal-card-premium animate-scale-in" style="max-width: 800px;" (click)="$event.stopPropagation()">
+          <div class="modal-header-premium">
+            <h3><span>📂</span> {{ modalMode === 'VIEW' ? 'Visualizar Silo' : modalMode === 'EDIT' ? 'Modificar Silo' : modalMode === 'DELETE' ? 'Eliminar Silo' : modalMode === 'CONSUMO' ? 'Registrar Salida' : 'Agregar Silo' }}</h3>
+            <button class="btn-icon-premium" (click)="closeModal()">✖️</button>
           </div>
           <form (ngSubmit)="handleModalSubmit()">
             <!-- Tab Headers for VIEW mode -->
@@ -138,20 +135,20 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
               <button type="button" class="modal-tab-btn" [class.active]="activeTab === 'audit'" (click)="activeTab = 'audit'; loadAuditHistory()">🕒 Historial de Auditoría</button>
             </div>
 
-            <div class="modal-body-legacy custom-scroll">
+            <div class="modal-body-premium custom-scroll" [style.max-height]="'60vh'" [style.overflow-y]="'auto'">
               
               <ng-container *ngIf="modalMode === 'CONSUMO'">
-                <div class="form-row" style="grid-column: span 2;">
-                  <label class="legacy-label">Existencia Actual (kg)</label>
-                  <input type="number" class="legacy-input" [value]="newSilo.existenciaActual" disabled>
+                <div class="form-group-premium" style="grid-column: span 2;">
+                  <label>Existencia Actual (kg)</label>
+                  <input type="number" class="input-premium" [value]="newSilo.existenciaActual" disabled>
                 </div>
-                <div class="form-row">
-                  <label class="legacy-label">Kilos a Descontar *</label>
-                  <input type="number" class="legacy-input" [(ngModel)]="consumoKilos" name="consumoKilos" required min="0.01" [max]="newSilo.existenciaActual || 0">
+                <div class="form-group-premium">
+                  <label>Kilos a Descontar *</label>
+                  <input type="number" class="input-premium" [(ngModel)]="consumoKilos" name="consumoKilos" required min="0.01" [max]="newSilo.existenciaActual || 0">
                 </div>
-                <div class="form-row">
-                  <label class="legacy-label">Motivo *</label>
-                  <input type="text" class="legacy-input" [(ngModel)]="consumoMotivo" name="consumoMotivo" required placeholder="Ej. Consumo por Extrusión">
+                <div class="form-group-premium">
+                  <label>Motivo *</label>
+                  <input type="text" class="input-premium" [(ngModel)]="consumoMotivo" name="consumoMotivo" required placeholder="Ej. Consumo por Extrusión">
                 </div>
               </ng-container>
 
@@ -161,52 +158,52 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
                   ⚠️ ¿Está seguro que desea eliminar este silo? Esta acción no se puede deshacer.
                 </div>
 
-                <div class="form-row">
-                  <label class="legacy-label">Código *</label>
-                  <input type="text" class="legacy-input" [(ngModel)]="newSilo.codigo" name="codigo" required [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                <div class="form-group-premium">
+                  <label>Código *</label>
+                  <input type="text" class="input-premium" [(ngModel)]="newSilo.codigo" name="codigo" required [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                 </div>
 
-                <div class="form-row">
-                  <label class="legacy-label">Nombre *</label>
-                  <input type="text" class="legacy-input" [(ngModel)]="newSilo.nombre" name="nombre" required [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                <div class="form-group-premium">
+                  <label>Nombre *</label>
+                  <input type="text" class="input-premium" [(ngModel)]="newSilo.nombre" name="nombre" required [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                 </div>
 
-                <div class="form-row">
-                  <label class="legacy-label">Capacidad (kg)</label>
-                  <input type="number" class="legacy-input" [(ngModel)]="newSilo.capacidadMaxima" name="capacidad" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                <div class="form-group-premium">
+                  <label>Capacidad (kg)</label>
+                  <input type="number" class="input-premium" [(ngModel)]="newSilo.capacidadMaxima" name="capacidad" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                 </div>
 
-                <div class="form-row">
-                  <label class="legacy-label">Mínimo (kg)</label>
-                  <input type="number" class="legacy-input" [(ngModel)]="newSilo.kgMinimo" name="minimo" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                <div class="form-group-premium">
+                  <label>Mínimo (kg)</label>
+                  <input type="number" class="input-premium" [(ngModel)]="newSilo.kgMinimo" name="minimo" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                 </div>
 
-                <div class="form-row">
-                  <label class="legacy-label">Máximo (kg)</label>
-                  <input type="number" class="legacy-input" [(ngModel)]="newSilo.kgMaximo" name="maximo" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                <div class="form-group-premium">
+                  <label>Máximo (kg)</label>
+                  <input type="number" class="input-premium" [(ngModel)]="newSilo.kgMaximo" name="maximo" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                 </div>
 
-                <div class="form-row">
-                  <label class="legacy-label">Estado Material</label>
-                  <select class="legacy-select" [(ngModel)]="newSilo.estadoMaterial" name="estadoMat" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                <div class="form-group-premium">
+                  <label>Estado Material</label>
+                  <select class="input-premium" [(ngModel)]="newSilo.estadoMaterial" name="estadoMat" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                     <option value="Virgen (pelet)">Virgen (pelet)</option>
                     <option value="Molido">Molido</option>
                     <option value="Mezcla">Mezcla</option>
                   </select>
                 </div>
 
-                <div class="form-row">
-                  <label class="legacy-label">Tipo de Material</label>
-                  <select class="legacy-select" [(ngModel)]="newSilo.tipoMaterial" name="tipoMat" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                <div class="form-group-premium">
+                  <label>Tipo de Material</label>
+                  <select class="input-premium" [(ngModel)]="newSilo.tipoMaterial" name="tipoMat" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                     <option value="PCR">PCR</option>
                     <option value="HDPE">HDPE</option>
                     <option value="PP">PP</option>
                   </select>
                 </div>
 
-                <div class="form-row">
-                  <label class="legacy-label">Activo</label>
-                  <input type="checkbox" class="legacy-checkbox" [(ngModel)]="newSilo.activo" name="activo" [disabled]="modalMode !== 'ADD'">
+                <div class="form-group-premium" style="flex-direction: row; align-items: center; gap: 0.5rem;">
+                  <input type="checkbox" class="legacy-checkbox" id="chk-activo" [(ngModel)]="newSilo.activo" name="activo" [disabled]="modalMode !== 'ADD'">
+                  <label for="chk-activo" style="margin: 0; cursor: pointer;">Activo</label>
                 </div>
               </ng-container>
 
@@ -256,19 +253,19 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
               </div>
 
             </div>
-            <div class="modal-footer-legacy">
-              <button type="submit" class="btn-confirm" *ngIf="modalMode !== 'VIEW'" [class.btn-danger]="modalMode === 'DELETE'">
+            <div class="modal-footer-premium">
+              <button type="submit" class="btn-premium" *ngIf="modalMode !== 'VIEW'" [class.btn-premium-danger]="modalMode === 'DELETE'">
                 {{ modalMode === 'DELETE' ? 'ELIMINAR' : 'CONFIRMAR' }}
               </button>
-              <button type="button" class="btn-cancel" (click)="closeModal()">{{ modalMode === 'VIEW' ? 'CERRAR' : 'CANCELAR' }}</button>
+              <button type="button" class="btn-premium-secondary" (click)="closeModal()">{{ modalMode === 'VIEW' ? 'CERRAR' : 'CANCELAR' }}</button>
             </div>
           </form>
         </div>
       </div>
 
-      <div class="content-container">
-        <div class="table-card shadow-premium">
-          <table class="premium-grid">
+      <div class="card-premium" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
+        <div class="table-modern-container">
+          <table class="table-modern">
             <thead>
               <tr>
                 <th class="text-center sticky-col">Archivar</th>
@@ -341,42 +338,6 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
                       <div class="num-filter-row">
                         <label>Hasta</label>
                         <input type="number" [(ngModel)]="filterCapacidadHasta" class="num-filter-input" (input)="cdr.detectChanges()">
-                      </div>
-                      <button class="btn-num-filter-search" (click)="applyNumericFilter()">Buscar</button>
-                    </div>
-                  </div>
-                </th>
-                <th *ngIf="isColVisible('existencia')" class="rel-pos text-right">
-                  <div class="header-cell-content justify-end">
-                    <span>Existencia (kg)</span>
-                    <button class="filter-trigger-btn" [class.active]="activeDropdown === 'existencia'" (click)="toggleDropdown('existencia', $event)">
-                      {{ sortColumn === 'existencia' ? (sortAsc ? '↑' : '↓') : '▼' }}
-                    </button>
-                  </div>
-                  <!-- Dropdown para Existencia -->
-                  <div class="col-filter-dropdown shadow-premium text-left" *ngIf="activeDropdown === 'existencia'" (click)="$event.stopPropagation()">
-                    <div class="dropdown-item-action" (click)="setSort('existencia', true)">
-                      <span class="icon">↑↓</span> Ordenar de A a Z
-                    </div>
-                    <div class="dropdown-item-action" (click)="setSort('existencia', false)">
-                      <span class="icon">↑↓</span> Ordenar de Z a A
-                    </div>
-                    <div class="dropdown-divider"></div>
-                    <div class="dropdown-item-action" (click)="pinColumn('existencia', 'left')">
-                      <span class="icon">⊞</span> Fijar a la izquierda
-                    </div>
-                    <div class="dropdown-item-action" (click)="pinColumn('existencia', 'right')">
-                      <span class="icon">⊞</span> Fijar a la derecha
-                    </div>
-                    <div class="dropdown-divider"></div>
-                    <div class="numeric-filter-box">
-                      <div class="num-filter-row">
-                        <label>Desde</label>
-                        <input type="number" [(ngModel)]="filterExistenciaDesde" class="num-filter-input" (input)="cdr.detectChanges()">
-                      </div>
-                      <div class="num-filter-row">
-                        <label>Hasta</label>
-                        <input type="number" [(ngModel)]="filterExistenciaHasta" class="num-filter-input" (input)="cdr.detectChanges()">
                       </div>
                       <button class="btn-num-filter-search" (click)="applyNumericFilter()">Buscar</button>
                     </div>
@@ -574,7 +535,6 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
                 
                 <td *ngIf="isColVisible('nombre')" class="font-semibold">{{ s.nombre }}</td>
                 <td *ngIf="isColVisible('capacidad')" class="text-right font-mono">{{ s.capacidadMaxima | number:'1.2-2' }}</td>
-                <td *ngIf="isColVisible('existencia')" class="text-right font-mono" style="color: #1a73e8; font-weight: bold;">{{ s.existenciaActual | number:'1.2-2' }}</td>
                 <td *ngIf="isColVisible('minimo')" class="text-right font-mono">{{ s.kgMinimo | number:'1.2-2' }}</td>
                 <td *ngIf="isColVisible('maximo')" class="text-right font-mono">{{ s.kgMaximo | number:'1.2-2' }}</td>
                 <td *ngIf="isColVisible('estadoMat')">{{ s.estadoMaterial }}</td>
@@ -597,7 +557,7 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
     .page-header-premium { margin-bottom: 3rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 1.5rem; }
     .premium-title { font-size: 2.2rem; color: #2c3e50; margin: 0; font-weight: 700; letter-spacing: -0.5px; }
     .breadcrumb-modern { font-size: 1rem; color: #7f8c8d; margin-top: 0.5rem; }
-
+    
     .toolbar-premium { 
       display: flex; justify-content: space-between; align-items: center; 
       margin-top: 2rem; gap: 1rem; flex-wrap: wrap;
@@ -616,12 +576,37 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
       box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
       border-color: #5cb85c;
     }
+    .btn-legacy:active { transform: translateY(0); }
     .btn-legacy.primary { background: #5cb85c; color: white; border-color: #4cae4c; }
+    .btn-legacy.primary:hover { background: #449d44; }
+    
+    .btn-quick-xls {
+      background: white; border: 1px solid #2e7d32; color: #2e7d32;
+      padding: 0.8rem 1.2rem; border-radius: 8px; font-size: 1.1rem; cursor: pointer;
+      font-weight: 600; display: flex; align-items: center; gap: 0.4rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s;
+    }
+    .btn-quick-xls:hover {
+      background: #e8f5e9; transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(46,125,50,0.1);
+    }
     
     .dropdown-container { position: relative; }
-    .table-card { overflow: visible !important; }
-    .premium-grid { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #f0f0f0; border-radius: 12px; overflow: visible !important; }
-    .premium-grid th { overflow: visible !important; }
+    .export-dropdown {
+      position: absolute; top: 120%; left: 0; width: 200px; background: #ffffff;
+      border: 1px solid #ddd; border-radius: 8px; z-index: 1000; 
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15); padding: 0.6rem 0;
+      animation: slideIn 0.2s ease-out;
+    }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .export-option {
+      padding: 1rem 1.5rem; cursor: pointer; display: block; font-size: 1.05rem; color: #2f3640;
+      transition: all 0.2s;
+    }
+    .export-option:hover { background: #f1f2f6; color: #5cb85c; padding-left: 1.8rem; }
+
+    .premium-grid { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #f0f0f0; border-radius: 12px; overflow: hidden; }
     .premium-grid th { 
       padding: 1.2rem 1rem; background: #f8f9fa; text-align: left; 
       font-size: 0.95rem; font-weight: 700; color: #34495e; 
@@ -632,47 +617,13 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
     .grid-row td { padding: 1.2rem 1rem; font-size: 1.05rem; color: #2c3e50; border-bottom: 1px solid #f0f0f0; }
 
     .link-btn { 
-      background: #f1f2f6; border: none; color: #5cb85c; padding: 0.5rem 1rem; 
-      border-radius: 6px; cursor: pointer; font-size: 0.95rem; font-weight: 600;
-      transition: all 0.2s;
+      background: none; border: none; color: #2e7d32; padding: 0.2rem 0.5rem; 
+      cursor: pointer; font-size: 0.95rem; font-weight: 600;
+      transition: color 0.2s;
     }
-    .link-btn:hover { background: #5cb85c; color: white; }
-
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
-    .legacy-card { background: white; width: 90%; max-width: 800px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 20px 40px rgba(0,0,0,0.2); overflow: hidden; }
-    .modal-header-legacy { padding: 1.5rem 2rem; background: #fcfcfc; border-bottom: 1px solid #eee; color: #2c3e50; font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 1rem; }
-    .modal-body-legacy { padding: 2.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-    .form-row { border-bottom: 1px solid #f5f5f5; padding-bottom: 1rem; display: flex; flex-direction: column; gap: 0.6rem; }
-    .legacy-label { font-size: 0.9rem; color: #7f8c8d; font-weight: 600; }
-    .legacy-input, .legacy-select { border: 1px solid #edf2f7; background: #f8fafc; border-radius: 8px; padding: 0.8rem 1rem; width: 100%; outline: none; font-size: 1rem; transition: border-color 0.2s; }
-    .legacy-input:focus { border-color: #5cb85c; background: #fff; }
-    .modal-footer-legacy { padding: 1.5rem 2.5rem; background: #fcfcfc; display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid #eee; }
-    
-    .search-modern-underline {
-      position: relative;
-      border-bottom: 1.5px solid #dcdde1;
-      width: 180px;
-      display: flex;
-      align-items: center;
-      transition: border-bottom-color 0.2s;
-    }
-    .search-modern-underline:focus-within {
-      border-bottom-color: #2e7d32;
-    }
-    .search-modern-underline input {
-      width: 100%;
-      border: none;
-      background: transparent;
-      padding: 0.4rem 0.1rem;
-      font-size: 0.95rem;
-      outline: none;
-      color: #2c3e50;
-      font-family: inherit;
-    }
-    .search-modern-underline input::placeholder {
-      color: #a0aec0;
-      font-weight: 500;
-    }
+    .link-btn:hover { color: #1b5e20; text-decoration: underline; }
+    .link-btn.delete { color: #d9534f; }
+    .link-btn.delete:hover { color: #c9302c; }
 
     .text-right { text-align: right; }
     .text-center { text-align: center; }
@@ -683,170 +634,29 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
     .alert-delete {
       background: #fdf2f2; border: 1px solid #f8b4b4; color: #9b1c1c;
       padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 1rem;
-      font-weight: 600; grid-column: span 2;
+      font-weight: 600;
     }
+    .btn-danger:hover { background: #c9302c !important; }
+
+    /* Modal Legacy (Imagen 2) */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
+    .legacy-card { background: white; width: 90%; max-width: 800px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 20px 40px rgba(0,0,0,0.2); overflow: hidden; }
+    .modal-header-legacy { padding: 1.5rem 2rem; background: #fcfcfc; border-bottom: 1px solid #eee; color: #2c3e50; font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 1rem; }
+    .modal-body-legacy { padding: 2.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .form-row { border-bottom: 1px solid #f5f5f5; padding-bottom: 1rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; grid-column: span 2; }
+    .legacy-label { font-size: 0.9rem; color: #7f8c8d; font-weight: 600; }
+    .legacy-input, .legacy-select { border: 1px solid #edf2f7; background: #f8fafc; border-radius: 8px; padding: 0.8rem 1rem; width: 100%; outline: none; font-size: 1rem; transition: border-color 0.2s; }
+    .legacy-input:focus { border-color: #5cb85c; background: #fff; }
+    .readonly-text { padding: 0.8rem 1rem; background: #f1f2f6; border-radius: 8px; font-weight: bold; color: #2c3e50; }
+    .checkbox-container-legacy { padding: 0.5rem 0; }
+    .legacy-checkbox { width: 20px; height: 20px; cursor: pointer; accent-color: #5cb85c; }
+    .modal-footer-legacy { padding: 1.5rem 2.5rem; background: #fcfcfc; display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid #eee; }
     .btn-confirm { background: #5cb85c; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; }
     .btn-cancel { background: #f1f2f6; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; }
     .btn-danger { background: #d9534f !important; border-color: #d43f3a !important; }
 
-    .filter-bar-premium {
-      background: white; border-radius: 10px; padding: 0.5rem 1rem; margin-bottom: 0;
-      display: flex; gap: 1rem; align-items: center; border: 1px solid #edf2f7;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    }
-    .filter-group { display: flex; align-items: center; gap: 0.5rem; flex-direction: row; }
-    .filter-group label { font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; white-space: nowrap; }
-    .filter-select {
-      padding: 0.45rem 0.8rem; border: 1px solid #e2e8f0; border-radius: 6px;
-      font-size: 0.85rem; background: #f8fafc; color: #1e293b; outline: none;
-      min-width: 140px; transition: all 0.2s;
-    }
-    .filter-select:focus { border-color: #5cb85c; background: white; }
-    .btn-clear-filters {
-      padding: 0.45rem 0.6rem; background: #f1f5f9; border: none; border-radius: 6px;
-      cursor: pointer; transition: all 0.2s; font-size: 0.95rem;
-    }
-    .btn-clear-filters:hover { background: #e2e8f0; transform: rotate(-90deg); }
-
-    .modal-tabs {
-      display: flex; background: #f8fafc; border-bottom: 2px solid #edf2f7;
-      padding: 0 2rem; gap: 1rem;
-    }
-    .modal-tab-btn {
-      padding: 1.2rem 1.5rem; background: none; border: none; border-bottom: 3px solid transparent;
-      font-size: 1.05rem; font-weight: 600; color: #64748b; cursor: pointer;
-      transition: all 0.2s;
-    }
-    .modal-tab-btn:hover { color: #2c3e50; }
-    .modal-tab-btn.active { color: #5cb85c; border-bottom-color: #5cb85c; }
-
-    .audit-timeline-container { grid-column: span 2; max-height: 450px; overflow-y: auto; padding: 1rem 0.5rem; }
-    .audit-timeline-loading {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 1rem; padding: 3rem 0; color: #64748b; font-weight: 600;
-    }
-    .loader-premium {
-      width: 40px; height: 40px; border: 4px solid #edf2f7; border-top-color: #5cb85c;
-      border-radius: 50%; animation: spin 1s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .audit-timeline-empty { text-align: center; padding: 3rem 0; color: #64748b; font-size: 1.1rem; }
-    
-    .premium-timeline {
-      position: relative; padding-left: 2.5rem; border-left: 3px solid #edf2f7;
-      margin: 1rem 0; display: flex; flex-direction: column; gap: 2rem;
-    }
-    .timeline-item { position: relative; animation: slideInTimeline 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
-    @keyframes slideInTimeline {
-      from { opacity: 0; transform: translateX(-20px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    .timeline-badge {
-      position: absolute; left: -3.65rem; top: 0.5rem; width: 2.2rem; height: 2.2rem;
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem; border: 3px solid #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      background: #e2e8f0;
-    }
-    .timeline-badge.insert { background: #e6f4ea; color: #137333; }
-    .timeline-badge.update { background: #e8f0fe; color: #1a73e8; }
-    .timeline-badge.delete { background: #fce8e6; color: #c5221f; }
-    .timeline-badge.archive { background: #fef7e0; color: #b06000; }
-
-    .timeline-card.glass {
-      background: rgba(255,255,255,0.7); backdrop-filter: blur(12px);
-      border: 1px solid rgba(226,232,240,0.8); border-radius: 12px;
-      padding: 1.5rem; box-shadow: 0 10px 15px rgba(0,0,0,0.05); transition: all 0.2s;
-    }
-    .timeline-card.glass:hover {
-      transform: translateY(-2px); box-shadow: 0 20px 25px rgba(0,0,0,0.1); border-color: #cbd5e1;
-    }
-    .card-meta { display: flex; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.6rem; font-weight: 600; }
-    .meta-user { display: flex; align-items: center; gap: 0.3rem; }
-    .card-action-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; }
-    .card-action-title.insert { color: #137333; }
-    .card-action-title.update { color: #1a73e8; }
-    .card-action-title.delete { color: #c5221f; }
-    .card-action-title.archive { color: #b06000; }
-
-    .changes-list { display: flex; flex-direction: column; gap: 0.8rem; background: #f8fafc; border-radius: 8px; padding: 1rem; border: 1px solid #edf2f7; }
-    .change-row { display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed #edf2f7; }
-    .change-row:last-child { padding-bottom: 0; border-bottom: none; }
-    .change-field { font-size: 0.95rem; font-weight: 700; color: #475569; }
-    .change-values { display: flex; align-items: center; gap: 0.6rem; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 600; }
-    .val-old { color: #9b1c1c; background: #fde8e8; padding: 0.2rem 0.5rem; border-radius: 4px; }
-    .val-arrow { color: #64748b; font-weight: bold; }
-    .val-new { color: #137333; background: #e6f4ea; padding: 0.2rem 0.5rem; border-radius: 4px; }
-    .action-details { font-size: 0.95rem; color: #64748b; line-height: 1.5; }
-    
-    .rel-pos { position: relative; }
-    .header-cell-content { display: flex; align-items: center; gap: 0.5rem; }
-    .justify-end { justify-content: flex-end; }
-    .filter-trigger-btn {
-      background: #edf2f7; border: none; border-radius: 4px; padding: 0.2rem 0.4rem;
-      font-size: 0.75rem; cursor: pointer; color: #718096; transition: all 0.2s;
-    }
-    .filter-trigger-btn:hover, .filter-trigger-btn.active {
-      background: #2e7d32; color: white;
-    }
-    
-    .col-filter-dropdown {
-      position: absolute; top: 100%; left: 0; background: white; border: 1px solid #e2e8f0;
-      border-radius: 8px; width: 230px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      z-index: 100; padding: 0.5rem 0; display: flex; flex-direction: column;
-      animation: fadeInDropdown 0.2s ease-out;
-    }
-    .text-left { text-align: left !important; }
-    
-    @keyframes fadeInDropdown {
-      from { opacity: 0; transform: translateY(5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .dropdown-item-action {
-      display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1rem;
-      font-size: 0.9rem; color: #4a5568; cursor: pointer; transition: background 0.2s;
-      font-weight: 600;
-    }
-    .dropdown-item-action:hover { background: #f7fafc; color: #2e7d32; }
-    .dropdown-item-action .icon { color: #a0aec0; font-size: 0.85rem; width: 16px; text-align: center; }
-    .dropdown-item-action:hover .icon { color: #2e7d32; }
-    
-    .dropdown-divider { height: 1px; background: #edf2f7; margin: 0.4rem 0; }
-    
-    .dropdown-search-box { padding: 0.5rem 1rem; position: relative; }
-    .dropdown-search-input {
-      width: 100%; padding: 0.4rem 0.6rem 0.4rem 1.8rem; border: 1px solid #edf2f7;
-      border-radius: 6px; font-size: 0.85rem; background: #f8fafc; outline: none;
-    }
-    .dropdown-search-input:focus { border-color: #2e7d32; background: white; }
-    .search-mini-icon { position: absolute; left: 1.5rem; top: 50%; transform: translateY(-50%); font-size: 0.8rem; opacity: 0.5; }
-    
-    .dropdown-checkbox-list { max-height: 150px; overflow-y: auto; padding: 0.25rem 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
-    .checkbox-list-item { font-size: 0.85rem; color: #4a5568; font-weight: 500; }
-    .checkbox-list-item label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
-    .checkbox-list-item input { cursor: pointer; }
-    
-    .numeric-filter-box { padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
-    .num-filter-row { display: flex; flex-direction: column; gap: 0.25rem; }
-    .num-filter-row label { font-size: 0.8rem; font-weight: 700; color: #718096; }
-    .num-filter-input {
-      padding: 0.4rem 0.6rem; border: 1px solid #edf2f7; border-radius: 6px;
-      font-size: 0.85rem; background: #f8fafc; outline: none; width: 100%;
-    }
-    .num-filter-input:focus { border-color: #2e7d32; background: white; }
-    
-    .btn-num-filter-search {
-      background: #2e7d32; color: white; border: none; border-radius: 6px;
-      padding: 0.5rem; font-size: 0.9rem; font-weight: 700; cursor: pointer;
-      transition: background 0.2s; text-align: center;
-    }
-    .btn-num-filter-search:hover { background: #1b5e20; }
-    
-    .legacy-table-checkbox {
-      width: 18px; height: 18px; cursor: not-allowed; accent-color: #2e7d32;
-    }
-    
+    /* Estilos Filtros Avanzados (Embudo) */
     .search-funnel-group {
       display: flex;
       align-items: center;
@@ -885,11 +695,11 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
     .search-filter-dropdown {
       position: absolute;
       top: calc(100% + 4px);
-      left: 0;
+      right: 0;
       background: white;
       border: 1px solid #cbd5e1;
       border-radius: 4px;
-      width: 250px;
+      width: 280px;
       box-shadow: 0 6px 15px rgba(0,0,0,0.12);
       z-index: 200;
       padding: 0.75rem 0;
@@ -904,6 +714,11 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
       flex-direction: column;
       gap: 0.6rem;
     }
+    .dropdown-filter-group-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
     .dropdown-filter-group {
       display: flex;
       flex-direction: column;
@@ -916,7 +731,7 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    .dropdown-filter-select {
+    .dropdown-filter-select, .dropdown-filter-input {
       width: 100%;
       padding: 0.35rem 0.5rem;
       border: 1px solid #cbd5e1;
@@ -929,7 +744,7 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
       cursor: pointer;
       transition: all 0.2s;
     }
-    .dropdown-filter-select:focus {
+    .dropdown-filter-select:focus, .dropdown-filter-input:focus {
       border-color: #2e7d32;
       background: white;
     }
@@ -981,7 +796,222 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
       opacity: 1;
       color: #d9534f;
     }
+    
+    .search-modern-underline {
+      position: relative;
+      border-bottom: 1.5px solid #dcdde1;
+      width: 180px;
+      display: flex;
+      align-items: center;
+      transition: border-bottom-color 0.2s;
+    }
+    .search-modern-underline:focus-within {
+      border-bottom-color: #2e7d32;
+    }
+    .search-modern-underline input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 0.4rem 0.1rem;
+      font-size: 0.95rem;
+      outline: none;
+      color: #2c3e50;
+      font-family: inherit;
+    }
+    .search-modern-underline input::placeholder {
+      color: #a0aec0;
+      font-weight: 500;
+    }
 
+    .dropdown-item-action {
+      display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1rem;
+      font-size: 0.9rem; color: #4a5568; cursor: pointer; transition: background 0.2s;
+      font-weight: 600;
+    }
+    .dropdown-item-action:hover { background: #f7fafc; color: #2e7d32; }
+    .dropdown-item-action .icon { color: #a0aec0; font-size: 0.85rem; width: 16px; text-align: center; }
+    .dropdown-item-action:hover .icon { color: #2e7d32; }
+    .dropdown-divider { height: 1px; background: #edf2f7; margin: 0.4rem 0; }
+    
+    .legacy-table-checkbox {
+      width: 18px; height: 18px; cursor: not-allowed; accent-color: #2e7d32;
+    }
+
+    
+    .rel-pos { position: relative; }
+    .header-cell-content { display: flex; align-items: center; gap: 0.4rem; justify-content: space-between; width: 100%; }
+    .justify-end { justify-content: flex-end; }
+    .filter-trigger-btn { background: none; border: none; color: #a0aec0; cursor: pointer; padding: 0.1rem 0.3rem; font-size: 0.7rem; border-radius: 3px; transition: all 0.2s; }
+    .filter-trigger-btn:hover { background: #e2e8f0; color: #4a5568; }
+    .filter-trigger-btn.active { color: #2e7d32; font-weight: bold; background: #e8f5e9; }
+    .col-filter-dropdown { position: absolute; top: calc(100% + 5px); left: 0; background: white; border: 1px solid #e2e8f0; border-radius: 8px; z-index: 1000; min-width: 220px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 0.5rem 0; animation: fadeInDropdown 0.2s ease-out; }
+    .col-filter-dropdown.text-left { left: auto; right: 0; }
+    .text-filter-box { padding: 0.5rem 1rem; }
+    .text-filter-input { width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
+    .text-filter-input:focus { border-color: #2e7d32; }
+    
+    /* Paginación */
+    .pagination-container-premium {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+      padding: 0.8rem 1.5rem;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #edf2f7;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .pagination-info {
+      font-size: 0.95rem;
+      color: #64748b;
+      font-weight: 600;
+    }
+    .pagination-controls {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .btn-page {
+      background: white;
+      border: 1px solid #dcdde1;
+      color: #2c3e50;
+      padding: 0.45rem 0.9rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 32px;
+    }
+    .btn-page:hover:not([disabled]) {
+      background: #f8f9fa;
+      border-color: #cbd5e1;
+      color: #2e7d32;
+    }
+    .btn-page.active {
+      background: #2e7d32;
+      border-color: #2e7d32;
+      color: white;
+    }
+    .btn-page[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Premium Modals Tabs */
+    .modal-tabs {
+      display: flex; background: #f8fafc; border-bottom: 2px solid #edf2f7;
+      padding: 0 2rem; gap: 1rem;
+    }
+    .modal-tab-btn {
+      padding: 1.2rem 1.5rem; background: none; border: none; border-bottom: 3px solid transparent;
+      font-size: 1.05rem; font-weight: 600; color: #64748b; cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+    .modal-tab-btn:hover { color: #2c3e50; }
+    .modal-tab-btn.active {
+      color: #5cb85c; border-bottom-color: #5cb85c;
+    }
+
+    /* Timeline Premium Neo-Cyber */
+    .audit-timeline-container {
+      grid-column: span 2; max-height: 450px; overflow-y: auto; padding: 1rem 0.5rem;
+    }
+    .audit-timeline-loading {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 1rem; padding: 3rem 0; color: #64748b; font-weight: 600;
+    }
+    .loader-premium {
+      width: 40px; height: 40px; border: 4px solid #edf2f7; border-top-color: #5cb85c;
+      border-radius: 50%; animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .audit-timeline-empty {
+      text-align: center; padding: 3rem 0; color: #64748b; font-size: 1.1rem;
+    }
+    
+    .premium-timeline {
+      position: relative; padding-left: 2.5rem; border-left: 3px solid #edf2f7;
+      margin: 1rem 0; display: flex; flex-direction: column; gap: 2rem;
+    }
+    .timeline-item {
+      position: relative; animation: slideInTimeline 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    @keyframes slideInTimeline {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .timeline-badge {
+      position: absolute; left: -3.65rem; top: 0.5rem; width: 2.2rem; height: 2.2rem;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; border: 3px solid #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      background: #e2e8f0;
+    }
+    .timeline-badge.insert { background: #e6f4ea; border-color: #e6f4ea; color: #137333; }
+    .timeline-badge.update { background: #e8f0fe; border-color: #e8f0fe; color: #1a73e8; }
+    .timeline-badge.delete { background: #fce8e6; border-color: #fce8e6; color: #c5221f; }
+    .timeline-badge.archive { background: #fef7e0; border-color: #fef7e0; color: #b06000; }
+
+    .timeline-card.glass {
+      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.8); border-radius: 12px;
+      padding: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
+    }
+    .timeline-card.glass:hover {
+      transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      border-color: #cbd5e1;
+    }
+    .card-meta {
+      display: flex; justify-content: space-between; font-size: 0.85rem;
+      color: #94a3b8; margin-bottom: 0.6rem; font-weight: 600;
+    }
+    .meta-user { display: flex; align-items: center; gap: 0.3rem; }
+    .card-action-title {
+      font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;
+    }
+    .card-action-title.insert { color: #137333; }
+    .card-action-title.update { color: #1a73e8; }
+    .card-action-title.delete { color: #c5221f; }
+    .card-action-title.archive { color: #b06000; }
+
+    .changes-list {
+      display: flex; flex-direction: column; gap: 0.8rem; background: #f8fafc;
+      border-radius: 8px; padding: 1rem; border: 1px solid #edf2f7;
+    }
+    .change-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 0.5rem; border-bottom: 1px dashed #edf2f7;
+    }
+    .change-row:last-child { padding-bottom: 0; border-bottom: none; }
+    .change-field {
+      font-size: 0.95rem; font-weight: 700; color: #475569;
+    }
+    .change-values {
+      display: flex; align-items: center; gap: 0.6rem; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem; font-weight: 600;
+    }
+    .val-old {
+      color: #9b1c1c; background: #fde8e8; padding: 0.2rem 0.5rem; border-radius: 4px;
+    }
+    .val-arrow { color: #64748b; font-weight: bold; }
+    .val-new {
+      color: #137333; background: #e6f4ea; padding: 0.2rem 0.5rem; border-radius: 4px;
+    }
+    .action-details {
+      font-size: 0.95rem; color: #64748b; line-height: 1.5;
+    }
+    
+    @keyframes fadeInDropdown {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   `] })
 export class SilosComponent implements OnInit {
   private inventarioService = inject(InventarioService);

@@ -9,96 +9,96 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="module-page animate-move-up">
+    <div class="module-page animate-fade-in">
       <div class="page-header-premium">
         <div class="title-section">
-          <h1 class="premium-title">📦 Lote</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Inventarios</span>
-            <span class="sep">></span>
+            <span class="sep">&rsaquo;</span>
             <span class="active">Lotes</span>
           </nav>
+          <h1 class="premium-title">Lote</h1>
         </div>
-        
+      </div>
+      
+      <div class="card-premium" style="margin-bottom: 1rem; border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
         <div class="toolbar-premium">
-          <div class="btn-group-modern">
-            <div class="dropdown-container">
-              <button class="btn-legacy secondary" (click)="showExportSelector = !showExportSelector">📥 Exportar <span class="arrow">▼</span></button>
-              <div class="export-dropdown shadow-premium" *ngIf="showExportSelector">
-                <div class="export-option" (click)="exportToCSV(); showExportSelector = false">
-                  📊 Excel (CSV)
-                </div>
-                <div class="export-option" (click)="exportToPDF(); showExportSelector = false">
-                  📕 PDF
-                </div>
+          <div class="toolbar-left">
+            <div class="dropdown-wrapper">
+              <button class="btn-premium-secondary" (click)="showExportSelector = !showExportSelector">📥 Exportar <span class="chevron-down">▼</span></button>
+              <div class="dropdown-menu-custom shadow-premium" *ngIf="showExportSelector" style="width: 150px; position: absolute; z-index: 10;">
+                <button class="dropdown-item-custom" (click)="exportToCSV(); showExportSelector = false">📊 Excel (CSV)</button>
+                <button class="dropdown-item-custom" (click)="exportToPDF(); showExportSelector = false">📕 PDF</button>
               </div>
             </div>
-            <button class="btn-legacy secondary" (click)="openModal()">Agregar</button>
-            <div class="dropdown-container">
-              <button class="btn-legacy primary" (click)="toggleColumnSelector()">Selecciona columnas <span class="arrow">▼</span></button>
-              <div class="column-selector-dropdown shadow-premium" *ngIf="showColumnSelector">
-                <div class="dropdown-header"><input type="text" placeholder="Filtrar..." class="search-mini"></div>
-                <div class="column-list custom-scroll">
-                  <div class="column-group">
-                    <label class="group-label"><input type="checkbox" checked disabled> Fijas a la izquierda</label>
-                    <label class="item-label"><input type="checkbox" checked disabled> (Ninguna)</label>
+            <button class="btn-premium" (click)="openModal()">Agregar</button>
+            
+            <!-- Selector de Columnas (Imagen 1) -->
+            <div class="dropdown-wrapper">
+              <button class="btn-premium-secondary" (click)="toggleColumnSelector()">Selecciona columnas <span class="chevron-down">▼</span></button>
+              <div class="column-selector-popover shadow-premium" *ngIf="showColumnSelector" style="position: absolute; z-index: 10;">
+                <div class="popover-search">
+                  <input type="text" placeholder="Filtrar..." class="search-mini">
+                </div>
+                <div class="popover-sections custom-scroll">
+                  <div class="popover-section">
+                    <div class="section-title"><input type="checkbox" checked disabled> Fijas a la izquierda</div>
+                    <label class="popover-item disabled"><input type="checkbox" checked disabled> (Ninguna)</label>
                   </div>
-                  <div class="column-group">
-                    <label class="group-label"><input type="checkbox" [checked]="allColsVisible()" (change)="toggleAllCols()"> No fijas</label>
-                    <div class="items">
-                      <label *ngFor="let col of columns" class="item-label">
+                  <div class="popover-section">
+                    <div class="section-title"><input type="checkbox" [checked]="allColsVisible()" (change)="toggleAllCols()"> No fijas</div>
+                    <div class="section-list">
+                      <label *ngFor="let col of columns" class="popover-item">
                         <input type="checkbox" [(ngModel)]="col.visible"> {{ col.label }}
                       </label>
                     </div>
                   </div>
                 </div>
-                <div class="dropdown-footer">
-                  <button class="btn-reset" (click)="resetColumns()">↺</button>
-                  <button class="btn-update" (click)="showColumnSelector = false">Actualizar</button>
+                <div class="popover-footer">
+                  <button class="btn-popover-reset" (click)="resetColumns()">↺</button>
+                  <button class="btn-popover-apply" (click)="showColumnSelector = false">Actualizar</button>
                 </div>
               </div>
             </div>
+            
             <!-- Botón Rápido de Excel (XLS) -->
-            <button class="btn-quick-xls" (click)="exportToCSV()" title="Exportar rápido a Excel">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-              </svg>
+            <button class="btn-premium-secondary" (click)="exportToCSV()" title="Exportar rápido a Excel">
               <span>XLS</span>
             </button>
           </div>
           
-          <div class="search-funnel-group">
-            <div class="dropdown-container">
-              <button class="btn-funnel-search" (click)="toggleSearchFilterDropdown($event)">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="funnel-icon">
+          <div class="toolbar-right">
+            <div class="dropdown-wrapper">
+              <button class="btn-premium-secondary" (click)="toggleSearchFilterDropdown($event)">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                   <path d="M10,18H14V16H10V18M3,6V8H21V6H3M6,13H18V11H6V13Z" />
                 </svg>
-                <span class="arrow-mini">▼</span>
+                <span class="chevron-down">▼</span>
               </button>
               
-              <div class="search-filter-dropdown shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()">
+              <div class="column-selector-popover shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()" style="position: absolute; right: 0; z-index: 10; width: 280px; padding: 1rem;">
                 <!-- Sección de Filtros Avanzados Compactos dentro del Embudo -->
-                <div class="dropdown-filter-section">
-                  <div class="dropdown-filter-group">
-                    <label class="dropdown-filter-label">Silo</label>
-                    <select class="dropdown-filter-select" [(ngModel)]="filterSiloId" (change)="onFilterChange()">
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                  <div class="form-group-premium">
+                    <label>Silo</label>
+                    <select class="input-premium" [(ngModel)]="filterSiloId" (change)="onFilterChange()">
                       <option value="">-- Todos los Silos --</option>
                       <option *ngFor="let s of silos" [value]="s.id">{{ s.nombre }}</option>
                     </select>
                   </div>
-                  <div class="dropdown-filter-group-row">
-                    <div class="dropdown-filter-group">
-                      <label class="dropdown-filter-label">Desde</label>
-                      <input type="date" class="dropdown-filter-input" [(ngModel)]="filterDateStart" (change)="onFilterChange()">
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="form-group-premium">
+                      <label>Desde</label>
+                      <input type="date" class="input-premium" [(ngModel)]="filterDateStart" (change)="onFilterChange()">
                     </div>
-                    <div class="dropdown-filter-group">
-                      <label class="dropdown-filter-label">Hasta</label>
-                      <input type="date" class="dropdown-filter-input" [(ngModel)]="filterDateEnd" (change)="onFilterChange()">
+                    <div class="form-group-premium">
+                      <label>Hasta</label>
+                      <input type="date" class="input-premium" [(ngModel)]="filterDateEnd" (change)="onFilterChange()">
                     </div>
                   </div>
-                  <div class="dropdown-filter-group">
-                    <label class="dropdown-filter-label">Estado</label>
-                    <select class="dropdown-filter-select" [(ngModel)]="filterConsumido" (change)="onFilterChange()">
+                  <div class="form-group-premium">
+                    <label>Estado</label>
+                    <select class="input-premium" [(ngModel)]="filterConsumido" (change)="onFilterChange()">
                       <option value="all">Todos</option>
                       <option value="false">En Stock</option>
                       <option value="true">Consumidos</option>
@@ -108,10 +108,10 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
                 
                 <div class="dropdown-divider"></div>
                 
-                <div class="dropdown-item-action" (click)="clearAllFilters()">
+                <div class="dropdown-item-action" (click)="clearAllFilters()" style="padding: 0.5rem 0;">
                   <span class="icon-circle-cross">✖</span> Limpiar filtros
                 </div>
-                <div class="dropdown-item-action" (click)="saveActiveFilters()">
+                <div class="dropdown-item-action" (click)="saveActiveFilters()" style="padding: 0.5rem 0;">
                   <span class="icon-floppy">💾</span> Guardar filtro como...
                 </div>
                 
@@ -133,12 +133,12 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
         </div>
       </div>
 
-      <!-- Modal Gestionar Lote (Fiel a Imagen 1) -->
-      <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
-        <div class="modal-card legacy-card animate-scale-in" (click)="$event.stopPropagation()">
-          <div class="modal-header-legacy">
-            <span class="header-icon">🏷️</span> 
-            {{ modalMode === 'VIEW' ? 'Visualizar Lote' : modalMode === 'EDIT' ? 'Modificar Lote' : modalMode === 'DELETE' ? 'Eliminar Lote' : 'Agregar Lote' }}
+      <!-- Modal Gestionar Lote -->
+      <div class="modal-overlay-premium" *ngIf="showModal" (click)="closeModal()">
+        <div class="modal-card-premium animate-scale-in" style="max-width: 800px;" (click)="$event.stopPropagation()">
+          <div class="modal-header-premium">
+            <h3><span>🏷️</span> {{ modalMode === 'VIEW' ? 'Visualizar Lote' : modalMode === 'EDIT' ? 'Modificar Lote' : modalMode === 'DELETE' ? 'Eliminar Lote' : 'Agregar Lote' }}</h3>
+            <button class="btn-icon-premium" (click)="closeModal()">✖️</button>
           </div>
           <form (ngSubmit)="handleModalSubmit()">
             <!-- Tab Headers for VIEW mode -->
@@ -147,7 +147,7 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
               <button type="button" class="modal-tab-btn" [class.active]="activeTab === 'audit'" (click)="activeTab = 'audit'; loadAuditHistory()">🕒 Historial de Auditoría</button>
             </div>
 
-            <div class="modal-body-legacy custom-scroll">
+            <div class="modal-body-premium custom-scroll" [style.max-height]="'60vh'" [style.overflow-y]="'auto'">
               
               <!-- Regular details fields (visible in edit/add/delete OR when activeTab is details in view mode) -->
               <ng-container *ngIf="modalMode !== 'VIEW' || activeTab === 'details'">
@@ -156,74 +156,72 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
                 </div>
 
                 <!-- Silo Selection -->
-                <div class="form-row">
-                  <label class="legacy-label">Silo</label>
-                  <select class="legacy-select" [(ngModel)]="newLote.loteSiloId" name="silo" (change)="onSiloChange()" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                <div class="form-group-premium">
+                  <label>Silo</label>
+                  <select class="input-premium" [(ngModel)]="newLote.loteSiloId" name="silo" (change)="onSiloChange()" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                     <option value="">Seleccione un silo...</option>
                     <option *ngFor="let s of silos" [value]="s.id">{{ s.nombre }} ({{ s.codigo }})</option>
                   </select>
                 </div>
 
                 <!-- Silo Helpers -->
-                <div class="form-grid-2">
-                  <div class="form-row">
-                    <label class="legacy-label">Máximo (kg)</label>
-                    <div class="readonly-text">{{ (selectedSilo?.kgMaximo | number:'1.2-2') || '0.00' }}</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                  <div class="form-group-premium">
+                    <label>Máximo (kg)</label>
+                    <div class="readonly-text" style="padding: 0.6rem 0.85rem; background: #f1f5f9; border-radius: 8px; font-weight: 600;">{{ (selectedSilo?.kgMaximo | number:'1.2-2') || '0.00' }}</div>
                   </div>
-                  <div class="form-row">
-                    <label class="legacy-label">Estado Material</label>
-                    <div class="readonly-text">{{ selectedSilo?.estadoMaterial || '---' }}</div>
+                  <div class="form-group-premium">
+                    <label>Estado Material</label>
+                    <div class="readonly-text" style="padding: 0.6rem 0.85rem; background: #f1f5f9; border-radius: 8px; font-weight: 600;">{{ selectedSilo?.estadoMaterial || '---' }}</div>
                   </div>
                 </div>
 
                 <!-- Embarque and Consumido -->
-                <div class="form-grid-2">
-                  <div class="form-row">
-                    <label class="legacy-label">No. Embarque *</label>
-                    <input type="text" class="legacy-input" [(ngModel)]="newLote.loteEmbarque" name="embarque" required [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                  <div class="form-group-premium">
+                    <label>No. Embarque *</label>
+                    <input type="text" class="input-premium" [(ngModel)]="newLote.loteEmbarque" name="embarque" required [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                   </div>
-                  <div class="form-row">
-                    <label class="legacy-label">Consumido *</label>
-                    <div class="checkbox-container-legacy">
-                      <input type="checkbox" class="legacy-checkbox" [(ngModel)]="newLote.loteConsumido" name="consumido" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
-                    </div>
+                  <div class="form-group-premium" style="flex-direction: row; align-items: center; gap: 0.5rem; justify-content: flex-start; padding-top: 1.5rem;">
+                    <input type="checkbox" class="legacy-checkbox" id="chk-consumido" [(ngModel)]="newLote.loteConsumido" name="consumido" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                    <label for="chk-consumido" style="margin: 0; cursor: pointer;">Consumido *</label>
                   </div>
                 </div>
 
                 <!-- Lote PO and Trunk No -->
-                <div class="form-grid-2">
-                  <div class="form-row">
-                    <label class="legacy-label">Lote PO</label>
-                    <input type="text" class="legacy-input" [(ngModel)]="newLote.lotePO" name="lotePO" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                  <div class="form-group-premium">
+                    <label>Lote PO</label>
+                    <input type="text" class="input-premium" [(ngModel)]="newLote.lotePO" name="lotePO" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                   </div>
-                  <div class="form-row">
-                    <label class="legacy-label">Trunk No</label>
-                    <input type="text" class="legacy-input" [(ngModel)]="newLote.loteTrunkNo" name="loteTrunkNo" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                  <div class="form-group-premium">
+                    <label>Trunk No</label>
+                    <input type="text" class="input-premium" [(ngModel)]="newLote.loteTrunkNo" name="loteTrunkNo" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                   </div>
                 </div>
 
-                <div class="form-row">
-                  <label class="legacy-label">Fecha Registro *</label>
-                  <input type="date" class="legacy-input" [ngModel]="newLote.loteFechaRegistro | date:'yyyy-MM-dd'" (ngModelChange)="newLote.loteFechaRegistro = $event" name="fecha" required [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                <div class="form-group-premium">
+                  <label>Fecha Registro *</label>
+                  <input type="date" class="input-premium" [ngModel]="newLote.loteFechaRegistro | date:'yyyy-MM-dd'" (ngModelChange)="newLote.loteFechaRegistro = $event" name="fecha" required [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                 </div>
 
-                <div class="form-row">
-                  <label class="legacy-label">Kg *</label>
-                  <input type="number" class="legacy-input" [(ngModel)]="newLote.loteKg" name="kg" required [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                <div class="form-group-premium">
+                  <label>Kg *</label>
+                  <input type="number" class="input-premium" [(ngModel)]="newLote.loteKg" name="kg" required [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                 </div>
 
-                <div class="form-row">
-                  <label class="legacy-label">Paquete Aditivos *</label>
-                  <select class="legacy-select" [(ngModel)]="newLote.lotePaqueteAditivos" name="aditivos" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                <div class="form-group-premium">
+                  <label>Paquete Aditivos *</label>
+                  <select class="input-premium" [(ngModel)]="newLote.lotePaqueteAditivos" name="aditivos" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                     <option value="No Aplica">No Aplica</option>
                     <option value="Llorens-MB1">Llorens-MB1</option>
                     <option value="CCP-07A-164040 L">CCP-07A-164040 L</option>
                   </select>
                 </div>
 
-                <div class="form-row">
-                  <label class="legacy-label">Tipo de Material *</label>
-                  <select class="legacy-select" [(ngModel)]="newLote.loteTipoMaterial" name="tipoMat" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
+                <div class="form-group-premium">
+                  <label>Tipo de Material *</label>
+                  <select class="input-premium" [(ngModel)]="newLote.loteTipoMaterial" name="tipoMat" [disabled]="modalMode === 'VIEW' || modalMode === 'DELETE'">
                     <option value="PCR">PCR</option>
                     <option value="HDPE">HDPE</option>
                     <option value="PP">PP</option>
@@ -278,35 +276,163 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
               </div>
 
             </div>
-            <div class="modal-footer-legacy">
-              <button type="submit" class="btn-confirm" *ngIf="modalMode !== 'VIEW'" [class.btn-danger]="modalMode === 'DELETE'">
+            <div class="modal-footer-premium">
+              <button type="submit" class="btn-premium" *ngIf="modalMode !== 'VIEW'" [class.btn-premium-danger]="modalMode === 'DELETE'">
                 {{ modalMode === 'DELETE' ? 'ELIMINAR' : 'CONFIRMAR' }}
               </button>
-              <button type="button" class="btn-cancel" (click)="closeModal()">{{ modalMode === 'VIEW' ? 'CERRAR' : 'CANCELAR' }}</button>
+              <button type="button" class="btn-premium-secondary" (click)="closeModal()">{{ modalMode === 'VIEW' ? 'CERRAR' : 'CANCELAR' }}</button>
             </div>
           </form>
         </div>
       </div>
 
-      <div class="content-container">
-        <div class="table-card shadow-premium">
-          <table class="premium-grid">
+      <div class="card-premium" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
+        <div class="table-modern-container">
+          <table class="table-modern">
             <thead>
               <tr>
                 <th class="text-center"></th>
                 <th class="text-center"></th>
                 <th class="text-center"></th>
-                <th *ngIf="isColVisible('loteNo')">Lote NO.</th>
-                <th *ngIf="isColVisible('lotePO')">Lote PO.</th>
-                <th *ngIf="isColVisible('fecha')">Fecha Registro</th>
-                <th *ngIf="isColVisible('trunk')">Trunk No</th>
-                <th *ngIf="isColVisible('tipoMat')">Tipo Material</th>
-                <th *ngIf="isColVisible('silo')">Silo</th>
-                <th *ngIf="isColVisible('kgMaximo')" class="text-right">Kg Maximo</th>
-                <th *ngIf="isColVisible('estadoMat')">Estado Material</th>
-                <th *ngIf="isColVisible('kg')" class="text-right">Kg</th>
+                
+                <th *ngIf="isColVisible('loteNo')" class="rel-pos">
+                  <div class="header-cell-content">
+                    <span>Lote NO.</span>
+                    <button class="filter-trigger-btn" [class.active]="activeDropdown === 'loteNo'" (click)="toggleDropdown('loteNo', $event)">
+                      {{ sortColumn === 'loteNo' ? (sortAsc ? '↑' : '↓') : '▼' }}
+                    </button>
+                  </div>
+                  <div class="col-filter-dropdown shadow-premium" *ngIf="activeDropdown === 'loteNo'" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item-action" (click)="setSort('loteNo', true)"><span class="icon">↑↓</span> Ordenar de A a Z</div>
+                    <div class="dropdown-item-action" (click)="setSort('loteNo', false)"><span class="icon">↑↓</span> Ordenar de Z a A</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="text-filter-box">
+                      <input type="text" placeholder="Buscar..." [(ngModel)]="filterLoteNo" (input)="cdr.detectChanges()" class="text-filter-input">
+                    </div>
+                  </div>
+                </th>
+
+                <th *ngIf="isColVisible('lotePO')" class="rel-pos">
+                  <div class="header-cell-content">
+                    <span>Lote PO.</span>
+                    <button class="filter-trigger-btn" [class.active]="activeDropdown === 'lotePO'" (click)="toggleDropdown('lotePO', $event)">
+                      {{ sortColumn === 'lotePO' ? (sortAsc ? '↑' : '↓') : '▼' }}
+                    </button>
+                  </div>
+                  <div class="col-filter-dropdown shadow-premium" *ngIf="activeDropdown === 'lotePO'" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item-action" (click)="setSort('lotePO', true)"><span class="icon">↑↓</span> Ordenar de A a Z</div>
+                    <div class="dropdown-item-action" (click)="setSort('lotePO', false)"><span class="icon">↑↓</span> Ordenar de Z a A</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="text-filter-box">
+                      <input type="text" placeholder="Buscar..." [(ngModel)]="filterLotePO" (input)="cdr.detectChanges()" class="text-filter-input">
+                    </div>
+                  </div>
+                </th>
+
+                <th *ngIf="isColVisible('fecha')" class="rel-pos">
+                  <div class="header-cell-content">
+                    <span>Fecha Registro</span>
+                    <button class="filter-trigger-btn" [class.active]="activeDropdown === 'fecha'" (click)="toggleDropdown('fecha', $event)">
+                      {{ sortColumn === 'fecha' ? (sortAsc ? '↑' : '↓') : '▼' }}
+                    </button>
+                  </div>
+                  <div class="col-filter-dropdown shadow-premium" *ngIf="activeDropdown === 'fecha'" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item-action" (click)="setSort('fecha', true)"><span class="icon">↑↓</span> Ordenar Antiguos</div>
+                    <div class="dropdown-item-action" (click)="setSort('fecha', false)"><span class="icon">↑↓</span> Ordenar Recientes</div>
+                  </div>
+                </th>
+
+                <th *ngIf="isColVisible('trunk')" class="rel-pos">
+                  <div class="header-cell-content">
+                    <span>Trunk No</span>
+                    <button class="filter-trigger-btn" [class.active]="activeDropdown === 'trunk'" (click)="toggleDropdown('trunk', $event)">
+                      {{ sortColumn === 'trunk' ? (sortAsc ? '↑' : '↓') : '▼' }}
+                    </button>
+                  </div>
+                  <div class="col-filter-dropdown shadow-premium" *ngIf="activeDropdown === 'trunk'" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item-action" (click)="setSort('trunk', true)"><span class="icon">↑↓</span> Ordenar de A a Z</div>
+                    <div class="dropdown-item-action" (click)="setSort('trunk', false)"><span class="icon">↑↓</span> Ordenar de Z a A</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="text-filter-box">
+                      <input type="text" placeholder="Buscar..." [(ngModel)]="filterTrunk" (input)="cdr.detectChanges()" class="text-filter-input">
+                    </div>
+                  </div>
+                </th>
+
+                <th *ngIf="isColVisible('tipoMat')" class="rel-pos">
+                  <div class="header-cell-content">
+                    <span>Tipo Material</span>
+                    <button class="filter-trigger-btn" [class.active]="activeDropdown === 'tipoMat'" (click)="toggleDropdown('tipoMat', $event)">
+                      {{ sortColumn === 'tipoMat' ? (sortAsc ? '↑' : '↓') : '▼' }}
+                    </button>
+                  </div>
+                  <div class="col-filter-dropdown shadow-premium" *ngIf="activeDropdown === 'tipoMat'" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item-action" (click)="setSort('tipoMat', true)"><span class="icon">↑↓</span> Ordenar de A a Z</div>
+                    <div class="dropdown-item-action" (click)="setSort('tipoMat', false)"><span class="icon">↑↓</span> Ordenar de Z a A</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="text-filter-box">
+                      <input type="text" placeholder="Buscar..." [(ngModel)]="filterTipoMat" (input)="cdr.detectChanges()" class="text-filter-input">
+                    </div>
+                  </div>
+                </th>
+
+                <th *ngIf="isColVisible('silo')" class="rel-pos">
+                  <div class="header-cell-content">
+                    <span>Silo</span>
+                    <button class="filter-trigger-btn" [class.active]="activeDropdown === 'silo'" (click)="toggleDropdown('silo', $event)">
+                      {{ sortColumn === 'silo' ? (sortAsc ? '↑' : '↓') : '▼' }}
+                    </button>
+                  </div>
+                  <div class="col-filter-dropdown shadow-premium" *ngIf="activeDropdown === 'silo'" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item-action" (click)="setSort('silo', true)"><span class="icon">↑↓</span> Ordenar de A a Z</div>
+                    <div class="dropdown-item-action" (click)="setSort('silo', false)"><span class="icon">↑↓</span> Ordenar de Z a A</div>
+                  </div>
+                </th>
+
+                <th *ngIf="isColVisible('kgMaximo')" class="rel-pos text-right">
+                  <div class="header-cell-content justify-end">
+                    <span>Kg Maximo</span>
+                    <button class="filter-trigger-btn" [class.active]="activeDropdown === 'kgMaximo'" (click)="toggleDropdown('kgMaximo', $event)">
+                      {{ sortColumn === 'kgMaximo' ? (sortAsc ? '↑' : '↓') : '▼' }}
+                    </button>
+                  </div>
+                  <div class="col-filter-dropdown shadow-premium text-left" *ngIf="activeDropdown === 'kgMaximo'" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item-action" (click)="setSort('kgMaximo', true)"><span class="icon">↑↓</span> Ordenar Menor a Mayor</div>
+                    <div class="dropdown-item-action" (click)="setSort('kgMaximo', false)"><span class="icon">↑↓</span> Ordenar Mayor a Menor</div>
+                  </div>
+                </th>
+
+                <th *ngIf="isColVisible('estadoMat')" class="rel-pos">
+                  <div class="header-cell-content">
+                    <span>Estado Material</span>
+                    <button class="filter-trigger-btn" [class.active]="activeDropdown === 'estadoMat'" (click)="toggleDropdown('estadoMat', $event)">
+                      {{ sortColumn === 'estadoMat' ? (sortAsc ? '↑' : '↓') : '▼' }}
+                    </button>
+                  </div>
+                  <div class="col-filter-dropdown shadow-premium" *ngIf="activeDropdown === 'estadoMat'" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item-action" (click)="setSort('estadoMat', true)"><span class="icon">↑↓</span> Ordenar de A a Z</div>
+                    <div class="dropdown-item-action" (click)="setSort('estadoMat', false)"><span class="icon">↑↓</span> Ordenar de Z a A</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="text-filter-box">
+                      <input type="text" placeholder="Buscar..." [(ngModel)]="filterEstadoMat" (input)="cdr.detectChanges()" class="text-filter-input">
+                    </div>
+                  </div>
+                </th>
+
+                <th *ngIf="isColVisible('kg')" class="rel-pos text-right">
+                  <div class="header-cell-content justify-end">
+                    <span>Kg</span>
+                    <button class="filter-trigger-btn" [class.active]="activeDropdown === 'kg'" (click)="toggleDropdown('kg', $event)">
+                      {{ sortColumn === 'kg' ? (sortAsc ? '↑' : '↓') : '▼' }}
+                    </button>
+                  </div>
+                  <div class="col-filter-dropdown shadow-premium text-left" *ngIf="activeDropdown === 'kg'" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item-action" (click)="setSort('kg', true)"><span class="icon">↑↓</span> Ordenar Menor a Mayor</div>
+                    <div class="dropdown-item-action" (click)="setSort('kg', false)"><span class="icon">↑↓</span> Ordenar Mayor a Menor</div>
+                  </div>
+                </th>
+
                 <th *ngIf="isColVisible('consumido')" class="text-center">Consumido</th>
-                <th *ngIf="isColVisible('aditivos')">Paquete Aditivos</th>
               </tr>
             </thead>
             <tbody>
@@ -333,7 +459,6 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
                 <td *ngIf="isColVisible('consumido')" class="text-center">
                   <input type="checkbox" [checked]="item.loteConsumido" disabled class="legacy-table-checkbox">
                 </td>
-                <td *ngIf="isColVisible('aditivos')">{{ item.lotePaqueteAditivos || '---' }}</td>
               </tr>
             </tbody>
           </table>
@@ -638,6 +763,19 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
       width: 18px; height: 18px; cursor: not-allowed; accent-color: #2e7d32;
     }
 
+    
+    .rel-pos { position: relative; }
+    .header-cell-content { display: flex; align-items: center; gap: 0.4rem; justify-content: space-between; width: 100%; }
+    .justify-end { justify-content: flex-end; }
+    .filter-trigger-btn { background: none; border: none; color: #a0aec0; cursor: pointer; padding: 0.1rem 0.3rem; font-size: 0.7rem; border-radius: 3px; transition: all 0.2s; }
+    .filter-trigger-btn:hover { background: #e2e8f0; color: #4a5568; }
+    .filter-trigger-btn.active { color: #2e7d32; font-weight: bold; background: #e8f5e9; }
+    .col-filter-dropdown { position: absolute; top: calc(100% + 5px); left: 0; background: white; border: 1px solid #e2e8f0; border-radius: 8px; z-index: 1000; min-width: 220px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 0.5rem 0; animation: fadeInDropdown 0.2s ease-out; }
+    .col-filter-dropdown.text-left { left: auto; right: 0; }
+    .text-filter-box { padding: 0.5rem 1rem; }
+    .text-filter-input { width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
+    .text-filter-input:focus { border-color: #2e7d32; }
+    
     /* Paginación */
     .pagination-container-premium {
       display: flex;
@@ -829,6 +967,33 @@ export class LotesComponent implements OnInit {
   // Paginación
   currentPage = 1;
   pageSize = 10;
+  
+  // Table Filtering & Sorting State
+  activeDropdown: string | null = null;
+  sortColumn: string = '';
+  sortAsc: boolean = true;
+  filterLoteNo = '';
+  filterLotePO = '';
+  filterTrunk = '';
+  filterTipoMat = '';
+  filterEstadoMat = '';
+
+  toggleDropdown(col: string, event: Event) {
+    event.stopPropagation();
+    this.activeDropdown = this.activeDropdown === col ? null : col;
+    this.showSearchFilterDropdown = false;
+    this.showColumnSelector = false;
+    this.showExportSelector = false;
+  }
+
+  setSort(col: string, asc: boolean) {
+    this.sortColumn = col;
+    this.sortAsc = asc;
+    this.activeDropdown = null;
+    this.currentPage = 1;
+    this.cdr.detectChanges();
+  }
+  
 
   columns = [
     { id: 'loteNo', label: 'Lote NO.', visible: true },
@@ -840,8 +1005,7 @@ export class LotesComponent implements OnInit {
     { id: 'kgMaximo', label: 'Kg Maximo', visible: true },
     { id: 'estadoMat', label: 'Estado Material', visible: true },
     { id: 'kg', label: 'Kg', visible: true },
-    { id: 'consumido', label: 'Consumido', visible: true },
-    { id: 'aditivos', label: 'Paquete Aditivos', visible: false }
+    { id: 'consumido', label: 'Consumido', visible: true }
   ];
 
   ngOnInit() {
@@ -1028,21 +1192,15 @@ export class LotesComponent implements OnInit {
 
   get filteredLotes() {
     const q = (this.searchQuery || '').toLowerCase();
-    return this.lotes.filter(item => {
-      // Búsqueda General
+    let result = this.lotes.filter(item => {
       const matchesSearch = !q || 
         (item.loteEmbarque || '').toLowerCase().includes(q) ||
         (item.lotePO || '').toLowerCase().includes(q) ||
         (item.loteTrunkNo || '').toLowerCase().includes(q);
 
-      // Filtro Silo
       const matchesSilo = !this.filterSiloId || item.loteSiloId === this.filterSiloId;
+      const matchesConsumido = this.filterConsumido === 'all' || item.loteConsumido.toString() === this.filterConsumido;
 
-      // Filtro Consumido
-      const matchesConsumido = this.filterConsumido === 'all' || 
-        item.loteConsumido.toString() === this.filterConsumido;
-
-      // Filtro Fecha
       let matchesDate = true;
       if (item.loteFechaRegistro) {
         const itemDate = new Date(item.loteFechaRegistro);
@@ -1057,8 +1215,39 @@ export class LotesComponent implements OnInit {
         }
       }
 
-      return matchesSearch && matchesSilo && matchesConsumido && matchesDate;
+      // Column filters
+      const matchesLoteNo = !this.filterLoteNo || (item.loteEmbarque || '').toLowerCase().includes(this.filterLoteNo.toLowerCase());
+      const matchesLotePO = !this.filterLotePO || (item.lotePO || '').toLowerCase().includes(this.filterLotePO.toLowerCase());
+      const matchesTrunk = !this.filterTrunk || (item.loteTrunkNo || '').toLowerCase().includes(this.filterTrunk.toLowerCase());
+      const matchesTipoMat = !this.filterTipoMat || (item.loteTipoMaterial || '').toLowerCase().includes(this.filterTipoMat.toLowerCase());
+      const matchesEstadoMat = !this.filterEstadoMat || this.getSiloEstadoMaterial(item.loteSiloId).toLowerCase().includes(this.filterEstadoMat.toLowerCase());
+
+      return matchesSearch && matchesSilo && matchesConsumido && matchesDate && 
+             matchesLoteNo && matchesLotePO && matchesTrunk && matchesTipoMat && matchesEstadoMat;
     });
+
+    if (this.sortColumn) {
+      result.sort((a, b) => {
+        let valA: any = '';
+        let valB: any = '';
+        switch(this.sortColumn) {
+          case 'loteNo': valA = a.loteEmbarque; valB = b.loteEmbarque; break;
+          case 'lotePO': valA = a.lotePO; valB = b.lotePO; break;
+          case 'fecha': valA = a.loteFechaRegistro ? new Date(a.loteFechaRegistro).getTime() : 0; valB = b.loteFechaRegistro ? new Date(b.loteFechaRegistro).getTime() : 0; break;
+          case 'trunk': valA = a.loteTrunkNo; valB = b.loteTrunkNo; break;
+          case 'tipoMat': valA = a.loteTipoMaterial; valB = b.loteTipoMaterial; break;
+          case 'silo': valA = this.getSiloNombre(a.loteSiloId); valB = this.getSiloNombre(b.loteSiloId); break;
+          case 'kgMaximo': valA = this.getSiloCapacidad(a.loteSiloId); valB = this.getSiloCapacidad(b.loteSiloId); break;
+          case 'estadoMat': valA = this.getSiloEstadoMaterial(a.loteSiloId); valB = this.getSiloEstadoMaterial(b.loteSiloId); break;
+          case 'kg': valA = a.loteKg; valB = b.loteKg; break;
+        }
+        if (valA < valB) return this.sortAsc ? -1 : 1;
+        if (valA > valB) return this.sortAsc ? 1 : -1;
+        return 0;
+      });
+    }
+
+    return result;
   }
 
   // Paginación Helpers

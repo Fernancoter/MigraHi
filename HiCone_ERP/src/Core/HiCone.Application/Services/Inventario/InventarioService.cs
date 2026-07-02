@@ -155,7 +155,9 @@ namespace HiCone.Application.Services.Inventario
                     ExistenciaId = existenciaId,
                     CantidadReal = ep?.CantidadReal ?? 0,
                     CantidadSistema = cantidadSistema,
-                    MillarSistema = 0 
+                    MillarSistema = 0,
+                    ProducidoEnTurno = ep?.ProducidoEnTurno ?? 0,
+                    EnTurnoSegunSistema = ep?.EnTurnoSegunSistema ?? 0
                 });
             }
 
@@ -396,6 +398,8 @@ namespace HiCone.Application.Services.Inventario
                 {
                     ep.CantidadReal = item.CantidadReal;
                     ep.CantidadSistema = item.CantidadSistema;
+                    ep.ProducidoEnTurno = item.ProducidoEnTurno;
+                    ep.EnTurnoSegunSistema = item.EnTurnoSegunSistema;
                 }
                 else
                 {
@@ -404,7 +408,9 @@ namespace HiCone.Application.Services.Inventario
                         ExistenciaId = item.ExistenciaId,
                         ProductoId = item.ProductoId,
                         CantidadReal = item.CantidadReal,
-                        CantidadSistema = item.CantidadSistema
+                        CantidadSistema = item.CantidadSistema,
+                        ProducidoEnTurno = item.ProducidoEnTurno,
+                        EnTurnoSegunSistema = item.EnTurnoSegunSistema
                     };
                     _context.ExistenciaProductos.Add(newEp);
                 }
@@ -502,6 +508,8 @@ namespace HiCone.Application.Services.Inventario
         public decimal CantidadReal { get; set; }
         public decimal CantidadSistema { get; set; }
         public decimal MillarSistema { get; set; }
+        public decimal ProducidoEnTurno { get; set; }
+        public decimal EnTurnoSegunSistema { get; set; }
     }
 
     public class ExistenciaSiloDto

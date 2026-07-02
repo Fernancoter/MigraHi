@@ -13,8 +13,14 @@ public class Prensa : TenantEntity
     public string? Modelo { get; set; }
     public string? NumeroSerie { get; set; }
     public bool IsActive { get; set; } = true;
+    public string? Marca { get; set; }
     public EstadoPrensa Estado { get; set; } = EstadoPrensa.Disponible;
+
     public string? Observaciones { get; set; }
+
+    // Retrocompatibilidad
+    public string NumeroPrensa { get => Codigo; set => Codigo = value; }
+    public string? Imagen { get; set; }
 
     // ── Colecciones ───────────────────────────────────────────────────────
     public virtual ICollection<Prensado> Prensados { get; set; } = new List<Prensado>();

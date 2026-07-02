@@ -59,7 +59,24 @@ public class IdentityService : IInfrastructureIdentityService
             return (false, new[] { $"Cuenta bloqueada hasta {user.LockoutEnd}." }, null);
         }
 
-        if (!BC.Verify(password, user.PasswordHash))
+        bool isPasswordValid = false;
+        try
+        {
+            isPasswordValid = BC.Verify(password, user.PasswordHash);
+        }
+        catch (BCrypt.Net.SaltParseException)
+        {
+            // Fallback for plaintext or invalid hash formats
+            isPasswordValid = (user.PasswordHash == password);
+            if (isPasswordValid)
+            {
+                // Auto-upgrade password to a valid BCrypt hash
+                user.PasswordHash = BC.HashPassword(password);
+                await _context.SaveChangesAsync(default);
+            }
+        }
+
+        if (!isPasswordValid)
         {
             user.AccessFailedCount++;
             if (user.AccessFailedCount >= 5)
@@ -87,7 +104,17 @@ public class IdentityService : IInfrastructureIdentityService
         var user = await _context.Users.FindAsync(userId);
         if (user == null) return (false, new[] { "Usuario no encontrado." });
 
-        if (!BC.Verify(currentPassword, user.PasswordHash))
+        bool isCurrentPasswordValid = false;
+        try
+        {
+            isCurrentPasswordValid = BC.Verify(currentPassword, user.PasswordHash);
+        }
+        catch (BCrypt.Net.SaltParseException)
+        {
+            isCurrentPasswordValid = (user.PasswordHash == currentPassword);
+        }
+
+        if (!isCurrentPasswordValid)
         {
             return (false, new[] { "La contraseña actual es incorrecta." });
         }

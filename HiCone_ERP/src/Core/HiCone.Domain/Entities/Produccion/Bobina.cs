@@ -6,12 +6,27 @@ namespace HiCone.Domain.Entities.Produccion;
 
 public class Bobina : TenantEntity
 {
-    // ── No. de Serie ───────────────────────────────────────────────────────
+    // ── No. de Serie ────────────────────────────────────────────────────────
     public string NoSerie { get; set; } = null!;             // BobinaNoSerie — generado automáticamente
     public int BobinaNo { get; set; }                        // Número secuencial en la extrusión
     public string BobinaOrigen { get; set; } = "Normal";     // Normal, Reproceso
 
-    // ── Mediciones ────────────────────────────────────────────────────────
+    // Retrocompatibilidad con el módulo de configuración de producción
+    public string? Mill { get; set; }
+    public string? Station { get; set; }
+    public int BobbinNo { get => BobinaNo; set => BobinaNo = value; }
+    public string SerialNo { get => NoSerie; set => NoSerie = value; }
+    public string? Codigo { get; set; }
+    public DateTime? RestStart { get; set; }
+    public int RestMinutes { get; set; }
+    public decimal ScrapKg { get => MermaKg; set => MermaKg = value; }
+    public decimal Thickness { get => Espesor; set => Espesor = value; }
+    public string? Observations { get; set; }
+    public string? MillReason { get; set; }
+    public string? ProductName { get; set; }
+    public string? Reel { get; set; }
+
+    // ── Mediciones ──────────────────────────────────────────────────────────
     public decimal Kg { get; set; }                          // Peso bruto
     public decimal MermaKg { get; set; }
     public decimal Espesor { get; set; }                     // mm
@@ -54,6 +69,9 @@ public class Bobina : TenantEntity
 
     // ── Colecciones ───────────────────────────────────────────────────────
     public virtual ICollection<PrensadoBobina> PrensadosBobina { get; set; } = new List<PrensadoBobina>();
+
+    // ── Interrupciones ────────────────────────────────────────────────────
+    public Guid? BobinaInterrupcionesId { get; set; }
 
     // ── Computed helpers ──────────────────────────────────────────────────
     public bool ReposoCompletado(int minutosMinimos) =>

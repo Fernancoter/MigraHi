@@ -16,6 +16,10 @@ public class Extrusora : TenantEntity
     public bool IsActive { get; set; } = true;
     public EstadoExtrusora Estado { get; set; } = EstadoExtrusora.Disponible;
 
+    // Retrocompatibilidad con el módulo de configuración de producción
+    public string NumeroExtrusora { get => Codigo; set => Codigo = value; }
+    public string? Imagen { get; set; }
+
     // Capacidad nominal
     public decimal CapacidadKgHora { get; set; }
     public int NumeroEstaciones { get; set; } = 1;           // Estaciones de bobinas
@@ -26,4 +30,7 @@ public class Extrusora : TenantEntity
     public virtual ICollection<Extrusion> Extrusiones { get; set; } = new List<Extrusion>();
     public virtual ICollection<ExtrusoraProducto> Productos { get; set; } = new List<ExtrusoraProducto>();
     public virtual ICollection<ExtrusoraMezcladora> Mezcladoras { get; set; } = new List<ExtrusoraMezcladora>();
+
+    // Retrocompatibilidad
+    public virtual ICollection<ExtrusoraOperario> ExtrusoraOperarios { get; set; } = new List<ExtrusoraOperario>();
 }

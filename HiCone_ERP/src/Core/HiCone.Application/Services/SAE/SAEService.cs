@@ -325,21 +325,225 @@ public class SAEService : ISAEService
         if (!await _context.SaeProducts.AnyAsync())
         {
             _context.SaeProducts.AddRange(
-                new SaeProduct { ProductNumber = "BOB-4-STD", ProductName = "Bobina 4\" Estándar (SAE)", IsActive = true, Price = 150.00m, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow },
-                new SaeProduct { ProductNumber = "BOB-6-PRE", ProductName = "Bobina 6\" Premium (SAE)", IsActive = true, Price = 280.00m, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow },
-                new SaeProduct { ProductNumber = "MAT-VIRGEN", ProductName = "Resina Virgen Polietileno", IsActive = true, Price = 45.50m, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow }
+                new SaeProduct { ProductNumber = "808172000", ProductName = "12PK SAC PCR", Unit = "MILLAR", IsActive = true, Price = 150.00m, Cost = 0.00m, TipoProducto = "Can", Packaging = "Reels", SubProductType = "SAC", Exist = 1587.60m, Group = "8081", PiecesPlt = 58800.00m, Product8020 = "20", Pallets = 27, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow },
+                new SaeProduct { ProductNumber = "8081C2000", ProductName = "12PK SAC PCR", Unit = "MILLAR", IsActive = true, Price = 280.00m, Cost = 0.00m, TipoProducto = "Can", Packaging = "Reels", SubProductType = "SAC", Exist = 0.00m, Group = "8081", PiecesPlt = 0.00m, Product8020 = "", Pallets = 0, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow },
+                new SaeProduct { ProductNumber = "809572000", ProductName = "2202/206 NON-ECO", Unit = "MILLAR", IsActive = true, Price = 45.50m, Cost = 0.00m, TipoProducto = "Can", Packaging = "Reels", SubProductType = "Sleek", Exist = 3609.60m, Group = "8095", PiecesPlt = 150400.00m, Product8020 = "20", Pallets = 24, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow }
+            );
+        }
+
+        if (!await _context.SaeCustomers.AnyAsync())
+        {
+            _context.SaeCustomers.AddRange(
+                new SaeCustomer { CustomerCode = "CAHG", CustomerName = "AMERICAS HGP", ConsolidatedName = "Heineken", Shipping = "AV. ALFONSO REYES", RFC = "AHG150320QD1", IsActive = true, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow },
+                new SaeCustomer { CustomerCode = "HKGDL", CustomerName = "AMERICAS HGP SA DE CV", ConsolidatedName = "Heineken", Shipping = "GUADALAJARA", RFC = "XXX", IsActive = true, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow },
+                new SaeCustomer { CustomerCode = "ATM01", CustomerName = "ARTANT DE MEXICO S DE RL DE CV", ConsolidatedName = "SIN GRUPO", Shipping = "MELCHOR OCAMPO", RFC = "AME140512GE1", IsActive = true, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow }
             );
         }
 
         if (!await _context.SaeOrders.AnyAsync())
         {
             _context.SaeOrders.AddRange(
-                new SaeOrder { OrderDoc = "P-10254", CustomerCode = "BIMBO-01", CustomerName = "Bimbo S.A. de C.V.", OrderDate = DateTime.Now.AddDays(-2), TotalAmount = 15400.50m, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow },
-                new SaeOrder { OrderDoc = "P-10255", CustomerCode = "WALMART-MX", CustomerName = "Walmart de México", OrderDate = DateTime.Now.AddDays(-1), TotalAmount = 45200.00m, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow },
-                new SaeOrder { OrderDoc = "P-10256", CustomerCode = "NESTLE-PROD", CustomerName = "Nestlé México", OrderDate = DateTime.Now, TotalAmount = 12800.75m, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow }
+                new SaeOrder { OrderDoc = "P-10254", CustomerCode = "CAHG", CustomerName = "AMERICAS HGP", OrderDate = DateTime.Now.AddDays(-2), TotalAmount = 15400.50m, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow },
+                new SaeOrder { OrderDoc = "P-10255", CustomerCode = "HKGDL", CustomerName = "AMERICAS HGP SA DE CV", OrderDate = DateTime.Now.AddDays(-1), TotalAmount = 45200.00m, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow },
+                new SaeOrder { OrderDoc = "P-10256", CustomerCode = "ATM01", CustomerName = "ARTANT DE MEXICO S DE RL DE CV", OrderDate = DateTime.Now, TotalAmount = 12800.75m, TenantId = tenantId, FechaSincronizacion = DateTime.UtcNow }
             );
         }
 
         return await _context.SaveChangesAsync(default) > 0;
     }
+
+    public async Task<SaeOrder?> GetOrderByDocAsync(string orderDoc)
+    {
+        return await _context.SaeOrders.FirstOrDefaultAsync(o => o.OrderDoc == orderDoc);
+    }
+
+    public async Task<IEnumerable<SaeOrder>> GetAllOrdersAsync()
+    {
+        return await _context.SaeOrders.OrderByDescending(o => o.OrderDate).ToListAsync();
+    }
+
+    public async Task<IEnumerable<SaeCustomer>> GetClientesSAEAsync()
+    {
+        return await _context.SaeCustomers.Where(c => c.IsActive).OrderBy(c => c.CustomerName).ToListAsync();
+    }
+
+    public async Task<IEnumerable<SaeSalesPerson>> GetSalesPersonsAsync()
+    {
+        return await _context.SaeSalesPersons.Where(s => s.SalesPersonActive).OrderBy(s => s.SalesPersonName).ToListAsync();
+    }
+
+    public async Task<IEnumerable<SaeBudget>> GetBudgetsAsync(int year, string? consolidatedName, string? productNumber)
+    {
+        var query = _context.SaeBudgets.Where(b => b.BudgetYear == year);
+        if (!string.IsNullOrEmpty(consolidatedName))
+            query = query.Where(b => b.ConsolidatedName == consolidatedName);
+        if (!string.IsNullOrEmpty(productNumber))
+            query = query.Where(b => b.ProductNumber == productNumber);
+        return await query.OrderBy(b => b.CustomerCode).ThenBy(b => b.BudgetMonth).ToListAsync();
+    }
+
+    public async Task<bool> SaveBudgetsAsync(List<SaeBudget> budgets)
+    {
+        if (budgets == null || !budgets.Any()) return false;
+        foreach (var b in budgets)
+        {
+            var existing = await _context.SaeBudgets.FirstOrDefaultAsync(x =>
+                x.CustomerCode == b.CustomerCode &&
+                x.ProductNumber == b.ProductNumber &&
+                x.BudgetYear == b.BudgetYear &&
+                x.BudgetMonth == b.BudgetMonth);
+            if (existing != null)
+            {
+                existing.BudgetEstimated = b.BudgetEstimated;
+                existing.BudgetReal = b.BudgetReal;
+                existing.BudgetOutlook = b.BudgetOutlook;
+                existing.BudgetPrice = b.BudgetPrice;
+                existing.BudgetPriceOutlook = b.BudgetPriceOutlook;
+            }
+            else
+            {
+                b.TenantId = new Guid("00000000-0000-0000-0000-000000000001");
+                _context.SaeBudgets.Add(b);
+            }
+        }
+        return await _context.SaveChangesAsync(default) > 0;
+    }
+
+    public async Task<IEnumerable<SaeBudgetSummary>> GetFTBReportAsync(int year, int month)
+    {
+        var budgets = await _context.SaeBudgets
+            .Where(b => b.BudgetYear == year && b.BudgetMonth <= month)
+            .ToListAsync();
+
+        var grouped = budgets.GroupBy(b => new { b.ProductNumber, b.ConsolidatedName })
+            .Select(g => new SaeBudgetSummary
+            {
+                ProductNumber = g.Key.ProductNumber,
+                ConsolidatedName = g.Key.ConsolidatedName ?? "General",
+                TotalEstimated = g.Sum(x => x.BudgetEstimated),
+                TotalReal = g.Sum(x => x.BudgetReal),
+                CompliancePercent = g.Sum(x => x.BudgetEstimated) > 0
+                    ? Math.Round(g.Sum(x => x.BudgetReal) / g.Sum(x => x.BudgetEstimated) * 100, 1)
+                    : 0
+            });
+        return grouped;
+    }
+
+    public async Task<object> GetKPIsAsync()
+    {
+        var totalPedidos = await _context.SaeOrders.CountAsync();
+        var pedidosPendientes = await _context.SaeOrders.CountAsync(o => !o.Procesada);
+        var ventasMes = await _context.SaeOrders
+            .Where(o => o.OrderDate.Month == DateTime.Now.Month && o.OrderDate.Year == DateTime.Now.Year)
+            .SumAsync(o => o.TotalAmount);
+        var ventasMesAnterior = await _context.SaeOrders
+            .Where(o => o.OrderDate.Month == DateTime.Now.AddMonths(-1).Month && o.OrderDate.Year == DateTime.Now.AddMonths(-1).Year)
+            .SumAsync(o => o.TotalAmount);
+        var crecimiento = ventasMesAnterior > 0 ? Math.Round((ventasMes - ventasMesAnterior) / ventasMesAnterior * 100, 1) : 0;
+
+        return new
+        {
+            VentasTotalesMes = ventasMes,
+            PedidosPendientes = pedidosPendientes,
+            TotalPedidos = totalPedidos,
+            CrecimientoVsMesAnterior = crecimiento
+        };
+    }
+
+    public async Task<IEnumerable<ItwOutlookRowDto>> GetItwOutlookAsync()
+    {
+        var currentYear = DateTime.Now.Year;
+        var budgets = await _context.SaeBudgets
+            .Where(b => b.BudgetYear == currentYear)
+            .ToListAsync();
+
+        var pendingOrders = await _context.SaeRemissions
+            .Where(r => r.Quantity > 0)
+            .GroupBy(r => r.ProductNumber)
+            .Select(g => new { ProductNumber = g.Key ?? "", PendingQuantity = g.Sum(x => x.Quantity) })
+            .ToDictionaryAsync(k => k.ProductNumber, v => v.PendingQuantity);
+
+        var groupedBudgets = budgets.GroupBy(b => new { b.ProductNumber, b.ConsolidatedName })
+            .Select(g => new ItwOutlookRowDto
+            {
+                ProductNumber = g.Key.ProductNumber,
+                ConsolidatedName = g.Key.ConsolidatedName ?? "General",
+                CurrentStock = 0, // Should be linked to Silos/Bobinas
+                PendingOrders = pendingOrders.ContainsKey(g.Key.ProductNumber) ? pendingOrders[g.Key.ProductNumber] : 0,
+                BudgetRemaining = g.Sum(x => Math.Max(0, x.BudgetEstimated - x.BudgetReal)),
+                CoveragePercent = 100,
+                Status = "OK"
+            }).ToList();
+
+        foreach(var row in groupedBudgets)
+        {
+            var demand = row.PendingOrders + row.BudgetRemaining;
+            row.CoveragePercent = demand > 0 ? Math.Round((row.CurrentStock / demand) * 100, 1) : 100;
+            if(row.CoveragePercent < 50) row.Status = "CRITICAL";
+            else if (row.CoveragePercent < 80) row.Status = "WARNING";
+            else row.Status = "OK";
+        }
+
+        return groupedBudgets;
+    }
+
+    public async Task<IEnumerable<RealtimeInventoryRowDto>> GetRealtimeInventoryAsync()
+    {
+        var pendingOrders = await _context.SaeRemissions
+            .Where(r => r.Quantity > 0)
+            .GroupBy(r => r.ProductNumber)
+            .Select(g => new { ProductNumber = g.Key ?? "", PendingQuantity = g.Sum(x => x.Quantity) })
+            .ToDictionaryAsync(k => k.ProductNumber, v => v.PendingQuantity);
+
+        var products = await _context.SaeProducts.Where(p => p.IsActive).ToListAsync();
+
+        var rows = products.Select(p => {
+            var demand = pendingOrders.ContainsKey(p.ProductNumber) ? pendingOrders[p.ProductNumber] : 0;
+            var totalStock = 0; // Linked to inventory
+            return new RealtimeInventoryRowDto
+            {
+                ProductNumber = p.ProductNumber,
+                ProductName = p.ProductName,
+                SilosTotal = 0,
+                BobinasTotal = 0,
+                TotalStock = totalStock,
+                SaeDemand = demand,
+                Balance = totalStock - demand
+            };
+        }).ToList();
+
+        return rows;
+    }
+}
+
+/// <summary>DTO de resumen de presupuesto para el reporte FTB.</summary>
+public class SaeBudgetSummary
+{
+    public string ProductNumber { get; set; } = null!;
+    public string ConsolidatedName { get; set; } = null!;
+    public decimal TotalEstimated { get; set; }
+    public decimal TotalReal { get; set; }
+    public decimal CompliancePercent { get; set; }
+}
+
+public class ItwOutlookRowDto
+{
+    public string ProductNumber { get; set; } = null!;
+    public string ConsolidatedName { get; set; } = null!;
+    public decimal CurrentStock { get; set; }
+    public decimal PendingOrders { get; set; }
+    public decimal BudgetRemaining { get; set; }
+    public decimal CoveragePercent { get; set; }
+    public string Status { get; set; } = null!;
+}
+
+public class RealtimeInventoryRowDto
+{
+    public string ProductNumber { get; set; } = null!;
+    public string ProductName { get; set; } = null!;
+    public decimal SilosTotal { get; set; }
+    public decimal BobinasTotal { get; set; }
+    public decimal TotalStock { get; set; }
+    public decimal SaeDemand { get; set; }
+    public decimal Balance { get; set; }
 }

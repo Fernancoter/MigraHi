@@ -1,34 +1,115 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 export interface SaeProducto {
   productNumber: string;
   productName: string;
-  stock?: number;
+  unit?: string;
+  price?: number;
+  cost: number;
+  tipoProducto?: string;
+  packaging?: string;
+  subProductType?: string;
+  exist: number;
+  group?: string;
+  piecesPlt: number;
+  product8020?: string;
+  pallets: number;
   isActive: boolean;
 }
 
 export interface SaePedido {
+  id?: string;
   orderDoc: string;
-  clientCode: string;
-  date: Date;
+  orderDate: Date;
+  orderDeliveryDate?: Date;
+  customerCode: string;
+  customerName?: string;
   totalAmount: number;
-  // Aliases para compatibilidad con UI antigua sin cambiar diseño
-  folio?: string;
-  claveCliente?: string;
-  fecha?: Date;
-  importe?: number;
-  estatus?: string;
+  procesada: boolean;
 }
 
-export interface SaePresupuesto {
-  anio: number;
-  mes: number;
-  producto: string;
-  cliente: string;
-  cantidadEstimada: number;
-  cantidadReal: number;
+export interface SaeRemision {
+  remissionDoc: string;
+  orderDoc: string;
+  remissionDate: Date;
+  productNumber?: string;
+  quantity: number;
+  customerCode?: string;
+  customerName?: string;
+  shipping?: string;
+}
+
+export interface SaeCliente {
+  customerCode: string;
+  customerName: string;
+  consolidatedName?: string;
+  shipping?: string;
+  email?: string;
+  phone?: string;
+  rfc?: string;
+  isActive: boolean;
+}
+
+export interface SaeBudget {
+  customerCode: string;
+  customerName?: string;
+  consolidatedName?: string;
+  productNumber: string;
+  budgetYear: number;
+  budgetMonth: number;
+  budgetEstimated: number;
+  budgetReal: number;
+  budgetOutlook: number;
+  budgetPrice: number;
+  budgetPriceOutlook: number;
+}
+
+export interface SaeSalesPerson {
+  salesPersonName: string;
+  salesPersonActive: boolean;
+}
+
+export interface SaeBudgetSummary {
+  productNumber: string;
+  consolidatedName: string;
+  totalEstimated: number;
+  totalReal: number;
+  compliancePercent: number;
+}
+
+export interface SaeKPIs {
+  ventasTotalesMes: number;
+  pedidosPendientes: number;
+  totalPedidos: number;
+  crecimientoVsMesAnterior: number;
+}
+
+export interface OrderDetail {
+  order: SaePedido;
+  remisiones: SaeRemision[];
+}
+
+export interface ItwOutlookRow {
+  productNumber: string;
+  consolidatedName: string;
+  currentStock: number;
+  pendingOrders: number;
+  budgetRemaining: number;
+  coveragePercent: number;
+  status: string; // 'CRITICAL', 'WARNING', 'OK'
+}
+
+export interface RealtimeInventoryRow {
+  productNumber: string;
+  productName: string;
+  silosTotal: number;
+  bobinasTotal: number;
+  totalStock: number;
+  saeDemand: number;
+  balance: number;
 }
 
 @Injectable({
@@ -38,29 +119,80 @@ export class SaeService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:5007/api/v1/sae';
 
+  // Productos
   getProductos(): Observable<SaeProducto[]> {
     return this.http.get<SaeProducto[]>(`${this.apiUrl}/productos`);
   }
 
-  // Alias para compatibilidad con componentes que usan getInventario
-  getInventario(): Observable<SaeProducto[]> {
-    return this.getProductos();
+  // Clientes
+  getClientes(): Observable<SaeCliente[]> {
+    return this.http.get<SaeCliente[]>(`${this.apiUrl}/clientes`);
   }
 
+  getSalesPersons(): Observable<SaeSalesPerson[]> {
+    return this.http.get<SaeSalesPerson[]>(`${this.apiUrl}/salespersons`);
+  }
+
+  // Órdenes
   getOrdenesPendientes(): Observable<SaePedido[]> {
     return this.http.get<SaePedido[]>(`${this.apiUrl}/ordenes-pendientes`);
   }
 
-  // Alias para compatibilidad con componentes que usan getPedidos
   getPedidos(): Observable<SaePedido[]> {
     return this.getOrdenesPendientes();
   }
 
-  getReporteFTB(anio: number, mes: number): Observable<SaePresupuesto[]> {
-    // Retornamos vacío por ahora si el endpoint no existe, para no romper el build
-    return this.http.get<SaePresupuesto[]>(`${this.apiUrl}/reporte-ftb?anio=${anio}&mes=${mes}`);
+  getAllOrdenes(): Observable<SaePedido[]> {
+    return this.http.get<SaePedido[]>(`${this.apiUrl}/ordenes`);
   }
 
+  getOrderDetail(orderDoc: string): Observable<OrderDetail> {
+    return this.http.get<OrderDetail>(`${this.apiUrl}/ordenes/${encodeURIComponent(orderDoc)}`);
+  }
+
+  getRemisiones(orderDoc: string): Observable<SaeRemision[]> {
+    return this.http.get<SaeRemision[]>(`${this.apiUrl}/remisiones/${encodeURIComponent(orderDoc)}`);
+  }
+
+  // Presupuestos
+  getBudgets(year: number, consolidatedName?: string, productNumber?: string): Observable<SaeBudget[]> {
+    let url = `${this.apiUrl}/budgets?year=${year}`;
+    if (consolidatedName) url += `&consolidatedName=${encodeURIComponent(consolidatedName)}`;
+    if (productNumber) url += `&productNumber=${encodeURIComponent(productNumber)}`;
+    return this.http.get<SaeBudget[]>(url);
+  }
+
+  saveBudgets(budgets: SaeBudget[]): Observable<any> {
+    return this.http.post(`${this.apiUrl}/budgets`, budgets);
+  }
+
+  getReporteFTB(anio: number, mes: number): Observable<SaeBudgetSummary[]> {
+    return this.http.get<SaeBudgetSummary[]>(`${this.apiUrl}/reporte-ftb?anio=${anio}&mes=${mes}`).pipe(
+      catchError(() => of([]))
+    );
+  }
+
+  // ITW y Realtime
+  getItwOutlook(): Observable<ItwOutlookRow[]> {
+    return this.http.get<ItwOutlookRow[]>(`${this.apiUrl}/itw-outlook`).pipe(
+      catchError(() => of([]))
+    );
+  }
+
+  getRealtimeInventory(): Observable<RealtimeInventoryRow[]> {
+    return this.http.get<RealtimeInventoryRow[]>(`${this.apiUrl}/realtime-inventory`).pipe(
+      catchError(() => of([]))
+    );
+  }
+
+  // KPIs
+  getKPIs(): Observable<SaeKPIs> {
+    return this.http.get<SaeKPIs>(`${this.apiUrl}/kpis`).pipe(
+      catchError(() => of({ ventasTotalesMes: 0, pedidosPendientes: 0, totalPedidos: 0, crecimientoVsMesAnterior: 0 }))
+    );
+  }
+
+  // Sincronización
   sincronizar(): Observable<any> {
     return this.http.post(`${this.apiUrl}/sincronizar`, {});
   }

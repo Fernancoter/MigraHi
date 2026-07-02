@@ -13,7 +13,14 @@ public class Producto : TenantEntity
     public string Nombre { get; set; } = null!;
     public string? Descripcion { get; set; }
 
+    // Retrocompatibilidad con el módulo de configuración de producción
+    public string Clave { get => Codigo; set => Codigo = value; }
+    public string? ProductoBase { get; set; }
+    public decimal PrecioUnitario { get; set; }
+    public string? ProductoSAE { get; set; }
+
     // Parámetros de proceso
+
     public TipoMaterial TipoMaterial { get; set; } = TipoMaterial.Virgen;
     public decimal Calibre { get; set; }                     // mm
     public decimal Ancho { get; set; }                       // mm

@@ -1,4 +1,5 @@
 using HiCone.Domain.Entities.Produccion;
+using HiCone.Domain.Entities.Common;
 using HiCone.Domain.Enums;
 
 namespace HiCone.Application.Interfaces;
@@ -21,7 +22,7 @@ public interface IProduccionService
         string? lotePaqueteAditivos, 
         string? observaciones);
 
-    Task<bool> FinalizarExtrusionAsync(Guid extrusionId, string? motivoAnticipado = null);
+    Task<bool> FinalizarExtrusionAsync(Guid extrusionId, string? motivoAnticipado = null, Guid? nextExtrusionId = null);
     Task<bool> RegistrarConsumoExtrusionAsync(Guid extrusionId, Guid siloVirgenId, decimal virgenKg, Guid? siloMolidoId, decimal molidoKg);
     
     Task<Bobina> GuardarBobinaAsync(
@@ -45,7 +46,6 @@ public interface IProduccionService
     
     // ── Prensado (Carreras y Carretes) ─────────────────────────────────────
     Task<Prensado> IniciarPrensadoAsync(Guid prensaId, Guid operarioId, Guid turnoId, Guid productoId, Guid troquelId);
-    Task<bool> MontarBobinaEnPrensadoAsync(Guid prensadoId, Guid bobinaId);
     Task<Carrera> IniciarCarreraAsync(Guid prensadoId);
     Task<bool> FinalizarCarreraAsync(Guid carreraId);
     Task<bool> RegistrarDefectoCarreteAsync(Guid carreteId, TipoDefecto tipo, string descripcion);
@@ -69,6 +69,12 @@ public interface IProduccionService
     Task<bool> ValidarBobinaAsync(Guid bobinaId);
     Task<bool> TransferirBobinaAsync(Guid bobinaId, Guid extrusionDestinoId);
 
+    // ── Nuevas Funcionalidades (Exportar, Interrupción, Impresión Múltiple, Eliminadas) ──
+    Task<byte[]> ExportarBobinasAsync(string formato, IEnumerable<string> columnasVisibles);
+    Task<int> LlenadoBobinaInterrupcionAsync();
+    Task<byte[]> ImprimirMultipleBobinasAsync(List<string> noSeries);
+    Task<IEnumerable<AuditLog>> GetBobinasEliminadasAsync();
+
     // ── Recalibración (Legacy: SDRecalibrarExtrusion) ──
     Task<bool> RecalibrarExtrusionAsync(Guid extrusionId, decimal? calibre, decimal? ancho, decimal? longitud);
 
@@ -86,4 +92,65 @@ public interface IProduccionService
     Task<IEnumerable<Extrusion>> GetExtrusionesAsync();
     Task<IEnumerable<Prensado>> GetPrensadosAsync();
     Task<IEnumerable<ExtrusoraProducto>> GetExtrusoraProductosAsync();
+    Task<ExtrusoraProducto?> GetExtrusoraProductoByIdAsync(Guid id);
+    Task<ExtrusoraProducto> CreateExtrusoraProductoAsync(ExtrusoraProducto entity);
+    Task<ExtrusoraProducto> UpdateExtrusoraProductoAsync(ExtrusoraProducto entity);
+    Task<bool> DeleteExtrusoraProductoAsync(Guid id);
+
+    // ── Turnos por Semana ──────────────────────────────────────────────────
+    Task<TurnosSemanaResponseDto> GetTurnosSemanaAsync(DateTime startDate, DateTime endDate);
+    Task<bool> GuardarTurnosSemanaAsync(List<GuardarTurnoSemanaDiaDto> batch);
+}
+
+public class TurnoSemanaDiaDto
+{
+    public Guid ExtrusionId { get; set; }
+    public string ExtrusionIdLegacy { get; set; } = string.Empty;
+    public DateTime Fecha { get; set; }
+    public string Dia { get; set; } = string.Empty;
+    public string Hora { get; set; } = string.Empty;
+    public string Estado { get; set; } = string.Empty;
+    public Guid? ProductoId { get; set; }
+    public string ProductoNombre { get; set; } = string.Empty;
+    public Guid OperarioId { get; set; }
+    public string OperarioNombre { get; set; } = string.Empty;
+    public decimal Plan { get; set; }
+    public decimal Producido { get; set; }
+}
+
+public class TurnoSemanaShiftDto
+{
+    public Guid TurnoId { get; set; }
+    public string TurnoNombre { get; set; } = string.Empty;
+    public List<TurnoSemanaDiaDto> Dias { get; set; } = new();
+}
+
+public class TurnoSemanaExtrusoraDto
+{
+    public Guid ExtrusoraId { get; set; }
+    public string ExtrusoraNombre { get; set; } = string.Empty;
+    public List<TurnoSemanaShiftDto> Turnos { get; set; } = new();
+}
+
+public class ResumenTurnoSemanaDto
+{
+    public string Producto { get; set; } = string.Empty;
+    public string Extrusora { get; set; } = string.Empty;
+    public decimal Programado { get; set; }
+    public decimal Fabricado { get; set; }
+    public decimal Diferencia { get; set; }
+}
+
+public class TurnosSemanaResponseDto
+{
+    public List<TurnoSemanaExtrusoraDto> Extrusoras { get; set; } = new();
+    public List<ResumenTurnoSemanaDto> Resumen { get; set; } = new();
+}
+
+public class GuardarTurnoSemanaDiaDto
+{
+    public Guid ExtrusionId { get; set; }
+    public Guid? ProductoId { get; set; }
+    public Guid OperarioId { get; set; }
+    public decimal Plan { get; set; }
 }

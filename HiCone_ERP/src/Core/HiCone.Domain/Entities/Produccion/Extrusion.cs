@@ -13,6 +13,21 @@ public class Extrusion : TenantEntity
     public DateTime? FechaFin { get; set; }
     public EstadoExtrusion Estado { get; set; } = EstadoExtrusion.Programada;
 
+    // Retrocompatibilidad con el módulo de configuración de producción
+    public decimal Programado { get; set; }
+    public string? ProductoNombre { get; set; }
+    public ExtrusionStatus Status { get => (ExtrusionStatus)Estado; set => Estado = (EstadoExtrusion)value; }
+    public decimal Producido { get; set; }
+    public int TiempoInterrupcionMin { get; set; }
+    public bool EnCurso { get; set; }
+    public long ExtrusionIdLegacy { get; set; }
+    public decimal KgVirgen { get => VirgenKg; set => VirgenKg = value; }
+    public decimal KgMolido { get => MolidoKg; set => MolidoKg = value; }
+    public decimal Target { get => MetaKg; set => MetaKg = value; }
+    public DateTime? ProcessStart { get => FechaInicio; set { if(value.HasValue) FechaInicio = value.Value; } }
+    public DateTime? ProcessEnd { get => FechaFin; set => FechaFin = value; }
+
+
     // ── Parámetros de proceso ───────────────────────────────────────────────
     public decimal Calibre { get; set; }                     // mm
     public decimal Ancho { get; set; }                       // mm

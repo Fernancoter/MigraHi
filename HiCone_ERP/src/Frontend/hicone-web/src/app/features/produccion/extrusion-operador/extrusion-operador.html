@@ -1,19 +1,23 @@
 <div class="extrusion-container">
   <!-- Cabecera de Módulo Premium -->
-  <header class="panel-header">
-    <div class="header-info">
-      <span class="badge-module">PRODUCCIÓN</span>
-      <h1>🎛️ Consola de Operación de Extrusión</h1>
-      <p class="subtitle">Panel de inauguración de órdenes y registro dual side-by-side de bobinas con control transaccional de stock.</p>
+  <div class="page-header-premium">
+    <div class="title-section">
+      <nav class="breadcrumb-modern">
+        <span class="root">Producción</span>
+        <span class="sep">&rsaquo;</span>
+        <span class="active">Consola de Operación</span>
+      </nav>
+      <h1 class="premium-title">Consola de Operación de Extrusión</h1>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Panel de inauguración de órdenes y registro dual side-by-side de bobinas con control transaccional de stock.</p>
     </div>
     
     <!-- Botón de Cierre de Extrusión (visible solo si hay orden activa) -->
     <div class="header-actions" *ngIf="extrusionActiva">
-      <button class="btn-danger-modern pulse-btn" (click)="abrirCierre()">
+      <button class="btn-premium-danger pulse-btn" (click)="abrirCierre()">
         <span>🏁 FINALIZAR ORDEN Y TURNO</span>
       </button>
     </div>
-  </header>
+  </div>
 
   <!-- Alertas de Estado -->
   <div class="alert-container" *ngIf="errorMessage || successMessage">

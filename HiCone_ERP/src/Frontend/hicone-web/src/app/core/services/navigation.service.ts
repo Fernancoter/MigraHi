@@ -3,7 +3,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-export type ModuleType = 'INVENTARIO' | 'EXTRUSIÓN' | 'PRENSADO' | 'EMBARQUES' | 'CALIDAD' | 'SEGURIDAD' | 'CONFIGURACIÓN' | 'REPORTES_SAE' | 'CATÁLOGOS_SAE' | 'SISTEMA' | null;
+export type ModuleType = 'INVENTARIO' | 'EXTRUSIÓN' | 'PRENSADO' | 'EMBARQUES' | 'CALIDAD' | 'SEGURIDAD' | 'CONFIGURACIÓN' | 'REPORTES_SAE' | 'CATÁLOGOS_SAE' | 'SISTEMA' | 'CONFIGURACION_PRODUCCION' | null;
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +55,8 @@ export class NavigationService {
       this.activeModuleSubject.next('EMBARQUES');
     } else if (lowerUrl.includes('/seguridad')) {
       this.activeModuleSubject.next('SEGURIDAD');
+    } else if (lowerUrl.includes('/configurar-produccion')) {
+      this.activeModuleSubject.next('CONFIGURACION_PRODUCCION');
     } else if (lowerUrl.includes('/configuracion')) {
       this.activeModuleSubject.next('CONFIGURACIÓN');
     } else if (lowerUrl.includes('/reportes-sae')) {

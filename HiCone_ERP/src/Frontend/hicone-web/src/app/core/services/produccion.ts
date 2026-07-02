@@ -77,8 +77,16 @@ export interface Extrusion {
   turnoId?: string;
   turno?: Turno;
   producto?: Producto;
+  productoNombre?: string;
   totalBobinas?: number;
   metaKg?: number;
+  tiempoInterrupcion?: number;
+  lotePaqueteAditivos?: string;
+  iniciaProceso?: Date;
+  finProceso?: Date;
+  extrusionIdLegacy?: number;
+  programado?: number;
+  producido?: number;
 }
 
 export interface Bobina {
@@ -249,6 +257,23 @@ export class ProduccionService {
     return this.http.get<any>(`${this.apiUrl}/extrusion/${id}/resultado`);
   }
 
+  getExtrusion(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/extrusion/${id}`);
+  }
+
+  createExtrusion(request: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/extrusion`, request);
+  }
+
+  updateExtrusion(id: string, request: any): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/extrusion/${id}`, request);
+  }
+
+
+  deleteExtrusion(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/extrusion/${id}`);
+  }
+
   // ── Consultas de Extrusión ──────────────────────────────────────────
   getHistorialExtrusiones(desde?: string, hasta?: string, extrusoraId?: string, productoId?: string): Observable<any[]> {
     let params = '';
@@ -269,5 +294,48 @@ export class ProduccionService {
 
   getExtrusoraProductos(): Observable<ExtrusoraProducto[]> {
     return this.http.get<ExtrusoraProducto[]>(`${this.apiUrl}/extrusora-productos`);
+  }
+
+  getExtrusoraProducto(id: string): Observable<ExtrusoraProducto> {
+    return this.http.get<ExtrusoraProducto>(`${this.apiUrl}/extrusora-productos/${id}`);
+  }
+
+  createExtrusoraProducto(ep: Partial<ExtrusoraProducto>): Observable<ExtrusoraProducto> {
+    return this.http.post<ExtrusoraProducto>(`${this.apiUrl}/extrusora-productos`, ep);
+  }
+
+  updateExtrusoraProducto(id: string, ep: Partial<ExtrusoraProducto>): Observable<ExtrusoraProducto> {
+    return this.http.put<ExtrusoraProducto>(`${this.apiUrl}/extrusora-productos/${id}`, ep);
+  }
+
+  deleteExtrusoraProducto(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/extrusora-productos/${id}`);
+  }
+
+  // ── Turnos por Semana ──────────────────────────────────────────────────
+  getTurnosSemana(fechaInicio: string, fechaFin: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/extrusion/turnos-semana?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
+  }
+
+  guardarTurnosSemana(batch: any[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/extrusion/turnos-semana/guardar`, batch);
+  }
+
+  // ── Nuevas Funcionalidades de Bobinas (Exportar, Interrupción, Impresión Múltiple, Eliminadas) ──
+  exportarBobinas(formato: string, columnasVisibles: string[]): Observable<Blob> {
+    const columnas = columnasVisibles.join(',');
+    return this.http.get(`${this.apiUrl}/extrusion/bobinas/export?formato=${formato}&columnas=${columnas}`, { responseType: 'blob' });
+  }
+
+  llenadoBobinaInterrupcion(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/extrusion/bobinas/llenado-interrupcion`, {});
+  }
+
+  imprimirMultipleBobinas(noSeries: string[]): Observable<Blob> {
+    return this.http.post(`${this.apiUrl}/extrusion/bobinas/imprimir-multiple`, noSeries, { responseType: 'blob' });
+  }
+
+  getBobinasEliminadas(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/extrusion/bobinas/eliminadas`);
   }
 }

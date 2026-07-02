@@ -8,4 +8,8 @@ public class Turno : TenantEntity
     public TimeSpan HoraInicio { get; set; }
     public TimeSpan HoraFin { get; set; }
     public bool IsActive { get; set; } = true;
+    public string? Color { get; set; }
+
+    // Retrocompatibilidad
+    public string Clave { get; set; } = null!;
 }
