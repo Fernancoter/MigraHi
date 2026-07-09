@@ -628,14 +628,5 @@ public record ExtrusoraDto(string Nombre, string NumeroExtrusora, string? Imagen
 public record ExtrusoraOperarioDto(Guid? OperarioId, Guid TenantId);
 public record ExtrusoraOperarioBatchItemDto(Guid? TurnoId, Guid? OperarioId, Guid? TenantId);
 public record PrensaDto(string? NumeroPrensa, string Nombre, string? Imagen, string? Marca, string? Modelo, Guid TenantId);
-<<<<<<< HEAD:HiCone_ERP/src/Presentation/HiCone.API/Controllers/CatalogosController.cs
-<<<<<<< HEAD:HiCone_ERP/src/Presentation/HiCone.API/Controllers/CatalogosController.cs
-
-
-=======
 public record CausaInterrupcionDto(string Nombre, bool Prensa, bool Extrusora, Guid TenantId);
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Presentation/HiCone.API/Controllers/CatalogosController.cs
-=======
-public record CausaInterrupcionDto(string Nombre, bool Prensa, bool Extrusora, Guid TenantId);
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Presentation/HiCone.API/Controllers/CatalogosController.cs
 

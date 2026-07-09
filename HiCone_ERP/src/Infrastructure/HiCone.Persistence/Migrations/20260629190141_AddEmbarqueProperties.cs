@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -59,12 +59,12 @@ namespace HiCone.Persistence.Migrations
                 nullable: false,
                 defaultValue: "");
 
-            migrationBuilder.AddColumn<string>(
-                name: "observaciones",
-                table: "ordenes_etiquetado",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+            // migrationBuilder.AddColumn<string>(
+            //     name: "observaciones",
+            //     table: "ordenes_etiquetado",
+            //     type: "nvarchar(max)",
+            //     nullable: false,
+            //     defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "operador_nombre",
@@ -108,12 +108,12 @@ namespace HiCone.Persistence.Migrations
                 nullable: false,
                 defaultValue: "");
 
-            migrationBuilder.AddColumn<string>(
-                name: "cliente_grupo",
-                table: "embarques",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+            // migrationBuilder.AddColumn<string>(
+            //     name: "cliente_grupo",
+            //     table: "embarques",
+            //     type: "nvarchar(max)",
+            //     nullable: false,
+            //     defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "cliente_nombre",
@@ -129,12 +129,12 @@ namespace HiCone.Persistence.Migrations
                 nullable: false,
                 defaultValue: "");
 
-            migrationBuilder.AddColumn<DateTime>(
-                name: "fecha",
-                table: "embarques",
-                type: "datetime2",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+            // migrationBuilder.AddColumn<DateTime>(
+            //     name: "fecha",
+            //     table: "embarques",
+            //     type: "datetime2",
+            //     nullable: false,
+            //     defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.AddColumn<string>(
                 name: "folio",
@@ -143,12 +143,12 @@ namespace HiCone.Persistence.Migrations
                 nullable: false,
                 defaultValue: "");
 
-            migrationBuilder.AddColumn<Guid>(
-                name: "embarque_id",
-                table: "embarque_pallets",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+            // migrationBuilder.AddColumn<Guid>(
+            //     name: "embarque_id",
+            //     table: "embarque_pallets",
+            //     type: "uniqueidentifier",
+            //     nullable: false,
+            //     defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
 
             migrationBuilder.AddColumn<string>(
                 name: "no_pallet",
@@ -157,19 +157,19 @@ namespace HiCone.Persistence.Migrations
                 nullable: false,
                 defaultValue: "");
 
-            migrationBuilder.AddColumn<Guid>(
-                name: "palet_id",
-                table: "embarque_pallets",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+            // migrationBuilder.AddColumn<Guid>(
+            //     name: "palet_id",
+            //     table: "embarque_pallets",
+            //     type: "uniqueidentifier",
+            //     nullable: false,
+            //     defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
 
-            migrationBuilder.AddColumn<Guid>(
-                name: "embarque_id",
-                table: "embarque_detalles",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+            // migrationBuilder.AddColumn<Guid>(
+            //     name: "embarque_id",
+            //     table: "embarque_detalles",
+            //     type: "uniqueidentifier",
+            //     nullable: false,
+            //     defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
 
             migrationBuilder.AddColumn<string>(
                 name: "producto_nombre",
@@ -178,128 +178,128 @@ namespace HiCone.Persistence.Migrations
                 nullable: false,
                 defaultValue: "");
 
-            migrationBuilder.AddColumn<string>(
-                name: "no_serie",
-                table: "carretes",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+            // migrationBuilder.AddColumn<string>(
+            //     name: "no_serie",
+            //     table: "carretes",
+            //     type: "nvarchar(max)",
+            //     nullable: false,
+            //     defaultValue: "");
+            // 
+            // migrationBuilder.AddColumn<string>(
+            //     name: "observaciones",
+            //     table: "carretes",
+            //     type: "nvarchar(max)",
+            //     nullable: false,
+            //     defaultValue: "");
 
-            migrationBuilder.AddColumn<string>(
-                name: "observaciones",
-                table: "carretes",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_palet_carretes_carrete_id",
-                table: "palet_carretes",
-                column: "carrete_id");
+            // migrationBuilder.CreateIndex(
+            //     name: "ix_palet_carretes_carrete_id",
+            //     table: "palet_carretes",
+            //     column: "carrete_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_palet_carretes_palet_id",
                 table: "palet_carretes",
                 column: "palet_id");
 
-            migrationBuilder.CreateIndex(
-                name: "ix_embarque_pallets_embarque_id",
-                table: "embarque_pallets",
-                column: "embarque_id");
+            // migrationBuilder.CreateIndex(
+            //     name: "ix_embarque_pallets_embarque_id",
+            //     table: "embarque_pallets",
+            //     column: "embarque_id");
+            // 
+            // migrationBuilder.CreateIndex(
+            //     name: "ix_embarque_pallets_palet_id",
+            //     table: "embarque_pallets",
+            //     column: "palet_id");
+            // 
+            // migrationBuilder.CreateIndex(
+            //     name: "ix_embarque_detalles_embarque_id",
+            //     table: "embarque_detalles",
+            //     column: "embarque_id");
 
-            migrationBuilder.CreateIndex(
-                name: "ix_embarque_pallets_palet_id",
-                table: "embarque_pallets",
-                column: "palet_id");
+            // migrationBuilder.AddForeignKey(
+            //     name: "fk_embarque_detalles_embarques_embarque_id",
+            //     table: "embarque_detalles",
+            //     column: "embarque_id",
+            //     principalTable: "embarques",
+            //     principalColumn: "id",
+            //     onDelete: ReferentialAction.Cascade);
+            // 
+            // migrationBuilder.AddForeignKey(
+            //     name: "fk_embarque_pallets_embarques_embarque_id",
+            //     table: "embarque_pallets",
+            //     column: "embarque_id",
+            //     principalTable: "embarques",
+            //     principalColumn: "id",
+            //     onDelete: ReferentialAction.Cascade);
+            // 
+            // migrationBuilder.AddForeignKey(
+            //     name: "fk_embarque_pallets_palets_palet_id",
+            //     table: "embarque_pallets",
+            //     column: "palet_id",
+            //     principalTable: "palets",
+            //     principalColumn: "id",
+            //     onDelete: ReferentialAction.Cascade);
 
-            migrationBuilder.CreateIndex(
-                name: "ix_embarque_detalles_embarque_id",
-                table: "embarque_detalles",
-                column: "embarque_id");
-
-            migrationBuilder.AddForeignKey(
-                name: "fk_embarque_detalles_embarques_embarque_id",
-                table: "embarque_detalles",
-                column: "embarque_id",
-                principalTable: "embarques",
-                principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "fk_embarque_pallets_embarques_embarque_id",
-                table: "embarque_pallets",
-                column: "embarque_id",
-                principalTable: "embarques",
-                principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "fk_embarque_pallets_palets_palet_id",
-                table: "embarque_pallets",
-                column: "palet_id",
-                principalTable: "palets",
-                principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "fk_palet_carretes_carretes_carrete_id",
-                table: "palet_carretes",
-                column: "carrete_id",
-                principalTable: "carretes",
-                principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "fk_palet_carretes_palets_palet_id",
-                table: "palet_carretes",
-                column: "palet_id",
-                principalTable: "palets",
-                principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
+            // migrationBuilder.AddForeignKey(
+            //     name: "fk_palet_carretes_carretes_carrete_id",
+            //     table: "palet_carretes",
+            //     column: "carrete_id",
+            //     principalTable: "carretes",
+            //     principalColumn: "id",
+            //     onDelete: ReferentialAction.Cascade);
+            // 
+            // migrationBuilder.AddForeignKey(
+            //     name: "fk_palet_carretes_palets_palet_id",
+            //     table: "palet_carretes",
+            //     column: "palet_id",
+            //     principalTable: "palets",
+            //     principalColumn: "id",
+            //     onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "fk_embarque_detalles_embarques_embarque_id",
-                table: "embarque_detalles");
+            // migrationBuilder.DropForeignKey(
+            //     name: "fk_embarque_detalles_embarques_embarque_id",
+            //     table: "embarque_detalles");
+            // 
+            // migrationBuilder.DropForeignKey(
+            //     name: "fk_embarque_pallets_embarques_embarque_id",
+            //     table: "embarque_pallets");
+            // 
+            // migrationBuilder.DropForeignKey(
+            //     name: "fk_embarque_pallets_palets_palet_id",
+            //     table: "embarque_pallets");
 
-            migrationBuilder.DropForeignKey(
-                name: "fk_embarque_pallets_embarques_embarque_id",
-                table: "embarque_pallets");
+            // migrationBuilder.DropForeignKey(
+            //     name: "fk_palet_carretes_carretes_carrete_id",
+            //     table: "palet_carretes");
+            // 
+            // migrationBuilder.DropForeignKey(
+            //     name: "fk_palet_carretes_palets_palet_id",
+            //     table: "palet_carretes");
 
-            migrationBuilder.DropForeignKey(
-                name: "fk_embarque_pallets_palets_palet_id",
-                table: "embarque_pallets");
-
-            migrationBuilder.DropForeignKey(
-                name: "fk_palet_carretes_carretes_carrete_id",
-                table: "palet_carretes");
-
-            migrationBuilder.DropForeignKey(
-                name: "fk_palet_carretes_palets_palet_id",
-                table: "palet_carretes");
-
-            migrationBuilder.DropIndex(
-                name: "ix_palet_carretes_carrete_id",
-                table: "palet_carretes");
+            // migrationBuilder.DropIndex(
+            //     name: "ix_palet_carretes_carrete_id",
+            //     table: "palet_carretes");
 
             migrationBuilder.DropIndex(
                 name: "ix_palet_carretes_palet_id",
                 table: "palet_carretes");
 
-            migrationBuilder.DropIndex(
-                name: "ix_embarque_pallets_embarque_id",
-                table: "embarque_pallets");
-
-            migrationBuilder.DropIndex(
-                name: "ix_embarque_pallets_palet_id",
-                table: "embarque_pallets");
-
-            migrationBuilder.DropIndex(
-                name: "ix_embarque_detalles_embarque_id",
-                table: "embarque_detalles");
+            // migrationBuilder.DropIndex(
+            //     name: "ix_embarque_pallets_embarque_id",
+            //     table: "embarque_pallets");
+            // 
+            // migrationBuilder.DropIndex(
+            //     name: "ix_embarque_pallets_palet_id",
+            //     table: "embarque_pallets");
+            // 
+            // migrationBuilder.DropIndex(
+            //     name: "ix_embarque_detalles_embarque_id",
+            //     table: "embarque_detalles");
 
             migrationBuilder.DropColumn(
                 name: "producto_nombre",
@@ -329,9 +329,9 @@ namespace HiCone.Persistence.Migrations
                 name: "no_orden",
                 table: "ordenes_etiquetado");
 
-            migrationBuilder.DropColumn(
-                name: "observaciones",
-                table: "ordenes_etiquetado");
+            // migrationBuilder.DropColumn(
+            //     name: "observaciones",
+            //     table: "ordenes_etiquetado");
 
             migrationBuilder.DropColumn(
                 name: "operador_nombre",
@@ -357,9 +357,9 @@ namespace HiCone.Persistence.Migrations
                 name: "vel_linea_uno",
                 table: "ordenes_etiquetado");
 
-            migrationBuilder.DropColumn(
-                name: "cliente_grupo",
-                table: "embarques");
+            // migrationBuilder.DropColumn(
+            //     name: "cliente_grupo",
+            //     table: "embarques");
 
             migrationBuilder.DropColumn(
                 name: "cliente_nombre",
@@ -369,41 +369,41 @@ namespace HiCone.Persistence.Migrations
                 name: "destino_envia",
                 table: "embarques");
 
-            migrationBuilder.DropColumn(
-                name: "fecha",
-                table: "embarques");
+            // migrationBuilder.DropColumn(
+            //     name: "fecha",
+            //     table: "embarques");
 
             migrationBuilder.DropColumn(
                 name: "folio",
                 table: "embarques");
 
-            migrationBuilder.DropColumn(
-                name: "embarque_id",
-                table: "embarque_pallets");
+            // migrationBuilder.DropColumn(
+            //     name: "embarque_id",
+            //     table: "embarque_pallets");
 
             migrationBuilder.DropColumn(
                 name: "no_pallet",
                 table: "embarque_pallets");
 
-            migrationBuilder.DropColumn(
-                name: "palet_id",
-                table: "embarque_pallets");
+            // migrationBuilder.DropColumn(
+            //     name: "palet_id",
+            //     table: "embarque_pallets");
 
-            migrationBuilder.DropColumn(
-                name: "embarque_id",
-                table: "embarque_detalles");
+            // migrationBuilder.DropColumn(
+            //     name: "embarque_id",
+            //     table: "embarque_detalles");
 
             migrationBuilder.DropColumn(
                 name: "producto_nombre",
                 table: "embarque_detalles");
 
-            migrationBuilder.DropColumn(
-                name: "no_serie",
-                table: "carretes");
-
-            migrationBuilder.DropColumn(
-                name: "observaciones",
-                table: "carretes");
+            // migrationBuilder.DropColumn(
+            //     name: "no_serie",
+            //     table: "carretes");
+            // 
+            // migrationBuilder.DropColumn(
+            //     name: "observaciones",
+            //     table: "carretes");
         }
     }
 }

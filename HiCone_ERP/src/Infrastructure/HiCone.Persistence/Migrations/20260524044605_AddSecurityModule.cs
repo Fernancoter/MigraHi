@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -21,14 +21,16 @@ namespace HiCone.Persistence.Migrations
                 table: "users",
                 newName: "receives_information");
 
-            migrationBuilder.AlterColumn<Guid>(
+            migrationBuilder.DropColumn(
+                name: "operador_id",
+                table: "users");
+
+            migrationBuilder.AddColumn<Guid>(
                 name: "operador_id",
                 table: "users",
                 type: "uniqueidentifier",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldType: "int",
-                oldNullable: true);
+                nullable: true);
+
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "activation_date",
@@ -261,14 +263,15 @@ namespace HiCone.Persistence.Migrations
                 table: "users",
                 newName: "password_updated_at");
 
-            migrationBuilder.AlterColumn<int>(
+            migrationBuilder.DropColumn(
+                name: "operador_id",
+                table: "users");
+
+            migrationBuilder.AddColumn<int>(
                 name: "operador_id",
                 table: "users",
                 type: "int",
-                nullable: true,
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldNullable: true);
+                nullable: true);
         }
     }
 }
