@@ -322,9 +322,23 @@ export class ProduccionService {
   }
 
   // ── Nuevas Funcionalidades de Bobinas (Exportar, Interrupción, Impresión Múltiple, Eliminadas) ──
-  exportarBobinas(formato: string, columnasVisibles: string[]): Observable<Blob> {
-    const columnas = columnasVisibles.join(',');
-    return this.http.get(`${this.apiUrl}/extrusion/bobinas/export?formato=${formato}&columnas=${columnas}`, { responseType: 'blob' });
+  // Filtros opcionales del grid — equivalentes a BobinaFiltrosDto en el backend
+  exportarBobinas(filtros?: {
+    fechaDesde?: string | null;
+    fechaHasta?: string | null;
+    extrusoraId?: string | null;
+    estado?: number | null;
+    productoId?: string | null;
+    loteVirgen?: string | null;
+  }): Observable<Blob> {
+    let params = 'formato=excel';
+    if (filtros?.fechaDesde) params += `&fechaDesde=${encodeURIComponent(filtros.fechaDesde)}`;
+    if (filtros?.fechaHasta) params += `&fechaHasta=${encodeURIComponent(filtros.fechaHasta)}`;
+    if (filtros?.extrusoraId) params += `&extrusoraId=${filtros.extrusoraId}`;
+    if (filtros?.estado != null) params += `&estado=${filtros.estado}`;
+    if (filtros?.productoId) params += `&productoId=${filtros.productoId}`;
+    if (filtros?.loteVirgen) params += `&loteVirgen=${encodeURIComponent(filtros.loteVirgen)}`;
+    return this.http.get(`${this.apiUrl}/extrusion/bobinas/export?${params}`, { responseType: 'blob' });
   }
 
   llenadoBobinaInterrupcion(): Observable<any> {

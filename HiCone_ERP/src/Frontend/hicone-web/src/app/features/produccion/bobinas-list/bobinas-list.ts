@@ -608,12 +608,13 @@ export class BobinasListComponent implements OnInit {
   }
 
   exportar(formato: string) {
-    const colNames = this.visibleColumns.map(c => c.field);
-    this.prodService.exportarBobinas(formato, colNames).subscribe(blob => {
+    // El endpoint ahora acepta filtros estructurados del grid.
+    // Los filtros opcionales pueden expandirse aquí cuando el componente exponga campos de fecha/estado.
+    this.prodService.exportarBobinas().subscribe(blob => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Bobinas_${new Date().getTime()}.${formato === 'excel' ? 'xlsx' : 'pdf'}`;
+      a.download = `Bobinas_${new Date().getTime()}.xlsx`;
       a.click();
       window.URL.revokeObjectURL(url);
     });

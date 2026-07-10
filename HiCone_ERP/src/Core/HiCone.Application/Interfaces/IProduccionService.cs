@@ -1,3 +1,4 @@
+using HiCone.Application.Produccion;
 using HiCone.Domain.Entities.Produccion;
 using HiCone.Domain.Entities.Common;
 using HiCone.Domain.Enums;
@@ -70,8 +71,10 @@ public interface IProduccionService
     Task<bool> TransferirBobinaAsync(Guid bobinaId, Guid extrusionDestinoId);
 
     // ── Nuevas Funcionalidades (Exportar, Interrupción, Impresión Múltiple, Eliminadas) ──
-    Task<byte[]> ExportarBobinasAsync(string formato, IEnumerable<string> columnasVisibles);
+    /// <summary>Exporta el listado filtrado de bobinas a Excel (.xlsx) con ClosedXML.</summary>
+    Task<byte[]> ExportarBobinasAsync(BobinaFiltrosDto filtros);
     Task<int> LlenadoBobinaInterrupcionAsync();
+    /// <summary>Genera un PDF con etiquetas Code 128 (QuestPDF+BarcodeLib) para cada número de serie recibido.</summary>
     Task<byte[]> ImprimirMultipleBobinasAsync(List<string> noSeries);
     Task<IEnumerable<AuditLog>> GetBobinasEliminadasAsync();
 

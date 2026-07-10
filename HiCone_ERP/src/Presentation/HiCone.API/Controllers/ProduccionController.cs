@@ -1,5 +1,6 @@
 using HiCone.Application.Common.Interfaces;
 using HiCone.Application.Interfaces;
+using HiCone.Application.Produccion;
 using HiCone.Domain.Entities.Produccion;
 using HiCone.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -1028,14 +1029,32 @@ public class ProduccionController : ControllerBase
     // ── Nuevas Funcionalidades de Bobinas (Exportar, Interrupción, Impresión Múltiple, Eliminadas) ──
 
     [HttpGet("extrusion/bobinas/export")]
-    public async Task<IActionResult> ExportarBobinas([FromQuery] string formato, [FromQuery] string columnas)
+    public async Task<IActionResult> ExportarBobinas(
+        [FromQuery] string? formato,
+        [FromQuery] DateTime? fechaDesde,
+        [FromQuery] DateTime? fechaHasta,
+        [FromQuery] Guid? extrusoraId,
+        [FromQuery] EstadoBobina? estado,
+        [FromQuery] Guid? productoId,
+        [FromQuery] string? loteVirgen)
     {
-        var columnasVisibles = string.IsNullOrEmpty(columnas) ? new List<string>() : columnas.Split(',').ToList();
-        var fileContent = await _produccionService.ExportarBobinasAsync(formato, columnasVisibles);
-        
-        string contentType = formato.ToLower() == "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf";
-        string fileName = $"Bobinas_{DateTime.Now:yyyyMMddHHmmss}.{(formato.ToLower() == "excel" ? "xlsx" : "pdf")}";
-        
+        var filtros = new BobinaFiltrosDto
+        {
+            Formato      = formato ?? "excel",
+            FechaDesde   = fechaDesde,
+            FechaHasta   = fechaHasta,
+            ExtrusoraId  = extrusoraId,
+            Estado       = estado,
+            ProductoId   = productoId,
+            LoteVirgen   = loteVirgen
+        };
+
+        var fileContent = await _produccionService.ExportarBobinasAsync(filtros);
+
+        // MIME type correcto para que Angular y el navegador no reciban bytes corruptos
+        const string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        string fileName = $"Bobinas_Export_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
+
         return File(fileContent, contentType, fileName);
     }
 

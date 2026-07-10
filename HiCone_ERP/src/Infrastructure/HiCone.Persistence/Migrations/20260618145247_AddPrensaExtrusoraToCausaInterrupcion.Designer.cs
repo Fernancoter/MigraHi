@@ -1111,7 +1111,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<string>("ClienteGrupo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -1122,8 +1121,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("cliente_nombre");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("created_at");
@@ -1136,7 +1133,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("deleted_at");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<string>("DestinoEnvia")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -1151,8 +1147,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("folio");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
                         .HasColumnName("is_deleted");
@@ -1194,25 +1188,19 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("deleted_at");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<Guid>("EmbarqueId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("embarque_id");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
                         .HasColumnName("is_deleted");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<string>("ProductoNombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("producto_nombre");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("tenant_id");
@@ -1228,12 +1216,9 @@ namespace HiCone.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_embarque_detalles");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.HasIndex("EmbarqueId")
                         .HasDatabaseName("ix_embarque_detalles_embarque_id");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.ToTable("embarque_detalles", (string)null);
                 });
 
@@ -1256,18 +1241,14 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("deleted_at");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<Guid>("EmbarqueId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("embarque_id");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
                         .HasColumnName("is_deleted");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<string>("NoPallet")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -1277,8 +1258,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("palet_id");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("tenant_id");
@@ -1294,15 +1273,12 @@ namespace HiCone.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_embarque_pallets");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.HasIndex("EmbarqueId")
                         .HasDatabaseName("ix_embarque_pallets_embarque_id");
 
                     b.HasIndex("PaletId")
                         .HasDatabaseName("ix_embarque_pallets_palet_id");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.ToTable("embarque_pallets", (string)null);
                 });
 
@@ -1514,7 +1490,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("is_deleted");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<string>("NoSerie")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -1525,8 +1500,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("observaciones");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("tenant_id");
@@ -2497,7 +2470,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("deleted_at");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<decimal>("Eficiencia")
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("eficiencia");
@@ -2511,13 +2483,10 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_inicio");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<DateTime>("FechaOrden")
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_orden");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<DateTime>("FechaTermina")
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_termina");
@@ -2526,13 +2495,10 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("horas_utiles");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
                         .HasColumnName("is_deleted");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<string>("NoOrden")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -2556,20 +2522,15 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("piezas_molino");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("tenant_id");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<string>("TurnoNombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("turno_nombre");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("updated_at");
@@ -2578,7 +2539,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("updated_by");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<string>("VelLineaDos")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -2589,8 +2549,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("vel_linea_uno");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.HasKey("Id")
                         .HasName("pk_ordenes_etiquetado");
 
@@ -2642,13 +2600,10 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("lote_id");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<string>("ProductoNombre")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("producto_nombre");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("tenant_id");
@@ -2721,15 +2676,12 @@ namespace HiCone.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_palet_carretes");
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.HasIndex("CarreteId")
                         .HasDatabaseName("ix_palet_carretes_carrete_id");
 
                     b.HasIndex("PaletId")
                         .HasDatabaseName("ix_palet_carretes_palet_id");
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
                     b.ToTable("palet_carretes", (string)null);
                 });
 
@@ -4131,7 +4083,6 @@ namespace HiCone.Persistence.Migrations
                     b.Navigation("Articulo");
                 });
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
             modelBuilder.Entity("HiCone.Domain.Entities.Logistica.EmbarqueDetalle", b =>
                 {
                     b.HasOne("HiCone.Domain.Entities.Logistica.Embarque", "Embarque")
@@ -4165,8 +4116,6 @@ namespace HiCone.Persistence.Migrations
                     b.Navigation("Palet");
                 });
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
             modelBuilder.Entity("HiCone.Domain.Entities.Produccion.Bobina", b =>
                 {
                     b.HasOne("HiCone.Domain.Entities.Produccion.Extrusion", "Extrusion")
@@ -4280,7 +4229,6 @@ namespace HiCone.Persistence.Migrations
                         .HasConstraintName("fk_palets_lotes_lote_id");
                 });
 
-<<<<<<< HEAD:HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
             modelBuilder.Entity("HiCone.Domain.Entities.Produccion.PaletCarrete", b =>
                 {
                     b.HasOne("HiCone.Domain.Entities.Produccion.Carrete", "Carrete")
@@ -4302,8 +4250,6 @@ namespace HiCone.Persistence.Migrations
                     b.Navigation("Palet");
                 });
 
-=======
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Infrastructure/HiCone.Persistence/Migrations/20260618145247_AddPrensaExtrusoraToCausaInterrupcion.Designer.cs
             modelBuilder.Entity("HiCone.Domain.Entities.Produccion.PrensaProducto", b =>
                 {
                     b.HasOne("HiCone.Domain.Entities.Produccion.Prensa", "Prensa")

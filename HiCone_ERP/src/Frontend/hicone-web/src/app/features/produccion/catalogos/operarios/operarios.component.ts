@@ -46,15 +46,7 @@ import * as XLSX from 'xlsx';
             <button class="btn btn-primary" (click)="openCreate()">+ Agregar</button>
 
             <!-- Selector de Columnas -->
-<<<<<<< HEAD:HiCone_ERP/src/Frontend/hicone-web/src/app/features/produccion/catalogos/operarios/operarios.component.ts
-<<<<<<< HEAD:HiCone_ERP/src/Frontend/hicone-web/src/app/features/produccion/catalogos/operarios/operarios.component.ts
-            <div class="dropdown-wrapper">
-=======
             <div class="dropdown-wrapper" (clickOutside)="closeColumnDropdown()">
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Frontend/hicone-web/src/app/features/produccion/catalogos/operarios/operarios.component.ts
-=======
-            <div class="dropdown-wrapper" (clickOutside)="closeColumnDropdown()">
->>>>>>> origin/information_report/refactor:HiCone6/HiCone_ERP/src/Frontend/hicone-web/src/app/features/produccion/catalogos/operarios/operarios.component.ts
               <button class="btn btn-secondary" (click)="toggleColumnDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem; background: #5cb85c; color: white; border-color: #4cae4c;">
                 Selecciona columnas <span style="font-size: 0.7rem; color: white;">▼</span>
               </button>

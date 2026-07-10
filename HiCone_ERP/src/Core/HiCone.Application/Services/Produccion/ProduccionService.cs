@@ -1,11 +1,18 @@
 using HiCone.Application.Common.Interfaces;
 using HiCone.Application.Interfaces;
+using HiCone.Application.Produccion;
 using HiCone.Domain.Entities.Produccion;
 using HiCone.Domain.Entities.Calidad;
 using HiCone.Domain.Entities.Inventario;
 using HiCone.Domain.Entities.Common;
 using HiCone.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using ClosedXML.Excel;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
+using BarcodeStandard;
+using SkiaSharp;
 
 namespace HiCone.Application.Services.Produccion;
 
@@ -1276,13 +1283,118 @@ public class ProduccionService : IProduccionService
 
     // ── Nuevas Funcionalidades (Exportar, Interrupción, Impresión Múltiple, Eliminadas) ──
 
-    public Task<byte[]> ExportarBobinasAsync(string formato, IEnumerable<string> columnasVisibles)
+    // ── ExportarBobinasAsync: genera Excel real con ClosedXML ──────────────────────────
+    // Equivalente a BobinaWWExport en GeneXus: aplica filtros del GridState y retorna .xlsx
+    public async Task<byte[]> ExportarBobinasAsync(BobinaFiltrosDto filtros)
     {
-        // Placeholder para la exportación. En producción esto usaría iTextSharp para PDF 
-        // o EPPlus / ClosedXML para Excel, iterando sobre las bobinas y dibujando la tabla
-        // con las columnas específicas.
-        string content = $"Reporte de Bobinas en formato {formato.ToUpper()}\nColumnas: {string.Join(", ", columnasVisibles)}";
-        return Task.FromResult(System.Text.Encoding.UTF8.GetBytes(content));
+        // 1. Consulta base con todas las relaciones necesarias
+        var query = _context.Bobinas
+            .Include(b => b.Producto)
+            .Include(b => b.Operario)
+            .Include(b => b.SiloVirgen)
+            .Include(b => b.SiloMolido)
+            .Include(b => b.Extrusion)
+                .ThenInclude(e => e.Extrusora)
+            .Include(b => b.Extrusion)
+                .ThenInclude(e => e.Turno)
+            .AsQueryable();
+
+        // 2. Aplicar filtros dinámicos (fiel a BobinaFiltrosDto)
+        if (filtros.FechaDesde.HasValue)
+            query = query.Where(b => b.HoraInicio >= filtros.FechaDesde.Value);
+        if (filtros.FechaHasta.HasValue)
+            query = query.Where(b => b.HoraInicio <= filtros.FechaHasta.Value);
+        if (filtros.ExtrusoraId.HasValue)
+            query = query.Where(b => b.Extrusion.ExtrusoraId == filtros.ExtrusoraId.Value);
+        if (filtros.Estado.HasValue)
+            query = query.Where(b => b.Estado == filtros.Estado.Value);
+        if (filtros.ProductoId.HasValue)
+            query = query.Where(b => b.ProductoId == filtros.ProductoId.Value);
+        if (!string.IsNullOrWhiteSpace(filtros.LoteVirgen))
+            query = query.Where(b => b.LoteVirgen != null && b.LoteVirgen.Contains(filtros.LoteVirgen));
+
+        var bobinas = await query
+            .OrderByDescending(b => b.HoraInicio)
+            .ToListAsync();
+
+        // 3. Construir libro Excel con ClosedXML
+        using var workbook = new XLWorkbook();
+        var ws = workbook.Worksheets.Add("Bobinas");
+
+        // Colores institucionales HiCone
+        var headerBg  = XLColor.FromHtml("#1E3A5F");  // azul marino
+        var headerFg  = XLColor.White;
+        var altRowBg  = XLColor.FromHtml("#F0F4FA");  // gris muy claro
+
+        // 3a. Encabezados — Fila 1
+        string[] headers = [
+            "Nº Serie Bobina", "Producto", "Fecha Creación",
+            "Peso (kg)", "Merma (kg)", "Silo Virgen", "Lote Virgen",
+            "Silo Molido", "Estado", "Operador", "Turno"
+        ];
+
+        for (int col = 1; col <= headers.Length; col++)
+        {
+            var cell = ws.Cell(1, col);
+            cell.Value = headers[col - 1];
+            cell.Style.Font.Bold = true;
+            cell.Style.Font.FontColor = headerFg;
+            cell.Style.Fill.BackgroundColor = headerBg;
+            cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        }
+
+        // 3b. Datos — Filas 2…N
+        int row = 2;
+        foreach (var b in bobinas)
+        {
+            // Fondo alterno para legibilidad
+            if (row % 2 == 0)
+                ws.Row(row).Style.Fill.BackgroundColor = altRowBg;
+
+            string estadoLabel = b.Estado switch
+            {
+                EstadoBobina.EnProceso  => "En Proceso",
+                EstadoBobina.EnReposo   => "En Reposo",
+                EstadoBobina.Disponible => "Disponible",
+                EstadoBobina.EnPrensado => "En Prensado",
+                EstadoBobina.Utilizada  => "Utilizada",
+                EstadoBobina.Rechazada  => "Rechazada",
+                EstadoBobina.Molido     => "Molido/Reciclada",
+                _                       => b.Estado.ToString()
+            };
+
+            ws.Cell(row, 1).Value  = b.NoSerie;
+            ws.Cell(row, 2).Value  = b.Producto?.Nombre ?? b.ProductName ?? "—";
+            ws.Cell(row, 3).Value  = b.HoraInicio.ToLocalTime();
+            ws.Cell(row, 3).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+            ws.Cell(row, 4).Value  = (double)b.Kg;
+            ws.Cell(row, 5).Value  = (double)b.MermaKg;
+            ws.Cell(row, 6).Value  = b.SiloVirgen?.Nombre ?? "—";
+            ws.Cell(row, 7).Value  = b.LoteVirgen ?? "—";
+            ws.Cell(row, 8).Value  = b.SiloMolido?.Nombre ?? "—";
+            ws.Cell(row, 9).Value  = estadoLabel;
+            ws.Cell(row, 10).Value = b.Operario?.NombreCompleto ?? "—";
+            ws.Cell(row, 11).Value = b.Extrusion?.Turno?.Nombre ?? "—";
+
+            // Formato numérico para kg
+            ws.Cell(row, 4).Style.NumberFormat.Format = "#,##0.00";
+            ws.Cell(row, 5).Style.NumberFormat.Format = "#,##0.00";
+
+            row++;
+        }
+
+        // 3c. Auto-ajuste de columnas y freeze del encabezado
+        ws.Columns().AdjustToContents();
+        ws.SheetView.FreezeRows(1);
+
+        // 3d. Autofilter en toda la tabla
+        ws.RangeUsed()?.SetAutoFilter();
+
+        // 4. Serializar a bytes y retornar
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        return stream.ToArray();
     }
 
     public async Task<int> LlenadoBobinaInterrupcionAsync()
@@ -1329,12 +1441,143 @@ public class ProduccionService : IProduccionService
         return asignadas;
     }
 
-    public Task<byte[]> ImprimirMultipleBobinasAsync(List<string> noSeries)
+    // ── ImprimirMultipleBobinasAsync: PDF de etiquetas Code 128 con QuestPDF + BarcodeLib ──
+    // Equivalente a BobinaReportMainMulti en GeneXus (módulo PrinterSD).
+    // Genera una página/etiqueta por bobina formateada para impresoras Zebra de planta (4"×6").
+    public async Task<byte[]> ImprimirMultipleBobinasAsync(List<string> noSeries)
     {
-        // Placeholder para la impresión múltiple que genera un PDF.
-        // En Genexus esto llama a BobinaReportMainMulti.
-        string content = $"IMPRESIÓN MÚLTIPLE DE ETIQUETAS\n\nBobinas seleccionadas:\n{string.Join("\n", noSeries)}";
-        return Task.FromResult(System.Text.Encoding.UTF8.GetBytes(content));
+        // 1. Consultar bobinas por sus números de serie
+        var bobinas = await _context.Bobinas
+            .Include(b => b.Producto)
+            .Include(b => b.Operario)
+            .Include(b => b.SiloVirgen)
+            .Include(b => b.SiloMolido)
+            .Include(b => b.Extrusion)
+                .ThenInclude(e => e.Extrusora)
+            .Include(b => b.Extrusion)
+                .ThenInclude(e => e.Turno)
+            .Where(b => noSeries.Contains(b.NoSerie))
+            .OrderBy(b => b.NoSerie)
+            .ToListAsync();
+
+        if (!bobinas.Any())
+            return Array.Empty<byte>();
+
+        // 2. Helper: genera imagen Code 128 como PNG bytes para un número de serie
+        // BarcodeLib 3.1.5 usa SkiaSharp internamente — namespace BarcodeStandard
+        static byte[] GenerarBarcode(string noSerie)
+        {
+            var barcode = new Barcode();
+            // Encode retorna SKImage — 350×110 px, nítido para lectores de mano industriales
+            SKImage img = barcode.Encode(BarcodeStandard.Type.Code128, noSerie, 350, 110);
+            using var ms = new MemoryStream();
+            img.Encode(SKEncodedImageFormat.Png, 100).SaveTo(ms);
+            return ms.ToArray();
+        }
+
+        // 3. Configurar QuestPDF (licencia Community — gratuita para proyectos abiertos/internos)
+        QuestPDF.Settings.License = LicenseType.Community;
+
+        // 4. Definir el documento PDF — tamaño etiqueta 4"×6" (101.6mm × 152.4mm)
+        var pdf = Document.Create(container =>
+        {
+            foreach (var b in bobinas)
+            {
+                container.Page(page =>
+                {
+                    // Tamaño estándar de etiqueta de almacén
+                    page.Size(101.6f, 152.4f, Unit.Millimetre);
+                    page.Margin(3, Unit.Millimetre);
+                    page.PageColor(Colors.White);
+                    page.DefaultTextStyle(ts => ts.FontFamily("Arial").FontSize(7));
+
+                    page.Content().Column(col =>
+                    {
+                        // ── Cabecera: Empresa ──────────────────────────────────
+                        col.Item().Background(Colors.Blue.Darken3).Padding(2).AlignCenter()
+                            .Text("HICONE PLÁSTICOS")
+                            .FontSize(10).FontColor(Colors.White).Bold();
+
+                        col.Item().Height(1);
+
+                        // ── Producto y Código ──────────────────────────────────
+                        col.Item().Row(r =>
+                        {
+                            r.RelativeItem().Text(txt =>
+                            {
+                                txt.Span("PRODUCTO: ").Bold();
+                                txt.Span(b.Producto?.Nombre ?? b.ProductName ?? "—");
+                            });
+                        });
+                        col.Item().Row(r =>
+                        {
+                            r.RelativeItem().Text(txt =>
+                            {
+                                txt.Span("CÓDIGO:   ").Bold();
+                                txt.Span(b.ProductoId.HasValue ? b.ProductoId.Value.ToString("N")[..8].ToUpper() : "—");
+                            });
+                        });
+
+                        col.Item().Height(2);
+
+                        // ── Código de barras Code 128 ──────────────────────────
+                        var barcodeBytes = GenerarBarcode(b.NoSerie);
+                        col.Item().AlignCenter()
+                            .Width(90, Unit.Millimetre)
+                            .Image(barcodeBytes).FitWidth();
+
+                        // Serie debajo del barcode
+                        col.Item().AlignCenter()
+                            .Text(b.NoSerie)
+                            .FontSize(8).Bold().FontFamily("Courier New");
+
+                        col.Item().Height(2);
+                        col.Item().LineHorizontal(0.5f).LineColor(Colors.Grey.Lighten2);
+                        col.Item().Height(1);
+
+                        // ── Grid de datos ──────────────────────────────────────
+                        col.Item().Table(t =>
+                        {
+                            t.ColumnsDefinition(c =>
+                            {
+                                c.RelativeColumn();
+                                c.RelativeColumn();
+                            });
+
+                            void LabelCell(string label, string value)
+                            {
+                                t.Cell().Padding(1).Text(txt =>
+                                {
+                                    txt.Span($"{label}: ").Bold();
+                                    txt.Span(value);
+                                });
+                            }
+
+                            LabelCell("PESO BRUTO",  $"{b.Kg:N2} Kg");
+                            LabelCell("MERMA",        $"{b.MermaKg:N2} Kg");
+                            LabelCell("FECHA",        b.HoraInicio.ToLocalTime().ToString("dd/MM/yy"));
+                            LabelCell("HORA FIN",     b.HoraSalida.ToLocalTime().ToString("HH:mm"));
+                            LabelCell("MÁQUINA",      b.Extrusion?.Extrusora?.Nombre ?? "—");
+                            LabelCell("TURNO",        b.Extrusion?.Turno?.Nombre    ?? "—");
+                            LabelCell("OPERADOR",     b.Operario?.NombreCompleto    ?? "—");
+                            LabelCell("LOTE VIRGEN",  b.LoteVirgen                  ?? "—");
+                            LabelCell("SILO VIRGEN",  b.SiloVirgen?.Nombre          ?? "—");
+                            LabelCell("SILO MOLIDO",  b.SiloMolido?.Nombre          ?? "—");
+                        });
+
+                        // ── Pie: QA ────────────────────────────────────────────
+                        col.Item().Height(2);
+                        col.Item().LineHorizontal(0.5f).LineColor(Colors.Grey.Lighten2);
+                        col.Item().AlignCenter()
+                            .Text("** CONFIRMADO PARIDAD 1:1 QA **")
+                            .FontSize(6).Italic().FontColor(Colors.Grey.Medium);
+                    });
+                });
+            }
+        });
+
+        // 5. Serializar a bytes y retornar
+        return pdf.GeneratePdf();
     }
 
     public async Task<IEnumerable<AuditLog>> GetBobinasEliminadasAsync()

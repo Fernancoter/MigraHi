@@ -4,6 +4,11 @@ using HiCone.Infrastructure;
 using HiCone.Persistence;
 using HiCone.Persistence.Seeds;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure;
+
+// ⚠️ QuestPDF: declarar licencia antes de generar cualquier PDF
+// Sin esta línea, QuestPDF >= 2022.12 lanza InvalidOperationException en runtime
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
