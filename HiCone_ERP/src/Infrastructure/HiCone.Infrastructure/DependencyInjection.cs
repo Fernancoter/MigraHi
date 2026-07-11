@@ -17,6 +17,7 @@ public static class DependencyInjection
         services.AddScoped<ICurrentTenantService, CurrentTenantService>();
         services.AddScoped<IInfrastructureIdentityService, HiCone.Infrastructure.Identity.IdentityService>();
         services.AddScoped<ITokenService, HiCone.Infrastructure.Identity.TokenService>();
+        services.AddScoped<IEmailService, EmailService>();
 
         var key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"] ?? "HiCone_Super_Secret_Key_For_JWT_Auth_2026");
 

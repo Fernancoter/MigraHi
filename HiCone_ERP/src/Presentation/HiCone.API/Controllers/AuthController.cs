@@ -1,6 +1,9 @@
 using HiCone.Application.Common.Interfaces;
 using HiCone.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using HiCone.Application.Services.Identity;
+using System.Linq;
 
 namespace HiCone.API.Controllers;
 
@@ -9,12 +12,23 @@ namespace HiCone.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IInfrastructureIdentityService _identityService;
+    private readonly IIdentityService _applicationIdentityService;
     private readonly ITokenService _tokenService;
+    private readonly IEmailService _emailService;
+    private readonly IApplicationDbContext _context;
 
-    public AuthController(IInfrastructureIdentityService identityService, ITokenService tokenService)
+    public AuthController(
+        IInfrastructureIdentityService identityService,
+        IIdentityService applicationIdentityService,
+        ITokenService tokenService,
+        IEmailService emailService,
+        IApplicationDbContext context)
     {
         _identityService = identityService;
+        _applicationIdentityService = applicationIdentityService;
         _tokenService = tokenService;
+        _emailService = emailService;
+        _context = context;
     }
 
     [HttpPost("login")]
@@ -97,10 +111,76 @@ public class AuthController : ControllerBase
         await _tokenService.RevokeRefreshTokenAsync(request.RefreshToken);
         return NoContent();
     }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] CreateUserDto dto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        try
+        {
+            if (dto.RoleIds == null || !dto.RoleIds.Any())
+            {
+                var operarioRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Operario");
+                if (operarioRole != null)
+                {
+                    dto.RoleIds = new List<Guid> { operarioRole.Id };
+                }
+            }
+
+            var user = await _applicationIdentityService.CreateUserAsync(dto);
+            return Ok(new { success = true, userId = user.Id });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email))
+        {
+            return BadRequest(new { Error = "Debe ingresar su correo electrónico." });
+        }
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+        if (user == null)
+        {
+            return BadRequest(new { Error = "El correo electrónico no está registrado." });
+        }
+
+        var chars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789!@#$";
+        var random = new Random();
+        var tempPassword = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
+
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(tempPassword);
+        user.MustChangePassword = true;
+        await _context.SaveChangesAsync(default);
+
+        var emailBody = $@"
+            <h3>Recuperación de Contraseña</h3>
+            <p>Hola {user.FirstName},</p>
+            <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en HiCone ERP.</p>
+            <p>Tu contraseña temporal es: <strong>{tempPassword}</strong></p>
+            <p>Deberás cambiar esta contraseña la próxima vez que inicies sesión en el sistema.</p>
+            <p>Saludos,<br/>Soporte HiCone ERP</p>";
+
+        try
+        {
+            await _emailService.SendEmailAsync(user.Email, "Restablecer contraseña - HiCone ERP", emailBody);
+            return Ok(new { Message = "Correo de recuperación enviado con éxito." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { Error = "Error al enviar el correo electrónico: " + ex.Message });
+        }
+    }
 }
 
 public record LoginRequest(string Email, string Password, string? DeviceInfo);
 public record RefreshTokenRequest(string RefreshToken);
+public record ForgotPasswordRequest(string Email);
 public record ChangePasswordRequest(Guid UserId, string CurrentPassword, string NewPassword);
 
 public class LoginResponse

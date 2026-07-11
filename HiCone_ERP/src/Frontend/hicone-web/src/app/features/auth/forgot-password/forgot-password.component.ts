@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -18,7 +19,7 @@ import { Router, RouterModule } from '@angular/router';
 
         <form [formGroup]="forgotForm" (ngSubmit)="onSubmit()" class="login-form">
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email">Correo Electrónico</label>
             <div class="input-wrapper" [class.error]="isFieldInvalid('email')">
               <span class="input-icon">✉️</span>
               <input 
@@ -29,23 +30,23 @@ import { Router, RouterModule } from '@angular/router';
                 autocomplete="email">
             </div>
             <div class="error-message" *ngIf="isFieldInvalid('email')">
-              <span *ngIf="forgotForm.get('email')?.errors?.['required']">Debe ingresar su correo</span>
-              <span *ngIf="forgotForm.get('email')?.errors?.['email']">Formato de correo inválido</span>
+              <span *ngIf="forgotForm.get('email')?.errors?.['required']">Debe ingresar su correo electrónico</span>
+              <span *ngIf="forgotForm.get('email')?.errors?.['email']">Ingrese un correo electrónico válido</span>
             </div>
           </div>
 
-          <button type="submit" class="login-btn" [disabled]="isLoading()">
-            <span *ngIf="!isLoading()">CONFIRMAR</span>
+          <button type="submit" class="btn-submit" [disabled]="isLoading()">
+            <span *ngIf="!isLoading()">Enviar Instrucciones</span>
             <span *ngIf="isLoading()" class="loader"></span>
           </button>
-
-          <div class="login-footer">
-            <a routerLink="/login" class="back-link">Volver para iniciar sesión</a>
-          </div>
         </form>
 
         <div class="success-message" *ngIf="isSubmitted()">
-          Instrucciones enviadas. Por favor revisa tu bandeja de entrada.
+          Contraseña temporal enviada. Revisa tu bandeja de entrada.
+        </div>
+
+        <div class="login-footer">
+          <a routerLink="/login" class="back-link">Volver al inicio de sesión</a>
         </div>
       </div>
       
@@ -159,6 +160,7 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class ForgotPasswordComponent {
   private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
   
   forgotForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]]
@@ -171,11 +173,16 @@ export class ForgotPasswordComponent {
     if (this.forgotForm.invalid) return;
     
     this.isLoading.set(true);
-    // Simulación de envío (solo frontend por ahora)
-    setTimeout(() => {
-      this.isLoading.set(false);
-      this.isSubmitted.set(true);
-    }, 1500);
+    this.authService.forgotPassword(this.forgotForm.value.email).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.isSubmitted.set(true);
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        alert(err.error?.error || err.error?.Error || 'Ocurrió un error al enviar el correo.');
+      }
+    });
   }
 
   isFieldInvalid(field: string): boolean {

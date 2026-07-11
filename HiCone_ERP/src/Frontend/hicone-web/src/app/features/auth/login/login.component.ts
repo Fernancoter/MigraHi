@@ -471,13 +471,28 @@ export class LoginComponent implements OnInit {
     }
     
     this.isLoading.set(true);
-    setTimeout(() => {
-      this.isLoading.set(false);
-      this.toggleRegister(false);
-      this.errorMessage.set('Cuenta creada con éxito. Ya puedes iniciar sesión.');
-      
-      // Limpiar formulario tras registro exitoso
-      this.registerForm.reset();
-    }, 2000);
+    
+    const payload = {
+      username: this.registerForm.value.username,
+      email: this.registerForm.value.email,
+      password: this.registerForm.value.password,
+      firstName: this.registerForm.value.firstName || '',
+      lastName: this.registerForm.value.lastName || '',
+      roleIds: []
+    };
+
+    this.authService.register(payload).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.toggleRegister(false);
+        this.errorMessage.set('Cuenta creada con éxito. Ya puedes iniciar sesión.');
+        this.registerForm.reset();
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        const errorMsg = err.error?.error || err.error?.Error || 'Error al registrar la cuenta. Inténtelo de nuevo.';
+        this.errorMessage.set(errorMsg);
+      }
+    });
   }
 }

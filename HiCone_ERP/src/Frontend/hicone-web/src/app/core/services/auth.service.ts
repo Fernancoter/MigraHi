@@ -93,6 +93,14 @@ export class AuthService {
     });
   }
 
+  register(user: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, user);
+  }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  }
+
   private setSession(response: LoginResponse) {
     // Calcular campos de compatibilidad para el header y sidebar
     response.user.fullName = `${response.user.firstName} ${response.user.lastName}`;
