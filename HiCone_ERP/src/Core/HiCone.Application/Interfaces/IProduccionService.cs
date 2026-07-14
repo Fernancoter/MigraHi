@@ -46,6 +46,7 @@ public interface IProduccionService
     
     // ── Prensado (Carreras y Carretes) ─────────────────────────────────────
     Task<Prensado> IniciarPrensadoAsync(Guid prensaId, Guid operarioId, Guid turnoId, Guid productoId, Guid troquelId);
+    Task<bool> MontarBobinaEnPrensadoAsync(Guid prensadoId, Guid bobinaId);
     Task<Carrera> IniciarCarreraAsync(Guid prensadoId);
     Task<bool> FinalizarCarreraAsync(Guid carreraId);
     Task<bool> RegistrarDefectoCarreteAsync(Guid carreteId, TipoDefecto tipo, string descripcion);

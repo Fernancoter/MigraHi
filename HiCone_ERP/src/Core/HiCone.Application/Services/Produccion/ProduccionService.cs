@@ -413,6 +413,47 @@ public class ProduccionService : IProduccionService
         return prensado;
     }
 
+    // Monta una bobina en el prensado para poder iniciar carreras.
+    // Equivale a CrearPrensadoBobina + SDBobinaEnPrensado + SetEstadoBobina del legado GeneXus.
+    public async Task<bool> MontarBobinaEnPrensadoAsync(Guid prensadoId, Guid bobinaId)
+    {
+        var prensado = await _context.Prensados
+            .Include(p => p.Bobinas)
+            .FirstOrDefaultAsync(p => p.Id == prensadoId);
+        if (prensado == null) throw new Exception("Prensado no encontrado");
+
+        var bobina = await _context.Bobinas.FindAsync(bobinaId);
+        if (bobina == null) throw new Exception("Bobina no encontrada");
+
+        // Validar disponibilidad (Legacy: SDEscanearBobina sólo acepta bobinas en reposo/proceso)
+        if (bobina.Estado != EstadoBobina.EnReposo && bobina.Estado != EstadoBobina.EnProceso)
+            throw new InvalidOperationException(
+                $"La bobina '{bobina.NoSerie}' no está disponible para prensado (estado actual: {bobina.Estado}).");
+
+        // Sólo una bobina activa a la vez: desactivar la anterior (Legacy: cambio de bobina en la prensa)
+        foreach (var pbActiva in prensado.Bobinas.Where(b => b.Activa))
+        {
+            pbActiva.Activa = false;
+            pbActiva.HoraFin = DateTime.UtcNow;
+        }
+
+        // Crear el vínculo Prensado-Bobina (Legacy: CrearPrensadoBobina)
+        var prensadoBobina = new PrensadoBobina
+        {
+            PrensadoId = prensadoId,
+            BobinaId = bobinaId,
+            Activa = true,
+            CantCarreras = 0,
+            HoraInicio = DateTime.UtcNow
+        };
+        _context.PrensadoBobinas.Add(prensadoBobina);
+
+        // La bobina pasa a estar montada en la prensa (Legacy: SetEstadoBobina → EnPrensado)
+        bobina.Estado = EstadoBobina.EnPrensado;
+
+        return await _context.SaveChangesAsync(default) > 0;
+    }
+
     public async Task<Carrera> IniciarCarreraAsync(Guid prensadoId)
     {
         var prensado = await _context.Prensados

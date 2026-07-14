@@ -1,11 +1,14 @@
 # Project Memory: HiCone ERP Modernization
 
 ## Rama Activa
-`information_report/refactor` — activa y con los servidores del backend (5007) y frontend (4200) iniciados.
+`QA` — activa y con los servidores del backend (5007), frontend web (4200) y frontend móvil (4201) iniciados.
 
-## Estado Actual (2026-06-29)
-- **Backend:** Operativo (Puerto 5007, levantado en segundo plano). Controladores y endpoints de reportes operativos (DRR, Pallet Embarque, Carrete Pallet, Existencias) completamente integrados.
-- **Frontend:** Operativo (Puerto 4200, levantado en segundo plano). Módulo de "Reportes HC" ampliado con la nueva pantalla de "Existencia" y columnas agregadas en el "Resumen de Extrusión".
+## Estado Actual (2026-07-13)
+- **Backend:** Operativo (Puerto 5007, levantado en segundo plano con dotnet run).
+- **Frontend Web (`hicone-web`):** Operativo (Puerto 4200, levantado en segundo plano con ng serve).
+- **Frontend Móvil (`hicone-mobile`):** Operativo (Puerto 4201, levantado en segundo plano con ng serve --port 4201).
+- **Correcciones:** 
+  - Se corrigió un error de compilación en el backend (el controlador `ProduccionController` dependía de `MontarBobinaEnPrensadoAsync` en `IProduccionService`, el cual había sido removido en la rama remota). Se restauró e implementó la función en el servicio restableciendo la vinculación lógica de bobinas montadas en prensas.
 - **Base de Datos:** Migración `AddEmbarqueProperties` aplicada exitosamente sobre el servidor local de SQL Server.
 
 ✅ **Reporte de Existencia y Columnas de Extrusión COMPLETADOS** (2026-06-29)
