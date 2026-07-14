@@ -65,6 +65,7 @@ namespace HiCone.Application.Services.Identity
         public bool PasswordNeverExpires { get; set; } = false;
         public string? SecurityPolicyId { get; set; }
         public bool IsRepositoryEnabled { get; set; } = true;
+        public bool MustChangePassword { get; set; } = true;
         public string? AvatarUrl { get; set; }
         public List<Guid> RoleIds { get; set; } = new();
     }
@@ -334,7 +335,7 @@ namespace HiCone.Application.Services.Identity
                 IsRepositoryEnabled = dto.IsRepositoryEnabled,
                 AvatarUrl = dto.AvatarUrl,
                 IsActive = true,
-                MustChangePassword = true,
+                MustChangePassword = dto.MustChangePassword,
                 EmailConfirmed = false,
                 IsDeleted = false
             };
