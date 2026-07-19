@@ -21,13 +21,13 @@ import { AuthService } from '../../../core/services/auth.service';
           <div class="form-group">
             <label for="email">Nombre de Usuario o Email</label>
             <div class="input-wrapper" [class.error]="isFieldInvalid('email')">
-              <span class="input-icon">✉️</span>
-              <input 
+              <span class="input-icon">✉️</span>            <input 
                 type="text" 
                 id="email" 
                 formControlName="email" 
                 placeholder="usuario123"
-                autocomplete="username">
+                autocomplete="username"
+                (focus)="clearErrorMessage()">
             </div>
             <div class="error-message" *ngIf="isFieldInvalid('email')">
               <span *ngIf="loginForm.get('email')?.errors?.['required']">Debe ingresar el nombre de usuario</span>
@@ -43,7 +43,8 @@ import { AuthService } from '../../../core/services/auth.service';
                 id="password" 
                 formControlName="password" 
                 placeholder="••••••••"
-                autocomplete="current-password">
+                autocomplete="current-password"
+                (focus)="clearErrorMessage()">
               <button 
                 type="button" 
                 class="password-toggle" 
@@ -329,6 +330,11 @@ export class LoginComponent implements OnInit {
         rememberMe: true
       });
     }
+
+    // Clear error message when the form value changes (typing/editing)
+    this.loginForm.valueChanges.subscribe(() => {
+      this.clearErrorMessage();
+    });
   }
 
   togglePasswordVisibility() {
@@ -338,6 +344,12 @@ export class LoginComponent implements OnInit {
   isFieldInvalid(field: string): boolean {
     const control = this.loginForm.get(field);
     return !!(control && control.invalid && (control.dirty || control.touched));
+  }
+
+  clearErrorMessage() {
+    if (this.errorMessage()) {
+      this.errorMessage.set(null);
+    }
   }
 
   onLogin() {
