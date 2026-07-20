@@ -293,23 +293,23 @@ export class ProduccionService {
   }
 
   getExtrusoraProductos(): Observable<ExtrusoraProducto[]> {
-    return this.http.get<ExtrusoraProducto[]>(`${this.apiUrl}/extrusora-productos`);
+    return this.http.get<ExtrusoraProducto[]>(`${this.apiUrl}/referencias/extrusora-producto`);
   }
 
   getExtrusoraProducto(id: string): Observable<ExtrusoraProducto> {
-    return this.http.get<ExtrusoraProducto>(`${this.apiUrl}/extrusora-productos/${id}`);
+    return this.http.get<ExtrusoraProducto>(`${this.apiUrl}/referencias/extrusora-producto/${id}`);
   }
 
-  createExtrusoraProducto(ep: Partial<ExtrusoraProducto>): Observable<ExtrusoraProducto> {
-    return this.http.post<ExtrusoraProducto>(`${this.apiUrl}/extrusora-productos`, ep);
+  createExtrusoraProducto(ep: any): Observable<ExtrusoraProducto> {
+    return this.http.post<ExtrusoraProducto>(`${this.apiUrl}/referencias/extrusora-producto`, ep);
   }
 
-  updateExtrusoraProducto(id: string, ep: Partial<ExtrusoraProducto>): Observable<ExtrusoraProducto> {
-    return this.http.put<ExtrusoraProducto>(`${this.apiUrl}/extrusora-productos/${id}`, ep);
+  updateExtrusoraProducto(id: string, ep: any): Observable<ExtrusoraProducto> {
+    return this.http.put<ExtrusoraProducto>(`${this.apiUrl}/referencias/extrusora-producto/${id}`, ep);
   }
 
   deleteExtrusoraProducto(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/extrusora-productos/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/referencias/extrusora-producto/${id}`);
   }
 
   // ── Turnos por Semana ──────────────────────────────────────────────────

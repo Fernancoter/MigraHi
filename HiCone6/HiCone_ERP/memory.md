@@ -152,3 +152,10 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
   - Las acciones de las tablas (Visualizar, Modificar, Eliminar) se trasladaron a la izquierda (fijas) en Producto Terminado, con diseño en tres columnas.
   - Implementación global de directiva de colapso automático (`ClickOutsideDirective`) en menús contextuales y selectores de columnas.
 - **Fijación de Errores TypeScript**: Se resolvieron problemas de tipado durante el build (NG5002 y TS2339) para garantizar la compilación 100% exitosa del Frontend.
+
+## 2026-07-20: Corrección de Extrusora Producto y Migración de Base de Datos
+- **Base de Datos**: Se aplicó la migración pendiente de Entity Framework Core `AddEmbarqueProperties` en el servidor local SQL Server (`HiCone_ERP_V3`), lo que resolvió el error de columna inexistente `bobina_interrupciones_id` al consultar extrusiones.
+- **Rutas de API en Extrusora-Producto**: Se modificaron las rutas del frontend en `ProduccionService` para apuntar a `/referencias/extrusora-producto` (el CRUD real) en lugar del endpoint genérico `/extrusora-productos` que generaba errores 400.
+- **Mapeo de DTO Extrusora-Producto**: Se corrigió el método `save()` en `ExtrusoraProductoListComponent` para mapear los campos del formulario al DTO esperado por el backend (`ExtrusoraProductoDto`), resolviendo problemas de campos requeridos vacíos (como `ProductoNombre`).
+- **Alineación de Modelos**: Se ajustó la proyección del controlador en el backend (`GetExtrusoraProductos`) para devolver objetos anidados `Extrusora` y `Producto` con los nombres de propiedad correctos, lo que permitió que la grilla y el formulario de edición en el frontend lean y carguen la información de forma correcta.
+- **Servidores e Integridad**: Servidores iniciados de manera exitosa y pruebas de frontend pasando al 100%.

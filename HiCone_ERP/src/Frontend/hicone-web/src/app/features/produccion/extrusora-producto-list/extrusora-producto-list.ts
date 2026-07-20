@@ -743,8 +743,19 @@ export class ExtrusoraProductoListComponent implements OnInit {
       return;
     }
 
+    const selectedProducto = this.productos.find(p => p.id === this.form.productoId);
+    const payload = {
+      extrusoraId: this.form.extrusoraId,
+      productoNombre: selectedProducto ? selectedProducto.nombre : '',
+      productoCalibre: Number(this.form.defaultCalibre) || 0,
+      productoAncho: String(this.form.defaultAncho ?? ''),
+      productoLongitud: Number(this.form.defaultLongitud) || 0,
+      reposoMin: Number(this.form.defaultMinutosReposo) || 0,
+      procesoMin: Number(this.procesoMin) || 90
+    };
+
     if (this.viewState === 'add') {
-      this.prodService.createExtrusoraProducto(this.form).subscribe({
+      this.prodService.createExtrusoraProducto(payload).subscribe({
         next: () => {
           alert('Configuración agregada correctamente');
           this.goToList();
@@ -752,7 +763,7 @@ export class ExtrusoraProductoListComponent implements OnInit {
         error: (err) => alert('Error al agregar configuración: ' + (err.error?.message || err.message))
       });
     } else {
-      this.prodService.updateExtrusoraProducto(this.form.id!, this.form).subscribe({
+      this.prodService.updateExtrusoraProducto(this.form.id!, payload).subscribe({
         next: () => {
           alert('Configuración modificada correctamente');
           this.goToList();
