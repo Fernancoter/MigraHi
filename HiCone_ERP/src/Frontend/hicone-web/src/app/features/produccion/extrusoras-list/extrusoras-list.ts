@@ -173,10 +173,7 @@ import autoTable from 'jspdf-autotable';
             <!-- Número de Extrusora -->
             <div class="form-group-premium">
               <label>Número de Extrusora</label>
-              <select class="input-premium" [(ngModel)]="form.numeroExtrusora">
-                <option value="" disabled selected>-- Seleccionar --</option>
-                <option *ngFor="let c of claves" [value]="c.valor">{{ c.valor }}</option>
-              </select>
+              <input class="input-premium" type="text" [(ngModel)]="form.numeroExtrusora" placeholder="Ej. 1, 2, 3..." />
             </div>
 
             <!-- Extrusora (Nombre) -->
