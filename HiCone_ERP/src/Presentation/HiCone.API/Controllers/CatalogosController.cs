@@ -206,6 +206,18 @@ public class CatalogosController : ControllerBase
         };
         _context.Extrusoras.Add(entity);
 
+        // Crear registro en tabla Maquinas para mantener retrocompatibilidad de FK
+        var maquina = new Maquina
+        {
+            Id = entity.Id,
+            Codigo = entity.Codigo,
+            Nombre = entity.Nombre,
+            Tipo = "Extrusora",
+            Estado = "Disponible",
+            TenantId = entity.TenantId
+        };
+        _context.Maquinas.Add(maquina);
+
         var username = User.Identity?.Name ?? "Sistema";
         _context.AuditLogs.Add(new AuditLog
         {
@@ -241,6 +253,14 @@ public class CatalogosController : ControllerBase
         entity.NumeroExtrusora = dto.NumeroExtrusora;
         entity.Imagen = dto.Imagen;
 
+        // Actualizar registro en tabla Maquinas para mantener retrocompatibilidad
+        var maquina = await _context.Maquinas.FindAsync(id);
+        if (maquina != null)
+        {
+            maquina.Nombre = dto.Nombre;
+            maquina.Codigo = dto.NumeroExtrusora;
+        }
+
         var username = User.Identity?.Name ?? "Sistema";
         _context.AuditLogs.Add(new AuditLog
         {
@@ -268,6 +288,13 @@ public class CatalogosController : ControllerBase
         var item = await _context.Extrusoras.FindAsync(id);
         if (item is null) return NotFound();
         _context.Extrusoras.Remove(item);
+
+        // Eliminar registro en tabla Maquinas para mantener retrocompatibilidad
+        var maquina = await _context.Maquinas.FindAsync(id);
+        if (maquina != null)
+        {
+            _context.Maquinas.Remove(maquina);
+        }
 
         var username = User.Identity?.Name ?? "Sistema";
         _context.AuditLogs.Add(new AuditLog
