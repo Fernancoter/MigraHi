@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -158,20 +158,6 @@ namespace HiCone.Persistence.Migrations
                 type: "uniqueidentifier",
                 nullable: true);
 
-            migrationBuilder.AddColumn<bool>(
-                name: "extrusora",
-                table: "causas_interrupcion",
-                type: "bit",
-                nullable: false,
-                defaultValue: false);
-
-            migrationBuilder.AddColumn<bool>(
-                name: "prensa",
-                table: "causas_interrupcion",
-                type: "bit",
-                nullable: false,
-                defaultValue: false);
-
             migrationBuilder.AddColumn<Guid>(
                 name: "bobina_interrupciones_id",
                 table: "bobinas",
@@ -280,14 +266,6 @@ namespace HiCone.Persistence.Migrations
             migrationBuilder.DropColumn(
                 name: "maquina_id1",
                 table: "extrusiones");
-
-            migrationBuilder.DropColumn(
-                name: "extrusora",
-                table: "causas_interrupcion");
-
-            migrationBuilder.DropColumn(
-                name: "prensa",
-                table: "causas_interrupcion");
 
             migrationBuilder.DropColumn(
                 name: "bobina_interrupciones_id",
