@@ -207,14 +207,7 @@ import * as XLSX from 'xlsx';
                 <!-- Número de Extrusora -->
                 <div class="erp-field">
                   <label class="erp-label">Número de Extrusora</label>
-                  <div class="erp-select-wrapper">
-                    <select class="erp-select" [(ngModel)]="form.numeroExtrusora">
-                      <option value="">-- Seleccionar --</option>
-                      @for (c of claves(); track c.id) {
-                        <option [value]="c.valor">{{ c.valor }}</option>
-                      }
-                    </select>
-                  </div>
+                  <input class="erp-input" type="text" [(ngModel)]="form.numeroExtrusora" placeholder="Ej. 1, 2, 3..." />
                 </div>
 
                 <div class="erp-separator"></div>
