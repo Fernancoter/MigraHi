@@ -394,6 +394,8 @@ import autoTable from 'jspdf-autotable';
     .module-page { padding: 3rem; }
     .ml-3 { margin-left: 0.75rem; }
     .ext-name-cell { font-size: 0.85rem; color: #0f172a; font-weight: bold; }
+    .actions-col { width: 330px; min-width: 330px; }
+    .actions-cell { white-space: nowrap !important; width: 330px; min-width: 330px; }
 
     /* Dropdowns & Popovers */
     .dropdown-wrapper { position: relative; display: inline-block; }
