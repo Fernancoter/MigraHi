@@ -13,6 +13,17 @@ import autoTable from 'jspdf-autotable';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="module-page animate-fade-in" (click)="closeAllDropdowns()">
+      <!-- TOAST NOTIFICATION -->
+      <div class="custom-toast" *ngIf="notification.type" [ngClass]="notification.type">
+        <div class="toast-content">
+          <span class="toast-icon" *ngIf="notification.type === 'success'">✔️</span>
+          <span class="toast-icon" *ngIf="notification.type === 'danger'">❌</span>
+          <span class="toast-icon" *ngIf="notification.type === 'info'">ℹ️</span>
+          <span class="toast-text">{{ notification.message }}</span>
+        </div>
+        <button class="toast-close" (click)="clearNotification()">✖️</button>
+      </div>
+
       <!-- HEADER PRINCIPAL -->
       <div class="page-header-premium">
         <div class="title-section">
@@ -468,6 +479,60 @@ import autoTable from 'jspdf-autotable';
     .animate-slide-up { animation: slideUp .15s ease-out; }
     @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Custom Toast Notification */
+    .custom-toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      min-width: 300px;
+      z-index: 10000;
+      border-left: 4px solid #10b981;
+      animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .custom-toast.danger {
+      border-left-color: #ef4444;
+    }
+    .custom-toast.info {
+      border-left-color: #3b82f6;
+    }
+    .toast-content {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .toast-icon {
+      font-size: 1.1rem;
+    }
+    .toast-text {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+    .toast-close {
+      background: transparent;
+      border: none;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      cursor: pointer;
+      padding: 0;
+      margin-left: 1rem;
+      transition: color 0.2s;
+    }
+    .toast-close:hover {
+      color: #475569;
+    }
+    @keyframes slideInRight {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
   `]
 })
 export class ExtrusoraProductoListComponent implements OnInit {
@@ -498,6 +563,9 @@ export class ExtrusoraProductoListComponent implements OnInit {
   // Popover de Exportación
   showExportOptions = false;
 
+  // Toast notifications state
+  notification: { message: string, type: 'success' | 'danger' | 'info' | null } = { message: '', type: null };
+
   // Selector de columnas
   showColumnSelector = false;
   visibleCols = { extrusora: true, productoNombre: true, calibre: true, ancho: true, longitud: true, reposo: true, proceso: true };
@@ -513,6 +581,19 @@ export class ExtrusoraProductoListComponent implements OnInit {
   parsedChanges: any[] = [];
   auditCurrentPage = 1;
   auditPageSize = 5;
+
+  showNotification(message: string, type: 'success' | 'danger' | 'info' = 'success') {
+    this.notification = { message, type };
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      this.clearNotification();
+    }, 4000);
+  }
+
+  clearNotification() {
+    this.notification = { message: '', type: null };
+    this.cdr.detectChanges();
+  }
 
   ngOnInit() {
     this.loadData();
@@ -741,7 +822,7 @@ export class ExtrusoraProductoListComponent implements OnInit {
 
   save() {
     if (!this.form.extrusoraId || !this.form.productoId) {
-      alert('Debe seleccionar la Extrusora y el Producto');
+      this.showNotification('Debe seleccionar la Extrusora y el Producto', 'danger');
       return;
     }
 
@@ -759,18 +840,18 @@ export class ExtrusoraProductoListComponent implements OnInit {
     if (this.viewState === 'add') {
       this.prodService.createExtrusoraProducto(payload).subscribe({
         next: () => {
-          alert('Configuración agregada correctamente');
+          this.showNotification('Configuración agregada correctamente', 'success');
           this.goToList();
         },
-        error: (err) => alert('Error al agregar configuración: ' + (err.error?.message || err.message))
+        error: (err) => this.showNotification('Error al agregar configuración: ' + (err.error?.message || err.message), 'danger')
       });
     } else {
       this.prodService.updateExtrusoraProducto(this.form.id!, payload).subscribe({
         next: () => {
-          alert('Configuración modificada correctamente');
+          this.showNotification('Configuración modificada correctamente', 'success');
           this.goToList();
         },
-        error: (err) => alert('Error al modificar configuración: ' + (err.error?.message || err.message))
+        error: (err) => this.showNotification('Error al modificar configuración: ' + (err.error?.message || err.message), 'danger')
       });
     }
   }
@@ -791,13 +872,13 @@ export class ExtrusoraProductoListComponent implements OnInit {
     if (!this.itemAEliminar) return;
     this.prodService.deleteExtrusoraProducto(this.itemAEliminar.id).subscribe({
       next: () => {
-        alert('Configuración eliminada correctamente');
+        this.showNotification('Configuración eliminada correctamente', 'success');
         this.mostrarConfirmarEliminar = false;
         this.itemAEliminar = null;
         this.loadData();
       },
       error: (err) => {
-        alert('Error al eliminar configuración');
+        this.showNotification('Error al eliminar configuración', 'danger');
         this.mostrarConfirmarEliminar = false;
         this.itemAEliminar = null;
         this.cdr.detectChanges();
