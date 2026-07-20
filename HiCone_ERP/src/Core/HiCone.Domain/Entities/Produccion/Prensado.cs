@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using HiCone.Domain.Common;
 using HiCone.Domain.Enums;
 
@@ -22,12 +23,20 @@ public class Prensado : TenantEntity
     public string? Ancho { get; set; }
     public decimal Longitud { get; set; }
     public string? ProductoNombre { get; set; }
+
+    [NotMapped]
     public PrensadoStatus Status { get => (PrensadoStatus)Estado; set => Estado = (EstadoPrensado)value; }
+
     public decimal KgVirgen { get; set; }
     public decimal KgMolido { get; set; }
     public decimal Target { get; set; }
+
+    [NotMapped]
     public DateTime? ProcessStart { get => HoraIniciaProceso; set { if(value.HasValue) HoraIniciaProceso = value.Value; } }
+
+    [NotMapped]
     public DateTime? ProcessEnd { get => HoraFinProceso; set => HoraFinProceso = value; }
+
     public decimal Producido { get; set; }
     public int TiempoInterrupcionMin { get; set; }
     public bool EnCurso { get; set; }

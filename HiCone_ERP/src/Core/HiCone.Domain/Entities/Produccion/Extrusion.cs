@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using HiCone.Domain.Common;
 using HiCone.Domain.Enums;
 using HiCone.Domain.Entities.Inventario;
@@ -16,15 +17,28 @@ public class Extrusion : TenantEntity
     // Retrocompatibilidad con el módulo de configuración de producción
     public decimal Programado { get; set; }
     public string? ProductoNombre { get; set; }
+
+    [NotMapped]
     public ExtrusionStatus Status { get => (ExtrusionStatus)Estado; set => Estado = (EstadoExtrusion)value; }
+
     public decimal Producido { get; set; }
     public int TiempoInterrupcionMin { get; set; }
     public bool EnCurso { get; set; }
     public long ExtrusionIdLegacy { get; set; }
+
+    [NotMapped]
     public decimal KgVirgen { get => VirgenKg; set => VirgenKg = value; }
+
+    [NotMapped]
     public decimal KgMolido { get => MolidoKg; set => MolidoKg = value; }
+
+    [NotMapped]
     public decimal Target { get => MetaKg; set => MetaKg = value; }
+
+    [NotMapped]
     public DateTime? ProcessStart { get => FechaInicio; set { if(value.HasValue) FechaInicio = value.Value; } }
+
+    [NotMapped]
     public DateTime? ProcessEnd { get => FechaFin; set => FechaFin = value; }
 
 
@@ -61,6 +75,7 @@ public class Extrusion : TenantEntity
     public virtual Extrusora Extrusora { get; set; } = null!;
 
     // Retrocompatibilidad con Maquina (renombrada a Extrusora)
+    [NotMapped]
     public Guid MaquinaId { get => ExtrusoraId; set => ExtrusoraId = value; }
 
     public Guid OperarioId { get; set; }
