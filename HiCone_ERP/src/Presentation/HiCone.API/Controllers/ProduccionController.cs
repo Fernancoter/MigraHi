@@ -209,6 +209,62 @@ public class ProduccionController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost("productos")]
+    public async Task<ActionResult<Guid>> CreateProducto([FromBody] ProductoDto dto)
+    {
+        var entity = new Producto
+        {
+            Id = Guid.NewGuid(),
+            Codigo = dto.Clave,
+            Nombre = dto.Nombre,
+            Descripcion = dto.Descripcion,
+            CategoriaId = dto.CategoriaId,
+            IsActive = dto.IsActive ?? true,
+            ProductoSAE = dto.ProductoSAE,
+            PrecioUnitario = dto.PrecioUnitario,
+            ClaveExternaSAE = dto.ClaveExterna,
+            TipoMaterial = Enum.TryParse<TipoMaterial>(dto.TipoMaterial, out var tm) ? tm : TipoMaterial.Virgen,
+            ProductoBase = dto.ProductoBase,
+            TenantId = Guid.Parse("00000000-0000-0000-0000-000000000001")
+        };
+        _context.Productos.Add(entity);
+        await _context.SaveChangesAsync(default);
+        return Ok(entity.Id);
+    }
+
+    [HttpPut("productos/{id}")]
+    public async Task<IActionResult> UpdateProducto(Guid id, [FromBody] ProductoDto dto)
+    {
+        var entity = await _context.Productos.FindAsync(id);
+        if (entity == null) return NotFound();
+
+        entity.Codigo = dto.Clave;
+        entity.Nombre = dto.Nombre;
+        entity.Descripcion = dto.Descripcion;
+        entity.CategoriaId = dto.CategoriaId;
+        entity.IsActive = dto.IsActive ?? true;
+        entity.ProductoSAE = dto.ProductoSAE;
+        entity.PrecioUnitario = dto.PrecioUnitario;
+        entity.ClaveExternaSAE = dto.ClaveExterna;
+        entity.TipoMaterial = Enum.TryParse<TipoMaterial>(dto.TipoMaterial, out var tm) ? tm : TipoMaterial.Virgen;
+        entity.ProductoBase = dto.ProductoBase;
+
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    [HttpDelete("productos/{id}")]
+    public async Task<IActionResult> DeleteProducto(Guid id)
+    {
+        var entity = await _context.Productos.FindAsync(id);
+        if (entity == null) return NotFound();
+
+        entity.IsDeleted = true;
+        entity.DeletedAt = DateTime.UtcNow;
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
     [HttpGet("turnos")]
     public async Task<ActionResult<IEnumerable<Turno>>> GetTurnos()
     {
@@ -786,5 +842,18 @@ public record UpdateExtrusionRequest(
     int Estado,
     DateTime? ProcessStart,
     DateTime? ProcessEnd
+);
+
+public record ProductoDto(
+    string Clave, 
+    string Nombre, 
+    string? Descripcion, 
+    Guid? CategoriaId, 
+    bool? IsActive, 
+    string? ProductoSAE, 
+    decimal PrecioUnitario, 
+    string? ClaveExterna, 
+    string? TipoMaterial, 
+    string? ProductoBase
 );
 
