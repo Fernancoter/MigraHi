@@ -535,7 +535,18 @@ public class ProduccionController : ControllerBase
                     }
                     else
                     {
-                        defaultOpId = defaultTenantId;
+                        var defaultOp = new Operario
+                        {
+                            Id = Guid.NewGuid(),
+                            NumeroEmpleado = "0000",
+                            Nombre = "Operador Genérico",
+                            Activo = true,
+                            TenantId = defaultTenantId
+                        };
+                        _context.Operarios.Add(defaultOp);
+                        await _context.SaveChangesAsync(default);
+                        operarios.Add(defaultOp);
+                        defaultOpId = defaultOp.Id;
                     }
                 }
 
