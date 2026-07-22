@@ -1545,7 +1545,7 @@ public class ApplicationDbContextSeeder
 
         if (!await _context.Extrusiones.AnyAsync())
         {
-            var extrusora = await _context.Extrusoras.FirstOrDefaultAsync() ?? new Extrusora { Nombre = "Extrusora 1", TenantId = defaultTenantId };
+            var extrusora = await _context.Extrusoras.FirstOrDefaultAsync() ?? new Extrusora { Nombre = "Extrusora 1", NumeroExtrusora = "1", TenantId = defaultTenantId };
             var turno = await _context.Turnos.FirstOrDefaultAsync() ?? new Turno { Nombre = "1er Turno", TenantId = defaultTenantId };
             var operario = await _context.Operarios.FirstOrDefaultAsync() ?? new Operario { Nombre = "Juan Pérez", TenantId = defaultTenantId };
             
@@ -1598,8 +1598,8 @@ public class ApplicationDbContextSeeder
         // Prensas y Prensados
         if (!await _context.Prensados.AnyAsync())
         {
-            var prensa1 = await _context.Prensas.FirstOrDefaultAsync() ?? new Prensa { Nombre = "Prensa 1", TenantId = defaultTenantId };
-            var prensa2 = new Prensa { Nombre = "Prensa 2", TenantId = defaultTenantId };
+            var prensa1 = await _context.Prensas.FirstOrDefaultAsync() ?? new Prensa { Nombre = "Prensa 1", NumeroPrensa = "1", TenantId = defaultTenantId };
+            var prensa2 = new Prensa { Nombre = "Prensa 2", NumeroPrensa = "2", TenantId = defaultTenantId };
             
             if (_context.Entry(prensa1).State == EntityState.Detached) _context.Prensas.Add(prensa1);
             _context.Prensas.Add(prensa2);

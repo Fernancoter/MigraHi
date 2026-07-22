@@ -346,20 +346,30 @@ public class CatalogosController : ControllerBase
         var existing = await _context.ExtrusoraOperarios
             .FirstOrDefaultAsync(eo => eo.ExtrusoraId == extrusoraId && eo.TurnoId == turnoId);
 
-        if (existing is null)
+        if (dto.OperarioId == null || dto.OperarioId == Guid.Empty)
         {
-            _context.ExtrusoraOperarios.Add(new ExtrusoraOperario
+            if (existing != null)
             {
-                Id = Guid.NewGuid(),
-                ExtrusoraId = extrusoraId,
-                TurnoId = turnoId,
-                OperarioId = dto.OperarioId ?? Guid.Empty,
-                TenantId = dto.TenantId
-            });
+                _context.ExtrusoraOperarios.Remove(existing);
+            }
         }
         else
         {
-            existing.OperarioId = dto.OperarioId ?? Guid.Empty;
+            if (existing is null)
+            {
+                _context.ExtrusoraOperarios.Add(new ExtrusoraOperario
+                {
+                    Id = Guid.NewGuid(),
+                    ExtrusoraId = extrusoraId,
+                    TurnoId = turnoId,
+                    OperarioId = dto.OperarioId.Value,
+                    TenantId = dto.TenantId
+                });
+            }
+            else
+            {
+                existing.OperarioId = dto.OperarioId.Value;
+            }
         }
         await _context.SaveChangesAsync(default);
         return NoContent();
@@ -384,14 +394,14 @@ public class CatalogosController : ControllerBase
         var newItems = new List<ExtrusoraOperario>();
         foreach (var item in items)
         {
-            if (item.TurnoId.HasValue)
+            if (item.TurnoId.HasValue && item.OperarioId.HasValue && item.OperarioId.Value != Guid.Empty)
             {
                 var newEo = new ExtrusoraOperario
                 {
                     Id = Guid.NewGuid(),
                     ExtrusoraId = extrusoraId,
                     TurnoId = item.TurnoId.Value,
-                    OperarioId = item.OperarioId ?? Guid.Empty,
+                    OperarioId = item.OperarioId.Value,
                     TenantId = item.TenantId ?? Guid.Empty
                 };
                 _context.ExtrusoraOperarios.Add(newEo);
