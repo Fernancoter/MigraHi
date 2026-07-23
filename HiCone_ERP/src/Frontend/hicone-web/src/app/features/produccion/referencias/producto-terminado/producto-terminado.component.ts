@@ -121,7 +121,6 @@ export interface ColumnDef {
         </div>
       </div>
 
-<<<<
       @if (!viewMode() && !editMode()) {
       <div class="table-responsive" style="overflow-x: auto;">
         <table style="width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 1rem; min-width: 1200px;">
@@ -170,7 +169,6 @@ export interface ColumnDef {
           </tbody>
         </table>
       </div>
->>>>
 
       <!-- Paginación -->
       @if (totalPages() > 1) {
