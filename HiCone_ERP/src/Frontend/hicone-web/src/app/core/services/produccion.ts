@@ -102,6 +102,24 @@ export interface Bobina {
   motivoMolino?: any;
   bobinaOrigen?: string;
   mermaKg?: number;
+  extrusoraNombre?: string;
+  turnoNombre?: string;
+  mezclaVirgenPct?: number;
+  mezclaMolidoPct?: number;
+  horaInicio?: string | Date;
+  horaSalida?: string | Date;
+  desviacionEstandar?: number;
+  reposoHr?: number;
+  operadorNombre?: string;
+  observaciones?: string;
+  siloMolidoNombre?: string;
+  siloVirgenNombre?: string;
+  loteVirgen?: string;
+  paqueteAditivos?: string;
+  extrusion?: any;
+  siloVirgen?: any;
+  siloMolido?: any;
+  operario?: any;
 }
 
 export interface Prensado {
@@ -293,23 +311,23 @@ export class ProduccionService {
   }
 
   getExtrusoraProductos(): Observable<ExtrusoraProducto[]> {
-    return this.http.get<ExtrusoraProducto[]>(`${this.apiUrl}/extrusora-productos`);
+    return this.http.get<ExtrusoraProducto[]>(`${this.apiUrl}/referencias/extrusora-producto`);
   }
 
   getExtrusoraProducto(id: string): Observable<ExtrusoraProducto> {
-    return this.http.get<ExtrusoraProducto>(`${this.apiUrl}/extrusora-productos/${id}`);
+    return this.http.get<ExtrusoraProducto>(`${this.apiUrl}/referencias/extrusora-producto/${id}`);
   }
 
   createExtrusoraProducto(ep: Partial<ExtrusoraProducto>): Observable<ExtrusoraProducto> {
-    return this.http.post<ExtrusoraProducto>(`${this.apiUrl}/extrusora-productos`, ep);
+    return this.http.post<ExtrusoraProducto>(`${this.apiUrl}/referencias/extrusora-producto`, ep);
   }
 
   updateExtrusoraProducto(id: string, ep: Partial<ExtrusoraProducto>): Observable<ExtrusoraProducto> {
-    return this.http.put<ExtrusoraProducto>(`${this.apiUrl}/extrusora-productos/${id}`, ep);
+    return this.http.put<ExtrusoraProducto>(`${this.apiUrl}/referencias/extrusora-producto/${id}`, ep);
   }
 
   deleteExtrusoraProducto(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/extrusora-productos/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/referencias/extrusora-producto/${id}`);
   }
 
   // ── Turnos por Semana ──────────────────────────────────────────────────
@@ -320,6 +338,15 @@ export class ProduccionService {
   guardarTurnosSemana(batch: any[]): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/extrusion/turnos-semana/guardar`, batch);
   }
+
+  getTurnosSemanaPrensado(fechaInicio: string, fechaFin: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/prensado/turnos-semana?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
+  }
+
+  guardarTurnosSemanaPrensado(batch: any[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/prensado/turnos-semana/guardar`, batch);
+  }
+
 
   // ── Nuevas Funcionalidades de Bobinas (Exportar, Interrupción, Impresión Múltiple, Eliminadas) ──
   exportarBobinas(formato: string, columnasVisibles: string[]): Observable<Blob> {
@@ -337,5 +364,38 @@ export class ProduccionService {
 
   getBobinasEliminadas(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/extrusion/bobinas/eliminadas`);
+  }
+
+  // ── Nuevas Funcionalidades de Prensado (Listados Operativos) ──
+  getCarreras(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/carreras`);
+  }
+
+  getCarretes(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/carretes`);
+  }
+
+  getPalets(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/palets`);
+  }
+
+  getInterrupcionesPrensado(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/interrupciones-prensado`);
+  }
+
+  getInterrupcionesExtrusion(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/interrupciones-extrusion`);
+  }
+
+  registrarInterrupcionManual(request: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/extrusion/interrupcion/manual`, request);
+  }
+
+  updateInterrupcionExtrusion(id: string, request: any): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/extrusion/interrupcion/${id}`, request);
+  }
+
+  deleteInterrupcionExtrusion(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/extrusion/interrupcion/${id}`);
   }
 }

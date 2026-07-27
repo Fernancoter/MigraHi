@@ -43,6 +43,10 @@ export class NavigationService {
     const lowerUrl = url.toLowerCase();
     if (lowerUrl.includes('/inventario') || lowerUrl.includes('/silos') || lowerUrl.includes('/lotes') || lowerUrl.includes('/cierre-mes')) {
       this.activeModuleSubject.next('INVENTARIO');
+    } else if (lowerUrl.includes('/produccion/prensado') || lowerUrl.includes('tab=prensado')) {
+      this.activeModuleSubject.next('PRENSADO');
+    } else if (lowerUrl.includes('/produccion/extrusion') || lowerUrl.includes('tab=extrusion')) {
+      this.activeModuleSubject.next('EXTRUSIÓN');
     } else if (lowerUrl.includes('/produccion') || lowerUrl.includes('/extrusiones') || lowerUrl.includes('/bobinas')) {
       // Preservar si ya es EXTRUSIÓN o PRENSADO al compartir la misma ruta base
       const current = this.activeModuleSubject.value;
@@ -56,6 +60,7 @@ export class NavigationService {
     } else if (lowerUrl.includes('/seguridad')) {
       this.activeModuleSubject.next('SEGURIDAD');
     } else if (lowerUrl.includes('/configurar-produccion')) {
+      // Si no es prensado ni extrusión, entonces es configuración general
       this.activeModuleSubject.next('CONFIGURACION_PRODUCCION');
     } else if (lowerUrl.includes('/configuracion')) {
       this.activeModuleSubject.next('CONFIGURACIÓN');

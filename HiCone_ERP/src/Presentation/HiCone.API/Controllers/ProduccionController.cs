@@ -310,6 +310,112 @@ public class ProduccionController : ControllerBase
         return result ? Ok() : BadRequest("No se encontró interrupción activa para esta extrusión");
     }
 
+    [HttpGet("interrupciones-extrusion")]
+    public async Task<ActionResult<IEnumerable<object>>> GetInterrupcionesExtrusion()
+    {
+        var interrupciones = await _produccionService.GetInterrupcionesExtrusionAsync();
+        var items = interrupciones.Select(i => new
+        {
+            i.Id,
+            i.ExtrusionId,
+            ExtrusionIdLegacy = i.Extrusion != null ? i.Extrusion.ExtrusionIdLegacy : 0,
+            Fecha = i.Extrusion != null ? i.Extrusion.Fecha : DateTime.UtcNow.Date,
+            Estado = i.Extrusion != null ? i.Extrusion.Estado.ToString() : "",
+            HoraInicioExtrusion = i.Extrusion != null ? i.Extrusion.FechaInicio : DateTime.UtcNow,
+            HoraFinExtrusion = i.Extrusion != null ? i.Extrusion.FechaFin : null,
+            Turno = (i.Extrusion != null && i.Extrusion.Turno != null) ? i.Extrusion.Turno.Nombre : "",
+            Operador = (i.Extrusion != null && i.Extrusion.Operario != null) ? i.Extrusion.Operario.NombreCompleto : "",
+            Extrusora = (i.Extrusion != null && i.Extrusion.Extrusora != null) ? i.Extrusion.Extrusora.Nombre : "",
+            Producto = (i.Extrusion != null && i.Extrusion.Producto != null) ? i.Extrusion.Producto.Clave : "",
+            TipoMaterial = (i.Extrusion != null && i.Extrusion.SiloVirgen != null && i.Extrusion.SiloVirgen.TipoMaterial != null) ? i.Extrusion.SiloVirgen.TipoMaterial : "PCR",
+            Concluida = i.Concluida,
+            HoraInicio = i.HoraInicio,
+            HoraFin = i.HoraFin,
+            Descripcion = i.Descripcion,
+            DuracionMinutos = i.DuracionMinutos,
+            CausaId = i.CausaId,
+            CausaCodigo = i.Causa != null ? i.Causa.Codigo : "",
+            CausaDescripcion = i.Causa != null ? i.Causa.Descripcion : "",
+            CausaTipo = i.Causa != null ? i.Causa.Tipo : "General"
+        });
+
+        return Ok(items);
+    }
+
+    [HttpPost("extrusion/interrupcion/manual")]
+    public async Task<ActionResult<ExtrusionInterrupcion>> RegistrarInterrupcionManual([FromBody] RegistrarInterrupcionManualRequest request)
+    {
+        var defaultTenantId = new Guid("00000000-0000-0000-0000-000000000001");
+        var interrupcion = new ExtrusionInterrupcion
+        {
+            Id = Guid.NewGuid(),
+            ExtrusionId = request.ExtrusionId,
+            CausaId = request.CausaId,
+            Descripcion = request.Descripcion,
+            HoraInicio = request.HoraInicio,
+            HoraFin = request.HoraFin,
+            Concluida = request.Concluida,
+            TenantId = defaultTenantId
+        };
+
+        _context.ExtrusionInterrupciones.Add(interrupcion);
+
+        var extrusion = await _context.Extrusiones
+            .Include(e => e.Extrusora)
+            .FirstOrDefaultAsync(e => e.Id == request.ExtrusionId);
+
+        if (extrusion != null)
+        {
+            var todasInterrupciones = await _context.ExtrusionInterrupciones
+                .Where(i => i.ExtrusionId == request.ExtrusionId && !i.IsDeleted)
+                .ToListAsync();
+
+            double totalMinutos = todasInterrupciones
+                .Where(i => i.HoraFin.HasValue)
+                .Sum(i => (i.HoraFin.Value - i.HoraInicio).TotalMinutes);
+
+            if (request.Concluida && request.HoraFin.HasValue)
+            {
+                totalMinutos += (request.HoraFin.Value - request.HoraInicio).TotalMinutes;
+            }
+
+            extrusion.TiempoInterrupcion = (int)Math.Round(totalMinutos);
+
+            bool hayActivas = todasInterrupciones.Any(i => !i.Concluida) || (!request.Concluida);
+            extrusion.InterrupcionEnCurso = hayActivas;
+
+            if (extrusion.Extrusora != null)
+            {
+                extrusion.Extrusora.Estado = hayActivas ? EstadoExtrusora.Detenida : EstadoExtrusora.EnProceso;
+            }
+        }
+
+        await _context.SaveChangesAsync(default);
+        return Ok(interrupcion);
+    }
+
+    [HttpPut("extrusion/interrupcion/{id}")]
+    public async Task<IActionResult> ActualizarInterrupcionExtrusion(Guid id, [FromBody] ActualizarInterrupcionManualRequest request)
+    {
+        var result = await _produccionService.ActualizarInterrupcionExtrusionAsync(
+            id,
+            request.CausaId,
+            request.Descripcion,
+            request.HoraInicio,
+            request.HoraFin,
+            request.Concluida
+        );
+
+        return result ? NoContent() : BadRequest("No se pudo actualizar la interrupción.");
+    }
+
+    [HttpDelete("extrusion/interrupcion/{id}")]
+    public async Task<IActionResult> EliminarInterrupcionExtrusion(Guid id)
+    {
+        var result = await _produccionService.EliminarInterrupcionExtrusionAsync(id);
+        return result ? NoContent() : BadRequest("No se pudo eliminar la interrupción.");
+    }
+
     [HttpPost("prensado/interrupcion")]
     public async Task<ActionResult<PrensadoInterrupcion>> RegistrarInterrupcionPrensado([FromBody] RegistrarInterrupcionRequest request)
     {
@@ -420,9 +526,345 @@ public class ProduccionController : ControllerBase
     public async Task<ActionResult<IEnumerable<Extrusion>>> GetExtrusiones()
         => Ok(await _produccionService.GetExtrusionesAsync());
 
+    [HttpGet("extrusion/programacion")]
+    public async Task<ActionResult<IEnumerable<object>>> GetExtrusionesProgramacion()
+    {
+        var items = await _context.Extrusiones
+            .Include(e => e.Turno)
+            .Include(e => e.Producto)
+            .Include(e => e.Operario)
+            .Where(e => !e.IsDeleted && e.Estado == EstadoExtrusion.Programada)
+            .OrderByDescending(e => e.Fecha)
+            .Select(e => new
+            {
+                e.Id,
+                FechaExtrusora = e.Fecha,
+                Turno = e.Turno.Nombre,
+                Producto = e.Producto != null ? e.Producto.Clave : "",
+                Operador = e.Operario != null ? e.Operario.NombreCompleto : "",
+                Programado = e.MetaKg
+            })
+            .ToListAsync();
+
+        return Ok(items);
+    }
+
+    // ── Turnos Por Semana Prensado ─────────────────────────────────────────
+
+    [HttpGet("prensado/turnos-semana")]
+    public async Task<IActionResult> GetTurnosSemanaPrensas([FromQuery] DateTime fechaInicio, [FromQuery] DateTime fechaFin)
+    {
+        var result = await _produccionService.GetTurnosSemanaPrensasAsync(fechaInicio, fechaFin);
+        return Ok(result);
+    }
+
+    [HttpPost("prensado/turnos-semana/guardar")]
+    public async Task<IActionResult> GuardarTurnosSemanaPrensas([FromBody] List<GuardarTurnoPrensaItemRequest> batch)
+    {
+        try
+        {
+            var success = await _produccionService.GuardarTurnosSemanaPrensasAsync(batch);
+            if (!success) return BadRequest(new { message = "No se pudieron guardar las modificaciones de turnos." });
+            return Ok(new { message = "Información actualizada" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = $"Error al guardar modificaciones: {ex.Message}" });
+        }
+    }
+
+
+
+    [HttpGet("extrusion/operacion")]
+    public async Task<ActionResult<IEnumerable<object>>> GetExtrusionesOperacion()
+    {
+        var items = await _context.Extrusiones
+            .Include(e => e.Extrusora)
+            .Include(e => e.Turno)
+            .Include(e => e.Producto)
+            .Include(e => e.Operario)
+            .Where(e => !e.IsDeleted && e.Estado != EstadoExtrusion.Programada)
+            .OrderByDescending(e => e.Fecha)
+            .Select(e => new
+            {
+                e.Id,
+                Status = e.Estado.ToString(),
+                Extrusora = e.Extrusora.Nombre,
+                Turno = e.Turno.Nombre,
+                Producto = e.Producto != null ? e.Producto.Clave : "",
+                Operador = e.Operario != null ? e.Operario.NombreCompleto : "",
+                Producido = e.Producido,
+                TiempoInterrupcion = e.TiempoInterrupcionMin,
+                EnCurso = e.EnCurso,
+                ExtrusionId = e.ExtrusionIdLegacy
+            })
+            .ToListAsync();
+
+        return Ok(items);
+    }
+
+    [HttpGet("prensado/programacion")]
+    public async Task<ActionResult<IEnumerable<object>>> GetPrensadoProgramacion()
+    {
+        var items = await _context.Prensados
+            .Include(p => p.Prensa)
+            .Include(p => p.Turno)
+            .Include(p => p.Producto)
+            .Include(p => p.Operario)
+            .Where(p => !p.IsDeleted && ((int)p.Estado == 0 || (int)p.Estado == 5))
+            .OrderByDescending(p => p.Fecha)
+            .Select(p => new
+            {
+                p.Id,
+                Fecha = p.Fecha,
+                Prensa = p.Prensa.Nombre,
+                Turno = p.Turno.Nombre,
+                Producto = p.Producto != null ? p.Producto.Clave : "",
+                Operador = p.Operario != null ? p.Operario.NombreCompleto : "",
+                Programado = p.Programado
+            })
+            .ToListAsync();
+
+        return Ok(items);
+    }
+
+    [HttpGet("prensado/operacion")]
+    public async Task<ActionResult<IEnumerable<object>>> GetPrensadoOperacion()
+    {
+        var items = await _context.Prensados
+            .Include(p => p.Prensa)
+            .Include(p => p.Turno)
+            .Include(p => p.Producto)
+            .Include(p => p.Operario)
+            .Where(p => !p.IsDeleted && (int)p.Estado != 0 && (int)p.Estado != 5)
+            .OrderByDescending(p => p.Fecha)
+            .Select(p => new
+            {
+                p.Id,
+                Status = p.Estado.ToString(),
+                Prensa = p.Prensa.Nombre,
+                Turno = p.Turno.Nombre,
+                Producto = p.Producto != null ? p.Producto.Clave : "",
+                Operador = p.Operario != null ? p.Operario.NombreCompleto : "",
+                Producido = p.Producido,
+                TiempoInterrupcion = p.TiempoInterrupcionMin,
+                EnCurso = p.EnCurso
+            })
+            .ToListAsync();
+
+        return Ok(items);
+    }
+
+    [HttpGet("prensado/{id}")]
+    public async Task<ActionResult<object>> GetPrensadoDetail(Guid id)
+    {
+        var item = await _context.Prensados
+            .Include(p => p.Prensa)
+            .Include(p => p.Turno)
+            .Include(p => p.Operario)
+            .Include(p => p.Producto)
+            .Include(p => p.Troquel)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (item == null) return NotFound(new { message = "Orden de prensado no encontrada." });
+        return Ok(new
+        {
+            item.Id,
+            IdLegacy = item.PrensadoIdLegacy,
+            Fecha = item.Fecha,
+            Prensa = item.Prensa.Nombre,
+            PrensaId = item.PrensaId,
+            Turno = item.Turno.Nombre,
+            TurnoId = item.TurnoId,
+            Producto = item.Producto.Clave,
+            ProductoId = item.ProductoId,
+            Operador = item.Operario.NombreCompleto,
+            OperadorId = item.OperarioId,
+            Estado = (int)item.Estado,
+            Status = item.Estado.ToString(),
+            LevasUnidadMedida = item.LevasUnidadMedida,
+            LevasKgEntrada = item.LevasKgEntrada,
+            LevasKgSalida = item.LevasKgSalida,
+            LevasGradosEntrada = item.LevasGradosEntrada,
+            LevasGradosSalida = item.LevasGradosSalida,
+            RodillosUnidadMedida = item.RodillosUnidadMedida,
+            RodillosKgEntrada = item.RodillosKgEntrada,
+            RodillosKgSalida = item.RodillosKgSalida,
+            RodillosGradosEntrada = item.RodillosGradosEntrada,
+            RodillosGradosSalida = item.RodillosGradosSalida,
+            TroquelId = item.TroquelId,
+            TroquelNombre = item.Troquel != null ? item.Troquel.Nombre : "",
+            IniciaProceso = item.HoraIniciaProceso,
+            FinProceso = item.HoraFinProceso,
+            ProductoDescripcion = item.Producto.Nombre,
+            Calibre = item.Calibre,
+            Ancho = item.Ancho,
+            Longitud = item.Longitud,
+            VirgenKg = item.KgVirgen,
+            MolidoKg = item.KgMolido,
+            Meta = item.MetaPallets,
+            LoteSilo = item.LoteSilo
+        });
+    }
+
+    [HttpPut("prensado/{id}")]
+    public async Task<IActionResult> UpdatePrensado(Guid id, [FromBody] UpdatePrensadoRequest request)
+    {
+        var entity = await _context.Prensados.FindAsync(id);
+        if (entity == null) return NotFound(new { message = "Orden de prensado no encontrada." });
+
+        entity.Fecha = request.Fecha.Date;
+        entity.Estado = (EstadoPrensado)request.Estado;
+        entity.OperarioId = request.OperarioId;
+        entity.TroquelId = request.TroquelId;
+        entity.LevasUnidadMedida = request.LevasUnidadMedida ?? "Kg";
+        entity.RodillosUnidadMedida = request.RodillosUnidadMedida ?? "Kg";
+        entity.LevasKgEntrada = request.LevasKgEntrada;
+        entity.LevasKgSalida = request.LevasKgSalida;
+        entity.LevasGradosEntrada = request.LevasGradosEntrada;
+        entity.LevasGradosSalida = request.LevasGradosSalida;
+        entity.RodillosKgEntrada = request.RodillosKgEntrada;
+        entity.RodillosKgSalida = request.RodillosKgSalida;
+        entity.RodillosGradosEntrada = request.RodillosGradosEntrada;
+        entity.RodillosGradosSalida = request.RodillosGradosSalida;
+        if (request.IniciaProceso.HasValue) entity.HoraIniciaProceso = request.IniciaProceso.Value;
+        entity.HoraFinProceso = request.FinProceso;
+        
+        entity.Calibre = request.Calibre;
+        entity.Ancho = request.Ancho;
+        entity.Longitud = request.Longitud;
+        entity.KgVirgen = request.VirgenKg;
+        entity.KgMolido = request.MolidoKg;
+        entity.MetaPallets = request.Meta;
+        entity.LoteSilo = request.LoteSilo;
+
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    [HttpDelete("prensado/{id}")]
+    public async Task<IActionResult> DeletePrensado(Guid id)
+    {
+        var entity = await _context.Prensados.FindAsync(id);
+        if (entity == null) return NotFound(new { message = "Orden de prensado no encontrada." });
+
+        entity.IsDeleted = true;
+        entity.DeletedAt = DateTime.UtcNow;
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
     [HttpGet("prensados")]
     public async Task<ActionResult<IEnumerable<Prensado>>> GetPrensados()
         => Ok(await _produccionService.GetPrensadosAsync());
+
+    [HttpGet("carreras")]
+    public async Task<ActionResult<IEnumerable<object>>> GetCarreras()
+    {
+        var items = await _context.Carreras
+            .Include(c => c.Prensado)
+                .ThenInclude(p => p.Prensa)
+            .Include(c => c.Prensado)
+                .ThenInclude(p => p.Turno)
+            .Include(c => c.Prensado)
+                .ThenInclude(p => p.Operario)
+            .OrderByDescending(c => c.FechaRegistro)
+            .Select(c => new
+            {
+                c.Id,
+                c.CarreraNo,
+                c.Estado,
+                c.FechaRegistro,
+                c.FechaValidacion,
+                c.CarreraTroquel,
+                c.PaletTerminado,
+                PrensadoId = c.PrensadoId,
+                PrensaNombre = c.Prensado.Prensa.Nombre,
+                TurnoNombre = c.Prensado.Turno.Nombre,
+                OperarioNombre = c.Prensado.Operario.NombreCompleto
+            })
+            .ToListAsync();
+
+        return Ok(items);
+    }
+
+    [HttpGet("carretes")]
+    public async Task<ActionResult<IEnumerable<object>>> GetCarretes()
+    {
+        var items = await _context.Carretes
+            .Include(c => c.Carrera)
+                .ThenInclude(ca => ca.Prensado)
+                    .ThenInclude(p => p.Producto)
+            .OrderByDescending(c => c.NoSerie)
+            .Select(c => new
+            {
+                c.Id,
+                c.NoSerie,
+                c.NoLinea,
+                c.Estado,
+                c.Molino,
+                c.TerminaPalet,
+                c.PaletSerie,
+                c.Observaciones,
+                CarreraNo = c.Carrera.CarreraNo,
+                ProductoNombre = c.Carrera.Prensado.Producto.Nombre
+            })
+            .ToListAsync();
+
+        return Ok(items);
+    }
+
+    [HttpGet("palets")]
+    public async Task<ActionResult<IEnumerable<object>>> GetPalets()
+    {
+        var items = await _context.Palets
+            .Include(p => p.Producto)
+            .Include(p => p.Operario)
+            .Include(p => p.Prensa)
+            .OrderByDescending(p => p.NoSerie)
+            .Select(p => new
+            {
+                p.Id,
+                p.NoSerie,
+                p.Tipo,
+                p.Estatus,
+                p.Capacidad,
+                p.TotalCarretes,
+                p.HoraInicioEnsamble,
+                p.HoraFinEnsamble,
+                ProductoNombre = p.Producto != null ? p.Producto.Nombre : "---",
+                OperarioNombre = p.Operario != null ? p.Operario.NombreCompleto : "---",
+                PrensaNombre = p.Prensa != null ? p.Prensa.Nombre : "---"
+            })
+            .ToListAsync();
+
+        return Ok(items);
+    }
+
+    [HttpGet("interrupciones-prensado")]
+    public async Task<ActionResult<IEnumerable<object>>> GetInterrupcionesPrensado()
+    {
+        var items = await _context.PrensadoInterrupciones
+            .Include(i => i.Prensado)
+                .ThenInclude(p => p.Prensa)
+            .Include(i => i.Causa)
+            .OrderByDescending(i => i.HoraInicio)
+            .Select(i => new
+            {
+                i.Id,
+                i.PrensadoId,
+                i.HoraInicio,
+                i.HoraFin,
+                i.Concluida,
+                i.Descripcion,
+                DuracionMinutos = i.HoraFin.HasValue ? (double?)(i.HoraFin.Value - i.HoraInicio).TotalMinutes : null,
+                PrensaNombre = i.Prensado.Prensa.Nombre,
+                CausaNombre = i.Causa != null ? i.Causa.Descripcion : "Otras causas"
+            })
+            .ToListAsync();
+
+        return Ok(items);
+    }
 
     [HttpGet("turno-activo")]
     public async Task<IActionResult> GetTurnoActivoAlternativo()
@@ -440,10 +882,16 @@ public class ProduccionController : ControllerBase
     public async Task<ActionResult<TurnosSemanaResponseDto>> GetTurnosSemana([FromQuery] string fechaInicio, [FromQuery] string fechaFin)
     {
         if (string.IsNullOrWhiteSpace(fechaInicio) || string.IsNullOrWhiteSpace(fechaFin))
-            return BadRequest("Se requieren las fechas de inicio y fin.");
+            return BadRequest(new { message = "Se requieren las fechas de inicio y fin." });
 
-        DateTime start = DateTime.Parse(fechaInicio).Date;
-        DateTime end = DateTime.Parse(fechaFin).Date;
+        if (!DateTime.TryParse(fechaInicio, System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None, out var start) ||
+            !DateTime.TryParse(fechaFin, System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None, out var end))
+        {
+            return BadRequest(new { message = "Formato de fecha inválido. Use yyyy-MM-dd." });
+        }
+        start = start.Date; end = end.Date;
         
         var dates = new List<DateTime>();
         for (var dt = start; dt <= end; dt = dt.AddDays(1))
@@ -455,6 +903,10 @@ public class ProduccionController : ControllerBase
         var extrusoras = await _context.Extrusoras.Where(e => !e.IsDeleted).ToListAsync();
         var turnos = await _context.Turnos.Where(t => !t.IsDeleted).ToListAsync();
         var operarios = await _context.Operarios.Where(o => !o.IsDeleted).ToListAsync();
+
+        if (!extrusoras.Any()) return BadRequest(new { message = "No hay extrusoras configuradas." });
+        if (!turnos.Any())     return BadRequest(new { message = "No hay turnos configurados." });
+        if (!operarios.Any())  return BadRequest(new { message = "No hay operarios configurados. Registre al menos un operario antes de programar turnos." });
 
         var existingExtrusiones = await _context.Extrusiones
             .Where(e => e.Fecha >= start && e.Fecha <= end)
@@ -472,15 +924,7 @@ public class ProduccionController : ControllerBase
 
                 if (defaultOpId == Guid.Empty)
                 {
-                    var firstOp = operarios.FirstOrDefault();
-                    if (firstOp != null)
-                    {
-                        defaultOpId = firstOp.Id;
-                    }
-                    else
-                    {
-                        defaultOpId = defaultTenantId;
-                    }
+                    defaultOpId = operarios.First().Id;
                 }
 
                 foreach (var date in dates)
@@ -488,10 +932,13 @@ public class ProduccionController : ControllerBase
                     var exists = existingExtrusiones.Any(e => e.ExtrusoraId == ext.Id && e.TurnoId == trn.Id && e.Fecha.Date == date.Date);
                     if (!exists)
                     {
+                        var extShort = ext.Nombre.Replace(" ", "");
+                        extShort = extShort.Length == 0 ? "EXT" : extShort.Substring(0, Math.Min(5, extShort.Length));
+
                         var newExt = new Extrusion
                         {
                             Id = Guid.NewGuid(),
-                            Codigo = $"EXT-{date:yyyyMMdd}-{trn.Nombre.Replace(" ", "")}-{ext.Nombre.Replace(" ", "").Substring(0, Math.Min(5, ext.Nombre.Length))}",
+                            Codigo = $"EXT-{date:yyyyMMdd}-{trn.Nombre.Replace(" ", "")}-{extShort}",
                             Fecha = date.Date,
                             FechaInicio = date.Date.Add(trn.HoraInicio),
                             FechaFin = date.Date.Add(trn.HoraFin < trn.HoraInicio ? trn.HoraFin.Add(TimeSpan.FromDays(1)) : trn.HoraFin),
@@ -695,6 +1142,23 @@ public record RegistrarConsumoRequest(Guid SiloVirgenId, decimal VirgenKg, Guid?
 public record RechazarBobinaRequest(MotivoMolino Motivo, string? Observaciones);
 public record RecalibrarExtrusionRequest(decimal? Calibre, decimal? Ancho, decimal? Longitud);
 
+public record RegistrarInterrupcionManualRequest(
+    Guid ExtrusionId,
+    Guid CausaId,
+    string? Descripcion,
+    DateTime HoraInicio,
+    DateTime? HoraFin,
+    bool Concluida
+);
+
+public record ActualizarInterrupcionManualRequest(
+    Guid CausaId,
+    string? Descripcion,
+    DateTime HoraInicio,
+    DateTime? HoraFin,
+    bool Concluida
+);
+
 public class TurnosSemanaResponseDto
 {
     public IEnumerable<ResumenItemDto> Resumen { get; set; } = new List<ResumenItemDto>();
@@ -786,5 +1250,31 @@ public record UpdateExtrusionRequest(
     int Estado,
     DateTime? ProcessStart,
     DateTime? ProcessEnd
+);
+
+public record UpdatePrensadoRequest(
+    DateTime Fecha,
+    int Estado,
+    Guid OperarioId,
+    Guid? TroquelId,
+    string? LevasUnidadMedida,
+    string? RodillosUnidadMedida,
+    decimal LevasKgEntrada,
+    decimal LevasKgSalida,
+    decimal LevasGradosEntrada,
+    decimal LevasGradosSalida,
+    decimal RodillosKgEntrada,
+    decimal RodillosKgSalida,
+    decimal RodillosGradosEntrada,
+    decimal RodillosGradosSalida,
+    DateTime? IniciaProceso,
+    DateTime? FinProceso,
+    decimal Calibre,
+    string? Ancho,
+    decimal Longitud,
+    decimal VirgenKg,
+    decimal MolidoKg,
+    int Meta,
+    string? LoteSilo
 );
 

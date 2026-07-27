@@ -112,7 +112,29 @@ public class AuthController : ControllerBase
         return NoContent();
     }
 
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] CreateUserDto dto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        try
+        {
+            if (dto.RoleIds == null || !dto.RoleIds.Any())
+            {
+                var operarioRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Operario");
+                if (operarioRole != null)
+                {
+                    dto.RoleIds = new List<Guid> { operarioRole.Id };
+                }
+            }
 
+            var user = await _applicationIdentityService.CreateUserAsync(dto);
+            return Ok(new { success = true, userId = user.Id });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
+    }
 
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)

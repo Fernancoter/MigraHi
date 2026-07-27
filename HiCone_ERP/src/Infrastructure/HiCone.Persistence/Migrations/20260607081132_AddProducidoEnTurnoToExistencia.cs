@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -11,12 +11,12 @@ namespace HiCone.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // migrationBuilder.AddColumn<string>(
-            //     name: "clave",
-            //     table: "turnos",
-            //     type: "nvarchar(max)",
-            //     nullable: false,
-            //     defaultValue: "");
+            migrationBuilder.AddColumn<string>(
+                name: "clave",
+                table: "turnos",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "color",
@@ -50,24 +50,24 @@ namespace HiCone.Persistence.Migrations
                 type: "nvarchar(max)",
                 nullable: true);
 
-            // migrationBuilder.AddColumn<string>(
-            //     name: "imagen",
-            //     table: "prensas",
-            //     type: "nvarchar(max)",
-            //     nullable: true);
-            // 
-            // migrationBuilder.AddColumn<string>(
-            //     name: "marca",
-            //     table: "prensas",
-            //     type: "nvarchar(max)",
-            //     nullable: true);
-            // 
-            // migrationBuilder.AddColumn<string>(
-            //     name: "numero_prensa",
-            //     table: "prensas",
-            //     type: "nvarchar(max)",
-            //     nullable: false,
-            //     defaultValue: "");
+            migrationBuilder.AddColumn<string>(
+                name: "imagen",
+                table: "prensas",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "marca",
+                table: "prensas",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "numero_prensa",
+                table: "prensas",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "ancho",
@@ -190,18 +190,18 @@ namespace HiCone.Persistence.Migrations
                 nullable: false,
                 defaultValue: "");
 
-            // migrationBuilder.AddColumn<string>(
-            //     name: "imagen",
-            //     table: "extrusoras",
-            //     type: "nvarchar(max)",
-            //     nullable: true);
-            // 
-            // migrationBuilder.AddColumn<string>(
-            //     name: "numero_extrusora",
-            //     table: "extrusoras",
-            //     type: "nvarchar(max)",
-            //     nullable: false,
-            //     defaultValue: "");
+            migrationBuilder.AddColumn<string>(
+                name: "imagen",
+                table: "extrusoras",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "numero_extrusora",
+                table: "extrusoras",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
 
             migrationBuilder.AddColumn<bool>(
                 name: "en_curso",
@@ -381,31 +381,165 @@ namespace HiCone.Persistence.Migrations
                 nullable: false,
                 defaultValue: 0m);
 
-            // Duplicate table creation and index creation commented out
-            // to avoid errors since they already exist in the baseline schema.
+            migrationBuilder.CreateTable(
+                name: "cat_estados_material",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    created_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    updated_at = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    updated_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    is_deleted = table.Column<bool>(type: "bit", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    tenant_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_cat_estados_material", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "cat_tipos_material",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    created_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    updated_at = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    updated_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    is_deleted = table.Column<bool>(type: "bit", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    tenant_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_cat_tipos_material", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "catalogo_claves",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    valor = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    orden = table.Column<int>(type: "int", nullable: false),
+                    created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    created_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    updated_at = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    updated_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    is_deleted = table.Column<bool>(type: "bit", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    tenant_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_catalogo_claves", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "extrusora_operarios",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    extrusora_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    operario_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    turno_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    created_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    updated_at = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    updated_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    is_deleted = table.Column<bool>(type: "bit", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    tenant_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_extrusora_operarios", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_extrusora_operarios_extrusoras_extrusora_id",
+                        column: x => x.extrusora_id,
+                        principalTable: "extrusoras",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_extrusora_operarios_operarios_operario_id",
+                        column: x => x.operario_id,
+                        principalTable: "operarios",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_extrusora_operarios_turnos_turno_id",
+                        column: x => x.turno_id,
+                        principalTable: "turnos",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "silos_produccion",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    capacidad_kg = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    minimo_kg = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    maximo_kg = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    estado_material = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    tipo_material = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    silo_activo = table.Column<bool>(type: "bit", nullable: false),
+                    is_archived = table.Column<bool>(type: "bit", nullable: false),
+                    created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    created_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    updated_at = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    updated_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    is_deleted = table.Column<bool>(type: "bit", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    tenant_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_silos_produccion", x => x.id);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_extrusora_operarios_extrusora_id",
+                table: "extrusora_operarios",
+                column: "extrusora_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_extrusora_operarios_operario_id",
+                table: "extrusora_operarios",
+                column: "operario_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_extrusora_operarios_turno_id",
+                table: "extrusora_operarios",
+                column: "turno_id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            // migrationBuilder.DropTable(
-            //     name: "cat_estados_material");
-            // 
-            // migrationBuilder.DropTable(
-            //     name: "cat_tipos_material");
-            // 
-            // migrationBuilder.DropTable(
-            //     name: "catalogo_claves");
-            // 
-            // migrationBuilder.DropTable(
-            //     name: "extrusora_operarios");
-            // 
-            // migrationBuilder.DropTable(
-            //     name: "silos_produccion");
-            // 
-            // migrationBuilder.DropColumn(
-            //     name: "clave",
-            //     table: "turnos");
+            migrationBuilder.DropTable(
+                name: "cat_estados_material");
+
+            migrationBuilder.DropTable(
+                name: "cat_tipos_material");
+
+            migrationBuilder.DropTable(
+                name: "catalogo_claves");
+
+            migrationBuilder.DropTable(
+                name: "extrusora_operarios");
+
+            migrationBuilder.DropTable(
+                name: "silos_produccion");
+
+            migrationBuilder.DropColumn(
+                name: "clave",
+                table: "turnos");
 
             migrationBuilder.DropColumn(
                 name: "color",
@@ -427,17 +561,17 @@ namespace HiCone.Persistence.Migrations
                 name: "producto_sae",
                 table: "productos");
 
-            // migrationBuilder.DropColumn(
-            //     name: "imagen",
-            //     table: "prensas");
-            // 
-            // migrationBuilder.DropColumn(
-            //     name: "marca",
-            //     table: "prensas");
-            // 
-            // migrationBuilder.DropColumn(
-            //     name: "numero_prensa",
-            //     table: "prensas");
+            migrationBuilder.DropColumn(
+                name: "imagen",
+                table: "prensas");
+
+            migrationBuilder.DropColumn(
+                name: "marca",
+                table: "prensas");
+
+            migrationBuilder.DropColumn(
+                name: "numero_prensa",
+                table: "prensas");
 
             migrationBuilder.DropColumn(
                 name: "ancho",
@@ -511,13 +645,13 @@ namespace HiCone.Persistence.Migrations
                 name: "nombre",
                 table: "operarios");
 
-            // migrationBuilder.DropColumn(
-            //     name: "imagen",
-            //     table: "extrusoras");
-            // 
-            // migrationBuilder.DropColumn(
-            //     name: "numero_extrusora",
-            //     table: "extrusoras");
+            migrationBuilder.DropColumn(
+                name: "imagen",
+                table: "extrusoras");
+
+            migrationBuilder.DropColumn(
+                name: "numero_extrusora",
+                table: "extrusoras");
 
             migrationBuilder.DropColumn(
                 name: "en_curso",

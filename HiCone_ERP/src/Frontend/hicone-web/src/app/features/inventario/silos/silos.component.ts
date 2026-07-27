@@ -12,12 +12,12 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
     <div class="module-page animate-fade-in">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Silo</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Inventarios</span>
             <span class="sep">&rsaquo;</span>
             <span class="active">Silos</span>
           </nav>
-          <h1 class="premium-title">Silo</h1>
         </div>
       </div>
       

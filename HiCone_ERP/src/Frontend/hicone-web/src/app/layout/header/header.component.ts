@@ -9,6 +9,7 @@ interface ModuleItem {
   title: string;
   icon: string;
   route: string;
+  queryParams?: any;
 }
 
 @Component({
@@ -42,6 +43,7 @@ interface ModuleItem {
             <div class="megamenu-grid-modern">
               <a *ngFor="let m of modules" 
                  [routerLink]="m.route" 
+                 [queryParams]="m.queryParams || {}"
                  class="module-tile-premium"
                  (click)="selectModule(m)">
                 <div class="tile-icon-box">{{ m.icon }}</div>
@@ -191,7 +193,7 @@ export class HeaderComponent {
   modules: ModuleItem[] = [
     { title: 'Inventario', icon: '🏭', route: '/dashboard' },
     { title: 'Extrusión', icon: '🏗️', route: '/produccion/extrusion/inicio' },
-    { title: 'Prensado', icon: '⚙️', route: '/produccion' },
+    { title: 'Prensado', icon: '⚙️', route: '/produccion/prensado/inicio' },
     { title: 'Embarques', icon: '🚚', route: '/embarques' },
     { title: 'Calidad', icon: '✅', route: '/calidad' },
     { title: 'Seguridad', icon: '🛡️', route: '/seguridad' },

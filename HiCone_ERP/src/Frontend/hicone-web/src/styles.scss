@@ -121,30 +121,32 @@ h1, h2, h3, h4 {
 
 .title-section {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
 }
 
-.premium-title {
-  font-size: 1.875rem;
-  font-weight: 800;
-  color: #1e293b; /* Dark neutral color instead of bright green */
-  margin: 0 0 0.25rem 0;
+.premium-title, .legacy-title {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: #4caf50 !important; /* Green title as shown in QA Image 2 */
+  margin: 0 0 0.2rem 0;
 }
 
-.breadcrumb-modern {
+.breadcrumb-modern, .breadcrumb-legacy {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: #94a3b8; /* Muted gray */
-  font-size: 0.875rem;
-  font-weight: 500;
+  gap: 0.35rem;
+  color: #757575;
+  font-size: 0.85rem;
+  font-weight: 400;
+  margin-top: 0.15rem;
 }
-.breadcrumb-modern .active {
-  color: #1e293b; /* Dark text for active page */
-  font-weight: 600;
+.breadcrumb-modern .active, .breadcrumb-legacy .active {
+  color: #9e9e9e;
 }
-.breadcrumb-modern .sep {
-  color: #cbd5e1;
+.breadcrumb-modern .sep, .breadcrumb-legacy .sep, .sep {
+  color: #4caf50 !important; /* Green arrows/separators */
+  font-weight: bold !important;
+  font-size: 0.9rem;
 }
 .breadcrumb-modern a {
   color: #10b981;
@@ -472,6 +474,303 @@ h1, h2, h3, h4 {
   color: #1e293b;
 }
 
+/* Filter Button with Funnel Icon & Dropdown (Match QA Screenshot) */
+.btn-filter-funnel {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  color: #334155;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+.btn-filter-funnel:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.filter-popover-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  min-width: 180px;
+  padding: 6px 0;
+}
+
+.filter-popover-item {
+  padding: 8px 14px;
+  font-size: 0.83rem;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s;
+}
+.filter-popover-item:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+.filter-popover-item .icon {
+  font-size: 0.9rem;
+  color: #475569;
+}
+
 @keyframes fadeInDropdown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 .animate-scale-in { animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* =========================================================================
+   GLOBAL MASTER TABLE & FORM CARD DESIGN SYSTEM (Professional ERP Theme)
+   ========================================================================= */
+
+/* Main Module Layout */
+.module-page, .page-container {
+  padding: 1.5rem 2.5rem;
+  background: #f8fafc;
+  min-height: calc(100vh - 64px);
+}
+
+/* Master Cards & Form Containers */
+.block-card, .card-premium {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+.block-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.block-header {
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border-bottom: 1px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.block-header .green-square-icon {
+  width: 14px;
+  height: 14px;
+  background: #4caf50;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+}
+.block-header .block-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #1e293b;
+  letter-spacing: 0.01em;
+}
+
+.block-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Master Form Grid Layout */
+.form-container-legacy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 1rem;
+}
+
+.form-grid-2cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.form-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form-label-gx {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.input-gx, .select-gx {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  outline: none;
+  font-size: 0.88rem;
+  color: #1e293b;
+  background: #ffffff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.input-gx:focus, .select-gx:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+}
+
+/* Master Tables (GX & Subtables) */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.gx-table, .gx-subtable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  color: #1e293b;
+}
+
+.gx-table th, .gx-subtable th {
+  background: #f1f5f9;
+  border-bottom: 2px solid #cbd5e1;
+  border-right: 1px solid #e2e8f0;
+  padding: 0.75rem 1rem;
+  color: #334155;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.gx-table th:last-child, .gx-subtable th:last-child {
+  border-right: none;
+}
+
+.gx-table td, .gx-subtable td {
+  border-bottom: 1px solid #e2e8f0;
+  border-right: 1px solid #f1f5f9;
+  padding: 0.65rem 1rem;
+  vertical-align: middle;
+}
+.gx-table td:last-child, .gx-subtable td:last-child {
+  border-right: none;
+}
+
+.gx-table tr:nth-child(even), .gx-subtable tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+.gx-table tr:hover td, .gx-subtable tr:hover td {
+  background-color: #f0fdf4; /* Subtle green highlight on row hover */
+}
+
+.input-subtable {
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 0.45rem 0.65rem;
+  outline: none;
+  font-size: 0.85rem;
+  width: 100%;
+  box-sizing: border-box;
+  background: #ffffff;
+  transition: border-color 0.2s;
+}
+.input-subtable:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.12);
+}
+
+.subtable-footer {
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border-top: 1px solid #cbd5e1;
+}
+.link-nuevo-fila {
+  color: #2e7d32;
+  font-size: 0.83rem;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.link-nuevo-fila:hover {
+  color: #1b5e20;
+}
+
+/* Master Action Buttons */
+.btn-primary-green-solid {
+  background: #4caf50;
+  color: #ffffff;
+  border: 1px solid #43a047;
+  padding: 0.55rem 1.4rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.25);
+  transition: all 0.2s ease;
+}
+.btn-primary-green-solid:hover {
+  background: #43a047;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.35);
+}
+
+.btn-secondary-grey {
+  background: #64748b;
+  color: #ffffff;
+  border: 1px solid #475569;
+  padding: 0.55rem 1.4rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(100, 116, 139, 0.2);
+  transition: all 0.2s ease;
+}
+.btn-secondary-grey:hover {
+  background: #475569;
+  transform: translateY(-1px);
+}
+
+/* Icon Buttons in tables */
+.btn-action-icon {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 3px 6px;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-action-icon.edit:hover {
+  background: #e8f5e9;
+  border-color: #4caf50;
+  color: #2e7d32;
+}
+.btn-action-icon.delete:hover {
+  background: #ffebee;
+  border-color: #ef5350;
+  color: #c62828;
+}

@@ -1,42 +1,44 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProduccionService, Extrusora, Producto, Operario } from '../../../core/services/produccion';
+import { ProduccionService, Prensa, Producto, Operario } from '../../../core/services/produccion';
 import { FormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 @Component({
-  selector: 'app-turnos-semana',
+  selector: 'app-turnos-semana-prensado',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
     <div class="module-page animate-fade-in">
+      <!-- Cabecera -->
       <div class="page-header-premium">
         <div class="title-section">
           <nav class="breadcrumb-modern">
-            <span class="root">Extrusión</span>
+            <span class="root">Prensado</span>
             <span class="sep">&rsaquo;</span>
             <span class="active">Turnos Por Semana</span>
           </nav>
-          <h1 class="premium-title">Turnos Por Semana Extrusoras</h1>
+          <h1 class="premium-title">Turnos Por Semana Prensas</h1>
         </div>
       </div>
 
+      <!-- Contenedor Principal -->
       <div class="content-card glass shadow-sm">
         <div class="card-header-bar">
           <span class="green-flag-icon"></span>
-          <span class="header-title">Extrusoras</span>
+          <span class="header-title">Prensas</span>
         </div>
         
         <div class="inner-padding">
-          <!-- Alerta de inicio de semana -->
+          <!-- Alerta verde de inicio de semana -->
           <div class="info-alert-box-legacy">
             <span class="legacy-alert-icon">🟢</span>
             <span class="alert-text">Seleccione el Inicio de semana para generar la plantilla de turnos.</span>
           </div>
 
-          <!-- Tabla Azul de Resumen Pivot -->
+          <!-- Tabla Azul de Resumen Pivot (Prensado) -->
           <div class="resumen-container-legacy">
             <div class="resumen-table-header">
               <span class="drag-title-text">Arrastre los filtros aquí</span>
@@ -65,19 +67,19 @@ import autoTable from 'jspdf-autotable';
                     
                     <label class="popover-checkbox-row">
                       <input type="checkbox" [(ngModel)]="visibleCols.productoId">
-                      <span>Extrusion Producto Id</span>
+                      <span>Prensado Producto Id</span>
                     </label>
                     <label class="popover-checkbox-row">
                       <input type="checkbox" [(ngModel)]="visibleCols.producto">
                       <span>Producto</span>
                     </label>
                     <label class="popover-checkbox-row">
-                      <input type="checkbox" [(ngModel)]="visibleCols.extrusoraId">
-                      <span>Extrusion Extrusora Id</span>
+                      <input type="checkbox" [(ngModel)]="visibleCols.prensaId">
+                      <span>Prensado Prensa Id</span>
                     </label>
                     <label class="popover-checkbox-row">
-                      <input type="checkbox" [(ngModel)]="visibleCols.extrusora">
-                      <span>Extrusora</span>
+                      <input type="checkbox" [(ngModel)]="visibleCols.prensa">
+                      <span>Prensa</span>
                     </label>
                     <label class="popover-checkbox-row">
                       <input type="checkbox" [(ngModel)]="visibleCols.programado">
@@ -85,7 +87,7 @@ import autoTable from 'jspdf-autotable';
                     </label>
                     <label class="popover-checkbox-row">
                       <input type="checkbox" [(ngModel)]="visibleCols.fabricado">
-                      <span>Fabricado</span>
+                      <span>Producido</span>
                     </label>
                     <label class="popover-checkbox-row">
                       <input type="checkbox" [(ngModel)]="visibleCols.diferencia">
@@ -101,54 +103,50 @@ import autoTable from 'jspdf-autotable';
               <table class="resumen-grid-table">
                 <thead>
                   <tr>
-                    <th *ngIf="visibleCols.productoId">Extrusion Producto Id</th>
+                    <th *ngIf="visibleCols.productoId">Prensado Producto Id</th>
                     <th *ngIf="visibleCols.producto">Producto</th>
-                    <th *ngIf="visibleCols.extrusoraId">Extrusion Extrusora Id</th>
-                    <th *ngIf="visibleCols.extrusora">Extrusora</th>
+                    <th *ngIf="visibleCols.prensaId">Prensado Prensa Id</th>
+                    <th *ngIf="visibleCols.prensa">Prensa</th>
                     <th *ngIf="visibleCols.programado" class="text-right">Programado</th>
-                    <th *ngIf="visibleCols.fabricado" class="text-right">Fabricado</th>
+                    <th *ngIf="visibleCols.fabricado" class="text-right">Producido</th>
                     <th *ngIf="visibleCols.diferencia" class="text-right">Diferencia</th>
                   </tr>
                 </thead>
                 <tbody>
                   <ng-container *ngFor="let group of groupedResumen">
                     <tr *ngFor="let row of group.rows; let first = first">
-                      <!-- Producto grouping row -->
                       <td *ngIf="visibleCols.productoId">{{ row.productoId }}</td>
                       <td *ngIf="visibleCols.producto && first" [attr.rowspan]="group.rows.length" class="grouped-cell font-bold">
                         <span class="collapse-icon">−</span> {{ group.producto }}
                       </td>
-                      <td *ngIf="visibleCols.extrusoraId">{{ row.extrusoraId }}</td>
-                      <td *ngIf="visibleCols.extrusora">{{ row.extrusora }}</td>
+                      <td *ngIf="visibleCols.prensaId">{{ row.prensaId || row.extrusoraId }}</td>
+                      <td *ngIf="visibleCols.prensa">{{ row.prensa || row.extrusora }}</td>
                       <td *ngIf="visibleCols.programado" class="text-right">{{ row.programado | number }}</td>
                       <td *ngIf="visibleCols.fabricado" class="text-right">{{ row.fabricado | number }}</td>
                       <td *ngIf="visibleCols.diferencia" class="text-right">{{ row.diferencia | number }}</td>
                     </tr>
-                    <!-- Subtotal row for product group -->
                     <tr class="subtotal-row">
                       <td *ngIf="visibleCols.productoId"></td>
                       <td *ngIf="visibleCols.producto" class="font-bold">Total para {{ group.producto }}</td>
-                      <td *ngIf="visibleCols.extrusoraId"></td>
-                      <td *ngIf="visibleCols.extrusora"></td>
+                      <td *ngIf="visibleCols.prensaId"></td>
+                      <td *ngIf="visibleCols.prensa"></td>
                       <td *ngIf="visibleCols.programado" class="text-right font-bold">{{ group.subtotal.programado | number }}</td>
                       <td *ngIf="visibleCols.fabricado" class="text-right font-bold">{{ group.subtotal.fabricado | number }}</td>
                       <td *ngIf="visibleCols.diferencia" class="text-right font-bold">{{ group.subtotal.diferencia | number }}</td>
                     </tr>
                   </ng-container>
 
-                  <!-- Empty state for resumen table -->
                   <tr *ngIf="resumen.length === 0">
                     <td [attr.colspan]="getColspanCount()" class="text-center text-muted py-4">
                       No hay datos de resumen cargados. Especifique fechas y haga clic en PROGRAMAR O CONSULTAR.
                     </td>
                   </tr>
 
-                  <!-- Grand total row -->
                   <tr class="grand-total-row" *ngIf="resumen.length > 0">
                     <td *ngIf="visibleCols.productoId"></td>
                     <td *ngIf="visibleCols.producto" class="font-bold">TOTAL</td>
-                    <td *ngIf="visibleCols.extrusoraId"></td>
-                    <td *ngIf="visibleCols.extrusora"></td>
+                    <td *ngIf="visibleCols.prensaId"></td>
+                    <td *ngIf="visibleCols.prensa"></td>
                     <td *ngIf="visibleCols.programado" class="text-right font-bold">{{ totalResumen.programado | number }}</td>
                     <td *ngIf="visibleCols.fabricado" class="text-right font-bold">{{ totalResumen.fabricado | number }}</td>
                     <td *ngIf="visibleCols.diferencia" class="text-right font-bold">{{ totalResumen.diferencia | number }}</td>
@@ -178,22 +176,27 @@ import autoTable from 'jspdf-autotable';
             {{ loading ? 'CARGANDO...' : 'PROGRAMAR O CONSULTAR' }}
           </button>
 
-          <!-- Tabs de Extrusoras -->
+          <!-- Banner de éxito al guardar -->
+          <div *ngIf="mensajeExito" class="success-alert-banner animate-fade-in">
+            ✓ {{ mensajeExito }}
+          </div>
+
+          <!-- Tabs de Prensas -->
           <div class="tabs-container-legacy">
             <div class="tabs-header-legacy">
-              <button *ngFor="let ext of extrusoras; let i = index" 
+              <button *ngFor="let prn of prensas; let i = index" 
                       class="tab-link-legacy" 
                       [class.active]="selectedTabIndex === i"
                       (click)="selectedTabIndex = i">
-                {{ ext.nombre }}
+                {{ prn.prensaNombre || prn.nombre }}
               </button>
             </div>
+
             <div class="tab-body-legacy">
-              <!-- Si hay extrusoras cargadas -->
-              <div class="tab-pane-content" *ngIf="extrusorasData.length > 0 && selectedTabIndex < extrusorasData.length">
-                <!-- Se despliegan los turnos de la extrusora seleccionada -->
+              <!-- Se despliegan los turnos de la prensa seleccionada -->
+              <div class="tab-pane-content" *ngIf="prensasData.length > 0 && selectedTabIndex < prensasData.length">
                 <div class="shift-cards-container">
-                  <div class="shift-card" *ngFor="let shift of extrusorasData[selectedTabIndex].turnos">
+                  <div class="shift-card" *ngFor="let shift of prensasData[selectedTabIndex].turnos">
                     <div class="shift-card-header">
                       <span class="green-flag-icon"></span>
                       <h4>{{ shift.turnoNombre }}</h4>
@@ -204,12 +207,11 @@ import autoTable from 'jspdf-autotable';
                         <table class="shift-details-table">
                           <thead>
                             <tr>
-                              <th>Extrusión ID</th>
+                              <th>Prensado ID</th>
                               <th>Estado</th>
                               <th>Fecha</th>
-                              <th>Hora</th>
                               <th>Día</th>
-                              <th style="min-width: 180px;">Producto</th>
+                              <th style="min-width: 190px;">Producto</th>
                               <th style="width: 100px;" class="text-right">Plan</th>
                               <th class="text-right">Producido</th>
                               <th style="min-width: 220px;">Operador</th>
@@ -217,22 +219,39 @@ import autoTable from 'jspdf-autotable';
                           </thead>
                           <tbody>
                             <tr *ngFor="let dia of shift.dias" [ngClass]="{'row-disabled': dia.estado !== 'Programada'}">
-                              <td>{{ dia.extrusionIdLegacy }}</td>
+                              <td>{{ dia.prensadoIdLegacy || dia.extrusionIdLegacy }}</td>
                               <td>
                                 <span class="badge-status" [ngClass]="getStatusClass(dia.estado)">
                                   {{ getEstadoLabel(dia.estado) }}
                                 </span>
                               </td>
-                              <td>{{ dia.fecha | date:'dd/MM/yy' }}</td>
-                              <td>{{ dia.hora }}</td>
-                              <td>{{ dia.dia }}</td>
+                              <td>{{ dia.fecha | date:'dd/MM/yy HH:mm' }}</td>
+                              <td>{{ dia.dia | titlecase }}</td>
                               
-                              <!-- Producto Dropdown / Text -->
-                              <td>
-                                <select *ngIf="dia.estado === 'Programada'" [(ngModel)]="dia.productoId" class="table-select-legacy">
-                                  <option value="" disabled>-- Seleccione Producto --</option>
-                                  <option *ngFor="let p of catalogoProductos" [value]="p.id">{{ p.nombre }}</option>
-                                </select>
+                              <!-- Desplegable con Buscador de Producto (Imágenes 3 y 4) -->
+                              <td class="cell-dropdown-relative">
+                                <div *ngIf="dia.estado === 'Programada'" class="custom-combobox" (click)="$event.stopPropagation()">
+                                  <div class="combobox-selected" (click)="toggleDropdown(dia, 'producto')">
+                                    <span>{{ getProductoDisplay(dia.productoId) }}</span>
+                                    <span class="arrow-icon">▼</span>
+                                  </div>
+                                  <div class="combobox-menu animate-slide-up" *ngIf="activeDropdown === dia.prensadoId + '_producto'">
+                                    <div class="combobox-search-box">
+                                      <input type="text" placeholder="🔍 Buscar clave de producto..." [(ngModel)]="searchProductoText" (click)="$event.stopPropagation()" class="search-input-inner">
+                                    </div>
+                                    <div class="combobox-options-list">
+                                      <div *ngFor="let p of getFilteredProductos()" 
+                                           class="combobox-option" 
+                                           [class.selected]="p.id === dia.productoId"
+                                           (click)="selectProducto(dia, p)">
+                                        {{ p.codigo || p.nombre }}
+                                      </div>
+                                      <div *ngIf="getFilteredProductos().length === 0" class="combobox-empty">
+                                        No hay coincidencias
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                                 <span *ngIf="dia.estado !== 'Programada'" class="read-only-text font-bold">{{ dia.productoNombre }}</span>
                               </td>
 
@@ -245,12 +264,30 @@ import autoTable from 'jspdf-autotable';
                               <!-- Producido (Read only) -->
                               <td class="text-right">{{ dia.producido | number }}</td>
 
-                              <!-- Operador Dropdown / Text -->
-                              <td>
-                                <select *ngIf="dia.estado === 'Programada'" [(ngModel)]="dia.operarioId" class="table-select-legacy">
-                                  <option value="" disabled>-- Seleccione Operario --</option>
-                                  <option *ngFor="let op of catalogoOperarios" [value]="op.id">{{ op.nombreCompleto | uppercase }}</option>
-                                </select>
+                              <!-- Desplegable con Buscador de Operador (Imagen 3) -->
+                              <td class="cell-dropdown-relative">
+                                <div *ngIf="dia.estado === 'Programada'" class="custom-combobox" (click)="$event.stopPropagation()">
+                                  <div class="combobox-selected" (click)="toggleDropdown(dia, 'operador')">
+                                    <span>{{ getOperarioDisplay(dia.operarioId) }}</span>
+                                    <span class="arrow-icon">▼</span>
+                                  </div>
+                                  <div class="combobox-menu animate-slide-up" *ngIf="activeDropdown === dia.prensadoId + '_operador'">
+                                    <div class="combobox-search-box">
+                                      <input type="text" placeholder="🔍 Buscar operador..." [(ngModel)]="searchOperadorText" (click)="$event.stopPropagation()" class="search-input-inner">
+                                    </div>
+                                    <div class="combobox-options-list">
+                                      <div *ngFor="let op of getFilteredOperarios()" 
+                                           class="combobox-option" 
+                                           [class.selected]="op.id === dia.operarioId"
+                                           (click)="selectOperario(dia, op)">
+                                        {{ op.nombreCompleto | uppercase }}
+                                      </div>
+                                      <div *ngIf="getFilteredOperarios().length === 0" class="combobox-empty">
+                                        No hay coincidencias
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                                 <span *ngIf="dia.estado !== 'Programada'" class="read-only-text">{{ dia.operarioNombre | uppercase }}</span>
                               </td>
                             </tr>
@@ -266,8 +303,8 @@ import autoTable from 'jspdf-autotable';
                 </div>
               </div>
 
-              <!-- Empty state si no se ha consultado -->
-              <div *ngIf="extrusorasData.length === 0" class="tab-pane-content text-center py-8">
+              <!-- Empty state si no hay datos -->
+              <div *ngIf="prensasData.length === 0" class="tab-pane-content text-center py-8">
                 <p class="empty-state-msg">No hay registros de programación cargados para el rango de fechas seleccionado.</p>
               </div>
             </div>
@@ -278,10 +315,10 @@ import autoTable from 'jspdf-autotable';
   `,
   styles: [`
     .module-page { padding: 3rem; background: #f8fafc; min-height: 100%; font-family: 'Outfit', sans-serif; }
-    .breadcrumb { font-size: 0.8rem; color: #64748b; margin-bottom: 0.5rem; font-weight: 500; }
-    .page-title { font-size: 1.75rem; font-weight: 800; color: #166534; margin: 0 0 1.5rem 0; }
+    .breadcrumb-modern { font-size: 0.8rem; color: #64748b; margin-bottom: 0.5rem; font-weight: 500; }
+    .premium-title { font-size: 1.75rem; font-weight: 800; color: #166534; margin: 0 0 1.5rem 0; }
 
-    .content-card { background: white; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; }
+    .content-card { background: white; border: 1px solid #cbd5e1; border-radius: 8px; overflow: visible; }
     
     .card-header-bar { 
       background: #f8fafc; 
@@ -298,11 +335,7 @@ import autoTable from 'jspdf-autotable';
       clip-path: polygon(0% 0%, 100% 0%, 75% 50%, 100% 100%, 0% 100%);
       display: inline-block;
     }
-    .header-title {
-      font-weight: 700; 
-      color: #2e7d32;
-      font-size: 0.95rem;
-    }
+    .header-title { font-weight: 700; color: #2e7d32; font-size: 0.95rem; }
     
     .inner-padding { padding: 1.5rem; }
 
@@ -318,6 +351,18 @@ import autoTable from 'jspdf-autotable';
     }
     .legacy-alert-icon { font-size: 0.9rem; }
     .alert-text { font-size: 0.85rem; color: #334155; font-weight: 600; }
+
+    .success-alert-banner {
+      background-color: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+      padding: 0.75rem 1.25rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
 
     /* Pivot Resumen Table Layout */
     .resumen-container-legacy {
@@ -336,26 +381,11 @@ import autoTable from 'jspdf-autotable';
       border-top-left-radius: 4px;
       border-top-right-radius: 4px;
     }
-    .drag-title-text {
-      font-size: 0.75rem;
-      color: #37474f;
-      font-weight: 700;
-    }
-    .options-menu-container {
-      position: relative;
-    }
-    .btn-hamburger {
-      background: transparent;
-      border: none;
-      font-size: 1.1rem;
-      color: #37474f;
-      cursor: pointer;
-      padding: 0.2rem 0.5rem;
-    }
-    .btn-hamburger:hover {
-      background: rgba(0,0,0,0.1);
-      border-radius: 4px;
-    }
+    .drag-title-text { font-size: 0.75rem; color: #37474f; font-weight: 700; }
+    .options-menu-container { position: relative; }
+    .btn-hamburger { background: transparent; border: none; font-size: 1.1rem; color: #37474f; cursor: pointer; padding: 0.2rem 0.5rem; }
+    .btn-hamburger:hover { background: rgba(0,0,0,0.1); border-radius: 4px; }
+
     .opciones-popover {
       position: absolute;
       top: 100%;
@@ -383,13 +413,7 @@ import autoTable from 'jspdf-autotable';
       border-radius: 4px 4px 0 0;
       margin: -0.5rem -0.5rem 0.25rem -0.5rem;
     }
-    .btn-popover-close {
-      background: transparent;
-      border: none;
-      color: white;
-      font-size: 1.1rem;
-      cursor: pointer;
-    }
+    .btn-popover-close { background: transparent; border: none; color: white; font-size: 1.1rem; cursor: pointer; }
     .btn-export-option {
       background: transparent;
       border: none;
@@ -404,43 +428,14 @@ import autoTable from 'jspdf-autotable';
       gap: 0.5rem;
       border-radius: 4px;
     }
-    .btn-export-option:hover {
-      background: #f1f5f9;
-    }
-    .popover-divider {
-      height: 1px;
-      background: #e2e8f0;
-      margin: 0.25rem 0;
-    }
-    .popover-section-title {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #64748b;
-      padding: 0.25rem 0.75rem;
-    }
-    .popover-checkbox-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.35rem 0.75rem;
-      cursor: pointer;
-      font-size: 0.8rem;
-      color: #334155;
-    }
-    .popover-checkbox-row:hover {
-      background: #f8fafc;
-    }
-    .popover-checkbox-row input {
-      cursor: pointer;
-    }
+    .btn-export-option:hover { background: #f1f5f9; }
+    .popover-divider { height: 1px; background: #e2e8f0; margin: 0.25rem 0; }
+    .popover-section-title { font-size: 0.75rem; font-weight: 700; color: #64748b; padding: 0.25rem 0.75rem; }
+    .popover-checkbox-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.75rem; cursor: pointer; font-size: 0.8rem; color: #334155; }
+    .popover-checkbox-row:hover { background: #f8fafc; }
 
-    .table-scroll-resumen {
-      overflow-x: auto;
-    }
-    .resumen-grid-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    .table-scroll-resumen { overflow-x: auto; }
+    .resumen-grid-table { width: 100%; border-collapse: collapse; }
     .resumen-grid-table th {
       background: #1e3f66;
       color: white;
@@ -460,51 +455,16 @@ import autoTable from 'jspdf-autotable';
       border-right: 1px solid #e2e8f0;
       white-space: nowrap;
     }
-    .grouped-cell {
-      background: #f8fafc !important;
-      vertical-align: middle;
-    }
-    .collapse-icon {
-      color: #1e3f66;
-      font-weight: bold;
-      margin-right: 0.25rem;
-    }
-    .subtotal-row td {
-      background: #eceff1;
-      font-weight: bold;
-      color: #37474f;
-    }
-    .grand-total-row td {
-      background: #cfd8dc;
-      font-weight: bold;
-      color: #263238;
-      border-bottom: 2px solid #90a4ae;
-    }
+    .grouped-cell { background: #f8fafc !important; vertical-align: middle; }
+    .collapse-icon { color: #1e3f66; font-weight: bold; margin-right: 0.25rem; }
+    .subtotal-row td { background: #eceff1; font-weight: bold; color: #37474f; }
+    .grand-total-row td { background: #cfd8dc; font-weight: bold; color: #263238; border-bottom: 2px solid #90a4ae; }
 
-    .date-controls-grid { 
-      display: grid; 
-      grid-template-columns: repeat(2, 1fr); 
-      gap: 1.5rem; 
-      max-width: 600px; 
-      margin-bottom: 1.5rem; 
-    }
+    .date-controls-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; max-width: 600px; margin-bottom: 1.5rem; }
     .control-group { display: flex; flex-direction: column; gap: 0.35rem; }
     .control-label { font-size: 0.8rem; font-weight: 700; color: #334155; }
-    
-    .input-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-    .form-input-legacy { 
-      width: 100%;
-      border: 1px solid #cbd5e1; 
-      border-radius: 4px; 
-      padding: 0.5rem; 
-      font-size: 0.85rem; 
-      outline: none; 
-      font-family: inherit;
-    }
+    .input-wrapper { position: relative; display: flex; align-items: center; }
+    .form-input-legacy { width: 100%; border: 1px solid #cbd5e1; border-radius: 4px; padding: 0.5rem; font-size: 0.85rem; outline: none; font-family: inherit; }
 
     .btn-legacy-submit { 
       background: #4caf50; 
@@ -521,18 +481,8 @@ import autoTable from 'jspdf-autotable';
     .btn-legacy-submit:hover:not([disabled]) { background: #43a047; }
     .btn-legacy-submit[disabled] { opacity: 0.7; cursor: not-allowed; }
 
-    .tabs-container-legacy { 
-      margin-top: 2rem; 
-      border: 1px solid #cbd5e1; 
-      border-radius: 4px; 
-      overflow: hidden; 
-    }
-    .tabs-header-legacy { 
-      display: flex; 
-      background: #f8fafc; 
-      border-bottom: 1px solid #cbd5e1; 
-      overflow-x: auto;
-    }
+    .tabs-container-legacy { margin-top: 2rem; border: 1px solid #cbd5e1; border-radius: 4px; overflow: hidden; }
+    .tabs-header-legacy { display: flex; background: #f8fafc; border-bottom: 1px solid #cbd5e1; overflow-x: auto; }
     .tab-link-legacy { 
       background: transparent; 
       border: none; 
@@ -545,71 +495,20 @@ import autoTable from 'jspdf-autotable';
       white-space: nowrap;
     }
     .tab-link-legacy.active { color: #2e7d32; }
-    .tab-link-legacy.active::after { 
-      content: ''; 
-      position: absolute; 
-      bottom: -1px; 
-      left: 0; 
-      width: 100%; 
-      height: 3px; 
-      background: #2e7d32; 
-    }
+    .tab-link-legacy.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 3px; background: #2e7d32; }
     
     .tab-body-legacy { padding: 1.5rem; background: white; }
-    
-    /* Shift cards styles (shift panels) */
-    .shift-cards-container {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
-    .shift-card {
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-    .shift-card-header {
-      background: #f8fafc;
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid #cbd5e1;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .shift-card-header h4 {
-      margin: 0;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #334155;
-    }
-    .shift-card-body {
-      padding: 1.25rem;
-    }
-    .table-scroll { overflow-x: auto; }
-    .shift-details-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
-    .shift-details-table th {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #475569;
-      padding: 0.6rem 0.75rem;
-      border-bottom: 2px solid #e2e8f0;
-      white-space: nowrap;
-    }
-    .shift-details-table td {
-      padding: 0.5rem 0.75rem;
-      border-bottom: 1px solid #f1f5f9;
-      font-size: 0.85rem;
-      color: #334155;
-      vertical-align: middle;
-      white-space: nowrap;
-    }
-    .row-disabled {
-      background-color: #fafafa;
-    }
+    .shift-cards-container { display: flex; flex-direction: column; gap: 2rem; }
+    .shift-card { border: 1px solid #cbd5e1; border-radius: 6px; overflow: visible; }
+    .shift-card-header { background: #f8fafc; padding: 0.75rem 1rem; border-bottom: 1px solid #cbd5e1; display: flex; align-items: center; gap: 0.5rem; }
+    .shift-card-header h4 { margin: 0; font-size: 0.95rem; font-weight: 700; color: #334155; }
+    .shift-card-body { padding: 1.25rem; }
+    .table-scroll { overflow-x: auto; overflow-y: visible; }
+    .shift-details-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .shift-details-table th { font-size: 0.75rem; font-weight: 700; color: #475569; padding: 0.6rem 0.75rem; border-bottom: 2px solid #e2e8f0; white-space: nowrap; }
+    .shift-details-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; color: #334155; vertical-align: middle; white-space: nowrap; }
+    .row-disabled { background-color: #fafafa; }
+
     .badge-status {
       padding: 0.2rem 0.5rem;
       border-radius: 4px;
@@ -625,40 +524,66 @@ import autoTable from 'jspdf-autotable';
     .badge-status.programada { background-color: #1976d2; }
     .badge-status.proceso { background-color: #f57c00; }
     
-    .table-select-legacy {
-      padding: 0.3rem 0.5rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      background: white;
-      font-family: inherit;
-      outline: none;
-      width: 100%;
-    }
-    .table-select-legacy:focus {
-      border-color: #4caf50;
-    }
-    .table-input-legacy {
-      padding: 0.3rem 0.5rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      font-family: inherit;
-      outline: none;
-    }
-    .table-input-legacy:focus {
-      border-color: #4caf50;
-    }
-    .read-only-text {
-      display: inline-block;
-      font-size: 0.85rem;
-    }
+    .table-input-legacy { padding: 0.3rem 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8rem; font-family: inherit; outline: none; }
+    .table-input-legacy:focus { border-color: #4caf50; }
+    .read-only-text { display: inline-block; font-size: 0.85rem; }
 
-    .shift-card-actions {
+    /* Estilos de Desplegables con Buscador (Imágenes 3 y 4) */
+    .cell-dropdown-relative { position: relative; }
+    .custom-combobox { position: relative; width: 100%; cursor: pointer; }
+    .combobox-selected {
       display: flex;
-      justify-content: flex-start;
-      margin-top: 1rem;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.35rem 0.6rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      background: white;
+      font-size: 0.8rem;
+      color: #334155;
+      font-weight: 600;
     }
+    .combobox-selected:hover { border-color: #4caf50; }
+    .arrow-icon { font-size: 0.65rem; color: #64748b; margin-left: 0.5rem; }
+
+    .combobox-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      min-width: 220px;
+      background: white;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      z-index: 200;
+      border-radius: 4px;
+      margin-top: 2px;
+      overflow: hidden;
+    }
+    .combobox-search-box { padding: 0.4rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+    .search-input-inner {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      padding: 0.35rem 0.5rem;
+      font-size: 0.78rem;
+      outline: none;
+      font-family: inherit;
+    }
+    .search-input-inner:focus { border-color: #4caf50; }
+    .combobox-options-list { max-height: 180px; overflow-y: auto; }
+    .combobox-option {
+      padding: 0.45rem 0.65rem;
+      font-size: 0.8rem;
+      color: #334155;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .combobox-option:hover { background: #f0fdf4; color: #166534; font-weight: 600; }
+    .combobox-option.selected { background: #dcfce7; color: #15803d; font-weight: 700; }
+    .combobox-empty { padding: 0.5rem; font-size: 0.75rem; color: #94a3b8; text-align: center; font-style: italic; }
+
+    .shift-card-actions { display: flex; justify-content: flex-start; margin-top: 1rem; }
     .btn-save-shift {
       background: #4caf50;
       color: white;
@@ -671,10 +596,7 @@ import autoTable from 'jspdf-autotable';
       box-shadow: 0 2px 4px rgba(76,175,80,0.2);
       transition: all 0.2s;
     }
-    .btn-save-shift:hover {
-      background: #43a047;
-      transform: translateY(-1px);
-    }
+    .btn-save-shift:hover { background: #43a047; transform: translateY(-1px); }
 
     .text-center { text-align: center; }
     .text-right { text-align: right; }
@@ -685,27 +607,33 @@ import autoTable from 'jspdf-autotable';
     .empty-state-msg { color: #94a3b8; font-style: italic; font-size: 0.85rem; }
   `]
 })
-export class TurnosSemanaComponent implements OnInit {
+export class TurnosSemanaPrensadoComponent implements OnInit {
   private prodService = inject(ProduccionService);
   
-  extrusoras: Extrusora[] = [];
+  prensas: any[] = [];
   selectedTabIndex = 0;
   fechaInicio: string = '';
   fechaFin: string = '';
   
   loading: boolean = false;
   mostrarOpciones: boolean = false;
+  mensajeExito: string = '';
 
-  // Catálogos para los selects del grid
+  // Catálogos
   catalogoProductos: Producto[] = [];
   catalogoOperarios: Operario[] = [];
+
+  // Controladores de desplegables con buscador
+  activeDropdown: string | null = null;
+  searchProductoText: string = '';
+  searchOperadorText: string = '';
 
   // Visibilidad de columnas en tabla resumen
   visibleCols = {
     productoId: false,
     producto: true,
-    extrusoraId: false,
-    extrusora: true,
+    prensaId: false,
+    prensa: true,
     programado: true,
     fabricado: true,
     diferencia: true
@@ -713,36 +641,34 @@ export class TurnosSemanaComponent implements OnInit {
 
   // Datos provenientes del backend
   resumen: any[] = [];
-  extrusorasData: any[] = [];
+  prensasData: any[] = [];
 
   ngOnInit() {
-    // Escuchar clics globales para cerrar el popover de opciones al hacer clic fuera
+    // Cerrar desplegables al hacer clic fuera
     document.addEventListener('click', () => {
       this.mostrarOpciones = false;
+      this.activeDropdown = null;
     });
 
-    // Cargar catálogos iniciales
-    this.prodService.getProductos().subscribe(data => this.catalogoProductos = data);
-    this.prodService.getOperarios().subscribe(data => this.catalogoOperarios = data);
+    // Cargar catálogos
+    this.prodService.getProductos().subscribe(data => this.catalogoProductos = data || []);
+    this.prodService.getOperarios().subscribe(data => this.catalogoOperarios = data || []);
     
-    // Cargar lista de extrusoras para pestañas
-    this.prodService.getExtrusoras().subscribe({
+    this.prodService.getPrensas().subscribe({
       next: (data) => {
-        this.extrusoras = data || [];
+        this.prensas = data || [];
       },
-      error: (err) => console.error('Error al cargar extrusoras:', err)
+      error: (err) => console.error('Error al cargar prensas:', err)
     });
 
-    // Rango de fechas por defecto: del lunes a viernes de la semana actual
+    // Rango de fechas por defecto
     const today = new Date();
-    const dayOfWeek = today.getDay(); // 0 (Dom) a 6 (Sáb)
+    const dayOfWeek = today.getDay();
     
-    // Lunes de esta semana
     const startOfWeek = new Date(today);
     const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
     startOfWeek.setDate(today.getDate() + diffToMonday);
     
-    // Viernes de esta semana
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 4);
 
@@ -762,11 +688,60 @@ export class TurnosSemanaComponent implements OnInit {
     this.mostrarOpciones = !this.mostrarOpciones;
   }
 
+  toggleDropdown(dia: any, type: 'producto' | 'operador') {
+    const key = dia.prensadoId + '_' + type;
+    if (this.activeDropdown === key) {
+      this.activeDropdown = null;
+    } else {
+      this.activeDropdown = key;
+      this.searchProductoText = '';
+      this.searchOperadorText = '';
+    }
+  }
+
+  getProductoDisplay(productoId: string): string {
+    const p = this.catalogoProductos.find(x => x.id === productoId);
+    return p ? (p.codigo || p.nombre) : '-- Seleccione Producto --';
+  }
+
+  getOperarioDisplay(operarioId: string): string {
+    const op = this.catalogoOperarios.find(x => x.id === operarioId);
+    return op ? op.nombreCompleto.toUpperCase() : '-- Seleccione Operador --';
+  }
+
+  getFilteredProductos(): Producto[] {
+    if (!this.searchProductoText.trim()) return this.catalogoProductos;
+    const txt = this.searchProductoText.toLowerCase();
+    return this.catalogoProductos.filter(p => 
+      (p.codigo && p.codigo.toLowerCase().includes(txt)) || 
+      (p.nombre && p.nombre.toLowerCase().includes(txt))
+    );
+  }
+
+  getFilteredOperarios(): Operario[] {
+    if (!this.searchOperadorText.trim()) return this.catalogoOperarios;
+    const txt = this.searchOperadorText.toLowerCase();
+    return this.catalogoOperarios.filter(op => 
+      op.nombreCompleto && op.nombreCompleto.toLowerCase().includes(txt)
+    );
+  }
+
+  selectProducto(dia: any, producto: Producto) {
+    dia.productoId = producto.id;
+    dia.productoNombre = producto.codigo || producto.nombre;
+    this.activeDropdown = null;
+  }
+
+  selectOperario(dia: any, operario: Operario) {
+    dia.operarioId = operario.id;
+    dia.operarioNombre = operario.nombreCompleto;
+    this.activeDropdown = null;
+  }
+
   getColspanCount(): number {
     return Object.values(this.visibleCols).filter(val => val).length;
   }
 
-  // Agrupamiento por producto de la tabla resumen
   get groupedResumen(): any[] {
     const groups: { [key: string]: any } = {};
     for (const r of this.resumen) {
@@ -786,7 +761,6 @@ export class TurnosSemanaComponent implements OnInit {
     return Object.values(groups);
   }
 
-  // Totales generales para tabla resumen
   get totalResumen() {
     let programado = 0;
     let fabricado = 0;
@@ -812,66 +786,73 @@ export class TurnosSemanaComponent implements OnInit {
     if (st.includes('3') || st.includes('finalizada') || st.includes('terminada')) return 'Terminada';
     if (st.includes('1') || st.includes('programada') || st.includes('creada')) return 'Programada';
     if (st.includes('2') || st.includes('proceso')) return 'En Proceso';
-    return 'Creada';
+    return 'Por Programar';
   }
 
-  // Consulta/Programación de turnos del backend
-  consultarTurnos() {
+  consultarTurnos(clearMsg: boolean = true) {
     if (!this.fechaInicio || !this.fechaFin) {
       alert('Por favor especifique la Fecha de Inicio y Fecha Fin.');
       return;
     }
     this.loading = true;
-    this.prodService.getTurnosSemana(this.fechaInicio, this.fechaFin).subscribe({
+    if (clearMsg) {
+      this.mensajeExito = '';
+    }
+    this.prodService.getTurnosSemanaPrensado(this.fechaInicio, this.fechaFin).subscribe({
       next: (data) => {
         this.loading = false;
         this.resumen = data.resumen || [];
-        this.extrusorasData = data.extrusoras || [];
-        
-        // Mantener la pestaña seleccionada dentro del rango válido
-        if (this.selectedTabIndex >= this.extrusorasData.length) {
+        this.prensasData = data.prensas || data.extrusoras || [];
+        if (data.prensas && data.prensas.length > 0) {
+          this.prensas = data.prensas;
+        }
+        if (this.selectedTabIndex >= this.prensasData.length) {
           this.selectedTabIndex = 0;
         }
       },
       error: (err) => {
         this.loading = false;
-        console.error('Error al consultar turnos semanales:', err);
-        alert(err.error?.message || err.message || 'Ocurrió un error en el servidor al generar la plantilla.');
+        console.error('Error al consultar turnos de prensado:', err);
+        alert(err.error?.message || err.message || 'Ocurrió un error en el servidor.');
       }
     });
   }
 
-  // Guardar modificaciones aplicadas a un turno
   guardarShift(shift: any) {
-    // Mapear los datos de los días a DTO de guardado
     const batch = shift.dias
-      .filter((d: any) => d.estado === 'Programada')
+      .filter((d: any) => {
+        const st = String(d.estado).toLowerCase();
+        return st.includes('programada') || st.includes('1') || st.includes('creada') || st.includes('por programar');
+      })
       .map((d: any) => ({
-        extrusionId: d.extrusionId,
-        productoId: d.productoId || null,
-        operarioId: d.operarioId || null,
+        prensadoId: d.prensadoId || d.extrusionId,
+        productoId: (d.productoId && d.productoId !== 'null' && d.productoId !== 'undefined') ? d.productoId : null,
+        operarioId: (d.operarioId && d.operarioId !== 'null' && d.operarioId !== 'undefined') ? d.operarioId : null,
         plan: Number(d.plan) || 0
       }));
 
     if (batch.length === 0) {
-      alert('No hay registros modificables (en estado Programada) en este turno.');
+      alert('No hay registros modificables en este turno.');
       return;
     }
 
-    this.prodService.guardarTurnosSemana(batch).subscribe({
-      next: () => {
-        alert('Programación de turno guardada con éxito.');
-        this.consultarTurnos(); // Recargar datos para recalcular resumen
+    this.prodService.guardarTurnosSemanaPrensado(batch).subscribe({
+      next: (res: any) => {
+        const msg = res?.message || 'Información actualizada';
+        this.mensajeExito = msg;
+        alert(msg);
+        setTimeout(() => this.mensajeExito = '', 5000);
+        this.consultarTurnos(false);
       },
       error: (err) => {
         console.error('Error al guardar programación:', err);
-        alert(err.error?.message || 'Error al guardar la programación de turno.');
+        alert(err.error?.message || 'Error al guardar la programación de turno de prensado.');
       }
     });
   }
 
-  // ── EXPORTACIONES ──────────────────────────────────────────────────────
 
+  // Exportaciones
   exportarExcel() {
     if (this.resumen.length === 0) {
       alert('No hay datos en la tabla para exportar.');
@@ -880,20 +861,20 @@ export class TurnosSemanaComponent implements OnInit {
 
     const dataToExport = this.resumen.map(r => {
       const row: any = {};
-      if (this.visibleCols.productoId) row['Extrusion Producto Id'] = r.productoId;
+      if (this.visibleCols.productoId) row['Prensado Producto Id'] = r.productoId;
       if (this.visibleCols.producto) row['Producto'] = r.producto;
-      if (this.visibleCols.extrusoraId) row['Extrusion Extrusora Id'] = r.extrusoraId;
-      if (this.visibleCols.extrusora) row['Extrusora'] = r.extrusora;
+      if (this.visibleCols.prensaId) row['Prensado Prensa Id'] = r.prensaId || r.extrusoraId;
+      if (this.visibleCols.prensa) row['Prensa'] = r.prensa || r.extrusora;
       if (this.visibleCols.programado) row['Programado'] = r.programado;
-      if (this.visibleCols.fabricado) row['Fabricado'] = r.fabricado;
+      if (this.visibleCols.fabricado) row['Producido'] = r.fabricado;
       if (this.visibleCols.diferencia) row['Diferencia'] = r.diferencia;
       return row;
     });
 
     const ws = XLSX.utils.json_to_sheet(dataToExport);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Resumen_Semanal');
-    XLSX.writeFile(wb, `Reporte_Resumen_Turnos_${this.fechaInicio}_al_${this.fechaFin}.xlsx`);
+    XLSX.utils.book_append_sheet(wb, ws, 'Resumen_Semanal_Prensado');
+    XLSX.writeFile(wb, `Reporte_Resumen_Turnos_Prensado_${this.fechaInicio}_al_${this.fechaFin}.xlsx`);
   }
 
   exportarPDF() {
@@ -907,17 +888,16 @@ export class TurnosSemanaComponent implements OnInit {
     const keys: string[] = [];
 
     if (this.visibleCols.producto) { headers.push('Producto'); keys.push('producto'); }
-    if (this.visibleCols.extrusora) { headers.push('Extrusora'); keys.push('extrusora'); }
+    if (this.visibleCols.prensa) { headers.push('Prensa'); keys.push('prensa'); }
     if (this.visibleCols.programado) { headers.push('Programado'); keys.push('programado'); }
-    if (this.visibleCols.fabricado) { headers.push('Fabricado'); keys.push('fabricado'); }
+    if (this.visibleCols.fabricado) { headers.push('Producido'); keys.push('fabricado'); }
     if (this.visibleCols.diferencia) { headers.push('Diferencia'); keys.push('diferencia'); }
 
     const rows = this.resumen.map(r => keys.map(k => String(r[k] || '0')));
 
-    // Agregar total general al PDF
     const totalRow: string[] = [];
     if (this.visibleCols.producto) totalRow.push('TOTAL');
-    if (this.visibleCols.extrusora) totalRow.push('');
+    if (this.visibleCols.prensa) totalRow.push('');
     if (this.visibleCols.programado) totalRow.push(String(this.totalResumen.programado));
     if (this.visibleCols.fabricado) totalRow.push(String(this.totalResumen.fabricado));
     if (this.visibleCols.diferencia) totalRow.push(String(this.totalResumen.diferencia));
@@ -925,8 +905,8 @@ export class TurnosSemanaComponent implements OnInit {
 
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(16);
-    doc.setTextColor(30, 63, 102); // Deep blue `#1e3f66`
-    doc.text('Resumen Semanal de Extrusión', 14, 15);
+    doc.setTextColor(30, 63, 102);
+    doc.text('Resumen Semanal de Prensado', 14, 15);
     
     doc.setFont('Helvetica', 'normal');
     doc.setFontSize(10);
@@ -938,21 +918,12 @@ export class TurnosSemanaComponent implements OnInit {
       body: rows,
       startY: 28,
       theme: 'grid',
-      styles: {
-        fontSize: 9,
-        cellPadding: 4
-      },
-      headStyles: {
-        fillColor: [30, 63, 102],
-        textColor: [255, 255, 255],
-        fontStyle: 'bold'
-      },
-      alternateRowStyles: {
-        fillColor: [245, 247, 250]
-      }
+      styles: { fontSize: 9, cellPadding: 4 },
+      headStyles: { fillColor: [30, 63, 102], textColor: [255, 255, 255], fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [245, 247, 250] }
     });
 
-    doc.save(`Resumen_Semanal_Extrusion_${this.fechaInicio}_${this.fechaFin}.pdf`);
+    doc.save(`Resumen_Semanal_Prensado_${this.fechaInicio}_${this.fechaFin}.pdf`);
   }
 
   exportarHTML() {
@@ -964,7 +935,7 @@ export class TurnosSemanaComponent implements OnInit {
     let htmlContent = `
       <html>
         <head>
-          <title>Resumen Semanal de Extrusión</title>
+          <title>Resumen Semanal de Prensado</title>
           <style>
             body { font-family: Arial, sans-serif; padding: 20px; color: #333; }
             h1 { color: #1e3f66; margin-bottom: 5px; }
@@ -978,19 +949,19 @@ export class TurnosSemanaComponent implements OnInit {
           </style>
         </head>
         <body>
-          <h1>Resumen Semanal de Extrusión</h1>
+          <h1>Resumen Semanal de Prensado</h1>
           <h3>Rango de fechas: ${this.fechaInicio} al ${this.fechaFin}</h3>
           <table>
             <thead>
               <tr>
     `;
 
-    if (this.visibleCols.productoId) htmlContent += '<th>Extrusion Producto Id</th>';
+    if (this.visibleCols.productoId) htmlContent += '<th>Prensado Producto Id</th>';
     if (this.visibleCols.producto) htmlContent += '<th>Producto</th>';
-    if (this.visibleCols.extrusoraId) htmlContent += '<th>Extrusion Extrusora Id</th>';
-    if (this.visibleCols.extrusora) htmlContent += '<th>Extrusora</th>';
+    if (this.visibleCols.prensaId) htmlContent += '<th>Prensado Prensa Id</th>';
+    if (this.visibleCols.prensa) htmlContent += '<th>Prensa</th>';
     if (this.visibleCols.programado) htmlContent += '<th class="text-right">Programado</th>';
-    if (this.visibleCols.fabricado) htmlContent += '<th class="text-right">Fabricado</th>';
+    if (this.visibleCols.fabricado) htmlContent += '<th class="text-right">Producido</th>';
     if (this.visibleCols.diferencia) htmlContent += '<th class="text-right">Diferencia</th>';
 
     htmlContent += `
@@ -1009,31 +980,29 @@ export class TurnosSemanaComponent implements OnInit {
             htmlContent += `<td rowspan="${group.rows.length}" class="font-bold">${group.producto}</td>`;
           }
         }
-        if (this.visibleCols.extrusoraId) htmlContent += `<td>${row.extrusoraId || ''}</td>`;
-        if (this.visibleCols.extrusora) htmlContent += `<td>${row.extrusora || ''}</td>`;
+        if (this.visibleCols.prensaId) htmlContent += `<td>${row.prensaId || row.extrusoraId || ''}</td>`;
+        if (this.visibleCols.prensa) htmlContent += `<td>${row.prensa || row.extrusora || ''}</td>`;
         if (this.visibleCols.programado) htmlContent += `<td class="text-right">${row.programado || 0}</td>`;
         if (this.visibleCols.fabricado) htmlContent += `<td class="text-right">${row.fabricado || 0}</td>`;
         if (this.visibleCols.diferencia) htmlContent += `<td class="text-right">${row.diferencia || 0}</td>`;
         htmlContent += '</tr>';
       }
-      // Subtotal
       htmlContent += '<tr style="background-color: #eceff1; font-weight: bold;">';
       if (this.visibleCols.productoId) htmlContent += '<td></td>';
       if (this.visibleCols.producto) htmlContent += `<td>Total para ${group.producto}</td>`;
-      if (this.visibleCols.extrusoraId) htmlContent += '<td></td>';
-      if (this.visibleCols.extrusora) htmlContent += '<td></td>';
+      if (this.visibleCols.prensaId) htmlContent += '<td></td>';
+      if (this.visibleCols.prensa) htmlContent += '<td></td>';
       if (this.visibleCols.programado) htmlContent += `<td class="text-right">${group.subtotal.programado}</td>`;
       if (this.visibleCols.fabricado) htmlContent += `<td class="text-right">${group.subtotal.fabricado}</td>`;
       if (this.visibleCols.diferencia) htmlContent += `<td class="text-right">${group.subtotal.diferencia}</td>`;
       htmlContent += '</tr>';
     }
 
-    // Grand total
     htmlContent += '<tr style="background-color: #cfd8dc; font-weight: bold; border-top: 2px solid #90a4ae;">';
     if (this.visibleCols.productoId) htmlContent += '<td></td>';
     if (this.visibleCols.producto) htmlContent += '<td>TOTAL</td>';
-    if (this.visibleCols.extrusoraId) htmlContent += '<td></td>';
-    if (this.visibleCols.extrusora) htmlContent += '<td></td>';
+    if (this.visibleCols.prensaId) htmlContent += '<td></td>';
+    if (this.visibleCols.prensa) htmlContent += '<td></td>';
     if (this.visibleCols.programado) htmlContent += `<td class="text-right">${this.totalResumen.programado}</td>`;
     if (this.visibleCols.fabricado) htmlContent += `<td class="text-right">${this.totalResumen.fabricado}</td>`;
     if (this.visibleCols.diferencia) htmlContent += `<td class="text-right">${this.totalResumen.diferencia}</td>`;

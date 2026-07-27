@@ -147,7 +147,7 @@ public class ProduccionService : IProduccionService
         return extrusion;
     }
 
-    public async Task<bool> FinalizarExtrusionAsync(Guid extrusionId, string? motivoAnticipado = null, Guid? nextExtrusionId = null)
+    public async Task<bool> FinalizarExtrusionAsync(Guid extrusionId, string? motivoAnticipado = null)
     {
         var extrusion = await _context.Extrusiones
             .Include(e => e.Bobinas)
@@ -166,37 +166,9 @@ public class ProduccionService : IProduccionService
         var extrusora = await _context.Extrusoras.FindAsync(extrusion.ExtrusoraId);
         if (extrusora != null) extrusora.Estado = EstadoExtrusora.Disponible;
 
-        // Transferir bobinas activas a la siguiente extrusión si se especifica
-        if (nextExtrusionId.HasValue && nextExtrusionId.Value != Guid.Empty)
-        {
-            var nextExt = await _context.Extrusiones.FindAsync(nextExtrusionId.Value);
-            if (nextExt != null)
-            {
-                var bobsToTransfer = extrusion.Bobinas.Where(b => b.Estado == EstadoBobina.EnProceso).ToList();
-                foreach (var b in bobsToTransfer)
-                {
-                    b.ExtrusionId = nextExtrusionId.Value;
-                    
-                    // Recalibración si el producto cambia
-                    if (nextExt.ProductoId != b.ProductoId)
-                    {
-                        var ep = await _context.ExtrusoraProductos
-                            .FirstOrDefaultAsync(x => x.ExtrusoraId == nextExt.ExtrusoraId && x.ProductoId == b.ProductoId && !x.IsDeleted && x.IsActive);
-                        if (ep != null)
-                        {
-                            nextExt.Calibre = ep.DefaultCalibre;
-                            nextExt.Ancho = ep.DefaultAncho;
-                            nextExt.Longitud = ep.DefaultLongitud;
-                            nextExt.ProductoId = b.ProductoId;
-                        }
-                    }
-                }
-            }
-        }
-
-        // Pausar/finalizar cualquier bobina asociada restante que permanezca EnProceso -> cambiar a EnReposo
-        var bobinasEnProcesoRestantes = extrusion.Bobinas.Where(b => b.Estado == EstadoBobina.EnProceso).ToList();
-        foreach (var bobina in bobinasEnProcesoRestantes)
+        // Pausar/finalizar cualquier bobina asociada que permanezca EnProceso -> cambiar a EnReposo
+        var bobinasEnProceso = extrusion.Bobinas.Where(b => b.Estado == EstadoBobina.EnProceso).ToList();
+        foreach (var bobina in bobinasEnProceso)
         {
             bobina.Estado = EstadoBobina.EnReposo;
             bobina.IniciaReposo = DateTime.UtcNow;
@@ -768,37 +740,125 @@ public class ProduccionService : IProduccionService
         return await _context.SaveChangesAsync(default) > 0;
     }
 
+    public async Task<IEnumerable<ExtrusionInterrupcion>> GetInterrupcionesExtrusionAsync()
+    {
+        return await _context.ExtrusionInterrupciones
+            .Include(i => i.Extrusion)
+                .ThenInclude(e => e.Extrusora)
+            .Include(i => i.Extrusion)
+                .ThenInclude(e => e.Turno)
+            .Include(i => i.Extrusion)
+                .ThenInclude(e => e.Operario)
+            .Include(i => i.Extrusion)
+                .ThenInclude(e => e.Producto)
+            .Include(i => i.Extrusion)
+                .ThenInclude(e => e.SiloVirgen)
+            .Include(i => i.Causa)
+            .Where(i => !i.IsDeleted)
+            .OrderByDescending(i => i.HoraInicio)
+            .ToListAsync();
+    }
+
+    public async Task<bool> ActualizarInterrupcionExtrusionAsync(Guid id, Guid causaId, string? descripcion, DateTime horaInicio, DateTime? horaFin, bool concluida)
+    {
+        var interrupcion = await _context.ExtrusionInterrupciones
+            .Include(i => i.Extrusion)
+            .ThenInclude(e => e.Extrusora)
+            .FirstOrDefaultAsync(i => i.Id == id);
+
+        if (interrupcion == null) return false;
+
+        interrupcion.CausaId = causaId;
+        interrupcion.Descripcion = descripcion;
+        interrupcion.HoraInicio = horaInicio;
+        interrupcion.HoraFin = horaFin;
+        interrupcion.Concluida = concluida;
+
+        if (interrupcion.Extrusion != null)
+        {
+            var todasInterrupciones = await _context.ExtrusionInterrupciones
+                .Where(i => i.ExtrusionId == interrupcion.ExtrusionId && !i.IsDeleted && i.Id != id)
+                .ToListAsync();
+
+            double totalMinutos = todasInterrupciones
+                .Where(i => i.HoraFin.HasValue)
+                .Sum(i => (i.HoraFin.Value - i.HoraInicio).TotalMinutes);
+
+            if (concluida && horaFin.HasValue)
+            {
+                totalMinutos += (horaFin.Value - horaInicio).TotalMinutes;
+            }
+
+            interrupcion.Extrusion.TiempoInterrupcion = (int)Math.Round(totalMinutos);
+
+            bool hayActivas = todasInterrupciones.Any(i => !i.Concluida) || (!concluida);
+            interrupcion.Extrusion.InterrupcionEnCurso = hayActivas;
+
+            if (interrupcion.Extrusion.Extrusora != null)
+            {
+                interrupcion.Extrusion.Extrusora.Estado = hayActivas ? EstadoExtrusora.Detenida : EstadoExtrusora.EnProceso;
+            }
+        }
+
+        return await _context.SaveChangesAsync(default) > 0;
+    }
+
+    public async Task<bool> EliminarInterrupcionExtrusionAsync(Guid id)
+    {
+        var interrupcion = await _context.ExtrusionInterrupciones
+            .Include(i => i.Extrusion)
+            .ThenInclude(e => e.Extrusora)
+            .FirstOrDefaultAsync(i => i.Id == id);
+
+        if (interrupcion == null) return false;
+
+        interrupcion.IsDeleted = true;
+        interrupcion.DeletedAt = DateTime.UtcNow;
+
+        if (interrupcion.Extrusion != null)
+        {
+            var todasInterrupciones = await _context.ExtrusionInterrupciones
+                .Where(i => i.ExtrusionId == interrupcion.ExtrusionId && !i.IsDeleted && i.Id != id)
+                .ToListAsync();
+
+            double totalMinutos = todasInterrupciones
+                .Where(i => i.HoraFin.HasValue)
+                .Sum(i => (i.HoraFin.Value - i.HoraInicio).TotalMinutes);
+
+            interrupcion.Extrusion.TiempoInterrupcion = (int)Math.Round(totalMinutos);
+
+            bool hayActivas = todasInterrupciones.Any(i => !i.Concluida);
+            interrupcion.Extrusion.InterrupcionEnCurso = hayActivas;
+
+            if (interrupcion.Extrusion.Extrusora != null)
+            {
+                interrupcion.Extrusion.Extrusora.Estado = hayActivas ? EstadoExtrusora.Detenida : EstadoExtrusora.EnProceso;
+            }
+        }
+
+        return await _context.SaveChangesAsync(default) > 0;
+    }
+
     // ── Consultas ──────────────────────────────────────────────────────────
 
     public async Task<IEnumerable<Bobina>> GetBobinasDisponiblesParaPrensadoAsync()
     {
-        var bobbinsInReposo = await _context.Bobinas
-            .Include(b => b.Extrusion)
-            .Where(b => b.Estado == EstadoBobina.EnReposo)
-            .ToListAsync();
-
-        bool hasChanges = false;
-        foreach (var b in bobbinsInReposo)
-        {
-            if (b.IniciaReposo.HasValue)
-            {
-                var elapsedMinutes = (DateTime.UtcNow - b.IniciaReposo.Value).TotalMinutes;
-                if (elapsedMinutes >= b.MinutosEnReposo)
-                {
-                    b.Estado = EstadoBobina.Disponible;
-                    hasChanges = true;
-                }
-            }
-        }
-
-        if (hasChanges)
-        {
-            await _context.SaveChangesAsync(default);
-        }
-
         return await _context.Bobinas
             .Include(b => b.Extrusion)
-            .Where(b => b.Estado == EstadoBobina.Disponible)
+                .ThenInclude(e => e.Extrusora)
+            .Include(b => b.Extrusion)
+                .ThenInclude(e => e.Turno)
+            .Include(b => b.Extrusion)
+                .ThenInclude(e => e.Operario)
+            .Include(b => b.Extrusion)
+                .ThenInclude(e => e.SiloVirgen)
+            .Include(b => b.Extrusion)
+                .ThenInclude(e => e.SiloMolido)
+            .Include(b => b.SiloVirgen)
+            .Include(b => b.SiloMolido)
+            .Include(b => b.Operario)
+            .Include(b => b.Producto)
+            .Where(b => !b.IsDeleted)
             .OrderByDescending(b => b.HoraSalida)
             .ToListAsync();
     }
@@ -1009,305 +1069,185 @@ public class ProduccionService : IProduccionService
             .ToListAsync();
     }
 
-    public async Task<ExtrusoraProducto?> GetExtrusoraProductoByIdAsync(Guid id)
+    public async Task<object> GetTurnosSemanaPrensasAsync(DateTime fechaInicio, DateTime fechaFin)
     {
-        return await _context.ExtrusoraProductos
-            .Include(ep => ep.Extrusora)
-            .Include(ep => ep.Producto)
-            .FirstOrDefaultAsync(ep => ep.Id == id && !ep.IsDeleted);
-    }
+        var tenantId = new Guid("00000000-0000-0000-0000-000000000001");
+        var startDate = fechaInicio.Date;
+        var endDate = fechaFin.Date;
+        if (endDate < startDate) endDate = startDate;
 
-    public async Task<ExtrusoraProducto> CreateExtrusoraProductoAsync(ExtrusoraProducto entity)
-    {
-        entity.Id = Guid.NewGuid();
-        _context.ExtrusoraProductos.Add(entity);
-        
-        // Registrar Auditoría
-        _context.AuditLogs.Add(new AuditLog
+        var prensas = await _context.Prensas.Where(p => !p.IsDeleted).OrderBy(p => p.Codigo).ToListAsync();
+        if (!prensas.Any())
         {
-            Id = Guid.NewGuid(),
-            EntityName = "ExtrusoraProducto",
-            EntityId = entity.Id.ToString(),
-            Action = "INSERT",
-            Username = "Admin",
-            Timestamp = DateTime.UtcNow,
-            ChangesJson = System.Text.Json.JsonSerializer.Serialize(new[]
+            for (int i = 1; i <= 5; i++)
             {
-                new { Property = "Calibre", Old = "", New = entity.DefaultCalibre.ToString() },
-                new { Property = "Ancho", Old = "", New = entity.DefaultAncho.ToString() },
-                new { Property = "Longitud", Old = "", New = entity.DefaultLongitud.ToString() },
-                new { Property = "Reposo", Old = "", New = entity.DefaultMinutosReposo.ToString() }
-            })
-        });
-
-        await _context.SaveChangesAsync(default);
-        return entity;
-    }
-
-    public async Task<ExtrusoraProducto> UpdateExtrusoraProductoAsync(ExtrusoraProducto entity)
-    {
-        var existing = await _context.ExtrusoraProductos.FindAsync(entity.Id);
-        if (existing == null) throw new Exception("Configuración no encontrada");
-
-        var changes = new List<object>();
-        if (existing.ExtrusoraId != entity.ExtrusoraId)
-        {
-            changes.Add(new { Property = "ExtrusoraId", Old = existing.ExtrusoraId.ToString(), New = entity.ExtrusoraId.ToString() });
-            existing.ExtrusoraId = entity.ExtrusoraId;
-        }
-        if (existing.ProductoId != entity.ProductoId)
-        {
-            changes.Add(new { Property = "ProductoId", Old = existing.ProductoId.ToString(), New = entity.ProductoId.ToString() });
-            existing.ProductoId = entity.ProductoId;
-        }
-        if (existing.DefaultCalibre != entity.DefaultCalibre)
-        {
-            changes.Add(new { Property = "Calibre", Old = existing.DefaultCalibre.ToString(), New = entity.DefaultCalibre.ToString() });
-            existing.DefaultCalibre = entity.DefaultCalibre;
-        }
-        if (existing.DefaultAncho != entity.DefaultAncho)
-        {
-            changes.Add(new { Property = "Ancho", Old = existing.DefaultAncho.ToString(), New = entity.DefaultAncho.ToString() });
-            existing.DefaultAncho = entity.DefaultAncho;
-        }
-        if (existing.DefaultLongitud != entity.DefaultLongitud)
-        {
-            changes.Add(new { Property = "Longitud", Old = existing.DefaultLongitud.ToString(), New = entity.DefaultLongitud.ToString() });
-            existing.DefaultLongitud = entity.DefaultLongitud;
-        }
-        if (existing.DefaultMinutosReposo != entity.DefaultMinutosReposo)
-        {
-            changes.Add(new { Property = "Reposo", Old = existing.DefaultMinutosReposo.ToString(), New = entity.DefaultMinutosReposo.ToString() });
-            existing.DefaultMinutosReposo = entity.DefaultMinutosReposo;
-        }
-
-        if (changes.Count > 0)
-        {
-            _context.AuditLogs.Add(new AuditLog
-            {
-                Id = Guid.NewGuid(),
-                EntityName = "ExtrusoraProducto",
-                EntityId = existing.Id.ToString(),
-                Action = "UPDATE",
-                Username = "Admin",
-                Timestamp = DateTime.UtcNow,
-                ChangesJson = System.Text.Json.JsonSerializer.Serialize(changes)
-            });
-        }
-
-        await _context.SaveChangesAsync(default);
-        return existing;
-    }
-
-    public async Task<bool> DeleteExtrusoraProductoAsync(Guid id)
-    {
-        var existing = await _context.ExtrusoraProductos.FindAsync(id);
-        if (existing == null) return false;
-
-        _context.ExtrusoraProductos.Remove(existing);
-        
-        _context.AuditLogs.Add(new AuditLog
-        {
-            Id = Guid.NewGuid(),
-            EntityName = "ExtrusoraProducto",
-            EntityId = id.ToString(),
-            Action = "DELETE",
-            Username = "Admin",
-            Timestamp = DateTime.UtcNow,
-            ChangesJson = "[]"
-        });
-
-        return await _context.SaveChangesAsync(default) > 0;
-    }
-
-    // ── Turnos por Semana ──────────────────────────────────────────────────
-    public async Task<TurnosSemanaResponseDto> GetTurnosSemanaAsync(DateTime startDate, DateTime endDate)
-    {
-        var result = new TurnosSemanaResponseDto();
-
-        // 1. Obtener catálogos necesarios
-        var extrusoras = await _context.Extrusoras.Where(e => e.IsActive && !e.IsDeleted).OrderBy(e => e.Nombre).ToListAsync();
-        var turnos = await _context.Turnos.Where(t => t.IsActive && !t.IsDeleted).OrderBy(t => t.Nombre).ToListAsync();
-        var operarios = await _context.Operarios.Where(o => o.IsActive).ToListAsync();
-
-        // Obtener asignaciones por defecto de operarios y productos
-        var defaultProductos = await _context.ExtrusoraProductos
-            .Include(ep => ep.Producto)
-            .Where(ep => ep.IsActive && !ep.IsDeleted)
-            .ToListAsync();
-
-        var defaultOperarios = await _context.ExtrusoraOperarios
-            .Include(eo => eo.Operario)
-            .Where(eo => !eo.IsDeleted)
-            .ToListAsync();
-
-        // Generar lista de días en el rango
-        var dates = new List<DateTime>();
-        for (var date = startDate.Date; date <= endDate.Date; date = date.AddDays(1))
-        {
-            dates.Add(date);
-        }
-
-        // Obtener el legacy ID inicial si necesitamos crear registros nuevos
-        var maxLegacyId = await _context.Extrusiones.AnyAsync() ? await _context.Extrusiones.MaxAsync(e => e.ExtrusionIdLegacy) : 0;
-        var nextLegacyId = maxLegacyId > 0 ? maxLegacyId + 1 : 24926;
-
-        // 2. Procesar cada máquina, turno y fecha para autoprogramar
-        foreach (var ext in extrusoras)
-        {
-            var extDto = new TurnoSemanaExtrusoraDto
-            {
-                ExtrusoraId = ext.Id,
-                ExtrusoraNombre = ext.Nombre
-            };
-
-            foreach (var t in turnos)
-            {
-                var shiftDto = new TurnoSemanaShiftDto
+                var prensa = new Prensa
                 {
-                    TurnoId = t.Id,
-                    TurnoNombre = t.Nombre
+                    Id = Guid.NewGuid(),
+                    Codigo = $"PRN-0{i}",
+                    Nombre = $"Prensa {i}",
+                    Estado = EstadoPrensa.Disponible,
+                    TenantId = tenantId
                 };
+                _context.Prensas.Add(prensa);
+                prensas.Add(prensa);
+            }
+            await _context.SaveChangesAsync(default);
+        }
 
-                foreach (var date in dates)
+        var turnos = await _context.Turnos.Where(t => !t.IsDeleted).OrderBy(t => t.Nombre).ToListAsync();
+        if (!turnos.Any())
+        {
+            var t1 = new Turno { Id = Guid.NewGuid(), Nombre = "1er Turno", HoraInicio = new TimeSpan(6, 0, 0), HoraFin = new TimeSpan(14, 0, 0), TenantId = tenantId };
+            var t2 = new Turno { Id = Guid.NewGuid(), Nombre = "2do Turno", HoraInicio = new TimeSpan(14, 0, 0), HoraFin = new TimeSpan(22, 0, 0), TenantId = tenantId };
+            var t3 = new Turno { Id = Guid.NewGuid(), Nombre = "3er Turno", HoraInicio = new TimeSpan(22, 0, 0), HoraFin = new TimeSpan(6, 0, 0), TenantId = tenantId };
+            _context.Turnos.AddRange(t1, t2, t3);
+            await _context.SaveChangesAsync(default);
+            turnos = new List<Turno> { t1, t2, t3 };
+        }
+
+        var productos = await _context.Productos.Where(p => !p.IsDeleted).ToListAsync();
+        var defaultProducto = productos.FirstOrDefault();
+        var operarios = await _context.Operarios.Where(o => !o.IsDeleted).ToListAsync();
+        var defaultOperario = operarios.FirstOrDefault();
+
+        long maxLegacyId = await _context.Prensados.MaxAsync(p => (long?)p.PrensadoIdLegacy) ?? 63050;
+
+        var existingPrensados = await _context.Prensados
+            .Include(p => p.Prensa)
+            .Include(p => p.Turno)
+            .Include(p => p.Producto)
+            .Include(p => p.Operario)
+            .Where(p => !p.IsDeleted && p.Fecha.Date >= startDate && p.Fecha.Date <= endDate)
+            .ToListAsync();
+
+        bool hasChanges = false;
+        var dates = new List<DateTime>();
+        for (var dt = startDate; dt <= endDate; dt = dt.AddDays(1))
+        {
+            dates.Add(dt);
+        }
+
+        foreach (var prensa in prensas)
+        {
+            foreach (var turno in turnos)
+            {
+                foreach (var dt in dates)
                 {
-                    // Buscar si existe extrusión programada
-                    var extrusion = await _context.Extrusiones
-                        .Include(e => e.Producto)
-                        .Include(e => e.Operario)
-                        .FirstOrDefaultAsync(e => e.ExtrusoraId == ext.Id && e.TurnoId == t.Id && e.Fecha.Date == date.Date);
-
-                    if (extrusion == null)
+                    var existing = existingPrensados.FirstOrDefault(p => p.PrensaId == prensa.Id && p.TurnoId == turno.Id && p.Fecha.Date == dt);
+                    if (existing == null)
                     {
-                        // Si no existe, intentar autoprogramar usando los valores por defecto
-                        var defProd = defaultProductos.FirstOrDefault(ep => ep.ExtrusoraId == ext.Id);
-                        if (defProd != null)
+                        maxLegacyId++;
+                        var newPrensado = new Prensado
                         {
-                            var defOp = defaultOperarios.FirstOrDefault(eo => eo.ExtrusoraId == ext.Id && eo.TurnoId == t.Id)?.OperarioId 
-                                        ?? operarios.FirstOrDefault()?.Id 
-                                        ?? Guid.Empty;
-
-                            // Crear extrusión
-                            var todayStr = date.ToString("yyyyMMdd");
-                            var countToday = await _context.Extrusiones.CountAsync(e => e.Fecha.Date == date.Date);
-                            var suffix = (countToday + 1).ToString("D3");
-                            var codigo = $"EXT-{todayStr}-{suffix}";
-
-                            extrusion = new Extrusion
-                            {
-                                Id = Guid.NewGuid(),
-                                Codigo = codigo,
-                                ExtrusoraId = ext.Id,
-                                TurnoId = t.Id,
-                                ProductoId = defProd.ProductoId,
-                                ProductoNombre = defProd.Producto.Nombre,
-                                OperarioId = defOp,
-                                Estado = EstadoExtrusion.Programada,
-                                Fecha = date.Date.Add(t.HoraInicio),
-                                FechaInicio = date.Date.Add(t.HoraInicio),
-                                Calibre = defProd.DefaultCalibre,
-                                Ancho = defProd.DefaultAncho,
-                                Longitud = defProd.DefaultLongitud,
-                                MetaKg = defProd.DefaultMetaKg,
-                                VirgenKg = defProd.DefaultVirgenKg,
-                                MolidoKg = defProd.DefaultMolidoKg,
-                                RevHusilloVirgen = defProd.DefaultRevHusilloVirgen,
-                                RevHusilloMolido = defProd.DefaultRevHusilloMolido,
-                                LoteSilo = "L-SILO-AUTO",
-                                ExtrusionIdLegacy = nextLegacyId++
-                            };
-
-                            _context.Extrusiones.Add(extrusion);
-                            await _context.SaveChangesAsync(default);
-                        }
-                    }
-
-                    if (extrusion != null)
-                    {
-                        // Formatear día en español
-                        string dayName = date.ToString("dddd", new System.Globalization.CultureInfo("es-ES"));
-                        dayName = char.ToUpper(dayName[0]) + dayName.Substring(1);
-
-                        // Contar bobinas totales producidas para este registro
-                        var producido = await _context.Bobinas.CountAsync(b => b.ExtrusionId == extrusion.Id);
-
-                        var diaDto = new TurnoSemanaDiaDto
-                        {
-                            ExtrusionId = extrusion.Id,
-                            ExtrusionIdLegacy = extrusion.ExtrusionIdLegacy > 0 ? extrusion.ExtrusionIdLegacy.ToString() : extrusion.Codigo,
-                            Fecha = extrusion.Fecha,
-                            Dia = dayName,
-                            Hora = t.HoraInicio.ToString(@"hh\:mm"),
-                            Estado = extrusion.Estado.ToString(),
-                            ProductoId = extrusion.ProductoId,
-                            ProductoNombre = extrusion.Producto?.Nombre ?? extrusion.ProductoNombre ?? "N/A",
-                            OperarioId = extrusion.OperarioId,
-                            OperarioNombre = extrusion.Operario?.NombreCompleto ?? "Sin Operador",
-                            Plan = extrusion.MetaKg,
-                            Producido = producido * 10 // Cada bobina representa un valor proporcional
+                            Id = Guid.NewGuid(),
+                            Fecha = dt,
+                            HoraIniciaProceso = dt.Add(turno.HoraInicio),
+                            Estado = EstadoPrensado.Programada,
+                            PrensaId = prensa.Id,
+                            TurnoId = turno.Id,
+                            ProductoId = defaultProducto?.Id ?? Guid.Empty,
+                            OperarioId = defaultOperario?.Id ?? Guid.Empty,
+                            Programado = 0,
+                            Producido = 0,
+                            PrensadoIdLegacy = maxLegacyId,
+                            TenantId = tenantId
                         };
-
-                        shiftDto.Dias.Add(diaDto);
+                        _context.Prensados.Add(newPrensado);
+                        existingPrensados.Add(newPrensado);
+                        hasChanges = true;
                     }
-                }
-
-                if (shiftDto.Dias.Count > 0)
-                {
-                    extDto.Turnos.Add(shiftDto);
                 }
             }
-
-            result.Extrusoras.Add(extDto);
         }
 
-        // 3. Generar la tabla de resumen (agrupada por Producto y Extrusora)
-        var allDias = result.Extrusoras
-            .SelectMany(e => e.Turnos.SelectMany(t => t.Dias.Select(d => new { e.ExtrusoraNombre, d })))
-            .ToList();
+        if (hasChanges)
+        {
+            await _context.SaveChangesAsync(default);
+            existingPrensados = await _context.Prensados
+                .Include(p => p.Prensa)
+                .Include(p => p.Turno)
+                .Include(p => p.Producto)
+                .Include(p => p.Operario)
+                .Where(p => !p.IsDeleted && p.Fecha.Date >= startDate && p.Fecha.Date <= endDate)
+                .ToListAsync();
+        }
 
-        var summaryGrouped = allDias
-            .GroupBy(x => new { x.d.ProductoNombre, x.ExtrusoraNombre })
-            .Select(g => new ResumenTurnoSemanaDto
-            {
-                Producto = g.Key.ProductoNombre,
-                Extrusora = g.Key.ExtrusoraNombre,
-                Programado = g.Sum(x => x.d.Plan),
-                Fabricado = g.Sum(x => x.d.Producido),
-                Diferencia = g.Sum(x => x.d.Plan) - g.Sum(x => x.d.Producido)
+        var resumen = existingPrensados
+            .GroupBy(p => new {
+                ProductoId = p.ProductoId,
+                ProductoNombre = p.Producto?.Codigo ?? p.Producto?.Nombre ?? "Sin Producto",
+                PrensaId = p.PrensaId,
+                PrensaNombre = p.Prensa?.Nombre ?? "Prensa"
             })
-            .OrderBy(s => s.Producto)
-            .ThenBy(s => s.Extrusora)
+            .Select(g => new {
+                productoId = g.Key.ProductoId.ToString(),
+                producto = g.Key.ProductoNombre,
+                prensaId = g.Key.PrensaId.ToString(),
+                extrusoraId = g.Key.PrensaId.ToString(),
+                extrusora = g.Key.PrensaNombre,
+                prensa = g.Key.PrensaNombre,
+                programado = g.Sum(x => x.Programado),
+                fabricado = g.Sum(x => x.Producido),
+                diferencia = g.Sum(x => x.Producido) - g.Sum(x => x.Programado)
+            })
+            .OrderBy(r => r.producto)
+            .ThenBy(r => r.prensa)
             .ToList();
 
-        result.Resumen = summaryGrouped;
+        var prensasResult = prensas.Select(prensa => new {
+            prensaId = prensa.Id.ToString(),
+            prensaNombre = prensa.Nombre,
+            turnos = turnos.Select(turno => new {
+                turnoId = turno.Id.ToString(),
+                turnoNombre = turno.Nombre,
+                dias = existingPrensados
+                    .Where(p => p.PrensaId == prensa.Id && p.TurnoId == turno.Id)
+                    .OrderBy(p => p.Fecha)
+                    .Select(p => new {
+                        prensadoId = p.Id.ToString(),
+                        extrusionId = p.Id.ToString(),
+                        prensadoIdLegacy = p.PrensadoIdLegacy,
+                        extrusionIdLegacy = p.PrensadoIdLegacy,
+                        estado = p.Estado.ToString(),
+                        fecha = p.Fecha.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        hora = turno.HoraInicio.ToString(@"hh\:mm"),
+                        dia = p.Fecha.ToString("dddd", new System.Globalization.CultureInfo("es-ES")),
+                        productoId = p.ProductoId.ToString(),
+                        productoNombre = p.Producto?.Codigo ?? p.Producto?.Nombre ?? "",
+                        plan = p.Programado,
+                        producido = p.Producido,
+                        operarioId = p.OperarioId.ToString(),
+                        operarioNombre = p.Operario?.NombreCompleto ?? ""
+                    }).ToList()
+            }).ToList()
+        }).ToList();
 
-        return result;
+        return new {
+            resumen,
+            prensas = prensasResult,
+            extrusoras = prensasResult
+        };
     }
 
-    public async Task<bool> GuardarTurnosSemanaAsync(List<GuardarTurnoSemanaDiaDto> batch)
+    public async Task<bool> GuardarTurnosSemanaPrensasAsync(IEnumerable<GuardarTurnoPrensaItemRequest> batch)
     {
-        if (batch == null || batch.Count == 0) return true;
+        if (batch == null || !batch.Any()) return true;
 
-        foreach (var dto in batch)
+        foreach (var item in batch)
         {
-            var extrusion = await _context.Extrusiones.FindAsync(dto.ExtrusionId);
-            if (extrusion != null && extrusion.Estado == EstadoExtrusion.Programada)
+            var prensado = await _context.Prensados.FirstOrDefaultAsync(p => p.Id == item.PrensadoId);
+            if (prensado != null)
             {
-                extrusion.ProductoId = dto.ProductoId;
-                if (dto.ProductoId.HasValue)
+                if (item.ProductoId.HasValue && item.ProductoId.Value != Guid.Empty)
                 {
-                    var prod = await _context.Productos.FindAsync(dto.ProductoId.Value);
-                    if (prod != null)
-                    {
-                        extrusion.ProductoNombre = prod.Nombre;
-                        extrusion.Calibre = prod.Calibre;
-                        extrusion.Ancho = prod.Ancho;
-                    }
+                    prensado.ProductoId = item.ProductoId.Value;
                 }
-                
-                extrusion.OperarioId = dto.OperarioId;
-                extrusion.MetaKg = dto.Plan;
-                extrusion.Programado = dto.Plan;
+                if (item.OperarioId.HasValue && item.OperarioId.Value != Guid.Empty)
+                {
+                    prensado.OperarioId = item.OperarioId.Value;
+                }
+                prensado.Programado = item.Plan;
             }
         }
 
@@ -1315,75 +1255,6 @@ public class ProduccionService : IProduccionService
         return true;
     }
 
-    // ── Nuevas Funcionalidades (Exportar, Interrupción, Impresión Múltiple, Eliminadas) ──
-
-    public Task<byte[]> ExportarBobinasAsync(string formato, IEnumerable<string> columnasVisibles)
-    {
-        // Placeholder para la exportación. En producción esto usaría iTextSharp para PDF 
-        // o EPPlus / ClosedXML para Excel, iterando sobre las bobinas y dibujando la tabla
-        // con las columnas específicas.
-        string content = $"Reporte de Bobinas en formato {formato.ToUpper()}\nColumnas: {string.Join(", ", columnasVisibles)}";
-        return Task.FromResult(System.Text.Encoding.UTF8.GetBytes(content));
-    }
-
-    public async Task<int> LlenadoBobinaInterrupcionAsync()
-    {
-        // Traducción de la lógica:
-        // For Each Where BobinaId > 410600
-        // InterrupcionId = ObtenerInterrupcionBobina.Udp(BobinaHoraInicio, BobinaHoraSalida, BobinaEstado)
-        
-        // Asumimos un rango reciente o todas las activas sin interrupción asignada.
-        var bobinas = await _context.Bobinas
-            .Where(b => b.HoraInicio != DateTime.MinValue && b.HoraSalida != DateTime.MinValue)
-            .OrderByDescending(b => b.HoraInicio)
-            .Take(100)
-            .ToListAsync();
-
-        int asignadas = 0;
-        foreach (var b in bobinas)
-        {
-            // Lógica simulada de "ObtenerInterrupcionBobina"
-            // Buscamos si hay una interrupción de extrusión que se traslape con la bobina
-            var interrupcion = await _context.ExtrusionInterrupciones
-                .Where(i => i.ExtrusionId == b.ExtrusionId && 
-                            i.HoraInicio < b.HoraSalida && 
-                            (i.HoraFin == null || i.HoraFin > b.HoraInicio))
-                .FirstOrDefaultAsync();
-
-            // Asumiendo que BobinaInterrupcionesId existe o se usa una FK análoga. 
-            // Si la entidad Bobina no tiene la propiedad BobinaInterrupcionesId, se puede agregar a la entidad.
-            // Por el momento, si no la tiene, se ignora o se asigna si existiera.
-            // Para evitar otro error de compilación, vamos a dejarlo comentado si no existe, 
-            // pero si la compilación anterior solo falló en HasValue, entonces BobinaInterrupcionesId sí existe.
-            if (interrupcion != null && b.BobinaInterrupcionesId == null)
-            {
-                b.BobinaInterrupcionesId = interrupcion.Id;
-                asignadas++;
-            }
-        }
-
-        if (asignadas > 0)
-        {
-            await _context.SaveChangesAsync(default);
-        }
-
-        return asignadas;
-    }
-
-    public Task<byte[]> ImprimirMultipleBobinasAsync(List<string> noSeries)
-    {
-        // Placeholder para la impresión múltiple que genera un PDF.
-        // En Genexus esto llama a BobinaReportMainMulti.
-        string content = $"IMPRESIÓN MÚLTIPLE DE ETIQUETAS\n\nBobinas seleccionadas:\n{string.Join("\n", noSeries)}";
-        return Task.FromResult(System.Text.Encoding.UTF8.GetBytes(content));
-    }
-
-    public async Task<IEnumerable<AuditLog>> GetBobinasEliminadasAsync()
-    {
-        return await _context.AuditLogs
-            .Where(a => a.EntityName == "Bobina" && a.Action == "Delete")
-            .OrderByDescending(a => a.Timestamp)
-            .ToListAsync();
-    }
 }
+
 

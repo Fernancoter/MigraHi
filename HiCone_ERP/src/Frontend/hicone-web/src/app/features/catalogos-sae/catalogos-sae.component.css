@@ -104,18 +104,17 @@
 }
 
 .wwp-header h1 {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 0;
-  letter-spacing: -0.025em;
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: #4caf50;
+  margin: 0 0 0.2rem 0;
 }
 
 .wwp-breadcrumbs {
   font-size: 0.85rem;
-  color: #64748b;
-  margin-top: 0.25rem;
-  font-weight: 500;
+  color: #757575;
+  margin-top: 0.15rem;
+  font-weight: 400;
 }
 
 .sub-title {

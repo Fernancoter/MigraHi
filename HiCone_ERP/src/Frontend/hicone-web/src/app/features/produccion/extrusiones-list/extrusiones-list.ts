@@ -16,6 +16,7 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
     <div class="module-page animate-fade-in">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Extrusión</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Extrusión</span>
             <span class="sep">&rsaquo;</span>
@@ -23,7 +24,6 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
             <span class="sep">&rsaquo;</span>
             <span class="active">Extrusiones</span>
           </nav>
-          <h1 class="premium-title">Extrusión</h1>
         </div>
       </div>
 

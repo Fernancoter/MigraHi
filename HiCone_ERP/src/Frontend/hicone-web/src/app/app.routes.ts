@@ -26,6 +26,16 @@ import { ExtrusorasListComponent } from './features/produccion/extrusoras-list/e
 import { ExtrusoraProductoListComponent } from './features/produccion/extrusora-producto-list/extrusora-producto-list';
 import { ExtrusionesListComponent } from './features/produccion/extrusiones-list/extrusiones-list';
 import { BobinasListComponent } from './features/produccion/bobinas-list/bobinas-list';
+import { ExtrusionInterrupcionesListComponent } from './features/produccion/extrusion-interrupciones-list/extrusion-interrupciones-list';
+import { TroquelesCatalogoComponent } from './features/produccion/catalogos/troqueles/troqueles.component';
+import { PrensadosListComponent } from './features/produccion/prensados-list/prensados-list';
+import { InicioPrensadoComponent } from './features/produccion/inicio-prensado/inicio-prensado.component';
+import { TurnosSemanaPrensadoComponent } from './features/produccion/turnos-semana-prensado/turnos-semana-prensado';
+
+import { CarrerasListComponent } from './features/produccion/carreras-list/carreras-list';
+import { CarretesListComponent } from './features/produccion/carretes-list/carretes-list';
+import { PaletsListComponent } from './features/produccion/palets-list/palets-list';
+import { InterrupcionesListComponent } from './features/produccion/interrupciones-list/interrupciones-list';
 import { EmbarquesComponent } from './features/embarques/embarques.component';
 import { CalidadComponent } from './features/calidad/calidad.component';
 import { ConfiguracionComponent } from './features/configuracion/configuracion.component';
@@ -70,6 +80,17 @@ export const routes: Routes = [
       { path: 'produccion/extrusion/extrusora-producto', component: ExtrusoraProductoListComponent },
       { path: 'produccion/extrusion/operacion/extrusiones', component: ExtrusionesListComponent },
       { path: 'produccion/extrusion/operacion/bobinas', component: BobinasListComponent },
+      { path: 'produccion/extrusion/operacion/interrupciones', component: ExtrusionInterrupcionesListComponent },
+      { path: 'produccion/prensado/inicio', component: InicioPrensadoComponent },
+      { path: 'produccion/prensado/turnos-semana', component: TurnosSemanaPrensadoComponent },
+
+      { path: 'produccion/prensado/catalogos/troqueles', component: TroquelesCatalogoComponent },
+      { path: 'produccion/prensado/catalogos/prensas', component: PrensasCatalogoComponent },
+      { path: 'produccion/prensado/operacion/prensados', component: PrensadosListComponent },
+      { path: 'produccion/prensado/operacion/carreras', component: CarrerasListComponent },
+      { path: 'produccion/prensado/operacion/carretes', component: CarretesListComponent },
+      { path: 'produccion/prensado/operacion/palets', component: PaletsListComponent },
+      { path: 'produccion/prensado/operacion/interrupciones', component: InterrupcionesListComponent },
       { path: 'embarques', component: EmbarquesComponent },
       { path: 'embarques/carga/:id', loadComponent: () => import('./features/embarques/carga-camion/carga-camion').then(m => m.CargaCamionComponent) },
       {

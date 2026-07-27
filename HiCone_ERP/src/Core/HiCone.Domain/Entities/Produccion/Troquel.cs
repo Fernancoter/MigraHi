@@ -1,6 +1,8 @@
 using HiCone.Domain.Common;
 using HiCone.Domain.Enums;
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace HiCone.Domain.Entities.Produccion;
 
 /// <summary>
@@ -8,6 +10,9 @@ namespace HiCone.Domain.Entities.Produccion;
 /// </summary>
 public class Troquel : TenantEntity
 {
+    [NotMapped]
+    public int SecuencialId { get; set; }
+
     public string Codigo { get; set; } = null!;
     public string Nombre { get; set; } = null!;
     public EstadoTroquel Estado { get; set; } = EstadoTroquel.Disponible;

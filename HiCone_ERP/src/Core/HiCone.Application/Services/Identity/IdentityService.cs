@@ -46,139 +46,53 @@ namespace HiCone.Application.Services.Identity
 
     public class CreateUserDto
     {
-        [System.Text.Json.Serialization.JsonPropertyName("username")]
         public string Username { get; set; } = null!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("email")]
         public string Email { get; set; } = null!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("password")]
         public string Password { get; set; } = null!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("firstName")]
         public string FirstName { get; set; } = null!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("lastName")]
         public string LastName { get; set; } = null!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("phoneNumber")]
         public string? PhoneNumber { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("operadorId")]
         public Guid? OperadorId { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("gender")]
         public string? Gender { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("authenticationType")]
         public string? AuthenticationType { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("companyId")]
         public int? CompanyId { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("namespace")]
         public string? Namespace { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("externalId")]
         public string? ExternalId { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("birthday")]
         public DateTime? Birthday { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("activationDate")]
         public DateTime? ActivationDate { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("receivesInformation")]
         public bool ReceivesInformation { get; set; } = true;
-
-        [System.Text.Json.Serialization.JsonPropertyName("cannotChangePassword")]
         public bool CannotChangePassword { get; set; } = false;
-
-        [System.Text.Json.Serialization.JsonPropertyName("passwordNeverExpires")]
         public bool PasswordNeverExpires { get; set; } = false;
-
-        [System.Text.Json.Serialization.JsonPropertyName("securityPolicyId")]
         public string? SecurityPolicyId { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("isRepositoryEnabled")]
         public bool IsRepositoryEnabled { get; set; } = true;
-
-        [System.Text.Json.Serialization.JsonPropertyName("mustChangePassword")]
-        public bool MustChangePassword { get; set; } = false;
-
-        [System.Text.Json.Serialization.JsonPropertyName("avatarUrl")]
+        public bool MustChangePassword { get; set; } = true;
         public string? AvatarUrl { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("roleIds")]
         public List<Guid> RoleIds { get; set; } = new();
     }
 
     public class UpdateUserDto
     {
-        [System.Text.Json.Serialization.JsonPropertyName("email")]
         public string Email { get; set; } = null!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("firstName")]
         public string FirstName { get; set; } = null!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("lastName")]
         public string LastName { get; set; } = null!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("phoneNumber")]
         public string? PhoneNumber { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("isActive")]
         public bool IsActive { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("isLockedOut")]
         public bool IsLockedOut { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("mustChangePassword")]
         public bool MustChangePassword { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("operadorId")]
         public Guid? OperadorId { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("gender")]
         public string? Gender { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("authenticationType")]
         public string? AuthenticationType { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("companyId")]
         public int? CompanyId { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("namespace")]
         public string? Namespace { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("externalId")]
         public string? ExternalId { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("birthday")]
         public DateTime? Birthday { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("activationDate")]
         public DateTime? ActivationDate { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("receivesInformation")]
         public bool ReceivesInformation { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("cannotChangePassword")]
         public bool CannotChangePassword { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("passwordNeverExpires")]
         public bool PasswordNeverExpires { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("securityPolicyId")]
         public string? SecurityPolicyId { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("isRepositoryEnabled")]
         public bool IsRepositoryEnabled { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("avatarUrl")]
         public string? AvatarUrl { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("roleIds")]
         public List<Guid> RoleIds { get; set; } = new();
     }
 
@@ -553,7 +467,6 @@ namespace HiCone.Application.Services.Identity
             if (user == null) return false;
 
             user.PasswordHash = BC.HashPassword(newPassword);
-            user.MustChangePassword = false; // El cambio de contraseña manual por admin limpia la bandera de cambio obligatorio
             await _context.SaveChangesAsync(default);
             return true;
         }

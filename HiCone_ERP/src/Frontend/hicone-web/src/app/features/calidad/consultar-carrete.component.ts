@@ -86,7 +86,7 @@ import { CalidadService } from '../../core/services/calidad';
       margin-bottom: 10px;
     }
     .breadcrumb-item { color: #999; }
-    .breadcrumb-separator { font-size: 14px; }
+    .breadcrumb-separator { font-size: 14px; color: #4caf50; font-weight: bold; }
     .breadcrumb-item.active { color: #777; }
     
     .page-content {

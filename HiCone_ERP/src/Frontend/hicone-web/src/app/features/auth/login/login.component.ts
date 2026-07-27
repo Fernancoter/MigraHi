@@ -11,7 +11,7 @@ import { AuthService } from '../../../core/services/auth.service';
   template: `
     <div class="login-page">
       <!-- Tarjeta de Login -->
-      <div class="login-card glass animate-fade-in">
+      <div class="login-card glass animate-fade-in" *ngIf="!showRegister()">
         <div class="login-header">
           <img src="assets/images/logo-hicone.png" alt="Hi-Cone Logo" class="company-logo" onerror="this.src='https://hicone.com/wp-content/uploads/2021/04/Hi-Cone-Logo-no-tagline.png';">
           <p>Ingresa tus credenciales para acceder</p>
@@ -21,13 +21,13 @@ import { AuthService } from '../../../core/services/auth.service';
           <div class="form-group">
             <label for="email">Nombre de Usuario o Email</label>
             <div class="input-wrapper" [class.error]="isFieldInvalid('email')">
-              <span class="input-icon">✉️</span>            <input 
+              <span class="input-icon">✉️</span>
+              <input 
                 type="text" 
                 id="email" 
                 formControlName="email" 
                 placeholder="usuario123"
-                autocomplete="username"
-                (focus)="clearErrorMessage()">
+                autocomplete="username">
             </div>
             <div class="error-message" *ngIf="isFieldInvalid('email')">
               <span *ngIf="loginForm.get('email')?.errors?.['required']">Debe ingresar el nombre de usuario</span>
@@ -43,8 +43,7 @@ import { AuthService } from '../../../core/services/auth.service';
                 id="password" 
                 formControlName="password" 
                 placeholder="••••••••"
-                autocomplete="current-password"
-                (focus)="clearErrorMessage()">
+                autocomplete="current-password">
               <button 
                 type="button" 
                 class="password-toggle" 
@@ -71,6 +70,8 @@ import { AuthService } from '../../../core/services/auth.service';
         </form>
 
         <div class="login-footer">
+          <p>¿Aún no tienes cuenta? <button type="button" class="link-btn" (click)="toggleRegister(true)">Crear una ahora</button></p>
+          
           <div class="apk-download">
             <a href="http://erphi-cone.com/erp/HICONE.apk" target="_blank" class="apk-link">
               <span class="apk-icon">📱</span>
@@ -82,6 +83,69 @@ import { AuthService } from '../../../core/services/auth.service';
         <div class="gam-error" *ngIf="errorMessage()">
           {{ errorMessage() }}
         </div>
+      </div>
+
+      <!-- Modal de Registro Flotante -->
+      <div class="register-modal glass animate-scale-up" *ngIf="showRegister()">
+        <div class="modal-header">
+          <h2>Registrarse</h2>
+          <p class="modal-subtitle">Crea tu cuenta para acceder al ecosistema Hi-Cone</p>
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="register-grid">
+          <div class="form-group">
+            <label>Nombre de Usuario *</label>
+            <input type="text" formControlName="username" placeholder="usuario123" [class.input-error]="isRegisterFieldInvalid('username')">
+            <div class="error-message" *ngIf="isRegisterFieldInvalid('username')">
+              <span *ngIf="registerForm.get('username')?.errors?.['required']">El nombre de usuario es obligatorio</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" formControlName="email" placeholder="email@ejemplo.com" [class.input-error]="isRegisterFieldInvalid('email')">
+            <div class="error-message" *ngIf="isRegisterFieldInvalid('email')">
+              <span *ngIf="registerForm.get('email')?.errors?.['required']">El email es obligatorio</span>
+              <span *ngIf="registerForm.get('email')?.errors?.['email']">Ingrese un correo electrónico válido</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Contraseña *</label>
+            <input type="password" formControlName="password" placeholder="••••••••" [class.input-error]="isRegisterFieldInvalid('password')">
+            <div class="error-message" *ngIf="isRegisterFieldInvalid('password')">
+              <span *ngIf="registerForm.get('password')?.errors?.['required']">La contraseña es obligatoria</span>
+              <span *ngIf="registerForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Confirmación de contraseña *</label>
+            <input type="password" formControlName="confirmPassword" placeholder="••••••••" [class.input-error]="isRegisterFieldInvalid('confirmPassword')">
+            <div class="error-message" *ngIf="isRegisterFieldInvalid('confirmPassword')">
+              <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Confirme su contraseña</span>
+              <span *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordMismatch']">Las contraseñas no coinciden</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" formControlName="firstName" placeholder="Tu nombre">
+          </div>
+
+          <div class="form-group">
+            <label>Apellido</label>
+            <input type="text" formControlName="lastName" placeholder="Tu apellido">
+          </div>
+
+          <div class="modal-actions">
+            <button type="submit" class="login-btn" [disabled]="isLoading()">
+              <span *ngIf="!isLoading()">REGISTRARSE</span>
+              <span *ngIf="isLoading()" class="loader"></span>
+            </button>
+            <button type="button" class="btn-secondary" (click)="toggleRegister(false)">VOLVER</button>
+          </div>
+        </form>
       </div>
       
       <div class="login-bg">
@@ -318,7 +382,17 @@ export class LoginComponent implements OnInit {
     rememberMe: [false]
   });
 
+  registerForm: FormGroup = this.fb.group({
+    username: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    confirmPassword: ['', [Validators.required]],
+    firstName: [''],
+    lastName: ['']
+  });
+
   isLoading = signal(false);
+  showRegister = signal(false);
   errorMessage = signal<string | null>(null);
   showPassword = signal(false);
 
@@ -330,15 +404,18 @@ export class LoginComponent implements OnInit {
         rememberMe: true
       });
     }
-
-    // Clear error message when the form value changes (typing/editing)
-    this.loginForm.valueChanges.subscribe(() => {
-      this.clearErrorMessage();
-    });
   }
 
   togglePasswordVisibility() {
     this.showPassword.update(v => !v);
+  }
+
+  toggleRegister(show: boolean) {
+    this.showRegister.set(show);
+    this.errorMessage.set(null);
+    if (!show) {
+      this.registerForm.reset();
+    }
   }
 
   isFieldInvalid(field: string): boolean {
@@ -346,10 +423,9 @@ export class LoginComponent implements OnInit {
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
-  clearErrorMessage() {
-    if (this.errorMessage()) {
-      this.errorMessage.set(null);
-    }
+  isRegisterFieldInvalid(field: string): boolean {
+    const control = this.registerForm.get(field);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   onLogin() {
@@ -373,6 +449,48 @@ export class LoginComponent implements OnInit {
       error: (err) => {
         this.isLoading.set(false);
         const errorMsg = err.error?.errors?.[0] || err.error?.message || 'Error al iniciar sesión. Inténtelo de nuevo.';
+        this.errorMessage.set(errorMsg);
+      }
+    });
+  }
+
+  onRegister() {
+    this.errorMessage.set(null);
+    
+    // Validar coincidencia de contraseña de manera manual e interactiva
+    const password = this.registerForm.get('password')?.value;
+    const confirmPassword = this.registerForm.get('confirmPassword')?.value;
+    
+    if (password !== confirmPassword) {
+      this.registerForm.get('confirmPassword')?.setErrors({ passwordMismatch: true });
+    }
+
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
+    }
+    
+    this.isLoading.set(true);
+    
+    const payload = {
+      username: this.registerForm.value.username,
+      email: this.registerForm.value.email,
+      password: this.registerForm.value.password,
+      firstName: this.registerForm.value.firstName || '',
+      lastName: this.registerForm.value.lastName || '',
+      roleIds: []
+    };
+
+    this.authService.register(payload).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.toggleRegister(false);
+        this.errorMessage.set('Cuenta creada con éxito. Ya puedes iniciar sesión.');
+        this.registerForm.reset();
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        const errorMsg = err.error?.error || err.error?.Error || 'Error al registrar la cuenta. Inténtelo de nuevo.';
         this.errorMessage.set(errorMsg);
       }
     });

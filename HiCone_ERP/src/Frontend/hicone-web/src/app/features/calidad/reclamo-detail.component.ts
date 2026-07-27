@@ -12,10 +12,10 @@ import { CalidadService, Reclamo, ReclamoDetalle } from '../../core/services/cal
     <div class="page-container animate-fade-in" *ngIf="reclamo">
       <div class="page-header-premium">
         <div class="title-section">
-          <nav class="breadcrumb-modern">
-            <a routerLink="/calidad">Calidad</a> / <a routerLink="/calidad/reclamos">Reclamos</a> / <span>{{ reclamo.codigo }}</span>
-          </nav>
           <h1 class="premium-title">Expediente de Reclamo: {{ reclamo.codigo }}</h1>
+          <nav class="breadcrumb-modern">
+            <a routerLink="/calidad">Calidad</a> <span class="sep">&rsaquo;</span> <a routerLink="/calidad/reclamos">Reclamos</a> <span class="sep">&rsaquo;</span> <span class="active">{{ reclamo.codigo }}</span>
+          </nav>
           <p>Detalle, investigación de causa raíz (RCA) y carretes afectados</p>
         </div>
         <div class="actions" *ngIf="isAbiertoOrProceso()">

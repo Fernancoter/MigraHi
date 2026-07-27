@@ -173,7 +173,13 @@ import autoTable from 'jspdf-autotable';
             <!-- Número de Extrusora -->
             <div class="form-group-premium">
               <label>Número de Extrusora</label>
-              <input class="input-premium" type="text" [(ngModel)]="form.numeroExtrusora" placeholder="Ej. 1, 2, 3..." />
+              <select class="input-premium" [(ngModel)]="form.numeroExtrusora" *ngIf="claves.length > 0">
+                <option value="" disabled selected>-- Seleccionar --</option>
+                <option *ngFor="let c of claves" [value]="c.valor">{{ c.valor }}</option>
+              </select>
+              <div class="error-message" *ngIf="claves.length === 0" style="color: #ef4444; font-size: 0.85rem; margin-top: 0.25rem;">
+                ⚠️ No hay números de extrusora configurados en el catálogo de claves.
+              </div>
             </div>
 
             <!-- Extrusora (Nombre) -->
@@ -209,10 +215,13 @@ import autoTable from 'jspdf-autotable';
                   <button class="btn-row-delete" (click)="deleteOperarioRow(i)" title="Eliminar fila">×</button>
                 </td>
                 <td>
-                  <select class="input-premium" [(ngModel)]="row.turnoId" (change)="onTurnoChange(row)">
+                  <select class="input-premium" [(ngModel)]="row.turnoId" (change)="onTurnoChange(row)" *ngIf="turnosList.length > 0">
                     <option value="" disabled selected>-- Seleccione Turno --</option>
                     <option *ngFor="let t of turnosList" [value]="t.id">{{ t.nombre }}</option>
                   </select>
+                  <div class="error-message" *ngIf="turnosList.length === 0" style="color: #ef4444; font-size: 0.85rem; margin-top: 0.25rem;">
+                    ⚠️ No hay turnos configurados.
+                  </div>
                 </td>
                 <td>
                   <select class="input-premium" [(ngModel)]="row.operarioId">
