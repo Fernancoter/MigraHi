@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProduccionService } from '../../../core/services/produccion';
 import { AuthService } from '../../../core/services/auth.service';
+import { InventarioService, Silo } from '../../../core/services/inventario.service';
 
 @Component({
   selector: 'app-wizard',
@@ -56,7 +57,7 @@ import { AuthService } from '../../../core/services/auth.service';
 
           <div class="form-group">
             <label>Máquina</label>
-            <select [(ngModel)]="selectedMaquinaId" class="form-select">
+            <select [(ngModel)]="selectedMaquinaId" (change)="onMaquinaChange()" class="form-select">
               <option value="" disabled selected>Seleccione la máquina...</option>
               <option *ngFor="let maq of maquinas" [value]="maq.id">{{ maq.nombre }} ({{ maq.codigo }})</option>
             </select>
@@ -64,10 +65,15 @@ import { AuthService } from '../../../core/services/auth.service';
 
           <div class="form-group">
             <label>Producto</label>
-            <select [(ngModel)]="selectedProductoId" class="form-select">
-              <option value="" disabled selected>Seleccione el producto...</option>
-              <option *ngFor="let prod of productos" [value]="prod.id">{{ prod.nombre }} ({{ prod.codigo }})</option>
+            <select [(ngModel)]="selectedProductoId" (change)="onProductoChange()" class="form-select" [disabled]="!selectedMaquinaId">
+              <option value="" disabled selected>
+                {{ !selectedMaquinaId ? 'Seleccione primero la máquina...' : 'Seleccione el producto...' }}
+              </option>
+              <option *ngFor="let prod of productosFiltrados" [value]="prod.id">{{ prod.codigo }}</option>
             </select>
+            <p *ngIf="selectedMaquinaId && productosFiltrados.length === 0" class="no-products-warning">
+              ⚠️ No hay productos configurados para esta máquina en la base de datos.
+            </p>
           </div>
 
           <div class="btn-group" style="margin-top: 10px;">
@@ -78,26 +84,11 @@ import { AuthService } from '../../../core/services/auth.service';
 
       <!-- Slide 3: Confirmación / Operar -->
       <div class="wizard-slide" *ngIf="currentStep === 3">
-        <div class="illustration-container">
-          <!-- Celular/Iniciar SVG -->
-          <div class="phone-icon-wrapper">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="phone-svg">
-              <rect x="5" y="2" width="14" height="20" rx="2" />
-              <path d="M12 18h.01" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </div>
-        </div>
-
-        <div class="wizard-content">
+        <div class="wizard-content wizard-scrollable">
           <h1>Operar</h1>
-          <p class="subtitle">Completar datos para iniciar operación</p>
+          <p class="subtitle">Completar datos de inicio para la {{ selectedProceso === 'extrusion' ? 'Extrusora' : 'Prensa' }}</p>
 
-          <!-- Resumen de Configuración -->
           <div class="summary-card">
-            <div class="summary-item">
-              <span class="label">Proceso:</span>
-              <span class="value">{{ selectedProceso === 'extrusion' ? 'Extrusión' : 'Prensado' }}</span>
-            </div>
             <div class="summary-item">
               <span class="label">Máquina:</span>
               <span class="value">{{ getSelectedMaquinaNombre() }}</span>
@@ -108,8 +99,82 @@ import { AuthService } from '../../../core/services/auth.service';
             </div>
           </div>
 
+          <!-- FORMULARIO DE EXTRUSIÓN -->
+          <div *ngIf="selectedProceso === 'extrusion'" class="process-form">
+            <div class="form-row">
+              <div class="form-group half-width">
+                <label>Silo Virgen</label>
+                <select [(ngModel)]="selectedSiloVirgenId" class="form-select">
+                  <option value="" disabled selected>Silo Virgen...</option>
+                  <option *ngFor="let s of silosVirgen" [value]="s.id">{{ s.nombre }} ({{ s.existenciaActual }} kg)</option>
+                </select>
+              </div>
+              <div class="form-group half-width">
+                <label>Virgen Kilos</label>
+                <input type="number" [(ngModel)]="virgenKg" class="form-input" placeholder="0">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group half-width">
+                <label>Silo Molido (Opc.)</label>
+                <select [(ngModel)]="selectedSiloMolidoId" class="form-select">
+                  <option value="">Ninguno</option>
+                  <option *ngFor="let s of silosMolido" [value]="s.id">{{ s.nombre }} ({{ s.existenciaActual }} kg)</option>
+                </select>
+              </div>
+              <div class="form-group half-width">
+                <label>Molido Kilos</label>
+                <input type="number" [(ngModel)]="molidoKg" class="form-input" placeholder="0">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group half-width">
+                <label>RPM Husillo Virgen</label>
+                <input type="number" [(ngModel)]="revHusilloVirgen" class="form-input" placeholder="0">
+              </div>
+              <div class="form-group half-width">
+                <label>RPM Husillo Molido</label>
+                <input type="number" [(ngModel)]="revHusilloMolido" class="form-input" placeholder="0">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group half-width">
+                <label>Meta Kilos</label>
+                <input type="number" [(ngModel)]="metaKg" class="form-input" placeholder="0">
+              </div>
+              <div class="form-group half-width">
+                <label>Lote Aditivos</label>
+                <input type="text" [(ngModel)]="lotePaqueteAditivos" class="form-input" placeholder="Lote...">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Observaciones</label>
+              <textarea [(ngModel)]="observaciones" class="form-textarea" rows="2" placeholder="Observaciones de inicio..."></textarea>
+            </div>
+          </div>
+
+          <!-- FORMULARIO DE PRENSADO -->
+          <div *ngIf="selectedProceso === 'prensado'" class="process-form">
+            <div class="form-group">
+              <label>Troquel</label>
+              <select [(ngModel)]="selectedTroquelId" class="form-select">
+                <option value="" disabled selected>Seleccione el troquel...</option>
+                <option *ngFor="let t of troqueles" [value]="t.id">{{ t.nombre }} ({{ t.codigo }})</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Observaciones</label>
+              <textarea [(ngModel)]="observaciones" class="form-textarea" rows="3" placeholder="Observaciones de inicio..."></textarea>
+            </div>
+          </div>
+
           <div class="btn-group" style="margin-top: 15px;">
-            <button class="btn btn-teal" [disabled]="isSubmitting" (click)="iniciarOperacion()">
+            <button class="btn btn-teal" [disabled]="isSubmitting || !isFormReady()" (click)="iniciarOperacion()">
               <span *ngIf="!isSubmitting">INICIAR OPERACIÓN</span>
               <span *ngIf="isSubmitting">INICIANDO...</span>
             </button>
@@ -141,7 +206,7 @@ import { AuthService } from '../../../core/services/auth.service';
       align-items: center;
       justify-content: space-between;
       min-height: calc(100vh - 120px);
-      padding: 24px 16px;
+      padding: 16px 12px;
       color: var(--text-main);
       animation: fadeIn 0.3s ease-out;
       user-select: none;
@@ -156,24 +221,41 @@ import { AuthService } from '../../../core/services/auth.service';
       width: 100%;
       max-width: 420px;
       animation: slideIn 0.3s ease-out;
+      overflow: hidden;
+    }
+
+    .wizard-scrollable {
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
+      padding-right: 4px;
+      width: 100%;
+    }
+
+    /* Ocultar barra de scroll en navegadores basados en WebKit */
+    .wizard-scrollable::-webkit-scrollbar {
+      width: 4px;
+    }
+    .wizard-scrollable::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 2px;
     }
 
     .illustration-container {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 150px;
+      min-height: 120px;
     }
 
     .illust-svg {
-      width: 180px;
-      height: 135px;
+      width: 150px;
+      height: 110px;
     }
 
     .pencil-icon-wrapper, .phone-icon-wrapper {
-      width: 80px;
-      height: 80px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
       background-color: rgba(56, 189, 248, 0.1);
       border: 1px solid rgba(56, 189, 248, 0.2);
@@ -185,8 +267,8 @@ import { AuthService } from '../../../core/services/auth.service';
     }
 
     .pencil-svg, .phone-svg {
-      width: 40px;
-      height: 40px;
+      width: 32px;
+      height: 32px;
     }
 
     .wizard-content {
@@ -194,11 +276,11 @@ import { AuthService } from '../../../core/services/auth.service';
       text-align: center;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
     }
 
     .wizard-content h1 {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 700;
       letter-spacing: -0.5px;
       color: var(--text-main);
@@ -206,9 +288,9 @@ import { AuthService } from '../../../core/services/auth.service';
     }
 
     .wizard-content .subtitle {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-muted);
-      margin: 0 0 10px 0;
+      margin: 0 0 6px 0;
     }
 
     /* Formulario */
@@ -216,45 +298,76 @@ import { AuthService } from '../../../core/services/auth.service';
       text-align: left;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
       width: 100%;
+      margin-bottom: 8px;
     }
 
     .form-group label {
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
-    .form-select {
+    .form-select, .form-input, .form-textarea {
       background-color: #151f32;
       border: 1px solid var(--border-color);
       border-radius: 8px;
       color: var(--text-main);
-      padding: 12px;
-      font-size: 15px;
+      padding: 10px 12px;
+      font-size: 14px;
       width: 100%;
       outline: none;
       transition: var(--transition-smooth);
+      box-sizing: border-box;
     }
 
-    .form-select:focus {
+    .form-select:focus, .form-input:focus, .form-textarea:focus {
       border-color: var(--primary);
       box-shadow: 0 0 8px rgba(56, 189, 248, 0.25);
+    }
+
+    .form-textarea {
+      resize: none;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .half-width {
+      width: 50%;
+    }
+
+    .process-form {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .no-products-warning {
+      color: #f59e0b;
+      font-size: 11px;
+      margin-top: 4px;
+      text-align: left;
     }
 
     /* Resumen */
     .summary-card {
       background-color: #151f32;
       border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 10px;
+      padding: 12px;
       text-align: left;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
       width: 100%;
     }
 
@@ -263,7 +376,7 @@ import { AuthService } from '../../../core/services/auth.service';
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding-bottom: 8px;
+      padding-bottom: 6px;
     }
 
     .summary-item:last-child {
@@ -272,12 +385,12 @@ import { AuthService } from '../../../core/services/auth.service';
     }
 
     .summary-item .label {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-muted);
     }
 
     .summary-item .value {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--text-main);
     }
@@ -286,14 +399,14 @@ import { AuthService } from '../../../core/services/auth.service';
     .btn-group {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       width: 100%;
     }
 
     .btn {
       width: 100%;
-      padding: 14px;
-      font-size: 15px;
+      padding: 12px;
+      font-size: 14px;
       font-weight: 700;
       border-radius: 8px;
       border: none;
@@ -332,7 +445,7 @@ import { AuthService } from '../../../core/services/auth.service';
     .wizard-indicators {
       display: flex;
       gap: 10px;
-      margin: 24px 0;
+      margin: 16px 0;
     }
 
     .dot {
@@ -351,12 +464,12 @@ import { AuthService } from '../../../core/services/auth.service';
 
     /* Botón de Cerrar */
     .wizard-close-container {
-      margin-top: 10px;
+      margin-top: 5px;
     }
 
     .close-btn {
-      width: 44px;
-      height: 44px;
+      width: 40px;
+      height: 40px;
       border-radius: 8px;
       border: 1px solid var(--border-color);
       background-color: transparent;
@@ -375,8 +488,8 @@ import { AuthService } from '../../../core/services/auth.service';
     }
 
     .close-btn svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
     }
 
     @keyframes fadeIn {
@@ -393,37 +506,91 @@ import { AuthService } from '../../../core/services/auth.service';
 export class WizardComponent implements OnInit {
   private produccionService = inject(ProduccionService);
   private authService = inject(AuthService);
+  private inventarioService = inject(InventarioService);
   private router = inject(Router);
 
   currentStep = 1;
-  selectedProceso = 'extrusion'; // Extrusión por defecto para que las listas carguen inicialmente
+  selectedProceso = 'extrusion';
   maquinas: any[] = [];
   productos: any[] = [];
+  extrusoraProductos: any[] = [];
+  productosFiltrados: any[] = [];
+
   selectedMaquinaId = '';
   selectedProductoId = '';
+
+  // Parámetros de Mezcla e Inicio (Paso 3)
+  silosVirgen: Silo[] = [];
+  silosMolido: Silo[] = [];
+  troqueles: any[] = [];
+
+  selectedSiloVirgenId = '';
+  virgenKg = 1000;
+  selectedSiloMolidoId = '';
+  molidoKg = 0;
+  metaKg = 5000;
+  revHusilloVirgen = 45;
+  revHusilloMolido = 0;
+  lotePaqueteAditivos = 'LOT-AD-01';
+  observaciones = 'Iniciado desde el Wizard PWA';
+
+  // Prensado
+  selectedTroquelId = '';
 
   isSubmitting = false;
   private touchStartX = 0;
 
   ngOnInit() {
+    // 1. Cargar catálogo base de productos (fallback)
     this.produccionService.getProductos().subscribe({
-      next: (prods: any[]) => this.productos = prods,
+      next: (prods: any[]) => {
+        this.productos = prods;
+        if (this.selectedProceso !== 'extrusion') {
+          this.productosFiltrados = prods;
+        }
+      },
       error: (err: any) => console.error('Error cargando productos:', err)
     });
 
-    // Cargar extrusoras por defecto al inicio
-    this.produccionService.getExtrusoras().subscribe({
-      next: (exts: any[]) => this.maquinas = exts,
-      error: (err: any) => console.error('Error cargando extrusoras por defecto:', err)
+    // 2. Cargar todas las relaciones Extrusora-Producto
+    this.produccionService.getExtrusoraProductos().subscribe({
+      next: (data: any[]) => {
+        this.extrusoraProductos = data;
+        this.onMaquinaChange(); // Filtrar inicialmente si ya hay máquina
+      },
+      error: (err: any) => console.error('Error cargando extrusora-productos:', err)
     });
+
+    // 3. Cargar silos desde Inventario
+    this.inventarioService.getSilos().subscribe({
+      next: (silos: Silo[]) => {
+        this.silosVirgen = silos.filter(s => s.estadoMaterial?.toLowerCase().includes('virgen'));
+        this.silosMolido = silos.filter(s => s.estadoMaterial?.toLowerCase().includes('molido'));
+        if (this.silosVirgen.length > 0) {
+          this.selectedSiloVirgenId = this.silosVirgen[0].id;
+        }
+      },
+      error: (err: any) => console.error('Error cargando silos:', err)
+    });
+
+    // 4. Cargar troqueles desde Catálogos
+    this.produccionService.getTroqueles().subscribe({
+      next: (troqs: any[]) => {
+        this.troqueles = troqs;
+        if (troqs.length > 0) {
+          this.selectedTroquelId = troqs[0].id;
+        }
+      },
+      error: (err: any) => console.error('Error cargando troqueles:', err)
+    });
+
+    // Cargar extrusoras por defecto
+    this.cargarMaquinas();
   }
 
-  selectProceso(proceso: string) {
-    this.selectedProceso = proceso;
-    this.selectedMaquinaId = '';
+  cargarMaquinas() {
     this.maquinas = [];
-
-    if (proceso === 'extrusion') {
+    if (this.selectedProceso === 'extrusion') {
       this.produccionService.getExtrusoras().subscribe({
         next: (exts: any[]) => this.maquinas = exts,
         error: (err: any) => console.error('Error cargando extrusoras:', err)
@@ -434,8 +601,52 @@ export class WizardComponent implements OnInit {
         error: (err: any) => console.error('Error cargando prensas:', err)
       });
     }
+  }
 
+  selectProceso(proceso: string) {
+    this.selectedProceso = proceso;
+    this.selectedMaquinaId = '';
+    this.selectedProductoId = '';
+    this.productosFiltrados = [];
+    this.cargarMaquinas();
     this.nextStep();
+  }
+
+  onMaquinaChange() {
+    this.selectedProductoId = '';
+    if (this.selectedProceso === 'extrusion') {
+      // Filtrar los productos configurados específicamente para esta extrusora
+      const relaciones = this.extrusoraProductos.filter(ep => ep.extrusoraId === this.selectedMaquinaId);
+      this.productosFiltrados = relaciones.map(ep => ep.producto).filter(p => !!p);
+    } else {
+      // Prensado: por defecto muestra todos los productos
+      this.productosFiltrados = this.productos;
+    }
+  }
+
+  onProductoChange() {
+    // Si es extrusión, precargamos los valores predeterminados de la relación extrusora-producto
+    if (this.selectedProceso === 'extrusion' && this.selectedMaquinaId && this.selectedProductoId) {
+      const ep = this.extrusoraProductos.find(
+        x => x.extrusoraId === this.selectedMaquinaId && x.productoId === this.selectedProductoId
+      );
+      if (ep) {
+        this.virgenKg = ep.defaultVirgenKg !== undefined ? ep.defaultVirgenKg : 1000;
+        this.molidoKg = ep.defaultMolidoKg !== undefined ? ep.defaultMolidoKg : 0;
+        this.metaKg = ep.defaultMetaKg !== undefined ? ep.defaultMetaKg : 5000;
+        this.revHusilloVirgen = ep.defaultRevHusilloVirgen !== undefined ? ep.defaultRevHusilloVirgen : 45;
+        this.revHusilloMolido = ep.defaultRevHusilloMolido !== undefined ? ep.defaultRevHusilloMolido : 0;
+      }
+    }
+  }
+
+  isFormReady(): boolean {
+    if (!this.selectedMaquinaId || !this.selectedProductoId) return false;
+    if (this.selectedProceso === 'extrusion') {
+      return !!this.selectedSiloVirgenId && this.virgenKg > 0 && this.metaKg > 0;
+    } else {
+      return !!this.selectedTroquelId;
+    }
   }
 
   nextStep() {
@@ -451,6 +662,9 @@ export class WizardComponent implements OnInit {
   }
 
   goToStep(step: number) {
+    // Validaciones básicas de navegación
+    if (step === 2 && !this.selectedProceso) return;
+    if (step === 3 && (!this.selectedMaquinaId || !this.selectedProductoId)) return;
     this.currentStep = step;
   }
 
@@ -460,15 +674,14 @@ export class WizardComponent implements OnInit {
   }
 
   getSelectedProductoNombre(): string {
-    const prod = this.productos.find(p => p.id === this.selectedProductoId);
-    return prod ? prod.nombre : 'No seleccionado';
+    const prod = this.productosFiltrados.find(p => p.id === this.selectedProductoId);
+    return prod ? prod.codigo : 'No seleccionado';
   }
 
   closeWizard() {
     this.router.navigate(['/']);
   }
 
-  // Captura de gestos de deslizamiento táctil (Swipe)
   onTouchStart(event: TouchEvent) {
     this.touchStartX = event.changedTouches[0].screenX;
   }
@@ -478,19 +691,17 @@ export class WizardComponent implements OnInit {
     const diff = this.touchStartX - touchEndX;
 
     if (diff > 60) {
-      // Deslizó hacia la izquierda -> Siguiente paso
       this.nextStep();
     } else if (diff < -60) {
-      // Deslizó hacia la derecha -> Paso anterior
       this.prevStep();
     }
   }
 
   iniciarOperacion() {
+    if (!this.isFormReady()) return;
     this.isSubmitting = true;
     const user = this.authService.currentUser();
 
-    // Obtener operarios de la base de datos para obtener un operarioId válido en caso de que no esté en el usuario logueado
     this.produccionService.getOperarios().subscribe({
       next: (operarios: any[]) => {
         let operarioId = user?.operadorId || (operarios && operarios.length > 0 ? operarios[0].id : null);
@@ -498,9 +709,8 @@ export class WizardComponent implements OnInit {
           operarioId = operarios[0].id;
         }
 
-        // Obtener turno dinámico según la hora actual
         const hour = new Date().getHours();
-        let turnoId = '654f2948-204d-42dc-946f-2ba1717ca84c'; // Matutino por defecto
+        let turnoId = '654f2948-204d-42dc-946f-2ba1717ca84c'; // Matutino
         if (hour >= 14 && hour < 22) {
           turnoId = '15a790d0-bf2c-46db-b1fe-0a3a0359c890'; // Vespertino
         } else if (hour >= 22 || hour < 6) {
@@ -513,15 +723,15 @@ export class WizardComponent implements OnInit {
             operarioId: operarioId,
             turnoId: turnoId,
             productoId: this.selectedProductoId,
-            siloVirgenId: '62b8c1cd-f938-4587-b832-77239272c0ff', // Silo Principal Virgen
-            virgenKg: 1000,
-            siloMolidoId: null,
-            molidoKg: 0,
-            metaKg: 5000,
-            revHusilloVirgen: 45,
-            revHusilloMolido: 0,
-            lotePaqueteAditivos: 'LOT-AD-01',
-            observaciones: 'Iniciado desde el Wizard PWA'
+            siloVirgenId: this.selectedSiloVirgenId,
+            virgenKg: this.virgenKg,
+            siloMolidoId: this.selectedSiloMolidoId || null,
+            molidoKg: this.molidoKg || 0,
+            metaKg: this.metaKg,
+            revHusilloVirgen: this.revHusilloVirgen,
+            revHusilloMolido: this.revHusilloMolido,
+            lotePaqueteAditivos: this.lotePaqueteAditivos,
+            observaciones: this.observaciones
           };
 
           this.produccionService.iniciarExtrusion(request).subscribe({
@@ -533,7 +743,7 @@ export class WizardComponent implements OnInit {
             error: (err: any) => {
               this.isSubmitting = false;
               console.error('Error al iniciar extrusión:', err);
-              alert('Error al iniciar extrusión: ' + (err.error?.message || err.message || 'Verifique la conexión o el estado de la máquina.'));
+              alert('Error al iniciar extrusión: ' + (err.error?.message || err.message || 'Verifique los parámetros.'));
             }
           });
 
@@ -543,7 +753,7 @@ export class WizardComponent implements OnInit {
             operarioId: operarioId,
             turnoId: turnoId,
             productoId: this.selectedProductoId,
-            troquelId: '4fae4718-f859-4f87-8578-1795d2394ad7' // Troquel 12 Cavidades
+            troquelId: this.selectedTroquelId
           };
 
           this.produccionService.iniciarPrensado(request).subscribe({
@@ -555,7 +765,7 @@ export class WizardComponent implements OnInit {
             error: (err: any) => {
               this.isSubmitting = false;
               console.error('Error al iniciar prensado:', err);
-              alert('Error al iniciar prensado: ' + (err.error?.message || err.message || 'Verifique la conexión o el estado de la máquina.'));
+              alert('Error al iniciar prensado: ' + (err.error?.message || err.message || 'Verifique la máquina.'));
             }
           });
         }

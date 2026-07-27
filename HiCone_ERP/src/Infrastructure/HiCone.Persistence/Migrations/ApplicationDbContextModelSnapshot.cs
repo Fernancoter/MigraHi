@@ -1640,10 +1640,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("bobbin_no");
 
-                    b.Property<Guid?>("BobinaInterrupcionesId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("bobina_interrupciones_id");
-
                     b.Property<int>("BobinaNo")
                         .HasColumnType("int")
                         .HasColumnName("bobina_no");
@@ -2171,10 +2167,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("descripcion");
 
-                    b.Property<bool>("Extrusora")
-                        .HasColumnType("bit")
-                        .HasColumnName("extrusora");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit")
                         .HasColumnName("is_active");
@@ -2186,10 +2178,6 @@ namespace HiCone.Persistence.Migrations
                     b.Property<int>("OrdenVisual")
                         .HasColumnType("int")
                         .HasColumnName("orden_visual");
-
-                    b.Property<bool>("Prensa")
-                        .HasColumnType("bit")
-                        .HasColumnName("prensa");
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")
@@ -2212,57 +2200,6 @@ namespace HiCone.Persistence.Migrations
                         .HasName("pk_causas_interrupcion");
 
                     b.ToTable("causas_interrupcion", (string)null);
-                });
-
-            modelBuilder.Entity("HiCone.Domain.Entities.Produccion.ConfiguracionSistema", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("created_by");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("deleted_at");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit")
-                        .HasColumnName("is_deleted");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("key");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("tenant_id");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("updated_at");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("updated_by");
-
-                    b.Property<string>("Valor")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("valor");
-
-                    b.HasKey("Id")
-                        .HasName("pk_configuraciones_sistema");
-
-                    b.ToTable("configuraciones_sistema", (string)null);
                 });
 
             modelBuilder.Entity("HiCone.Domain.Entities.Produccion.Extrusion", b =>
@@ -2338,6 +2275,14 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("is_deleted");
 
+                    b.Property<decimal>("KgMolido")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("kg_molido");
+
+                    b.Property<decimal>("KgVirgen")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("kg_virgen");
+
                     b.Property<decimal>("Longitud")
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("longitud");
@@ -2354,9 +2299,9 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("lote_silo");
 
-                    b.Property<Guid?>("MaquinaId1")
+                    b.Property<Guid>("MaquinaId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("maquina_id1");
+                        .HasColumnName("maquina_id");
 
                     b.Property<decimal>("MetaKg")
                         .HasColumnType("decimal(18,2)")
@@ -2377,6 +2322,14 @@ namespace HiCone.Persistence.Migrations
                     b.Property<Guid>("OperarioId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("operario_id");
+
+                    b.Property<DateTime?>("ProcessEnd")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("process_end");
+
+                    b.Property<DateTime?>("ProcessStart")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("process_start");
 
                     b.Property<decimal>("Producido")
                         .HasColumnType("decimal(18,2)")
@@ -2409,6 +2362,14 @@ namespace HiCone.Persistence.Migrations
                     b.Property<Guid?>("SiloVirgenId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("silo_virgen_id");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
+
+                    b.Property<decimal>("Target")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("target");
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")
@@ -2451,8 +2412,8 @@ namespace HiCone.Persistence.Migrations
                     b.HasIndex("LoteId")
                         .HasDatabaseName("ix_extrusiones_lote_id");
 
-                    b.HasIndex("MaquinaId1")
-                        .HasDatabaseName("ix_extrusiones_maquina_id1");
+                    b.HasIndex("MaquinaId")
+                        .HasDatabaseName("ix_extrusiones_maquina_id");
 
                     b.HasIndex("OperarioId")
                         .HasDatabaseName("ix_extrusiones_operario_id");
@@ -3881,6 +3842,14 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("prensado_id_legacy");
 
+                    b.Property<DateTime?>("ProcessEnd")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("process_end");
+
+                    b.Property<DateTime?>("ProcessStart")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("process_start");
+
                     b.Property<decimal>("Producido")
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("producido");
@@ -3917,6 +3886,10 @@ namespace HiCone.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("rodillos_unidad_medida");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
 
                     b.Property<decimal>("Target")
                         .HasColumnType("decimal(18,2)")
@@ -4597,6 +4570,7 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("Clave")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("clave");
 
@@ -4669,18 +4643,6 @@ namespace HiCone.Persistence.Migrations
                     b.Property<int>("BudgetMonth")
                         .HasColumnType("int")
                         .HasColumnName("budget_month");
-
-                    b.Property<decimal>("BudgetOutlook")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("budget_outlook");
-
-                    b.Property<decimal>("BudgetPrice")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("budget_price");
-
-                    b.Property<decimal>("BudgetPriceOutlook")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("budget_price_outlook");
 
                     b.Property<decimal>("BudgetReal")
                         .HasColumnType("decimal(18,2)")
@@ -4795,10 +4757,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("phone");
 
-                    b.Property<string>("RFC")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("rfc");
-
                     b.Property<string>("Shipping")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("shipping");
@@ -4910,10 +4868,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("cost");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("created_at");
@@ -4926,17 +4880,9 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("deleted_at");
 
-                    b.Property<decimal>("Exist")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("exist");
-
                     b.Property<DateTime?>("FechaSincronizacion")
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_sincronizacion");
-
-                    b.Property<string>("Group")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("group");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit")
@@ -4946,25 +4892,9 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("is_deleted");
 
-                    b.Property<string>("Packaging")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("packaging");
-
-                    b.Property<int>("Pallets")
-                        .HasColumnType("int")
-                        .HasColumnName("pallets");
-
-                    b.Property<decimal>("PiecesPlt")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("pieces_plt");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("price");
-
-                    b.Property<string>("Product8020")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("product8020");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
@@ -4976,17 +4906,9 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("product_number");
 
-                    b.Property<string>("SubProductType")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("sub_product_type");
-
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("tenant_id");
-
-                    b.Property<string>("TipoProducto")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("tipo_producto");
 
                     b.Property<string>("Unit")
                         .HasColumnType("nvarchar(max)")
@@ -5683,8 +5605,10 @@ namespace HiCone.Persistence.Migrations
 
                     b.HasOne("HiCone.Domain.Entities.Produccion.Maquina", null)
                         .WithMany("Extrusiones")
-                        .HasForeignKey("MaquinaId1")
-                        .HasConstraintName("fk_extrusiones_maquinas_maquina_id1");
+                        .HasForeignKey("MaquinaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_extrusiones_maquinas_maquina_id");
 
                     b.HasOne("HiCone.Domain.Entities.Produccion.Operario", "Operario")
                         .WithMany("Extrusiones")

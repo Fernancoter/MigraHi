@@ -275,10 +275,17 @@ import { ProduccionConfigService, Turno } from '../../../../core/services/produc
               </div>
               <div class="erp-panel-body">
 
-                <!-- Clave -->
+                <!-- Clave (opciones desde la BD) -->
                 <div class="erp-field">
                   <label class="erp-label">Clave</label>
-                  <input class="erp-input" type="text" [(ngModel)]="form.clave" placeholder="Ej. MATUTINO, VESPERTINO, etc." />
+                  <div class="erp-select-wrapper">
+                    <select class="erp-select" [(ngModel)]="form.clave">
+                      <option value="">-- Seleccionar --</option>
+                      @for (c of claves(); track c.id) {
+                        <option [value]="c.valor">{{ c.valor }}</option>
+                      }
+                    </select>
+                  </div>
                 </div>
 
                 <div class="erp-separator"></div>

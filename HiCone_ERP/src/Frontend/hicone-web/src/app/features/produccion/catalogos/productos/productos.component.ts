@@ -446,7 +446,12 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
                   @if (modalReadOnly()) {
                     {{ form.productoSAE || '(Ninguno)' }}
                   } @else {
-                    <input class="field-input" type="text" [(ngModel)]="form.productoSAE" placeholder="Ej. BOB-4-STD" style="width: 100%; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;" />
+                    <select class="field-input" [(ngModel)]="form.productoSAE" style="width: 100%; appearance: auto; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;">
+                      <option [value]="undefined">(Ninguno)</option>
+                      @for (code of saeCodes(); track code.code) {
+                        <option [value]="code.code">{{ code.code }} - {{ code.name }}</option>
+                      }
+                    </select>
                   }
                 </div>
               </div>
@@ -546,11 +551,17 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
               <!-- Tipo Material -->
               <div class="legacy-field-row">
                 <label class="legacy-field-label">Tipo Material</label>
-                <div class="legacy-field-value">
+                <div class="legacy-field-value" style="display: flex; align-items: center; justify-content: space-between;">
                   @if (modalReadOnly()) {
-                    {{ form.tipoMaterial || '' }}
+                    <span>{{ form.tipoMaterial || '' }}</span>
+                    <span style="color: #64748b; font-size: 1.2rem;">▼</span>
                   } @else {
-                    <input class="field-input" type="text" [(ngModel)]="form.tipoMaterial" placeholder="Ej. Virgen, Molido, Mixto" style="width: 100%; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;" />
+                    <select class="field-input" [(ngModel)]="form.tipoMaterial" style="width: 100%; appearance: auto; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;">
+                      <option [value]="undefined"></option>
+                      @for (mat of materialTipos(); track mat.id) {
+                        <option [value]="mat.nombre">{{ mat.nombre }}</option>
+                      }
+                    </select>
                   }
                 </div>
               </div>

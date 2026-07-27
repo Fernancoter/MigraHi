@@ -98,15 +98,14 @@ public class ReferenciasController : ControllerBase
             .Select(ep => new
             {
                 ep.Id,
-                ep.ExtrusoraId,
-                Extrusora = new { ep.Extrusora.Id, ep.Extrusora.Nombre },
-                ep.ProductoId,
-                Producto = new { ep.Producto.Id, ep.Producto.Nombre },
-                ep.DefaultCalibre,
-                ep.DefaultAncho,
-                ep.DefaultLongitud,
-                ep.DefaultMinutosReposo,
-                ep.IsActive
+                ExtrusoraId = ep.ExtrusoraId,
+                ExtrusoraNombre = ep.Extrusora.Nombre,
+                ProductoNombre = ep.Producto.Nombre,
+                ProductoCalibre = ep.DefaultCalibre,
+                ProductoAncho = ep.DefaultAncho.ToString(),
+                ProductoLongitud = (int)ep.DefaultLongitud,
+                ReposoMin = ep.DefaultMinutosReposo,
+                ProcesoMin = 90
             })
             .ToListAsync();
 

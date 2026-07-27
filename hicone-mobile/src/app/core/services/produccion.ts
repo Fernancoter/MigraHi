@@ -166,6 +166,10 @@ export class ProduccionService {
     return this.http.post<Bobina>(`${this.apiUrl}/extrusion/${extrusionId}/registrar-bobina`, request);
   }
 
+  registrarConsumoExtrusion(extrusionId: string, request: { siloVirgenId: string, virgenKg: number, siloMolidoId: string, molidoKg: number }): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/extrusion/${extrusionId}/consumo`, request);
+  }
+
   // ── Prensado ───────────────────────────────────────────────────────────
   getPrensados(): Observable<Prensado[]> {
     return this.http.get<Prensado[]>(`${this.apiUrl}/prensados`);
@@ -223,6 +227,10 @@ export class ProduccionService {
 
   getTurnos(): Observable<Turno[]> {
     return this.http.get<Turno[]>(`${this.apiUrl}/turnos`);
+  }
+
+  getTroqueles(): Observable<any[]> {
+    return this.http.get<any[]>(`http://localhost:5007/api/v1/catalogos/troqueles`);
   }
 
   // ── Bobinas Disponibles ───────────────────────────────────────────────

@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { CapturaShellComponent } from '../../../layout/captura-shell/captura-shell.component';
+import { OfflineStoreService } from '../../../core/offline/offline-store.service';
 
 @Component({
   selector: 'app-prensado-menu',
@@ -131,8 +131,15 @@ import { CapturaShellComponent } from '../../../layout/captura-shell/captura-she
   `]
 })
 export class PrensadoMenuComponent {
-  private shell = inject(CapturaShellComponent);
+  // Valores de turno/prensa se leen del OfflineStore directamente
+  // (el Shell ya no expone selectedTurno/selectedPrensa como signals públicos)
+  activeShift = signal('—');
+  activePrensa = signal('—');
 
-  activeShift = this.shell.selectedTurno;
-  activePrensa = this.shell.selectedPrensa;
+  private offlineStore = inject(OfflineStoreService);
+
+  constructor() {
+    this.offlineStore.get<string>('active_shift').then(v => { if (v) this.activeShift.set(v); });
+    this.offlineStore.get<string>('active_press').then(v => { if (v) this.activePrensa.set(v); });
+  }
 }
