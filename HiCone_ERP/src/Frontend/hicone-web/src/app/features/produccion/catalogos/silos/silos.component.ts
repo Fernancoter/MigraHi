@@ -12,6 +12,7 @@ import * as XLSX from 'xlsx';
     <div class="module-page animate-move-up">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Catálogo de Silos</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Producción</span>
             <span class="sep">&rsaquo;</span>
@@ -19,7 +20,6 @@ import * as XLSX from 'xlsx';
             <span class="sep">&rsaquo;</span>
             <span class="active">Silos</span>
           </nav>
-          <h1 class="premium-title">Catálogo de Silos</h1>
         </div>
       </div>
         
@@ -29,14 +29,18 @@ import * as XLSX from 'xlsx';
           <!-- LEFT SIDE -->
           <div class="toolbar-left" style="display: flex; gap: 0.75rem; align-items: center;">
             <!-- Dropdown de Exportar -->
-            <div class="dropdown-wrapper">
-              <button class="btn btn-secondary" (click)="toggleExportDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem; border-radius: 4px; padding: 0.4rem 0.8rem; color: #475569; font-weight: 500;">
-                Exportar <span style="font-size: 0.6rem; color: #94a3b8;">▼</span>
+            <div class="export-dropdown-wrapper">
+              <button class="btn-export-qa" (click)="toggleExportDropdown($event)" title="Exportar datos">
+                📥 Exportar <span class="chevron-down-qa">▾</span>
               </button>
               @if (showExportOptions()) {
-                <div class="column-selector-popover animate-slide-up" style="padding: 0.5rem 0; width: 150px; left: 0;">
-                  <div class="dropdown-item" (click)="exportCSV()" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 500;"><span style="color: #10b981; font-size: 1.1rem;">📊</span> Excel</div>
-                  <div class="dropdown-item" (click)="exportPDF()" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 500;"><span style="color: #ef4444; font-size: 1.1rem;">📄</span> PDF</div>
+                <div class="export-popover-qa shadow-premium" (click)="$event.stopPropagation()">
+                  <button class="export-item-qa" (click)="exportCSV()">
+                    <span class="export-icon">📊</span> Excel (CSV)
+                  </button>
+                  <button class="export-item-qa" (click)="exportPDF()">
+                    <span class="export-icon">📕</span> PDF
+                  </button>
                 </div>
               }
             </div>

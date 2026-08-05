@@ -262,6 +262,34 @@ public class ProduccionController : ControllerBase
 
     // ── Pallets ────────────────────────────────────────────────────────────
 
+    [HttpGet("palets")]
+    public async Task<ActionResult> GetPalets([FromQuery] string? productoCodigo, [FromQuery] string? noSerie)
+    {
+        var query = _context.Palets
+            .Include(p => p.Producto)
+            .AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(productoCodigo))
+        {
+            query = query.Where(p => p.Producto != null && (p.Producto.Codigo == productoCodigo || p.Producto.Nombre == productoCodigo));
+        }
+
+        if (!string.IsNullOrWhiteSpace(noSerie))
+        {
+            query = query.Where(p => p.NoSerie.Contains(noSerie));
+        }
+
+        var list = await query.Select(p => new {
+            id = p.Id,
+            noSerie = p.NoSerie,
+            estatus = p.Estatus.ToString(),
+            producto = p.Producto != null ? p.Producto.Codigo : "Sin Producto",
+            carretes = p.TotalCarretes > 0 ? p.TotalCarretes : 32
+        }).ToListAsync();
+
+        return Ok(list);
+    }
+
     [HttpPost("palets")]
     public async Task<ActionResult<Palet>> CrearPalet([FromBody] CrearPaletRequest request)
     {
@@ -282,6 +310,7 @@ public class ProduccionController : ControllerBase
         var result = await _produccionService.FinalizarPaletAsync(id);
         return result ? Ok() : BadRequest();
     }
+
 
     // ── Interrupciones (Downtime) ──────────────────────────────────────────
     
@@ -479,6 +508,153 @@ public class ProduccionController : ControllerBase
     {
         var result = await _produccionService.TransferirBobinaAsync(id, extrusionDestinoId);
         return result ? Ok(new { success = true }) : BadRequest("No se pudo transferir la bobina.");
+    }
+
+    // ── CRUD de Bobinas para Módulo Operación / Bobinas ─────────────────────
+
+    [HttpGet("bobinas/todas")]
+    public async Task<IActionResult> GetTodasBobinas()
+    {
+        var bobinas = await _context.Bobinas
+            .Include(b => b.Extrusion)
+                .ThenInclude(e => e.Extrusora)
+            .Include(b => b.Extrusion)
+                .ThenInclude(e => e.Turno)
+            .Include(b => b.Extrusion)
+                .ThenInclude(e => e.Operario)
+            .Include(b => b.Producto)
+            .Include(b => b.Operario)
+            .Include(b => b.SiloVirgen)
+            .Include(b => b.SiloMolido)
+            .OrderByDescending(b => b.HoraInicio)
+            .ToListAsync();
+
+        return Ok(bobinas);
+    }
+
+    [HttpGet("bobina/{id}")]
+    public async Task<IActionResult> GetBobinaDetalle(Guid id)
+    {
+        var bobina = await _context.Bobinas
+            .Include(b => b.Extrusion)
+                .ThenInclude(e => e.Extrusora)
+            .Include(b => b.Extrusion)
+                .ThenInclude(e => e.Turno)
+            .Include(b => b.Extrusion)
+                .ThenInclude(e => e.Operario)
+            .Include(b => b.Producto)
+            .Include(b => b.Operario)
+            .Include(b => b.SiloVirgen)
+            .Include(b => b.SiloMolido)
+            .FirstOrDefaultAsync(b => b.Id == id);
+
+        if (bobina == null) return NotFound(new { message = "Bobina no encontrada" });
+        return Ok(bobina);
+    }
+
+    [HttpPut("bobina/{id}")]
+    public async Task<IActionResult> ActualizarBobina(Guid id, [FromBody] ActualizarBobinaDto dto)
+    {
+        var bobina = await _context.Bobinas.FirstOrDefaultAsync(b => b.Id == id);
+        if (bobina == null) return NotFound(new { message = "Bobina no encontrada" });
+
+        if (!string.IsNullOrEmpty(dto.NoSerie)) bobina.NoSerie = dto.NoSerie;
+        if (!string.IsNullOrEmpty(dto.BobinaOrigen)) bobina.BobinaOrigen = dto.BobinaOrigen;
+        if (dto.Kg.HasValue) bobina.Kg = dto.Kg.Value;
+        if (dto.MermaKg.HasValue) bobina.MermaKg = dto.MermaKg.Value;
+        if (dto.Espesor.HasValue) bobina.Espesor = dto.Espesor.Value;
+        if (dto.DesviacionEstandar.HasValue) bobina.DesviacionEstandar = dto.DesviacionEstandar.Value;
+        if (dto.HoraInicio.HasValue) bobina.HoraInicio = dto.HoraInicio.Value;
+        if (dto.HoraSalida.HasValue) bobina.HoraSalida = dto.HoraSalida.Value;
+        if (dto.Estado.HasValue) bobina.Estado = dto.Estado.Value;
+        if (dto.MotivoMolino.HasValue) bobina.MotivoMolino = dto.MotivoMolino.Value;
+        if (dto.Observaciones != null) bobina.Observaciones = dto.Observaciones;
+        if (dto.BobinaNo.HasValue) bobina.BobinaNo = dto.BobinaNo.Value;
+        if (dto.Carreras.HasValue) bobina.Carreras = dto.Carreras.Value;
+        if (dto.LoteVirgen != null) bobina.LoteVirgen = dto.LoteVirgen;
+
+        await _context.SaveChangesAsync(default);
+        return Ok(bobina);
+    }
+
+    [HttpDelete("bobina/{id}")]
+    public async Task<IActionResult> EliminarBobina(Guid id)
+    {
+        var bobina = await _context.Bobinas.FirstOrDefaultAsync(b => b.Id == id);
+        if (bobina == null) return NotFound(new { message = "Bobina no encontrada" });
+
+        _context.Bobinas.Remove(bobina);
+        await _context.SaveChangesAsync(default);
+        return Ok(new { success = true });
+    }
+
+    [HttpPost("bobinas/seeder-test")]
+    public async Task<IActionResult> SeedBobinasTest()
+    {
+        var count = await _context.Bobinas.CountAsync();
+        if (count >= 2) return Ok(new { message = $"Ya existen {count} bobinas en la base de datos.", seeded = false });
+
+        var extrusora = await _context.Extrusoras.FirstOrDefaultAsync() ?? new Extrusora { Codigo = "EXT-01", Nombre = "Extrusora 1", Estado = EstadoExtrusora.EnProceso };
+        if (extrusora.Id == Guid.Empty) { _context.Extrusoras.Add(extrusora); await _context.SaveChangesAsync(default); }
+
+        var operario = await _context.Operarios.FirstOrDefaultAsync() ?? new Operario { NumeroEmpleado = "EMP-01", NombreCompleto = "ANTONIO GONZALEZ AYALA" };
+        if (operario.Id == Guid.Empty) { _context.Operarios.Add(operario); await _context.SaveChangesAsync(default); }
+
+        var turno = await _context.Turnos.FirstOrDefaultAsync() ?? new Turno { Nombre = "1er Turno", HoraInicio = new TimeSpan(6,0,0), HoraFin = new TimeSpan(14,0,0) };
+        if (turno.Id == Guid.Empty) { _context.Turnos.Add(turno); await _context.SaveChangesAsync(default); }
+
+        var producto = await _context.Productos.FirstOrDefaultAsync() ?? new Producto { Codigo = "PROD-8063C2", Nombre = "8063C2", TipoMaterial = TipoMaterial.Virgen };
+        if (producto.Id == Guid.Empty) { _context.Productos.Add(producto); await _context.SaveChangesAsync(default); }
+
+        var extrusion = await _context.Extrusiones.FirstOrDefaultAsync() ?? new Extrusion { ExtrusoraId = extrusora.Id, OperarioId = operario.Id, TurnoId = turno.Id, ProductoId = producto.Id, FechaInicio = DateTime.UtcNow.AddHours(-10), Estado = EstadoExtrusion.EnProceso };
+        if (extrusion.Id == Guid.Empty) { _context.Extrusiones.Add(extrusion); await _context.SaveChangesAsync(default); }
+
+        var b1 = new Bobina
+        {
+            ExtrusionId = extrusion.Id,
+            BobinaNo = 26,
+            NoSerie = "B-010626-01-026A",
+            BobinaOrigen = "A",
+            Kg = 520.00m,
+            MermaKg = 0.00m,
+            Espesor = 12.50m,
+            DesviacionEstandar = 0.190m,
+            HoraInicio = DateTime.UtcNow.AddHours(-8),
+            HoraSalida = DateTime.UtcNow.AddHours(-6),
+            Estado = EstadoBobina.Consumida,
+            ColorEstacion = ColorEstacion.SinAsignar,
+            ProductoId = producto.Id,
+            OperarioId = operario.Id,
+            LoteVirgen = "202603233240 LE",
+            Observaciones = "Bobina producida correctamente"
+        };
+
+        var b2 = new Bobina
+        {
+            ExtrusionId = extrusion.Id,
+            BobinaNo = 27,
+            NoSerie = "B-010626-01-027A",
+            BobinaOrigen = "B",
+            Kg = 510.50m,
+            MermaKg = 15.00m,
+            Espesor = 12.80m,
+            DesviacionEstandar = 0.200m,
+            HoraInicio = DateTime.UtcNow.AddHours(-6),
+            HoraSalida = DateTime.UtcNow.AddHours(-4),
+            Estado = EstadoBobina.Molido,
+            MotivoMolino = MotivoMolino.DefectoCalibre,
+            ColorEstacion = ColorEstacion.Azul,
+            ProductoId = producto.Id,
+            OperarioId = operario.Id,
+            LoteVirgen = "202603233240 LE",
+            Observaciones = "Limpieza y cambio de mallas A y C"
+        };
+
+        _context.Bobinas.Add(b1);
+        _context.Bobinas.Add(b2);
+        await _context.SaveChangesAsync(default);
+
+        return Ok(new { message = "Se crearon 2 bobinas de prueba en la base de datos.", seeded = true, b1Id = b1.Id, b2Id = b2.Id });
     }
 
     // ── Recalibración ──────────────────────────────────────────────────────
@@ -1277,4 +1453,22 @@ public record UpdatePrensadoRequest(
     int Meta,
     string? LoteSilo
 );
+
+public class ActualizarBobinaDto
+{
+    public string? NoSerie { get; set; }
+    public string? BobinaOrigen { get; set; }
+    public decimal? Kg { get; set; }
+    public decimal? MermaKg { get; set; }
+    public decimal? Espesor { get; set; }
+    public decimal? DesviacionEstandar { get; set; }
+    public DateTime? HoraInicio { get; set; }
+    public DateTime? HoraSalida { get; set; }
+    public EstadoBobina? Estado { get; set; }
+    public MotivoMolino? MotivoMolino { get; set; }
+    public string? Observaciones { get; set; }
+    public int? BobinaNo { get; set; }
+    public int? Carreras { get; set; }
+    public string? LoteVirgen { get; set; }
+}
 

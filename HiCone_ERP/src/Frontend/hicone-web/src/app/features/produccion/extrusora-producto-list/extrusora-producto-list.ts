@@ -16,6 +16,7 @@ import autoTable from 'jspdf-autotable';
       <!-- HEADER PRINCIPAL -->
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">{{ viewState === 'list' ? 'Extrusora Producto' : 'Gestionar Extrusora Producto' }}</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Extrusión</span>
             <span class="sep">&rsaquo;</span>
@@ -23,7 +24,6 @@ import autoTable from 'jspdf-autotable';
             <span class="active" *ngIf="viewState === 'list'">Extrusora Producto</span>
             <span class="active" *ngIf="viewState !== 'list'"> &rsaquo; {{ viewState === 'view' ? 'Visualizar Extrusora Producto' : 'Gestionar Extrusora Producto' }}</span>
           </nav>
-          <h1 class="premium-title">{{ viewState === 'list' ? 'Extrusora Producto' : 'Gestionar Extrusora Producto' }}</h1>
         </div>
       </div>
 
@@ -35,17 +35,16 @@ import autoTable from 'jspdf-autotable';
         <div class="toolbar-premium" (click)="$event.stopPropagation()">
           <div class="toolbar-left">
             <!-- Botón Exportar -->
-            <div class="dropdown-wrapper">
-              <button class="btn-premium-secondary" (click)="toggleExportDropdown($event)">
-                <span>📥 Exportar</span>
-                <span class="chevron-down">▾</span>
+            <div class="export-dropdown-wrapper">
+              <button class="btn-export-qa" (click)="toggleExportDropdown($event)" title="Exportar datos">
+                📥 Exportar <span class="chevron-down-qa">▾</span>
               </button>
-              <div class="opciones-export-popover animate-slide-up" *ngIf="showExportOptions">
-                <button class="btn-export-option" (click)="exportarExcel()">
-                  <span>📊 Exportar to XLSX</span>
+              <div class="export-popover-qa shadow-premium" *ngIf="showExportOptions" (click)="$event.stopPropagation()">
+                <button class="export-item-qa" (click)="exportarExcel()">
+                  <span class="export-icon">📊</span> Excel (CSV)
                 </button>
-                <button class="btn-export-option" (click)="exportarPDF()">
-                  <span>📄 Exportar to PDF</span>
+                <button class="export-item-qa" (click)="exportarPDF()">
+                  <span class="export-icon">📕</span> PDF
                 </button>
               </div>
             </div>

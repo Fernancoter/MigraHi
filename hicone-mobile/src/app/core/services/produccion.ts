@@ -233,6 +233,14 @@ export class ProduccionService {
     return this.http.get<any[]>(`http://localhost:5007/api/v1/catalogos/troqueles`);
   }
 
+  getPalets(productoCodigo?: string, noSerie?: string): Observable<any[]> {
+    let params = '';
+    if (productoCodigo) params += `productoCodigo=${encodeURIComponent(productoCodigo)}&`;
+    if (noSerie) params += `noSerie=${encodeURIComponent(noSerie)}&`;
+    return this.http.get<any[]>(`${this.apiUrl}/palets?${params}`);
+  }
+
+
   // ── Bobinas Disponibles ───────────────────────────────────────────────
   getBobinasDisponibles(): Observable<Bobina[]> {
     return this.http.get<Bobina[]>(`${this.apiUrl}/disponibilidad/bobinas`);

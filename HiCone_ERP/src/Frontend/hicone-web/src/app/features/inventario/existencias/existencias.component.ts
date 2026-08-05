@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -117,6 +117,7 @@ export class ExistenciasComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private inventarioService = inject(InventarioService);
+  private cdr = inject(ChangeDetectorRef);
   
   existenciaId: string = '';
   fechaHora: string = '';
@@ -150,6 +151,7 @@ export class ExistenciasComponent implements OnInit {
           tipoMaterial: item.tipoMaterial,
           loteVirgen: item.loteVirgen
         }));
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Error al cargar existencias de silos:', err)
     });
@@ -165,6 +167,7 @@ export class ExistenciasComponent implements OnInit {
           producidoEnTurno: item.producidoEnTurno,
           enTurnoSegunSistema: item.enTurnoSegunSistema
         }));
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Error al cargar existencias de bobinas:', err)
     });
@@ -180,6 +183,7 @@ export class ExistenciasComponent implements OnInit {
           producidoEnTurno: item.producidoEnTurno,
           enTurnoSegunSistema: item.enTurnoSegunSistema
         }));
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Error al cargar existencias de pallets:', err)
     });

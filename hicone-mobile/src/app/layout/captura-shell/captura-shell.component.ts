@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, inject, signal } from '@angular/core';
+import { Subscription, interval } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { SyncQueueService } from '../../core/offline/sync-queue.service';
@@ -522,23 +523,32 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
   // Prensas (todavía hardcoded)
   prensas = ['Prensa #1', 'Prensa #2', 'Prensa #3', 'Prensa #4'];
 
-  private intervalId: any;
-  private onlineListener = () => { this.isOnline = true; this.forceSync(); };
-  private offlineListener = () => { this.isOnline = false; };
+  private syncSub?: Subscription;
+
+  @HostListener('window:online')
+  onOnline() {
+    this.isOnline = true;
+    this.forceSync();
+  }
+
+  @HostListener('window:offline')
+  onOffline() {
+    this.isOnline = false;
+  }
 
   ngOnInit() {
-    window.addEventListener('online', this.onlineListener);
-    window.addEventListener('offline', this.offlineListener);
     this.updatePendingCount();
-    this.intervalId = setInterval(() => this.updatePendingCount(), 3000);
+    this.syncSub = interval(3000).subscribe(() => {
+      this.updatePendingCount();
+    });
     // Resetear selección de extrusión al entrar
     this.extrusionState.reset();
   }
 
   ngOnDestroy() {
-    window.removeEventListener('online', this.onlineListener);
-    window.removeEventListener('offline', this.offlineListener);
-    if (this.intervalId) clearInterval(this.intervalId);
+    if (this.syncSub) {
+      this.syncSub.unsubscribe();
+    }
   }
 
   toggleShiftsMenu() {
@@ -625,7 +635,11 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     if (url.includes('/escanear')) return 'Escanear Código';
     if (url.includes('/prensado')) return 'Prensados';
     if (url.includes('/extrusion')) return 'Extrusiones';
-    if (url.includes('/reportes') || url.includes('/sync')) return 'Historial / Sync';
+    if (url.includes('/etiquetado-pallets')) return 'Etiquetado Pallet';
+    if (url.includes('/reportes')) return 'Reportes';
+    if (url.includes('/sync')) return 'Historial / Sync';
+
+
     return 'Inicio';
   }
 

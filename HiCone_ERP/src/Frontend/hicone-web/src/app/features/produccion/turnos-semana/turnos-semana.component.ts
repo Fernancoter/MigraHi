@@ -11,12 +11,12 @@ import { ProduccionConfigService, Turno, Extrusora, Prensa, Producto, Operario }
     <div class="module-page animate-move-up">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Turnos Por Semana</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Producción</span>
             <span class="sep">&rsaquo;</span>
             <span class="active">Turnos Por Semana</span>
           </nav>
-          <h1 class="premium-title">Turnos Por Semana</h1>
         </div>
       </div>
       
@@ -62,15 +62,12 @@ import { ProduccionConfigService, Turno, Extrusora, Prensa, Producto, Operario }
                       <span style="cursor: pointer; font-size: 1rem;" (click)="showGridMenu.set(false)">✕</span>
                     </div>
                     <div style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 0.5rem;">
-                      <div class="menu-item">
-                        <span style="color: #005a70; font-weight: bold; margin-right: 0.5rem; font-size: 1rem;">⬇</span> Exportar a HTML
-                      </div>
-                      <div class="menu-item">
-                        <span style="color: #005a70; font-weight: bold; margin-right: 0.5rem; font-size: 1rem;">⬇</span> Exportar a PDF
-                      </div>
-                      <div class="menu-item">
-                        <span style="color: #005a70; font-weight: bold; margin-right: 0.5rem; font-size: 1rem;">⬇</span> Exportar a XLSX
-                      </div>
+                      <button class="export-item-qa">
+                        <span class="export-icon">📊</span> Excel (CSV)
+                      </button>
+                      <button class="export-item-qa">
+                        <span class="export-icon">📕</span> PDF
+                      </button>
                     </div>
                     <div style="padding: 0.5rem;">
                       <div style="margin-bottom: 0.5rem; font-size: 0.75rem; color: #334155;">Columnas visibles</div>

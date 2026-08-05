@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProduccionService, Extrusion } from '../../../core/services/produccion';
 import { FormsModule } from '@angular/forms';
@@ -32,14 +32,17 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
         <div class="toolbar-premium">
           <div class="toolbar-left">
             <!-- Menú Desplegable Exportar -->
-            <div class="dropdown-wrapper">
-              <button class="btn-premium-secondary" (click)="toggleExportDropdown($event)">
-                <span>📥 Exportar</span>
-                <span class="chevron-down">▾</span>
+            <div class="export-dropdown-wrapper">
+              <button class="btn-export-qa" (click)="toggleExportDropdown($event)" title="Exportar datos">
+                📥 Exportar <span class="chevron-down-qa">▾</span>
               </button>
-              <div class="dropdown-menu-custom" *ngIf="showExportOptions">
-                <button class="dropdown-item-custom" (click)="exportarExcel()">📊 Descargar XLS (Excel)</button>
-                <button class="dropdown-item-custom" (click)="exportarPDF()">📕 Descargar PDF</button>
+              <div class="export-popover-qa shadow-premium" *ngIf="showExportOptions" (click)="$event.stopPropagation()">
+                <button class="export-item-qa" (click)="exportarExcel()">
+                  <span class="export-icon">📊</span> Excel (CSV)
+                </button>
+                <button class="export-item-qa" (click)="exportarPDF()">
+                  <span class="export-icon">📕</span> PDF
+                </button>
               </div>
             </div>
 
@@ -229,14 +232,17 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
                     <div class="toolbar-premium" style="padding: 0.5rem 0; border-bottom: none; background: transparent;">
                       <div class="toolbar-left">
                         <!-- Menú Desplegable Exportar -->
-                        <div class="dropdown-wrapper">
-                          <button class="btn-premium-secondary" (click)="toggleExportDropdownBobina($event)">
-                            <span>📥 Exportar</span>
-                            <span class="chevron-down">▾</span>
+                        <div class="export-dropdown-wrapper">
+                          <button class="btn-export-qa" (click)="toggleExportDropdownBobina($event)" title="Exportar datos">
+                            📥 Exportar <span class="chevron-down-qa">▾</span>
                           </button>
-                          <div class="dropdown-menu-custom" *ngIf="showExportOptionsBobina">
-                            <button class="dropdown-item-custom" (click)="exportarBobinasExcel()">📊 Descargar XLS (Excel)</button>
-                            <button class="dropdown-item-custom" (click)="exportarBobinasPDF()">📕 Descargar PDF</button>
+                          <div class="export-popover-qa shadow-premium" *ngIf="showExportOptionsBobina" (click)="$event.stopPropagation()">
+                            <button class="export-item-qa" (click)="exportarBobinasExcel()">
+                              <span class="export-icon">📊</span> Excel (CSV)
+                            </button>
+                            <button class="export-item-qa" (click)="exportarBobinasPDF()">
+                              <span class="export-icon">📕</span> PDF
+                            </button>
                           </div>
                         </div>
 
@@ -1290,15 +1296,15 @@ export class ExtrusionesListComponent implements OnInit {
     processEnd: ''
   };
 
+  @HostListener('document:click')
+  onDocumentClick() {
+    this.showExportOptions = false;
+    this.showColumnSelector = false;
+  }
+
   ngOnInit() {
     this.cargarExtrusiones();
     this.cargarCatalogos();
-    
-    // Cerrar popovers al hacer click fuera
-    window.addEventListener('click', () => {
-      this.showExportOptions = false;
-      this.showColumnSelector = false;
-    });
   }
 
   cargarExtrusiones() {

@@ -8,18 +8,22 @@ import { Observable } from 'rxjs';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="page-container animate-fade-in">
-      <header class="page-header">
-        <div class="header-main">
-          <h1 class="page-title">Inventario de Artículos</h1>
-          <p class="page-subtitle">Gestión centralizada del catálogo de productos y existencias.</p>
+    <div class="module-page animate-fade-in">
+      <div class="page-header-premium">
+        <div class="title-section">
+          <h1 class="premium-title">Inventario de Artículos</h1>
+          <nav class="breadcrumb-modern">
+            <span class="root">Inventarios</span>
+            <span class="sep">&rsaquo;</span>
+            <span class="active">Artículos</span>
+          </nav>
         </div>
-        <button class="btn-primary">
+        <button class="btn-primary-green">
           <span class="icon">＋</span> Nuevo Artículo
         </button>
-      </header>
+      </div>
 
-      <div class="table-container glass">
+      <div class="card-premium" style="padding: 1.5rem;">
         <div class="table-actions">
           <div class="search-box">
             <span class="search-icon">🔍</span>

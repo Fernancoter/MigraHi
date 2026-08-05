@@ -29,14 +29,18 @@ import { ProduccionConfigService, Prensa } from '../../../../core/services/produ
           <div class="action-bar-legacy">
             <div class="left-actions">
               <!-- Exportar Dropdown -->
-              <div class="dropdown">
-                <button class="btn-legacy" (click)="toggleExportDropdown($event)">
-                  <span class="icon">📥</span> Exportar <span class="chevron-down">▾</span>
+              <div class="export-dropdown-wrapper">
+                <button class="btn-export-qa" (click)="toggleExportDropdown($event)" title="Exportar datos">
+                  📥 Exportar <span class="chevron-down-qa">▾</span>
                 </button>
                 @if (showExportMenu()) {
-                  <div class="modern-menu animate-slide-up" (click)="$event.stopPropagation()">
-                    <div class="menu-item" (click)="exportCSV()">Excel (CSV)</div>
-                    <div class="menu-item" (click)="exportPDF()">PDF</div>
+                  <div class="export-popover-qa shadow-premium" (click)="$event.stopPropagation()">
+                    <button class="export-item-qa" (click)="exportCSV()">
+                      <span class="export-icon">📊</span> Excel (CSV)
+                    </button>
+                    <button class="export-item-qa" (click)="exportPDF()">
+                      <span class="export-icon">📕</span> PDF
+                    </button>
                   </div>
                 }
               </div>

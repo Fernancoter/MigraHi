@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service';
+import { timer } from 'rxjs';
 
 interface UserDto {
   id: string;
@@ -229,7 +230,7 @@ export class UsuariosComponent implements OnInit {
         this.loadUsers();
         this.loadOperadores();
         this.showUserConfigId.set(null);
-        setTimeout(() => this.successMsg.set(null), 3000);
+        timer(3000).subscribe(() => this.successMsg.set(null));
       },
       error: () => this.errorMsg.set(`Error al ${action} el operador.`)
     });

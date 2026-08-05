@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { OperadoresService, OperadorDto } from '../../../core/services/operadores.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-operadores',
@@ -179,7 +180,7 @@ export class OperadoresComponent implements OnInit {
         this.successMsg.set(`Operador ${o.operadorNombre} habilitado.`);
         this.isProcessing.set(null);
         this.loadOperadores();
-        setTimeout(() => this.successMsg.set(null), 3000);
+        timer(3000).subscribe(() => this.successMsg.set(null));
       },
       error: () => {
         this.errorMsg.set('Error al habilitar.');
@@ -195,7 +196,7 @@ export class OperadoresComponent implements OnInit {
         this.successMsg.set(`Operador ${o.operadorNombre} deshabilitado.`);
         this.isProcessing.set(null);
         this.loadOperadores();
-        setTimeout(() => this.successMsg.set(null), 3000);
+        timer(3000).subscribe(() => this.successMsg.set(null));
       },
       error: () => {
         this.errorMsg.set('Error al deshabilitar.');

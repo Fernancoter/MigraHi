@@ -21,6 +21,7 @@ export interface PrensaProducto {
     <div class="module-page animate-fade-in" style="padding: 3rem; background: #fff; min-height: calc(100vh - 64px); position: relative;">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Prensa Producto</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Producción</span>
             <span class="sep">&rsaquo;</span>
@@ -28,7 +29,6 @@ export interface PrensaProducto {
             <span class="sep">&rsaquo;</span>
             <span class="active">Prensa Producto</span>
           </nav>
-          <h1 class="premium-title">Prensa Producto</h1>
         </div>
       </div>
 
@@ -37,13 +37,17 @@ export interface PrensaProducto {
         <!-- Izquierda: Exportar, Agregar, Selecciona columnas -->
         <div style="display: flex; gap: 0.5rem; align-items: center;">
           <!-- Exportar -->
-          <div style="position: relative;">
-            <button (click)="toggleExportMenu()" style="background: white; color: #5cb85c; border: 1px solid #5cb85c; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
-              <span>⬇️</span> Exportar <span style="font-size: 0.6rem;">▼</span>
+          <div class="export-dropdown-wrapper">
+            <button class="btn-export-qa" (click)="toggleExportMenu()" title="Exportar datos">
+              📥 Exportar <span class="chevron-down-qa">▾</span>
             </button>
-            <div *ngIf="isExportMenuOpen" style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 50; width: 120px; padding: 0.5rem; margin-top: 0.5rem;">
-              <button (click)="exportCSV()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Excel</button>
-              <button style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">PDF</button>
+            <div class="export-popover-qa shadow-premium" *ngIf="isExportMenuOpen" (click)="$event.stopPropagation()">
+              <button class="export-item-qa" (click)="exportCSV()">
+                <span class="export-icon">📊</span> Excel (CSV)
+              </button>
+              <button class="export-item-qa">
+                <span class="export-icon">📕</span> PDF
+              </button>
             </div>
           </div>
 

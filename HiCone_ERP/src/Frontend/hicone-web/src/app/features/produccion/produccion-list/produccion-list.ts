@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProduccionService, Extrusion, Prensado, CausaInterrupcion } from '../../../core/services/produccion';
 import { FormsModule } from '@angular/forms';
@@ -11,12 +11,12 @@ import { FormsModule } from '@angular/forms';
     <div class="module-page animate-fade-in">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Monitor de Producción en Tiempo Real</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Producción</span>
             <span class="sep">&rsaquo;</span>
             <span class="active">Tablero de Control</span>
           </nav>
-          <h1 class="premium-title">Monitor de Producción en Tiempo Real</h1>
           <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Control de extrusoras, prensas y gestión de tiempos muertos (Downtime).</p>
         </div>
       </div>
@@ -151,6 +151,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class ProduccionListComponent implements OnInit {
   private produccionService = inject(ProduccionService);
+  private cdr = inject(ChangeDetectorRef);
   
   extrusionesActivas: Extrusion[] = [];
   prensadosActivos: Prensado[] = [];
@@ -170,14 +171,19 @@ export class ProduccionListComponent implements OnInit {
   refreshData() {
     this.produccionService.getExtrusiones().subscribe(data => {
       this.extrusionesActivas = data.filter(e => e.estado === 'EnProceso' || e.estado === 'Detenida');
+      this.cdr.detectChanges();
     });
     this.produccionService.getPrensados().subscribe(data => {
       this.prensadosActivos = data.filter(p => p.estado === 'EnProceso' || p.estado === 'Detenida');
+      this.cdr.detectChanges();
     });
   }
 
   loadCausas() {
-    this.produccionService.getCausasInterrupcion().subscribe(data => this.causas = data);
+    this.produccionService.getCausasInterrupcion().subscribe(data => {
+      this.causas = data;
+      this.cdr.detectChanges();
+    });
   }
 
   abrirModalInterrupcion(item: any, type: 'extrusion' | 'prensado') {

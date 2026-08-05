@@ -116,6 +116,14 @@ export interface Bobina {
   siloVirgenNombre?: string;
   loteVirgen?: string;
   paqueteAditivos?: string;
+  productoId?: any;
+  productoNombre?: string;
+  tipoMaterial?: string;
+  prensaNombre?: string;
+  interrupcionesMotivo?: string;
+  timeCode?: string;
+  timeDescription?: string;
+  timeType?: string;
   extrusion?: any;
   siloVirgen?: any;
   siloMolido?: any;
@@ -249,6 +257,26 @@ export class ProduccionService {
   }
 
   // ── Gestión de Bobinas ───────────────────────────────────────────────
+  getTodasBobinas(): Observable<Bobina[]> {
+    return this.http.get<Bobina[]>(`${this.apiUrl}/bobinas/todas`);
+  }
+
+  getBobinaDetalle(id: string): Observable<Bobina> {
+    return this.http.get<Bobina>(`${this.apiUrl}/bobina/${id}`);
+  }
+
+  actualizarBobina(id: string, data: any): Observable<Bobina> {
+    return this.http.put<Bobina>(`${this.apiUrl}/bobina/${id}`, data);
+  }
+
+  eliminarBobina(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/bobina/${id}`);
+  }
+
+  seedBobinasTest(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/bobinas/seeder-test`, {});
+  }
+
   pausarBobina(id: string): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/bobina/${id}/pausar`, {});
   }

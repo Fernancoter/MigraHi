@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy, inject, effect, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, effect, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { Subscription, switchMap, of, timeout, catchError, EMPTY } from 'rxjs';
+import { Subscription, switchMap, of, timeout, catchError, EMPTY, timer } from 'rxjs';
 import { ProduccionService, Bobina } from '../../../core/services/produccion';
 import { OfflineStoreService } from '../../../core/offline/offline-store.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -72,6 +72,8 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   };
 
   private subs = new Subscription();
+
+  private cdr = inject(ChangeDetectorRef);
 
   constructor() {
     // Reaccionar cuando cambia la extrusora seleccionada en el header Shell.
@@ -327,10 +329,18 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   private mostrarMensaje(text: string, isError = false) {
     if (isError) {
       this.errorMessage = text;
-      setTimeout(() => this.errorMessage = '', 6000);
+      this.cdr.markForCheck();
+      timer(6000).subscribe(() => {
+        this.errorMessage = '';
+        this.cdr.markForCheck();
+      });
     } else {
       this.successMessage = text;
-      setTimeout(() => this.successMessage = '', 5000);
+      this.cdr.markForCheck();
+      timer(5000).subscribe(() => {
+        this.successMessage = '';
+        this.cdr.markForCheck();
+      });
     }
   }
 

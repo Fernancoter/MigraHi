@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProduccionService, Extrusora, Producto, Operario } from '../../../core/services/produccion';
 import { FormsModule } from '@angular/forms';
@@ -14,12 +14,12 @@ import autoTable from 'jspdf-autotable';
     <div class="module-page animate-fade-in">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Turnos Por Semana Extrusoras</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Extrusión</span>
             <span class="sep">&rsaquo;</span>
             <span class="active">Turnos Por Semana</span>
           </nav>
-          <h1 class="premium-title">Turnos Por Semana Extrusoras</h1>
         </div>
       </div>
 
@@ -50,14 +50,11 @@ import autoTable from 'jspdf-autotable';
                     <button class="btn-popover-close" (click)="mostrarOpciones = false">×</button>
                   </div>
                   <div class="popover-body">
-                    <button class="btn-export-option" (click)="exportarHTML()">
-                      <span class="arrow-down-icon">📥</span> Exportar a HTML
+                    <button class="export-item-qa" (click)="exportarExcel()">
+                      <span class="export-icon">📊</span> Excel (CSV)
                     </button>
-                    <button class="btn-export-option" (click)="exportarPDF()">
-                      <span class="arrow-down-icon">📥</span> Exportar a PDF
-                    </button>
-                    <button class="btn-export-option" (click)="exportarExcel()">
-                      <span class="arrow-down-icon">📥</span> Exportar a XLSX
+                    <button class="export-item-qa" (click)="exportarPDF()">
+                      <span class="export-icon">📕</span> PDF
                     </button>
                     
                     <div class="popover-divider"></div>
@@ -319,43 +316,66 @@ import autoTable from 'jspdf-autotable';
     .legacy-alert-icon { font-size: 0.9rem; }
     .alert-text { font-size: 0.85rem; color: #334155; font-weight: 600; }
 
+    .content-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); overflow: visible; margin-bottom: 1.5rem; }
+    
+    .card-header-bar { 
+      background: #fafafa; 
+      padding: 1.25rem 1.5rem; 
+      border-bottom: 1px solid #e2e8f0; 
+      display: flex; 
+      align-items: center; 
+      gap: 0.5rem;
+      border-radius: 12px 12px 0 0;
+    }
+    .green-flag-icon {
+      width: 12px;
+      height: 12px;
+      background: #166534;
+      clip-path: polygon(0% 0%, 100% 0%, 75% 50%, 100% 100%, 0% 100%);
+      display: inline-block;
+    }
+    .header-title { font-weight: 800; color: #166534; font-size: 1rem; }
+    
+    .inner-padding { padding: 1.5rem; }
+
+    .info-alert-box-legacy { 
+      display: flex; 
+      align-items: center; 
+      gap: 0.75rem; 
+      background: #ffffff; 
+      border: 1px solid #cbd5e1; 
+      border-radius: 10px; 
+      padding: 0.85rem 1.25rem; 
+      margin-bottom: 1.5rem; 
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .legacy-alert-icon { font-size: 0.9rem; }
+    .alert-text { font-size: 0.85rem; color: #334155; font-weight: 600; }
+
     /* Pivot Resumen Table Layout */
     .resumen-container-legacy {
-      border: 1px solid #b0bec5;
-      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
       margin-bottom: 1.5rem;
-      background: #eceff1;
-      overflow: visible;
+      background: #f8fafc;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     }
     .resumen-table-header {
-      background: #b0bec5;
-      padding: 0.5rem 1rem;
+      background: #f1f5f9;
+      padding: 0.75rem 1.25rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
+      border-bottom: 1px solid #e2e8f0;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
     }
-    .drag-title-text {
-      font-size: 0.75rem;
-      color: #37474f;
-      font-weight: 700;
-    }
-    .options-menu-container {
-      position: relative;
-    }
-    .btn-hamburger {
-      background: transparent;
-      border: none;
-      font-size: 1.1rem;
-      color: #37474f;
-      cursor: pointer;
-      padding: 0.2rem 0.5rem;
-    }
-    .btn-hamburger:hover {
-      background: rgba(0,0,0,0.1);
-      border-radius: 4px;
-    }
+    .drag-title-text { font-size: 0.75rem; color: #475569; font-weight: 700; }
+    .options-menu-container { position: relative; }
+    .btn-hamburger { background: transparent; border: none; font-size: 1.1rem; color: #475569; cursor: pointer; padding: 0.2rem 0.5rem; }
+    .btn-hamburger:hover { background: rgba(0,0,0,0.05); border-radius: 4px; }
+
     .opciones-popover {
       position: absolute;
       top: 100%;
@@ -365,7 +385,7 @@ import autoTable from 'jspdf-autotable';
       border: 1px solid #cbd5e1;
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
       z-index: 100;
-      border-radius: 6px;
+      border-radius: 8px;
       padding: 0.5rem;
       display: flex;
       flex-direction: column;
@@ -375,28 +395,22 @@ import autoTable from 'jspdf-autotable';
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #1e3f66;
+      background: #166534;
       color: white;
       padding: 0.4rem 0.75rem;
       font-size: 0.85rem;
       font-weight: 700;
-      border-radius: 4px 4px 0 0;
+      border-radius: 6px 6px 0 0;
       margin: -0.5rem -0.5rem 0.25rem -0.5rem;
     }
-    .btn-popover-close {
-      background: transparent;
-      border: none;
-      color: white;
-      font-size: 1.1rem;
-      cursor: pointer;
-    }
+    .btn-popover-close { background: transparent; border: none; color: white; font-size: 1.1rem; cursor: pointer; }
     .btn-export-option {
       background: transparent;
       border: none;
       text-align: left;
       padding: 0.5rem 0.75rem;
       font-size: 0.8rem;
-      color: #1e3f66;
+      color: #166534;
       font-weight: 600;
       cursor: pointer;
       display: flex;
@@ -404,51 +418,22 @@ import autoTable from 'jspdf-autotable';
       gap: 0.5rem;
       border-radius: 4px;
     }
-    .btn-export-option:hover {
-      background: #f1f5f9;
-    }
-    .popover-divider {
-      height: 1px;
-      background: #e2e8f0;
-      margin: 0.25rem 0;
-    }
-    .popover-section-title {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #64748b;
-      padding: 0.25rem 0.75rem;
-    }
-    .popover-checkbox-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.35rem 0.75rem;
-      cursor: pointer;
-      font-size: 0.8rem;
-      color: #334155;
-    }
-    .popover-checkbox-row:hover {
-      background: #f8fafc;
-    }
-    .popover-checkbox-row input {
-      cursor: pointer;
-    }
+    .btn-export-option:hover { background: #f1f5f9; }
+    .popover-divider { height: 1px; background: #e2e8f0; margin: 0.25rem 0; }
+    .popover-section-title { font-size: 0.75rem; font-weight: 700; color: #64748b; padding: 0.25rem 0.75rem; }
+    .popover-checkbox-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.75rem; cursor: pointer; font-size: 0.8rem; color: #334155; }
+    .popover-checkbox-row:hover { background: #f8fafc; }
 
-    .table-scroll-resumen {
-      overflow-x: auto;
-    }
-    .resumen-grid-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    .table-scroll-resumen { overflow-x: auto; }
+    .resumen-grid-table { width: 100%; border-collapse: collapse; }
     .resumen-grid-table th {
-      background: #1e3f66;
+      background: #166534;
       color: white;
       font-size: 0.8rem;
       font-weight: 700;
       padding: 0.6rem 0.85rem;
       text-align: left;
-      border-right: 1px solid #153050;
+      border-right: 1px solid #14532d;
       white-space: nowrap;
     }
     .resumen-grid-table td {
@@ -715,11 +700,12 @@ export class TurnosSemanaComponent implements OnInit {
   resumen: any[] = [];
   extrusorasData: any[] = [];
 
+  @HostListener('document:click')
+  onDocumentClick() {
+    this.mostrarOpciones = false;
+  }
+
   ngOnInit() {
-    // Escuchar clics globales para cerrar el popover de opciones al hacer clic fuera
-    document.addEventListener('click', () => {
-      this.mostrarOpciones = false;
-    });
 
     // Cargar catálogos iniciales
     this.prodService.getProductos().subscribe(data => this.catalogoProductos = data);

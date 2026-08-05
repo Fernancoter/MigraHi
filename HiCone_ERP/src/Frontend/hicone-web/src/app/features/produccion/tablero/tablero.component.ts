@@ -15,12 +15,12 @@ import autoTable from 'jspdf-autotable';
     <div class="module-page animate-move-up">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Tablero de Producción</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Producción</span>
             <span class="sep">&rsaquo;</span>
             <span class="active">Inicio</span>
           </nav>
-          <h1 class="premium-title">Tablero de Producción</h1>
         </div>
       </div>
 

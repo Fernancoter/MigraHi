@@ -1538,9 +1538,10 @@ public class ApplicationDbContextSeeder
             var ext2Id = Guid.NewGuid();
 
             _context.Extrusoras.AddRange(
-                new Extrusora { Id = ext1Id, Codigo = "EXT-01", Nombre = "Extrusora Principal #1", CapacidadKgHora = 150, NumeroEstaciones = 1, Estado = EstadoExtrusora.Disponible, TenantId = defaultTenantId },
-                new Extrusora { Id = ext2Id, Codigo = "EXT-02", Nombre = "Extrusora Secundaria #2", CapacidadKgHora = 120, NumeroEstaciones = 1, Estado = EstadoExtrusora.Disponible, TenantId = defaultTenantId }
+                new Extrusora { Id = ext1Id, Codigo = "EXT-01", Nombre = "Extrusora 1", CapacidadKgHora = 150, NumeroEstaciones = 1, Estado = EstadoExtrusora.Disponible, TenantId = defaultTenantId },
+                new Extrusora { Id = ext2Id, Codigo = "EXT-02", Nombre = "Extrusora 2", CapacidadKgHora = 120, NumeroEstaciones = 1, Estado = EstadoExtrusora.Disponible, TenantId = defaultTenantId }
             );
+
 
             _context.Prensas.AddRange(
                 new Prensa { Codigo = "PRE-01", NumeroPrensa = "UNO", Nombre = "Prensa 1", Marca = "Siemens", Modelo = "XR-2000", Estado = EstadoPrensa.Disponible, TenantId = defaultTenantId },
@@ -1956,5 +1957,53 @@ public class ApplicationDbContextSeeder
                 await _context.SaveChangesAsync(default);
             }
         }
+
+        // Seed Etiquetado Pallets and Products
+        var prodCode1 = "8063C2000";
+        var prod1Ref = await _context.Productos.FirstOrDefaultAsync(p => p.Codigo == prodCode1);
+        if (prod1Ref == null)
+        {
+            var cat = await _context.ProductoCategorias.FirstOrDefaultAsync() ?? new ProductoCategoria { Nombre = "Empaque", TenantId = defaultTenantId };
+            prod1Ref = new Producto { Codigo = prodCode1, Nombre = prodCode1, TenantId = defaultTenantId, CategoriaId = cat.Id };
+            _context.Productos.Add(prod1Ref);
+            _context.Productos.AddRange(
+                new Producto { Codigo = "806372000", Nombre = "806372000", TenantId = defaultTenantId, CategoriaId = cat.Id },
+                new Producto { Codigo = "808172000", Nombre = "808172000", TenantId = defaultTenantId, CategoriaId = cat.Id },
+                new Producto { Codigo = "8081C2000", Nombre = "8081C2000", TenantId = defaultTenantId, CategoriaId = cat.Id }
+            );
+            await _context.SaveChangesAsync(default);
+        }
+
+        if (!await _context.Palets.AnyAsync(p => p.NoSerie == "P4T1-290125-N213"))
+        {
+            _context.Palets.AddRange(
+                new Palet
+                {
+                    Id = Guid.NewGuid(),
+                    NoSerie = "P4T1-290125-N213",
+                    Estatus = EstatusPalet.Terminado,
+                    Capacidad = 32,
+                    TotalCarretes = 32,
+                    HoraInicioEnsamble = DateTime.UtcNow.AddHours(-10),
+                    HoraFinEnsamble = DateTime.UtcNow.AddHours(-2),
+                    ProductoId = prod1Ref.Id,
+                    TenantId = defaultTenantId
+                },
+                new Palet
+                {
+                    Id = Guid.NewGuid(),
+                    NoSerie = "P4T3-310125-N3",
+                    Estatus = EstatusPalet.Terminado,
+                    Capacidad = 32,
+                    TotalCarretes = 32,
+                    HoraInicioEnsamble = DateTime.UtcNow.AddHours(-12),
+                    HoraFinEnsamble = DateTime.UtcNow.AddHours(-4),
+                    ProductoId = prod1Ref.Id,
+                    TenantId = defaultTenantId
+                }
+            );
+            await _context.SaveChangesAsync(default);
+        }
     }
 }
+

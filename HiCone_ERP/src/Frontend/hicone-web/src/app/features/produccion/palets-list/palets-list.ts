@@ -25,14 +25,18 @@ import { ProduccionService } from '../../../core/services/produccion';
 
       <div class="actions-toolbar" style="margin-bottom: 1.5rem;">
           <div class="toolbar-left">
-            <div class="dropdown-wrapper">
-              <button class="btn btn-secondary" (click)="toggleExportDropdown($event)">
-                <span>⬇</span> Exportar
+            <div class="export-dropdown-wrapper">
+              <button class="btn-export-qa" (click)="toggleExportDropdown($event)" title="Exportar datos">
+                📥 Exportar <span class="chevron-down-qa">▾</span>
               </button>
               @if (showExportOptions()) {
-                <div class="dd-popover animate-slide-up" (click)="$event.stopPropagation()">
-                  <div class="dd-item" (click)="exportCSV()">Excel (CSV)</div>
-                  <div class="dd-item" (click)="exportPDF()">PDF</div>
+                <div class="export-popover-qa shadow-premium" (click)="$event.stopPropagation()">
+                  <button class="export-item-qa" (click)="exportCSV()">
+                    <span class="export-icon">📊</span> Excel (CSV)
+                  </button>
+                  <button class="export-item-qa" (click)="exportPDF()">
+                    <span class="export-icon">📕</span> PDF
+                  </button>
                 </div>
               }
             </div>

@@ -12,12 +12,12 @@ import { ProduccionService, Extrusion, CausaInterrupcion } from '../../../core/s
     <div class="page-container animate-fade-in">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">{{ showTableroDirectivo ? 'Extrusión' : 'Inicio Extrusión' }}</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Extrusión</span>
             <span class="sep">&rsaquo;</span>
             <span class="active">Inicio</span>
           </nav>
-          <h1 class="premium-title">{{ showTableroDirectivo ? 'Extrusión' : 'Inicio Extrusión' }}</h1>
         </div>
       </div>
 
@@ -1029,7 +1029,7 @@ export class ExtrusionInicioComponent implements OnInit {
       this.cerrarModales();
       this.operacion = this.allExtrusiones.filter(e => e.estado === 'EnProceso' || e.estado === 'Detenida');
       this.programados = this.allExtrusiones.filter(e => e.estado !== 'EnProceso' && e.estado !== 'Detenida');
-      setTimeout(() => alert('Registro realizado con éxito.'), 50);
+      alert('Registro realizado con éxito.');
       return;
     }
 
@@ -1059,7 +1059,7 @@ export class ExtrusionInicioComponent implements OnInit {
       next: () => {
         this.cerrarModales();
         this.cargarExtrusiones();
-        setTimeout(() => alert('Registro realizado con éxito.'), 50);
+        alert('Registro realizado con éxito.');
       },
       error: (err) => {
         console.error('Error al guardar cambios:', err);
@@ -1090,15 +1090,27 @@ export class ExtrusionInicioComponent implements OnInit {
 
   eliminar(ex: any) {
     if (confirm(`¿Está seguro de eliminar de forma permanente la orden de extrusión de la extrusora ${ex.extrusora?.nombre || ''}?`)) {
+      if (ex.id && String(ex.id).startsWith('mock-')) {
+        this.allExtrusiones = this.allExtrusiones.filter(item => item.id !== ex.id);
+        this.operacion = this.allExtrusiones.filter(e => e.estado === 'EnProceso' || e.estado === 'Detenida' || Number(e.estado) === 2);
+        this.programados = this.allExtrusiones.filter(e => e.estado !== 'EnProceso' && e.estado !== 'Detenida' && Number(e.estado) !== 2);
+        alert('Orden de extrusión eliminada.');
+        return;
+      }
+
       this.prodService.deleteExtrusion(ex.id).subscribe({
         next: () => {
           alert('Orden de extrusión eliminada.');
           this.cargarExtrusiones();
         },
-        error: (err) => alert(err.error?.message || 'Error al eliminar')
+        error: (err) => {
+          console.error('Error al eliminar orden de extrusión:', err);
+          alert(err.error?.message || 'No se pudo eliminar la orden de extrusión.');
+        }
       });
     }
   }
+
 
   ver(ex: any) {
     alert(`Visualizar detalle de extrusión ID: ${ex.id}`);

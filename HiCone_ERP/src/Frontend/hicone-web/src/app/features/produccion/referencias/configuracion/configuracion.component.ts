@@ -17,6 +17,7 @@ export interface ConfiguracionSistema {
     <div class="module-page animate-fade-in" style="padding: 3rem; background: #fff; min-height: calc(100vh - 64px); position: relative;">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Configuración</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Producción</span>
             <span class="sep">&rsaquo;</span>
@@ -24,7 +25,6 @@ export interface ConfiguracionSistema {
             <span class="sep">&rsaquo;</span>
             <span class="active">Configuración</span>
           </nav>
-          <h1 class="premium-title">Configuración</h1>
         </div>
       </div>
 

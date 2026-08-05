@@ -15,12 +15,12 @@ import autoTable from 'jspdf-autotable';
       <!-- CABECERA PRINCIPAL ESTILO QA -->
       <div class="page-header-clean bg-white p-6 rounded-lg shadow-sm mb-6" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;">
         <div class="title-section">
-          <nav class="breadcrumb-modern" style="font-size: 0.75rem; color: #166534; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;">
+          <h1 class="premium-title" style="font-size: 1.5rem; font-weight: 900; color: #166534; margin: 0;">Inicio Prensado</h1>
+          <nav class="breadcrumb-modern" style="font-size: 0.75rem; color: #166534; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.3rem;">
             <span class="root">Prensado</span>
             <span class="sep" style="margin: 0 0.4rem;">&rsaquo;</span>
             <span class="active" style="color: #166534; font-weight: 800;">Inicio</span>
           </nav>
-          <h1 class="premium-title" style="font-size: 1.5rem; font-weight: 900; color: #166534; margin: 0;">Inicio Prensado</h1>
         </div>
       </div>
 
