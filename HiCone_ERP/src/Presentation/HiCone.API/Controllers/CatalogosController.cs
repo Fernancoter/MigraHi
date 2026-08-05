@@ -739,6 +739,224 @@ public class CatalogosController : ControllerBase
         }
         return NoContent();
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // PRENSA PRODUCTO
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [HttpGet("prensa-productos")]
+    [AllowAnonymous]
+    public async Task<ActionResult<IEnumerable<object>>> GetPrensaProductos([FromQuery] string? search = null)
+    {
+        var query = _context.PrensaProductos
+            .Include(pp => pp.Prensa)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+            query = query.Where(pp => pp.Prensa.Nombre.Contains(search) || pp.Item.Contains(search) || pp.Carrete.Contains(search));
+
+        var items = await query
+            .OrderBy(pp => pp.Prensa.Nombre).ThenBy(pp => pp.Item)
+            .Select(pp => new
+            {
+                pp.Id,
+                PrensaId = pp.PrensaId,
+                Prensa = pp.Prensa.Nombre,
+                pp.Item,
+                pp.Carrete
+            })
+            .ToListAsync();
+
+        return Ok(items);
+    }
+
+    [HttpGet("prensa-productos/{id}")]
+    [AllowAnonymous]
+    public async Task<ActionResult<object>> GetPrensaProducto(Guid id)
+    {
+        var pp = await _context.PrensaProductos
+            .Include(x => x.Prensa)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (pp is null) return NotFound(new { message = "Relación Prensa-Producto no encontrada." });
+
+        return Ok(new
+        {
+            pp.Id,
+            PrensaId = pp.PrensaId,
+            Prensa = pp.Prensa.Nombre,
+            pp.Item,
+            pp.Carrete
+        });
+    }
+
+    [HttpPost("prensa-productos")]
+    [AllowAnonymous]
+    public async Task<ActionResult<Guid>> CreatePrensaProducto([FromBody] PrensaProductoDto dto)
+    {
+        var entity = new PrensaProducto
+        {
+            Id = Guid.NewGuid(),
+            PrensaId = dto.PrensaId,
+            Item = dto.Item,
+            Carrete = dto.Carrete,
+            TenantId = dto.TenantId != Guid.Empty ? dto.TenantId : Guid.Parse("00000000-0000-0000-0000-000000000001")
+        };
+        _context.PrensaProductos.Add(entity);
+        await _context.SaveChangesAsync(default);
+        return Ok(entity.Id);
+    }
+
+    [HttpPut("prensa-productos/{id}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> UpdatePrensaProducto(Guid id, [FromBody] PrensaProductoDto dto)
+    {
+        var entity = await _context.PrensaProductos.FindAsync(id);
+        if (entity is null) return NotFound(new { message = "Relación Prensa-Producto no encontrada." });
+
+        entity.PrensaId = dto.PrensaId;
+        entity.Item = dto.Item;
+        entity.Carrete = dto.Carrete;
+
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    [HttpDelete("prensa-productos/{id}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> DeletePrensaProducto(Guid id)
+    {
+        var item = await _context.PrensaProductos.FindAsync(id);
+        if (item != null)
+        {
+            _context.PrensaProductos.Remove(item);
+            await _context.SaveChangesAsync(default);
+        }
+        return NoContent();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // PRODUCTO TERMINADO
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [HttpGet("producto-terminados")]
+    [AllowAnonymous]
+    public async Task<ActionResult<IEnumerable<object>>> GetProductoTerminados([FromQuery] string? search = null)
+    {
+        var query = _context.ProductosTerminados.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+            query = query.Where(pt =>
+                (pt.Producto != null && pt.Producto.Contains(search)) ||
+                (pt.CodigoSap != null && pt.CodigoSap.Contains(search)));
+
+        var items = await query
+            .OrderBy(pt => pt.Producto)
+            .Select(pt => new
+            {
+                pt.Id,
+                pt.Producto,
+                pt.TerminadoPalets,
+                pt.CarreteMiliar,
+                pt.PaletMiliar,
+                pt.TerminadoPeso,
+                pt.PesoCarrete,
+                pt.PesoPalet,
+                pt.ConEtiqueta,
+                pt.Etiquetable,
+                pt.CodigoSap,
+                pt.Mrd
+            })
+            .ToListAsync();
+
+        return Ok(items);
+    }
+
+    [HttpGet("producto-terminados/{id}")]
+    [AllowAnonymous]
+    public async Task<ActionResult<object>> GetProductoTerminado(Guid id)
+    {
+        var pt = await _context.ProductosTerminados.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (pt is null) return NotFound(new { message = "Producto terminado no encontrado." });
+
+        return Ok(new
+        {
+            pt.Id,
+            pt.Producto,
+            pt.TerminadoPalets,
+            pt.CarreteMiliar,
+            pt.PaletMiliar,
+            pt.TerminadoPeso,
+            pt.PesoCarrete,
+            pt.PesoPalet,
+            pt.ConEtiqueta,
+            pt.Etiquetable,
+            pt.CodigoSap,
+            pt.Mrd
+        });
+    }
+
+    [HttpPost("producto-terminados")]
+    [AllowAnonymous]
+    public async Task<ActionResult<Guid>> CreateProductoTerminado([FromBody] ProductoTerminadoDto dto)
+    {
+        var entity = new ProductoTerminado
+        {
+            Id = Guid.NewGuid(),
+            Producto = dto.Producto,
+            TerminadoPalets = dto.TerminadoPalets,
+            CarreteMiliar = dto.CarreteMiliar,
+            PaletMiliar = dto.PaletMiliar,
+            TerminadoPeso = dto.TerminadoPeso,
+            PesoCarrete = dto.PesoCarrete,
+            PesoPalet = dto.PesoPalet,
+            ConEtiqueta = dto.ConEtiqueta,
+            Etiquetable = dto.Etiquetable,
+            CodigoSap = dto.CodigoSap,
+            Mrd = dto.Mrd,
+            TenantId = dto.TenantId != Guid.Empty ? dto.TenantId : Guid.Parse("00000000-0000-0000-0000-000000000001")
+        };
+        _context.ProductosTerminados.Add(entity);
+        await _context.SaveChangesAsync(default);
+        return Ok(entity.Id);
+    }
+
+    [HttpPut("producto-terminados/{id}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> UpdateProductoTerminado(Guid id, [FromBody] ProductoTerminadoDto dto)
+    {
+        var entity = await _context.ProductosTerminados.FindAsync(id);
+        if (entity is null) return NotFound(new { message = "Producto terminado no encontrado." });
+
+        entity.Producto = dto.Producto;
+        entity.TerminadoPalets = dto.TerminadoPalets;
+        entity.CarreteMiliar = dto.CarreteMiliar;
+        entity.PaletMiliar = dto.PaletMiliar;
+        entity.TerminadoPeso = dto.TerminadoPeso;
+        entity.PesoCarrete = dto.PesoCarrete;
+        entity.PesoPalet = dto.PesoPalet;
+        entity.ConEtiqueta = dto.ConEtiqueta;
+        entity.Etiquetable = dto.Etiquetable;
+        entity.CodigoSap = dto.CodigoSap;
+        entity.Mrd = dto.Mrd;
+
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    [HttpDelete("producto-terminados/{id}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> DeleteProductoTerminado(Guid id)
+    {
+        var item = await _context.ProductosTerminados.FindAsync(id);
+        if (item != null)
+        {
+            _context.ProductosTerminados.Remove(item);
+            await _context.SaveChangesAsync(default);
+        }
+        return NoContent();
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -750,6 +968,26 @@ public record ExtrusoraOperarioDto(Guid? OperarioId, Guid TenantId);
 public record ExtrusoraOperarioBatchItemDto(Guid? TurnoId, Guid? OperarioId, Guid? TenantId);
 public record PrensaDto(string? NumeroPrensa, string Nombre, string? Imagen, string? Marca, string? Modelo, Guid TenantId);
 public record TroquelDto(string Codigo, string Nombre, string? Observaciones, int Estado, Guid TenantId);
+public record PrensaProductoDto(
+    Guid PrensaId,
+    string Item,
+    string Carrete,
+    Guid TenantId
+);
+public record ProductoTerminadoDto(
+    string? Producto,
+    int TerminadoPalets,
+    int CarreteMiliar,
+    int PaletMiliar,
+    decimal TerminadoPeso,
+    decimal PesoCarrete,
+    decimal PesoPalet,
+    bool ConEtiqueta,
+    bool Etiquetable,
+    string? CodigoSap,
+    int Mrd,
+    Guid TenantId
+);
 
 
 

@@ -116,7 +116,7 @@ public class LogisticaService : ILogisticaService
         // 4. Validar contra detalles de la remisión
         // En legacy se busca el producto del palet dentro de los productos del embarque
         var detalleCompatible = embarque.Detalles
-            .FirstOrDefault(d => d.ProductoSAE == palet.ProductoTerminado?.Nombre || d.ProductoId == palet.ProductoId);
+            .FirstOrDefault(d => d.ProductoSAE == palet.ProductoTerminado?.CodigoSap || d.ProductoId == palet.ProductoId);
 
         if (detalleCompatible == null)
             return (false, "El producto de este palet no pertenece a esta remisión");
