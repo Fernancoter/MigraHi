@@ -209,6 +209,75 @@ public class ProduccionController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost("productos")]
+    public async Task<ActionResult<Guid>> CreateProducto([FromBody] ProductoDto dto)
+    {
+        var entity = new Producto
+        {
+            Id = Guid.NewGuid(),
+            Codigo = dto.Clave,
+            Nombre = dto.Nombre,
+            Descripcion = dto.Descripcion,
+            CategoriaId = dto.CategoriaId,
+            IsActive = dto.IsActive,
+            ProductoSAE = dto.ProductoSAE,
+            PrecioUnitario = dto.PrecioUnitario,
+            ClaveExternaSAE = dto.ClaveExterna,
+            ProductoBase = dto.ProductoBase,
+            TipoMaterial = TryParseTipoMaterial(dto.TipoMaterial) ?? HiCone.Domain.Enums.TipoMaterial.Virgen,
+            TenantId = dto.TenantId != Guid.Empty ? dto.TenantId : Guid.Parse("00000000-0000-0000-0000-000000000001")
+        };
+        _context.Productos.Add(entity);
+        await _context.SaveChangesAsync(default);
+        return Ok(entity.Id);
+    }
+
+    [HttpPut("productos/{id}")]
+    public async Task<IActionResult> UpdateProducto(Guid id, [FromBody] ProductoDto dto)
+    {
+        var entity = await _context.Productos.FindAsync(id);
+        if (entity is null) return NotFound(new { message = "Producto no encontrado." });
+
+        if (!string.IsNullOrWhiteSpace(dto.Clave)) entity.Codigo = dto.Clave;
+        if (!string.IsNullOrWhiteSpace(dto.Nombre)) entity.Nombre = dto.Nombre;
+        entity.Descripcion = dto.Descripcion;
+        entity.CategoriaId = dto.CategoriaId;
+        entity.IsActive = dto.IsActive;
+        entity.ProductoSAE = dto.ProductoSAE;
+        entity.PrecioUnitario = dto.PrecioUnitario;
+        entity.ClaveExternaSAE = dto.ClaveExterna;
+        entity.ProductoBase = dto.ProductoBase;
+        var parsedTipo = TryParseTipoMaterial(dto.TipoMaterial);
+        if (parsedTipo.HasValue) entity.TipoMaterial = parsedTipo.Value;
+
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    [HttpDelete("productos/{id}")]
+    public async Task<IActionResult> DeleteProducto(Guid id)
+    {
+        var item = await _context.Productos.FindAsync(id);
+        if (item != null)
+        {
+            _context.Productos.Remove(item);
+            await _context.SaveChangesAsync(default);
+        }
+        return NoContent();
+    }
+
+    /// <summary>
+    /// El formulario de Productos toma "Tipo de Material" de un catálogo libre (CatTiposMaterial),
+    /// mientras que Producto.TipoMaterial es un enum fijo (Virgen/Molido/Mixto) heredado del legado.
+    /// Se mapea por nombre cuando coincide; si no coincide, se conserva el valor anterior/por defecto.
+    /// </summary>
+    private static TipoMaterial? TryParseTipoMaterial(string? value)
+    {
+        if (!string.IsNullOrWhiteSpace(value) && Enum.TryParse<TipoMaterial>(value, true, out var parsed))
+            return parsed;
+        return null;
+    }
+
     [HttpGet("turnos")]
     public async Task<ActionResult<IEnumerable<Turno>>> GetTurnos()
     {
@@ -707,6 +776,61 @@ public class ProduccionController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Panel "Carreras por Prensado" (ícono ⚙ del legado GeneXus): agrupa las carreras de este
+    /// prensado por la bobina con la que arrancaron, replicando la vista `CarreraWW` del legado.
+    ///
+    /// SUPUESTO A VALIDAR — "Reposo (Hr)": el legado calcula este valor con el proceso
+    /// `ReposoTranscurrido` (DB.BobinaWW → BobinaTiempoReposo/ObtenerTiempoReposo), cuya fórmula
+    /// exacta no está disponible en el código migrado. La entidad Bobina sí conserva el campo
+    /// `IniciaReposo` y el método `ReposoCompletado(minutosMinimos)` que compara
+    /// `(DateTime.UtcNow - IniciaReposo)` contra el mínimo configurado — evidencia de que el reposo
+    /// se mide desde `IniciaReposo`. Para un valor histórico coherente (no relativo a "ahora"),
+    /// aquí se aproxima como las horas transcurridas entre `Bobina.IniciaReposo` y el registro de
+    /// la primera carrera que usó esa bobina en este prensado. Confirmar con el equipo que conoce
+    /// el sistema legado antes de usarlo para reportes formales.
+    /// </summary>
+    [HttpGet("prensado/{id}/carreras-por-bobina")]
+    public async Task<ActionResult<IEnumerable<object>>> GetCarrerasPorBobina(Guid id)
+    {
+        var carreras = await _context.Carreras
+            .Include(c => c.Carretes)
+            .Where(c => c.PrensadoId == id)
+            .ToListAsync();
+
+        var bobinaIds = carreras.Select(c => c.InicioPrensadoBobinaId).Distinct().ToList();
+        var bobinas = await _context.Bobinas
+            .Where(b => bobinaIds.Contains(b.Id))
+            .ToDictionaryAsync(b => b.Id);
+
+        var result = carreras
+            .GroupBy(c => c.InicioPrensadoBobinaId)
+            .Select(g =>
+            {
+                bobinas.TryGetValue(g.Key, out var bobina);
+                var primeraCarrera = g.OrderBy(c => c.FechaRegistro).First();
+                double? reposoHr = bobina?.IniciaReposo.HasValue == true
+                    ? Math.Round((primeraCarrera.FechaRegistro - bobina.IniciaReposo!.Value).TotalHours, 2)
+                    : null;
+
+                return new
+                {
+                    BobinaId = g.Key,
+                    Bobina = bobina?.NoSerie ?? "—",
+                    ReposoHr = reposoHr,
+                    Carreras = g.Count(),
+                    EnProceso = g.Count(c => c.Estado == EstadoCarrera.EnProceso),
+                    Terminadas = g.Count(c => c.Estado == EstadoCarrera.Terminada),
+                    Validadas = g.Count(c => c.Estado == EstadoCarrera.Validada),
+                    Carretes = g.Sum(c => c.Carretes.Count)
+                };
+            })
+            .OrderByDescending(x => x.Carreras)
+            .ToList();
+
+        return Ok(result);
+    }
+
     [HttpPut("prensado/{id}")]
     public async Task<IActionResult> UpdatePrensado(Guid id, [FromBody] UpdatePrensadoRequest request)
     {
@@ -788,6 +912,62 @@ public class ProduccionController : ControllerBase
         return Ok(items);
     }
 
+    [HttpGet("carrera/{id}")]
+    public async Task<ActionResult<object>> GetCarrera(Guid id)
+    {
+        var c = await _context.Carreras
+            .Include(x => x.Prensado).ThenInclude(p => p.Prensa)
+            .Include(x => x.Prensado).ThenInclude(p => p.Turno)
+            .Include(x => x.Prensado).ThenInclude(p => p.Operario)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (c is null) return NotFound(new { message = "Carrera no encontrada." });
+
+        return Ok(new
+        {
+            c.Id,
+            c.CarreraNo,
+            c.Estado,
+            c.FechaRegistro,
+            c.FechaValidacion,
+            c.CarreraTroquel,
+            c.PaletTerminado,
+            PrensadoId = c.PrensadoId,
+            PrensaNombre = c.Prensado.Prensa.Nombre,
+            TurnoNombre = c.Prensado.Turno.Nombre,
+            OperarioNombre = c.Prensado.Operario.NombreCompleto
+        });
+    }
+
+    [HttpPut("carrera/{id}")]
+    public async Task<IActionResult> UpdateCarrera(Guid id, [FromBody] CarreraUpdateDto dto)
+    {
+        var entity = await _context.Carreras.FindAsync(id);
+        if (entity is null) return NotFound(new { message = "Carrera no encontrada." });
+
+        entity.CarreraNo = dto.CarreraNo;
+        entity.Estado = (EstadoCarrera)dto.Estado;
+        entity.CarreraTroquel = dto.CarreraTroquel;
+        entity.PaletTerminado = dto.PaletTerminado;
+        if (dto.Estado == (int)EstadoCarrera.Validada && entity.FechaValidacion is null)
+            entity.FechaValidacion = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    [HttpDelete("carrera/{id}")]
+    public async Task<IActionResult> DeleteCarrera(Guid id)
+    {
+        var item = await _context.Carreras.FindAsync(id);
+        if (item != null)
+        {
+            _context.Carreras.Remove(item);
+            await _context.SaveChangesAsync(default);
+        }
+        return NoContent();
+    }
+
     [HttpGet("carretes")]
     public async Task<ActionResult<IEnumerable<object>>> GetCarretes()
     {
@@ -812,6 +992,60 @@ public class ProduccionController : ControllerBase
             .ToListAsync();
 
         return Ok(items);
+    }
+
+    [HttpGet("carrete/{id}")]
+    public async Task<ActionResult<object>> GetCarrete(Guid id)
+    {
+        var c = await _context.Carretes
+            .Include(x => x.Carrera).ThenInclude(ca => ca.Prensado).ThenInclude(p => p.Producto)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (c is null) return NotFound(new { message = "Carrete no encontrado." });
+
+        return Ok(new
+        {
+            c.Id,
+            c.NoSerie,
+            c.NoLinea,
+            c.Estado,
+            c.Molino,
+            c.TerminaPalet,
+            c.PaletSerie,
+            c.Observaciones,
+            CarreraId = c.CarreraId,
+            CarreraNo = c.Carrera.CarreraNo,
+            ProductoNombre = c.Carrera.Prensado.Producto.Nombre
+        });
+    }
+
+    [HttpPut("carrete/{id}")]
+    public async Task<IActionResult> UpdateCarrete(Guid id, [FromBody] CarreteUpdateDto dto)
+    {
+        var entity = await _context.Carretes.FindAsync(id);
+        if (entity is null) return NotFound(new { message = "Carrete no encontrado." });
+
+        entity.NoLinea = dto.NoLinea;
+        entity.Estado = (EstadoCarrete)dto.Estado;
+        entity.Molino = (MolinoCarrete)dto.Molino;
+        entity.TerminaPalet = dto.TerminaPalet;
+        entity.PaletSerie = dto.PaletSerie;
+        entity.Observaciones = dto.Observaciones;
+
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    [HttpDelete("carrete/{id}")]
+    public async Task<IActionResult> DeleteCarrete(Guid id)
+    {
+        var item = await _context.Carretes.FindAsync(id);
+        if (item != null)
+        {
+            _context.Carretes.Remove(item);
+            await _context.SaveChangesAsync(default);
+        }
+        return NoContent();
     }
 
     [HttpGet("palets")]
@@ -841,6 +1075,68 @@ public class ProduccionController : ControllerBase
         return Ok(items);
     }
 
+    [HttpGet("palet/{id}")]
+    public async Task<ActionResult<object>> GetPalet(Guid id)
+    {
+        var p = await _context.Palets
+            .Include(x => x.Producto)
+            .Include(x => x.Operario)
+            .Include(x => x.Prensa)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (p is null) return NotFound(new { message = "Palet no encontrado." });
+
+        return Ok(new
+        {
+            p.Id,
+            p.NoSerie,
+            p.Tipo,
+            p.Estatus,
+            p.Capacidad,
+            p.TotalCarretes,
+            p.HoraInicioEnsamble,
+            p.HoraFinEnsamble,
+            ProductoId = p.ProductoId,
+            ProductoNombre = p.Producto != null ? p.Producto.Nombre : "---",
+            OperarioId = p.OperarioId,
+            OperarioNombre = p.Operario != null ? p.Operario.NombreCompleto : "---",
+            PrensaId = p.PrensaId,
+            PrensaNombre = p.Prensa != null ? p.Prensa.Nombre : "---"
+        });
+    }
+
+    [HttpPut("palet/{id}")]
+    public async Task<IActionResult> UpdatePalet(Guid id, [FromBody] PaletUpdateDto dto)
+    {
+        var entity = await _context.Palets.FindAsync(id);
+        if (entity is null) return NotFound(new { message = "Palet no encontrado." });
+
+        entity.Tipo = (TipoPalet)dto.Tipo;
+        entity.Estatus = (EstatusPalet)dto.Estatus;
+        entity.Capacidad = dto.Capacidad;
+        entity.TotalCarretes = dto.TotalCarretes;
+        entity.ProductoId = dto.ProductoId;
+        entity.OperarioId = dto.OperarioId;
+        entity.PrensaId = dto.PrensaId;
+        if (dto.Estatus == (int)EstatusPalet.Terminado && entity.HoraFinEnsamble is null)
+            entity.HoraFinEnsamble = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    [HttpDelete("palet/{id}")]
+    public async Task<IActionResult> DeletePalet(Guid id)
+    {
+        var item = await _context.Palets.FindAsync(id);
+        if (item != null)
+        {
+            _context.Palets.Remove(item);
+            await _context.SaveChangesAsync(default);
+        }
+        return NoContent();
+    }
+
     [HttpGet("interrupciones-prensado")]
     public async Task<ActionResult<IEnumerable<object>>> GetInterrupcionesPrensado()
     {
@@ -864,6 +1160,59 @@ public class ProduccionController : ControllerBase
             .ToListAsync();
 
         return Ok(items);
+    }
+
+    [HttpGet("prensado/interrupcion/{id}")]
+    public async Task<ActionResult<object>> GetInterrupcionPrensado(Guid id)
+    {
+        var i = await _context.PrensadoInterrupciones
+            .Include(x => x.Prensado).ThenInclude(p => p.Prensa)
+            .Include(x => x.Causa)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (i is null) return NotFound(new { message = "Interrupción no encontrada." });
+
+        return Ok(new
+        {
+            i.Id,
+            i.PrensadoId,
+            i.CausaId,
+            i.HoraInicio,
+            i.HoraFin,
+            i.Concluida,
+            i.Descripcion,
+            DuracionMinutos = i.HoraFin.HasValue ? (double?)(i.HoraFin.Value - i.HoraInicio).TotalMinutes : null,
+            PrensaNombre = i.Prensado.Prensa.Nombre,
+            CausaNombre = i.Causa != null ? i.Causa.Descripcion : "Otras causas"
+        });
+    }
+
+    [HttpPut("prensado/interrupcion/{id}")]
+    public async Task<IActionResult> UpdateInterrupcionPrensado(Guid id, [FromBody] InterrupcionPrensadoUpdateDto dto)
+    {
+        var entity = await _context.PrensadoInterrupciones.FindAsync(id);
+        if (entity is null) return NotFound(new { message = "Interrupción no encontrada." });
+
+        entity.CausaId = dto.CausaId;
+        entity.HoraInicio = dto.HoraInicio;
+        entity.HoraFin = dto.HoraFin;
+        entity.Concluida = dto.Concluida;
+        entity.Descripcion = dto.Descripcion;
+
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    [HttpDelete("prensado/interrupcion/{id}")]
+    public async Task<IActionResult> DeleteInterrupcionPrensado(Guid id)
+    {
+        var item = await _context.PrensadoInterrupciones.FindAsync(id);
+        if (item != null)
+        {
+            _context.PrensadoInterrupciones.Remove(item);
+            await _context.SaveChangesAsync(default);
+        }
+        return NoContent();
     }
 
     [HttpGet("turno-activo")]
@@ -1277,4 +1626,23 @@ public record UpdatePrensadoRequest(
     int Meta,
     string? LoteSilo
 );
+
+public record ProductoDto(
+    string Clave,
+    string Nombre,
+    string? Descripcion,
+    Guid? CategoriaId,
+    bool IsActive,
+    string? ProductoSAE,
+    decimal PrecioUnitario,
+    string? ClaveExterna,
+    string? TipoMaterial,
+    string? ProductoBase,
+    Guid TenantId
+);
+
+public record CarreraUpdateDto(int CarreraNo, int Estado, string? CarreraTroquel, bool PaletTerminado);
+public record CarreteUpdateDto(int NoLinea, int Estado, int Molino, bool TerminaPalet, string? PaletSerie, string? Observaciones);
+public record PaletUpdateDto(int Tipo, int Estatus, int Capacidad, int TotalCarretes, Guid? ProductoId, Guid? OperarioId, Guid? PrensaId);
+public record InterrupcionPrensadoUpdateDto(Guid? CausaId, DateTime HoraInicio, DateTime? HoraFin, bool Concluida, string? Descripcion);
 

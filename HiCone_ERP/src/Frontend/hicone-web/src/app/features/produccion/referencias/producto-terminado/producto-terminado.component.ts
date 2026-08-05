@@ -1,287 +1,252 @@
-import { Component, signal, computed, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
-import * as XLSX from 'xlsx';
+import { ProduccionService } from '../../../../core/services/produccion';
 
-export interface ProductoTerminado {
-  id?: string;
-  terminadoPalets: number;
-  carreteMillar: number;
-  paletMillar: number;
-  terminadoPeso: number;
-  pesoCarrete: number;
-  pesoPalet: number;
-  conEtiqueta: boolean;
-  etiquetable: boolean;
-  producto: string;
-  codigoSap: string;
-  mrd: number;
-}
-
-export interface ColumnDef {
-  key: keyof ProductoTerminado;
-  label: string;
-  visible: boolean;
-  pin: 'left' | 'right' | 'none';
-}
+const ALL_COLUMNS = ['terminadoPalets', 'carreteMiliar', 'paletMiliar', 'terminadoPeso', 'pesoCarrete', 'pesoPalet', 'conEtiqueta', 'etiquetable', 'producto', 'codigoSap', 'mrd'];
 
 @Component({
   selector: 'app-producto-terminado',
   standalone: true,
-  imports: [CommonModule, FormsModule, ClickOutsideDirective],
+  imports: [CommonModule, FormsModule],
   template: `
-    <div class="module-page animate-fade-in" style="padding: 3rem; background: #fff; min-height: calc(100vh - 64px); position: relative;">
+    <div class="module-page animate-move-up" (click)="closeAllDropdowns()">
+
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Producto Terminado</h1>
           <nav class="breadcrumb-modern">
-            <span class="root">Producción</span>
-            <span class="sep">&rsaquo;</span>
-            <span class="root">Referencias</span>
+            <span class="root">Prensado</span>
             <span class="sep">&rsaquo;</span>
             <span class="active">Producto Terminado</span>
           </nav>
-          <h1 class="premium-title">Producto Terminado</h1>
         </div>
       </div>
 
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; margin-bottom: 1rem; padding-bottom: 0.5rem;">
-        
-        <!-- Izquierda: Exportar, Selecciona columnas -->
-        <div style="display: flex; gap: 0.5rem; align-items: center;">
-          <!-- Exportar -->
-          <div style="position: relative;">
-            <button (click)="toggleExportMenu()" style="background: white; color: #5cb85c; border: 1px solid #5cb85c; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
-              <span>⬇️</span> Exportar <span style="font-size: 0.6rem;">▼</span>
+      <div class="actions-toolbar" style="margin-bottom: 1.5rem;">
+        <div class="toolbar-left">
+          <div class="dropdown-wrapper">
+            <button class="btn btn-secondary" (click)="toggleExportDropdown($event)">
+              <span><svg class="btn-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Exportar
             </button>
-            <div *ngIf="isExportMenuOpen" style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 50; width: 120px; padding: 0.5rem; margin-top: 0.5rem;">
-              <button (click)="exportCSV()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Excel</button>
-              <button style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">PDF</button>
-            </div>
+            @if (showExportOptions()) {
+              <div class="dd-popover animate-slide-up" (click)="$event.stopPropagation()">
+                <div class="dd-item" (click)="exportCSV()">Excel (CSV)</div>
+              </div>
+            }
           </div>
 
-          <!-- Selecciona Columnas -->
-          <div style="position: relative;" (clickOutside)="isColumnsMenuOpen = false">
-            <button (click)="toggleColumnsMenu()" style="background: #5cb85c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
-              Selecciona columnas <span style="font-size: 0.6rem;">▼</span>
+          <button class="btn btn-primary" (click)="abrirAgregar()">+ Agregar</button>
+
+          <div class="dropdown-wrapper">
+            <button class="btn btn-secondary btn-cols" (click)="toggleColumnDropdown($event)">
+              <svg class="btn-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> Selecciona columnas ▾
             </button>
-            <div *ngIf="isColumnsMenuOpen" style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 50; width: 250px; padding: 1rem; margin-top: 0.5rem;">
-              <input type="text" placeholder="Buscar..." style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8rem; margin-bottom: 1rem; box-sizing: border-box;" />
-              
-              <div style="font-size: 0.8rem; font-weight: bold; color: #64748b; margin-bottom: 0.5rem;">Fijas a la izquierda <span style="font-size: 0.6rem;">▼</span></div>
-              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.85rem; color: #334155;">
-                <input type="checkbox" [checked]="getColumnsByPin('left').length === 0" disabled /> (Ninguna)
+            @if (showColumnSelector()) {
+              <div class="col-sel-popover animate-slide-up" (click)="$event.stopPropagation()">
+                <div class="col-subitem"><label><input type="checkbox" [checked]="isColVisible('terminadoPalets')" (change)="toggleCol('terminadoPalets')" /> Terminado Palets</label></div>
+                <div class="col-subitem"><label><input type="checkbox" [checked]="isColVisible('carreteMiliar')" (change)="toggleCol('carreteMiliar')" /> Carrete Millar</label></div>
+                <div class="col-subitem"><label><input type="checkbox" [checked]="isColVisible('paletMiliar')" (change)="toggleCol('paletMiliar')" /> Palet Millar</label></div>
+                <div class="col-subitem"><label><input type="checkbox" [checked]="isColVisible('terminadoPeso')" (change)="toggleCol('terminadoPeso')" /> Terminado Peso</label></div>
+                <div class="col-subitem"><label><input type="checkbox" [checked]="isColVisible('pesoCarrete')" (change)="toggleCol('pesoCarrete')" /> Peso Carrete</label></div>
+                <div class="col-subitem"><label><input type="checkbox" [checked]="isColVisible('pesoPalet')" (change)="toggleCol('pesoPalet')" /> Peso Palet</label></div>
+                <div class="col-subitem"><label><input type="checkbox" [checked]="isColVisible('conEtiqueta')" (change)="toggleCol('conEtiqueta')" /> Con Etiqueta</label></div>
+                <div class="col-subitem"><label><input type="checkbox" [checked]="isColVisible('etiquetable')" (change)="toggleCol('etiquetable')" /> Etiquetable</label></div>
+                <div class="col-subitem"><label><input type="checkbox" [checked]="isColVisible('producto')" (change)="toggleCol('producto')" /> Producto</label></div>
+                <div class="col-subitem"><label><input type="checkbox" [checked]="isColVisible('codigoSap')" (change)="toggleCol('codigoSap')" /> Código SAP</label></div>
+                <div class="col-subitem"><label><input type="checkbox" [checked]="isColVisible('mrd')" (change)="toggleCol('mrd')" /> MRD</label></div>
               </div>
-              <div *ngFor="let col of columns" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.85rem; color: #334155;">
-                <input type="checkbox" [checked]="col.pin === 'left'" (change)="togglePin(col, 'left')" /> {{ col.label }}
-              </div>
-
-              <div style="font-size: 0.8rem; font-weight: bold; color: #64748b; margin-bottom: 0.5rem; margin-top: 1rem;">No fijas <span style="font-size: 0.6rem;">▼</span></div>
-              <div *ngFor="let col of columns" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.85rem; color: #334155;">
-                <input type="checkbox" [(ngModel)]="col.visible" (change)="onVisibilityChange(col)" /> {{ col.label }}
-              </div>
-
-              <div style="font-size: 0.8rem; font-weight: bold; color: #64748b; margin-bottom: 0.5rem; margin-top: 1rem;">Fijas a la derecha <span style="font-size: 0.6rem;">▼</span></div>
-              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.85rem; color: #334155;">
-                <input type="checkbox" [checked]="getColumnsByPin('right').length === 0" disabled /> (Ninguna)
-              </div>
-              <div *ngFor="let col of columns" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.85rem; color: #334155;">
-                <input type="checkbox" [checked]="col.pin === 'right'" (change)="togglePin(col, 'right')" /> {{ col.label }}
-              </div>
-              
-              <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                <button (click)="resetColumns()" style="background: #5cb85c; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">↺</button>
-                <button (click)="isColumnsMenuOpen = false" style="background: #5cb85c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; flex-grow: 1;">Actualizar</button>
-              </div>
-            </div>
+            }
           </div>
         </div>
 
-        <!-- Derecha: Filtro, Buscar -->
-        <div style="display: flex; gap: 1rem; align-items: center;">
-          <!-- Filter Dropdown Trigger -->
-          <div style="position: relative;" (click)="toggleFilterMenu()" (clickOutside)="isFilterMenuOpen = false">
-            <button style="background: none; border: none; color: #64748b; cursor: pointer; padding-right: 0.5rem; display: flex; align-items: center;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-            </button>
-            
-            <!-- Filter Dropdown -->
-            <div *ngIf="isFilterMenuOpen" style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 50; width: 200px; padding: 0.5rem;">
-              <button (click)="clearFilters(); $event.stopPropagation()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Limpiar filtros</button>
-              <button (click)="saveFilters(); $event.stopPropagation()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Guardar filtro como...</button>
-            </div>
-          </div>
+        <div style="flex:1"></div>
 
-          <div style="position: relative; width: 250px;">
-            <input type="text" [ngModel]="searchText()" (ngModelChange)="onSearchChange($event)"
-                   placeholder="Buscar" 
-                   style="border: none; background: transparent; font-size: 0.9rem; outline: none; padding: 0.5rem; width: 100%; border-bottom: 2px solid transparent; transition: border-color 0.2s; color: #334155;" />
+        <div class="toolbar-right">
+          <div class="search-box">
+            <span class="search-icon"><svg class="search-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            <input class="search-input" type="text" placeholder="Buscar..." [ngModel]="searchText()" (ngModelChange)="searchText.set($event)" />
           </div>
         </div>
       </div>
 
-<<<<
-      @if (!viewMode() && !editMode()) {
-      <div class="table-responsive" style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 1rem; min-width: 1200px;">
+      <div class="content-card">
+        <table class="data-table">
           <thead>
             <tr>
-              <th style="width: 60px; text-align: center; padding: 1rem; border-bottom: 1px solid #e2e8f0; background: white; position: sticky; left: 0; z-index: 20;">Vis</th>
-              <th style="width: 60px; text-align: center; padding: 1rem; border-bottom: 1px solid #e2e8f0; background: white; position: sticky; left: 60px; z-index: 20;">Mod</th>
-              <th style="width: 60px; text-align: center; padding: 1rem; border-bottom: 1px solid #e2e8f0; background: white; position: sticky; left: 120px; z-index: 20;">Eli</th>
-              <ng-container *ngFor="let col of activeColumns">
-                <th [ngStyle]="getThStyle(col)" style="text-align: left; padding: 1rem; color: #334155; font-size: 0.85rem; font-weight: bold; border-bottom: 1px solid #e2e8f0; background: white;">
-                  {{ col.label }} <span style="font-size: 0.6rem; color: #94a3b8; cursor: pointer;">▼</span>
-                </th>
-              </ng-container>
+              <th class="col-acciones">Acciones</th>
+              @if (isColVisible('terminadoPalets')) { <th>Terminado Palets</th> }
+              @if (isColVisible('carreteMiliar')) { <th>Carrete Millar</th> }
+              @if (isColVisible('paletMiliar')) { <th>Palet Millar</th> }
+              @if (isColVisible('terminadoPeso')) { <th>Terminado Peso</th> }
+              @if (isColVisible('pesoCarrete')) { <th>Peso Carrete</th> }
+              @if (isColVisible('pesoPalet')) { <th>Peso Palet</th> }
+              @if (isColVisible('conEtiqueta')) { <th>Con Etiqueta</th> }
+              @if (isColVisible('etiquetable')) { <th>Etiquetable</th> }
+              @if (isColVisible('producto')) { <th>Producto</th> }
+              @if (isColVisible('codigoSap')) { <th>Código SAP</th> }
+              @if (isColVisible('mrd')) { <th>MRD</th> }
             </tr>
           </thead>
           <tbody>
             @if (isLoading()) {
-              <tr><td [attr.colspan]="activeColumns.length + 3" style="text-align:center; padding:2rem; color:#94a3b8;">Cargando...</td></tr>
-            } @else if (paginatedItems().length === 0) {
-              <tr><td [attr.colspan]="activeColumns.length + 3" style="text-align:center; padding:2rem; color:#94a3b8; font-style:italic;">No se encontraron resultados.</td></tr>
+              <tr><td [attr.colspan]="visibleCount() + 1" class="empty-state">Cargando...</td></tr>
             } @else {
               @for (item of paginatedItems(); track item.id) {
-                <tr class="table-row">
-                  <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; text-align: center; background: white; position: sticky; left: 0; z-index: 10;">
-                    <button (click)="openView(item)" style="background: none; border: none; color: #3b82f6; cursor: pointer; font-size: 1.1rem;" title="Visualizar">👁️</button>
+                <tr>
+                  <td class="col-acciones">
+                    <a class="row-action" (click)="visualizar(item)">Visualizar</a>
+                    <a class="row-action" (click)="modificar(item)">Modificar</a>
+                    <a class="row-action row-action-danger" (click)="eliminar(item)">Eliminar</a>
                   </td>
-                  <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; text-align: center; background: white; position: sticky; left: 60px; z-index: 10;">
-                    <button (click)="openEdit(item)" style="background: none; border: none; color: #eab308; cursor: pointer; font-size: 1.1rem;" title="Modificar">✏️</button>
-                  </td>
-                  <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; text-align: center; background: white; position: sticky; left: 120px; z-index: 10;">
-                    <button (click)="openDeleteConfirm(item.id!)" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.1rem;" title="Eliminar">🗑️</button>
-                  </td>
-                  <ng-container *ngFor="let col of activeColumns">
-                    <td [ngStyle]="getTdStyle(col)" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem; background: inherit;">
-                      <ng-container *ngIf="col.key === 'conEtiqueta' || col.key === 'etiquetable'; else textCell">
-                        <input type="checkbox" [checked]="item[col.key]" disabled />
-                      </ng-container>
-                      <ng-template #textCell>
-                        {{ item[col.key] }}
-                      </ng-template>
-                    </td>
-                  </ng-container>
+                  @if (isColVisible('terminadoPalets')) { <td>{{ item.terminadoPalets }}</td> }
+                  @if (isColVisible('carreteMiliar')) { <td>{{ item.carreteMiliar }}</td> }
+                  @if (isColVisible('paletMiliar')) { <td>{{ item.paletMiliar }}</td> }
+                  @if (isColVisible('terminadoPeso')) { <td>{{ item.terminadoPeso }}</td> }
+                  @if (isColVisible('pesoCarrete')) { <td>{{ item.pesoCarrete }}</td> }
+                  @if (isColVisible('pesoPalet')) { <td>{{ item.pesoPalet }}</td> }
+                  @if (isColVisible('conEtiqueta')) { <td>{{ item.conEtiqueta ? 'Sí' : 'No' }}</td> }
+                  @if (isColVisible('etiquetable')) { <td>{{ item.etiquetable ? 'Sí' : 'No' }}</td> }
+                  @if (isColVisible('producto')) { <td class="col-nombre">{{ item.producto }}</td> }
+                  @if (isColVisible('codigoSap')) { <td>{{ item.codigoSap }}</td> }
+                  @if (isColVisible('mrd')) { <td>{{ item.mrd }}</td> }
                 </tr>
+              }
+              @if (paginatedItems().length === 0) {
+                <tr><td [attr.colspan]="visibleCount() + 1" class="empty-state">No se encontraron registros.</td></tr>
               }
             }
           </tbody>
         </table>
       </div>
->>>>
 
-      <!-- Paginación -->
-      @if (totalPages() > 1) {
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
-          <div style="font-size: 0.85rem; color: #64748b;">Página {{ currentPage() }} de {{ totalPages() }}</div>
-          <div class="pagination-container">
-            <button class="pag-btn" [disabled]="currentPage() === 1" (click)="prevPage()">Ant</button>
-            @for (p of getPages(currentPage(), totalPages()); track $index) {
+      @if (filteredItems().length > 0) {
+        <div class="pagination-container">
+          <span class="pagination-label">Página {{ currentPage() }} de {{ totalPages() }}</span>
+          <div class="pagination-buttons">
+            <button class="pag-btn" [disabled]="currentPage() === 1" (click)="prevPage()">&laquo;</button>
+            @for (p of getPages(currentPage(), totalPages()); track p) {
               @if (p === '...') { <span class="pag-dots">...</span> }
-              @else { <button class="pag-btn" [class.active]="currentPage() === p" (click)="setPage($any(p))">{{ p }}</button> }
+              @else { <button class="pag-btn" [class.active]="currentPage() === p" (click)="setPage(p)">{{ p }}</button> }
             }
-            <button class="pag-btn" [disabled]="currentPage() === totalPages()" (click)="nextPage()">Sig</button>
+            <button class="pag-btn" [disabled]="currentPage() === totalPages()" (click)="nextPage()">&raquo;</button>
           </div>
         </div>
       }
-      } <!-- END DE IF (!viewMode() && !editMode()) -->
 
-      <!-- FORMULARIO PANTALLA COMPLETA (Visualizar o Modificar) -->
-      @if (viewMode() || editMode()) {
-        <div class="form-container animate-fade-in" style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; margin-top: 1rem;">
-          <div style="background: #f8fafc; padding: 1rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 0.5rem; border-top-left-radius: 8px; border-top-right-radius: 8px;">
-            <span style="color: #5cb85c; font-size: 1.2rem;">🏷️</span>
-            <h3 style="margin: 0; color: #334155; font-size: 1rem;">Información General</h3>
-          </div>
-          
-          <div style="padding: 2rem;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
-              <div class="form-group">
-                <label>Terminado Id</label>
-                <input type="text" [value]="selectedItem()?.id || ''" disabled class="form-control" />
-              </div>
-              <div class="form-group">
-                <label>Producto Nombre</label>
-                <input type="text" [value]="selectedItem()?.producto || ''" [disabled]="viewMode()" class="form-control" />
-              </div>
-              <div class="form-group">
-                <label>Terminado Palets</label>
-                <input type="number" [value]="selectedItem()?.terminadoPalets || 0" [disabled]="viewMode()" class="form-control" />
-              </div>
-              <div class="form-group">
-                <label>Carrete Millar</label>
-                <input type="number" [value]="selectedItem()?.carreteMillar || 0" [disabled]="viewMode()" class="form-control" />
-              </div>
-              <div class="form-group">
-                <label>Palet Millar</label>
-                <input type="number" [value]="selectedItem()?.paletMillar || 0" [disabled]="viewMode()" class="form-control" />
-              </div>
-              <div class="form-group">
-                <label>Terminado Peso</label>
-                <input type="number" [value]="selectedItem()?.terminadoPeso || 0" [disabled]="viewMode()" class="form-control" />
-              </div>
-              <div class="form-group">
-                <label>Peso Carrete</label>
-                <input type="number" [value]="selectedItem()?.pesoCarrete || 0" [disabled]="viewMode()" class="form-control" />
-              </div>
-              <div class="form-group">
-                <label>Peso Palet</label>
-                <input type="number" [value]="selectedItem()?.pesoPalet || 0" [disabled]="viewMode()" class="form-control" />
-              </div>
-              <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
-                <input type="checkbox" [checked]="selectedItem()?.conEtiqueta" [disabled]="viewMode()" />
-                <label style="margin: 0;">Con Etiqueta</label>
-              </div>
-              <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
-                <input type="checkbox" [checked]="selectedItem()?.etiquetable" [disabled]="viewMode()" />
-                <label style="margin: 0;">Etiquetable</label>
+      <!-- Modal Visualizar -->
+      @if (viewingItem(); as v) {
+        <div class="modal-overlay" (click)="cerrarVisualizar()">
+          <div class="modal-card" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+              <h2>Detalle Producto Terminado</h2>
+              <button class="modal-close" (click)="cerrarVisualizar()"><svg class="close-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="detail-grid">
+                <div class="detail-item"><span class="d-label">Producto</span><span class="d-value">{{ v.producto || '—' }}</span></div>
+                <div class="detail-item"><span class="d-label">Código SAP</span><span class="d-value">{{ v.codigoSap || '—' }}</span></div>
+                <div class="detail-item"><span class="d-label">Terminado Palets</span><span class="d-value">{{ v.terminadoPalets }}</span></div>
+                <div class="detail-item"><span class="d-label">Terminado Peso</span><span class="d-value">{{ v.terminadoPeso }}</span></div>
+                <div class="detail-item"><span class="d-label">Carrete Millar / Palet Millar</span><span class="d-value">{{ v.carreteMiliar }} / {{ v.paletMiliar }}</span></div>
+                <div class="detail-item"><span class="d-label">Peso Carrete / Peso Palet</span><span class="d-value">{{ v.pesoCarrete }} / {{ v.pesoPalet }}</span></div>
+                <div class="detail-item"><span class="d-label">Con Etiqueta</span><span class="d-value">{{ v.conEtiqueta ? 'Sí' : 'No' }}</span></div>
+                <div class="detail-item"><span class="d-label">Etiquetable</span><span class="d-value">{{ v.etiquetable ? 'Sí' : 'No' }}</span></div>
+                <div class="detail-item"><span class="d-label">MRD</span><span class="d-value">{{ v.mrd }}</span></div>
               </div>
             </div>
-
-            <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0; display: flex; gap: 1rem;">
-              <button (click)="cancelView()" class="btn-cancel">CANCELAR</button>
-              @if (editMode()) {
-                <button class="btn-save" (click)="saveEdit()">GUARDAR</button>
-                <button class="btn-delete" (click)="openDeleteConfirm(selectedItem()?.id!)" style="margin-left: auto;">ELIMINAR</button>
-              }
-            </div>
-          </div>
-
-          <!-- Auditoria -->
-          <div style="background: #f8fafc; padding: 1rem; border-bottom: 1px solid #e2e8f0; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 0.5rem;">
-            <span style="color: #5cb85c; font-size: 1.2rem;">🏷️</span>
-            <h3 style="margin: 0; color: #334155; font-size: 1rem;">Historial Auditoria</h3>
-          </div>
-          <div style="padding: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-            <div style="border: 1px solid #e2e8f0; border-radius: 4px;">
-              <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0; background: #f8fafc; font-weight: bold; color: #64748b; font-size: 0.9rem;">Change Log</div>
-              <div style="padding: 1rem; min-height: 100px; text-align: center; color: #94a3b8; font-size: 0.85rem;">
-                <table style="width: 100%;">
-                  <tr><th>Date</th><th>User</th></tr>
-                  <tr><td colspan="2" style="padding-top: 1rem;">Sin cambios registrados</td></tr>
-                </table>
-              </div>
-            </div>
-            <div style="border: 1px solid #e2e8f0; border-radius: 4px;">
-              <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0; background: #f8fafc; font-weight: bold; color: #64748b; font-size: 0.9rem;">Detail</div>
-              <div style="padding: 1rem; min-height: 100px;"></div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" (click)="cerrarVisualizar()">Cerrar</button>
             </div>
           </div>
         </div>
       }
 
-      <!-- MODAL ELIMINAR -->
-      @if (showDeleteModal()) {
-        <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">
-          <div style="background: white; padding: 2rem; border-radius: 8px; width: 400px; text-align: center; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);">
-            <div style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;">⚠️</div>
-            <h2 style="margin-top: 0;">Confirmar Eliminación</h2>
-            <p style="color: #64748b; margin-bottom: 2rem;">¿Estás seguro que deseas eliminar este registro permanentemente?</p>
-            <div style="display: flex; gap: 1rem; justify-content: center;">
-              <button (click)="showDeleteModal.set(false)" class="btn-cancel">Cancelar</button>
-              <button (click)="confirmDelete()" class="btn-delete">Eliminar</button>
+      <!-- Modal Agregar/Modificar -->
+      @if (editForm(); as f) {
+        <div class="modal-overlay" (click)="cerrarModal()">
+          <div class="modal-card" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+              <h2>{{ editingId ? 'Modificar' : 'Agregar' }} Producto Terminado</h2>
+              <button class="modal-close" (click)="cerrarModal()"><svg class="close-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-grid">
+                <div class="form-field" style="grid-column: 1 / -1;">
+                  <label>Producto</label>
+                  <input type="text" [(ngModel)]="f.producto" placeholder="Código o descripción del producto" />
+                </div>
+                <div class="form-field">
+                  <label>Código SAP</label>
+                  <input type="text" [(ngModel)]="f.codigoSap" />
+                </div>
+                <div class="form-field">
+                  <label>MRD</label>
+                  <input type="number" [(ngModel)]="f.mrd" />
+                </div>
+                <div class="form-field">
+                  <label>Terminado Palets</label>
+                  <input type="number" [(ngModel)]="f.terminadoPalets" />
+                </div>
+                <div class="form-field">
+                  <label>Terminado Peso</label>
+                  <input type="number" [(ngModel)]="f.terminadoPeso" />
+                </div>
+                <div class="form-field">
+                  <label>Carrete Millar</label>
+                  <input type="number" [(ngModel)]="f.carreteMiliar" />
+                </div>
+                <div class="form-field">
+                  <label>Palet Millar</label>
+                  <input type="number" [(ngModel)]="f.paletMiliar" />
+                </div>
+                <div class="form-field">
+                  <label>Peso Carrete</label>
+                  <input type="number" [(ngModel)]="f.pesoCarrete" />
+                </div>
+                <div class="form-field">
+                  <label>Peso Palet</label>
+                  <input type="number" [(ngModel)]="f.pesoPalet" />
+                </div>
+                <div class="form-field">
+                  <label>Con Etiqueta</label>
+                  <select [(ngModel)]="f.conEtiqueta">
+                    <option [ngValue]="true">Sí</option>
+                    <option [ngValue]="false">No</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label>Etiquetable</label>
+                  <select [(ngModel)]="f.etiquetable">
+                    <option [ngValue]="true">Sí</option>
+                    <option [ngValue]="false">No</option>
+                  </select>
+                </div>
+              </div>
+              @if (saveError()) { <div class="form-error">{{ saveError() }}</div> }
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+              <button class="btn btn-primary" [disabled]="saving()" (click)="guardar()">{{ saving() ? 'Guardando...' : 'Guardar' }}</button>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Modal Eliminar -->
+      @if (itemToDelete(); as del) {
+        <div class="modal-overlay" (click)="cancelarEliminar()">
+          <div class="modal-card modal-card-sm" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+              <h2>Eliminar Producto Terminado</h2>
+              <button class="modal-close" (click)="cancelarEliminar()"><svg class="close-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <p>¿Está seguro de que desea eliminar <strong>{{ del.producto || 'este registro' }}</strong>? Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" (click)="cancelarEliminar()">Cancelar</button>
+              <button class="btn btn-danger" [disabled]="deleting()" (click)="confirmarEliminar()">{{ deleting() ? 'Eliminando...' : 'Sí, eliminar' }}</button>
             </div>
           </div>
         </div>
@@ -290,152 +255,124 @@ export interface ColumnDef {
     </div>
   `,
   styles: [`
-    .animate-move-up { animation: moveUp .3s ease-out; }
-    @keyframes moveUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .btn-icon-svg { display:inline-block; vertical-align:-2px; }
+    .search-icon-svg { display:block; }
+    .close-icon-svg { display:block; }
+    .icon-btn-svg { display:block; }
+    .module-page { padding: 3rem; font-family: 'Inter', sans-serif; }
+    h1           { font-size:1.75rem; font-weight:800; color:#1e293b; margin:0 0 .25rem; }
+    .actions-toolbar { display:flex; width:100%; align-items:center; gap:.5rem; }
+    .toolbar-left    { display:flex; gap:.6rem; align-items:center; }
+    .toolbar-right   { display:flex; gap:.6rem; align-items:center; }
 
-    .animate-fade-in { animation: fadeIn .3s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .btn { padding:.52rem 1.1rem; border-radius:7px; border:none; cursor:pointer; font-size:.82rem; font-weight:700; transition:all .18s; display:flex; align-items:center; gap:.35rem; }
+    .btn-primary   { background:#3faa5a; color:#fff; }
+    .btn-primary:disabled { opacity:.6; cursor:not-allowed; }
+    .btn-secondary { background:#fff; color:#475569; border:1px solid #e2e8f0; }
+    .btn-secondary:hover { background:#f8fafc; border-color:#cbd5e1; }
+    .btn-danger { background:#dc2626; color:#fff; }
+    .btn-danger:disabled { opacity:.6; cursor:not-allowed; }
+    .btn-cols { font-size:.78rem; padding:.48rem .9rem; }
 
-    .table-row { transition: background-color 0.2s; background: white; }
-    .table-row:hover { background: #f8fafc; }
-    .table-row:hover td { background: #f8fafc; } /* Inherit hover background for sticky cells */
+    .search-box   { position:relative; }
+    .search-icon  { position:absolute; left:.7rem; top:50%; transform:translateY(-50%); color:#94a3b8; }
+    .search-input { padding:.48rem .75rem .48rem 2rem; border:1px solid #e2e8f0; border-radius:7px; font-size:.82rem; outline:none; width:200px; color:#334155; }
+    .search-input:focus { border-color:#3faa5a; box-shadow:0 0 0 3px rgba(63,170,90,.12); }
 
-    .pagination-container { display:flex; justify-content:center; align-items:center; gap:.4rem; }
-    .pag-btn { height:2.1rem; min-width:2.1rem; padding:0 .5rem; border-radius:4px; border:1px solid #cbd5e1; background:white; color:#475569; font-weight:600; font-size:.85rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
-    .pag-btn:hover:not(:disabled) { background:#f8fafc; color:#0f172a; }
+    .dropdown-wrapper { position:relative; }
+    .dd-popover  { position:absolute; left:0; top:110%; background:#fff; border:1px solid #e2e8f0; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,.1); z-index:200; min-width:140px; overflow:hidden; }
+    .dd-item     { padding:.6rem 1rem; font-size:.82rem; font-weight:600; color:#334155; cursor:pointer; }
+    .dd-item:hover { background:#f1f5f9; }
+
+    .col-sel-popover { position:absolute; left:0; top:110%; background:#fff; border:1px solid #e2e8f0; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.12); z-index:200; width:220px; padding:.75rem; max-height:320px; overflow-y:auto; }
+    .col-subitem { display:flex; flex-direction:column; gap:.2rem; }
+    .col-subitem label { display:flex; align-items:center; gap:.4rem; font-size:.8rem; color:#475569; cursor:pointer; padding:.15rem 0; }
+
+    .content-card { background:#fff; border-radius:12px; border:1px solid #e2e8f0; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.04); margin-top:1rem; overflow-x:auto; }
+    .data-table   { width:100%; border-collapse:collapse; }
+    .data-table th { text-align:left; padding:.85rem 1rem; background:#f8fafc; color:#64748b; font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.04em; border-bottom:1px solid #e2e8f0; white-space:nowrap; }
+    .data-table td { padding:.78rem 1rem; border-bottom:1px solid #f1f5f9; font-size:.83rem; color:#334155; white-space:nowrap; }
+    .data-table tr:hover td { background:#f8fafc; }
+    .col-nombre { font-weight:700; color:#1e293b; }
+    .col-acciones { display:flex; gap:.75rem; position:sticky; left:0; z-index:2; background:#fff; box-shadow:2px 0 4px rgba(0,0,0,.06); }
+    .data-table thead th.col-acciones { z-index:3; background:#f8fafc; }
+    .data-table tr:hover td.col-acciones { background:#f8fafc; }
+    .row-action { color:#3faa5a; font-weight:700; font-size:.8rem; cursor:pointer; text-decoration:none; }
+    .row-action:hover { text-decoration:underline; }
+    .row-action-danger { color:#dc2626; }
+    .empty-state { text-align:center; padding:3rem; color:#94a3b8; font-style:italic; }
+
+    .pagination-container { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-top:1.4rem; flex-wrap:wrap; }
+    .pagination-label { font-size:.8rem; color:#64748b; font-weight:600; }
+    .pagination-buttons { display:flex; align-items:center; gap:.35rem; }
+    .pag-btn { height:2rem; min-width:2rem; padding:0 .45rem; border-radius:7px; border:1px solid #e2e8f0; background:#fff; color:#475569; font-weight:700; font-size:.82rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .18s; }
+    .pag-btn:hover:not(:disabled) { background:#f8fafc; border-color:#cbd5e1; }
     .pag-btn:disabled { opacity:.4; cursor:not-allowed; }
-    .pag-btn.active { background:#5cb85c; border-color:#5cb85c; color:white; }
-    .pag-dots { font-size:.85rem; color:#94a3b8; font-weight:700; padding:0 .2rem; }
-    
-    .form-group { display: flex; flex-direction: column; }
-    .form-group label { font-size: 0.85rem; color: #64748b; font-weight: 600; margin-bottom: 0.25rem; }
-    .form-control { padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; color: #334155; font-size: 0.9rem; }
-    .form-control:disabled { background: #f1f5f9; color: #94a3b8; }
-    
-    .btn-cancel { padding: 0.6rem 1.5rem; background: #94a3b8; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
-    .btn-cancel:hover { background: #64748b; }
-    .btn-save { padding: 0.6rem 1.5rem; background: #5cb85c; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
-    .btn-save:hover { background: #4cae4c; }
-    .btn-delete { padding: 0.6rem 1.5rem; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
-    .btn-delete:hover { background: #dc2626; }
+    .pag-btn.active { background:#3faa5a; border-color:#3faa5a; color:#fff; }
+
+    .modal-overlay { position:fixed; inset:0; background:rgba(15,23,42,.55); display:flex; align-items:center; justify-content:center; z-index:500; padding:1.5rem; }
+    .modal-card { background:#fff; border-radius:12px; width:100%; max-width:620px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 20px 50px rgba(0,0,0,.25); }
+    .modal-card-sm { max-width:440px; }
+    .modal-header { display:flex; align-items:center; justify-content:space-between; padding:1.1rem 1.4rem; border-bottom:1px solid #e2e8f0; }
+    .modal-header h2 { margin:0; font-size:1.05rem; font-weight:800; color:#1e293b; }
+    .modal-close { background:none; border:none; cursor:pointer; font-size:1rem; color:#94a3b8; }
+    .modal-body { padding:1.2rem 1.4rem; overflow-y:auto; }
+    .modal-footer { display:flex; justify-content:flex-end; gap:.6rem; padding:1rem 1.4rem; border-top:1px solid #e2e8f0; }
+
+    .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:.9rem 1.5rem; }
+    .detail-item { display:flex; flex-direction:column; gap:.2rem; }
+    .d-label { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:#94a3b8; }
+    .d-value { font-size:.88rem; color:#1e293b; font-weight:600; }
+
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:.9rem 1.2rem; }
+    .form-field { display:flex; flex-direction:column; gap:.3rem; }
+    .form-field label { font-size:.72rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:.03em; }
+    .form-field input, .form-field select { padding:.5rem .6rem; border:1px solid #e2e8f0; border-radius:7px; font-size:.85rem; color:#1e293b; }
+    .form-field input:focus, .form-field select:focus { outline:none; border-color:#3faa5a; box-shadow:0 0 0 3px rgba(63,170,90,.12); }
+    .form-error { margin-top:.9rem; padding:.6rem .8rem; background:#fef2f2; color:#dc2626; border-radius:7px; font-size:.82rem; font-weight:600; }
   `]
 })
 export class ProductoTerminadoComponent implements OnInit {
-  private http = inject(HttpClient);
-  // Endpoint simulado
-  private apiUrl = 'http://localhost:5007/api/v1/produccion/referencias/producto-terminado';
+  private svc = inject(ProduccionService);
 
-  searchText = signal<string>('');
-  currentPage = signal<number>(1);
-  pageSize = signal<number>(10);
-  isLoading = signal<boolean>(false);
+  items = signal<any[]>([]);
+  isLoading = signal(false);
+  searchText = signal('');
+  currentPage = signal(1);
+  pageSize = signal(10);
 
-  items = signal<ProductoTerminado[]>([]);
+  showColumnSelector = signal(false);
+  showExportOptions = signal(false);
+  visibleColumns = signal<string[]>([...ALL_COLUMNS]);
 
-  viewMode = signal<boolean>(false);
-  editMode = signal<boolean>(false);
-  selectedItem = signal<ProductoTerminado | null>(null);
+  viewingItem = signal<any | null>(null);
 
-  showDeleteModal = signal<boolean>(false);
-  itemToDelete = signal<string | null>(null);
+  editForm = signal<any | null>(null);
+  editingId: string | null = null;
+  saving = signal(false);
+  saveError = signal('');
 
-  isFilterMenuOpen = false;
-  isColumnsMenuOpen = false;
-  isExportMenuOpen = false;
-
-  columns: ColumnDef[] = [
-    { key: 'terminadoPalets', label: 'Terminado Palets', visible: true, pin: 'none' },
-    { key: 'carreteMillar', label: 'Carrete Millar', visible: true, pin: 'none' },
-    { key: 'paletMillar', label: 'Palet Millar', visible: true, pin: 'none' },
-    { key: 'terminadoPeso', label: 'Terminado Peso', visible: true, pin: 'none' },
-    { key: 'pesoCarrete', label: 'Peso Carrete', visible: true, pin: 'none' },
-    { key: 'pesoPalet', label: 'Peso Palet', visible: true, pin: 'none' },
-    { key: 'conEtiqueta', label: 'Con Etiqueta', visible: true, pin: 'none' },
-    { key: 'etiquetable', label: 'Etiquetable', visible: true, pin: 'none' },
-    { key: 'producto', label: 'Producto', visible: true, pin: 'none' },
-    { key: 'codigoSap', label: 'Código SAP', visible: true, pin: 'none' },
-    { key: 'mrd', label: 'MRD', visible: true, pin: 'none' }
-  ];
+  itemToDelete = signal<any | null>(null);
+  deleting = signal(false);
 
   ngOnInit() {
-    this.loadData();
-    const savedFilter = localStorage.getItem('productoTerminadoSearch');
-    if (savedFilter) {
-      this.searchText.set(savedFilter);
-    }
+    this.load();
   }
 
-  loadData() {
+  load() {
     this.isLoading.set(true);
-    this.http.get<ProductoTerminado[]>(this.apiUrl).subscribe({
-      next: (data) => {
-        this.items.set(data);
-        this.isLoading.set(false);
-      },
-      error: (err) => {
-        console.warn('Endpoint no disponible. Inicializando vacío.', err);
-        this.items.set([]); // Ya no usamos getMockData
-        this.isLoading.set(false);
-      }
+    this.svc.getProductosTerminados().subscribe({
+      next: (data) => { this.items.set(data); this.isLoading.set(false); },
+      error: (err) => { console.error(err); this.isLoading.set(false); }
     });
-  }
-
-  get activeColumns(): ColumnDef[] {
-    // Ordenar: Fijas izquierda, No fijas, Fijas derecha
-    const left = this.columns.filter(c => c.visible && c.pin === 'left');
-    const none = this.columns.filter(c => c.visible && c.pin === 'none');
-    const right = this.columns.filter(c => c.visible && c.pin === 'right');
-    return [...left, ...none, ...right];
-  }
-
-  getColumnsByPin(pin: 'left' | 'right' | 'none'): ColumnDef[] {
-    return this.columns.filter(c => c.pin === pin && c.visible);
-  }
-
-  togglePin(col: ColumnDef, pinState: 'left' | 'right') {
-    if (col.pin === pinState) {
-      col.pin = 'none'; // unpin
-    } else {
-      col.pin = pinState; // pin
-      col.visible = true; // force visible
-    }
-  }
-
-  onVisibilityChange(col: ColumnDef) {
-    if (!col.visible) {
-      col.pin = 'none';
-    }
-  }
-
-  resetColumns() {
-    this.columns.forEach(c => {
-      c.visible = true;
-      c.pin = 'none';
-    });
-  }
-
-  getThStyle(col: ColumnDef): any {
-    if (col.pin === 'left') return { position: 'sticky', left: '180px', zIndex: 15 }; // 60+60+60 = 180
-    if (col.pin === 'right') return { position: 'sticky', right: '0', zIndex: 15 };
-    return {};
-  }
-
-  getTdStyle(col: ColumnDef): any {
-    if (col.pin === 'left') return { position: 'sticky', left: '180px', zIndex: 5 };
-    if (col.pin === 'right') return { position: 'sticky', right: '0', zIndex: 5 };
-    return {};
   }
 
   filteredItems = computed(() => {
-    let list = this.items();
     const s = this.searchText().trim().toLowerCase();
-    if (s) {
-      list = list.filter(e => 
-        (e.producto?.toLowerCase() || '').includes(s) || 
-        (e.codigoSap?.toLowerCase() || '').includes(s)
-      );
-    }
-    return list;
+    return s ? this.items().filter(item =>
+      item.producto?.toLowerCase().includes(s) ||
+      item.codigoSap?.toLowerCase().includes(s)
+    ) : this.items();
   });
 
   paginatedItems = computed(() => {
@@ -444,46 +381,16 @@ export class ProductoTerminadoComponent implements OnInit {
   });
 
   totalPages = computed(() => Math.ceil(this.filteredItems().length / this.pageSize()) || 1);
+  visibleCount = computed(() => this.visibleColumns().length);
 
-  toggleFilterMenu() {
-    this.isFilterMenuOpen = !this.isFilterMenuOpen;
-    this.isColumnsMenuOpen = false;
-    this.isExportMenuOpen = false;
+  isColVisible(col: string) { return this.visibleColumns().includes(col); }
+  toggleCol(col: string) {
+    this.visibleColumns.update(cols => cols.includes(col) ? cols.filter(c => c !== col) : [...cols, col]);
   }
 
-  toggleColumnsMenu() {
-    this.isColumnsMenuOpen = !this.isColumnsMenuOpen;
-    this.isFilterMenuOpen = false;
-    this.isExportMenuOpen = false;
-  }
-
-  toggleExportMenu() {
-    this.isExportMenuOpen = !this.isExportMenuOpen;
-    this.isFilterMenuOpen = false;
-    this.isColumnsMenuOpen = false;
-  }
-
-  clearFilters() {
-    this.searchText.set('');
-    localStorage.removeItem('productoTerminadoSearch');
-    this.isFilterMenuOpen = false;
-  }
-
-  saveFilters() {
-    localStorage.setItem('productoTerminadoSearch', this.searchText());
-    this.isFilterMenuOpen = false;
-    alert('Filtro guardado localmente.');
-  }
-
-  onSearchChange(value: string) {
-    this.searchText.set(value);
-    this.currentPage.set(1);
-  }
-
-  /* ── Pagination ───────────────────────────────────── */
   prevPage() { if (this.currentPage() > 1) this.currentPage.update(p => p - 1); }
   nextPage() { if (this.currentPage() < this.totalPages()) this.currentPage.update(p => p + 1); }
-  setPage(p: number) { this.currentPage.set(p); }
+  setPage(p: number | string) { if (typeof p === 'number') this.currentPage.set(p); }
 
   getPages(current: number, total: number): (number | string)[] {
     if (total <= 1) return [];
@@ -495,65 +402,100 @@ export class ProductoTerminadoComponent implements OnInit {
     return pages;
   }
 
-  /* ── Formularios y Modales ───────────────────────── */
-  openView(item: ProductoTerminado) {
-    this.selectedItem.set({...item});
-    this.viewMode.set(true);
-    this.editMode.set(false);
+  toggleColumnDropdown(e: Event) { e.stopPropagation(); this.showColumnSelector.update(v => !v); this.showExportOptions.set(false); }
+  toggleExportDropdown(e: Event) { e.stopPropagation(); this.showExportOptions.update(v => !v); this.showColumnSelector.set(false); }
+  closeAllDropdowns() { this.showColumnSelector.set(false); this.showExportOptions.set(false); }
+
+  visualizar(item: any) {
+    this.svc.getProductoTerminado(item.id).subscribe({
+      next: (detail) => this.viewingItem.set(detail),
+      error: (err) => { console.error(err); alert('No se pudo cargar el detalle.'); }
+    });
+  }
+  cerrarVisualizar() { this.viewingItem.set(null); }
+
+  abrirAgregar() {
+    this.editingId = null;
+    this.saveError.set('');
+    this.editForm.set({
+      producto: '', codigoSap: '',
+      terminadoPalets: 0, terminadoPeso: 0,
+      carreteMiliar: 0, paletMiliar: 0,
+      pesoCarrete: 0, pesoPalet: 0,
+      conEtiqueta: false, etiquetable: true,
+      mrd: 0
+    });
   }
 
-  openEdit(item: ProductoTerminado) {
-    this.selectedItem.set({...item});
-    this.editMode.set(true);
-    this.viewMode.set(false);
+  modificar(item: any) {
+    this.saveError.set('');
+    this.svc.getProductoTerminado(item.id).subscribe({
+      next: (detail) => { this.editingId = detail.id; this.editForm.set({ ...detail }); },
+      error: (err) => { console.error(err); alert('No se pudo cargar el registro.'); }
+    });
   }
 
-  cancelView() {
-    this.viewMode.set(false);
-    this.editMode.set(false);
-    this.selectedItem.set(null);
-  }
+  cerrarModal() { this.editForm.set(null); this.editingId = null; this.saveError.set(''); }
 
-  saveEdit() {
-    // Aquí iría el update via this.http.put(...)
-    alert('Cambios guardados localmente (Simulación)');
-    this.cancelView();
-    // this.loadData();
-  }
+  guardar() {
+    const f = this.editForm();
+    if (!f) return;
 
-  openDeleteConfirm(id: string) {
-    this.itemToDelete.set(id);
-    this.showDeleteModal.set(true);
-  }
+    this.saving.set(true);
+    this.saveError.set('');
 
-  confirmDelete() {
-    const id = this.itemToDelete();
-    if (id) {
-      // Simular borrado real
-      // this.http.delete(...)
-      this.items.update(list => list.filter(x => x.id !== id));
+    const request = {
+      producto: f.producto,
+      codigoSap: f.codigoSap,
+      terminadoPalets: f.terminadoPalets,
+      terminadoPeso: f.terminadoPeso,
+      carreteMiliar: f.carreteMiliar,
+      paletMiliar: f.paletMiliar,
+      pesoCarrete: f.pesoCarrete,
+      pesoPalet: f.pesoPalet,
+      conEtiqueta: f.conEtiqueta,
+      etiquetable: f.etiquetable,
+      mrd: f.mrd,
+      tenantId: '00000000-0000-0000-0000-000000000001'
+    };
+
+    const done = () => { this.saving.set(false); this.cerrarModal(); this.load(); };
+    const onError = (err: any) => { this.saving.set(false); this.saveError.set(err?.error?.message || 'Ocurrió un error al guardar.'); };
+
+    if (this.editingId) {
+      this.svc.updateProductoTerminado(this.editingId, request).subscribe({ next: done, error: onError });
+    } else {
+      this.svc.createProductoTerminado(request).subscribe({ next: done, error: onError });
     }
-    this.showDeleteModal.set(false);
-    this.itemToDelete.set(null);
-    if (this.viewMode() || this.editMode()) {
-      this.cancelView();
-    }
+  }
+
+  eliminar(item: any) { this.itemToDelete.set(item); }
+  cancelarEliminar() { this.itemToDelete.set(null); }
+
+  confirmarEliminar() {
+    const item = this.itemToDelete();
+    if (!item) return;
+    this.deleting.set(true);
+    this.svc.deleteProductoTerminado(item.id).subscribe({
+      next: () => { this.deleting.set(false); this.itemToDelete.set(null); this.load(); },
+      error: (err) => { this.deleting.set(false); console.error(err); alert('No se pudo eliminar el registro.'); }
+    });
   }
 
   exportCSV() {
-    this.isExportMenuOpen = false;
-    const dataToExport = this.paginatedItems().map(item => {
-      const row: any = {};
-      this.activeColumns.forEach(col => {
-        row[col.label] = item[col.key];
-      });
-      return row;
+    this.showExportOptions.set(false);
+    let csv = '﻿Producto;Código SAP;Terminado Palets;Terminado Peso;Carrete Millar;Palet Millar;Peso Carrete;Peso Palet;Con Etiqueta;Etiquetable;MRD\n';
+    this.filteredItems().forEach(item => {
+      csv += [
+        item.producto, item.codigoSap, item.terminadoPalets, item.terminadoPeso,
+        item.carreteMiliar, item.paletMiliar, item.pesoCarrete, item.pesoPalet,
+        item.conEtiqueta ? 'Sí' : 'No', item.etiquetable ? 'Sí' : 'No', item.mrd
+      ].join(';') + '\n';
     });
-
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'ProductoTerminado');
-
-    XLSX.writeFile(wb, `producto_terminado_${new Date().toISOString().slice(0,10)}.xlsx`);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `producto_terminado_${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
   }
 }
