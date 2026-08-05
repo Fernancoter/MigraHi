@@ -201,66 +201,6 @@ export class ProduccionService {
     return this.http.post<Prensado>(`${this.apiUrl}/prensado/iniciar`, request);
   }
 
-  getPrensadoDetail(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/prensado/${id}`);
-  }
-
-  updatePrensado(id: string, request: any): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/prensado/${id}`, request);
-  }
-
-  deletePrensado(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/prensado/${id}`);
-  }
-
-  getCarrerasPorBobina(prensadoId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/prensado/${prensadoId}/carreras-por-bobina`);
-  }
-
-  getTroquelesCatalogo(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/catalogos/troqueles`);
-  }
-
-  getPrensaProductos(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/catalogos/prensa-productos`);
-  }
-
-  getPrensaProducto(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/catalogos/prensa-productos/${id}`);
-  }
-
-  createPrensaProducto(request: any): Observable<string> {
-    return this.http.post<string>(`${this.apiUrl}/catalogos/prensa-productos`, request);
-  }
-
-  updatePrensaProducto(id: string, request: any): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/catalogos/prensa-productos/${id}`, request);
-  }
-
-  deletePrensaProducto(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/catalogos/prensa-productos/${id}`);
-  }
-
-  getProductosTerminados(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/catalogos/producto-terminados`);
-  }
-
-  getProductoTerminado(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/catalogos/producto-terminados/${id}`);
-  }
-
-  createProductoTerminado(request: any): Observable<string> {
-    return this.http.post<string>(`${this.apiUrl}/catalogos/producto-terminados`, request);
-  }
-
-  updateProductoTerminado(id: string, request: any): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/catalogos/producto-terminados/${id}`, request);
-  }
-
-  deleteProductoTerminado(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/catalogos/producto-terminados/${id}`);
-  }
-
   // ── Interrupciones (Downtime) ──────────────────────────────────────────
   getCausasInterrupcion(): Observable<CausaInterrupcion[]> {
     return this.http.get<CausaInterrupcion[]>(`${this.apiUrl}/causas-interrupcion`);
@@ -459,64 +399,16 @@ export class ProduccionService {
     return this.http.get<any[]>(`${this.apiUrl}/carreras`);
   }
 
-  getCarrera(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/carrera/${id}`);
-  }
-
-  updateCarrera(id: string, request: any): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/carrera/${id}`, request);
-  }
-
-  deleteCarrera(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/carrera/${id}`);
-  }
-
   getCarretes(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/carretes`);
-  }
-
-  getCarrete(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/carrete/${id}`);
-  }
-
-  updateCarrete(id: string, request: any): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/carrete/${id}`, request);
-  }
-
-  deleteCarrete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/carrete/${id}`);
   }
 
   getPalets(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/palets`);
   }
 
-  getPalet(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/palet/${id}`);
-  }
-
-  updatePalet(id: string, request: any): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/palet/${id}`, request);
-  }
-
-  deletePalet(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/palet/${id}`);
-  }
-
   getInterrupcionesPrensado(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/interrupciones-prensado`);
-  }
-
-  getInterrupcionPrensado(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/prensado/interrupcion/${id}`);
-  }
-
-  updateInterrupcionPrensado(id: string, request: any): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/prensado/interrupcion/${id}`, request);
-  }
-
-  deleteInterrupcionPrensado(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/prensado/interrupcion/${id}`);
   }
 
   getInterrupcionesExtrusion(): Observable<any[]> {

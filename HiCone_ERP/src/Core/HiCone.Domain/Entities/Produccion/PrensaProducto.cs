@@ -3,15 +3,25 @@ using HiCone.Domain.Common;
 namespace HiCone.Domain.Entities.Produccion;
 
 /// <summary>
-/// Producto habilitado para una prensa, con su identificación de carrete — equivalente a
-/// DB.PrensaProducto en el legado. Los nombres de columna vienen definidos por la migración
-/// "InitialProductionBaseline" ya existente en el repositorio.
+/// Productos habilitados para una prensa.
 /// </summary>
 public class PrensaProducto : TenantEntity
 {
     public Guid PrensaId { get; set; }
     public virtual Prensa Prensa { get; set; } = null!;
 
-    public string Item { get; set; } = null!;
-    public string Carrete { get; set; } = null!;
+    public Guid ProductoId { get; set; }
+    public virtual Producto Producto { get; set; } = null!;
+
+    // Defaults para esta combinación prensa+producto
+    public decimal DefaultLevasKgEntrada { get; set; }
+    public decimal DefaultLevasKgSalida { get; set; }
+    public decimal DefaultLevasGradosEntrada { get; set; }
+    public decimal DefaultLevasGradosSalida { get; set; }
+    public decimal DefaultRodillosKgEntrada { get; set; }
+    public decimal DefaultRodillosKgSalida { get; set; }
+    public decimal DefaultRodillosGradosEntrada { get; set; }
+    public decimal DefaultRodillosGradosSalida { get; set; }
+    public decimal DefaultMetaPallets { get; set; }
+    public bool IsActive { get; set; } = true;
 }

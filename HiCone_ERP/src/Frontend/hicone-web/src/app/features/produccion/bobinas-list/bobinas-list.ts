@@ -209,7 +209,7 @@ interface ColumnConfig {
                     </td>
                     <td *ngIf="col.field === 'no'" class="text-right summary-cnt-box">
                       <div class="cnt-header">CNT:</div>
-                      <div class="cnt-value">{{ getTotalCount() | number:'1,0-0' }}</div>
+                      <div class="cnt-value">{{ getTotalCount() | number:'1.0-0' }}</div>
                     </td>
                     <td *ngIf="col.field !== 'kg' && col.field !== 'no'"></td>
                   </ng-container>
@@ -700,7 +700,13 @@ interface ColumnConfig {
     </div>
   `,
   styles: [`
-    .module-page { padding: 0; }
+    .module-page { 
+      padding: 1.5rem; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 1rem; 
+      width: 100%;
+    }
     
     .action-bar-legacy { 
       padding: 0.75rem 1.25rem; 

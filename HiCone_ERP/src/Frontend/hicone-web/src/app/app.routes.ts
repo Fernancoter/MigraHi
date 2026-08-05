@@ -86,8 +86,6 @@ export const routes: Routes = [
 
       { path: 'produccion/prensado/catalogos/troqueles', component: TroquelesCatalogoComponent },
       { path: 'produccion/prensado/catalogos/prensas', component: PrensasCatalogoComponent },
-      { path: 'produccion/prensado/referencias/prensa-producto', loadComponent: () => import('./features/produccion/referencias/prensa-producto/prensa-producto.component').then(m => m.PrensaProductoComponent) },
-      { path: 'produccion/prensado/referencias/producto-terminado', loadComponent: () => import('./features/produccion/referencias/producto-terminado/producto-terminado.component').then(m => m.ProductoTerminadoComponent) },
       { path: 'produccion/prensado/operacion/prensados', component: PrensadosListComponent },
       { path: 'produccion/prensado/operacion/carreras', component: CarrerasListComponent },
       { path: 'produccion/prensado/operacion/carretes', component: CarretesListComponent },

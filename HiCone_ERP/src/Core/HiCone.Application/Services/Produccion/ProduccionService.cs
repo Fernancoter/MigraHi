@@ -1057,7 +1057,6 @@ public class ProduccionService : IProduccionService
             .Include(p => p.Operario)
             .Include(p => p.Turno)
             .Include(p => p.Prensa)
-            .Include(p => p.Troquel)
             .ToListAsync();
     }
 

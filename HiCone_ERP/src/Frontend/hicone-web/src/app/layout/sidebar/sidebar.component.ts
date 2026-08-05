@@ -113,17 +113,17 @@ import { NavigationService } from '../../core/services/navigation.service';
             <span class="item-label">Troqueles</span>
           </a>
           <!-- Prensas -->
-          <a routerLink="/produccion/prensado/catalogos/prensas" routerLinkActive="active" class="nav-item" title="Prensas">
+          <a routerLink="/configurar-produccion/catalogos/prensas" routerLinkActive="active" class="nav-item" title="Prensas">
             <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
             <span class="item-label">Prensas</span>
           </a>
           <!-- Prensa Producto -->
-          <a routerLink="/produccion/prensado/referencias/prensa-producto" routerLinkActive="active" class="nav-item" title="Prensa Producto">
+          <a routerLink="/configurar-produccion/referencias/prensa-producto" routerLinkActive="active" class="nav-item" title="Prensa Producto">
             <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
             <span class="item-label">Prensa Producto</span>
           </a>
           <!-- Producto Terminado -->
-          <a routerLink="/produccion/prensado/referencias/producto-terminado" routerLinkActive="active" class="nav-item" title="Producto Terminado">
+          <a routerLink="/configurar-produccion/referencias/producto-terminado" routerLinkActive="active" class="nav-item" title="Producto Terminado">
             <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
             <span class="item-label">Producto Terminado</span>
           </a>
