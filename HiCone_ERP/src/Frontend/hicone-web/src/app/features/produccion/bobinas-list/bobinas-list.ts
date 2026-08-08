@@ -97,15 +97,38 @@ interface ColumnConfig {
             </div>
 
             <div class="right-actions">
-              <div class="search-funnel-group">
-                <button class="btn-filter-funnel-qa" title="Filtrar">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#334155">
-                    <path d="M10,18H14V16H10V18M3,6V8H21V6H3M6,13H18V11H6V13Z" />
-                  </svg>
-                  <span class="chevron-down-dark">▾</span>
-                </button>
-                <div class="search-underline-box">
-                  <input type="text" class="search-input-underline" placeholder="Buscar" [(ngModel)]="searchTerm" (input)="onSearch()">
+              <div class="filter-search-group-qa">
+                <!-- Botón Filtro Avanzado -->
+                <div class="dropdown-wrapper">
+                  <button class="btn-filter-funnel-qa" (click)="toggleSearchFilterDropdown($event)" title="Filtros avanzados">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                    <span class="chevron-down-funnel">▾</span>
+                  </button>
+                  
+                  <div class="filter-popover-qa shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()">
+                    <div class="filter-item-qa" (click)="clearAllFilters()">
+                      <span class="icon-circle-cross-dark">✖</span> Limpiar filtros
+                    </div>
+                    <div class="filter-item-qa" (click)="saveActiveFilters()">
+                      <span class="icon-floppy-dark">💾</span> Guardar filtro como...
+                    </div>
+                    
+                    <ng-container *ngIf="savedFilters.length > 0">
+                      <div class="dropdown-divider"></div>
+                      <div class="dropdown-header-saved">Filtros Guardados</div>
+                      <div class="filter-item-qa saved-filter-item" *ngFor="let f of savedFilters" (click)="loadSavedFilter(f)">
+                        <span>📁 {{ f.name }}</span>
+                        <span class="btn-delete-saved-filter" (click)="deleteSavedFilter(f, $event)">🗑️</span>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+
+                <!-- Campo de Búsqueda Subrayado -->
+                <div class="search-modern-underline-qa">
+                  <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="onSearch()">
                 </div>
               </div>
             </div>
@@ -946,6 +969,24 @@ interface ColumnConfig {
     .audit-table-mini { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.8rem; }
     .audit-table-mini th { border-bottom: 1px solid #cbd5e1; padding: 0.5rem; color: #475569; font-weight: 700; }
     .audit-table-mini td { padding: 0.5rem; border-bottom: 1px solid #f1f5f9; color: #334155; }
+
+    /* ESTILOS DE FILTRO EMBUDO & BUSCADOR */
+    .dropdown-wrapper { position: relative; display: inline-block; }
+    .btn-filter-funnel-qa { background: #ffffff; border: 1px solid #dcdde1; border-radius: 4px; padding: 0.4rem 0.6rem; height: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: background 0.2s; }
+    .btn-filter-funnel-qa:hover { background: #f8fafc; border-color: #cbd5e1; }
+    .chevron-down-dark { font-size: 0.7rem; color: #334155; }
+    .filter-popover-qa { position: absolute; top: calc(100% + 4px); right: 0; background: #ffffff !important; border: 1px solid #cbd5e1 !important; border-radius: 6px !important; width: 180px !important; box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important; z-index: 99999 !important; padding: 6px 0 !important; box-sizing: border-box; }
+    .filter-item-qa { display: flex; align-items: center; gap: 8px; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: #334155; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+    .filter-item-qa:hover { background: #f1f5f9; color: #2e7d32; }
+    .icon-circle-cross-dark { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; background: #475569; color: white; border-radius: 50%; font-size: 8px; font-weight: bold; }
+    .filter-item-qa:hover .icon-circle-cross-dark { background: #2e7d32; }
+    .icon-floppy-dark { font-size: 0.9rem; color: #475569; }
+    .filter-item-qa:hover .icon-floppy-dark { color: #2e7d32; }
+    .dropdown-divider { height: 1px; background: #f1f5f9; margin: 0.75rem 0; }
+    .dropdown-header-saved { font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin: 0.5rem 0.5rem 0.25rem; }
+    .saved-filter-item { justify-content: space-between; font-weight: 600; color: #166534; }
+    .btn-delete-saved-filter { cursor: pointer; opacity: 0.6; padding: 2px; }
+    .btn-delete-saved-filter:hover { opacity: 1; color: #ef4444; }
   `]
 })
 export class BobinasListComponent implements OnInit {
@@ -960,6 +1001,10 @@ export class BobinasListComponent implements OnInit {
   columnMenuOpen = false;
   mostrandoEliminadas = false;
   activeRowId: string | null = null;
+
+  // Filtros Avanzados (Persistencia Local)
+  showSearchFilterDropdown = false;
+  savedFilters: any[] = [];
 
   // Control de Modo de Vista: 'LIST' | 'VIEW' | 'EDIT'
   currentView: 'LIST' | 'VIEW' | 'EDIT' = 'LIST';
@@ -1008,6 +1053,7 @@ export class BobinasListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadSavedFiltersFromStorage();
     this.prodService.seedBobinasTest().subscribe({
       next: () => this.cargarDatos(),
       error: () => this.cargarDatos()
@@ -1306,5 +1352,55 @@ export class BobinasListComponent implements OnInit {
 
   getTotalCount(): number {
     return this.filteredBobinas.length || 3368;
+  }
+
+  // ─── LÓGICA DE FILTROS AVANZADOS ───────────────────────────────────────────
+  toggleSearchFilterDropdown(event: Event) {
+    event.stopPropagation();
+    this.showSearchFilterDropdown = !this.showSearchFilterDropdown;
+    this.columnMenuOpen = false;
+    this.exportMenuOpen = false;
+  }
+
+  clearAllFilters() {
+    this.searchTerm = '';
+    this.showSearchFilterDropdown = false;
+    this.onSearch();
+  }
+
+  loadSavedFiltersFromStorage() {
+    const raw = localStorage.getItem('hicone_saved_filters_bobinas');
+    this.savedFilters = raw ? JSON.parse(raw) : [];
+  }
+
+  saveActiveFilters() {
+    this.showSearchFilterDropdown = false;
+    const filterName = prompt('Ingrese el nombre para este filtro:', 'Filtro Bobinas ' + new Date().toLocaleDateString());
+    if (!filterName) return;
+
+    const newFilter = {
+      id: 'F-' + Date.now(),
+      name: filterName,
+      state: {
+        searchTerm: this.searchTerm
+      }
+    };
+
+    this.savedFilters.push(newFilter);
+    localStorage.setItem('hicone_saved_filters_bobinas', JSON.stringify(this.savedFilters));
+    alert('Filtro guardado con éxito.');
+  }
+
+  loadSavedFilter(f: any) {
+    const s = f.state;
+    this.searchTerm = s.searchTerm || '';
+    this.showSearchFilterDropdown = false;
+    this.onSearch();
+  }
+
+  deleteSavedFilter(f: any, event: MouseEvent) {
+    event.stopPropagation();
+    this.savedFilters = this.savedFilters.filter(item => item.id !== f.id);
+    localStorage.setItem('hicone_saved_filters_bobinas', JSON.stringify(this.savedFilters));
   }
 }

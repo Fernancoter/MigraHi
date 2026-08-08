@@ -82,9 +82,35 @@ import { ProduccionService } from '../../../core/services/produccion';
           <div style="flex:1"></div>
 
           <div class="toolbar-right">
-            <div class="search-box">
-              <span class="search-icon">🔍</span>
-              <input class="search-input" type="text" placeholder="Buscar..." [ngModel]="searchText()" (ngModelChange)="searchText.set($event)" />
+            <div class="filter-search-group-qa">
+              <!-- Botón Filtro Avanzado -->
+              <div class="dropdown-wrapper">
+                <button class="btn-filter-funnel-qa" (click)="$event.stopPropagation(); toggleFilterMenu($event)" title="Filtros avanzados">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                  </svg>
+                  <span class="chevron-down-funnel">▾</span>
+                </button>
+                
+                <!-- Filter Dropdown -->
+                <div *ngIf="isFilterMenuOpen()" style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 99999; width: 210px; padding: 0.5rem;" (click)="$event.stopPropagation()">
+                  <button (click)="clearFilters(); $event.stopPropagation()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Limpiar Filtros</button>
+                  <button (click)="saveFilter(); $event.stopPropagation()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Guardar Filtro como...</button>
+                  <div *ngIf="savedFilters.length > 0">
+                    <div style="height: 1px; background: #e2e8f0; margin: 0.5rem 0;"></div>
+                    <div style="font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; padding: 0.25rem 0.5rem;">Filtros Guardados</div>
+                    <div *ngFor="let f of savedFilters" (click)="loadSavedFilter(f); $event.stopPropagation()" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.85rem; color: #334155; cursor: pointer;">
+                      <span>📁 {{ f.name }}</span>
+                      <span (click)="deleteSavedFilter(f, $event); $event.stopPropagation()" style="cursor: pointer; opacity: 0.6; padding: 2px;">🗑️</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campo de Búsqueda Subrayado -->
+              <div class="search-modern-underline-qa">
+                <input type="text" placeholder="Buscar..." [ngModel]="searchText()" (ngModelChange)="searchText.set($event)" />
+              </div>
             </div>
           </div>
       </div>
@@ -208,10 +234,13 @@ export class PaletsListComponent implements OnInit {
 
   showColumnSelector = signal(false);
   showExportOptions = signal(false);
+  isFilterMenuOpen = signal(false);
+  savedFilters: any[] = [];
 
   visibleColumns = signal<string[]>(['noSerie', 'productoNombre', 'prensaNombre', 'operarioNombre', 'totalCarretes', 'tipo', 'estatus']);
 
   ngOnInit() {
+    this.loadSavedFiltersFromStorage();
     this.load();
   }
 
@@ -276,9 +305,68 @@ export class PaletsListComponent implements OnInit {
     }
   }
 
-  toggleColumnDropdown(e: Event) { e.stopPropagation(); this.showColumnSelector.update(v => !v); this.showExportOptions.set(false); }
-  toggleExportDropdown(e: Event) { e.stopPropagation(); this.showExportOptions.update(v => !v); this.showColumnSelector.set(false); }
-  closeAllDropdowns()             { this.showColumnSelector.set(false); this.showExportOptions.set(false); }
+  toggleColumnDropdown(e: Event) {
+    e.stopPropagation();
+    this.showColumnSelector.update(v => !v);
+    this.showExportOptions.set(false);
+    this.isFilterMenuOpen.set(false);
+  }
+
+  toggleExportDropdown(e: Event) {
+    e.stopPropagation();
+    this.showExportOptions.update(v => !v);
+    this.showColumnSelector.set(false);
+    this.isFilterMenuOpen.set(false);
+  }
+
+  toggleFilterMenu(e: Event) {
+    e.stopPropagation();
+    this.showColumnSelector.set(false);
+    this.showExportOptions.set(false);
+    this.isFilterMenuOpen.update(v => !v);
+  }
+
+  closeAllDropdowns() {
+    this.showColumnSelector.set(false);
+    this.showExportOptions.set(false);
+    this.isFilterMenuOpen.set(false);
+  }
+
+  loadSavedFiltersFromStorage() {
+    const raw = localStorage.getItem('hicone_saved_filters_palets');
+    this.savedFilters = raw ? JSON.parse(raw) : [];
+  }
+
+  clearFilters() {
+    this.searchText.set('');
+    this.isFilterMenuOpen.set(false);
+  }
+
+  saveFilter() {
+    this.isFilterMenuOpen.set(false);
+    const filterName = prompt('Ingrese el nombre para este filtro:', 'Filtro Palets ' + new Date().toLocaleDateString());
+    if (!filterName) return;
+    const newFilter = {
+      id: 'F-' + Date.now(),
+      name: filterName,
+      state: { searchText: this.searchText() }
+    };
+    this.savedFilters.push(newFilter);
+    localStorage.setItem('hicone_saved_filters_palets', JSON.stringify(this.savedFilters));
+    alert('Filtro guardado con éxito.');
+  }
+
+  loadSavedFilter(f: any) {
+    this.searchText.set(f.state?.searchText || '');
+    this.currentPage.set(1);
+    this.isFilterMenuOpen.set(false);
+  }
+
+  deleteSavedFilter(f: any, event: MouseEvent) {
+    event.stopPropagation();
+    this.savedFilters = this.savedFilters.filter(item => item.id !== f.id);
+    localStorage.setItem('hicone_saved_filters_palets', JSON.stringify(this.savedFilters));
+  }
 
   exportCSV() {
     this.showExportOptions.set(false);

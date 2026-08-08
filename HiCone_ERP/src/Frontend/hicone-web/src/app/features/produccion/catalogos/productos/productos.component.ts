@@ -58,21 +58,51 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
           <div class="toolbar-spacer" style="flex: 1;"></div>
 
           <!-- RIGHT SIDE -->
-          <div class="toolbar-right" style="display: flex; gap: 0.75rem; align-items: center;">
-            <!-- Filtro de Búsqueda Estilo Legacy -->
-            <div class="legacy-search-container">
-              <span class="legacy-filter-icon" title="Filtrar">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                </svg>
-              </span>
-              <input 
-                class="legacy-search-input" 
-                type="text" 
-                placeholder="Buscar" 
-                [ngModel]="searchText()" 
-                (ngModelChange)="searchText.set($event); currentPage.set(1)"
-              />
+          <div class="toolbar-right">
+            <div class="filter-search-group-qa">
+              <!-- Botón Filtro Avanzado -->
+              <div class="dropdown-wrapper">
+                <button class="btn-filter-funnel-qa" (click)="toggleFilterDropdown($event)" title="Filtros avanzados">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                  </svg>
+                  <span class="chevron-down-funnel">▾</span>
+                </button>
+                
+                @if (showFilterDropdown()) {
+                  <div class="header-popover-menu animate-slide-up" style="position: absolute; top: calc(100% + 4px); right: 0; left: auto; width: 200px; z-index: 99999; padding: 6px 0;" (click)="$event.stopPropagation()">
+                    <div class="popover-item" (click)="clearFilters()" style="display: flex; align-items: center; gap: 8px; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: #334155; cursor: pointer;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                      Limpiar filtros
+                    </div>
+                    <div class="popover-item" (click)="saveFilterAs()" style="display: flex; align-items: center; gap: 8px; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: #334155; cursor: pointer;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                      Guardar filtro como...
+                    </div>
+                    
+                    @if (savedFilters.length > 0) {
+                      <div class="popover-divider"></div>
+                      <div style="font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; padding: 0.25rem 0.5rem;">Filtros Guardados</div>
+                      @for (f of savedFilters; track f.id) {
+                        <div class="popover-item" (click)="loadSavedFilter(f)" style="display: flex; justify-content: space-between; align-items: center; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: #334155; cursor: pointer;">
+                          <span>📁 {{ f.name }}</span>
+                          <span (click)="deleteSavedFilter(f, $event)" style="cursor: pointer; opacity: 0.6; padding: 2px;">🗑️</span>
+                        </div>
+                      }
+                    }
+                  </div>
+                }
+              </div>
+
+              <!-- Campo de Búsqueda Subrayado -->
+              <div class="search-modern-underline-qa">
+                <input 
+                  type="text" 
+                  placeholder="Buscar..." 
+                  [ngModel]="searchText()" 
+                  (ngModelChange)="searchText.set($event); currentPage.set(1)"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -939,6 +969,7 @@ export class ProductosCatalogoComponent implements OnInit {
   showSaeDropdown = signal(false);
   showColumnModal = signal(false);
   showFilterDropdown = signal(false);
+  savedFilters: any[] = [];
 
   form: Partial<Producto> & { 
     precioUnitarioFormat?: string; 
@@ -982,6 +1013,7 @@ export class ProductosCatalogoComponent implements OnInit {
   pageSize = signal<number>(8);
 
   ngOnInit() {
+    this.loadSavedFiltersFromStorage();
     this.load();
     this.loadCategories();
   }
@@ -1118,13 +1150,44 @@ export class ProductosCatalogoComponent implements OnInit {
     this.showFilterDropdown.set(false);
   }
 
-  closeColumnModal() {
-    this.showColumnModal.set(false);
+  loadSavedFiltersFromStorage() {
+    const raw = localStorage.getItem('hicone_saved_filters_productos');
+    this.savedFilters = raw ? JSON.parse(raw) : [];
   }
 
   saveFilterAs() {
-    alert('Save filter as... not implemented yet');
     this.showFilterDropdown.set(false);
+    const filterName = prompt('Ingrese el nombre para este filtro:', 'Filtro Productos ' + new Date().toLocaleDateString());
+    if (!filterName) return;
+
+    const newFilter = {
+      id: 'F-' + Date.now(),
+      name: filterName,
+      state: {
+        searchText: this.searchText()
+      }
+    };
+
+    this.savedFilters.push(newFilter);
+    localStorage.setItem('hicone_saved_filters_productos', JSON.stringify(this.savedFilters));
+    alert('Filtro guardado con éxito.');
+  }
+
+  loadSavedFilter(f: any) {
+    const s = f.state;
+    this.searchText.set(s.searchText || '');
+    this.currentPage.set(1);
+    this.showFilterDropdown.set(false);
+  }
+
+  deleteSavedFilter(f: any, event: MouseEvent) {
+    event.stopPropagation();
+    this.savedFilters = this.savedFilters.filter(item => item.id !== f.id);
+    localStorage.setItem('hicone_saved_filters_productos', JSON.stringify(this.savedFilters));
+  }
+
+  closeColumnModal() {
+    this.showColumnModal.set(false);
   }
 
   toggleColumnDropdown(event: Event) {

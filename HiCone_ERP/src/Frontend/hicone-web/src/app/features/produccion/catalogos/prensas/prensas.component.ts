@@ -118,27 +118,42 @@ import { ProduccionConfigService, Prensa } from '../../../../core/services/produ
 
             <!-- Lado Derecho: Filtro con Embudo y Desplegable + Buscar (IMAGEN 1) -->
             <div class="right-actions">
-              <div class="dropdown">
-                <button class="btn-filter-funnel" (click)="toggleFilterDropdown($event)" title="Filtrar">
-                  <span class="funnel-icon">🔻</span>
-                  <span class="chevron-down">▾</span>
-                </button>
-
-                @if (showFilterMenu()) {
-                  <div class="filter-popover-menu animate-slide-up" (click)="$event.stopPropagation()">
-                    <div class="filter-popover-item" (click)="clearFilters()">
-                      <span class="icon">✖</span> Limpiar filtros
+              <div class="filter-search-group-qa">
+                <!-- Botón Filtro Avanzado -->
+                <div class="dropdown-wrapper">
+                  <button class="btn-filter-funnel-qa" (click)="toggleFilterDropdown($event)" title="Filtros avanzados">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                    <span class="chevron-down-funnel">▾</span>
+                  </button>
+                  @if (showFilterMenu()) {
+                    <div class="filter-popover-menu animate-slide-up" style="z-index: 99999;" (click)="$event.stopPropagation()">
+                      <div class="filter-popover-item" (click)="clearFilters()">
+                        <span class="icon">✖</span> Limpiar filtros
+                      </div>
+                      <div class="filter-popover-item" (click)="saveFilterPreset()">
+                        <span class="icon">💾</span> Guardar filtro como...
+                      </div>
+                      
+                      @if (savedFilters.length > 0) {
+                        <div style="height: 1px; background: #e2e8f0; margin: 0.5rem 0;"></div>
+                        <div style="font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; padding: 0.25rem 0.5rem;">Filtros Guardados</div>
+                        @for (f of savedFilters; track f.id) {
+                          <div class="filter-popover-item" (click)="loadSavedFilter(f)" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>📁 {{ f.name }}</span>
+                            <span (click)="deleteSavedFilter(f, $event)" style="cursor: pointer; opacity: 0.6; padding: 2px;">🗑️</span>
+                          </div>
+                        }
+                      }
                     </div>
-                    <div class="filter-popover-item" (click)="saveFilterPreset()">
-                      <span class="icon">💾</span> Guardar filtro como...
-                    </div>
-                  </div>
-                }
-              </div>
+                  }
+                </div>
 
-              <div class="search-wrapper">
-                <span class="search-label">Buscar</span>
-                <input type="text" class="search-input-legacy" [ngModel]="searchText()" (ngModelChange)="searchText.set($event)" />
+                <!-- Campo de Búsqueda Subrayado -->
+                <div class="search-modern-underline-qa">
+                  <input type="text" placeholder="Buscar..." [ngModel]="searchText()" (ngModelChange)="searchText.set($event)" />
+                </div>
               </div>
             </div>
           </div>
@@ -473,6 +488,7 @@ export class PrensasCatalogoComponent implements OnInit {
   searchText = signal('');
   currentPage = signal(1);
   pageSize = signal(10);
+  savedFilters: any[] = [];
 
   // Menús desplegables
   showColMenu = signal(false);
@@ -490,6 +506,7 @@ export class PrensasCatalogoComponent implements OnInit {
   itemToDelete = signal<Prensa | null>(null);
 
   ngOnInit() {
+    this.loadSavedFiltersFromStorage();
     this.load();
   }
 
@@ -614,9 +631,39 @@ export class PrensasCatalogoComponent implements OnInit {
     this.showFilterMenu.set(false);
   }
 
+  loadSavedFiltersFromStorage() {
+    const raw = localStorage.getItem('hicone_saved_filters_prensas');
+    this.savedFilters = raw ? JSON.parse(raw) : [];
+  }
+
   saveFilterPreset() {
     this.showFilterMenu.set(false);
-    alert('Filtro guardado correctamente.');
+    const filterName = prompt('Ingrese el nombre para este filtro:', 'Filtro Prensas ' + new Date().toLocaleDateString());
+    if (!filterName) return;
+
+    const newFilter = {
+      id: 'F-' + Date.now(),
+      name: filterName,
+      state: {
+        searchText: this.searchText()
+      }
+    };
+
+    this.savedFilters.push(newFilter);
+    localStorage.setItem('hicone_saved_filters_prensas', JSON.stringify(this.savedFilters));
+    alert('Filtro guardado con éxito.');
+  }
+
+  loadSavedFilter(f: any) {
+    const s = f.state;
+    this.searchText.set(s.searchText || '');
+    this.showFilterMenu.set(false);
+  }
+
+  deleteSavedFilter(f: any, event: MouseEvent) {
+    event.stopPropagation();
+    this.savedFilters = this.savedFilters.filter(item => item.id !== f.id);
+    localStorage.setItem('hicone_saved_filters_prensas', JSON.stringify(this.savedFilters));
   }
 
   // Evento al cambiar Número de Prensa

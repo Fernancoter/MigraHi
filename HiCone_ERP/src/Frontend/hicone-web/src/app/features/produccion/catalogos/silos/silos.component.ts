@@ -95,31 +95,44 @@ import * as XLSX from 'xlsx';
           <div class="toolbar-spacer" style="flex: 1;"></div>
 
           <!-- RIGHT SIDE -->
-          <div class="toolbar-right" style="display: flex; gap: 0.75rem; align-items: center;">
-            <!-- Menú de Filtros -->
-            <div class="dropdown-wrapper">
-              <button class="btn btn-secondary" (click)="toggleFilterDropdown($event)" style="padding: 0.4rem 0.6rem; display: flex; align-items: center; border-radius: 4px; border: 1px solid #e2e8f0; font-size: 1rem; color: #64748b;">
-                <svg viewBox="0 0 24 24" width="16" height="16" style="margin-right: 4px;"><path fill="currentColor" d="M14,12V19.88C14.04,20.18 13.94,20.5 13.71,20.71C13.32,21.1 12.69,21.1 12.3,20.71L10.29,18.7C10.06,18.47 9.96,18.16 10,17.87V12H9.97L4.21,4.62C3.87,4.19 3.95,3.56 4.38,3.22C4.57,3.08 4.78,3 5,3V3H19V3C19.22,3 19.43,3.08 19.62,3.22C20.05,3.56 20.13,4.19 19.79,4.62L14.03,12H14Z" /></svg>
-                <span style="font-size: 0.6rem;">▼</span>
-              </button>
-              @if (showFilterOptions()) {
-                <div class="column-selector-popover animate-slide-up" style="width: auto; right: 0; left: auto; padding: 0.5rem 0;">
-                  <div class="dropdown-item" (click)="clearFilters()" style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #64748b;">✖</span> Limpiar filtros</div>
-                  <div class="dropdown-item" style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #64748b;">💾</span> Guardar filtro como...</div>
-                </div>
-              }
-            </div>
+          <div class="toolbar-right">
+            <div class="filter-search-group-qa">
+              <!-- Botón Filtro Avanzado -->
+              <div class="dropdown-wrapper">
+                <button class="btn-filter-funnel-qa" (click)="toggleFilterDropdown($event)" title="Filtros avanzados">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                  </svg>
+                  <span class="chevron-down-funnel">▾</span>
+                </button>
+                @if (showFilterOptions()) {
+                  <div class="column-selector-popover animate-slide-up" style="width: auto; right: 0; left: auto; padding: 0.5rem 0; z-index: 99999;" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item" (click)="clearFilters()" style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #64748b;">✖</span> Limpiar filtros</div>
+                    <div class="dropdown-item" (click)="saveFilter()" style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #64748b;">💾</span> Guardar filtro como...</div>
+                    
+                    @if (savedFilters.length > 0) {
+                      <div style="height: 1px; background: #e2e8f0; margin: 0.5rem 0;"></div>
+                      <div style="font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; padding: 0.25rem 0.5rem;">Filtros Guardados</div>
+                      @for (f of savedFilters; track f.id) {
+                        <div class="dropdown-item" (click)="loadSavedFilter(f)" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+                          <span>📁 {{ f.name }}</span>
+                          <span (click)="deleteSavedFilter(f, $event)" style="cursor: pointer; opacity: 0.6; padding: 2px;">🗑️</span>
+                        </div>
+                      }
+                    }
+                  </div>
+                }
+              </div>
 
-            <!-- Filtro de Búsqueda -->
-            <div class="search-box">
-              <input 
-                class="field-input" 
-                type="text" 
-                placeholder="Buscar" 
-                [ngModel]="searchText()" 
-                (ngModelChange)="searchText.set($event); currentPage.set(1)"
-                style="border-radius: 0; border: none; border-bottom: 1px solid #e2e8f0; padding: 0.4rem; box-shadow: none; width: 200px;"
-              />
+              <!-- Campo de Búsqueda Subrayado -->
+              <div class="search-modern-underline-qa">
+                <input 
+                  type="text" 
+                  placeholder="Buscar..." 
+                  [ngModel]="searchText()" 
+                  (ngModelChange)="searchText.set($event); currentPage.set(1)"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -363,6 +376,7 @@ export class SilosCatalogoComponent implements OnInit {
   showColumnSelector = signal<boolean>(false);
   showExportOptions = signal<boolean>(false);
   showFilterOptions = signal<boolean>(false);
+  savedFilters: any[] = [];
   visibleColumns = signal<string[]>(['nombre', 'capacidadKg', 'minimoKg', 'maximoKg', 'estadoMaterial', 'tipoMaterial', 'siloActivo']);
 
   currentPage = signal<number>(1);
@@ -372,6 +386,7 @@ export class SilosCatalogoComponent implements OnInit {
   tiposMaterial = signal<{id: string, nombre: string}[]>([]);
 
   ngOnInit() {
+    this.loadSavedFiltersFromStorage();
     this.load();
     this.svc.getMaterialEstados().subscribe(res => this.estadosMaterial.set(res));
     this.svc.getMaterialTipos().subscribe(res => this.tiposMaterial.set(res));
@@ -431,6 +446,42 @@ export class SilosCatalogoComponent implements OnInit {
     this.searchText.set('');
     this.showFilterOptions.set(false);
     this.currentPage.set(1);
+  }
+
+  loadSavedFiltersFromStorage() {
+    const raw = localStorage.getItem('hicone_saved_filters_silos_prod');
+    this.savedFilters = raw ? JSON.parse(raw) : [];
+  }
+
+  saveFilter() {
+    this.showFilterOptions.set(false);
+    const filterName = prompt('Ingrese el nombre para este filtro:', 'Filtro Silos ' + new Date().toLocaleDateString());
+    if (!filterName) return;
+
+    const newFilter = {
+      id: 'F-' + Date.now(),
+      name: filterName,
+      state: {
+        searchText: this.searchText()
+      }
+    };
+
+    this.savedFilters.push(newFilter);
+    localStorage.setItem('hicone_saved_filters_silos_prod', JSON.stringify(this.savedFilters));
+    alert('Filtro guardado con éxito.');
+  }
+
+  loadSavedFilter(f: any) {
+    const s = f.state;
+    this.searchText.set(s.searchText || '');
+    this.currentPage.set(1);
+    this.showFilterOptions.set(false);
+  }
+
+  deleteSavedFilter(f: any, event: MouseEvent) {
+    event.stopPropagation();
+    this.savedFilters = this.savedFilters.filter(item => item.id !== f.id);
+    localStorage.setItem('hicone_saved_filters_silos_prod', JSON.stringify(this.savedFilters));
   }
 
   resetCols() {

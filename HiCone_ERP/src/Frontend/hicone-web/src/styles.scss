@@ -637,6 +637,76 @@ h1, h2, h3, h4 {
 .animate-scale-in { animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
 
 /* =========================================================================
+   DISEÑO UNIFICADO: BOTÓN DE FILTRO Y BÚSQUEDA SUBRAYADA (IMAGEN 1)
+   ========================================================================= */
+
+.filter-search-group-qa {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-filter-funnel-qa {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
+  color: #64748b;
+}
+
+.btn-filter-funnel-qa:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.btn-filter-funnel-qa svg {
+  stroke-width: 2px;
+  color: #64748b;
+}
+
+.btn-filter-funnel-qa .chevron-down-funnel {
+  font-size: 0.65rem;
+  color: #64748b;
+  margin-left: 2px;
+}
+
+.search-modern-underline-qa {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border-bottom: 1px solid #cbd5e1;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.search-modern-underline-qa:focus-within {
+  border-color: #1e3f66; /* Color temático del ERP */
+}
+
+.search-modern-underline-qa input {
+  border: none !important;
+  background: transparent !important;
+  padding: 0.35rem 0.5rem !important;
+  font-size: 0.875rem !important;
+  outline: none !important;
+  color: #334155 !important;
+  width: 150px;
+  transition: width 0.25s ease-in-out;
+}
+
+.search-modern-underline-qa input:focus {
+  width: 200px;
+}
+
+/* =========================================================================
    GLOBAL MASTER TABLE & FORM CARD DESIGN SYSTEM (Professional ERP Theme)
    ========================================================================= */
 

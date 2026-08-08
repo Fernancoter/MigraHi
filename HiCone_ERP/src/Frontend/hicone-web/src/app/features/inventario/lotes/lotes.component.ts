@@ -78,35 +78,39 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
           </div>
           
           <div class="toolbar-right">
-            <div class="dropdown-wrapper">
-              <button class="btn-filter-funnel-qa" (click)="toggleSearchFilterDropdown($event)" title="Filtrar">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#334155">
-                  <path d="M10,18H14V16H10V18M3,6V8H21V6H3M6,13H18V11H6V13Z" />
-                </svg>
-                <span class="chevron-down-dark">▾</span>
-              </button>
-              
-              <div class="filter-popover-qa shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()">
-                <div class="filter-item-qa" (click)="clearAllFilters()">
-                  <span class="icon-circle-cross-dark">✖</span> Limpiar filtros
-                </div>
-                <div class="filter-item-qa" (click)="saveActiveFilters()">
-                  <span class="icon-floppy-dark">💾</span> Guardar filtro como...
-                </div>
+            <div class="filter-search-group-qa">
+              <!-- Botón Filtro Avanzado -->
+              <div class="dropdown-wrapper">
+                <button class="btn-filter-funnel-qa" (click)="toggleSearchFilterDropdown($event)" title="Filtros avanzados">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                  </svg>
+                  <span class="chevron-down-funnel">▾</span>
+                </button>
                 
-                <ng-container *ngIf="savedFilters.length > 0">
-                  <div class="dropdown-divider"></div>
-                  <div class="dropdown-header-saved">Filtros Guardados</div>
-                  <div class="filter-item-qa saved-filter-item" *ngFor="let f of savedFilters" (click)="loadSavedFilter(f)">
-                    <span>📁 {{ f.name }}</span>
-                    <span class="btn-delete-saved-filter" (click)="deleteSavedFilter(f, $event)">🗑️</span>
+                <div class="filter-popover-qa shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()">
+                  <div class="filter-item-qa" (click)="clearAllFilters()">
+                    <span class="icon-circle-cross-dark">✖</span> Limpiar filtros
                   </div>
-                </ng-container>
+                  <div class="filter-item-qa" (click)="saveActiveFilters()">
+                    <span class="icon-floppy-dark">💾</span> Guardar filtro como...
+                  </div>
+                  
+                  <ng-container *ngIf="savedFilters.length > 0">
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-header-saved">Filtros Guardados</div>
+                    <div class="filter-item-qa saved-filter-item" *ngFor="let f of savedFilters" (click)="loadSavedFilter(f)">
+                      <span>📁 {{ f.name }}</span>
+                      <span class="btn-delete-saved-filter" (click)="deleteSavedFilter(f, $event)">🗑️</span>
+                    </div>
+                  </ng-container>
+                </div>
               </div>
-            </div>
-            
-            <div class="search-underline-box">
-              <input type="text" class="search-input-underline" placeholder="Buscar" [(ngModel)]="searchQuery" (input)="onFilterChange()">
+              
+              <!-- Campo de Búsqueda Subrayado -->
+              <div class="search-modern-underline-qa">
+                <input type="text" placeholder="Buscar..." [(ngModel)]="searchQuery" (input)="onFilterChange()">
+              </div>
             </div>
           </div>
         </div>
