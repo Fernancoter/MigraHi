@@ -175,8 +175,20 @@ export class ProduccionService {
     return this.http.get<Prensado[]>(`${this.apiUrl}/prensados`);
   }
 
+  getPrensadosOperacion(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/prensado/operacion`);
+  }
+
+  getPrensadosProgramacion(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/prensado/programacion`);
+  }
+
   iniciarPrensado(request: any): Observable<Prensado> {
     return this.http.post<Prensado>(`${this.apiUrl}/prensado/iniciar`, request);
+  }
+
+  concluirPrensado(id: string, request: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/prensado/${id}/concluir`, request);
   }
 
   // ── Interrupciones (Downtime) ──────────────────────────────────────────

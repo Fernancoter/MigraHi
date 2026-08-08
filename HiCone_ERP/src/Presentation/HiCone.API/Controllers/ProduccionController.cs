@@ -260,6 +260,30 @@ public class ProduccionController : ControllerBase
         return result ? Ok() : BadRequest();
     }
 
+    [HttpPost("prensado/{id}/concluir")]
+    public async Task<IActionResult> ConcluirPrensado(Guid id, [FromBody] ConcluirPrensadoRequest request)
+    {
+        var entity = await _context.Prensados.FindAsync(id);
+        if (entity == null) return NotFound(new { message = "Orden de prensado no encontrada." });
+
+        entity.LevasUnidadMedida = request.LevasUnidadMedida ?? "Kg";
+        entity.RodillosUnidadMedida = request.RodillosUnidadMedida ?? "Kg";
+        entity.LevasKgEntrada = request.LevasKgEntrada;
+        entity.LevasKgSalida = request.LevasKgSalida;
+        entity.LevasGradosEntrada = request.LevasGradosEntrada;
+        entity.LevasGradosSalida = request.LevasGradosSalida;
+        entity.RodillosKgEntrada = request.RodillosKgEntrada;
+        entity.RodillosKgSalida = request.RodillosKgSalida;
+        entity.RodillosGradosEntrada = request.RodillosGradosEntrada;
+        entity.RodillosGradosSalida = request.RodillosGradosSalida;
+        entity.HoraFinProceso = request.FinProceso ?? DateTime.UtcNow;
+        entity.Estado = EstadoPrensado.Finalizado;
+        entity.EnCurso = false;
+
+        await _context.SaveChangesAsync(default);
+        return Ok(new { message = "Prensado concluido exitosamente." });
+    }
+
     // ── Pallets ────────────────────────────────────────────────────────────
 
     [HttpGet("palets")]
@@ -1452,6 +1476,20 @@ public record UpdatePrensadoRequest(
     decimal MolidoKg,
     int Meta,
     string? LoteSilo
+);
+
+public record ConcluirPrensadoRequest(
+    string? LevasUnidadMedida,
+    string? RodillosUnidadMedida,
+    decimal LevasKgEntrada,
+    decimal LevasKgSalida,
+    decimal LevasGradosEntrada,
+    decimal LevasGradosSalida,
+    decimal RodillosKgEntrada,
+    decimal RodillosKgSalida,
+    decimal RodillosGradosEntrada,
+    decimal RodillosGradosSalida,
+    DateTime? FinProceso
 );
 
 public class ActualizarBobinaDto
