@@ -218,11 +218,11 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
               <ng-container *ngFor="let ex of filteredItems; let idx = index">
                 <tr [style.background-color]="expandedExtrusionId === ex.id ? '#dcfce7' : ''">
                   <td class="actions-cell-1">
-                    <span class="info-circle-btn green" (click)="ver(ex)" title="Información">i</span>
+                    <span class="info-circle-btn green" (click)="verDetalle(ex, $event)" title="Información">i</span>
                     <span class="print-btn" (click)="imprimir(ex)" title="Imprimir">🖨️</span>
                     <button class="btn-premium-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="irAModificar(ex)">Modificar</button>
                     <button class="btn-premium-danger ml-2" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="eliminar(ex, $event)">Eliminar</button>
-                    <button class="btn-premium-secondary ml-2" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="ver(ex)">Visualizar</button>
+                    <button class="btn-premium-secondary ml-2" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="verDetalle(ex, $event)">Visualizar</button>
                   </td>
                   <td *ngIf="visibleCols.bobinas" class="text-right">
                     <button class="btn-premium-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="ver(ex)">{{ ex.totalBobinas || 0 }}</button>
@@ -622,6 +622,12 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
           <button class="btn-premium" (click)="guardarCambios()" [disabled]="saving">
             {{ saving ? 'CONFIRMANDO...' : 'CONFIRMAR' }}
           </button>
+          <button class="btn-premium-secondary" type="button" (click)="cancelarForm()">
+            CANCELAR
+          </button>
+        </div>
+      </div>
+
     <!-- MODAL DE VISUALIZACIÓN (VER DETALLE) -->
     <div class="modal-overlay-premium" *ngIf="mostrarModalVer">
       <div class="modal-card-premium animate-scale-in" style="max-width: 850px;">
@@ -1791,6 +1797,26 @@ export class ExtrusionesListComponent implements OnInit {
         }
       });
     }
+  }
+
+  verDetalle(ex: any, event?: Event) {
+    if (event) event.stopPropagation();
+    this.loadingDetalle = true;
+    this.cdr.detectChanges();
+    this.prodService.getExtrusion(ex.id).subscribe({
+      next: (data) => {
+        this.extrusionSeleccionada = data;
+        this.mostrarModalVer = true;
+        this.loadingDetalle = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al cargar detalle:', err);
+        alert('No se pudo cargar el detalle de la extrusión.');
+        this.loadingDetalle = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   ver(ex: any) {
