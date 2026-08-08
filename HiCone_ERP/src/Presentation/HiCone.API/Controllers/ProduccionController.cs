@@ -699,7 +699,7 @@ public class ProduccionController : ControllerBase
         => Ok(await _produccionService.GetHistorialExtrusionesAsync(desde, hasta, extrusoraId, productoId));
 
     [HttpGet("extrusiones")]
-    public async Task<ActionResult<IEnumerable<Extrusion>>> GetExtrusiones()
+    public async Task<ActionResult<IEnumerable<object>>> GetExtrusiones()
         => Ok(await _produccionService.GetExtrusionesAsync());
 
     [HttpGet("extrusion/programacion")]

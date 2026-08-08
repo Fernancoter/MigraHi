@@ -221,7 +221,7 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
                     <span class="info-circle-btn green" (click)="ver(ex)" title="Información">i</span>
                     <span class="print-btn" (click)="imprimir(ex)" title="Imprimir">🖨️</span>
                     <button class="btn-premium-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="irAModificar(ex)">Modificar</button>
-                    <button class="btn-premium-danger ml-2" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="eliminar(ex)">Eliminar</button>
+                    <button class="btn-premium-danger ml-2" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="eliminar(ex, $event)">Eliminar</button>
                     <button class="btn-premium-secondary ml-2" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="ver(ex)">Visualizar</button>
                   </td>
                   <td *ngIf="visibleCols.bobinas" class="text-right">
@@ -428,7 +428,7 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
                               <!-- Badge Molino si es scrapKg > 0 o b.mill -->
                               <span class="badge-molino-red" style="background: #ef4444; color: white; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; margin-right: 0.25rem;" *ngIf="b.scrapKg > 0 || b.mill">Molino</span>
                               <span class="pencil-edit-btn" style="cursor: pointer;" title="Modificar">✏️</span>
-                              <span class="cross-delete-btn" style="cursor: pointer; margin-left: 0.25rem;" (click)="eliminarBobina(b)" title="Eliminar">❌</span>
+                              <span class="cross-delete-btn" style="cursor: pointer; margin-left: 0.25rem;" (click)="eliminarBobina(b, $event)" title="Eliminar">❌</span>
                             </td>
                             <td *ngIf="visibleBobinaCols.extrusionId">{{ extrusionSeleccionada.extrusionIdLegacy || getShortId(extrusionSeleccionada.id, 0) }}</td>
                             <td *ngIf="visibleBobinaCols.bobinaOrigen">{{ b.station || b.bobinaOrigen || 'A' }}</td>
@@ -1738,7 +1738,8 @@ export class ExtrusionesListComponent implements OnInit {
     }
   }
 
-  eliminar(ex: Extrusion) {
+  eliminar(ex: Extrusion, event?: Event) {
+    if (event) event.stopPropagation();
     this.itemAEliminar = ex;
     this.tipoEliminacion = 'extrusion';
     this.mostrarConfirmarEliminar = true;
@@ -1858,7 +1859,8 @@ export class ExtrusionesListComponent implements OnInit {
     });
   }
 
-  eliminarBobina(bobina: any) {
+  eliminarBobina(bobina: any, event?: Event) {
+    if (event) event.stopPropagation();
     if (!this.extrusionSeleccionada) return;
     this.itemAEliminar = bobina;
     this.tipoEliminacion = 'bobina';

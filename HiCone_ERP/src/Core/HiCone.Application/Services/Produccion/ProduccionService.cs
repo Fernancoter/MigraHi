@@ -1039,14 +1039,71 @@ public class ProduccionService : IProduccionService
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Extrusion>> GetExtrusionesAsync()
+    public async Task<IEnumerable<object>> GetExtrusionesAsync()
     {
         return await _context.Extrusiones
             .Include(e => e.Producto)
             .Include(e => e.Operario)
             .Include(e => e.Turno)
             .Include(e => e.Extrusora)
-            .Include(e => e.Bobinas)
+            .OrderByDescending(e => e.FechaInicio)
+            .Select(e => new
+            {
+                e.Id,
+                e.Codigo,
+                e.Fecha,
+                e.FechaInicio,
+                e.FechaFin,
+                Estado = e.Estado.ToString(),
+                e.MetaKg,
+                e.Producido,
+                e.TiempoInterrupcion,
+                e.TiempoInterrupcionMin,
+                e.EnCurso,
+                e.ExtrusionIdLegacy,
+                e.ProductoNombre,
+                e.LotePaqueteAditivos,
+                e.Calibre,
+                e.Ancho,
+                e.Longitud,
+                e.VirgenKg,
+                e.MolidoKg,
+                e.RevHusilloVirgen,
+                e.RevHusilloMolido,
+                e.Observaciones,
+                e.LoteSilo,
+                e.MotivoAnticipado,
+                IniciaProceso = e.FechaInicio,
+                FinProceso = e.FechaFin,
+                Extrusora = e.Extrusora != null ? new { e.Extrusora.Id, e.Extrusora.Nombre, e.Extrusora.Codigo } : null,
+                Operario = e.Operario != null ? new { e.Operario.Id, NombreCompleto = e.Operario.Nombre } : null,
+                Turno = e.Turno != null ? new { e.Turno.Id, e.Turno.Nombre } : null,
+                Producto = e.Producto != null ? new { e.Producto.Id, e.Producto.Nombre, e.Producto.Clave } : null,
+                TotalBobinas = e.Bobinas.Count(b => !b.IsDeleted),
+                Bobinas = e.Bobinas.Where(b => !b.IsDeleted).Select(b => new
+                {
+                    b.Id,
+                    b.NoSerie,
+                    b.BobinaNo,
+                    b.Kg,
+                    b.MermaKg,
+                    b.Espesor,
+                    b.HoraInicio,
+                    b.HoraSalida,
+                    b.IniciaReposo,
+                    b.MinutosEnReposo,
+                    b.Carreras,
+                    b.Observations,
+                    b.MillReason,
+                    b.ProductName,
+                    b.Codigo,
+                    b.ScrapKg,
+                    b.Thickness,
+                    b.RestMinutes,
+                    Estado = b.Estado.ToString(),
+                    Mill = b.Mill
+                }).ToList()
+            })
             .ToListAsync();
     }
 

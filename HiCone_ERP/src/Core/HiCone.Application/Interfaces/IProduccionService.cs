@@ -86,7 +86,7 @@ public interface IProduccionService
     Task<IEnumerable<CausaInterrupcion>> GetCausasInterrupcionAsync();
     Task<Turno?> GetTurnoActivoAsync();
     Task<IEnumerable<Extrusion>> GetHistorialExtrusionesAsync(DateTime? desde, DateTime? hasta, Guid? extrusoraId, Guid? productoId);
-    Task<IEnumerable<Extrusion>> GetExtrusionesAsync();
+    Task<IEnumerable<object>> GetExtrusionesAsync();
     Task<IEnumerable<Prensado>> GetPrensadosAsync();
     Task<IEnumerable<ExtrusoraProducto>> GetExtrusoraProductosAsync();
 
