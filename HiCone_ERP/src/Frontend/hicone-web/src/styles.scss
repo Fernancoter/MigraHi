@@ -950,3 +950,48 @@ h1, h2, h3, h4 {
   border-color: #ef5350;
   color: #c62828;
 }
+
+/* Footer Bar Estandarizado ERP (Imágenes 1 y 2) */
+.footer-bar-legacy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px 24px;
+  border-top: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  margin-top: auto;
+  font-size: 0.85rem;
+  color: #475569;
+  width: 100%;
+  box-sizing: border-box;
+
+  .footer-label {
+    color: #475569;
+    font-weight: 500;
+  }
+
+  .date-box-legacy {
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 0.83rem;
+    color: #334155;
+    background: #ffffff;
+    outline: none;
+    text-align: center;
+    width: 110px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+
+    &:hover, &:focus {
+      border-color: #166534;
+    }
+  }
+
+  .copyright {
+    color: #64748b;
+    font-size: 0.83rem;
+    margin-left: 8px;
+  }
+}
