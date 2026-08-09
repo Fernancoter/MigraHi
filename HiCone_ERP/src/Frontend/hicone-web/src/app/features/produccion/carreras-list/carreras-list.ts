@@ -424,19 +424,14 @@ export class CarrerasListComponent implements OnInit {
   closeAllDropdowns()             { this.showColumnSelector.set(false); this.showExportOptions.set(false); }
 
   visualizar(item: any) {
-    this.svc.getCarrera(item.id).subscribe({
-      next: (detail) => this.viewingItem.set(detail),
-      error: (err) => { console.error(err); alert('No se pudo cargar el detalle de la carrera.'); }
-    });
+    this.viewingItem.set(item);
   }
   cerrarVisualizar() { this.viewingItem.set(null); }
 
   modificar(item: any) {
     this.saveError.set('');
-    this.svc.getCarrera(item.id).subscribe({
-      next: (detail) => { this.editingId = detail.id; this.editForm.set({ ...detail }); },
-      error: (err) => { console.error(err); alert('No se pudo cargar la carrera para modificar.'); }
-    });
+    this.editingId = item.id;
+    this.editForm.set({ ...item });
   }
 
   cerrarModal() { this.editForm.set(null); this.editingId = null; this.saveError.set(''); }
