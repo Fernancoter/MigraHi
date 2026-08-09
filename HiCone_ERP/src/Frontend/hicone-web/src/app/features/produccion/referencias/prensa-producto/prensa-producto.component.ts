@@ -1,12 +1,13 @@
 import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
+import { ProduccionService } from '../../../../core/services/produccion';
 import * as XLSX from 'xlsx';
 
 export interface PrensaProducto {
   id?: string;
+  prensaId?: string;
   prensa: string;
   item: string;
   carrete: string;
@@ -23,9 +24,7 @@ export interface PrensaProducto {
         <div class="title-section">
           <h1 class="premium-title">Prensa Producto</h1>
           <nav class="breadcrumb-modern">
-            <span class="root">Producción</span>
-            <span class="sep">&rsaquo;</span>
-            <span class="root">Referencias</span>
+            <span class="root">Prensado</span>
             <span class="sep">&rsaquo;</span>
             <span class="active">Prensa Producto</span>
           </nav>
@@ -196,7 +195,10 @@ export interface PrensaProducto {
                 <label style="font-size: 0.8rem; color: #64748b; font-weight: 500;">Prensa</label>
                 <div style="font-size: 1rem; color: #475569; padding-bottom: 0.5rem; border-bottom: 1px solid #e2e8f0;">
                   <ng-container *ngIf="isViewing || form.id">{{ form.prensa || '' }}</ng-container>
-                  <input *ngIf="!isViewing && !form.id" type="text" [(ngModel)]="form.prensa" placeholder="" style="border: none; outline: none; width: 100%; font-size: 1rem; color: #475569;">
+                  <select *ngIf="!isViewing && !form.id" [(ngModel)]="form.prensaId" style="border: none; outline: none; width: 100%; font-size: 1rem; color: #475569; background: transparent;">
+                    <option [ngValue]="undefined">-- Selecciona una prensa --</option>
+                    @for (p of prensas(); track p.id) { <option [ngValue]="p.id">{{ p.nombre }}</option> }
+                  </select>
                 </div>
               </div>
 
@@ -296,8 +298,7 @@ export interface PrensaProducto {
   `]
 })
 export class PrensaProductoComponent implements OnInit {
-  private http = inject(HttpClient);
-  private apiUrl = 'api/prensa-producto';
+  private svc = inject(ProduccionService);
 
   searchText = signal<string>('');
   currentPage = signal<number>(1);
@@ -305,6 +306,7 @@ export class PrensaProductoComponent implements OnInit {
   isLoading = signal<boolean>(false);
 
   items = signal<PrensaProducto[]>([]);
+  prensas = signal<any[]>([]);
 
   isFilterMenuOpen = false;
   isColumnsMenuOpen = false;
@@ -344,17 +346,18 @@ export class PrensaProductoComponent implements OnInit {
   ngOnInit() {
     this.loadSavedFiltersFromStorage();
     this.loadData();
+    this.svc.getPrensas().subscribe({ next: (data) => this.prensas.set(data), error: (err) => console.error(err) });
   }
 
   loadData() {
     this.isLoading.set(true);
-    this.http.get<PrensaProducto[]>(this.apiUrl).subscribe({
+    this.svc.getPrensaProductos().subscribe({
       next: (data) => {
         this.items.set(data);
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.warn('Endpoint no disponible, inicializando vacío.', err);
+        console.error(err);
         this.items.set([]);
         this.isLoading.set(false);
       }
@@ -447,24 +450,38 @@ export class PrensaProductoComponent implements OnInit {
   }
 
   saveModal() {
-    if (this.form.id) {
-      const current = this.items();
-      const index = current.findIndex(x => x.id === this.form.id);
-      if (index !== -1) {
-        current[index] = { ...this.form };
-        this.items.set([...current]);
-      }
-    } else {
-      const newItem = { ...this.form, id: Date.now().toString() };
-      this.items.set([newItem, ...this.items()]);
+    if (!this.form.id && !this.form.prensaId) {
+      alert('Selecciona una prensa.');
+      return;
     }
-    this.closeModal();
+
+    const request = {
+      prensaId: this.form.prensaId,
+      item: this.form.item,
+      carrete: this.form.carrete,
+      tenantId: '00000000-0000-0000-0000-000000000001'
+    };
+
+    if (this.form.id) {
+      this.svc.updatePrensaProducto(this.form.id, request).subscribe({
+        next: () => { this.closeModal(); this.loadData(); },
+        error: (err) => { console.error(err); alert('No se pudo guardar el cambio.'); }
+      });
+    } else {
+      this.svc.createPrensaProducto(request).subscribe({
+        next: () => { this.closeModal(); this.loadData(); },
+        error: (err) => { console.error(err); alert('No se pudo crear el registro.'); }
+      });
+    }
   }
 
   eliminar(item: PrensaProducto) {
+    if (!item.id) return;
     if (confirm(`¿Estás seguro de eliminar el registro de la prensa ${item.prensa}?`)) {
-      const current = this.items().filter(x => x.id !== item.id);
-      this.items.set(current);
+      this.svc.deletePrensaProducto(item.id).subscribe({
+        next: () => this.loadData(),
+        error: (err) => { console.error(err); alert('No se pudo eliminar el registro.'); }
+      });
     }
   }
 

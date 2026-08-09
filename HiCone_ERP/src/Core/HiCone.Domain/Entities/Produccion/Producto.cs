@@ -39,7 +39,6 @@ public class Producto : TenantEntity
 
     // ── Colecciones ───────────────────────────────────────────────────────
     public virtual ICollection<ExtrusoraProducto> ExtrusoraProductos { get; set; } = new List<ExtrusoraProducto>();
-    public virtual ICollection<PrensaProducto> PrensaProductos { get; set; } = new List<PrensaProducto>();
     public virtual ICollection<Bobina> Bobinas { get; set; } = new List<Bobina>();
     public virtual ICollection<Palet> Palets { get; set; } = new List<Palet>();
 }

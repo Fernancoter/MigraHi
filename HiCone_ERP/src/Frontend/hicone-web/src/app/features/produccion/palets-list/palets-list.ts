@@ -120,6 +120,7 @@ import { ProduccionService } from '../../../core/services/produccion';
         <table class="data-table">
           <thead>
             <tr>
+              <th class="col-acciones">Acciones</th>
               @if (isColVisible('noSerie')) { <th>No. Serie</th> }
               @if (isColVisible('productoNombre')) { <th>Producto</th> }
               @if (isColVisible('prensaNombre')) { <th>Prensa</th> }
@@ -132,6 +133,11 @@ import { ProduccionService } from '../../../core/services/produccion';
           <tbody>
             @for (item of paginatedItems(); track item.id) {
               <tr>
+                <td class="col-acciones">
+                  <a class="row-action" (click)="visualizar(item)">Visualizar</a>
+                  <a class="row-action" (click)="modificar(item)">Modificar</a>
+                  <a class="row-action row-action-danger" (click)="eliminar(item)">Eliminar</a>
+                </td>
                 @if (isColVisible('noSerie')) { <td class="col-nombre">{{ item.noSerie }}</td> }
                 @if (isColVisible('productoNombre')) { <td>{{ item.productoNombre }}</td> }
                 @if (isColVisible('prensaNombre')) { <td>{{ item.prensaNombre }}</td> }
@@ -149,7 +155,7 @@ import { ProduccionService } from '../../../core/services/produccion';
             }
             @if (paginatedItems().length === 0) {
               <tr>
-                <td [attr.colspan]="visibleCount()" class="empty-state">No se encontraron palets.</td>
+                <td [attr.colspan]="visibleCount() + 1" class="empty-state">No se encontraron palets.</td>
               </tr>
             }
           </tbody>
@@ -157,17 +163,134 @@ import { ProduccionService } from '../../../core/services/produccion';
       </div>
 
       <!-- Paginación -->
-      @if (totalPages() > 1) {
+      @if (filteredItems().length > 0) {
         <div class="pagination-container">
-          <button class="pag-btn" [disabled]="currentPage() === 1" (click)="prevPage()">&laquo;</button>
-          @for (p of getPages(currentPage(), totalPages()); track p) {
-            @if (p === '...') {
-              <span class="pag-dots">...</span>
-            } @else {
-              <button class="pag-btn" [class.active]="currentPage() === p" (click)="setPage(p)">{{ p }}</button>
+          <span class="pagination-label">Página {{ currentPage() }} de {{ totalPages() }}</span>
+          <div class="pagination-buttons">
+            <button class="pag-btn" [disabled]="currentPage() === 1" (click)="prevPage()">&laquo;</button>
+            @for (p of getPages(currentPage(), totalPages()); track p) {
+              @if (p === '...') {
+                <span class="pag-dots">...</span>
+              } @else {
+                <button class="pag-btn" [class.active]="currentPage() === p" (click)="setPage(p)">{{ p }}</button>
+              }
             }
-          }
-          <button class="pag-btn" [disabled]="currentPage() === totalPages()" (click)="nextPage()">&raquo;</button>
+            <button class="pag-btn" [disabled]="currentPage() === totalPages()" (click)="nextPage()">&raquo;</button>
+          </div>
+        </div>
+      }
+
+      <!-- Modal Visualizar -->
+      @if (viewingItem(); as v) {
+        <div class="modal-overlay" (click)="cerrarVisualizar()">
+          <div class="modal-card" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+              <h2>Detalle de Palet</h2>
+              <button class="modal-close" (click)="cerrarVisualizar()"><svg class="close-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="detail-grid">
+                <div class="detail-item"><span class="d-label">No. Serie</span><span class="d-value">{{ v.noSerie }}</span></div>
+                <div class="detail-item"><span class="d-label">Estatus</span><span class="d-value">{{ getEstatusLabel(v.estatus) }}</span></div>
+                <div class="detail-item"><span class="d-label">Producto</span><span class="d-value">{{ v.productoNombre }}</span></div>
+                <div class="detail-item"><span class="d-label">Tipo</span><span class="d-value">{{ v.tipo === 1 ? 'Normal' : 'Externo' }}</span></div>
+                <div class="detail-item"><span class="d-label">Prensa</span><span class="d-value">{{ v.prensaNombre }}</span></div>
+                <div class="detail-item"><span class="d-label">Operador</span><span class="d-value">{{ v.operarioNombre }}</span></div>
+                <div class="detail-item"><span class="d-label">Carretes / Capacidad</span><span class="d-value">{{ v.totalCarretes }} / {{ v.capacidad }}</span></div>
+                <div class="detail-item"><span class="d-label">Inicio Ensamble</span><span class="d-value">{{ v.horaInicioEnsamble | date:'dd/MM/yyyy HH:mm' }}</span></div>
+                <div class="detail-item"><span class="d-label">Fin Ensamble</span><span class="d-value">{{ v.horaFinEnsamble ? (v.horaFinEnsamble | date:'dd/MM/yyyy HH:mm') : '—' }}</span></div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" (click)="cerrarVisualizar()">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Modal Modificar -->
+      @if (editForm(); as f) {
+        <div class="modal-overlay" (click)="cerrarModal()">
+          <div class="modal-card" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+              <h2>Modificar Palet</h2>
+              <button class="modal-close" (click)="cerrarModal()"><svg class="close-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-grid">
+                <div class="form-field">
+                  <label>Tipo</label>
+                  <select [(ngModel)]="f.tipo">
+                    <option [ngValue]="1">Normal</option>
+                    <option [ngValue]="2">Externo</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label>Estatus</label>
+                  <select [(ngModel)]="f.estatus">
+                    <option [ngValue]="1">En Ensamble</option>
+                    <option [ngValue]="2">Terminado</option>
+                    <option [ngValue]="3">Embarcado</option>
+                    <option [ngValue]="4">Rechazado</option>
+                    <option [ngValue]="5">Aprobado</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label>Capacidad</label>
+                  <input type="number" [(ngModel)]="f.capacidad" />
+                </div>
+                <div class="form-field">
+                  <label>Total Carretes</label>
+                  <input type="number" [(ngModel)]="f.totalCarretes" />
+                </div>
+                <div class="form-field">
+                  <label>Producto</label>
+                  <select [(ngModel)]="f.productoId">
+                    <option [ngValue]="null">-- Sin producto --</option>
+                    @for (p of productos(); track p.id) { <option [ngValue]="p.id">{{ p.nombre }}</option> }
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label>Operador</label>
+                  <select [(ngModel)]="f.operarioId">
+                    <option [ngValue]="null">-- Sin operador --</option>
+                    @for (o of operarios(); track o.id) { <option [ngValue]="o.id">{{ o.nombreCompleto }}</option> }
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label>Prensa</label>
+                  <select [(ngModel)]="f.prensaId">
+                    <option [ngValue]="null">-- Sin prensa --</option>
+                    @for (pr of prensas(); track pr.id) { <option [ngValue]="pr.id">{{ pr.nombre }}</option> }
+                  </select>
+                </div>
+              </div>
+              @if (saveError()) { <div class="form-error">{{ saveError() }}</div> }
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+              <button class="btn btn-primary" [disabled]="saving()" (click)="guardar()">{{ saving() ? 'Guardando...' : 'Guardar' }}</button>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Modal Eliminar -->
+      @if (itemToDelete(); as del) {
+        <div class="modal-overlay" (click)="cancelarEliminar()">
+          <div class="modal-card modal-card-sm" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+              <h2>Eliminar Palet</h2>
+              <button class="modal-close" (click)="cancelarEliminar()"><svg class="close-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <p>¿Está seguro de que desea eliminar el palet <strong>{{ del.noSerie }}</strong>? Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" (click)="cancelarEliminar()">Cancelar</button>
+              <button class="btn btn-danger" [disabled]="deleting()" (click)="confirmarEliminar()">{{ deleting() ? 'Eliminando...' : 'Sí, eliminar' }}</button>
+            </div>
+          </div>
         </div>
       }
 
@@ -215,17 +338,62 @@ import { ProduccionService } from '../../../core/services/produccion';
     .data-table td { padding:.78rem 1rem; border-bottom:1px solid #f1f5f9; font-size:.83rem; color:#334155; }
     .data-table tr:hover td { background:#f8fafc; }
     .col-nombre { font-weight:700; color:#1e293b; }
+    .col-acciones { display:flex; gap:.75rem; position:sticky; left:0; z-index:2; background:#fff; box-shadow:2px 0 4px rgba(0,0,0,.06); }
+    .data-table thead th.col-acciones { z-index:3; background:#f8fafc; }
+    .data-table tr:hover td.col-acciones { background:#f8fafc; }
+    .row-action { color:#3faa5a; font-weight:700; font-size:.8rem; cursor:pointer; text-decoration:none; }
+    .row-action:hover { text-decoration:underline; }
+    .row-action-danger { color:#dc2626; }
     .empty-state { text-align:center; padding:3rem; color:#94a3b8; font-style:italic; }
 
-    .pagination-container { display:flex; justify-content:center; align-items:center; gap:.35rem; margin-top:1.4rem; }
+    .pagination-container { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-top:1.4rem; flex-wrap:wrap; }
+    .pagination-label { font-size:.8rem; color:#64748b; font-weight:600; }
+    .pagination-buttons { display:flex; align-items:center; gap:.35rem; }
     .pag-btn { height:2rem; min-width:2rem; padding:0 .45rem; border-radius:7px; border:1px solid #e2e8f0; background:#fff; color:#475569; font-weight:700; font-size:.82rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .18s; }
     .pag-btn:hover:not(:disabled) { background:#f8fafc; border-color:#cbd5e1; }
     .pag-btn:disabled { opacity:.4; cursor:not-allowed; }
     .pag-btn.active { background:#3faa5a; border-color:#3faa5a; color:#fff; }
+
+    .btn-danger { background:#dc2626; color:#fff; }
+    .btn-danger:disabled { opacity:.6; cursor:not-allowed; }
+    .btn-primary:disabled { opacity:.6; cursor:not-allowed; }
+
+    .modal-overlay { position:fixed; inset:0; background:rgba(15,23,42,.55); display:flex; align-items:center; justify-content:center; z-index:500; padding:1.5rem; }
+    .modal-card { background:#fff; border-radius:12px; width:100%; max-width:560px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 20px 50px rgba(0,0,0,.25); }
+    .modal-card-sm { max-width:440px; }
+    .modal-header { display:flex; align-items:center; justify-content:space-between; padding:1.1rem 1.4rem; border-bottom:1px solid #e2e8f0; }
+    .modal-header h2 { margin:0; font-size:1.05rem; font-weight:800; color:#1e293b; }
+    .modal-close { background:none; border:none; cursor:pointer; font-size:1rem; color:#94a3b8; }
+    .modal-body { padding:1.2rem 1.4rem; overflow-y:auto; }
+    .modal-footer { display:flex; justify-content:flex-end; gap:.6rem; padding:1rem 1.4rem; border-top:1px solid #e2e8f0; }
+
+    .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:.9rem 1.5rem; }
+    .detail-item { display:flex; flex-direction:column; gap:.2rem; }
+    .d-label { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:#94a3b8; }
+    .d-value { font-size:.88rem; color:#1e293b; font-weight:600; }
+
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:.9rem 1.2rem; }
+    .form-field { display:flex; flex-direction:column; gap:.3rem; }
+    .form-field label { font-size:.72rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:.03em; }
+    .form-field input, .form-field select { padding:.5rem .6rem; border:1px solid #e2e8f0; border-radius:7px; font-size:.85rem; color:#1e293b; }
+    .form-field input:focus, .form-field select:focus { outline:none; border-color:#3faa5a; box-shadow:0 0 0 3px rgba(63,170,90,.12); }
+    .form-error { margin-top:.9rem; padding:.6rem .8rem; background:#fef2f2; color:#dc2626; border-radius:7px; font-size:.82rem; font-weight:600; }
   `]
 })
 export class PaletsListComponent implements OnInit {
   private svc = inject(ProduccionService);
+
+  viewingItem = signal<any | null>(null);
+  editForm = signal<any | null>(null);
+  editingId: string | null = null;
+  saving = signal(false);
+  saveError = signal('');
+  itemToDelete = signal<any | null>(null);
+  deleting = signal(false);
+
+  productos = signal<any[]>([]);
+  operarios = signal<any[]>([]);
+  prensas = signal<any[]>([]);
 
   items = signal<any[]>([]);
   searchText = signal('');
@@ -242,6 +410,9 @@ export class PaletsListComponent implements OnInit {
   ngOnInit() {
     this.loadSavedFiltersFromStorage();
     this.load();
+    this.svc.getProductos().subscribe({ next: (data) => this.productos.set(data), error: (err) => console.error(err) });
+    this.svc.getOperarios().subscribe({ next: (data) => this.operarios.set(data), error: (err) => console.error(err) });
+    this.svc.getPrensas().subscribe({ next: (data) => this.prensas.set(data), error: (err) => console.error(err) });
   }
 
   load() {
@@ -330,6 +501,60 @@ export class PaletsListComponent implements OnInit {
     this.showColumnSelector.set(false);
     this.showExportOptions.set(false);
     this.isFilterMenuOpen.set(false);
+  }
+
+  visualizar(item: any) {
+    this.svc.getPalet(item.id).subscribe({
+      next: (detail) => this.viewingItem.set(detail),
+      error: (err) => { console.error(err); alert('No se pudo cargar el detalle del palet.'); }
+    });
+  }
+  cerrarVisualizar() { this.viewingItem.set(null); }
+
+  modificar(item: any) {
+    this.saveError.set('');
+    this.svc.getPalet(item.id).subscribe({
+      next: (detail) => { this.editingId = detail.id; this.editForm.set({ ...detail }); },
+      error: (err) => { console.error(err); alert('No se pudo cargar el palet para modificar.'); }
+    });
+  }
+
+  cerrarModal() { this.editForm.set(null); this.editingId = null; this.saveError.set(''); }
+
+  guardar() {
+    const f = this.editForm();
+    if (!f || !this.editingId) return;
+
+    this.saving.set(true);
+    this.saveError.set('');
+
+    const request = {
+      tipo: Number(f.tipo),
+      estatus: Number(f.estatus),
+      capacidad: f.capacidad,
+      totalCarretes: f.totalCarretes,
+      productoId: f.productoId || null,
+      operarioId: f.operarioId || null,
+      prensaId: f.prensaId || null
+    };
+
+    this.svc.updatePalet(this.editingId, request).subscribe({
+      next: () => { this.saving.set(false); this.cerrarModal(); this.load(); },
+      error: (err) => { this.saving.set(false); this.saveError.set(err?.error?.message || 'Ocurrió un error al guardar.'); }
+    });
+  }
+
+  eliminar(item: any) { this.itemToDelete.set(item); }
+  cancelarEliminar() { this.itemToDelete.set(null); }
+
+  confirmarEliminar() {
+    const item = this.itemToDelete();
+    if (!item) return;
+    this.deleting.set(true);
+    this.svc.deletePalet(item.id).subscribe({
+      next: () => { this.deleting.set(false); this.itemToDelete.set(null); this.load(); },
+      error: (err) => { this.deleting.set(false); console.error(err); alert('No se pudo eliminar el palet.'); }
+    });
   }
 
   loadSavedFiltersFromStorage() {
