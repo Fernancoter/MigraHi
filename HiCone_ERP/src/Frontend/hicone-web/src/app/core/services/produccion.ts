@@ -87,6 +87,7 @@ export interface Extrusion {
   extrusionIdLegacy?: number;
   programado?: number;
   producido?: number;
+  interrupciones?: any[];
 }
 
 export interface Bobina {
@@ -537,5 +538,9 @@ export class ProduccionService {
 
   deleteInterrupcionExtrusion(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/extrusion/interrupcion/${id}`);
+  }
+
+  getPrensasProductos(): Observable<any[]> {
+    return this.getPrensaProductos();
   }
 }

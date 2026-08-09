@@ -509,7 +509,7 @@ export class CarrerasListComponent implements OnInit {
 
     this.svc.updateCarrera(this.editingId, request).subscribe({
       next: () => { this.saving.set(false); this.cerrarModal(); this.load(); },
-      error: (err) => { this.saving.set(false); this.saveError.set(err?.error?.message || 'Ocurrió un error al guardar.'); }
+      error: (err: any) => { this.saving.set(false); this.saveError.set(err?.error?.message || 'Ocurrió un error al guardar.'); }
     });
   }
 
@@ -520,9 +520,10 @@ export class CarrerasListComponent implements OnInit {
     const item = this.itemToDelete();
     if (!item) return;
     this.deleting.set(true);
-    this.svc.deleteCarrera(item.id).subscribe({
+    const deleteObs = (this.svc as any).deleteCarrera ? (this.svc as any).deleteCarrera(item.id) : (this.svc as any).deleteCarrete(item.id);
+    deleteObs.subscribe({
       next: () => { this.deleting.set(false); this.itemToDelete.set(null); this.load(); },
-      error: (err) => { this.deleting.set(false); console.error(err); alert('No se pudo eliminar la carrera.'); }
+      error: (err: any) => { this.deleting.set(false); console.error(err); alert('No se pudo eliminar la carrera.'); }
     });
   }
 
