@@ -7,11 +7,12 @@ import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ProduccionConfigService } from '../../../core/services/produccion-config.service';
+import { ColumnFilterComponent } from '../../../shared/components/column-filter.component';
 
 @Component({
   selector: 'app-extrusiones-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ColumnFilterComponent],
   template: `
     <div class="module-page animate-fade-in">
       <div class="page-header-premium">
@@ -195,20 +196,46 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
             <thead>
               <tr>
                 <th class="actions-col-1"></th>
-                <th *ngIf="visibleCols.bobinas">Bobinas &nbsp;▾</th>
-                <th *ngIf="visibleCols.aditivos">Paquete Aditivos &nbsp;▾</th>
+                <th *ngIf="visibleCols.bobinas">
+                  <app-column-filter title="Bobinas" type="range" (filterChange)="onColumnFilterChange('bobinas', $event)" (sortChange)="onColumnSort('bobinas', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.aditivos">
+                  <app-column-filter title="Paquete Aditivos" type="text" (filterChange)="onColumnFilterChange('aditivos', $event)" (sortChange)="onColumnSort('aditivos', $event)"></app-column-filter>
+                </th>
                 <th *ngIf="visibleCols.tiempoInterrupcion"></th>
-                <th *ngIf="visibleCols.id">Id &nbsp;▾</th>
-                <th *ngIf="visibleCols.extrusora">Extrusora &nbsp;↑</th>
-                <th *ngIf="visibleCols.turno">Turno &nbsp;▾</th>
-                <th *ngIf="visibleCols.producto">Producto &nbsp;▾</th>
-                <th *ngIf="visibleCols.tiempoInterrupcion">Tiempo Interrupción (min) &nbsp;▾</th>
-                <th *ngIf="visibleCols.fecha">Fecha &nbsp;▾</th>
-                <th *ngIf="visibleCols.meta">Meta &nbsp;▾</th>
-                <th *ngIf="visibleCols.estado">Estado &nbsp;▾</th>
-                <th *ngIf="visibleCols.operador">Operador Nombre &nbsp;▾</th>
-                <th *ngIf="visibleCols.iniciaProceso">Inicia Proceso &nbsp;▾</th>
-                <th *ngIf="visibleCols.finProceso">Fin Proceso &nbsp;▾</th>
+                <th *ngIf="visibleCols.id">
+                  <app-column-filter title="Id" type="text" (filterChange)="onColumnFilterChange('id', $event)" (sortChange)="onColumnSort('id', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.extrusora">
+                  <app-column-filter title="Extrusora" type="select" [options]="extrusorasOptions" (filterChange)="onColumnFilterChange('extrusora', $event)" (sortChange)="onColumnSort('extrusora', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.turno">
+                  <app-column-filter title="Turno" type="select" [options]="turnosOptions" (filterChange)="onColumnFilterChange('turno', $event)" (sortChange)="onColumnSort('turno', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.producto">
+                  <app-column-filter title="Producto" type="select" [options]="productosOptions" (filterChange)="onColumnFilterChange('producto', $event)" (sortChange)="onColumnSort('producto', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.tiempoInterrupcion">
+                  <app-column-filter title="Tiempo Interrupción (min)" type="range" (filterChange)="onColumnFilterChange('tiempoInterrupcion', $event)" (sortChange)="onColumnSort('tiempoInterrupcion', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.fecha">
+                  <app-column-filter title="Fecha" type="dateRange" (filterChange)="onColumnFilterChange('fecha', $event)" (sortChange)="onColumnSort('fecha', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.meta">
+                  <app-column-filter title="Meta" type="range" (filterChange)="onColumnFilterChange('meta', $event)" (sortChange)="onColumnSort('meta', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.estado">
+                  <app-column-filter title="Estado" type="select" [options]="estadosOptions" (filterChange)="onColumnFilterChange('estado', $event)" (sortChange)="onColumnSort('estado', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.operador">
+                  <app-column-filter title="Operador Nombre" type="select" [options]="operariosOptions" (filterChange)="onColumnFilterChange('operador', $event)" (sortChange)="onColumnSort('operador', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.iniciaProceso">
+                  <app-column-filter title="Inicia Proceso" type="dateRange" (filterChange)="onColumnFilterChange('iniciaProceso', $event)" (sortChange)="onColumnSort('iniciaProceso', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.finProceso">
+                  <app-column-filter title="Fin Proceso" type="dateRange" (filterChange)="onColumnFilterChange('finProceso', $event)" (sortChange)="onColumnSort('finProceso', $event)"></app-column-filter>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -228,7 +255,7 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
                     {{ ex.lotePaqueteAditivos || '' }}
                   </td>
                   <td *ngIf="visibleCols.tiempoInterrupcion" style="text-align: center; vertical-align: middle;">
-                    <span class="action-link-green" (click)="verInterrupciones(ex)">
+                    <span *ngIf="ex.tiempoInterrupcion || hasInterrupciones(ex)" class="action-link-green" (click)="verInterrupciones(ex)">
                       Detalle Interrupción
                     </span>
                   </td>
@@ -1700,6 +1727,10 @@ export class ExtrusionesListComponent implements OnInit {
     this.isFilterMenuOpen = false;
   }
 
+  hasInterrupciones(ex: any): boolean {
+    return !!(ex && ex.interrupciones && ex.interrupciones.length > 0);
+  }
+
   ngOnInit() {
     this.loadSavedFiltersFromStorage();
     this.cargarExtrusiones();
@@ -1713,13 +1744,137 @@ export class ExtrusionesListComponent implements OnInit {
     });
   }
 
+  columnFilters: { [key: string]: any } = {};
+
+  get extrusorasOptions() {
+    return (this.catalogos.extrusoras || []).map(e => ({ label: e.nombre, value: e.nombre }));
+  }
+
+  get turnosOptions() {
+    return (this.catalogos.turnos || []).map(t => ({ label: t.nombre, value: t.nombre }));
+  }
+
+  get productosOptions() {
+    return (this.catalogos.productos || []).map(p => ({ label: p.nombre, value: p.nombre }));
+  }
+
+  get operariosOptions() {
+    return (this.catalogos.operarios || []).map(o => ({ label: (o.nombreCompleto || '').toUpperCase(), value: (o.nombreCompleto || '').toUpperCase() }));
+  }
+
+  get estadosOptions() {
+    return [
+      { label: 'Programada', value: 'Programada' },
+      { label: 'En Proceso', value: 'En Proceso' },
+      { label: 'Terminada', value: 'Terminada' },
+      { label: 'Detenida', value: 'Detenida' }
+    ];
+  }
+
+  onColumnFilterChange(column: string, filterData: any) {
+    this.columnFilters[column] = filterData;
+    this.applyFilters();
+  }
+
+  onColumnSort(col: string, dir: 'asc' | 'desc') {
+    this.filteredItems.sort((a, b) => {
+      const valA = this.getFieldValue(a, col);
+      const valB = this.getFieldValue(b, col);
+      if (valA < valB) return dir === 'asc' ? -1 : 1;
+      if (valA > valB) return dir === 'asc' ? 1 : -1;
+      return 0;
+    });
+    this.cdr.detectChanges();
+  }
+
+  getFieldValue(item: any, col: string): any {
+    switch (col) {
+      case 'id': return item.extrusionIdLegacy || item.id;
+      case 'extrusora': return item.extrusora?.nombre || item.extrusoraNombre || '';
+      case 'turno': return item.turno?.nombre || item.turnoNombre || '';
+      case 'producto': return item.producto?.nombre || item.productoNombre || '';
+      case 'operador': return (item.operario?.nombreCompleto || item.operadorNombre || '').toUpperCase();
+      case 'fecha': return item.fechaInicio || item.fecha;
+      case 'estado': return this.getEstadoLabel(item.estado);
+      case 'meta': return item.metaKg;
+      case 'bobinas': return item.totalBobinas || (item.bobinas ? item.bobinas.length : 0);
+      case 'aditivos': return item.lotePaqueteAditivos;
+      case 'tiempoInterrupcion': return item.tiempoInterrupcion || 0;
+      case 'iniciaProceso': return item.iniciaProceso || item.fechaInicio;
+      case 'finProceso': return item.finProceso || item.fechaFin;
+      default: return item[col];
+    }
+  }
+
+  applyFilters() {
+    let result = [...this.items];
+
+    // Buscador general
+    if (this.searchTerm && this.searchTerm.trim() !== '') {
+      const q = this.searchTerm.trim().toLowerCase();
+      result = result.filter(item =>
+        (item.extrusora?.nombre && item.extrusora.nombre.toLowerCase().includes(q)) ||
+        (item.producto?.nombre && item.producto.nombre.toLowerCase().includes(q)) ||
+        (item.operario?.nombreCompleto && item.operario.nombreCompleto.toLowerCase().includes(q)) ||
+        (item.lotePaqueteAditivos && item.lotePaqueteAditivos.toLowerCase().includes(q))
+      );
+    }
+
+    // Filtros por columna
+    Object.keys(this.columnFilters).forEach(col => {
+      const filter = this.columnFilters[col];
+      if (!filter) return;
+
+      if (filter.type === 'text' && filter.value !== undefined && filter.value !== null && filter.value !== '') {
+        const val = String(filter.value).toLowerCase();
+        result = result.filter(item => {
+          const itemVal = this.getFieldValue(item, col);
+          return itemVal !== null && itemVal !== undefined && String(itemVal).toLowerCase().includes(val);
+        });
+      } else if (filter.type === 'select' && filter.value !== undefined && filter.value !== null && filter.value !== '') {
+        const val = String(filter.value).toLowerCase();
+        result = result.filter(item => {
+          const itemVal = this.getFieldValue(item, col);
+          return itemVal !== null && itemVal !== undefined && String(itemVal).toLowerCase() === val;
+        });
+      } else if (filter.type === 'range') {
+        if (filter.min !== null && filter.min !== undefined && filter.min !== '') {
+          result = result.filter(item => (Number(this.getFieldValue(item, col)) || 0) >= Number(filter.min));
+        }
+        if (filter.max !== null && filter.max !== undefined && filter.max !== '') {
+          result = result.filter(item => (Number(this.getFieldValue(item, col)) || 0) <= Number(filter.max));
+        }
+      } else if (filter.type === 'dateRange') {
+        if (filter.min) {
+          const minD = new Date(filter.min);
+          result = result.filter(item => {
+            const raw = this.getFieldValue(item, col);
+            if (!raw) return false;
+            return new Date(raw) >= minD;
+          });
+        }
+        if (filter.max) {
+          const maxD = new Date(filter.max);
+          maxD.setHours(23, 59, 59, 999);
+          result = result.filter(item => {
+            const raw = this.getFieldValue(item, col);
+            if (!raw) return false;
+            return new Date(raw) <= maxD;
+          });
+        }
+      }
+    });
+
+    this.filteredItems = result;
+    this.currentPage = 1;
+    this.cdr.detectChanges();
+  }
+
   cargarExtrusiones() {
     this.prodService.getExtrusiones().subscribe({
       next: (data) => {
         this.items = data;
-        this.filteredItems = data;
-        this.currentPage = 1;
-        this.cdr.detectChanges();
+        this.applyFilters();
       },
       error: (err) => console.error('Error al cargar historial de extrusiones:', err)
     });
@@ -1760,17 +1915,7 @@ export class ExtrusionesListComponent implements OnInit {
   }
 
   onSearch() {
-    const term = this.searchTerm.toLowerCase().trim();
-    if (!term) {
-      this.filteredItems = this.items;
-    } else {
-      this.filteredItems = this.items.filter(ex => 
-        (ex.extrusora?.nombre || '').toLowerCase().includes(term) || 
-        (ex.operario?.nombreCompleto || '').toLowerCase().includes(term) || 
-        (ex.producto?.nombre || ex.productoNombre || '').toLowerCase().includes(term)
-      );
-    }
-    this.currentPage = 1;
+    this.applyFilters();
   }
 
   // Visualizadores de dropdowns
