@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, inject } from '@angular/core';
+import { Component, OnInit, HostListener, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProduccionService, Extrusora, Producto, Operario } from '../../../core/services/produccion';
 import { FormsModule } from '@angular/forms';
@@ -672,6 +672,7 @@ import autoTable from 'jspdf-autotable';
 })
 export class TurnosSemanaComponent implements OnInit {
   private prodService = inject(ProduccionService);
+  private cdr = inject(ChangeDetectorRef);
   
   extrusoras: Extrusora[] = [];
   selectedTabIndex = 0;
@@ -708,15 +709,19 @@ export class TurnosSemanaComponent implements OnInit {
   ngOnInit() {
 
     // Cargar catálogos iniciales
-    this.prodService.getProductos().subscribe(data => this.catalogoProductos = data);
-    this.prodService.getOperarios().subscribe(data => this.catalogoOperarios = data);
+    this.prodService.getProductos().subscribe(data => { this.catalogoProductos = data; this.cdr.detectChanges(); });
+    this.prodService.getOperarios().subscribe(data => { this.catalogoOperarios = data; this.cdr.detectChanges(); });
     
     // Cargar lista de extrusoras para pestañas
     this.prodService.getExtrusoras().subscribe({
       next: (data) => {
         this.extrusoras = data || [];
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error al cargar extrusoras:', err)
+      error: (err) => {
+        console.error('Error al cargar extrusoras:', err);
+        this.cdr.detectChanges();
+      }
     });
 
     // Rango de fechas por defecto: del lunes a viernes de la semana actual
@@ -808,6 +813,7 @@ export class TurnosSemanaComponent implements OnInit {
       return;
     }
     this.loading = true;
+    this.cdr.detectChanges();
     this.prodService.getTurnosSemana(this.fechaInicio, this.fechaFin).subscribe({
       next: (data) => {
         this.loading = false;
@@ -818,11 +824,13 @@ export class TurnosSemanaComponent implements OnInit {
         if (this.selectedTabIndex >= this.extrusorasData.length) {
           this.selectedTabIndex = 0;
         }
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.loading = false;
         console.error('Error al consultar turnos semanales:', err);
         alert(err.error?.message || err.message || 'Ocurrió un error en el servidor al generar la plantilla.');
+        this.cdr.detectChanges();
       }
     });
   }
@@ -848,10 +856,12 @@ export class TurnosSemanaComponent implements OnInit {
       next: () => {
         alert('Programación de turno guardada con éxito.');
         this.consultarTurnos(); // Recargar datos para recalcular resumen
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al guardar programación:', err);
         alert(err.error?.message || 'Error al guardar la programación de turno.');
+        this.cdr.detectChanges();
       }
     });
   }

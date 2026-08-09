@@ -799,6 +799,7 @@ export class TurnosSemanaPrensadoComponent implements OnInit {
       return;
     }
     this.loading = true;
+    this.cdr.detectChanges();
     if (clearMsg) {
       this.mensajeExito = '';
     }
@@ -813,11 +814,13 @@ export class TurnosSemanaPrensadoComponent implements OnInit {
         if (this.selectedTabIndex >= this.prensasData.length) {
           this.selectedTabIndex = 0;
         }
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.loading = false;
         console.error('Error al consultar turnos de prensado:', err);
         alert(err.error?.message || err.message || 'Ocurrió un error en el servidor.');
+        this.cdr.detectChanges();
       }
     });
   }
