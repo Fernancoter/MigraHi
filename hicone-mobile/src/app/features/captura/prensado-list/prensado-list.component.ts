@@ -10,33 +10,6 @@ import { ProduccionService } from '../../../core/services/produccion';
   imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div class="prensado-pwa-container">
-      <!-- TOP HEADER BAR -->
-      <header class="pwa-header">
-        <button class="btn-back" (click)="goBack()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <h1 class="header-title">Prensados</h1>
-        <div class="header-actions">
-          <button class="header-icon-btn" title="Horario / Alarma">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <circle cx="12" cy="13" r="7" />
-              <polyline points="12 9 12 13 14 15" />
-              <path d="M5 3L2 6" />
-              <path d="M19 3L22 6" />
-            </svg>
-          </button>
-          <button class="header-icon-btn" title="Capas / Vistas">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
-          </button>
-        </div>
-      </header>
-
       <!-- CARDS LIST CONTAINER -->
       <main class="cards-list">
         <div *ngIf="cargando" class="loading-state">
@@ -167,7 +140,7 @@ import { ProduccionService } from '../../../core/services/produccion';
 
             <!-- BUTTONS PROCESAR / CANCELAR -->
             <div class="capture-actions-grid mt-4">
-              <button class="btn-procesar-green" [disabled]="guardando" (click)="procesarConclusión()">
+              <button class="btn-procesar-green" [disabled]="guardando" (click)="procesarConclusion()">
                 {{ guardando ? 'PROCESANDO...' : 'PROCESAR' }}
               </button>
               <button class="btn-cancelar-grey" (click)="cerrarModalCaptura()">
@@ -610,7 +583,7 @@ export class PrensadoListComponent implements OnInit {
     this.mostrarModalCaptura = false;
   }
 
-  procesarConclusión() {
+  procesarConclusion() {
     if (!this.prensadoSeleccionado) return;
     this.guardando = true;
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -705,6 +705,7 @@ import { ProduccionService, Extrusion, CausaInterrupcion } from '../../../core/s
 export class ExtrusionInicioComponent implements OnInit {
   private prodService = inject(ProduccionService);
   private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
 
   showTableroDirectivo = false;
   allExtrusiones: any[] = [];
@@ -754,6 +755,7 @@ export class ExtrusionInicioComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.showTableroDirectivo = params['tablero'] === 'true';
+      this.cdr.detectChanges();
     });
     this.cargarExtrusiones();
     this.cargarCausas();
@@ -774,20 +776,22 @@ export class ExtrusionInicioComponent implements OnInit {
         if (this.operacion.length === 0 && this.programados.length === 0) {
           this.cargarMocks();
         }
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar extrusiones en inicio:', err);
         // En caso de error de conexión/autenticación, cargamos los mocks de respaldo
         this.cargarMocks();
+        this.cdr.detectChanges();
       }
     });
   }
 
   cargarCatalogos() {
-    this.prodService.getOperarios().subscribe(data => this.catalogos.operarios = data);
-    this.prodService.getTurnos().subscribe(data => this.catalogos.turnos = data);
-    this.prodService.getProductos().subscribe(data => this.catalogos.productos = data);
-    this.prodService.getExtrusoras().subscribe(data => this.catalogos.extrusoras = data);
+    this.prodService.getOperarios().subscribe(data => { this.catalogos.operarios = data; this.cdr.detectChanges(); });
+    this.prodService.getTurnos().subscribe(data => { this.catalogos.turnos = data; this.cdr.detectChanges(); });
+    this.prodService.getProductos().subscribe(data => { this.catalogos.productos = data; this.cdr.detectChanges(); });
+    this.prodService.getExtrusoras().subscribe(data => { this.catalogos.extrusoras = data; this.cdr.detectChanges(); });
   }
 
   cargarMocks() {
@@ -874,14 +878,19 @@ export class ExtrusionInicioComponent implements OnInit {
     this.allExtrusiones = mockData as any;
     this.operacion = this.allExtrusiones.filter(e => e.estado === 'EnProceso' || e.estado === 'Detenida');
     this.programados = this.allExtrusiones.filter(e => e.estado !== 'EnProceso' && e.estado !== 'Detenida');
+    this.cdr.detectChanges();
   }
 
   cargarCausas() {
     this.prodService.getCausasInterrupcion().subscribe({
       next: (data) => {
         this.causas = data;
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error al cargar causas de interrupción:', err)
+      error: (err) => {
+        console.error('Error al cargar causas de interrupción:', err);
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -956,10 +965,12 @@ export class ExtrusionInicioComponent implements OnInit {
         processEnd: formattedEnd
       };
       this.mostrarModalEditar = true;
+      this.cdr.detectChanges();
       return;
     }
 
     this.loadingDetalle = true;
+    this.cdr.detectChanges();
     this.prodService.getExtrusion(ex.id).subscribe({
       next: (data) => {
         this.extrusionSeleccionada = data;
@@ -995,11 +1006,13 @@ export class ExtrusionInicioComponent implements OnInit {
 
         this.mostrarModalEditar = true;
         this.loadingDetalle = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar datos para edición:', err);
         alert('No se pudo cargar el registro para modificar.');
         this.loadingDetalle = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -1029,11 +1042,13 @@ export class ExtrusionInicioComponent implements OnInit {
       this.cerrarModales();
       this.operacion = this.allExtrusiones.filter(e => e.estado === 'EnProceso' || e.estado === 'Detenida');
       this.programados = this.allExtrusiones.filter(e => e.estado !== 'EnProceso' && e.estado !== 'Detenida');
+      this.cdr.detectChanges();
       alert('Registro realizado con éxito.');
       return;
     }
 
     this.savingEdicion = true;
+    this.cdr.detectChanges();
     
     // Parse decimal fields safely
     const parsedAncho = parseFloat(this.editForm.ancho.replace('/', '.')) || 0;
@@ -1065,6 +1080,7 @@ export class ExtrusionInicioComponent implements OnInit {
         console.error('Error al guardar cambios:', err);
         alert(err.error?.message || 'Error del servidor al actualizar el registro.');
         this.savingEdicion = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -1074,6 +1090,7 @@ export class ExtrusionInicioComponent implements OnInit {
     this.mostrarModalInterrupcion = false;
     this.extrusionSeleccionada = null;
     this.savingEdicion = false;
+    this.cdr.detectChanges();
   }
 
   getEstadoLabelByVal(estadoVal: any): string {
@@ -1094,6 +1111,7 @@ export class ExtrusionInicioComponent implements OnInit {
         this.allExtrusiones = this.allExtrusiones.filter(item => item.id !== ex.id);
         this.operacion = this.allExtrusiones.filter(e => e.estado === 'EnProceso' || e.estado === 'Detenida' || Number(e.estado) === 2);
         this.programados = this.allExtrusiones.filter(e => e.estado !== 'EnProceso' && e.estado !== 'Detenida' && Number(e.estado) !== 2);
+        this.cdr.detectChanges();
         alert('Orden de extrusión eliminada.');
         return;
       }
@@ -1106,6 +1124,7 @@ export class ExtrusionInicioComponent implements OnInit {
         error: (err) => {
           console.error('Error al eliminar orden de extrusión:', err);
           alert(err.error?.message || 'No se pudo eliminar la orden de extrusión.');
+          this.cdr.detectChanges();
         }
       });
     }
@@ -1127,6 +1146,7 @@ export class ExtrusionInicioComponent implements OnInit {
       descripcion: ''
     };
     this.mostrarModalInterrupcion = true;
+    this.cdr.detectChanges();
   }
 
   cerrarModalInterrupcion() {
@@ -1136,6 +1156,7 @@ export class ExtrusionInicioComponent implements OnInit {
       causaId: '',
       descripcion: ''
     };
+    this.cdr.detectChanges();
   }
 
   confirmarRegistrarInterrupcion() {
@@ -1159,6 +1180,7 @@ export class ExtrusionInicioComponent implements OnInit {
       error: (err) => {
         console.error('Error al registrar interrupción:', err);
         alert(err.error?.message || 'Error del servidor al registrar interrupción.');
+        this.cdr.detectChanges();
       }
     });
   }
@@ -1174,6 +1196,7 @@ export class ExtrusionInicioComponent implements OnInit {
       error: (err) => {
         console.error('Error al finalizar interrupción:', err);
         alert(err.error?.message || 'Error del servidor al finalizar interrupción.');
+        this.cdr.detectChanges();
       }
     });
   }

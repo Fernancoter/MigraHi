@@ -70,11 +70,6 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
                 </div>
               </div>
             </div>
-            
-            <!-- Botón Rápido de Excel (XLS) -->
-            <button class="btn-premium-secondary" (click)="exportToCSV()" title="Exportar rápido a Excel">
-              <span>XLS</span>
-            </button>
           </div>
           
           <div class="toolbar-right">

@@ -89,11 +89,6 @@ interface SavedFilter {
                 </div>
               </div>
             </div>
-
-            <!-- Botón Rápido de Excel (XLS) Verde -->
-            <button class="btn-quick-xls" (click)="exportToCSV()" title="Exportar Rápido a Excel">
-              📊 XLS
-            </button>
           </div>
           
           <div class="filter-search-group-qa">

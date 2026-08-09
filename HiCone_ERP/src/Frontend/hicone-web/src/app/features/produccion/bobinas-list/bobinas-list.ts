@@ -251,13 +251,6 @@ interface ColumnConfig {
               <button class="btn-page-legacy" [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)">Sig</button>
             </div>
           </div>
-
-          <div class="legacy-date-footer">
-            <span>Consultas a partir de la siguiente fecha:</span>
-            <input type="text" class="date-input-legacy" value="24/04/28">
-            <span class="calendar-icon">📅</span>
-            <span class="copyright-text">Copyright 2023</span>
-          </div>
         </div>
       </ng-container>
 

@@ -221,12 +221,6 @@ import { ProduccionConfigService, Prensa } from '../../../../core/services/produ
             </div>
           </div>
         </div>
-
-        <div class="footer-bar-legacy">
-          <span>Consultas a partir de la siguiente fecha:</span>
-          <input type="text" class="date-box" value="26/04/26 📅" readonly />
-          <span class="copyright">Copyright 2023</span>
-        </div>
       }
 
       <!-- ═══════════════════════════════════════════════════════════════════════

@@ -21,14 +21,14 @@ import { NavigationService } from '../../core/services/navigation.service';
                 <path d="M19.5 21v-3.5a3 3 0 0 0-3-3H12M4.5 21v-3.5a3 3 0 0 1 3-3H12" />
             </svg>
         <div class="banner-text">
-          <h2 class="module-title">{{ (activeModule$ | async) | titlecase }}</h2>
-          <span class="module-subtitle">{{ (activeModule$ | async) | titlecase }}</span>
+          <h2 class="module-title">{{ getModuleTitle(activeModule$ | async) }}</h2>
+          <span class="module-subtitle">{{ getModuleTitle(activeModule$ | async) }}</span>
         </div>
       </div>
       
       <!-- Navegación Dinámica -->
       <nav class="sidebar-nav">
-        <div class="nav-section-modern"><span class="section-text">{{ activeModule$ | async }}</span></div>
+        <div class="nav-section-modern"><span class="section-text">{{ getModuleTitle(activeModule$ | async) }}</span></div>
         
         <ng-container *ngIf="(activeModule$ | async) === 'INVENTARIO'">
           <a routerLink="/inventario/inicio" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-item" title="Inicio">
@@ -596,6 +596,23 @@ export class SidebarComponent {
   constructor(private navService: NavigationService) {
     this.activeModule$ = this.navService.activeModule$;
     this.isSidebarVisible$ = this.navService.isSidebarVisible$;
+  }
+
+  getModuleTitle(moduleType: string | null): string {
+    if (!moduleType) return '';
+    const titles: { [key: string]: string } = {
+      'INVENTARIO': 'Inventario',
+      'EXTRUSIÓN': 'Extrusión',
+      'PRENSADO': 'Prensado',
+      'EMBARQUES': 'Embarques',
+      'CALIDAD': 'Calidad',
+      'SEGURIDAD': 'Seguridad',
+      'CONFIGURACION_PRODUCCION': 'Configurar Producción',
+      'REPORTES_SAE': 'Reportes SAE',
+      'CATÁLOGOS_SAE': 'Catálogos SAE',
+      'SISTEMA': 'Sistema'
+    };
+    return titles[moduleType.toUpperCase()] || moduleType;
   }
 
   toggleOperacion() {

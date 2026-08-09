@@ -69,10 +69,6 @@ import { InventarioService } from '../../../core/services/inventario';
       <div class="page-footer-actions">
         <button class="btn-premium-secondary" (click)="generarReporte()">REPORTE INVENTARIO</button>
       </div>
-      
-      <div class="bottom-bar-premium">
-        Consultas a partir de la siguiente fecha: <span class="date-box">07/03/26 <span class="calendar-icon">📅</span></span> Copyright 2026
-      </div>
     </div>
   `,
   styles: [`

@@ -235,12 +235,6 @@ interface InventarioRecord {
         </div>
       </div>
 
-      <div class="footer-bar-legacy">
-        <span>Consultas a partir de la siguiente fecha:</span>
-        <input type="text" class="date-box" value="26/04/26 📅" readonly />
-        <span class="copyright">Copyright 2023</span>
-      </div>
-
       <!-- Alertas -->
       <div class="alert-container-fixed" *ngIf="successMessage || errorMessage">
         <div class="alert-premium success animate-fade-in" *ngIf="successMessage">
@@ -473,6 +467,7 @@ export class InventarioIndexComponent implements OnInit {
           ];
         }
         this.aplicarFiltros();
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar existencias:', err);
@@ -490,6 +485,7 @@ export class InventarioIndexComponent implements OnInit {
           { id: 'inv-110', fechaHora: '16/08/25', turno: '1er Turno' }
         ];
         this.aplicarFiltros();
+        this.cdr.detectChanges();
       }
     });
   }
@@ -630,6 +626,7 @@ export class InventarioIndexComponent implements OnInit {
   updatePaginatedList() {
     const start = (this.currentPage - 1) * this.pageSize;
     this.paginatedRegistros = this.filteredRegistros.slice(start, start + this.pageSize);
+    this.cdr.detectChanges();
   }
 
   goToPage(page: number) {

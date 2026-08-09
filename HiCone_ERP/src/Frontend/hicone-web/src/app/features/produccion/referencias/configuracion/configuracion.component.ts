@@ -81,12 +81,6 @@ export interface ConfiguracionSistema {
           <button class="pag-btn" [disabled]="currentPage() === totalPages()" (click)="nextPage()">›</button>
         </div>
       }
-      
-      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e2e8f0; font-size: 0.75rem; color: #64748b; display: flex; align-items: center; gap: 2rem;">
-        <span>Consultas a partir de la siguiente fecha:</span>
-        <span style="display: flex; align-items: center; gap: 0.5rem; border: 1px solid #e2e8f0; padding: 0.2rem 0.5rem; border-radius: 4px;">03/03/20 <span style="color: #94a3b8; font-size: 0.8rem;">📅</span></span>
-        <span>Copyright 2023</span>
-      </div>
 
       <!-- Modal Agregar/Modificar -->
       <div *ngIf="isModalOpen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;">
