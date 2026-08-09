@@ -157,7 +157,7 @@ import { ProduccionConfigService, Troquel } from '../../../../core/services/prod
 
                 <!-- Campo de Búsqueda Subrayado -->
                 <div class="search-modern-underline-qa">
-                  <input type="text" placeholder="Buscar..." [ngModel]="searchText()" (ngModelChange)="searchText.set($event)" />
+                  <input type="text" placeholder="Buscar..." [ngModel]="searchText()" (ngModelChange)="onSearchChange($event)" />
                 </div>
               </div>
             </div>
@@ -655,6 +655,11 @@ export class TroquelesCatalogoComponent implements OnInit {
   searchText = signal('');
   currentPage = signal(1);
   pageSize = signal(10);
+
+  onSearchChange(value: string) {
+    this.searchText.set(value);
+    this.currentPage.set(1);
+  }
   savedFilters: any[] = [];
 
   // Menús desplegables

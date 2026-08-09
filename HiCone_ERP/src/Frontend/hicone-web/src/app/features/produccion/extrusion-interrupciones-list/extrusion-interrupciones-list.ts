@@ -115,7 +115,7 @@ import { ProduccionService, CausaInterrupcion, Extrusion } from '../../../core/s
 
               <!-- Campo de Búsqueda Subrayado -->
               <div class="search-modern-underline-qa">
-                <input type="text" placeholder="Buscar..." [ngModel]="searchText()" (ngModelChange)="searchText.set($event)" />
+                <input type="text" placeholder="Buscar..." [ngModel]="searchText()" (ngModelChange)="onSearchChange($event)" />
               </div>
             </div>
           </div>
@@ -470,6 +470,11 @@ export class ExtrusionInterrupcionesListComponent implements OnInit {
   searchText = signal('');
   currentPage = signal(1);
   pageSize = signal(10);
+
+  onSearchChange(value: string) {
+    this.searchText.set(value);
+    this.currentPage.set(1);
+  }
 
   showColumnSelector = signal(false);
   showExportOptions = signal(false);

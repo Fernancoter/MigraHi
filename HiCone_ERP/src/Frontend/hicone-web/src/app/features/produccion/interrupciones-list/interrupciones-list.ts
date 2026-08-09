@@ -80,7 +80,7 @@ import { ProduccionService } from '../../../core/services/produccion';
           <div class="toolbar-right">
             <div class="search-box">
               <span class="search-icon"><svg class="search-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
-              <input class="search-input" type="text" placeholder="Buscar..." [ngModel]="searchText()" (ngModelChange)="searchText.set($event)" />
+              <input class="search-input" type="text" placeholder="Buscar..." [ngModel]="searchText()" (ngModelChange)="onSearchChange($event)" />
             </div>
           </div>
       </div>
@@ -352,6 +352,11 @@ export class InterrupcionesListComponent implements OnInit {
   searchText = signal('');
   currentPage = signal(1);
   pageSize = signal(10);
+
+  onSearchChange(value: string) {
+    this.searchText.set(value);
+    this.currentPage.set(1);
+  }
 
   showColumnSelector = signal(false);
   showExportOptions = signal(false);

@@ -1151,6 +1151,7 @@ import autoTable from 'jspdf-autotable';
       }
     </div>
   }
+  </div>
   `,
   styles: [`
     .module-page { padding: 3rem; background: #f1f5f9; min-height: 100vh; }
