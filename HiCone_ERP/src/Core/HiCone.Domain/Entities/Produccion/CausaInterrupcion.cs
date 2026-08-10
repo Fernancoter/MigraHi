@@ -13,6 +13,4 @@ public class CausaInterrupcion : TenantEntity
     public string Tipo { get; set; } = "General";            // Mecanica, Material, Operacion, General
     public bool IsActive { get; set; } = true;
     public int OrdenVisual { get; set; } = 0;
-    public bool Prensa { get; set; } = false;
-    public bool Extrusora { get; set; } = false;
 }

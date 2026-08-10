@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { OfflineStoreService } from './offline-store.service';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, fromEvent } from 'rxjs';
 
 export interface PendingOp {
   id: string;
@@ -30,10 +30,13 @@ export class SyncQueueService {
   /** Bandeja de operaciones que el servidor rechazó (4xx). Visibles para el operador, nunca descartadas en silencio. */
   private deadLetterKey = 'sync_dead_letter';
   private isSyncing = false;
+  private ngZone = inject(NgZone);
 
   constructor() {
-    window.addEventListener('online', () => {
-      this.flush().catch(err => console.error('On-online flush failed:', err));
+    fromEvent(window, 'online').subscribe(() => {
+      this.ngZone.run(() => {
+        this.flush().catch(err => console.error('On-online flush failed:', err));
+      });
     });
   }
 

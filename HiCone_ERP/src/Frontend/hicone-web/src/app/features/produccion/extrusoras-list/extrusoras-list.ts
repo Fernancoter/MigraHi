@@ -17,6 +17,7 @@ import autoTable from 'jspdf-autotable';
       <!-- HEADER PRINCIPAL (Se adapta según vista actual) -->
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">{{ viewState === 'list' ? 'Extrusora' : 'Gestionar Extrusora' }}</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Extrusión</span>
             <span class="sep">&rsaquo;</span>
@@ -24,7 +25,6 @@ import autoTable from 'jspdf-autotable';
             <span class="active" *ngIf="viewState === 'list'">Extrusoras</span>
             <span class="active" *ngIf="viewState !== 'list'"> &rsaquo; Gestionar Extrusora</span>
           </nav>
-          <h1 class="premium-title">{{ viewState === 'list' ? 'Extrusora' : 'Gestionar Extrusora' }}</h1>
         </div>
       </div>
 
@@ -37,17 +37,16 @@ import autoTable from 'jspdf-autotable';
         <div class="toolbar-premium" (click)="$event.stopPropagation()">
           <div class="toolbar-left">
             <!-- Botón Exportar -->
-            <div class="dropdown-wrapper">
-              <button class="btn-premium-secondary" (click)="toggleExportDropdown($event)">
-                <span>📥 Exportar</span>
-                <span class="chevron-down">▾</span>
+            <div class="export-dropdown-wrapper">
+              <button class="btn-export-qa" (click)="toggleExportDropdown($event)" title="Exportar datos">
+                📥 Exportar <span class="chevron-down-qa">▾</span>
               </button>
-              <div class="opciones-export-popover animate-slide-up" *ngIf="showExportOptions">
-                <button class="btn-export-option" (click)="exportarExcel()">
-                  <span>📊 Exportar a XLSX</span>
+              <div class="export-popover-qa shadow-premium" *ngIf="showExportOptions" (click)="$event.stopPropagation()">
+                <button class="export-item-qa" (click)="exportarExcel()">
+                  <span class="export-icon">📊</span> Excel (CSV)
                 </button>
-                <button class="btn-export-option" (click)="exportarPDF()">
-                  <span>📄 Exportar a PDF</span>
+                <button class="export-item-qa" (click)="exportarPDF()">
+                  <span class="export-icon">📕</span> PDF
                 </button>
               </div>
             </div>
@@ -111,8 +110,35 @@ import autoTable from 'jspdf-autotable';
           </div>
           
           <div class="toolbar-right">
-            <div class="search-modern-underline">
-              <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="onSearch()">
+            <div class="filter-search-group-qa">
+              <!-- Botón Filtro Avanzado -->
+              <div class="dropdown-wrapper">
+                <button class="btn-filter-funnel-qa" (click)="$event.stopPropagation(); toggleFilterMenu($event)" title="Filtros avanzados">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                  </svg>
+                  <span class="chevron-down-funnel">▾</span>
+                </button>
+                
+                <!-- Filter Dropdown -->
+                <div *ngIf="isFilterMenuOpen" style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 99999; width: 210px; padding: 0.5rem;" (click)="$event.stopPropagation()">
+                  <button (click)="clearFilters(); $event.stopPropagation()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Limpiar Filtros</button>
+                  <button (click)="saveFilter(); $event.stopPropagation()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Guardar Filtro como...</button>
+                  <div *ngIf="savedFilters.length > 0">
+                    <div style="height: 1px; background: #e2e8f0; margin: 0.5rem 0;"></div>
+                    <div style="font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; padding: 0.25rem 0.5rem;">Filtros Guardados</div>
+                    <div *ngFor="let f of savedFilters" (click)="loadSavedFilter(f); $event.stopPropagation()" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.85rem; color: #334155; cursor: pointer;">
+                      <span>📁 {{ f.name }}</span>
+                      <span (click)="deleteSavedFilter(f, $event); $event.stopPropagation()" style="cursor: pointer; opacity: 0.6; padding: 2px;">🗑️</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campo de Búsqueda Subrayado -->
+              <div class="search-modern-underline-qa">
+                <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="onSearch()">
+              </div>
             </div>
           </div>
         </div>
@@ -173,7 +199,13 @@ import autoTable from 'jspdf-autotable';
             <!-- Número de Extrusora -->
             <div class="form-group-premium">
               <label>Número de Extrusora</label>
-              <input class="input-premium" type="text" [(ngModel)]="form.numeroExtrusora" placeholder="Ej. 1, 2, 3..." />
+              <select class="input-premium" [(ngModel)]="form.numeroExtrusora" *ngIf="claves.length > 0">
+                <option value="" disabled selected>-- Seleccionar --</option>
+                <option *ngFor="let c of claves" [value]="c.valor">{{ c.valor }}</option>
+              </select>
+              <div class="error-message" *ngIf="claves.length === 0" style="color: #ef4444; font-size: 0.85rem; margin-top: 0.25rem;">
+                ⚠️ No hay números de extrusora configurados en el catálogo de claves.
+              </div>
             </div>
 
             <!-- Extrusora (Nombre) -->
@@ -209,10 +241,13 @@ import autoTable from 'jspdf-autotable';
                   <button class="btn-row-delete" (click)="deleteOperarioRow(i)" title="Eliminar fila">×</button>
                 </td>
                 <td>
-                  <select class="input-premium" [(ngModel)]="row.turnoId" (change)="onTurnoChange(row)">
+                  <select class="input-premium" [(ngModel)]="row.turnoId" (change)="onTurnoChange(row)" *ngIf="turnosList.length > 0">
                     <option value="" disabled selected>-- Seleccione Turno --</option>
                     <option *ngFor="let t of turnosList" [value]="t.id">{{ t.nombre }}</option>
                   </select>
+                  <div class="error-message" *ngIf="turnosList.length === 0" style="color: #ef4444; font-size: 0.85rem; margin-top: 0.25rem;">
+                    ⚠️ No hay turnos configurados.
+                  </div>
                 </td>
                 <td>
                   <select class="input-premium" [(ngModel)]="row.operarioId">
@@ -513,6 +548,8 @@ export class ExtrusorasListComponent implements OnInit {
 
   // Popover de Exportar
   showExportOptions = false;
+  isFilterMenuOpen = false;
+  savedFilters: any[] = [];
 
   // Historial de Auditoría (Fiel a Imagen 4)
   auditHistory: AuditLog[] = [];
@@ -522,6 +559,7 @@ export class ExtrusorasListComponent implements OnInit {
   auditPageSize = 5;
 
   ngOnInit() {
+    this.loadSavedFiltersFromStorage();
     this.loadCatalogos();
     this.loadData();
   }
@@ -596,13 +634,60 @@ export class ExtrusorasListComponent implements OnInit {
   closeAllDropdowns() {
     this.showColumnSelector = false;
     this.showExportOptions = false;
+    this.isFilterMenuOpen = false;
   }
 
   toggleColumnDropdown(event: Event) {
     event.stopPropagation();
     this.showExportOptions = false;
+    this.isFilterMenuOpen = false;
     this.tempVisibleCols = { ...this.visibleCols };
     this.showColumnSelector = !this.showColumnSelector;
+  }
+
+  toggleFilterMenu(event: Event) {
+    event.stopPropagation();
+    this.showExportOptions = false;
+    this.showColumnSelector = false;
+    this.isFilterMenuOpen = !this.isFilterMenuOpen;
+  }
+
+  loadSavedFiltersFromStorage() {
+    const raw = localStorage.getItem('hicone_saved_filters_extr_list');
+    this.savedFilters = raw ? JSON.parse(raw) : [];
+  }
+
+  clearFilters() {
+    this.searchTerm = '';
+    this.isFilterMenuOpen = false;
+    this.onSearch();
+  }
+
+  saveFilter() {
+    this.isFilterMenuOpen = false;
+    const filterName = prompt('Ingrese el nombre para este filtro:', 'Filtro Extrusoras ' + new Date().toLocaleDateString());
+    if (!filterName) return;
+    const newFilter = {
+      id: 'F-' + Date.now(),
+      name: filterName,
+      state: { searchTerm: this.searchTerm }
+    };
+    this.savedFilters.push(newFilter);
+    localStorage.setItem('hicone_saved_filters_extr_list', JSON.stringify(this.savedFilters));
+    alert('Filtro guardado con éxito.');
+  }
+
+  loadSavedFilter(f: any) {
+    this.searchTerm = f.state?.searchTerm || '';
+    this.currentPage = 1;
+    this.isFilterMenuOpen = false;
+    this.onSearch();
+  }
+
+  deleteSavedFilter(f: any, event: MouseEvent) {
+    event.stopPropagation();
+    this.savedFilters = this.savedFilters.filter(item => item.id !== f.id);
+    localStorage.setItem('hicone_saved_filters_extr_list', JSON.stringify(this.savedFilters));
   }
 
   toggleExportDropdown(event: Event) {

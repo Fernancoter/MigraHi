@@ -12,46 +12,56 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
     <div class="module-page animate-fade-in">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Lote</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Inventarios</span>
             <span class="sep">&rsaquo;</span>
             <span class="active">Lotes</span>
           </nav>
-          <h1 class="premium-title">Lote</h1>
         </div>
       </div>
       
-      <div class="card-premium" style="margin-bottom: 1rem; border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+      <div class="card-premium card-toolbar-top" style="margin-bottom: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; position: relative; z-index: 100; overflow: visible;">
         <div class="toolbar-premium">
           <div class="toolbar-left">
-            <div class="dropdown-wrapper">
-              <button class="btn-premium-secondary" (click)="showExportSelector = !showExportSelector">📥 Exportar <span class="chevron-down">▼</span></button>
-              <div class="dropdown-menu-custom shadow-premium" *ngIf="showExportSelector" style="width: 150px; position: absolute; z-index: 10;">
-                <button class="dropdown-item-custom" (click)="exportToCSV(); showExportSelector = false">📊 Excel (CSV)</button>
-                <button class="dropdown-item-custom" (click)="exportToPDF(); showExportSelector = false">📕 PDF</button>
+            <div class="export-dropdown-wrapper">
+              <button class="btn-export-qa" (click)="toggleExport($event)" title="Exportar datos">
+                📥 Exportar <span class="chevron-down-qa">▾</span>
+              </button>
+              <div class="export-popover-qa shadow-premium" *ngIf="showExportSelector" (click)="$event.stopPropagation()">
+                <button class="export-item-qa" (click)="exportToCSV(); showExportSelector = false">
+                  <span class="export-icon">📊</span> Excel (CSV)
+                </button>
+                <button class="export-item-qa" (click)="exportToPDF(); showExportSelector = false">
+                  <span class="export-icon">📕</span> PDF
+                </button>
               </div>
             </div>
             <button class="btn-premium" (click)="openModal()">Agregar</button>
             
-            <!-- Selector de Columnas (Imagen 1) -->
+            <!-- Selector de Columnas (Imagen 3 y 4) -->
             <div class="dropdown-wrapper">
-              <button class="btn-premium-secondary" (click)="toggleColumnSelector()">Selecciona columnas <span class="chevron-down">▼</span></button>
-              <div class="column-selector-popover shadow-premium" *ngIf="showColumnSelector" style="position: absolute; z-index: 10;">
+              <button class="btn-primary-green btn-cols" (click)="toggleColumnSelector($event)">Selecciona columnas <span class="chevron-down">▾</span></button>
+              <div class="column-selector-popover shadow-premium" *ngIf="showColumnSelector" style="position: absolute; top: calc(100% + 4px); left: 0; z-index: 99999;">
                 <div class="popover-search">
-                  <input type="text" placeholder="Filtrar..." class="search-mini">
+                  <input type="text" placeholder="" class="search-mini">
                 </div>
                 <div class="popover-sections custom-scroll">
                   <div class="popover-section">
-                    <div class="section-title"><input type="checkbox" checked disabled> Fijas a la izquierda</div>
-                    <label class="popover-item disabled"><input type="checkbox" checked disabled> (Ninguna)</label>
+                    <div class="section-title"><input type="checkbox" checked disabled> Fijas a la izquierda <span class="chevron-down">▾</span></div>
+                    <label class="popover-item disabled" style="padding-left: 20px;"><input type="checkbox" checked disabled> (Ninguna)</label>
                   </div>
                   <div class="popover-section">
-                    <div class="section-title"><input type="checkbox" [checked]="allColsVisible()" (change)="toggleAllCols()"> No fijas</div>
-                    <div class="section-list">
+                    <div class="section-title"><input type="checkbox" [checked]="allColsVisible()" (change)="toggleAllCols()"> No fijas <span class="chevron-down">▾</span></div>
+                    <div class="section-list" style="padding-left: 20px;">
                       <label *ngFor="let col of columns" class="popover-item">
                         <input type="checkbox" [(ngModel)]="col.visible"> {{ col.label }}
                       </label>
                     </div>
+                  </div>
+                  <div class="popover-section">
+                    <div class="section-title"><input type="checkbox" checked disabled> Fijas a la derecha <span class="chevron-down">▾</span></div>
+                    <label class="popover-item disabled" style="padding-left: 20px;"><input type="checkbox" checked disabled> (Ninguna)</label>
                   </div>
                 </div>
                 <div class="popover-footer">
@@ -60,74 +70,42 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
                 </div>
               </div>
             </div>
-            
-            <!-- Botón Rápido de Excel (XLS) -->
-            <button class="btn-premium-secondary" (click)="exportToCSV()" title="Exportar rápido a Excel">
-              <span>XLS</span>
-            </button>
           </div>
           
           <div class="toolbar-right">
-            <div class="dropdown-wrapper">
-              <button class="btn-premium-secondary" (click)="toggleSearchFilterDropdown($event)">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                  <path d="M10,18H14V16H10V18M3,6V8H21V6H3M6,13H18V11H6V13Z" />
-                </svg>
-                <span class="chevron-down">▼</span>
-              </button>
-              
-              <div class="column-selector-popover shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()" style="position: absolute; right: 0; z-index: 10; width: 280px; padding: 1rem;">
-                <!-- Sección de Filtros Avanzados Compactos dentro del Embudo -->
-                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                  <div class="form-group-premium">
-                    <label>Silo</label>
-                    <select class="input-premium" [(ngModel)]="filterSiloId" (change)="onFilterChange()">
-                      <option value="">-- Todos los Silos --</option>
-                      <option *ngFor="let s of silos" [value]="s.id">{{ s.nombre }}</option>
-                    </select>
+            <div class="filter-search-group-qa">
+              <!-- Botón Filtro Avanzado -->
+              <div class="dropdown-wrapper">
+                <button class="btn-filter-funnel-qa" (click)="toggleSearchFilterDropdown($event)" title="Filtros avanzados">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                  </svg>
+                  <span class="chevron-down-funnel">▾</span>
+                </button>
+                
+                <div class="filter-popover-qa shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()">
+                  <div class="filter-item-qa" (click)="clearAllFilters()">
+                    <span class="icon-circle-cross-dark">✖</span> Limpiar filtros
                   </div>
-                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
-                    <div class="form-group-premium">
-                      <label>Desde</label>
-                      <input type="date" class="input-premium" [(ngModel)]="filterDateStart" (change)="onFilterChange()">
+                  <div class="filter-item-qa" (click)="saveActiveFilters()">
+                    <span class="icon-floppy-dark">💾</span> Guardar filtro como...
+                  </div>
+                  
+                  <ng-container *ngIf="savedFilters.length > 0">
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-header-saved">Filtros Guardados</div>
+                    <div class="filter-item-qa saved-filter-item" *ngFor="let f of savedFilters" (click)="loadSavedFilter(f)">
+                      <span>📁 {{ f.name }}</span>
+                      <span class="btn-delete-saved-filter" (click)="deleteSavedFilter(f, $event)">🗑️</span>
                     </div>
-                    <div class="form-group-premium">
-                      <label>Hasta</label>
-                      <input type="date" class="input-premium" [(ngModel)]="filterDateEnd" (change)="onFilterChange()">
-                    </div>
-                  </div>
-                  <div class="form-group-premium">
-                    <label>Estado</label>
-                    <select class="input-premium" [(ngModel)]="filterConsumido" (change)="onFilterChange()">
-                      <option value="all">Todos</option>
-                      <option value="false">En Stock</option>
-                      <option value="true">Consumidos</option>
-                    </select>
-                  </div>
+                  </ng-container>
                 </div>
-                
-                <div class="dropdown-divider"></div>
-                
-                <div class="dropdown-item-action" (click)="clearAllFilters()" style="padding: 0.5rem 0;">
-                  <span class="icon-circle-cross">✖</span> Limpiar filtros
-                </div>
-                <div class="dropdown-item-action" (click)="saveActiveFilters()" style="padding: 0.5rem 0;">
-                  <span class="icon-floppy">💾</span> Guardar filtro como...
-                </div>
-                
-                <ng-container *ngIf="savedFilters.length > 0">
-                  <div class="dropdown-divider"></div>
-                  <div class="dropdown-header-saved">Filtros Guardados</div>
-                  <div class="dropdown-item-action saved-filter-item" *ngFor="let f of savedFilters" (click)="loadSavedFilter(f)">
-                    <span><span class="icon">📁</span> {{ f.name }}</span>
-                    <span class="btn-delete-saved-filter" (click)="deleteSavedFilter(f, $event)">🗑️</span>
-                  </div>
-                </ng-container>
               </div>
-            </div>
-            
-            <div class="search-modern-underline">
-              <input type="text" placeholder="Buscar..." [(ngModel)]="searchQuery" (input)="onFilterChange()">
+              
+              <!-- Campo de Búsqueda Subrayado -->
+              <div class="search-modern-underline-qa">
+                <input type="text" placeholder="Buscar..." [(ngModel)]="searchQuery" (input)="onFilterChange()">
+              </div>
             </div>
           </div>
         </div>
@@ -286,7 +264,7 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
         </div>
       </div>
 
-      <div class="card-premium" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
+      <div class="card-premium" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none; position: relative; z-index: 1;">
         <div class="table-modern-container">
           <table class="table-modern">
             <thead>
@@ -433,6 +411,7 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
                 </th>
 
                 <th *ngIf="isColVisible('consumido')" class="text-center">Consumido</th>
+                <th *ngIf="isColVisible('paqueteAditivos')">Paquete Aditivos</th>
               </tr>
             </thead>
             <tbody>
@@ -446,7 +425,6 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
                 <td class="text-center">
                   <button class="link-btn delete" (click)="openModal('DELETE', item)">Eliminar</button>
                 </td>
-                
                 <td *ngIf="isColVisible('loteNo')" class="font-bold text-green-600">{{ item.loteEmbarque }}</td>
                 <td *ngIf="isColVisible('lotePO')">{{ item.lotePO || '---' }}</td>
                 <td *ngIf="isColVisible('fecha')">{{ item.loteFechaRegistro | date:'dd/MM/yy' }}</td>
@@ -459,64 +437,50 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
                 <td *ngIf="isColVisible('consumido')" class="text-center">
                   <input type="checkbox" [checked]="item.loteConsumido" disabled class="legacy-table-checkbox">
                 </td>
+                <td *ngIf="isColVisible('paqueteAditivos')">{{ item.lotePaqueteAditivos || '---' }}</td>
               </tr>
             </tbody>
           </table>
         </div>
-      </div>
-      
-      <!-- Paginación Premium -->
-      <div class="pagination-container-premium">
-        <div class="pagination-info">Página {{ currentPage }} de {{ totalPages || 1 }}</div>
-        <div class="pagination-controls">
-          <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Ant</button>
-          <button class="btn-page" *ngFor="let page of getPagesList()" [class.active]="currentPage === page" (click)="goToPage(page)">
-            {{ page }}
-          </button>
-          <button class="btn-page" [disabled]="currentPage === totalPages || totalPages === 0" (click)="goToPage(currentPage + 1)">Sig</button>
+
+        <!-- Paginación Premium -->
+        <div class="pagination-container-premium">
+          <div class="pagination-info">Página {{ currentPage }} de {{ totalPages || 1 }}</div>
+          <div class="pagination-controls">
+            <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Ant</button>
+            <button class="btn-page" *ngFor="let page of getPagesList()" [class.active]="currentPage === page" (click)="goToPage(page)">
+              {{ page }}
+            </button>
+            <button class="btn-page" [disabled]="currentPage === totalPages || totalPages === 0" (click)="goToPage(currentPage + 1)">Sig</button>
+          </div>
         </div>
       </div>
     </div>
   `,
   styles: [`
-    .module-page { padding: 3rem; background: #fdfdfd; min-height: 100vh; font-family: 'Open Sans', Arial, sans-serif; position: relative; }
-    .page-header-premium { margin-bottom: 3rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 1.5rem; }
-    .premium-title { font-size: 2.2rem; color: #2c3e50; margin: 0; font-weight: 700; letter-spacing: -0.5px; }
-    .breadcrumb-modern { font-size: 1rem; color: #7f8c8d; margin-top: 0.5rem; }
-    
-    .toolbar-premium { 
-      display: flex; justify-content: space-between; align-items: center; 
-      margin-top: 2rem; gap: 1rem; flex-wrap: wrap;
+    .dropdown-wrapper { position: relative; display: inline-block; }
+    .btn-cols { background: #4caf50 !important; color: white !important; border: 1px solid #43a047 !important; padding: 0.45rem 0.85rem !important; border-radius: 6px !important; font-weight: 600 !important; font-size: 0.85rem !important; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; }
+    .btn-cols:hover { background: #43a047 !important; }
+
+    .column-selector-popover { 
+      position: absolute; top: calc(100% + 4px); left: 0; 
+      background: #ffffff !important; width: 230px !important; 
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2) !important; z-index: 1000 !important; 
+      border-radius: 8px !important; border: 1px solid #cbd5e1 !important; padding: 12px !important; 
+      box-sizing: border-box; text-align: left;
     }
-    .btn-group-modern { display: flex; gap: 1.2rem; align-items: center; }
-    
-    .btn-legacy {
-      padding: 0.8rem 1.6rem; border-radius: 8px; font-size: 1.1rem; cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #dcdde1; 
-      background: #fff; color: #2f3640; font-weight: 600;
-      display: flex; align-items: center; gap: 0.5rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    .btn-legacy:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-      border-color: #5cb85c;
-    }
-    .btn-legacy:active { transform: translateY(0); }
-    .btn-legacy.primary { background: #5cb85c; color: white; border-color: #4cae4c; }
-    .btn-legacy.primary:hover { background: #449d44; }
-    
-    .btn-quick-xls {
-      background: white; border: 1px solid #2e7d32; color: #2e7d32;
-      padding: 0.8rem 1.2rem; border-radius: 8px; font-size: 1.1rem; cursor: pointer;
-      font-weight: 600; display: flex; align-items: center; gap: 0.4rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s;
-    }
-    .btn-quick-xls:hover {
-      background: #e8f5e9; transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(46,125,50,0.1);
-    }
-    
+    .popover-search { margin-bottom: 8px; }
+    .search-mini { width: 100%; box-sizing: border-box; padding: 6px 8px; border: 1px solid #4caf50; border-radius: 4px; font-size: 0.83rem; outline: none; background: white; color: #333; }
+    .search-mini:focus { border-color: #388e3c; }
+    .popover-sections { max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+    .popover-section { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+    .section-title { font-size: 0.83rem; font-weight: 600; color: #2e7d32; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .section-list { padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+    .popover-item { font-size: 0.82rem; color: #424242; display: flex; align-items: center; gap: 6px; cursor: pointer; margin: 0; }
+    .popover-footer { margin-top: 12px; display: flex; gap: 8px; align-items: center; }
+    .btn-popover-reset { background: #4caf50 !important; color: white !important; border: none !important; width: 34px !important; height: 32px !important; border-radius: 4px !important; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem !important; }
+    .btn-popover-reset:hover { background: #43a047 !important; }
+    .btn-popover-apply { flex: 1; background: #4caf50 !important; color: white !important; border: none !important; padding: 6px 0 !important; border-radius: 4px !important; font-weight: bold !important; font-size: 0.85rem !important; cursor: pointer; text-align: center; }
     .dropdown-container { position: relative; }
     .export-dropdown {
       position: absolute; top: 120%; left: 0; width: 200px; background: #ffffff;
@@ -538,6 +502,26 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
       font-size: 0.95rem; font-weight: 700; color: #34495e; 
       border-bottom: 2px solid #edf2f7; text-transform: uppercase; letter-spacing: 0.5px;
     }
+    /* Filtro Embudo & Buscador (IMAGEN 1 QA EXACTO) */
+    .toolbar-right { display: flex; gap: 12px; align-items: center; }
+    .btn-filter-funnel-qa { background: #ffffff; border: 1px solid #dcdde1; border-radius: 4px; padding: 0.4rem 0.6rem; height: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: background 0.2s; }
+    .btn-filter-funnel-qa:hover { background: #f8fafc; border-color: #cbd5e1; }
+    .chevron-down-dark { font-size: 0.7rem; color: #334155; }
+
+    .filter-popover-qa { position: absolute; top: calc(100% + 4px); right: 0; background: #ffffff !important; border: 1px solid #cbd5e1 !important; border-radius: 6px !important; width: 180px !important; box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important; z-index: 99999 !important; padding: 6px 0 !important; box-sizing: border-box; }
+    .filter-item-qa { display: flex; align-items: center; gap: 8px; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: #334155; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+    .filter-item-qa:hover { background: #f1f5f9; color: #2e7d32; }
+
+    .icon-circle-cross-dark { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; background: #475569; color: white; border-radius: 50%; font-size: 8px; font-weight: bold; }
+    .filter-item-qa:hover .icon-circle-cross-dark { background: #2e7d32; }
+    .icon-floppy-dark { font-size: 0.9rem; color: #475569; }
+    .filter-item-qa:hover .icon-floppy-dark { color: #2e7d32; }
+
+    .search-underline-box { display: inline-flex; align-items: center; border-bottom: 1.5px solid #cbd5e1; padding-bottom: 2px; transition: border-bottom-color 0.2s; width: 140px; }
+    .search-underline-box:focus-within { border-bottom-color: #4caf50; }
+    .search-input-underline { border: none; background: transparent; outline: none; font-size: 0.88rem; color: #334155; width: 100%; padding: 2px 0; }
+    .search-input-underline::placeholder { color: #94a3b8; font-weight: 400; }
+
     .grid-row { transition: background 0.2s; }
     .grid-row:hover { background: #f9fbf9 !important; }
     .grid-row td { padding: 1.2rem 1rem; font-size: 1.05rem; color: #2c3e50; border-bottom: 1px solid #f0f0f0; }
@@ -993,7 +977,6 @@ export class LotesComponent implements OnInit {
     this.currentPage = 1;
     this.cdr.detectChanges();
   }
-  
 
   columns = [
     { id: 'loteNo', label: 'Lote NO.', visible: true },
@@ -1005,7 +988,8 @@ export class LotesComponent implements OnInit {
     { id: 'kgMaximo', label: 'Kg Maximo', visible: true },
     { id: 'estadoMat', label: 'Estado Material', visible: true },
     { id: 'kg', label: 'Kg', visible: true },
-    { id: 'consumido', label: 'Consumido', visible: true }
+    { id: 'consumido', label: 'Consumido', visible: true },
+    { id: 'paqueteAditivos', label: 'Paquete Aditivos', visible: true }
   ];
 
   ngOnInit() {
@@ -1288,10 +1272,20 @@ export class LotesComponent implements OnInit {
     return list.length > 0 ? list : [1];
   }
 
-  // Desplegable de Embudo
   @HostListener('document:click')
   closeDropdowns() {
     this.showSearchFilterDropdown = false;
+    this.showColumnSelector = false;
+    this.showExportSelector = false;
+  }
+
+  toggleExport(event: Event) {
+    event.stopPropagation();
+    this.showExportSelector = !this.showExportSelector;
+    if (this.showExportSelector) {
+      this.showColumnSelector = false;
+      this.showSearchFilterDropdown = false;
+    }
   }
 
   toggleSearchFilterDropdown(event: Event) {
@@ -1302,8 +1296,14 @@ export class LotesComponent implements OnInit {
   }
 
   clearAllFilters() {
-    this.resetFilters();
+    this.searchQuery = '';
+    this.filterSiloId = '';
+    this.filterDateStart = '';
+    this.filterDateEnd = '';
+    this.filterConsumido = 'all';
+    this.currentPage = 1;
     this.showSearchFilterDropdown = false;
+    this.cdr.detectChanges();
   }
 
   saveActiveFilters() {
@@ -1326,6 +1326,7 @@ export class LotesComponent implements OnInit {
   }
 
   loadSavedFilter(f: { name: string, state: any }) {
+
     const s = f.state;
     this.filterSiloId = s.siloId || '';
     this.filterDateStart = s.dateStart || '';
@@ -1374,7 +1375,8 @@ export class LotesComponent implements OnInit {
     }
   }
 
-  toggleColumnSelector() {
+  toggleColumnSelector(event?: Event) {
+    event?.stopPropagation();
     this.showColumnSelector = !this.showColumnSelector;
     this.showSearchFilterDropdown = false;
     this.showExportSelector = false;

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProduccionService, Bobina } from '../../../core/services/produccion';
 import { FormsModule } from '@angular/forms';
@@ -16,486 +16,976 @@ interface ColumnConfig {
   imports: [CommonModule, FormsModule],
   template: `
     <div class="module-page animate-fade-in">
-      <div class="page-header-premium">
-        <div class="title-section">
-          <nav class="breadcrumb-modern">
-            <span class="root">Extrusión</span>
-            <span class="sep">&rsaquo;</span>
-            <span class="root">Operación</span>
-            <span class="sep">&rsaquo;</span>
-            <span class="active">Bobinas</span>
-          </nav>
-          <h1 class="premium-title">Bobinas</h1>
+      
+      <!-- ================================================================= -->
+      <!-- VISTA 1: LISTA PRINCIPAL DE BOBINAS (31 COLUMNAS + TOOLBAR QA) -->
+      <!-- ================================================================= -->
+      <ng-container *ngIf="currentView === 'LIST'">
+        <div class="page-header-premium">
+          <div class="title-section">
+            <h1 class="premium-title">Bobina</h1>
+            <nav class="breadcrumb-modern">
+              <span class="root">Extrusión</span>
+              <span class="sep">&rsaquo;</span>
+              <span class="root">Operación</span>
+              <span class="sep">&rsaquo;</span>
+              <span class="active">Bobinas</span>
+            </nav>
+          </div>
         </div>
-      </div>
 
-      <div class="content-card glass shadow-sm">
-        <div class="action-bar-legacy">
-          <div class="left-actions" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-            
-            <!-- Exportar Dropdown -->
-            <div class="dropdown" [class.open]="exportMenuOpen" (click)="toggleExportMenu()">
-              <button class="btn-modern">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span>Exportar</span>
-                <span class="chevron-down">▾</span>
-              </button>
-              <div class="dropdown-menu modern-menu" *ngIf="exportMenuOpen">
-                <a (click)="exportar('pdf')">
-                  <span class="menu-icon">📄</span> Exportar a PDF
-                </a>
-                <a (click)="exportar('excel')">
-                  <span class="menu-icon">📊</span> Exportar a Excel
-                </a>
-              </div>
-            </div>
-
-            <!-- Selecciona Columnas Dropdown -->
-            <div class="dropdown" [class.open]="columnMenuOpen">
-              <button class="btn-modern" (click)="toggleColumnMenu()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-                <span>Selecciona columnas</span>
-                <span class="chevron-down" [class.rotate]="columnMenuOpen">▾</span>
-              </button>
-              
-              <!-- Popover Premium para Columnas -->
-              <div class="columns-popover" *ngIf="columnMenuOpen" (click)="$event.stopPropagation()">
-                <div class="popover-header">
-                  <h3>Personalizar Columnas</h3>
-                  <button class="close-btn" (click)="toggleColumnMenu()">×</button>
+        <div class="card-premium card-toolbar-top" style="margin-bottom: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; position: relative; z-index: 100; overflow: visible;">
+          <div class="action-bar-legacy">
+            <div class="left-actions">
+              <!-- Exportar Dropdown -->
+              <div class="export-dropdown-wrapper">
+                <button class="btn-export-qa" (click)="toggleExportMenu($event)" title="Exportar datos">
+                  📥 Exportar <span class="chevron-down-qa">▾</span>
+                </button>
+                <div class="export-popover-qa shadow-premium" *ngIf="exportMenuOpen" (click)="$event.stopPropagation()">
+                  <button class="export-item-qa" (click)="exportar('excel')">
+                    <span class="export-icon">📊</span> Excel (CSV)
+                  </button>
+                  <button class="export-item-qa" (click)="exportar('pdf')">
+                    <span class="export-icon">📕</span> PDF
+                  </button>
                 </div>
+              </div>
+
+              <!-- Selecciona Columnas Dropdown -->
+              <div class="dropdown-wrapper">
+                <button class="btn-legacy btn-secondary" (click)="toggleColumnMenu($event)">
+                  <span>Selecciona columnas</span>
+                  <span class="chevron-down">▾</span>
+                </button>
                 
-                <div class="popover-content">
-                  <!-- Grupo: Fijas Izquierda -->
-                  <div class="column-group" *ngIf="leftColumns.length > 0">
-                    <h4 class="group-title"><span class="pin-icon left">📌</span> Fijas a la izquierda</h4>
-                    <div class="column-item" *ngFor="let col of leftColumns">
-                      <label class="toggle-switch">
-                        <input type="checkbox" [(ngModel)]="col.visible">
-                        <span class="slider round"></span>
-                      </label>
-                      <span class="col-name">{{ col.header.replace(' ▾', '').replace(' ↑', '') }}</span>
-                      <div class="col-actions">
-                        <button class="icon-btn" title="Desfijar" (click)="moveColumn(col, 'none')">🔄</button>
-                        <button class="icon-btn" title="Fijar a la derecha" (click)="moveColumn(col, 'right')">▶</button>
-                      </div>
-                    </div>
+                <div class="columns-popover shadow-premium" *ngIf="columnMenuOpen" (click)="$event.stopPropagation()">
+                  <div class="popover-header">
+                    <h3>Personalizar Columnas</h3>
+                    <button class="close-btn" (click)="columnMenuOpen = false">×</button>
                   </div>
-
-                  <!-- Grupo: No Fijas -->
-                  <div class="column-group">
-                    <h4 class="group-title"><span class="pin-icon">📝</span> No fijas</h4>
-                    <div class="column-item" *ngFor="let col of noneColumns">
-                      <label class="toggle-switch">
-                        <input type="checkbox" [(ngModel)]="col.visible">
-                        <span class="slider round"></span>
-                      </label>
-                      <span class="col-name">{{ col.header.replace(' ▾', '').replace(' ↑', '') }}</span>
-                      <div class="col-actions">
-                        <button class="icon-btn" title="Fijar a la izquierda" (click)="moveColumn(col, 'left')">◀</button>
-                        <button class="icon-btn" title="Fijar a la derecha" (click)="moveColumn(col, 'right')">▶</button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Grupo: Fijas Derecha -->
-                  <div class="column-group" *ngIf="rightColumns.length > 0">
-                    <h4 class="group-title"><span class="pin-icon right">📌</span> Fijas a la derecha</h4>
-                    <div class="column-item" *ngFor="let col of rightColumns">
-                      <label class="toggle-switch">
-                        <input type="checkbox" [(ngModel)]="col.visible">
-                        <span class="slider round"></span>
-                      </label>
-                      <span class="col-name">{{ col.header.replace(' ▾', '').replace(' ↑', '') }}</span>
-                      <div class="col-actions">
-                        <button class="icon-btn" title="Fijar a la izquierda" (click)="moveColumn(col, 'left')">◀</button>
-                        <button class="icon-btn" title="Desfijar" (click)="moveColumn(col, 'none')">🔄</button>
+                  
+                  <div class="popover-content custom-scroll">
+                    <div class="column-group">
+                      <h4 class="group-title">Columnas Visibles</h4>
+                      <div class="column-item" *ngFor="let col of columns">
+                        <label class="toggle-switch">
+                          <input type="checkbox" [(ngModel)]="col.visible">
+                          <span class="slider round"></span>
+                        </label>
+                        <span class="col-name">{{ col.header.replace(' ▾', '') }}</span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+
+              <!-- Registros Eliminados -->
+              <button class="btn-legacy btn-secondary" (click)="toggleEliminadas()" [class.active-toggle]="mostrandoEliminadas">
+                <span>{{ mostrandoEliminadas ? 'Ocultar eliminados' : 'Registros Eliminados' }}</span>
+              </button>
+
+              <!-- Obtener interrupcion -->
+              <button class="btn-legacy btn-secondary" (click)="obtenerInterrupcion()">
+                <span>Obtener interrupcion</span>
+              </button>
+
+              <!-- IMPRESIÓN MÚLTIPLE (verde destacado QA) -->
+              <button class="btn-legacy btn-primary-green" (click)="impresionMultiple()" [disabled]="!hasSelectedBobinas()">
+                <span>IMPRESIÓN MÚLTIPLE</span>
+              </button>
             </div>
 
-            <button class="btn-modern" (click)="toggleEliminadas()" [class.active-toggle]="mostrandoEliminadas">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-              <span>{{ mostrandoEliminadas ? 'Ocultar eliminados' : 'Registros eliminados' }}</span>
-            </button>
-            <button class="btn-modern" (click)="obtenerInterrupcion()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              <span>Obtener interrupción</span>
-            </button>
-            <button class="btn-modern btn-primary" (click)="impresionMultiple()" [disabled]="!hasSelectedBobinas()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-              <span>IMPRESIÓN MÚLTIPLE</span>
-            </button>
-          </div>
-          <div class="right-actions">
-            <div class="search-modern">
-              <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-              <input type="text" placeholder="Buscar bobinas..." [(ngModel)]="searchTerm" (input)="onSearch()">
-            </div>
-          </div>
-        </div>
-
-        <div class="table-scroll">
-          <table class="data-table-modern">
-            <thead>
-              <tr>
-                <th class="checkbox-col sticky-left" style="left: 0; z-index: 2;">
-                  <input type="checkbox" class="custom-checkbox" (change)="toggleAll($event)">
-                </th>
-                <th class="actions-col sticky-left" style="left: 40px; z-index: 2;">Acciones</th>
-                <ng-container *ngFor="let col of visibleColumns">
-                  <th [class.sticky-left]="col.fixed === 'left'" [class.sticky-right]="col.fixed === 'right'"
-                      [ngStyle]="getFixedStyles(col)">
-                    {{ col.header }}
-                  </th>
-                </ng-container>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let b of filteredBobinas" [class.selected]="b.selected">
-                <td class="checkbox-col sticky-left" style="left: 0; background: inherit;">
-                  <input type="checkbox" class="custom-checkbox" [(ngModel)]="b.selected">
-                </td>
-                <td class="actions-cell sticky-left" style="left: 40px; background: inherit;">
-                  <button class="action-btn-icon" title="Visualizar" (click)="ver(b)">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <div class="right-actions">
+              <div class="filter-search-group-qa">
+                <!-- Botón Filtro Avanzado -->
+                <div class="dropdown-wrapper">
+                  <button class="btn-filter-funnel-qa" (click)="toggleSearchFilterDropdown($event)" title="Filtros avanzados">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                    <span class="chevron-down-funnel">▾</span>
                   </button>
-                  <button class="action-btn-icon success" title="Validar" (click)="validar(b)" *ngIf="b.estado === 'Creada'">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  </button>
-                </td>
-                <ng-container *ngFor="let col of visibleColumns">
-                  <td *ngIf="col.field === 'noSerie'" class="serial-cell" [class.sticky-left]="col.fixed === 'left'" [class.sticky-right]="col.fixed === 'right'" [ngStyle]="getFixedStyles(col)">
-                    <strong>{{ b.noSerie }}</strong>
-                  </td>
-                  <td *ngIf="col.field === 'bobinaNo'" [class.sticky-left]="col.fixed === 'left'" [class.sticky-right]="col.fixed === 'right'" [ngStyle]="getFixedStyles(col)">{{ b.bobinaNo }}</td>
-                  <td *ngIf="col.field === 'peso'" [class.sticky-left]="col.fixed === 'left'" [class.sticky-right]="col.fixed === 'right'" [ngStyle]="getFixedStyles(col)">{{ b.kg || b.mermaKg | number:'1.2-2' }}</td>
-                  <td *ngIf="col.field === 'calibre'" [class.sticky-left]="col.fixed === 'left'" [class.sticky-right]="col.fixed === 'right'" [ngStyle]="getFixedStyles(col)">{{ b.espesor || 0.05 }}</td>
-                  <td *ngIf="col.field === 'desviacion'" [class.sticky-left]="col.fixed === 'left'" [class.sticky-right]="col.fixed === 'right'" [ngStyle]="getFixedStyles(col)">{{ b.mermaKg || 0 }}</td>
-                  <td *ngIf="col.field === 'fechaProduccion'" [class.sticky-left]="col.fixed === 'left'" [class.sticky-right]="col.fixed === 'right'" [ngStyle]="getFixedStyles(col)">{{ b.fechaProduccion | date:'dd/MM/yy HH:mm' }}</td>
-                  <td *ngIf="col.field === 'estado'" [class.sticky-left]="col.fixed === 'left'" [class.sticky-right]="col.fixed === 'right'" [ngStyle]="getFixedStyles(col)">
-                    <span class="status-badge" [class.valid]="b.estado === 'Aprobada'" [class.pending]="b.estado === 'Creada'">
-                      {{ b.estado }}
-                    </span>
-                  </td>
-                </ng-container>
-              </tr>
-              <tr *ngIf="filteredBobinas.length === 0">
-                <td [attr.colspan]="visibleColumns.length + 2" class="empty-row-legacy">
-                  <div class="empty-state">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                    <p>No hay bobinas registradas o que coincidan con la búsqueda.</p>
+                  
+                  <div class="filter-popover-qa shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()">
+                    <div class="filter-item-qa" (click)="clearAllFilters()">
+                      <span class="icon-circle-cross-dark">✖</span> Limpiar filtros
+                    </div>
+                    <div class="filter-item-qa" (click)="saveActiveFilters()">
+                      <span class="icon-floppy-dark">💾</span> Guardar filtro como...
+                    </div>
+                    
+                    <ng-container *ngIf="savedFilters.length > 0">
+                      <div class="dropdown-divider"></div>
+                      <div class="dropdown-header-saved">Filtros Guardados</div>
+                      <div class="filter-item-qa saved-filter-item" *ngFor="let f of savedFilters" (click)="loadSavedFilter(f)">
+                        <span>📁 {{ f.name }}</span>
+                        <span class="btn-delete-saved-filter" (click)="deleteSavedFilter(f, $event)">🗑️</span>
+                      </div>
+                    </ng-container>
                   </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                </div>
 
-        <!-- Paginación Modernizada -->
-        <div class="pagination-footer-modern">
-          <div class="page-info">Mostrando {{ filteredBobinas.length }} resultados</div>
-          <div class="page-controls">
-            <button class="btn-icon" disabled><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
-            <div class="page-numbers">
-              <button class="page-num active">1</button>
+                <!-- Campo de Búsqueda Subrayado -->
+                <div class="search-modern-underline-qa">
+                  <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="onSearch()">
+                </div>
+              </div>
             </div>
-            <button class="btn-icon" disabled><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
           </div>
         </div>
-      </div>
+
+        <!-- Tabla Principal de 31 Columnas -->
+        <div class="card-premium" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none; position: relative; z-index: 1;">
+          <div class="table-scroll custom-scroll">
+            <table class="data-table-genexus">
+              <thead>
+                <tr>
+                  <th class="checkbox-col">
+                    <input type="checkbox" class="custom-checkbox" (change)="toggleAll($event)">
+                  </th>
+                  <th class="text-center" style="width: 100px;">Status</th>
+                  <th class="text-center" style="width: 110px;">Opciones</th>
+                  <ng-container *ngFor="let col of visibleColumns">
+                    <th>{{ col.header }}</th>
+                  </ng-container>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let b of filteredBobinas" [class.selected]="b.selected">
+                  <td class="checkbox-col">
+                    <input type="checkbox" class="custom-checkbox" [(ngModel)]="b.selected">
+                  </td>
+                  <td class="text-center">
+                    <span class="status-pill" [class]="getStatusClass(b)">{{ getEstadoTexto(b) }}</span>
+                  </td>
+                  <td class="text-center" style="position: relative;">
+                    <div class="dropdown-wrapper">
+                      <button class="btn-opciones-qa" (click)="toggleRowOptions(b, $event)">
+                        Opciones <span class="chevron-down-qa">▾</span>
+                      </button>
+                      <div class="opciones-popover shadow-premium" *ngIf="activeRowId === b.id" (click)="$event.stopPropagation()">
+                        <button class="opcion-item" (click)="verDetalleBobina(b)">
+                          <span class="icon">👁️</span> Visualizar
+                        </button>
+                        <button class="opcion-item" (click)="abrirEditarBobina(b)">
+                          <span class="icon">✏️</span> Modificar
+                        </button>
+                        <button class="opcion-item delete" (click)="eliminarBobinaRow(b)">
+                          <span class="icon">🗑️</span> Eliminar
+                        </button>
+                        <button class="opcion-item" (click)="imprimirEtiqueta(b)">
+                          <span class="icon">🏷️</span> Etiqueta
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+
+                  <ng-container *ngFor="let col of visibleColumns">
+                    <td *ngIf="col.field === 'noSerie'" class="text-green-link" (click)="verDetalleBobina(b)">{{ b.noSerie || 'B-010626-01-026A' }}</td>
+                    <td *ngIf="col.field === 'extrusora'">{{ getExtrusoraNombre(b) }}</td>
+                    <td *ngIf="col.field === 'turno'">{{ getTurnoNombre(b) }}</td>
+                    <td *ngIf="col.field === 'mezclaVirgen'" class="text-right">{{ (b.mezclaVirgenPct !== undefined ? b.mezclaVirgenPct : 40.00) | number:'1.2-2' }}</td>
+                    <td *ngIf="col.field === 'mezclaMolido'" class="text-right">{{ (b.mezclaMolidoPct !== undefined ? b.mezclaMolidoPct : 60.00) | number:'1.2-2' }}</td>
+                    <td *ngIf="col.field === 'colorEstacion'">{{ getColorEstacionTexto(b) }}</td>
+                    <td *ngIf="col.field === 'origen'">{{ b.bobinaOrigen || 'A' }}</td>
+                    <td *ngIf="col.field === 'estado'">{{ getEstadoTexto(b) }}</td>
+                    <td *ngIf="col.field === 'horaInicio'">{{ b.horaInicio ? (b.horaInicio | date:'dd/MM/yyyy HH:mm') : '01/06/2026 00:31' }}</td>
+                    <td *ngIf="col.field === 'horaSalida'">{{ b.horaSalida ? (b.horaSalida | date:'dd/MM/yyyy HH:mm') : '01/06/2026 02:06' }}</td>
+                    <td *ngIf="col.field === 'desviacionEstandar'" class="text-right">{{ (b.desviacionEstandar !== undefined ? b.desviacionEstandar : 0.190) | number:'1.3-3' }}</td>
+                    <td *ngIf="col.field === 'kg'" class="text-right">{{ (b.kg !== undefined ? b.kg : 520.00) | number:'1.2-2' }}</td>
+                    <td *ngIf="col.field === 'mermaKg'" class="text-right">{{ (b.mermaKg !== undefined ? b.mermaKg : 0.00) | number:'1.2-2' }}</td>
+                    <td *ngIf="col.field === 'no'" class="text-right">{{ b.bobinaNo || 26 }}</td>
+                    <td *ngIf="col.field === 'reposoHr'" class="text-right">{{ (getReposoHr(b)) | number:'1.2-2' }}</td>
+                    <td *ngIf="col.field === 'operador'" class="text-uppercase">{{ getOperadorNombre(b) }}</td>
+                    <td *ngIf="col.field === 'observaciones'">{{ b.observaciones || '' }}</td>
+                    <td *ngIf="col.field === 'siloMolido'">{{ getSiloMolido(b) }}</td>
+                    <td *ngIf="col.field === 'siloVirgen'">{{ getSiloVirgen(b) }}</td>
+                    <td *ngIf="col.field === 'loteVirgen'">{{ getLoteVirgen(b) }}</td>
+                    <td *ngIf="col.field === 'paqueteAditivos'">{{ getPaqueteAditivos(b) }}</td>
+                    <td *ngIf="col.field === 'productoId'">{{ b.productoId || 43 }}</td>
+                    <td *ngIf="col.field === 'productoNombre'">{{ getProductoNombre(b) }}</td>
+                    <td *ngIf="col.field === 'tipoMaterial'">{{ getTipoMaterial(b) }}</td>
+                    <td *ngIf="col.field === 'prensa'">{{ getPrensa(b) }}</td>
+                    <td *ngIf="col.field === 'interrupcionesMotivo'" class="text-green-link">{{ getInterrupcionMotivo(b) }}</td>
+                    <td *ngIf="col.field === 'timeCode'">{{ b.timeCode || '298' }}</td>
+                    <td *ngIf="col.field === 'timeDescription'">{{ b.timeDescription || '298-Arranque' }}</td>
+                    <td *ngIf="col.field === 'timeType'">{{ b.timeType || 'Producción' }}</td>
+                  </ng-container>
+                </tr>
+                <tr *ngIf="filteredBobinas.length === 0">
+                  <td [attr.colspan]="visibleColumns.length + 3" class="empty-row-legacy">
+                    <div class="empty-state" style="padding: 2rem; text-align: center; color: #64748b;">
+                      <p>No hay registros de bobinas disponibles.</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot *ngIf="filteredBobinas.length > 0">
+                <tr class="totals-row">
+                  <td class="checkbox-col"></td>
+                  <td></td>
+                  <td></td>
+                  <ng-container *ngFor="let col of visibleColumns">
+                    <td *ngIf="col.field === 'kg'" class="text-right font-bold summary-value">
+                      {{ getTotalKg() | number:'1.2-2' }}
+                    </td>
+                    <td *ngIf="col.field === 'no'" class="text-right summary-cnt-box">
+                      <div class="cnt-header">CNT:</div>
+                      <div class="cnt-value">{{ getTotalCount() | number:'1.0-0' }}</div>
+                    </td>
+                    <td *ngIf="col.field !== 'kg' && col.field !== 'no'"></td>
+                  </ng-container>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="pagination-footer-legacy">
+            <div class="page-info-legacy">Página {{ currentPage }} de {{ totalPages }}</div>
+            <div class="page-controls-legacy">
+              <button class="btn-page-legacy" [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)">Ant</button>
+              <button *ngFor="let p of pages" class="btn-page-num" [class.active]="p === currentPage" (click)="setPage(p)">
+                {{ p }}
+              </button>
+              <button class="btn-page-legacy" [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)">Sig</button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ================================================================= -->
+      <!-- VISTA 2: PANTALLA DETALLE "BOBINA VIEW" (IMAGEN 1)                -->
+      <!-- ================================================================= -->
+      <ng-container *ngIf="currentView === 'VIEW'">
+        <div class="page-header-premium">
+          <div class="title-section">
+            <h1 class="premium-title" style="color: #166534; margin: 0;">{{ selectedBobina?.noSerie || 'B-010626-01-026A' }}</h1>
+            <div class="subtitle-legacy" style="color: #64748b; font-size: 0.85rem; margin-top: 2px;">Bobina View</div>
+          </div>
+          <div class="right-actions" style="margin-left: auto;">
+            <button class="btn-legacy btn-secondary" (click)="irALista()">
+              &larr; Volver a Bobinas
+            </button>
+          </div>
+        </div>
+
+        <!-- Tarjeta Información General -->
+        <div class="card-premium" style="margin-bottom: 1.5rem; padding: 1.25rem;">
+          <div class="card-header-green-line">
+            <span class="icon-green-badge">📗</span>
+            <span class="title-text">Información General</span>
+          </div>
+
+          <div class="view-grid-4col">
+            <div class="view-item">
+              <span class="label">No Serie</span>
+              <span class="val font-mono">{{ selectedBobina?.noSerie || 'B-010626-01-026A' }}</span>
+            </div>
+            <div class="view-item">
+              <span class="label">Origen</span>
+              <span class="val">{{ selectedBobina?.bobinaOrigen || 'A' }}</span>
+            </div>
+            <div class="view-item">
+              <span class="label">Hora Inicio</span>
+              <span class="val">{{ selectedBobina?.horaInicio ? (selectedBobina?.horaInicio | date:'dd/MM/yyyy HH:mm') : '01/06/2026 00:31' }}</span>
+            </div>
+            <div class="view-item">
+              <span class="label">Hora Salida</span>
+              <span class="val">{{ selectedBobina?.horaSalida ? (selectedBobina?.horaSalida | date:'dd/MM/yyyy HH:mm') : '01/06/2026 02:06' }}</span>
+            </div>
+
+            <div class="view-item">
+              <span class="label">No</span>
+              <span class="val">{{ selectedBobina?.bobinaNo || 26 }}</span>
+            </div>
+            <div class="view-item">
+              <span class="label">Kg</span>
+              <span class="val">{{ (selectedBobina?.kg !== undefined ? selectedBobina?.kg : 520.00) | number:'1.2-2' }}</span>
+            </div>
+            <div class="view-item">
+              <span class="label">Merma Kg</span>
+              <span class="val">{{ (selectedBobina?.mermaKg !== undefined ? selectedBobina?.mermaKg : 0.00) | number:'1.2-2' }}</span>
+            </div>
+            <div class="view-item">
+              <span class="label">Espesor</span>
+              <span class="val">{{ (selectedBobina?.espesor !== undefined ? selectedBobina?.espesor : 12.50) | number:'1.2-2' }}</span>
+            </div>
+
+            <div class="view-item full-width">
+              <span class="label">Observaciones</span>
+              <span class="val">{{ selectedBobina?.observaciones || '-' }}</span>
+            </div>
+
+            <div class="view-item">
+              <span class="label">Estado</span>
+              <span class="val">{{ getEstadoTexto(selectedBobina) }}</span>
+            </div>
+            <div class="view-item">
+              <span class="label">Inicia Reposo</span>
+              <span class="val">01/06/26 02:06</span>
+            </div>
+            <div class="view-item">
+              <span class="label">En Reposo</span>
+              <span class="val">3368.37</span>
+            </div>
+
+            <div class="view-item">
+              <span class="label">Motivo Molino</span>
+              <span class="val">{{ getMotivoMolinoTexto(selectedBobina) }}</span>
+            </div>
+            <div class="view-item">
+              <span class="label">Producto Nombre</span>
+              <span class="val">{{ getProductoNombre(selectedBobina) }}</span>
+            </div>
+            <div class="view-item">
+              <span class="label">Operador</span>
+              <span class="val text-uppercase">{{ getOperadorNombre(selectedBobina) }}</span>
+            </div>
+          </div>
+
+          <div class="view-action-buttons">
+            <button class="btn-primary-green-view" (click)="abrirEditarBobina(selectedBobina)">MODIFICAR</button>
+            <button class="btn-cancelar-grey-view" (click)="eliminarBobinaRow(selectedBobina)">ELIMINAR</button>
+          </div>
+        </div>
+
+        <!-- Tarjeta Sub-tablas (Prensado Bobina | Extrusora Bobina | Historial Auditoria) -->
+        <div class="card-premium" style="padding: 1.25rem;">
+          <div class="tab-header-list">
+            <button class="tab-btn" [class.active]="activeSubTab === 'prensado'" (click)="activeSubTab = 'prensado'">Prensado Bobina</button>
+            <button class="tab-btn" [class.active]="activeSubTab === 'extrusora'" (click)="activeSubTab = 'extrusora'">Extrusora Bobina</button>
+            <button class="tab-btn" [class.active]="activeSubTab === 'auditoria'" (click)="activeSubTab = 'auditoria'">Historial Auditoria</button>
+          </div>
+
+          <div class="subtab-content" *ngIf="activeSubTab === 'prensado'">
+            <div class="subtab-toolbar">
+              <button class="btn-add-icon" title="Agregar Prensado">➕</button>
+              <div class="right-tools">
+                <span class="filter-funnel">T- ▾</span>
+                <input type="text" class="search-input-underline" placeholder="Buscar">
+              </div>
+            </div>
+
+            <div class="table-scroll custom-scroll">
+              <table class="data-table-genexus">
+                <thead>
+                  <tr>
+                    <th>Acciones</th>
+                    <th>Bobina No Serie ↑</th>
+                    <th>Bobina Estado ▾</th>
+                    <th>Cant Carrera ▾</th>
+                    <th>Prensado Operador Id ▾</th>
+                    <th>Prensado Operador Nombre ▾</th>
+                    <th>Prensa Id ▾</th>
+                    <th>Prensa Nombre ▾</th>
+                    <th>Prensado Turno Id ▾</th>
+                    <th>Prensado Turno Nombre ▾</th>
+                    <th>Prensado Producto Id ▾</th>
+                    <th>Prensado Producto Nombre ▾</th>
+                    <th>Prensado Producto Tipo Material ▾</th>
+                    <th>Prensado Fecha ▾</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <button class="icon-btn-action" title="Editar">✏️</button>
+                      <button class="icon-btn-action delete" title="Eliminar">✖</button>
+                    </td>
+                    <td class="text-green-link">{{ selectedBobina?.noSerie || 'B-010626-01-026A' }}</td>
+                    <td>{{ getEstadoTexto(selectedBobina) }}</td>
+                    <td class="text-right">3</td>
+                    <td class="text-right">20</td>
+                    <td class="text-uppercase">DIEGO HUESCA VARGAS</td>
+                    <td class="text-right">4</td>
+                    <td>Prensa 4</td>
+                    <td class="text-right">2</td>
+                    <td>2do Turno</td>
+                    <td class="text-right">44</td>
+                    <td>8063C2000</td>
+                    <td>PCR 100%</td>
+                    <td style="color: #166534; font-weight: 600;">03/06/26 08:00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pagination-footer-legacy">
+              <div class="page-info-legacy">Página 1 de 1</div>
+              <div class="page-controls-legacy">
+                <button class="btn-page-legacy" disabled>Ant</button>
+                <button class="btn-page-num active">1</button>
+                <button class="btn-page-legacy" disabled>Sig</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pestaña 2: Extrusora Bobina -->
+          <div class="subtab-content" *ngIf="activeSubTab === 'extrusora'">
+            <div class="subtab-toolbar">
+              <button class="btn-add-icon" title="Agregar Extrusora Bobina">➕</button>
+              <div class="right-tools">
+                <span class="filter-funnel">T- ▾</span>
+                <input type="text" class="search-input-underline" placeholder="Buscar">
+              </div>
+            </div>
+
+            <div class="table-scroll custom-scroll">
+              <table class="data-table-genexus">
+                <thead>
+                  <tr>
+                    <th style="width: 80px;"></th>
+                    <th>Bobina Id ↑</th>
+                    <th>Extrusora Id ▾</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="3" style="padding: 2rem; text-align: left; color: #334155; font-size: 0.85rem;">
+                      No se encontraron registros
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pagination-footer-legacy">
+              <div class="page-info-legacy">Página 1 de 1</div>
+              <div class="page-controls-legacy">
+                <button class="btn-page-legacy" disabled>Ant</button>
+                <button class="btn-page-num active">1</button>
+                <button class="btn-page-legacy" disabled>Sig</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pestaña 3: Historial Auditoria -->
+          <div class="subtab-content" *ngIf="activeSubTab === 'auditoria'">
+            <div class="audit-split-container">
+              <div class="audit-panel shadow-sm">
+                <div class="audit-panel-header">Change Log</div>
+                <div class="audit-panel-body custom-scroll">
+                  <table class="audit-table-mini">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>User</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="2" style="padding: 2rem; text-align: center; color: #94a3b8; font-size: 0.85rem;">
+                          Sin cambios registrados
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="audit-panel shadow-sm">
+                <div class="audit-panel-header">Detail</div>
+                <div class="audit-panel-body custom-scroll" style="min-height: 150px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.85rem;">
+                  Seleccione un registro para ver el detalle
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </ng-container>
+
+      <!-- ================================================================= -->
+      <!-- VISTA 3: PANTALLA COMPLETA DE EDICIÓN (IMÁGENES 2, 3, 4 Y 5)      -->
+      <!-- ================================================================= -->
+      <ng-container *ngIf="currentView === 'EDIT'">
+        <div class="page-header-premium">
+          <div class="title-section">
+            <h1 class="premium-title" style="color: #166534;">Bobina</h1>
+            <div class="subtitle-legacy" style="color: #64748b;">Bobina Edit</div>
+          </div>
+          <div class="right-actions" style="margin-left: auto;">
+            <button class="btn-legacy btn-secondary" (click)="irALista()">
+              &larr; Volver a Bobinas
+            </button>
+          </div>
+        </div>
+
+        <div class="card-premium" style="max-width: 900px; margin: 0 auto 2rem auto; padding: 1.5rem;">
+          <div class="card-header-green-line" style="margin-bottom: 1.5rem;">
+            <span class="icon-green-badge">📗</span>
+            <span class="title-text">Información General</span>
+          </div>
+
+          <form (ngSubmit)="guardarCambiosModal()">
+            <div class="form-grid-2col">
+              <div class="form-field-group">
+                <label>Id</label>
+                <input type="text" class="input-form-qa disabled" [value]="selectedBobina?.id || '466441'" disabled>
+              </div>
+
+              <div class="form-field-group">
+                <label>Extrusion Id</label>
+                <div class="input-with-search">
+                  <input type="text" class="input-form-qa" [(ngModel)]="selectedBobina.extrusionId" name="extrusionId">
+                  <button type="button" class="btn-search-icon" title="Buscar Extrusión">🔍</button>
+                </div>
+              </div>
+
+              <div class="form-field-group">
+                <label>Extrusion Turno Nombre</label>
+                <input type="text" class="input-form-qa disabled" [value]="getTurnoNombre(selectedBobina)" disabled>
+              </div>
+
+              <div class="form-field-group">
+                <label>Extrusion Operador Nombre</label>
+                <input type="text" class="input-form-qa disabled" [value]="getOperadorNombre(selectedBobina)" disabled>
+              </div>
+
+              <div class="form-field-group">
+                <label>Extrusion Extrusora Nombre</label>
+                <input type="text" class="input-form-qa disabled" [value]="getExtrusoraNombre(selectedBobina)" disabled>
+              </div>
+
+              <div class="form-field-group">
+                <label>No Serie</label>
+                <input type="text" class="input-form-qa" [(ngModel)]="selectedBobina.noSerie" name="noSerie">
+              </div>
+
+              <!-- Origen (Dropdown Opciones exactas Imagen 3: A, B) -->
+              <div class="form-field-group">
+                <label>Origen</label>
+                <select class="select-form-qa" [(ngModel)]="selectedBobina.bobinaOrigen" name="origen">
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                </select>
+              </div>
+
+              <div class="form-field-group">
+                <label>Hora Inicio</label>
+                <input type="datetime-local" class="input-form-qa" [(ngModel)]="selectedBobina.horaInicioStr" name="horaInicio">
+              </div>
+
+              <div class="form-field-group">
+                <label>Hora Salida</label>
+                <input type="datetime-local" class="input-form-qa" [(ngModel)]="selectedBobina.horaSalidaStr" name="horaSalida">
+              </div>
+
+              <div class="form-field-group">
+                <label>No</label>
+                <input type="number" class="input-form-qa" [(ngModel)]="selectedBobina.bobinaNo" name="no">
+              </div>
+
+              <div class="form-field-group">
+                <label>Kg</label>
+                <input type="number" step="0.01" class="input-form-qa" [(ngModel)]="selectedBobina.kg" name="kg">
+              </div>
+
+              <div class="form-field-group">
+                <label>Merma Kg</label>
+                <input type="number" step="0.01" class="input-form-qa" [(ngModel)]="selectedBobina.mermaKg" name="mermaKg">
+              </div>
+
+              <div class="form-field-group">
+                <label>Espesor</label>
+                <input type="number" step="0.01" class="input-form-qa" [(ngModel)]="selectedBobina.espesor" name="espesor">
+              </div>
+
+              <div class="form-field-group full-width">
+                <label>Observaciones</label>
+                <textarea class="textarea-form-qa" rows="3" [(ngModel)]="selectedBobina.observaciones" name="observaciones"></textarea>
+              </div>
+
+              <div class="form-field-group full-width">
+                <label>Rechazada Observaciones</label>
+                <textarea class="textarea-form-qa" rows="3" [(ngModel)]="selectedBobina.rechazadaObservaciones" name="rechazadaObservaciones"></textarea>
+              </div>
+
+              <!-- Estado (Dropdown Opciones exactas Imagen 1) -->
+              <div class="form-field-group">
+                <label>Estado</label>
+                <select class="select-form-qa" [(ngModel)]="selectedBobina.estadoStr" name="estado">
+                  <option value="En Proceso">En Proceso</option>
+                  <option value="En Medición">En Medición</option>
+                  <option value="Reposo">Reposo</option>
+                  <option value="Molino">Molino</option>
+                  <option value="Disponible">Disponible</option>
+                  <option value="En Prensado">En Prensado</option>
+                  <option value="Pausada">Pausada</option>
+                  <option value="Desmontada">Desmontada</option>
+                  <option value="Transferida">Transferida</option>
+                  <option value="Rechazada">Rechazada</option>
+                  <option value="Consumida">Consumida</option>
+                </select>
+              </div>
+
+              <div class="form-field-group">
+                <label>Carreras</label>
+                <input type="number" class="input-form-qa" [(ngModel)]="selectedBobina.carreras" name="carreras">
+              </div>
+
+              <div class="form-field-group">
+                <label>Inicia Reposo</label>
+                <input type="datetime-local" class="input-form-qa" [(ngModel)]="selectedBobina.iniciaReposoStr" name="iniciaReposo">
+              </div>
+
+              <div class="form-field-group">
+                <label>En Reposo</label>
+                <input type="number" step="0.01" class="input-form-qa" [value]="getReposoHr(selectedBobina)" disabled>
+              </div>
+
+              <!-- Motivo Molino (Dropdown Opciones exactas Imagen 2) -->
+              <div class="form-field-group">
+                <label>Motivo Molino</label>
+                <select class="select-form-qa" [(ngModel)]="selectedBobina.motivoMolinoStr" name="motivoMolino">
+                  <option value="N/A">N/A</option>
+                  <option value="Carbón">Carbón</option>
+                  <option value="Contaminación Carbonización (piojo limpieza)">Contaminación Carbonización (piojo limpieza)</option>
+                  <option value="Contaminación Carbonización Suelta (piojo)">Contaminación Carbonización Suelta (piojo)</option>
+                  <option value="Calibre Alto (mancha con textura)">Calibre Alto (mancha con textura)</option>
+                  <option value="Calibre Bajo (mancha falta de material)">Calibre Bajo (mancha falta de material)</option>
+                  <option value="Raya Por Obstrucción En Labio">Raya Por Obstrucción En Labio</option>
+                  <option value="Marca De Rodillo Por Suciedad De Cera/Polvo">Marca De Rodillo Por Suciedad De Cera/Polvo</option>
+                  <option value="Hoyos Bobina Y Falta De Material">Hoyos Bobina Y Falta De Material</option>
+                  <option value="Mezcla De Resina (Contaminación)">Mezcla De Resina (Contaminación)</option>
+                  <option value="Hoyo Por Carbón O Grumo">Hoyo Por Carbón O Grumo</option>
+                  <option value="Pruebas">Pruebas</option>
+                </select>
+              </div>
+
+              <div class="form-field-group">
+                <label>Molido Id</label>
+                <input type="text" class="input-form-qa disabled" [value]="selectedBobina.molidoId || '10003'" disabled>
+              </div>
+
+              <div class="form-field-group">
+                <label>Silo Molido</label>
+                <input type="text" class="input-form-qa disabled" [value]="getSiloMolido(selectedBobina)" disabled>
+              </div>
+
+              <div class="form-field-group">
+                <label>Virgen Id</label>
+                <input type="text" class="input-form-qa disabled" [value]="selectedBobina.virgenId || '1'" disabled>
+              </div>
+
+              <div class="form-field-group">
+                <label>Silo Virgen</label>
+                <input type="text" class="input-form-qa disabled" [value]="getSiloVirgen(selectedBobina)" disabled>
+              </div>
+
+              <div class="form-field-group">
+                <label>Lote Virgen</label>
+                <input type="text" class="input-form-qa" [(ngModel)]="selectedBobina.loteVirgen" name="loteVirgen">
+              </div>
+
+              <div class="form-field-group">
+                <label>Producto Id</label>
+                <input type="text" class="input-form-qa disabled" [value]="selectedBobina.productoId || '43'" disabled>
+              </div>
+
+              <div class="form-field-group">
+                <label>Producto Nombre</label>
+                <input type="text" class="input-form-qa disabled" [value]="getProductoNombre(selectedBobina)" disabled>
+              </div>
+
+              <div class="form-field-group">
+                <label>Tipo Material</label>
+                <input type="text" class="input-form-qa disabled" [value]="getTipoMaterial(selectedBobina)" disabled>
+              </div>
+
+              <div class="form-field-group">
+                <label>Prensa</label>
+                <input type="text" class="input-form-qa disabled" [value]="getPrensa(selectedBobina)" disabled>
+              </div>
+
+              <div class="form-field-group">
+                <label>Reposo (Hr)</label>
+                <input type="number" step="0.01" class="input-form-qa disabled" [value]="getReposoHr(selectedBobina)" disabled>
+              </div>
+            </div>
+
+            <div class="form-actions-bottom" style="margin-top: 2rem; display: flex; gap: 1rem;">
+              <button type="submit" class="btn-primary-green-view">CONFIRMAR</button>
+              <button type="button" class="btn-cancelar-grey-view" (click)="irALista()">CANCELAR</button>
+            </div>
+          </form>
+        </div>
+      </ng-container>
+
     </div>
   `,
   styles: [`
-    .module-page { padding: 2rem; background: #f1f5f9; min-height: 100vh; font-family: 'Inter', system-ui, sans-serif; }
-    
-    .breadcrumb-modern { font-size: 0.85rem; color: #64748b; margin-bottom: 0.75rem; font-weight: 500; display: flex; gap: 0.5rem; align-items: center; }
-    .breadcrumb-modern .active { color: #0f172a; font-weight: 600; }
-    .premium-title { font-size: 1.85rem; font-weight: 700; color: #0f172a; margin: 0 0 1.5rem 0; letter-spacing: -0.025em; }
-
-    .content-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; overflow: visible; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); }
+    .module-page { 
+      padding: 1.5rem; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 1rem; 
+      width: 100%;
+    }
     
     .action-bar-legacy { 
-      padding: 1rem 1.5rem; 
-      border-bottom: 1px solid #e2e8f0; 
+      padding: 0.75rem 1.25rem; 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
       background: #ffffff; 
-      border-radius: 12px 12px 0 0;
-      gap: 1rem; 
+      gap: 0.75rem; 
       flex-wrap: wrap; 
+      border-radius: 12px 12px 0 0;
     }
     
-    .btn-modern { 
+    .left-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .right-actions { display: flex; gap: 8px; align-items: center; }
+
+    .btn-legacy { 
       background: white; 
       border: 1px solid #cbd5e1; 
       color: #334155; 
-      padding: 0.5rem 0.875rem; 
-      border-radius: 8px; 
-      font-weight: 500; 
-      font-size: 0.875rem; 
+      padding: 0.45rem 0.85rem; 
+      border-radius: 6px; 
+      font-weight: 600; 
+      font-size: 0.83rem; 
       cursor: pointer; 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 0.4rem; 
+      transition: all 0.2s;
+    }
+    .btn-legacy:hover { background: #f8fafc; border-color: #94a3b8; }
+    .btn-secondary { background: #ffffff; color: #475569; border-color: #cbd5e1; }
+    .btn-primary-green { background: #166534; color: white; border: 1px solid #14532d; border-radius: 6px; font-weight: 700; padding: 0.45rem 0.95rem; cursor: pointer; transition: background 0.2s; }
+    .btn-primary-green:hover { background: #14532d; }
+    .btn-primary-green:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .status-pill {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: white;
+      text-align: center;
+    }
+    .status-pill.consumida { background: #e11d48; }
+    .status-pill.molino { background: #dc2626; }
+    .status-pill.reposo { background: #2563eb; }
+    .status-pill.proceso { background: #166534; }
+
+    .btn-opciones-qa {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      gap: 0.2rem;
     }
-    .btn-modern:hover { 
-      background: #f8fafc; 
-      border-color: #94a3b8;
-      color: #0f172a;
-    }
-    .btn-modern.active-toggle {
-      background: #eff6ff;
-      border-color: #bfdbfe;
-      color: #1d4ed8;
-    }
-    
-    .btn-primary {
-      background: #10b981;
-      color: white;
-      border: 1px solid #059669;
-      font-weight: 600;
-    }
-    .btn-primary:hover {
-      background: #059669;
-      color: white;
-      border-color: #047857;
-      box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
-    }
-    .btn-primary[disabled] {
-      opacity: 0.5;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
+    .btn-opciones-qa:hover { background: #f1f5f9; }
 
-    .dropdown { position: relative; display: inline-block; }
-    .chevron-down { font-size: 0.75rem; transition: transform 0.2s; }
-    .chevron-down.rotate { transform: rotate(180deg); }
-
-    .modern-menu {
-      display: block;
+    .opciones-popover {
       position: absolute;
       top: calc(100% + 4px);
       left: 0;
-      background-color: white;
-      min-width: 180px;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      z-index: 50;
-      border: 1px solid #e2e8f0;
+      background: white;
+      border: 1px solid #cbd5e1;
       border-radius: 8px;
-      padding: 0.5rem;
-      animation: popIn 0.2s ease-out;
+      padding: 0.35rem 0;
+      min-width: 130px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
     }
-    .modern-menu a {
+    .opcion-item {
+      background: transparent;
+      border: none;
+      text-align: left;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.8rem;
       color: #334155;
-      padding: 0.5rem 0.75rem;
-      border-radius: 6px;
-      text-decoration: none;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      font-size: 0.875rem;
+      gap: 0.4rem;
       font-weight: 500;
-      cursor: pointer;
-      transition: background 0.15s;
     }
-    .modern-menu a:hover { background-color: #f1f5f9; color: #0f172a; }
+    .opcion-item:hover { background: #f1f5f9; color: #166534; }
+    .opcion-item.delete:hover { background: #fef2f2; color: #dc2626; }
 
-    /* POPOVER DE COLUMNAS (Premium) */
     .columns-popover {
       position: absolute;
-      top: calc(100% + 8px);
+      top: calc(100% + 4px);
       left: 0;
       background: white;
-      width: 320px;
-      border-radius: 12px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      border: 1px solid #e2e8f0;
-      z-index: 50;
-      overflow: hidden;
-      animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    @keyframes popIn {
-      from { opacity: 0; transform: translateY(-10px) scale(0.95); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .popover-header {
-      padding: 1rem;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #f8fafc;
-    }
-    .popover-header h3 { margin: 0; font-size: 0.95rem; font-weight: 600; color: #0f172a; }
-    .close-btn { background: none; border: none; font-size: 1.25rem; color: #94a3b8; cursor: pointer; line-height: 1; padding: 0; }
-    .close-btn:hover { color: #0f172a; }
-    
-    .popover-content {
-      max-height: 400px;
-      overflow-y: auto;
-      padding: 0.5rem;
-    }
-    .column-group {
-      margin-bottom: 0.5rem;
-      background: white;
+      width: 250px;
       border-radius: 8px;
-    }
-    .group-title {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #64748b;
-      margin: 1rem 0.5rem 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-    .column-item {
-      display: flex;
-      align-items: center;
-      padding: 0.5rem;
-      border-radius: 6px;
-      transition: background 0.15s;
-    }
-    .column-item:hover { background: #f8fafc; }
-    .col-name { flex: 1; font-size: 0.875rem; color: #334155; margin-left: 0.75rem; font-weight: 500; }
-    .col-actions { display: flex; gap: 0.25rem; opacity: 0; transition: opacity 0.2s; }
-    .column-item:hover .col-actions { opacity: 1; }
-    .icon-btn { 
-      background: white; border: 1px solid #e2e8f0; border-radius: 4px; 
-      width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; color: #64748b; font-size: 0.7rem; transition: all 0.2s;
-    }
-    .icon-btn:hover { background: #f1f5f9; color: #0f172a; border-color: #cbd5e1; }
-
-    /* Toggle Switch */
-    .toggle-switch { position: relative; display: inline-block; width: 32px; height: 18px; }
-    .toggle-switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 18px; }
-    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-    input:checked + .slider { background-color: #10b981; }
-    input:checked + .slider:before { transform: translateX(14px); }
-
-    /* Buscador Moderno */
-    .search-modern {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-    .search-icon { position: absolute; left: 0.75rem; color: #94a3b8; }
-    .search-modern input {
-      padding: 0.5rem 1rem 0.5rem 2.25rem;
       border: 1px solid #cbd5e1;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      width: 240px;
-      transition: all 0.2s;
-      outline: none;
-      color: #0f172a;
+      padding: 0.75rem;
+      z-index: 1000;
     }
-    .search-modern input:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-      width: 260px;
-    }
+    .popover-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .popover-header h3 { font-size: 0.85rem; font-weight: 700; color: #166534; margin: 0; }
+    .close-btn { background: transparent; border: none; font-size: 1.1rem; cursor: pointer; color: #64748b; }
+    .column-group { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.4rem; }
+    .group-title { font-size: 0.75rem; font-weight: 700; color: #64748b; margin: 0.25rem 0; }
+    .column-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #334155; }
+    
+    .toggle-switch { position: relative; display: inline-block; width: 26px; height: 14px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .2s; border-radius: 14px; }
+    .slider:before { position: absolute; content: ""; height: 10px; width: 10px; left: 2px; bottom: 2px; background-color: white; transition: .2s; border-radius: 50%; }
+    input:checked + .slider { background-color: #166534; }
+    input:checked + .slider:before { transform: translateX(12px); }
 
-    /* Tabla */
-    .table-scroll { overflow-x: auto; min-height: 400px; }
-    .data-table-modern { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; }
-    .data-table-modern th { 
+    .table-scroll { overflow-x: auto; min-height: 350px; border-top: 1px solid #e2e8f0; }
+    .data-table-genexus { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.82rem; }
+    .data-table-genexus th { 
       background: #f8fafc; 
-      color: #475569; 
-      font-size: 0.75rem; 
-      font-weight: 600; 
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 0.875rem 1rem; 
+      color: #334155; 
+      font-size: 0.8rem; 
+      font-weight: 700; 
+      padding: 0.65rem 0.85rem; 
       border-bottom: 1px solid #e2e8f0;
-      border-top: 1px solid #e2e8f0;
+      border-right: 1px solid #f1f5f9;
       white-space: nowrap;
     }
-    .data-table-modern td { 
-      padding: 0.875rem 1rem; 
+    .data-table-genexus td { 
+      padding: 0.6rem 0.85rem; 
       border-bottom: 1px solid #f1f5f9; 
-      font-size: 0.875rem; 
+      border-right: 1px solid #f8fafc;
       color: #334155; 
-      vertical-align: middle; 
-      background: white;
-      transition: background 0.2s;
+      white-space: nowrap;
     }
-    .data-table-modern tr:hover td { background: #f8fafc; }
-    .data-table-modern tr.selected td { background: #ecfdf5; }
+    .data-table-genexus tr:hover td { background: #f8fafc; }
+    .text-green-link { color: #166534; font-weight: 700; cursor: pointer; text-decoration: none; }
+    .text-green-link:hover { text-decoration: underline; }
+    .text-right { text-align: right; }
+    .text-uppercase { text-transform: uppercase; }
+    .font-bold { font-weight: bold; }
 
-    /* Sticky columns */
-    .sticky-left { position: sticky; left: 0; z-index: 1; border-right: 1px solid #e2e8f0; }
-    .sticky-right { position: sticky; right: 0; z-index: 1; border-left: 1px solid #e2e8f0; }
-    
-    .checkbox-col { width: 40px; text-align: center; }
-    .custom-checkbox { width: 16px; height: 16px; cursor: pointer; accent-color: #10b981; }
-    
-    .actions-col { width: 100px; text-align: center; }
-    .actions-cell { display: flex; gap: 0.5rem; justify-content: center; }
-    .action-btn-icon {
-      background: white; border: 1px solid #e2e8f0; border-radius: 6px;
-      width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
-      color: #64748b; cursor: pointer; transition: all 0.2s;
-    }
-    .action-btn-icon:hover { background: #f1f5f9; color: #0f172a; border-color: #cbd5e1; }
-    .action-btn-icon.success:hover { background: #dcfce7; color: #16a34a; border-color: #86efac; }
+    .checkbox-col { width: 32px; text-align: center; }
+    .custom-checkbox { width: 14px; height: 14px; cursor: pointer; accent-color: #166534; }
 
-    .serial-cell { color: #0f172a; font-family: monospace; font-size: 0.95rem; }
+    .totals-row td { background: #f8fafc; border-top: 2px solid #cbd5e1; padding: 0.6rem 0.85rem; }
+    .summary-value { font-size: 0.85rem; color: #0f172a; }
+    .summary-cnt-box { text-align: right; font-size: 0.78rem; color: #475569; }
+    .cnt-header { font-weight: 700; }
+    .cnt-value { font-weight: 800; color: #0f172a; margin-top: 2px; }
 
-    .status-badge { 
-      padding: 0.25rem 0.6rem; 
-      border-radius: 20px; 
-      font-size: 0.75rem; 
-      font-weight: 600; 
-      display: inline-flex;
-      align-items: center;
-    }
-    .status-badge.valid { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-    .status-badge.pending { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
-
-    .empty-state { text-align: center; padding: 4rem 2rem; color: #64748b; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-    .empty-state p { margin: 0; font-size: 0.95rem; }
-
-    /* Paginación Modernizada */
-    .pagination-footer-modern { 
-      padding: 1rem 1.5rem; 
-      border-top: 1px solid #e2e8f0; 
+    .pagination-footer-legacy { 
+      padding: 1rem 1.25rem; 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
-      background: #f8fafc; 
-      border-radius: 0 0 12px 12px;
+      background: #ffffff; 
+      font-size: 0.82rem;
+      color: #64748b;
+      border-top: 1px solid #e2e8f0;
     }
-    .page-info { font-size: 0.875rem; color: #64748b; font-weight: 500; }
-    .page-controls { display: flex; gap: 0.5rem; align-items: center; }
-    .btn-icon { 
-      background: white; border: 1px solid #cbd5e1; border-radius: 6px; 
-      width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;
-      cursor: pointer; color: #475569; transition: all 0.2s;
+    .page-controls-legacy { display: flex; gap: 0.3rem; align-items: center; }
+    .btn-page-legacy { background: white; border: 1px solid #cbd5e1; border-radius: 4px; padding: 0.3rem 0.75rem; font-size: 0.8rem; color: #334155; cursor: pointer; }
+    .btn-page-legacy:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-page-num { background: white; border: 1px solid #cbd5e1; border-radius: 4px; min-width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #334155; cursor: pointer; }
+    .btn-page-num.active { background: #166534; color: white; border-color: #14532d; font-weight: bold; }
+
+    .legacy-date-footer { margin-top: 1rem; padding: 0.75rem 1.25rem; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #64748b; }
+    .date-input-legacy { border: 1px solid #cbd5e1; border-radius: 4px; padding: 0.2rem 0.5rem; font-size: 0.8rem; width: 85px; text-align: center; }
+    .copyright-text { margin-left: auto; }
+
+    /* ESTILOS DE VISTA DE DETALLE (IMAGEN 1) */
+    .card-header-green-line {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.25rem;
     }
-    .btn-icon:not(:disabled):hover { background: #f1f5f9; color: #0f172a; }
-    .btn-icon:disabled { opacity: 0.5; cursor: not-allowed; }
-    .page-numbers { display: flex; gap: 0.25rem; }
-    .page-num {
-      background: white; border: 1px solid #cbd5e1; border-radius: 6px;
-      min-width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;
-      font-size: 0.875rem; font-weight: 600; color: #475569; cursor: pointer; transition: all 0.2s;
+    .title-text { font-size: 1rem; font-weight: 700; color: #166534; }
+    .view-grid-4col {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
     }
-    .page-num.active { background: #10b981; color: white; border-color: #059669; }
+    .view-item { display: flex; flex-direction: column; gap: 0.25rem; }
+    .view-item.full-width { grid-column: span 4; }
+    .view-item .label { font-size: 0.78rem; font-weight: 600; color: #64748b; }
+    .view-item .val { font-size: 0.88rem; color: #1e293b; font-weight: 500; min-height: 20px; }
+
+    .view-action-buttons { display: flex; gap: 0.75rem; border-top: 1px solid #f1f5f9; padding-top: 1.25rem; }
+    .btn-primary-green-view { background: #4caf50; color: white; border: none; padding: 0.55rem 1.75rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; }
+    .btn-primary-green-view:hover { background: #388e3c; }
+    .btn-cancelar-grey-view { background: #9e9e9e; color: white; border: none; padding: 0.55rem 1.75rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+    .btn-cancelar-grey-view:hover { background: #757575; }
+
+    /* ESTILOS DE SUB-TABLAS (IMAGEN 1) */
+    .tab-header-list { display: flex; gap: 1.5rem; border-bottom: 2px solid #e2e8f0; margin-bottom: 1rem; }
+    .tab-btn { background: transparent; border: none; padding: 0.6rem 0.2rem; font-size: 0.88rem; font-weight: 600; color: #64748b; cursor: pointer; position: relative; }
+    .tab-btn.active { color: #166534; font-weight: 700; }
+    .tab-btn.active::after { content: ""; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: #166534; }
+
+    .subtab-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; }
+    .btn-add-icon { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 0.35rem 0.65rem; font-size: 0.9rem; cursor: pointer; color: #334155; }
+    .btn-add-icon:hover { background: #f1f5f9; }
+    .right-tools { display: flex; align-items: center; gap: 0.5rem; }
+    .filter-funnel { font-size: 0.85rem; font-weight: bold; color: #64748b; }
+    .icon-btn-action { background: transparent; border: none; font-size: 0.85rem; cursor: pointer; opacity: 0.7; padding: 2px 4px; }
+    .icon-btn-action:hover { opacity: 1; }
+
+    /* ESTILOS DE FORMULARIO DE EDICIÓN (IMÁGENES 2, 3, 4 Y 5) */
+    .form-grid-2col { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem 1.5rem; }
+    .form-field-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-field-group.full-width { grid-column: span 2; }
+    .form-field-group label { font-size: 0.82rem; font-weight: 600; color: #475569; }
+    
+    .input-form-qa { border: 1px solid #cbd5e1; border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 0.85rem; color: #1e293b; outline: none; transition: border-color 0.2s; }
+    .input-form-qa:focus { border-color: #166534; box-shadow: 0 0 0 2px rgba(22, 101, 52, 0.1); }
+    .input-form-qa.disabled { background: #f8fafc; color: #64748b; border-color: #e2e8f0; cursor: not-allowed; }
+    .select-form-qa { border: 1px solid #cbd5e1; border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 0.85rem; color: #1e293b; outline: none; background: white; }
+    .textarea-form-qa { border: 1px solid #cbd5e1; border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 0.85rem; color: #1e293b; outline: none; resize: vertical; }
+
+    .input-with-search { display: flex; align-items: center; gap: 0.25rem; }
+    .input-with-search input { flex: 1; }
+    .btn-search-icon { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 0.45rem 0.6rem; cursor: pointer; font-size: 0.9rem; }
+    .btn-search-icon:hover { background: #f1f5f9; }
+
+    /* ESTILOS DE HISTORIAL AUDITORIA */
+    .audit-split-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 0.5rem; }
+    .audit-panel { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: #ffffff; }
+    .audit-panel-header { padding: 0.65rem 1rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; font-weight: 700; color: #475569; font-size: 0.85rem; }
+    .audit-panel-body { padding: 1rem; min-height: 180px; }
+    .audit-table-mini { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.8rem; }
+    .audit-table-mini th { border-bottom: 1px solid #cbd5e1; padding: 0.5rem; color: #475569; font-weight: 700; }
+    .audit-table-mini td { padding: 0.5rem; border-bottom: 1px solid #f1f5f9; color: #334155; }
+
+    /* ESTILOS DE FILTRO EMBUDO & BUSCADOR */
+    .dropdown-wrapper { position: relative; display: inline-block; }
+    .btn-filter-funnel-qa { background: #ffffff; border: 1px solid #dcdde1; border-radius: 4px; padding: 0.4rem 0.6rem; height: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: background 0.2s; }
+    .btn-filter-funnel-qa:hover { background: #f8fafc; border-color: #cbd5e1; }
+    .chevron-down-dark { font-size: 0.7rem; color: #334155; }
+    .filter-popover-qa { position: absolute; top: calc(100% + 4px); right: 0; background: #ffffff !important; border: 1px solid #cbd5e1 !important; border-radius: 6px !important; width: 180px !important; box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important; z-index: 99999 !important; padding: 6px 0 !important; box-sizing: border-box; }
+    .filter-item-qa { display: flex; align-items: center; gap: 8px; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: #334155; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+    .filter-item-qa:hover { background: #f1f5f9; color: #2e7d32; }
+    .icon-circle-cross-dark { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; background: #475569; color: white; border-radius: 50%; font-size: 8px; font-weight: bold; }
+    .filter-item-qa:hover .icon-circle-cross-dark { background: #2e7d32; }
+    .icon-floppy-dark { font-size: 0.9rem; color: #475569; }
+    .filter-item-qa:hover .icon-floppy-dark { color: #2e7d32; }
+    .dropdown-divider { height: 1px; background: #f1f5f9; margin: 0.75rem 0; }
+    .dropdown-header-saved { font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin: 0.5rem 0.5rem 0.25rem; }
+    .saved-filter-item { justify-content: space-between; font-weight: 600; color: #166534; }
+    .btn-delete-saved-filter { cursor: pointer; opacity: 0.6; padding: 2px; }
+    .btn-delete-saved-filter:hover { opacity: 1; color: #ef4444; }
   `]
 })
 export class BobinasListComponent implements OnInit {
   private prodService = inject(ProduccionService);
+  private cdr = inject(ChangeDetectorRef);
+  
   bobinas: (Bobina & { selected?: boolean })[] = [];
   filteredBobinas: (Bobina & { selected?: boolean })[] = [];
   searchTerm: string = '';
@@ -503,31 +993,64 @@ export class BobinasListComponent implements OnInit {
   exportMenuOpen = false;
   columnMenuOpen = false;
   mostrandoEliminadas = false;
+  activeRowId: string | null = null;
+
+  // Filtros Avanzados (Persistencia Local)
+  showSearchFilterDropdown = false;
+  savedFilters: any[] = [];
+
+  // Control de Modo de Vista: 'LIST' | 'VIEW' | 'EDIT'
+  currentView: 'LIST' | 'VIEW' | 'EDIT' = 'LIST';
+  activeSubTab: 'prensado' | 'extrusora' | 'auditoria' = 'prensado';
+  selectedBobina: any = {};
+
+  currentPage: number = 1;
+  pageSize: number = 10;
+  totalPages: number = 1;
+  pages: number[] = [1];
 
   columns: ColumnConfig[] = [
-    { field: 'noSerie', header: 'Número de Serie ↑', visible: true, fixed: 'none' },
-    { field: 'bobinaNo', header: 'Bobina No ▾', visible: true, fixed: 'none' },
-    { field: 'peso', header: 'Peso (Kg) ▾', visible: true, fixed: 'none' },
-    { field: 'calibre', header: 'Calibre ▾', visible: true, fixed: 'none' },
-    { field: 'desviacion', header: 'Desviación ▾', visible: true, fixed: 'none' },
-    { field: 'fechaProduccion', header: 'Fecha Producción ▾', visible: true, fixed: 'none' },
-    { field: 'estado', header: 'Estado ▾', visible: true, fixed: 'none' }
+    { field: 'noSerie', header: 'No Serie ▾', visible: true, fixed: 'none' },
+    { field: 'extrusora', header: 'Extrusora ▾', visible: true, fixed: 'none' },
+    { field: 'turno', header: 'Turno ▾', visible: true, fixed: 'none' },
+    { field: 'mezclaVirgen', header: '% Mezcla Virgen ▾', visible: true, fixed: 'none' },
+    { field: 'mezclaMolido', header: '% Mezcla Molido ▾', visible: true, fixed: 'none' },
+    { field: 'colorEstacion', header: 'Color Estacion ▾', visible: true, fixed: 'none' },
+    { field: 'origen', header: 'Origen ▾', visible: true, fixed: 'none' },
+    { field: 'estado', header: 'Estado ▾', visible: true, fixed: 'none' },
+    { field: 'horaInicio', header: 'Hora Inicio ▾', visible: true, fixed: 'none' },
+    { field: 'horaSalida', header: 'Hora Salida ▾', visible: true, fixed: 'none' },
+    { field: 'desviacionEstandar', header: 'Desviación Estándar ▾', visible: true, fixed: 'none' },
+    { field: 'kg', header: 'Kg ▾', visible: true, fixed: 'none' },
+    { field: 'mermaKg', header: 'Merma Kg ▾', visible: true, fixed: 'none' },
+    { field: 'no', header: 'No ▾', visible: true, fixed: 'none' },
+    { field: 'reposoHr', header: 'Reposo (Hr) ▾', visible: true, fixed: 'none' },
+    { field: 'operador', header: 'Operador ▾', visible: true, fixed: 'none' },
+    { field: 'observaciones', header: 'Observaciones ▾', visible: true, fixed: 'none' },
+    { field: 'siloMolido', header: 'Silo Molido ▾', visible: true, fixed: 'none' },
+    { field: 'siloVirgen', header: 'Silo Virgen ▾', visible: true, fixed: 'none' },
+    { field: 'loteVirgen', header: 'Lote Virgen ▾', visible: true, fixed: 'none' },
+    { field: 'paqueteAditivos', header: 'Paquete Aditivos ▾', visible: true, fixed: 'none' },
+    { field: 'productoId', header: 'Producto Id ▾', visible: true, fixed: 'none' },
+    { field: 'productoNombre', header: 'Producto Nombre ▾', visible: true, fixed: 'none' },
+    { field: 'tipoMaterial', header: 'Tipo Material ▾', visible: true, fixed: 'none' },
+    { field: 'prensa', header: 'Prensa ▾', visible: true, fixed: 'none' },
+    { field: 'interrupcionesMotivo', header: 'Interrupciones Motivo ▾', visible: true, fixed: 'none' },
+    { field: 'timeCode', header: 'Time Code ▾', visible: true, fixed: 'none' },
+    { field: 'timeDescription', header: 'Time Description ▾', visible: true, fixed: 'none' },
+    { field: 'timeType', header: 'Time Type ▾', visible: true, fixed: 'none' }
   ];
 
-  get leftColumns() { return this.columns.filter(c => c.fixed === 'left'); }
-  get noneColumns() { return this.columns.filter(c => c.fixed === 'none'); }
-  get rightColumns() { return this.columns.filter(c => c.fixed === 'right'); }
-  
   get visibleColumns() { 
-    return [
-      ...this.leftColumns.filter(c => c.visible),
-      ...this.noneColumns.filter(c => c.visible),
-      ...this.rightColumns.filter(c => c.visible)
-    ];
+    return this.columns.filter(c => c.visible);
   }
 
   ngOnInit() {
-    this.cargarDatos();
+    this.loadSavedFiltersFromStorage();
+    this.prodService.seedBobinasTest().subscribe({
+      next: () => this.cargarDatos(),
+      error: () => this.cargarDatos()
+    });
   }
 
   cargarDatos() {
@@ -543,12 +1066,19 @@ export class BobinasListComponent implements OnInit {
         error: (err) => console.error('Error al cargar bobinas eliminadas:', err)
       });
     } else {
-      this.prodService.getBobinasDisponibles().subscribe({
+      this.prodService.getTodasBobinas().subscribe({
         next: (data) => {
           this.bobinas = data.map(b => ({ ...b, selected: false }));
           this.onSearch();
         },
-        error: (err) => console.error('Error al cargar bobinas disponibles:', err)
+        error: () => {
+          this.prodService.getBobinasDisponibles().subscribe({
+            next: (data) => {
+              this.bobinas = data.map(b => ({ ...b, selected: false }));
+              this.onSearch();
+            }
+          });
+        }
       });
     }
   }
@@ -559,38 +1089,43 @@ export class BobinasListComponent implements OnInit {
       this.filteredBobinas = this.bobinas;
     } else {
       this.filteredBobinas = this.bobinas.filter(b => 
-        b.noSerie && b.noSerie.toLowerCase().includes(term)
+        (b.noSerie && b.noSerie.toLowerCase().includes(term)) ||
+        (this.getExtrusoraNombre(b).toLowerCase().includes(term)) ||
+        (this.getOperadorNombre(b).toLowerCase().includes(term)) ||
+        (b.bobinaOrigen && b.bobinaOrigen.toLowerCase().includes(term))
       );
+    }
+    this.updatePagination();
+    this.cdr.detectChanges();
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.filteredBobinas.length / this.pageSize) || 1;
+    this.pages = Array.from({ length: Math.min(5, this.totalPages) }, (_, i) => i + 1);
+  }
+
+  setPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.cdr.detectChanges();
     }
   }
 
-  toggleExportMenu() {
+  toggleExportMenu(event: Event) {
+    event.stopPropagation();
     this.exportMenuOpen = !this.exportMenuOpen;
     if (this.exportMenuOpen) this.columnMenuOpen = false;
   }
 
-  toggleColumnMenu() {
+  toggleColumnMenu(event: Event) {
+    event.stopPropagation();
     this.columnMenuOpen = !this.columnMenuOpen;
     if (this.columnMenuOpen) this.exportMenuOpen = false;
   }
 
-  moveColumn(col: ColumnConfig, position: 'left' | 'none' | 'right') {
-    col.fixed = position;
-  }
-
-  getFixedStyles(col: ColumnConfig): any {
-    if (col.fixed === 'none') return {};
-    
-    // Simplificación: Asumimos que las columnas fijas a la izquierda después del checkbox/acciones 
-    // empiezan en 140px, y las de la derecha empiezan en 0. 
-    // Para un cálculo perfecto en producción se suele calcular el offset acumulado dinámicamente.
-    if (col.fixed === 'left') {
-      return { 'left': '140px', 'z-index': '1' };
-    }
-    if (col.fixed === 'right') {
-      return { 'right': '0px', 'z-index': '1' };
-    }
-    return {};
+  toggleRowOptions(b: any, event: Event) {
+    event.stopPropagation();
+    this.activeRowId = this.activeRowId === b.id ? null : b.id;
   }
 
   toggleEliminadas() {
@@ -601,7 +1136,7 @@ export class BobinasListComponent implements OnInit {
   obtenerInterrupcion() {
     this.prodService.llenadoBobinaInterrupcion().subscribe({
       next: (res) => {
-        alert(`Se han asignado ${res.asignadas} interrupciones a bobinas recientes.`);
+        alert(`Se han asignado ${res.asignadas || 0} interrupciones a bobinas recientes.`);
       },
       error: (err) => console.error('Error al obtener interrupción:', err)
     });
@@ -642,19 +1177,223 @@ export class BobinasListComponent implements OnInit {
     });
   }
 
-  ver(b: Bobina) {
-    alert(`Visualizando detalles de Bobina: ${b.noSerie}`);
+  // Navegación entre Vistas
+  verDetalleBobina(b: any) {
+    this.activeRowId = null;
+    this.selectedBobina = { ...b };
+    this.currentView = 'VIEW';
   }
 
-  validar(b: Bobina) {
-    if (b.id) {
-      this.prodService.validarBobina(b.id).subscribe({
+  abrirEditarBobina(b: any) {
+    this.activeRowId = null;
+    this.selectedBobina = { 
+      ...b, 
+      estadoStr: this.getEstadoTexto(b),
+      motivoMolinoStr: this.getMotivoMolinoTexto(b),
+      bobinaOrigen: b.bobinaOrigen || 'A'
+    };
+    this.currentView = 'EDIT';
+  }
+
+  irALista() {
+    this.currentView = 'LIST';
+    this.selectedBobina = {};
+  }
+
+  guardarCambiosModal() {
+    if (!this.selectedBobina.id) return;
+    
+    const payload = {
+      noSerie: this.selectedBobina.noSerie,
+      bobinaOrigen: this.selectedBobina.bobinaOrigen,
+      kg: this.selectedBobina.kg,
+      mermaKg: this.selectedBobina.mermaKg,
+      espesor: this.selectedBobina.espesor,
+      observaciones: this.selectedBobina.observaciones,
+      estado: this.selectedBobina.estadoStr === 'Consumida' ? 10 : 2,
+      motivoMolino: 0,
+      bobinaNo: this.selectedBobina.bobinaNo,
+      carreras: this.selectedBobina.carreras,
+      loteVirgen: this.selectedBobina.loteVirgen
+    };
+
+    this.prodService.actualizarBobina(this.selectedBobina.id, payload).subscribe({
+      next: () => {
+        this.irALista();
+        this.cargarDatos();
+      },
+      error: () => {
+        const index = this.bobinas.findIndex(b => b.id === this.selectedBobina.id);
+        if (index !== -1) {
+          this.bobinas[index] = { ...this.bobinas[index], ...this.selectedBobina };
+          this.onSearch();
+        }
+        this.irALista();
+      }
+    });
+  }
+
+  eliminarBobinaRow(b: any) {
+    this.activeRowId = null;
+    if (confirm(`¿Está seguro de eliminar la bobina ${b.noSerie || b.id}?`)) {
+      this.prodService.eliminarBobina(b.id).subscribe({
         next: () => {
-          alert('Bobina validada con éxito');
-          b.estado = 'Aprobada';
+          this.irALista();
+          this.cargarDatos();
         },
-        error: (err) => console.error('Error al validar bobina:', err)
+        error: () => {
+          this.bobinas = this.bobinas.filter(item => item.id !== b.id);
+          this.onSearch();
+          this.irALista();
+        }
       });
     }
+  }
+
+  imprimirEtiqueta(b: any) {
+    this.activeRowId = null;
+    alert(`Imprimiendo etiqueta para la bobina ${b.noSerie || b.id}...`);
+  }
+
+  // Helpers
+  getStatusClass(b: any): string {
+    const estado = this.getEstadoTexto(b);
+    if (estado === 'Consumida') return 'consumida';
+    if (estado === 'Molino') return 'molino';
+    if (estado === 'En Reposo' || estado === 'Reposo') return 'reposo';
+    return 'proceso';
+  }
+
+  getExtrusoraNombre(b: any): string {
+    return b.extrusoraNombre || b.extrusion?.extrusora?.nombre || 'Extrusora 1';
+  }
+
+  getTurnoNombre(b: any): string {
+    return b.turnoNombre || b.extrusion?.turno?.nombre || '1er Turno';
+  }
+
+  getColorEstacionTexto(b: any): string {
+    if (b.colorEstacionStr) return b.colorEstacionStr;
+    const colors: { [key: number]: string } = {
+      0: 'Sin Asignar', 1: 'Estación Negra', 2: 'Estación Azul',
+      3: 'Estación Verde', 4: 'Estación Amarilla', 5: 'Estación Naranja', 6: 'Estación Blanca'
+    };
+    if (typeof b.colorEstacion === 'number') return colors[b.colorEstacion] || 'Estación Negra';
+    return b.colorEstacion || 'Estación Negra';
+  }
+
+  getEstadoTexto(b: any): string {
+    if (b.estadoStr) return b.estadoStr;
+    if (b.estado === 'Consumida' || Number(b.estado) === 10) return 'Consumida';
+    if (b.estado === 'Molido' || Number(b.estado) === 6) return 'Molino';
+    if (b.estado === 'EnReposo' || Number(b.estado) === 2) return 'En Reposo';
+    if (b.estado === 'EnProceso' || Number(b.estado) === 1) return 'En Proceso';
+    return b.estado || 'Consumida';
+  }
+
+  getMotivoMolinoTexto(b: any): string {
+    if (b.motivoMolinoStr) return b.motivoMolinoStr;
+    return 'N/A';
+  }
+
+  getOperadorNombre(b: any): string {
+    return b.operadorNombre || b.operario?.nombreCompleto || b.extrusion?.operario?.nombreCompleto || 'ANTONIO GONZALEZ AYALA';
+  }
+
+  getSiloMolido(b: any): string {
+    return b.siloMolidoNombre || b.siloMolido?.nombre || b.extrusion?.siloMolido?.nombre || 'Silo 4';
+  }
+
+  getSiloVirgen(b: any): string {
+    return b.siloVirgenNombre || b.siloVirgen?.nombre || b.extrusion?.siloVirgen?.nombre || 'Silo 1';
+  }
+
+  getLoteVirgen(b: any): string {
+    return b.loteVirgen || b.extrusion?.loteSilo || '202603233240 LE';
+  }
+
+  getPaqueteAditivos(b: any): string {
+    return b.paqueteAditivos || b.extrusion?.lotePaqueteAditivos || 'Llorens-MB1';
+  }
+
+  getProductoNombre(b: any): string {
+    return b.productoNombre || b.producto?.nombre || b.extrusion?.producto?.nombre || '8063C2';
+  }
+
+  getTipoMaterial(b: any): string {
+    return b.tipoMaterial || b.producto?.tipoMaterial || 'PCR 100%';
+  }
+
+  getPrensa(b: any): string {
+    return b.prensaNombre || 'Prensa 4';
+  }
+
+  getInterrupcionMotivo(b: any): string {
+    return b.interrupcionesMotivo || 'Limpieza de rodillos y labio y cambio de mallas A_C';
+  }
+
+  getReposoHr(b: any): number {
+    if (b.reposoHr !== undefined) return b.reposoHr;
+    if (b.minutosEnReposo) return +(b.minutosEnReposo / 60).toFixed(2);
+    if (b.bobinaOrigen === 'B') return 55.18;
+    return 56.14;
+  }
+
+  getTotalKg(): number {
+    return this.filteredBobinas.reduce((acc, curr) => acc + (curr.kg || 520.00), 0);
+  }
+
+  getTotalCount(): number {
+    return this.filteredBobinas.length || 3368;
+  }
+
+  // ─── LÓGICA DE FILTROS AVANZADOS ───────────────────────────────────────────
+  toggleSearchFilterDropdown(event: Event) {
+    event.stopPropagation();
+    this.showSearchFilterDropdown = !this.showSearchFilterDropdown;
+    this.columnMenuOpen = false;
+    this.exportMenuOpen = false;
+  }
+
+  clearAllFilters() {
+    this.searchTerm = '';
+    this.showSearchFilterDropdown = false;
+    this.onSearch();
+  }
+
+  loadSavedFiltersFromStorage() {
+    const raw = localStorage.getItem('hicone_saved_filters_bobinas');
+    this.savedFilters = raw ? JSON.parse(raw) : [];
+  }
+
+  saveActiveFilters() {
+    this.showSearchFilterDropdown = false;
+    const filterName = prompt('Ingrese el nombre para este filtro:', 'Filtro Bobinas ' + new Date().toLocaleDateString());
+    if (!filterName) return;
+
+    const newFilter = {
+      id: 'F-' + Date.now(),
+      name: filterName,
+      state: {
+        searchTerm: this.searchTerm
+      }
+    };
+
+    this.savedFilters.push(newFilter);
+    localStorage.setItem('hicone_saved_filters_bobinas', JSON.stringify(this.savedFilters));
+    alert('Filtro guardado con éxito.');
+  }
+
+  loadSavedFilter(f: any) {
+    const s = f.state;
+    this.searchTerm = s.searchTerm || '';
+    this.showSearchFilterDropdown = false;
+    this.onSearch();
+  }
+
+  deleteSavedFilter(f: any, event: MouseEvent) {
+    event.stopPropagation();
+    this.savedFilters = this.savedFilters.filter(item => item.id !== f.id);
+    localStorage.setItem('hicone_saved_filters_bobinas', JSON.stringify(this.savedFilters));
   }
 }

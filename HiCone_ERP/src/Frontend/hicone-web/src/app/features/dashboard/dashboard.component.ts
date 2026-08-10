@@ -6,14 +6,20 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="inicio-page animate-fade-in">
-      <header class="page-header">
-        <h1 class="page-title">Inicio</h1>
-        <nav class="breadcrumb">Inventario / Inicio</nav>
-      </header>
+    <div class="module-page animate-fade-in">
+      <div class="page-header-premium">
+        <div class="title-section">
+          <h1 class="premium-title">Inicio</h1>
+          <nav class="breadcrumb-modern">
+            <span class="root">Inventarios</span>
+            <span class="sep">&rsaquo;</span>
+            <span class="active">Inicio</span>
+          </nav>
+        </div>
+      </div>
 
       <div class="welcome-container">
-        <div class="welcome-card">
+        <div class="welcome-card card-section-rounded">
           <div class="welcome-icon">👋</div>
           <div class="welcome-text">
             <h2>Bienvenido a HiCone ERP</h2>
@@ -23,8 +29,7 @@ import { CommonModule } from '@angular/common';
       </div>
 
       <div class="info-grid">
-        <!-- Espacio para widgets rápidos en el futuro -->
-        <div class="info-card">
+        <div class="info-card card-section-rounded">
           <h3>Estado del Sistema</h3>
           <div class="status-indicator">
             <span class="dot online"></span>
@@ -35,40 +40,23 @@ import { CommonModule } from '@angular/common';
     </div>
   `,
   styles: [`
-    .inicio-page {
-      padding: 1.5rem;
-    }
-
-    .page-header {
-      margin-bottom: 2rem;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 1rem;
-    }
-
-    .page-title {
-      font-size: 1.5rem;
-      color: #7f8c8d;
-      margin-bottom: 0.25rem;
-    }
-
-    .breadcrumb {
-      font-size: 0.8rem;
-      color: #bdc3c7;
+    .module-page {
+      padding: 0;
     }
 
     .welcome-container {
-      margin-top: 2rem;
+      margin-top: 1.5rem;
     }
 
     .welcome-card {
       background: white;
-      border-radius: 8px;
+      border-radius: 12px;
       padding: 2.5rem;
       display: flex;
       align-items: center;
       gap: 2rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+      border: 1px solid #e2e8f0;
     }
 
     .welcome-icon {
@@ -77,15 +65,18 @@ import { CommonModule } from '@angular/common';
 
     .welcome-text h2 {
       margin-bottom: 0.5rem;
-      color: var(--text-main);
+      color: #166534;
+      font-size: 1.5rem;
+      font-weight: 800;
     }
 
     .welcome-text p {
-      color: var(--text-muted);
+      color: #475569;
+      font-size: 0.95rem;
     }
 
     .info-grid {
-      margin-top: 2rem;
+      margin-top: 1.5rem;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1.5rem;
@@ -94,22 +85,26 @@ import { CommonModule } from '@angular/common';
     .info-card {
       background: white;
       padding: 1.5rem;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
     }
 
     .info-card h3 {
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+      color: #64748b;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     .status-indicator {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      font-weight: 600;
-      color: var(--primary);
+      font-weight: 700;
+      color: #166534;
     }
 
     .dot {
@@ -119,8 +114,8 @@ import { CommonModule } from '@angular/common';
     }
 
     .dot.online {
-      background: var(--primary);
-      box-shadow: 0 0 10px var(--primary);
+      background: #166534;
+      box-shadow: 0 0 10px #166534;
     }
   `]
 })

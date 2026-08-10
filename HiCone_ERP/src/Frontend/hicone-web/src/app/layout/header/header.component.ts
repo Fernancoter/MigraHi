@@ -2,13 +2,14 @@ import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService, UserDto as User } from '../../core/services/auth.service';
-import { Observable } from 'rxjs';
+import { Observable, timer, Subscription } from 'rxjs';
 import { NavigationService } from '../../core/services/navigation.service';
 
 interface ModuleItem {
   title: string;
   icon: string;
   route: string;
+  queryParams?: any;
 }
 
 @Component({
@@ -42,6 +43,7 @@ interface ModuleItem {
             <div class="megamenu-grid-modern">
               <a *ngFor="let m of modules" 
                  [routerLink]="m.route" 
+                 [queryParams]="m.queryParams || {}"
                  class="module-tile-premium"
                  (click)="selectModule(m)">
                 <div class="tile-icon-box">{{ m.icon }}</div>
@@ -182,7 +184,7 @@ export class HeaderComponent {
   showGrid = false;
   showUserMenu = false;
   currentUser$: Observable<User | null>;
-  private closeTimer: any;
+  private closeTimer?: Subscription;
 
   getInitials(name: string): string {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
@@ -191,7 +193,7 @@ export class HeaderComponent {
   modules: ModuleItem[] = [
     { title: 'Inventario', icon: '🏭', route: '/dashboard' },
     { title: 'Extrusión', icon: '🏗️', route: '/produccion/extrusion/inicio' },
-    { title: 'Prensado', icon: '⚙️', route: '/produccion' },
+    { title: 'Prensado', icon: '⚙️', route: '/produccion/prensado/inicio' },
     { title: 'Embarques', icon: '🚚', route: '/embarques' },
     { title: 'Calidad', icon: '✅', route: '/calidad' },
     { title: 'Seguridad', icon: '🛡️', route: '/seguridad' },
@@ -235,25 +237,26 @@ export class HeaderComponent {
 
   onMouseEnter() {
     if (this.closeTimer) {
-      clearTimeout(this.closeTimer);
+      this.closeTimer.unsubscribe();
     }
     this.showGrid = true;
   }
 
   onMouseLeave() {
     // Si ya hay un timer, lo limpiamos para no acumular cierres
-    if (this.closeTimer) clearTimeout(this.closeTimer);
+    if (this.closeTimer) this.closeTimer.unsubscribe();
 
-    this.closeTimer = setTimeout(() => {
+    this.closeTimer = timer(1000).subscribe(() => {
       this.showGrid = false;
-      this.closeTimer = null;
-    }, 1000); // Reducido a 1 segundo como solicitaste
+      this.closeTimer = undefined;
+    }); // Reducido a 1 segundo como solicitaste
   }
 
   toggleGrid() {
     this.showGrid = !this.showGrid;
     if (this.showGrid && this.closeTimer) {
-      clearTimeout(this.closeTimer);
+      this.closeTimer.unsubscribe();
+      this.closeTimer = undefined;
     }
   }
 

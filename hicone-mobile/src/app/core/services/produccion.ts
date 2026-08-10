@@ -166,13 +166,29 @@ export class ProduccionService {
     return this.http.post<Bobina>(`${this.apiUrl}/extrusion/${extrusionId}/registrar-bobina`, request);
   }
 
+  registrarConsumoExtrusion(extrusionId: string, request: { siloVirgenId: string, virgenKg: number, siloMolidoId: string, molidoKg: number }): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/extrusion/${extrusionId}/consumo`, request);
+  }
+
   // ── Prensado ───────────────────────────────────────────────────────────
   getPrensados(): Observable<Prensado[]> {
     return this.http.get<Prensado[]>(`${this.apiUrl}/prensados`);
   }
 
+  getPrensadosOperacion(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/prensado/operacion`);
+  }
+
+  getPrensadosProgramacion(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/prensado/programacion`);
+  }
+
   iniciarPrensado(request: any): Observable<Prensado> {
     return this.http.post<Prensado>(`${this.apiUrl}/prensado/iniciar`, request);
+  }
+
+  concluirPrensado(id: string, request: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/prensado/${id}/concluir`, request);
   }
 
   // ── Interrupciones (Downtime) ──────────────────────────────────────────
@@ -224,6 +240,18 @@ export class ProduccionService {
   getTurnos(): Observable<Turno[]> {
     return this.http.get<Turno[]>(`${this.apiUrl}/turnos`);
   }
+
+  getTroqueles(): Observable<any[]> {
+    return this.http.get<any[]>(`http://localhost:5007/api/v1/catalogos/troqueles`);
+  }
+
+  getPalets(productoCodigo?: string, noSerie?: string): Observable<any[]> {
+    let params = '';
+    if (productoCodigo) params += `productoCodigo=${encodeURIComponent(productoCodigo)}&`;
+    if (noSerie) params += `noSerie=${encodeURIComponent(noSerie)}&`;
+    return this.http.get<any[]>(`${this.apiUrl}/palets?${params}`);
+  }
+
 
   // ── Bobinas Disponibles ───────────────────────────────────────────────
   getBobinasDisponibles(): Observable<Bobina[]> {

@@ -1,4 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { timer } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionService, Prensa } from '../../../core/services/produccion';
@@ -149,6 +150,7 @@ import { SyncQueueService, PendingOp } from '../../../core/offline/sync-queue.se
 export class CarreraComponent implements OnInit {
   private prodService = inject(ProduccionService);
   private syncQueue = inject(SyncQueueService);
+  private cdr = inject(ChangeDetectorRef);
 
   prensas: Prensa[] = [];
   selectedPrensaId = '';
@@ -198,8 +200,10 @@ export class CarreraComponent implements OnInit {
   showStatus(msg: string, success: boolean) {
     this.message = msg;
     this.isSuccess = success;
-    setTimeout(() => {
+    this.cdr.markForCheck();
+    timer(4000).subscribe(() => {
       this.message = '';
-    }, 4000);
+      this.cdr.markForCheck();
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
@@ -19,6 +19,7 @@ export class ExtrusionOperadorComponent implements OnInit {
   private invService = inject(InventarioService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   // Catálogos
   extrusoras: Extrusora[] = [];
@@ -132,17 +133,19 @@ export class ExtrusionOperadorComponent implements OnInit {
         if (this.extrusoras.length === 1) {
           this.seleccionarExtrusora(this.extrusoras[0]);
         }
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar extrusoras:', err);
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
 
-    this.prodService.getOperarios().subscribe((data: Operario[]) => this.operarios = data);
-    this.prodService.getProductos().subscribe((data: Producto[]) => this.productos = data);
-    this.prodService.getTurnos().subscribe((data: Turno[]) => this.turnos = data);
-    this.invService.getSilos().subscribe((data: Silo[]) => this.silos = data);
+    this.prodService.getOperarios().subscribe((data: Operario[]) => { this.operarios = data; this.cdr.detectChanges(); });
+    this.prodService.getProductos().subscribe((data: Producto[]) => { this.productos = data; this.cdr.detectChanges(); });
+    this.prodService.getTurnos().subscribe((data: Turno[]) => { this.turnos = data; this.cdr.detectChanges(); });
+    this.invService.getSilos().subscribe((data: Silo[]) => { this.silos = data; this.cdr.detectChanges(); });
   }
 
   seleccionarExtrusora(ext: Extrusora) {
@@ -178,10 +181,12 @@ export class ExtrusionOperadorComponent implements OnInit {
             this.cargarUltimasBobinas();
             this.cargarBobinasExtrusion();
           }
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error al cargar orden activa:', err);
           this.loading = false;
+          this.cdr.detectChanges();
         }
       });
   }
@@ -191,6 +196,7 @@ export class ExtrusionOperadorComponent implements OnInit {
     this.prodService.getSiguienteBobinaNo(this.extrusoraSeleccionada.id, this.inauguracion.productoId)
       .subscribe((no: number) => {
         this.siguienteBobinaNo = no;
+        this.cdr.detectChanges();
       });
   }
 
@@ -273,14 +279,16 @@ export class ExtrusionOperadorComponent implements OnInit {
           this.estacionB.calibre = this.extrusionActiva.producto.calibre;
         }
         // Actualizar silos localmente
-        this.invService.getSilos().subscribe((s: Silo[]) => this.silos = s);
+        this.invService.getSilos().subscribe((s: Silo[]) => { this.silos = s; this.cdr.detectChanges(); });
         this.cargarSiguienteConsecutivo();
         this.cargarUltimasBobinas();
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al inaugurar orden:', err);
         this.errorMessage = err.error?.message || 'Error del servidor al inaugurar orden.';
         this.saving = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -354,14 +362,16 @@ export class ExtrusionOperadorComponent implements OnInit {
         // Si es Estación A, recalculamos el consecutivo BobinaNo del backend
         this.cargarSiguienteConsecutivo();
         // Recargar silos localmente para ver actualización de molido
-        this.invService.getSilos().subscribe((s: Silo[]) => this.silos = s);
+        this.invService.getSilos().subscribe((s: Silo[]) => { this.silos = s; this.cdr.detectChanges(); });
         // Recargar lista completa de bobinas
         this.cargarBobinasExtrusion();
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al guardar bobina:', err);
         this.errorMessage = err.error?.message || 'Error del servidor al registrar bobina.';
         this.saving = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -399,10 +409,12 @@ export class ExtrusionOperadorComponent implements OnInit {
 
         this.loading = false;
         this.mostrarModalCierre = true;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al abrir modal de cierre:', err);
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -424,11 +436,13 @@ export class ExtrusionOperadorComponent implements OnInit {
           
           // Recargar catálogo de silos y extrusoras
           this.cargarCatalogos();
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error al finalizar extrusión:', err);
           this.errorMessage = 'No se pudo finalizar la orden de extrusión.';
           this.saving = false;
+          this.cdr.detectChanges();
         }
       });
   }
@@ -469,6 +483,7 @@ export class ExtrusionOperadorComponent implements OnInit {
     this.prodService.getBobinasByExtrusion(this.extrusionActiva.id).subscribe({
       next: (bobs) => {
         this.bobinasExtrusion = bobs;
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Error al cargar bobinas de extrusión:', err)
     });
@@ -502,11 +517,13 @@ export class ExtrusionOperadorComponent implements OnInit {
         this.successMessage = `¡Bobina ${bobina.noSerie} pausada correctamente!`;
         this.saving = false;
         this.cargarBobinasExtrusion();
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al pausar bobina:', err);
         this.errorMessage = err.error?.message || 'Error del servidor al pausar la bobina.';
         this.saving = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -520,11 +537,13 @@ export class ExtrusionOperadorComponent implements OnInit {
         this.successMessage = `¡Bobina ${bobina.noSerie} validada correctamente (Disponible para Prensado)!`;
         this.saving = false;
         this.cargarBobinasExtrusion();
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al validar bobina:', err);
         this.errorMessage = err.error?.message || 'Error del servidor al validar la bobina.';
         this.saving = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -550,12 +569,14 @@ export class ExtrusionOperadorComponent implements OnInit {
           this.bobinaAProcesar = null;
           this.cargarBobinasExtrusion();
           // Recargar silos localmente para ver actualización de molido
-          this.invService.getSilos().subscribe((s: Silo[]) => this.silos = s);
+          this.invService.getSilos().subscribe((s: Silo[]) => { this.silos = s; this.cdr.detectChanges(); });
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error al rechazar bobina:', err);
           this.errorMessage = err.error?.message || 'Error del servidor al rechazar la bobina.';
           this.saving = false;
+          this.cdr.detectChanges();
         }
       });
   }
@@ -572,10 +593,12 @@ export class ExtrusionOperadorComponent implements OnInit {
         this.extrusionesDisponibles = exts.filter(e => e.id !== this.extrusionActiva.id && e.estado !== 'Finalizada');
         this.loading = false;
         this.mostrarModalTransferir = true;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar extrusiones para transferir:', err);
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -592,11 +615,13 @@ export class ExtrusionOperadorComponent implements OnInit {
         this.saving = false;
         this.bobinaAProcesar = null;
         this.cargarBobinasExtrusion();
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al transferir bobina:', err);
         this.errorMessage = err.error?.message || 'Error del servidor al reasignar la bobina.';
         this.saving = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -629,11 +654,13 @@ export class ExtrusionOperadorComponent implements OnInit {
         this.mostrarModalRecalibrar = false;
         this.saving = false;
         this.cargarExtrusionActiva(); // Recargar datos de la orden
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al recalibrar extrusión:', err);
         this.errorMessage = err.error?.message || 'Error del servidor al aplicar recalibración.';
         this.saving = false;
+        this.cdr.detectChanges();
       }
     });
   }

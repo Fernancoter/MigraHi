@@ -79,11 +79,13 @@ public enum MolinoCarrete
 /// <summary>Estados del proceso de prensado</summary>
 public enum EstadoPrensado
 {
+    Programada = 0,
     EnProceso = 1,
     Finalizado = 2,
     Anticipado = 3,     // Finalización anticipada con motivo
     Cancelado = 4
 }
+
 
 /// <summary>Estatus del palet</summary>
 public enum EstatusPalet

@@ -11,13 +11,10 @@ namespace HiCone.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "fk_extrusiones_maquinas_maquina_id",
-                table: "extrusiones");
-
-            migrationBuilder.DropIndex(
-                name: "ix_extrusiones_maquina_id",
-                table: "extrusiones");
+            // NOTA: "extrusiones.maquina_id" (y su FK/índice) nunca existieron en esta base de datos
+            // recreada desde cero — el modelo actual usa extrusora_id directamente. Se omite el
+            // Drop de algo que no existe; se conserva el resto de la migración (incluye el genuino
+            // AddColumn "maquina_id1" más adelante).
 
             migrationBuilder.DropColumn(
                 name: "process_end",
@@ -37,10 +34,6 @@ namespace HiCone.Persistence.Migrations
 
             migrationBuilder.DropColumn(
                 name: "kg_virgen",
-                table: "extrusiones");
-
-            migrationBuilder.DropColumn(
-                name: "maquina_id",
                 table: "extrusiones");
 
             migrationBuilder.DropColumn(
@@ -164,25 +157,8 @@ namespace HiCone.Persistence.Migrations
                 type: "uniqueidentifier",
                 nullable: true);
 
-            migrationBuilder.CreateTable(
-                name: "configuraciones_sistema",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    key = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    valor = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    created_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    updated_at = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    updated_by = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    is_deleted = table.Column<bool>(type: "bit", nullable: false),
-                    deleted_at = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    tenant_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_configuraciones_sistema", x => x.id);
-                });
+            // NOTA: "configuraciones_sistema" ya existe desde "InitialProductionBaseline". Se omite
+            // su recreación aquí.
 
             migrationBuilder.CreateIndex(
                 name: "ix_extrusiones_maquina_id1",
@@ -203,9 +179,6 @@ namespace HiCone.Persistence.Migrations
             migrationBuilder.DropForeignKey(
                 name: "fk_extrusiones_maquinas_maquina_id1",
                 table: "extrusiones");
-
-            migrationBuilder.DropTable(
-                name: "configuraciones_sistema");
 
             migrationBuilder.DropIndex(
                 name: "ix_extrusiones_maquina_id1",

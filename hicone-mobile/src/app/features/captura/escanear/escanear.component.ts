@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
+import { timer } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ScannerService } from '../../../core/hardware/scanner.service';
 import { SyncQueueService, PendingOp } from '../../../core/offline/sync-queue.service';
@@ -210,6 +211,7 @@ import { SyncQueueService, PendingOp } from '../../../core/offline/sync-queue.se
 export class EscanearComponent {
   private scanner = inject(ScannerService);
   private syncQueue = inject(SyncQueueService);
+  private cdr = inject(ChangeDetectorRef);
 
   lastScan: { type: 'bobina' | 'carrete' | 'pallet'; code: string; format: string } | null = null;
   message = '';
@@ -277,8 +279,10 @@ export class EscanearComponent {
   showStatus(msg: string, success: boolean) {
     this.message = msg;
     this.isSuccess = success;
-    setTimeout(() => {
+    this.cdr.markForCheck();
+    timer(4000).subscribe(() => {
       this.message = '';
-    }, 4000);
+      this.cdr.markForCheck();
+    });
   }
 }

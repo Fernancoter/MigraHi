@@ -2,7 +2,6 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Categoria } from '../../../../core/services/produccion-config.service';
-import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-categorias-catalogo',
@@ -12,6 +11,7 @@ import * as XLSX from 'xlsx';
     <div class="module-page animate-move-up">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Catálogo de Categorías</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Producción</span>
             <span class="sep">&rsaquo;</span>
@@ -19,7 +19,6 @@ import * as XLSX from 'xlsx';
             <span class="sep">&rsaquo;</span>
             <span class="active">Categorías</span>
           </nav>
-          <h1 class="premium-title">Catálogo de Categorías</h1>
         </div>
       </div>
         
@@ -29,14 +28,18 @@ import * as XLSX from 'xlsx';
           <!-- LEFT SIDE -->
           <div class="toolbar-left" style="display: flex; gap: 0.75rem; align-items: center;">
             <!-- Dropdown de Exportar -->
-            <div class="dropdown-wrapper">
-              <button class="btn btn-secondary" (click)="toggleExportDropdown($event)" style="display: flex; align-items: center; gap: 0.4rem;">
-                <span>⬇️</span> Exportar
+            <div class="export-dropdown-wrapper">
+              <button class="btn-export-qa" (click)="toggleExportDropdown($event)" title="Exportar datos">
+                📥 Exportar <span class="chevron-down-qa">▾</span>
               </button>
               @if (showExportOptions()) {
-                <div class="column-selector-popover animate-slide-up">
-                  <div class="dropdown-item" (click)="exportCSV()">Excel</div>
-                  <div class="dropdown-item" (click)="exportPDF()">PDF</div>
+                <div class="export-popover-qa shadow-premium" (click)="$event.stopPropagation()">
+                  <button class="export-item-qa" (click)="exportCSV()">
+                    <span class="export-icon">📊</span> Excel (CSV)
+                  </button>
+                  <button class="export-item-qa" (click)="exportPDF()">
+                    <span class="export-icon">📕</span> PDF
+                  </button>
                 </div>
               }
             </div>
@@ -115,38 +118,50 @@ import * as XLSX from 'xlsx';
           <div class="toolbar-spacer" style="flex: 1;"></div>
 
           <!-- RIGHT SIDE -->
-          <div class="toolbar-right" style="display: flex; gap: 0.5rem; align-items: center;">
-            
-            <!-- Botón de Filtros Extras -->
-            <div class="dropdown-wrapper">
-              <button class="btn btn-filter" (click)="toggleFilterDropdown($event)" title="Filtros avanzados">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-                <span class="chevron" style="font-size: 0.7rem; margin-left: 0.2rem;">▾</span>
-              </button>
-              @if (showFilterOptions()) {
-                <div class="column-selector-popover filter-popover animate-slide-up" style="width: 200px; right: 0; left: auto;">
-                  <div class="dropdown-item" (click)="clearFilters()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                    Limpiar filtros
+          <div class="toolbar-right">
+            <div class="filter-search-group-qa">
+              <!-- Botón Filtro Avanzado -->
+              <div class="dropdown-wrapper">
+                <button class="btn-filter-funnel-qa" (click)="toggleFilterDropdown($event)" title="Filtros avanzados">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                  </svg>
+                  <span class="chevron-down-funnel">▾</span>
+                </button>
+                @if (showFilterOptions()) {
+                  <div class="column-selector-popover filter-popover animate-slide-up" style="width: 200px; right: 0; left: auto; z-index: 99999;" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item" (click)="clearFilters()">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                      Limpiar filtros
+                    </div>
+                    <div class="dropdown-item" (click)="saveFilter()">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                      Guardar filtro como...
+                    </div>
+                    
+                    @if (savedFilters.length > 0) {
+                      <div style="height: 1px; background: #e2e8f0; margin: 0.5rem 0;"></div>
+                      <div style="font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; padding: 0.25rem 0.5rem;">Filtros Guardados</div>
+                      @for (f of savedFilters; track f.id) {
+                        <div class="dropdown-item" (click)="loadSavedFilter(f)" style="display: flex; justify-content: space-between; align-items: center;">
+                          <span>📁 {{ f.name }}</span>
+                          <span (click)="deleteSavedFilter(f, $event)" style="cursor: pointer; opacity: 0.6; padding: 2px;">🗑️</span>
+                        </div>
+                      }
+                    }
                   </div>
-                  <div class="dropdown-item" (click)="saveFilter()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                    Guardar filtro como...
-                  </div>
-                </div>
-              }
-            </div>
+                }
+              </div>
 
-            <!-- Filtro de Búsqueda -->
-            <div class="search-box">
-              <span class="search-icon">🔍</span>
-              <input 
-                class="field-input" 
-                type="text" 
-                placeholder="Buscar..." 
-                [ngModel]="searchText()" 
-                (ngModelChange)="searchText.set($event); currentPage.set(1)"
-              />
+              <!-- Campo de Búsqueda Subrayado -->
+              <div class="search-modern-underline-qa">
+                <input 
+                  type="text" 
+                  placeholder="Buscar..." 
+                  [ngModel]="searchText()" 
+                  (ngModelChange)="searchText.set($event); currentPage.set(1)"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -490,6 +505,7 @@ export class CategoriasComponent implements OnInit {
   // Search & Filters
   searchText = signal<string>('');
   showFilterOptions = signal<boolean>(false);
+  savedFilters: any[] = [];
   
   // Columns
   showColumnSelector = signal<boolean>(false);
@@ -508,6 +524,7 @@ export class CategoriasComponent implements OnInit {
   pageSize = signal<number>(8);
 
   ngOnInit() {
+    this.loadSavedFiltersFromStorage();
     this.load();
   }
 
@@ -598,9 +615,40 @@ export class CategoriasComponent implements OnInit {
     this.showFilterOptions.set(false);
   }
 
+  loadSavedFiltersFromStorage() {
+    const raw = localStorage.getItem('hicone_saved_filters_categorias');
+    this.savedFilters = raw ? JSON.parse(raw) : [];
+  }
+
   saveFilter() {
-    alert('Filtro guardado (Funcionalidad pendiente de conexión al backend).');
     this.showFilterOptions.set(false);
+    const filterName = prompt('Ingrese el nombre para este filtro:', 'Filtro Categorías ' + new Date().toLocaleDateString());
+    if (!filterName) return;
+
+    const newFilter = {
+      id: 'F-' + Date.now(),
+      name: filterName,
+      state: {
+        searchText: this.searchText()
+      }
+    };
+
+    this.savedFilters.push(newFilter);
+    localStorage.setItem('hicone_saved_filters_categorias', JSON.stringify(this.savedFilters));
+    alert('Filtro guardado con éxito.');
+  }
+
+  loadSavedFilter(f: any) {
+    const s = f.state;
+    this.searchText.set(s.searchText || '');
+    this.currentPage.set(1);
+    this.showFilterOptions.set(false);
+  }
+
+  deleteSavedFilter(f: any, event: MouseEvent) {
+    event.stopPropagation();
+    this.savedFilters = this.savedFilters.filter(item => item.id !== f.id);
+    localStorage.setItem('hicone_saved_filters_categorias', JSON.stringify(this.savedFilters));
   }
 
   /* ------------------- PAGINATION ------------------- */
@@ -700,17 +748,21 @@ export class CategoriasComponent implements OnInit {
   /* ------------------- EXPORT ------------------- */
   exportCSV() {
     this.showExportOptions.set(false);
-    
-    const dataToExport = this.filteredItems().map(item => ({
-      ID: item.id,
-      Nombre: item.nombre
-    }));
+    let csvContent = '\uFEFFNombre\n';
+    this.filteredItems().forEach(op => {
+      if (this.isColVisible('nombre')) {
+        csvContent += `${op.nombre}\n`;
+      }
+    });
 
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Categorias');
-
-    XLSX.writeFile(wb, `categorias_${new Date().toISOString().slice(0,10)}.xlsx`);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `categorias_reporte_${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   exportPDF() {

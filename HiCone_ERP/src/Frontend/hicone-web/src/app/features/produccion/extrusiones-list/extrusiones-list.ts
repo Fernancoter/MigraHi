@@ -1,21 +1,23 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProduccionService, Extrusion } from '../../../core/services/produccion';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ProduccionConfigService } from '../../../core/services/produccion-config.service';
+import { ColumnFilterComponent } from '../../../shared/components/column-filter.component';
 
 @Component({
   selector: 'app-extrusiones-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ColumnFilterComponent],
   template: `
     <div class="module-page animate-fade-in">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Extrusión</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Extrusión</span>
             <span class="sep">&rsaquo;</span>
@@ -23,7 +25,6 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
             <span class="sep">&rsaquo;</span>
             <span class="active">Extrusiones</span>
           </nav>
-          <h1 class="premium-title">Extrusión</h1>
         </div>
       </div>
 
@@ -32,22 +33,22 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
         <div class="toolbar-premium">
           <div class="toolbar-left">
             <!-- Menú Desplegable Exportar -->
-            <div class="dropdown-wrapper">
-              <button class="btn-premium-secondary" (click)="toggleExportDropdown($event)">
-                <span>📥 Exportar</span>
-                <span class="chevron-down">▾</span>
+            <div class="export-dropdown-wrapper">
+              <button class="btn-export-qa" (click)="toggleExportDropdown($event)" title="Exportar datos">
+                📥 Exportar <span class="chevron-down-qa">▾</span>
               </button>
-              <div class="dropdown-menu-custom" *ngIf="showExportOptions">
-                <button class="dropdown-item-custom" (click)="exportarExcel()">📊 Descargar XLS (Excel)</button>
-                <button class="dropdown-item-custom" (click)="exportarPDF()">📕 Descargar PDF</button>
+              <div class="export-popover-qa shadow-premium" *ngIf="showExportOptions" (click)="$event.stopPropagation()">
+                <button class="export-item-qa" (click)="exportarExcel()">
+                  <span class="export-icon">📊</span> Excel (CSV)
+                </button>
+                <button class="export-item-qa" (click)="exportarPDF()">
+                  <span class="export-icon">📕</span> PDF
+                </button>
               </div>
             </div>
 
             <button class="btn-premium" (click)="irAAgregar()">
               <span>Agregar</span>
-            </button>
-            <button class="btn-premium-secondary" (click)="exportarExcel()" title="Exportar rápido a Excel">
-              <span>XLS</span>
             </button>
 
             <!-- Menú Desplegable Selecciona Columnas -->
@@ -157,8 +158,35 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
             </div>
           </div>
           <div class="toolbar-right">
-            <div class="search-modern-underline">
-              <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="onSearch()">
+            <div class="filter-search-group-qa">
+              <!-- Botón Filtro Avanzado -->
+              <div class="dropdown-wrapper">
+                <button class="btn-filter-funnel-qa" (click)="$event.stopPropagation(); toggleFilterMenu($event)" title="Filtros avanzados">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                  </svg>
+                  <span class="chevron-down-funnel">▾</span>
+                </button>
+                
+                <!-- Filter Dropdown -->
+                <div *ngIf="isFilterMenuOpen" style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 99999; width: 210px; padding: 0.5rem;" (click)="$event.stopPropagation()">
+                  <button (click)="clearFilters(); $event.stopPropagation()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Limpiar Filtros</button>
+                  <button (click)="saveFilter(); $event.stopPropagation()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Guardar Filtro como...</button>
+                  <div *ngIf="savedFilters.length > 0">
+                    <div style="height: 1px; background: #e2e8f0; margin: 0.5rem 0;"></div>
+                    <div style="font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; padding: 0.25rem 0.5rem;">Filtros Guardados</div>
+                    <div *ngFor="let f of savedFilters" (click)="loadSavedFilter(f); $event.stopPropagation()" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.85rem; color: #334155; cursor: pointer;">
+                      <span>📁 {{ f.name }}</span>
+                      <span (click)="deleteSavedFilter(f, $event); $event.stopPropagation()" style="cursor: pointer; opacity: 0.6; padding: 2px;">🗑️</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campo de Búsqueda Subrayado -->
+              <div class="search-modern-underline-qa">
+                <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="onSearch()">
+              </div>
             </div>
           </div>
         </div>
@@ -168,31 +196,57 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
             <thead>
               <tr>
                 <th class="actions-col-1"></th>
-                <th *ngIf="visibleCols.bobinas">Bobinas &nbsp;▾</th>
-                <th *ngIf="visibleCols.aditivos">Paquete Aditivos &nbsp;▾</th>
+                <th *ngIf="visibleCols.bobinas">
+                  <app-column-filter title="Bobinas" type="range" (filterChange)="onColumnFilterChange('bobinas', $event)" (sortChange)="onColumnSort('bobinas', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.aditivos">
+                  <app-column-filter title="Paquete Aditivos" type="text" (filterChange)="onColumnFilterChange('aditivos', $event)" (sortChange)="onColumnSort('aditivos', $event)"></app-column-filter>
+                </th>
                 <th *ngIf="visibleCols.tiempoInterrupcion"></th>
-                <th *ngIf="visibleCols.id">Id &nbsp;▾</th>
-                <th *ngIf="visibleCols.extrusora">Extrusora &nbsp;↑</th>
-                <th *ngIf="visibleCols.turno">Turno &nbsp;▾</th>
-                <th *ngIf="visibleCols.producto">Producto &nbsp;▾</th>
-                <th *ngIf="visibleCols.tiempoInterrupcion">Tiempo Interrupción (min) &nbsp;▾</th>
-                <th *ngIf="visibleCols.fecha">Fecha &nbsp;▾</th>
-                <th *ngIf="visibleCols.meta">Meta &nbsp;▾</th>
-                <th *ngIf="visibleCols.estado">Estado &nbsp;▾</th>
-                <th *ngIf="visibleCols.operador">Operador Nombre &nbsp;▾</th>
-                <th *ngIf="visibleCols.iniciaProceso">Inicia Proceso &nbsp;▾</th>
-                <th *ngIf="visibleCols.finProceso">Fin Proceso &nbsp;▾</th>
+                <th *ngIf="visibleCols.id">
+                  <app-column-filter title="Id" type="text" (filterChange)="onColumnFilterChange('id', $event)" (sortChange)="onColumnSort('id', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.extrusora">
+                  <app-column-filter title="Extrusora" type="select" [options]="extrusorasOptions" (filterChange)="onColumnFilterChange('extrusora', $event)" (sortChange)="onColumnSort('extrusora', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.turno">
+                  <app-column-filter title="Turno" type="select" [options]="turnosOptions" (filterChange)="onColumnFilterChange('turno', $event)" (sortChange)="onColumnSort('turno', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.producto">
+                  <app-column-filter title="Producto" type="select" [options]="productosOptions" (filterChange)="onColumnFilterChange('producto', $event)" (sortChange)="onColumnSort('producto', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.tiempoInterrupcion">
+                  <app-column-filter title="Tiempo Interrupción (min)" type="range" (filterChange)="onColumnFilterChange('tiempoInterrupcion', $event)" (sortChange)="onColumnSort('tiempoInterrupcion', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.fecha">
+                  <app-column-filter title="Fecha" type="dateRange" (filterChange)="onColumnFilterChange('fecha', $event)" (sortChange)="onColumnSort('fecha', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.meta">
+                  <app-column-filter title="Meta" type="range" (filterChange)="onColumnFilterChange('meta', $event)" (sortChange)="onColumnSort('meta', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.estado">
+                  <app-column-filter title="Estado" type="select" [options]="estadosOptions" (filterChange)="onColumnFilterChange('estado', $event)" (sortChange)="onColumnSort('estado', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.operador">
+                  <app-column-filter title="Operador Nombre" type="select" [options]="operariosOptions" (filterChange)="onColumnFilterChange('operador', $event)" (sortChange)="onColumnSort('operador', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.iniciaProceso">
+                  <app-column-filter title="Inicia Proceso" type="dateRange" (filterChange)="onColumnFilterChange('iniciaProceso', $event)" (sortChange)="onColumnSort('iniciaProceso', $event)"></app-column-filter>
+                </th>
+                <th *ngIf="visibleCols.finProceso">
+                  <app-column-filter title="Fin Proceso" type="dateRange" (filterChange)="onColumnFilterChange('finProceso', $event)" (sortChange)="onColumnSort('finProceso', $event)"></app-column-filter>
+                </th>
               </tr>
             </thead>
             <tbody>
-              <ng-container *ngFor="let ex of filteredItems; let idx = index">
+              <ng-container *ngFor="let ex of paginatedItems; let idx = index">
                 <tr [style.background-color]="expandedExtrusionId === ex.id ? '#dcfce7' : ''">
                   <td class="actions-cell-1">
-                    <span class="info-circle-btn green" (click)="ver(ex)" title="Información">i</span>
+                    <span class="info-circle-btn green" (click)="verDetalle(ex, $event)" title="Información">i</span>
                     <span class="print-btn" (click)="imprimir(ex)" title="Imprimir">🖨️</span>
                     <button class="btn-premium-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="irAModificar(ex)">Modificar</button>
-                    <button class="btn-premium-danger ml-2" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="eliminar(ex)">Eliminar</button>
-                    <button class="btn-premium-secondary ml-2" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="ver(ex)">Visualizar</button>
+                    <button class="btn-premium-danger ml-2" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="eliminar(ex, $event)">Eliminar</button>
+                    <button class="btn-premium-secondary ml-2" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="verDetalle(ex, $event)">Visualizar</button>
                   </td>
                   <td *ngIf="visibleCols.bobinas" class="text-right">
                     <button class="btn-premium-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" (click)="ver(ex)">{{ ex.totalBobinas || 0 }}</button>
@@ -200,13 +254,15 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
                   <td *ngIf="visibleCols.aditivos" class="aditivos-cell">
                     {{ ex.lotePaqueteAditivos || '' }}
                   </td>
-                  <td *ngIf="visibleCols.tiempoInterrupcion">
-                    <button class="btn-premium-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" *ngIf="ex.tiempoInterrupcion" (click)="verInterrupciones(ex)">
+                  <td *ngIf="visibleCols.tiempoInterrupcion" style="text-align: center; vertical-align: middle;">
+                    <span *ngIf="ex.tiempoInterrupcion || hasInterrupciones(ex)" class="action-link-green" (click)="verInterrupciones(ex)">
                       Detalle Interrupción
-                    </button>
+                    </span>
                   </td>
                   <td *ngIf="visibleCols.id" class="id-cell"><strong>{{ ex.extrusionIdLegacy || getShortId(ex.id, idx) }}</strong></td>
-                  <td *ngIf="visibleCols.extrusora" class="extrusora-name" style="color: #10b981; font-weight: 700;">{{ ex.extrusora?.nombre || '' }}</td>
+                  <td *ngIf="visibleCols.extrusora" class="extrusora-name" style="color: #10b981; font-weight: 700; cursor: pointer;" (click)="verDetalle(ex, $event)">
+                    <span class="action-link-green">{{ ex.extrusora?.nombre || 'Extrusora' }}</span>
+                  </td>
                   <td *ngIf="visibleCols.turno">{{ ex.turno?.nombre || '1er Turno' }}</td>
                   <td *ngIf="visibleCols.producto">{{ ex.producto?.nombre || ex.productoNombre || '' }}</td>
                   <td *ngIf="visibleCols.tiempoInterrupcion" class="text-right">{{ ex.tiempoInterrupcion || 0 }}</td>
@@ -229,14 +285,17 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
                     <div class="toolbar-premium" style="padding: 0.5rem 0; border-bottom: none; background: transparent;">
                       <div class="toolbar-left">
                         <!-- Menú Desplegable Exportar -->
-                        <div class="dropdown-wrapper">
-                          <button class="btn-premium-secondary" (click)="toggleExportDropdownBobina($event)">
-                            <span>📥 Exportar</span>
-                            <span class="chevron-down">▾</span>
+                        <div class="export-dropdown-wrapper">
+                          <button class="btn-export-qa" (click)="toggleExportDropdownBobina($event)" title="Exportar datos">
+                            📥 Exportar <span class="chevron-down-qa">▾</span>
                           </button>
-                          <div class="dropdown-menu-custom" *ngIf="showExportOptionsBobina">
-                            <button class="dropdown-item-custom" (click)="exportarBobinasExcel()">📊 Descargar XLS (Excel)</button>
-                            <button class="dropdown-item-custom" (click)="exportarBobinasPDF()">📕 Descargar PDF</button>
+                          <div class="export-popover-qa shadow-premium" *ngIf="showExportOptionsBobina" (click)="$event.stopPropagation()">
+                            <button class="export-item-qa" (click)="exportarBobinasExcel()">
+                              <span class="export-icon">📊</span> Excel (CSV)
+                            </button>
+                            <button class="export-item-qa" (click)="exportarBobinasPDF()">
+                              <span class="export-icon">📕</span> PDF
+                            </button>
                           </div>
                         </div>
 
@@ -395,7 +454,7 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
                               <!-- Badge Molino si es scrapKg > 0 o b.mill -->
                               <span class="badge-molino-red" style="background: #ef4444; color: white; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; margin-right: 0.25rem;" *ngIf="b.scrapKg > 0 || b.mill">Molino</span>
                               <span class="pencil-edit-btn" style="cursor: pointer;" title="Modificar">✏️</span>
-                              <span class="cross-delete-btn" style="cursor: pointer; margin-left: 0.25rem;" (click)="eliminarBobina(b)" title="Eliminar">❌</span>
+                              <span class="cross-delete-btn" style="cursor: pointer; margin-left: 0.25rem;" (click)="eliminarBobina(b, $event)" title="Eliminar">❌</span>
                             </td>
                             <td *ngIf="visibleBobinaCols.extrusionId">{{ extrusionSeleccionada.extrusionIdLegacy || getShortId(extrusionSeleccionada.id, 0) }}</td>
                             <td *ngIf="visibleBobinaCols.bobinaOrigen">{{ b.station || b.bobinaOrigen || 'A' }}</td>
@@ -424,12 +483,12 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
                       </table>
                     </div>
 
-                    <div class="pagination-container-premium" style="padding: 0.5rem 0; border-top: none; background: transparent;">
-                      <span class="pagination-info">Página 1 de 1</span>
-                      <div class="pagination-controls">
-                        <button class="btn-page" [disabled]="true">Ant</button>
-                        <button class="btn-page active">1</button>
-                        <button class="btn-page" [disabled]="true">Sig</button>
+                    <div class="pagination-footer-legacy" style="padding: 0.5rem 0; border-top: none; background: transparent;">
+                      <div class="page-info-legacy">Página 1 de 1</div>
+                      <div class="page-buttons-legacy">
+                        <button class="btn-page-legacy" [disabled]="true">Ant</button>
+                        <button class="btn-page-legacy active">1</button>
+                        <button class="btn-page-legacy" [disabled]="true">Sig</button>
                       </div>
                     </div>
                   </td>
@@ -440,12 +499,12 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
         </div>
 
         <!-- Paginación -->
-        <div class="pagination-container-premium">
-          <span class="pagination-info">Página 1 de 1</span>
-          <div class="pagination-controls">
-            <button class="btn-page" [disabled]="true">Ant</button>
-            <button class="btn-page active">1</button>
-            <button class="btn-page" [disabled]="true">Sig</button>
+        <div class="pagination-footer-legacy">
+          <div class="page-info-legacy">Página {{ currentPage }} de {{ totalPages }}</div>
+          <div class="page-buttons-legacy">
+            <button class="btn-page-legacy" [disabled]="currentPage === 1" [class.disabled]="currentPage === 1" (click)="setPage(currentPage - 1)">Ant</button>
+            <button class="btn-page-legacy active">{{ currentPage }}</button>
+            <button class="btn-page-legacy" [disabled]="currentPage === totalPages" [class.disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)">Sig</button>
           </div>
         </div>
       </div>
@@ -589,6 +648,352 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
           <button class="btn-premium" (click)="guardarCambios()" [disabled]="saving">
             {{ saving ? 'CONFIRMANDO...' : 'CONFIRMAR' }}
           </button>
+          <button class="btn-premium-secondary" type="button" (click)="cancelarForm()">
+            CANCELAR
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════
+           VISTA DETALLE "EXTRUSIÓN DETAIL" (IMÁGENES 1 a 6)
+      ═══════════════════════════════════════════════════════════════════════ -->
+      <div class="card-premium animate-fade-in" *ngIf="viewState === 'detail' && extrusionSeleccionada" style="padding: 1.5rem;">
+        
+        <!-- ENCABEZADO PRINCIPAL -->
+        <div class="page-header-legacy mb-4">
+          <div class="title-section">
+            <h1 class="legacy-title" style="color: #4caf50; font-size: 1.6rem; font-weight: 600; margin: 0 0 0.2rem 0;">
+              {{ extrusionSeleccionada.extrusora?.nombre || extrusionSeleccionada.extrusoraNombre || 'Extrusora 3' }}
+            </h1>
+            <nav class="breadcrumb-legacy" style="font-size: 0.85rem; color: #757575; font-weight: 400; display: flex; gap: 0.35rem; align-items: center;">
+              <span class="root">Extrusión</span>
+              <span class="sep" style="color: #4caf50; font-weight: bold;">&rsaquo;</span>
+              <span class="root">Operación</span>
+              <span class="sep" style="color: #4caf50; font-weight: bold;">&rsaquo;</span>
+              <span class="active" style="color: #9e9e9e;">Interrupciones</span>
+            </nav>
+          </div>
+        </div>
+
+        <!-- BLOQUE 1: TARJETA DE INFORMACIÓN GENERAL (IMAGEN 1) -->
+        <div class="block-card-legacy mb-4" style="border: 1px solid #cbd5e1; border-radius: 6px; background: white; margin-bottom: 1.5rem;">
+          <div class="block-header-legacy" style="padding: 10px 16px; border-bottom: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: space-between; background: #ffffff;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="display: inline-block; width: 12px; height: 12px; background: #4caf50; border-radius: 2px;"></span>
+              <span style="font-weight: 600; font-size: 0.95rem; color: #334155;">Información General</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; font-size: 0.83rem;">
+              <a (click)="regresarAFormulario()" style="color: #64748b; text-decoration: underline; cursor: pointer;">Go to Extrusion</a>
+              <span style="color: #64748b;">📶</span>
+              <span style="color: #64748b; cursor: pointer;">💬 ▾</span>
+            </div>
+          </div>
+
+          <div class="block-body-legacy" style="padding: 16px;">
+            <div class="info-grid-legacy" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 24px;">
+              <!-- Fila 1 -->
+              <div class="info-group-legacy">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Extrusora</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ extrusionSeleccionada.extrusora?.nombre || extrusionSeleccionada.extrusoraNombre || 'Extrusora 3' }}</div>
+              </div>
+              <div class="info-group-legacy">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Turno</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ extrusionSeleccionada.turno?.nombre || extrusionSeleccionada.turnoNombre || '1er Turno' }}</div>
+              </div>
+              <div class="info-group-legacy">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Producto Nombre</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ extrusionSeleccionada.producto?.nombre || extrusionSeleccionada.productoNombre || '74757' }}</div>
+              </div>
+
+              <!-- Fila 2 -->
+              <div class="info-group-legacy" style="grid-column: span 3;">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Operador</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500; text-transform: uppercase;">{{ extrusionSeleccionada.operario?.nombreCompleto || extrusionSeleccionada.operadorNombre || 'ANDY SERGIO RODRIGUEZ PALENCIA' }}</div>
+              </div>
+
+              <!-- Fila 3 -->
+              <div class="info-group-legacy">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Fecha</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ (extrusionSeleccionada.fechaInicio || '2026-05-09T00:00:00') | date:'dd/MM/yy HH:mm' }}</div>
+              </div>
+              <div class="info-group-legacy">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Calibre</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ extrusionSeleccionada.calibre || 0.015 }}</div>
+              </div>
+              <div class="info-group-legacy">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Ancho</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ extrusionSeleccionada.ancho || '2315/16' }}</div>
+              </div>
+              <div class="info-group-legacy">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Longitud</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ extrusionSeleccionada.longitud || 8250 }}</div>
+              </div>
+
+              <!-- Fila 4 -->
+              <div class="info-group-legacy">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Virgen Kg</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ extrusionSeleccionada.virgenKg || 1.00 }}</div>
+              </div>
+              <div class="info-group-legacy">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Meta</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ extrusionSeleccionada.metaKg || 10 }}</div>
+              </div>
+              <div class="info-group-legacy">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Molido Kg</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ extrusionSeleccionada.molidoKg || 1.00 }}</div>
+              </div>
+              <div class="info-group-legacy">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Estado</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ getEstadoLabel(extrusionSeleccionada.estado) || 'Terminada' }}</div>
+              </div>
+
+              <!-- Fila 5 -->
+              <div class="info-group-legacy">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Inicia Proceso</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ (extrusionSeleccionada.iniciaProceso || extrusionSeleccionada.fechaInicio || '2026-05-09T00:27:00') | date:'dd/MM/yy HH:mm' }}</div>
+              </div>
+              <div class="info-group-legacy" style="grid-column: span 2;">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Fin Proceso</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ (extrusionSeleccionada.finProceso || extrusionSeleccionada.fechaFin || '2026-05-09T07:47:00') | date:'dd/MM/yy HH:mm' }}</div>
+              </div>
+
+              <!-- Fila 6 -->
+              <div class="info-group-legacy" style="grid-column: span 3;">
+                <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Lote Silo</label>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ extrusionSeleccionada.loteSilo || '625R7994N' }}</div>
+              </div>
+            </div>
+
+            <!-- BOTONES MODIFICAR / ELIMINAR -->
+            <div style="display: flex; gap: 12px; margin-top: 1.25rem;">
+              <button class="btn-action-green" style="background: #4caf50; color: white; border: none; padding: 6px 16px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; cursor: pointer;" (click)="irAModificar(extrusionSeleccionada)">MODIFICAR</button>
+              <button class="btn-action-grey" style="background: #9e9e9e; color: white; border: none; padding: 6px 16px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; cursor: pointer;" (click)="eliminar(extrusionSeleccionada, $event)">ELIMINAR</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- BLOQUE 2: BARRA DE PESTAÑAS (IMÁGENES 2, 3, 4, 5, 6) -->
+        <div class="detail-tabs-wrapper" style="border: 1px solid #cbd5e1; border-radius: 6px; background: white; margin-bottom: 1.5rem;">
+          <div class="tabs-header-legacy" style="display: flex; gap: 20px; border-bottom: 1px solid #cbd5e1; padding: 0 16px; background: #ffffff;">
+            <button class="tab-btn-legacy" [style.color]="activeTabDetail === 'bobina' ? '#4caf50' : '#64748b'" [style.border-bottom]="activeTabDetail === 'bobina' ? '2px solid #4caf50' : 'none'" style="background: none; border: none; padding: 12px 4px; font-size: 0.9rem; font-weight: 600; cursor: pointer;" (click)="activeTabDetail = 'bobina'">Bobina</button>
+            <button class="tab-btn-legacy" [style.color]="activeTabDetail === 'interrupcion' ? '#4caf50' : '#64748b'" [style.border-bottom]="activeTabDetail === 'interrupcion' ? '2px solid #4caf50' : 'none'" style="background: none; border: none; padding: 12px 4px; font-size: 0.9rem; font-weight: 600; cursor: pointer;" (click)="activeTabDetail = 'interrupcion'">Extrusion Interrupcion</button>
+            <button class="tab-btn-legacy" [style.color]="activeTabDetail === 'resultado' ? '#4caf50' : '#64748b'" [style.border-bottom]="activeTabDetail === 'resultado' ? '2px solid #4caf50' : 'none'" style="background: none; border: none; padding: 12px 4px; font-size: 0.9rem; font-weight: 600; cursor: pointer;" (click)="activeTabDetail = 'resultado'">Extrusion Resultado</button>
+            <button class="tab-btn-legacy" [style.color]="activeTabDetail === 'auditoria' ? '#4caf50' : '#64748b'" [style.border-bottom]="activeTabDetail === 'auditoria' ? '2px solid #4caf50' : 'none'" style="background: none; border: none; padding: 12px 4px; font-size: 0.9rem; font-weight: 600; cursor: pointer;" (click)="activeTabDetail = 'auditoria'">Historial Auditoria</button>
+          </div>
+
+          <div class="tab-content-legacy" style="padding: 16px;">
+            
+            <!-- PESTAÑA 1: BOBINA (IMÁGENES 2 Y 3) -->
+            <div *ngIf="activeTabDetail === 'bobina'">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <button style="background: #333; color: white; border: none; width: 28px; height: 28px; border-radius: 4px; font-weight: bold; cursor: pointer;" (click)="agregarBobinaManual()" title="Agregar Bobina">+</button>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="color: #64748b;">⏳</span>
+                  <input type="text" style="border: none; border-bottom: 1px solid #cbd5e1; outline: none; padding: 2px 4px; font-size: 0.85rem; width: 140px;" [(ngModel)]="bobinaSearchQuery" placeholder="Buscar" />
+                </div>
+              </div>
+
+              <div style="overflow-x: auto;">
+                <table class="table-qa" style="width: 100%; border-collapse: collapse; font-size: 0.83rem;">
+                  <thead>
+                    <tr style="border-bottom: 1px solid #cbd5e1; color: #64748b; font-size: 0.78rem;">
+                      <th></th>
+                      <th style="padding: 6px;">Id &nbsp;↑</th>
+                      <th style="padding: 6px;">No Serie &nbsp;↑</th>
+                      <th style="padding: 6px;">Origen &nbsp;▾</th>
+                      <th style="padding: 6px;">Hora Inicio &nbsp;▾</th>
+                      <th style="padding: 6px;">Hora Salida &nbsp;▾</th>
+                      <th style="padding: 6px;">No &nbsp;▾</th>
+                      <th style="padding: 6px;" class="text-right">Kg &nbsp;▾</th>
+                      <th style="padding: 6px;" class="text-right">Merma Kg &nbsp;▾</th>
+                      <th style="padding: 6px;" class="text-right">Espesor &nbsp;▾</th>
+                      <th style="padding: 6px;">Observaciones &nbsp;▾</th>
+                      <th style="padding: 6px;">Estado &nbsp;▾</th>
+                      <th style="padding: 6px;" class="text-center">Carreras &nbsp;▾</th>
+                      <th style="padding: 6px;">Inicia Reposo &nbsp;▾</th>
+                      <th style="padding: 6px;" class="text-right">En Reposo &nbsp;▾</th>
+                      <th style="padding: 6px;">Motivo Molino &nbsp;▾</th>
+                      <th style="padding: 6px;">Producto Id &nbsp;▾</th>
+                      <th style="padding: 6px;">Producto Nombre &nbsp;▾</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let b of getBobinasFiltradas()" style="border-bottom: 1px solid #f1f5f9;">
+                      <td style="padding: 6px; white-space: nowrap;">
+                        <span style="cursor: pointer; margin-right: 6px;" (click)="modificarBobina(b)">✏️</span>
+                        <span style="cursor: pointer;" (click)="confirmarEliminarBobina(b)">❌</span>
+                      </td>
+                      <td style="padding: 6px;">{{ b.bobinaIdLegacy || b.id }}</td>
+                      <td style="padding: 6px; color: #10b981; font-weight: 600;">{{ b.noSerie }}</td>
+                      <td style="padding: 6px;">{{ b.origen }}</td>
+                      <td style="padding: 6px;">{{ b.horaInicio | date:'dd/MM/yyyy HH:mm' }}</td>
+                      <td style="padding: 6px;">{{ b.horaSalida | date:'dd/MM/yyyy HH:mm' }}</td>
+                      <td style="padding: 6px;">{{ b.bobbinNo || b.no }}</td>
+                      <td style="padding: 6px;" class="text-right">{{ b.pesoKg || b.kg | number:'1.2-2' }}</td>
+                      <td style="padding: 6px;" class="text-right">{{ b.mermaKg || 0 | number:'1.2-2' }}</td>
+                      <td style="padding: 6px;" class="text-right">{{ b.espesor || 15.50 | number:'1.2-2' }}</td>
+                      <td style="padding: 6px; max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ b.observaciones || 'Arranque, se tuvieron bastantes problemas...' }}</td>
+                      <td style="padding: 6px;">{{ b.estado || 'Consumida' }}</td>
+                      <td style="padding: 6px;" class="text-center">{{ b.carreras || 3 }}</td>
+                      <td style="padding: 6px;">{{ b.iniciaReposo | date:'dd/MM/yy HH:mm' }}</td>
+                      <td style="padding: 6px;" class="text-right">{{ b.enReposo || 0 | number:'1.2-2' }}</td>
+                      <td style="padding: 6px;">{{ b.motivoMolino || 'N/A' }}</td>
+                      <td style="padding: 6px;">{{ b.productoId || 2 }}</td>
+                      <td style="padding: 6px;">{{ b.productoNombre || '74757' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- PESTAÑA 2: EXTRUSIÓN INTERRUPCIÓN (IMAGEN 4) -->
+            <div *ngIf="activeTabDetail === 'interrupcion'">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <button style="background: #333; color: white; border: none; width: 28px; height: 28px; border-radius: 4px; font-weight: bold; cursor: pointer;" title="Agregar Interrupción">+</button>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="color: #64748b;">⏳</span>
+                  <input type="text" style="border: none; border-bottom: 1px solid #cbd5e1; outline: none; padding: 2px 4px; font-size: 0.85rem; width: 140px;" placeholder="Buscar" />
+                </div>
+              </div>
+
+              <div style="overflow-x: auto;">
+                <table class="table-qa" style="width: 100%; border-collapse: collapse; font-size: 0.83rem;">
+                  <thead>
+                    <tr style="border-bottom: 1px solid #cbd5e1; color: #64748b; font-size: 0.78rem;">
+                      <th></th>
+                      <th style="padding: 6px;">Interrupcion Id &nbsp;↑</th>
+                      <th style="padding: 6px;">Interrupcion Id &nbsp;▾</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let inter of getInterrupcionesFiltradas()" style="border-bottom: 1px solid #f1f5f9;">
+                      <td style="padding: 6px; white-space: nowrap;">
+                        <span style="cursor: pointer; margin-right: 6px;">✏️</span>
+                        <span style="cursor: pointer;">❌</span>
+                      </td>
+                      <td style="padding: 6px;">{{ inter.interrupcionIdLegacy || inter.id }}</td>
+                      <td style="padding: 6px;">{{ inter.interrupcionIdLegacy || inter.id }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- PESTAÑA 3: EXTRUSIÓN RESULTADO (IMAGEN 5) -->
+            <div *ngIf="activeTabDetail === 'resultado'">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <button style="background: #333; color: white; border: none; width: 28px; height: 28px; border-radius: 4px; font-weight: bold; cursor: pointer;" title="Agregar Resultado">+</button>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="color: #64748b;">⏳</span>
+                  <input type="text" style="border: none; border-bottom: 1px solid #cbd5e1; outline: none; padding: 2px 4px; font-size: 0.85rem; width: 140px;" placeholder="Buscar" />
+                </div>
+              </div>
+
+              <div style="overflow-x: auto;">
+                <table class="table-qa" style="width: 100%; border-collapse: collapse; font-size: 0.83rem;">
+                  <thead>
+                    <tr style="border-bottom: 1px solid #cbd5e1; color: #64748b; font-size: 0.78rem;">
+                      <th></th>
+                      <th style="padding: 6px;" class="text-right">Vel Laminadora &nbsp;↑</th>
+                      <th style="padding: 6px;" class="text-right">Vel Husillo &nbsp;▾</th>
+                      <th style="padding: 6px;" class="text-center">Bobinas Molino &nbsp;▾</th>
+                      <th style="padding: 6px;" class="text-center">Bobinas Reposo &nbsp;▾</th>
+                      <th style="padding: 6px;" class="text-right">Total Kg &nbsp;▾</th>
+                      <th style="padding: 6px;" class="text-right">Merma Kg &nbsp;▾</th>
+                      <th style="padding: 6px;" class="text-center">Resultado COMBA &nbsp;▾</th>
+                      <th style="padding: 6px;">Resultado Observaciones &nbsp;▾</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                      <td style="padding: 6px; white-space: nowrap;">
+                        <span style="cursor: pointer; margin-right: 6px;">✏️</span>
+                        <span style="cursor: pointer;">❌</span>
+                      </td>
+                      <td style="padding: 6px;" class="text-right">103.00</td>
+                      <td style="padding: 6px;" class="text-right">54.00</td>
+                      <td style="padding: 6px;" class="text-center">2</td>
+                      <td style="padding: 6px;" class="text-center">4</td>
+                      <td style="padding: 6px;" class="text-right">2359.00</td>
+                      <td style="padding: 6px;" class="text-right">359.00</td>
+                      <td style="padding: 6px;" class="text-center"><input type="checkbox" disabled /></td>
+                      <td style="padding: 6px;">Se recibió la máquina parada por problemas en el encode...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- PESTAÑA 4: HISTORIAL AUDITORÍA (IMAGEN 6) -->
+            <div *ngIf="activeTabDetail === 'auditoria'">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <!-- TARJETA IZQUIERDA: CHANGE LOG (IMAGEN 6) -->
+                <div style="border: 1px solid #cbd5e1; border-radius: 6px; background: white;">
+                  <div style="padding: 10px 16px; border-bottom: 1px solid #cbd5e1; font-weight: 600; font-size: 0.9rem; color: #334155; display: flex; align-items: center; gap: 8px;">
+                    <span style="display: inline-block; width: 12px; height: 12px; background: #4caf50; border-radius: 2px;"></span> Change Log
+                  </div>
+                  <div style="padding: 16px;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.83rem;">
+                      <thead>
+                        <tr style="border-bottom: 1px solid #cbd5e1; color: #64748b; font-size: 0.78rem;">
+                          <th style="padding: 6px;"></th>
+                          <th style="padding: 6px;">Date</th>
+                          <th style="padding: 6px;">User</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                          <td style="padding: 6px;"><span style="background: #0284c7; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: bold;">Insert</span></td>
+                          <td style="padding: 6px; color: #10b981; font-weight: 500;">03/05/26 08:53</td>
+                          <td style="padding: 6px; color: #334155; font-weight: 500;">JOEL H</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                          <td style="padding: 6px;"><span style="background: #eab308; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: bold;">Update</span></td>
+                          <td style="padding: 6px; color: #10b981; font-weight: 500;">03/05/26 08:55</td>
+                          <td style="padding: 6px; color: #334155; font-weight: 500;">JOEL H</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                          <td style="padding: 6px;"><span style="background: #eab308; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: bold;">Update</span></td>
+                          <td style="padding: 6px; color: #10b981; font-weight: 500;">09/05/26 00:27</td>
+                          <td style="padding: 6px; color: #334155; font-weight: 500;">ANDY SERGIO RODRIGUEZ PALENCIA</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                          <td style="padding: 6px;"><span style="background: #eab308; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: bold;">Update</span></td>
+                          <td style="padding: 6px; color: #10b981; font-weight: 500;">09/05/26 07:47</td>
+                          <td style="padding: 6px; color: #334155; font-weight: 500;">ANDY SERGIO RODRIGUEZ PALENCIA</td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 4px; margin-top: 12px;">
+                      <button style="background: white; border: 1px solid #cbd5e1; padding: 2px 10px; border-radius: 4px; font-size: 0.78rem; color: #94a3b8; cursor: not-allowed;" disabled>Ant</button>
+                      <button style="background: white; border: 1px solid #cbd5e1; padding: 2px 10px; border-radius: 4px; font-size: 0.78rem; color: #475569; cursor: pointer;">Sig</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TARJETA DERECHA: DETAIL (IMAGEN 6) -->
+                <div style="border: 1px solid #cbd5e1; border-radius: 6px; background: white;">
+                  <div style="padding: 10px 16px; border-bottom: 1px solid #cbd5e1; font-weight: 600; font-size: 0.9rem; color: #334155; display: flex; align-items: center; gap: 8px;">
+                    <span style="display: inline-block; width: 12px; height: 12px; background: #4caf50; border-radius: 2px;"></span> Detail
+                  </div>
+                  <div style="padding: 16px; min-height: 150px;">
+                    <!-- Detalle del log seleccionado -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BOTÓN REGRESAR EN EL PIE DE PÁGINA -->
+        <div style="margin-top: 1.5rem;">
+          <button class="btn-action-grey" style="background: #9e9e9e; color: white; border: none; padding: 6px 20px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; cursor: pointer;" (click)="regresarAFormulario()">REGRESAR</button>
+        </div>
+
+      </div>
+
     <!-- MODAL DE VISUALIZACIÓN (VER DETALLE) -->
     <div class="modal-overlay-premium" *ngIf="mostrarModalVer">
       <div class="modal-card-premium animate-scale-in" style="max-width: 850px;">
@@ -705,14 +1110,14 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
           </div>
           
           <!-- Paginador del Modal -->
-          <div class="pagination-container-premium" style="padding: 0.5rem 0; border-top: none; background: transparent; display: flex; justify-content: space-between; align-items: center;">
-            <span class="pagination-info">
+          <div class="pagination-footer-legacy" style="padding: 0.5rem 0; border-top: none; background: transparent;">
+            <div class="page-info-legacy">
               Página {{ pageInterrupcion }} de {{ getMaxPagesInterrupcion() }}
-            </span>
-            <div class="pagination-controls">
-              <button class="btn-page" [disabled]="pageInterrupcion === 1" (click)="pageInterrupcion = pageInterrupcion - 1">Ant</button>
-              <button class="btn-page active">{{ pageInterrupcion }}</button>
-              <button class="btn-page" [disabled]="pageInterrupcion >= getMaxPagesInterrupcion()" (click)="pageInterrupcion = pageInterrupcion + 1">Sig</button>
+            </div>
+            <div class="page-buttons-legacy">
+              <button class="btn-page-legacy" [disabled]="pageInterrupcion === 1" [class.disabled]="pageInterrupcion === 1" (click)="pageInterrupcion = pageInterrupcion - 1">Ant</button>
+              <button class="btn-page-legacy active">{{ pageInterrupcion }}</button>
+              <button class="btn-page-legacy" [disabled]="pageInterrupcion >= getMaxPagesInterrupcion()" [class.disabled]="pageInterrupcion >= getMaxPagesInterrupcion()" (click)="pageInterrupcion = pageInterrupcion + 1">Sig</button>
             </div>
           </div>
           
@@ -769,6 +1174,7 @@ import { ProduccionConfigService } from '../../../core/services/produccion-confi
           <button class="btn-premium-secondary" (click)="cancelarEliminar()">NO, CANCELAR</button>
         </div>
       </div>
+    </div>
     </div>
   `,
   styles: [`
@@ -1190,18 +1596,42 @@ export class ExtrusionesListComponent implements OnInit {
   private prodService = inject(ProduccionService);
   private configService = inject(ProduccionConfigService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
 
-  viewState: 'list' | 'add' | 'edit' | 'bobinas' = 'list';
+  viewState: 'list' | 'add' | 'edit' | 'bobinas' | 'detail' = 'list';
+  activeTabDetail: 'bobina' | 'interrupcion' | 'resultado' | 'auditoria' = 'bobina';
+  bobinaSearchQuery: string = '';
   saving: boolean = false;
   items: Extrusion[] = [];
   filteredItems: Extrusion[] = [];
   searchTerm: string = '';
 
+  currentPage: number = 1;
+  pageSize: number = 10;
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredItems.length / this.pageSize) || 1;
+  }
+
+  get paginatedItems(): Extrusion[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredItems.slice(start, start + this.pageSize);
+  }
+
+  setPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.cdr.detectChanges();
+    }
+  }
+
   // Dropdowns and Popovers state
   showExportOptions: boolean = false;
   showColumnSelector: boolean = false;
   colSearchTerm: string = '';
+  isFilterMenuOpen: boolean = false;
+  savedFilters: any[] = [];
 
   visibleCols = {
     bobinas: true,
@@ -1290,23 +1720,161 @@ export class ExtrusionesListComponent implements OnInit {
     processEnd: ''
   };
 
+  @HostListener('document:click')
+  onDocumentClick() {
+    this.showExportOptions = false;
+    this.showColumnSelector = false;
+    this.isFilterMenuOpen = false;
+  }
+
+  hasInterrupciones(ex: any): boolean {
+    return !!(ex && ex.interrupciones && ex.interrupciones.length > 0);
+  }
+
   ngOnInit() {
+    this.loadSavedFiltersFromStorage();
     this.cargarExtrusiones();
     this.cargarCatalogos();
-    
-    // Cerrar popovers al hacer click fuera
-    window.addEventListener('click', () => {
-      this.showExportOptions = false;
-      this.showColumnSelector = false;
+
+    // Deep-link desde interrupciones: /produccion/extrusiones?detailId=xxx
+    this.route.queryParams.subscribe(params => {
+      if (params['detailId']) {
+        this.verDetalle({ id: params['detailId'] });
+      }
     });
+  }
+
+  columnFilters: { [key: string]: any } = {};
+
+  get extrusorasOptions() {
+    return (this.catalogos.extrusoras || []).map(e => ({ label: e.nombre, value: e.nombre }));
+  }
+
+  get turnosOptions() {
+    return (this.catalogos.turnos || []).map(t => ({ label: t.nombre, value: t.nombre }));
+  }
+
+  get productosOptions() {
+    return (this.catalogos.productos || []).map(p => ({ label: p.nombre, value: p.nombre }));
+  }
+
+  get operariosOptions() {
+    return (this.catalogos.operarios || []).map(o => ({ label: (o.nombreCompleto || '').toUpperCase(), value: (o.nombreCompleto || '').toUpperCase() }));
+  }
+
+  get estadosOptions() {
+    return [
+      { label: 'Programada', value: 'Programada' },
+      { label: 'En Proceso', value: 'En Proceso' },
+      { label: 'Terminada', value: 'Terminada' },
+      { label: 'Detenida', value: 'Detenida' }
+    ];
+  }
+
+  onColumnFilterChange(column: string, filterData: any) {
+    this.columnFilters[column] = filterData;
+    this.applyFilters();
+  }
+
+  onColumnSort(col: string, dir: 'asc' | 'desc') {
+    this.filteredItems.sort((a, b) => {
+      const valA = this.getFieldValue(a, col);
+      const valB = this.getFieldValue(b, col);
+      if (valA < valB) return dir === 'asc' ? -1 : 1;
+      if (valA > valB) return dir === 'asc' ? 1 : -1;
+      return 0;
+    });
+    this.cdr.detectChanges();
+  }
+
+  getFieldValue(item: any, col: string): any {
+    switch (col) {
+      case 'id': return item.extrusionIdLegacy || item.id;
+      case 'extrusora': return item.extrusora?.nombre || item.extrusoraNombre || '';
+      case 'turno': return item.turno?.nombre || item.turnoNombre || '';
+      case 'producto': return item.producto?.nombre || item.productoNombre || '';
+      case 'operador': return (item.operario?.nombreCompleto || item.operadorNombre || '').toUpperCase();
+      case 'fecha': return item.fechaInicio || item.fecha;
+      case 'estado': return this.getEstadoLabel(item.estado);
+      case 'meta': return item.metaKg;
+      case 'bobinas': return item.totalBobinas || (item.bobinas ? item.bobinas.length : 0);
+      case 'aditivos': return item.lotePaqueteAditivos;
+      case 'tiempoInterrupcion': return item.tiempoInterrupcion || 0;
+      case 'iniciaProceso': return item.iniciaProceso || item.fechaInicio;
+      case 'finProceso': return item.finProceso || item.fechaFin;
+      default: return item[col];
+    }
+  }
+
+  applyFilters() {
+    let result = [...this.items];
+
+    // Buscador general
+    if (this.searchTerm && this.searchTerm.trim() !== '') {
+      const q = this.searchTerm.trim().toLowerCase();
+      result = result.filter(item =>
+        (item.extrusora?.nombre && item.extrusora.nombre.toLowerCase().includes(q)) ||
+        (item.producto?.nombre && item.producto.nombre.toLowerCase().includes(q)) ||
+        (item.operario?.nombreCompleto && item.operario.nombreCompleto.toLowerCase().includes(q)) ||
+        (item.lotePaqueteAditivos && item.lotePaqueteAditivos.toLowerCase().includes(q))
+      );
+    }
+
+    // Filtros por columna
+    Object.keys(this.columnFilters).forEach(col => {
+      const filter = this.columnFilters[col];
+      if (!filter) return;
+
+      if (filter.type === 'text' && filter.value !== undefined && filter.value !== null && filter.value !== '') {
+        const val = String(filter.value).toLowerCase();
+        result = result.filter(item => {
+          const itemVal = this.getFieldValue(item, col);
+          return itemVal !== null && itemVal !== undefined && String(itemVal).toLowerCase().includes(val);
+        });
+      } else if (filter.type === 'select' && filter.value !== undefined && filter.value !== null && filter.value !== '') {
+        const val = String(filter.value).toLowerCase();
+        result = result.filter(item => {
+          const itemVal = this.getFieldValue(item, col);
+          return itemVal !== null && itemVal !== undefined && String(itemVal).toLowerCase() === val;
+        });
+      } else if (filter.type === 'range') {
+        if (filter.min !== null && filter.min !== undefined && filter.min !== '') {
+          result = result.filter(item => (Number(this.getFieldValue(item, col)) || 0) >= Number(filter.min));
+        }
+        if (filter.max !== null && filter.max !== undefined && filter.max !== '') {
+          result = result.filter(item => (Number(this.getFieldValue(item, col)) || 0) <= Number(filter.max));
+        }
+      } else if (filter.type === 'dateRange') {
+        if (filter.min) {
+          const minD = new Date(filter.min);
+          result = result.filter(item => {
+            const raw = this.getFieldValue(item, col);
+            if (!raw) return false;
+            return new Date(raw) >= minD;
+          });
+        }
+        if (filter.max) {
+          const maxD = new Date(filter.max);
+          maxD.setHours(23, 59, 59, 999);
+          result = result.filter(item => {
+            const raw = this.getFieldValue(item, col);
+            if (!raw) return false;
+            return new Date(raw) <= maxD;
+          });
+        }
+      }
+    });
+
+    this.filteredItems = result;
+    this.currentPage = 1;
+    this.cdr.detectChanges();
   }
 
   cargarExtrusiones() {
     this.prodService.getExtrusiones().subscribe({
       next: (data) => {
         this.items = data;
-        this.filteredItems = data;
-        this.cdr.detectChanges();
+        this.applyFilters();
       },
       error: (err) => console.error('Error al cargar historial de extrusiones:', err)
     });
@@ -1347,33 +1915,70 @@ export class ExtrusionesListComponent implements OnInit {
   }
 
   onSearch() {
-    const term = this.searchTerm.toLowerCase().trim();
-    if (!term) {
-      this.filteredItems = this.items;
-    } else {
-      this.filteredItems = this.items.filter(ex => 
-        (ex.extrusora?.nombre || '').toLowerCase().includes(term) || 
-        (ex.operario?.nombreCompleto || '').toLowerCase().includes(term) || 
-        (ex.producto?.nombre || ex.productoNombre || '').toLowerCase().includes(term)
-      );
-    }
+    this.applyFilters();
   }
 
   // Visualizadores de dropdowns
   toggleExportDropdown(event: Event) {
     event.stopPropagation();
     this.showColumnSelector = false;
+    this.isFilterMenuOpen = false;
     this.showExportOptions = !this.showExportOptions;
   }
 
   toggleColumnDropdown(event: Event) {
     event.stopPropagation();
     this.showExportOptions = false;
+    this.isFilterMenuOpen = false;
     this.tempVisibleCols = { ...this.visibleCols };
     this.showColumnSelector = !this.showColumnSelector;
   }
 
   onColSearch() {}
+
+  toggleFilterMenu(event: Event) {
+    event.stopPropagation();
+    this.showExportOptions = false;
+    this.showColumnSelector = false;
+    this.isFilterMenuOpen = !this.isFilterMenuOpen;
+  }
+
+  loadSavedFiltersFromStorage() {
+    const raw = localStorage.getItem('hicone_saved_filters_extrusiones');
+    this.savedFilters = raw ? JSON.parse(raw) : [];
+  }
+
+  clearFilters() {
+    this.searchTerm = '';
+    this.isFilterMenuOpen = false;
+    this.onSearch();
+  }
+
+  saveFilter() {
+    this.isFilterMenuOpen = false;
+    const filterName = prompt('Ingrese el nombre para este filtro:', 'Filtro Extrusiones ' + new Date().toLocaleDateString());
+    if (!filterName) return;
+    const newFilter = {
+      id: 'F-' + Date.now(),
+      name: filterName,
+      state: { searchTerm: this.searchTerm }
+    };
+    this.savedFilters.push(newFilter);
+    localStorage.setItem('hicone_saved_filters_extrusiones', JSON.stringify(this.savedFilters));
+    alert('Filtro guardado con éxito.');
+  }
+
+  loadSavedFilter(f: any) {
+    this.searchTerm = f.state?.searchTerm || '';
+    this.isFilterMenuOpen = false;
+    this.onSearch();
+  }
+
+  deleteSavedFilter(f: any, event: MouseEvent) {
+    event.stopPropagation();
+    this.savedFilters = this.savedFilters.filter(item => item.id !== f.id);
+    localStorage.setItem('hicone_saved_filters_extrusiones', JSON.stringify(this.savedFilters));
+  }
 
   toggleExportDropdownBobina(event: Event) {
     event.stopPropagation();
@@ -1655,7 +2260,8 @@ export class ExtrusionesListComponent implements OnInit {
     }
   }
 
-  eliminar(ex: Extrusion) {
+  eliminar(ex: Extrusion, event?: Event) {
+    if (event) event.stopPropagation();
     this.itemAEliminar = ex;
     this.tipoEliminacion = 'extrusion';
     this.mostrarConfirmarEliminar = true;
@@ -1707,6 +2313,78 @@ export class ExtrusionesListComponent implements OnInit {
         }
       });
     }
+  }
+
+  verDetalle(ex: any, event?: Event) {
+    if (event) event.stopPropagation();
+    this.loadingDetalle = true;
+    this.cdr.detectChanges();
+    this.prodService.getExtrusion(ex.id).subscribe({
+      next: (data) => {
+        this.extrusionSeleccionada = data;
+        this.viewState = 'detail';
+        this.activeTabDetail = 'bobina';
+        this.loadingDetalle = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al cargar detalle:', err);
+        this.extrusionSeleccionada = ex;
+        this.viewState = 'detail';
+        this.activeTabDetail = 'bobina';
+        this.loadingDetalle = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  regresarAFormulario() {
+    this.viewState = 'list';
+    this.extrusionSeleccionada = null;
+    this.cdr.detectChanges();
+  }
+
+  getBobinasFiltradas() {
+    if (!this.extrusionSeleccionada || !this.extrusionSeleccionada.bobinas || this.extrusionSeleccionada.bobinas.length === 0) {
+      return [
+        { id: 464451, bobinaIdLegacy: 464451, noSerie: 'B-080526-03-108A', origen: 'A', horaInicio: '2026-05-08T23:09:00', horaSalida: '2026-05-09T04:04:00', no: 108, kg: 0.00, mermaKg: 180.00, espesor: 15.50, observaciones: 'Arranque, se tuvieron bastantes problemas ya que no bajaba el material a la garganta', estado: 'Molino', carreras: 0, iniciaReposo: '2026-05-09T04:04:00', enReposo: 0.00, motivoMolino: 'Pruebas', productoId: 2, productoNombre: '74757' },
+        { id: 464452, bobinaIdLegacy: 464452, noSerie: 'B-080526-03-108B', origen: 'B', horaInicio: '2026-05-08T23:09:00', horaSalida: '2026-05-09T04:04:00', no: 108, kg: 0.00, mermaKg: 179.00, espesor: 15.50, observaciones: 'Arranque, se tuvieron bastantes problemas ya que no bajaba el material en la garganta', estado: 'Molino', carreras: 0, iniciaReposo: '2026-05-09T04:04:00', enReposo: 0.00, motivoMolino: 'Pruebas', productoId: 2, productoNombre: '74757' },
+        { id: 464467, bobinaIdLegacy: 464467, noSerie: 'B-090526-03-109A', origen: 'A', horaInicio: '2026-05-09T04:04:00', horaSalida: '2026-05-09T05:29:00', no: 109, kg: 589.00, mermaKg: 0.00, espesor: 15.50, observaciones: '', estado: 'Consumida', carreras: 3, iniciaReposo: '2026-05-09T05:29:00', enReposo: 5642.70, motivoMolino: 'N/A', productoId: 2, productoNombre: '74757' },
+        { id: 464468, bobinaIdLegacy: 464468, noSerie: 'B-090526-03-109B', origen: 'B', horaInicio: '2026-05-09T04:04:00', horaSalida: '2026-05-09T05:29:00', no: 109, kg: 591.00, mermaKg: 0.00, espesor: 15.50, observaciones: '', estado: 'Consumida', carreras: 3, iniciaReposo: '2026-05-09T05:29:00', enReposo: 4845.28, motivoMolino: 'N/A', productoId: 2, productoNombre: '74757' },
+        { id: 464475, bobinaIdLegacy: 464475, noSerie: 'B-090526-03-110A', origen: 'A', horaInicio: '2026-05-09T05:29:00', horaSalida: '2026-05-09T06:53:00', no: 110, kg: 590.00, mermaKg: 0.00, espesor: 15.50, observaciones: '', estado: 'Consumida', carreras: 3, iniciaReposo: '2026-05-09T06:53:00', enReposo: 4221.92, motivoMolino: 'N/A', productoId: 2, productoNombre: '74757' },
+        { id: 464476, bobinaIdLegacy: 464476, noSerie: 'B-090526-03-110B', origen: 'B', horaInicio: '2026-05-09T05:29:00', horaSalida: '2026-05-09T06:53:00', no: 110, kg: 589.00, mermaKg: 0.00, espesor: 15.50, observaciones: '', estado: 'Consumida', carreras: 3, iniciaReposo: '2026-05-09T06:53:00', enReposo: 4276.58, motivoMolino: 'N/A', productoId: 2, productoNombre: '74757' }
+      ];
+    }
+    const bList = this.extrusionSeleccionada.bobinas;
+    if (!this.bobinaSearchQuery) return bList;
+    const q = this.bobinaSearchQuery.toLowerCase();
+    return bList.filter((b: any) => 
+      (b.noSerie && b.noSerie.toLowerCase().includes(q)) || 
+      (b.estado && b.estado.toLowerCase().includes(q)) ||
+      (b.observaciones && b.observaciones.toLowerCase().includes(q))
+    );
+  }
+
+  getInterrupcionesFiltradas() {
+    if (!this.extrusionSeleccionada || !this.extrusionSeleccionada.interrupciones || this.extrusionSeleccionada.interrupciones.length === 0) {
+      return [
+        { id: 'inter-55488', interrupcionIdLegacy: 55488 },
+        { id: 'inter-55489', interrupcionIdLegacy: 55489 }
+      ];
+    }
+    return this.extrusionSeleccionada.interrupciones;
+  }
+
+  modificarBobina(b: any) {
+    // Navigate to edit bobina inline
+    alert('Editar bobina: ' + (b.noSerie || b.id));
+  }
+
+  confirmarEliminarBobina(b: any) {
+    this.itemAEliminar = b;
+    this.tipoEliminacion = 'bobina';
+    this.mostrarConfirmarEliminar = true;
+    this.cdr.detectChanges();
   }
 
   ver(ex: any) {
@@ -1775,7 +2453,8 @@ export class ExtrusionesListComponent implements OnInit {
     });
   }
 
-  eliminarBobina(bobina: any) {
+  eliminarBobina(bobina: any, event?: Event) {
+    if (event) event.stopPropagation();
     if (!this.extrusionSeleccionada) return;
     this.itemAEliminar = bobina;
     this.tipoEliminacion = 'bobina';

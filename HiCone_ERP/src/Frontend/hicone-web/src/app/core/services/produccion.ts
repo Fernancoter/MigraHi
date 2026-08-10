@@ -87,6 +87,7 @@ export interface Extrusion {
   extrusionIdLegacy?: number;
   programado?: number;
   producido?: number;
+  interrupciones?: any[];
 }
 
 export interface Bobina {
@@ -102,6 +103,32 @@ export interface Bobina {
   motivoMolino?: any;
   bobinaOrigen?: string;
   mermaKg?: number;
+  extrusoraNombre?: string;
+  turnoNombre?: string;
+  mezclaVirgenPct?: number;
+  mezclaMolidoPct?: number;
+  horaInicio?: string | Date;
+  horaSalida?: string | Date;
+  desviacionEstandar?: number;
+  reposoHr?: number;
+  operadorNombre?: string;
+  observaciones?: string;
+  siloMolidoNombre?: string;
+  siloVirgenNombre?: string;
+  loteVirgen?: string;
+  paqueteAditivos?: string;
+  productoId?: any;
+  productoNombre?: string;
+  tipoMaterial?: string;
+  prensaNombre?: string;
+  interrupcionesMotivo?: string;
+  timeCode?: string;
+  timeDescription?: string;
+  timeType?: string;
+  extrusion?: any;
+  siloVirgen?: any;
+  siloMolido?: any;
+  operario?: any;
 }
 
 export interface Prensado {
@@ -175,6 +202,118 @@ export class ProduccionService {
     return this.http.post<Prensado>(`${this.apiUrl}/prensado/iniciar`, request);
   }
 
+  getPrensadoDetail(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/prensado/${id}`);
+  }
+
+  updatePrensado(id: string, request: any): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/prensado/${id}`, request);
+  }
+
+  deletePrensado(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/prensado/${id}`);
+  }
+
+  getCarrerasPorBobina(prensadoId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/prensado/${prensadoId}/carreras-por-bobina`);
+  }
+
+  getDetalleCalidadCarretes(prensadoId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/prensado/${prensadoId}/detalle-calidad-carretes`);
+  }
+
+  getTroquelesCatalogo(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/catalogos/troqueles`);
+  }
+
+  getPrensaProductos(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/catalogos/prensa-productos`);
+  }
+
+  getPrensaProducto(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/catalogos/prensa-productos/${id}`);
+  }
+
+  createPrensaProducto(request: any): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/catalogos/prensa-productos`, request);
+  }
+
+  updatePrensaProducto(id: string, request: any): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/catalogos/prensa-productos/${id}`, request);
+  }
+
+  deletePrensaProducto(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/catalogos/prensa-productos/${id}`);
+  }
+
+  getProductosTerminados(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/catalogos/producto-terminados`);
+  }
+
+  getProductoTerminado(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/catalogos/producto-terminados/${id}`);
+  }
+
+  createProductoTerminado(request: any): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/catalogos/producto-terminados`, request);
+  }
+
+  updateProductoTerminado(id: string, request: any): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/catalogos/producto-terminados/${id}`, request);
+  }
+
+  deleteProductoTerminado(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/catalogos/producto-terminados/${id}`);
+  }
+
+  getCarrera(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/carrera/${id}`);
+  }
+
+  updateCarrera(id: string, request: any): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/carrera/${id}`, request);
+  }
+
+  deleteCarrera(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/carrera/${id}`);
+  }
+
+  getCarrete(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/carrete/${id}`);
+  }
+
+  updateCarrete(id: string, request: any): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/carrete/${id}`, request);
+  }
+
+  deleteCarrete(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/carrete/${id}`);
+  }
+
+  getPalet(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/palet/${id}`);
+  }
+
+  updatePalet(id: string, request: any): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/palet/${id}`, request);
+  }
+
+  deletePalet(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/palet/${id}`);
+  }
+
+  getInterrupcionPrensado(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/prensado/interrupcion/${id}`);
+  }
+
+  updateInterrupcionPrensado(id: string, request: any): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/prensado/interrupcion/${id}`, request);
+  }
+
+  deleteInterrupcionPrensado(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/prensado/interrupcion/${id}`);
+  }
+
   // ── Interrupciones (Downtime) ──────────────────────────────────────────
   getCausasInterrupcion(): Observable<CausaInterrupcion[]> {
     return this.http.get<CausaInterrupcion[]>(`${this.apiUrl}/causas-interrupcion`);
@@ -231,6 +370,26 @@ export class ProduccionService {
   }
 
   // ── Gestión de Bobinas ───────────────────────────────────────────────
+  getTodasBobinas(): Observable<Bobina[]> {
+    return this.http.get<Bobina[]>(`${this.apiUrl}/bobinas/todas`);
+  }
+
+  getBobinaDetalle(id: string): Observable<Bobina> {
+    return this.http.get<Bobina>(`${this.apiUrl}/bobina/${id}`);
+  }
+
+  actualizarBobina(id: string, data: any): Observable<Bobina> {
+    return this.http.put<Bobina>(`${this.apiUrl}/bobina/${id}`, data);
+  }
+
+  eliminarBobina(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/bobina/${id}`);
+  }
+
+  seedBobinasTest(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/bobinas/seeder-test`, {});
+  }
+
   pausarBobina(id: string): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/bobina/${id}/pausar`, {});
   }
@@ -300,11 +459,11 @@ export class ProduccionService {
     return this.http.get<ExtrusoraProducto>(`${this.apiUrl}/referencias/extrusora-producto/${id}`);
   }
 
-  createExtrusoraProducto(ep: any): Observable<ExtrusoraProducto> {
+  createExtrusoraProducto(ep: Partial<ExtrusoraProducto>): Observable<ExtrusoraProducto> {
     return this.http.post<ExtrusoraProducto>(`${this.apiUrl}/referencias/extrusora-producto`, ep);
   }
 
-  updateExtrusoraProducto(id: string, ep: any): Observable<ExtrusoraProducto> {
+  updateExtrusoraProducto(id: string, ep: Partial<ExtrusoraProducto>): Observable<ExtrusoraProducto> {
     return this.http.put<ExtrusoraProducto>(`${this.apiUrl}/referencias/extrusora-producto/${id}`, ep);
   }
 
@@ -320,6 +479,15 @@ export class ProduccionService {
   guardarTurnosSemana(batch: any[]): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/extrusion/turnos-semana/guardar`, batch);
   }
+
+  getTurnosSemanaPrensado(fechaInicio: string, fechaFin: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/prensado/turnos-semana?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
+  }
+
+  guardarTurnosSemanaPrensado(batch: any[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/prensado/turnos-semana/guardar`, batch);
+  }
+
 
   // ── Nuevas Funcionalidades de Bobinas (Exportar, Interrupción, Impresión Múltiple, Eliminadas) ──
   exportarBobinas(formato: string, columnasVisibles: string[]): Observable<Blob> {
@@ -337,5 +505,42 @@ export class ProduccionService {
 
   getBobinasEliminadas(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/extrusion/bobinas/eliminadas`);
+  }
+
+  // ── Nuevas Funcionalidades de Prensado (Listados Operativos) ──
+  getCarreras(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/carreras`);
+  }
+
+  getCarretes(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/carretes`);
+  }
+
+  getPalets(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/palets`);
+  }
+
+  getInterrupcionesPrensado(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/interrupciones-prensado`);
+  }
+
+  getInterrupcionesExtrusion(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/interrupciones-extrusion`);
+  }
+
+  registrarInterrupcionManual(request: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/extrusion/interrupcion/manual`, request);
+  }
+
+  updateInterrupcionExtrusion(id: string, request: any): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/extrusion/interrupcion/${id}`, request);
+  }
+
+  deleteInterrupcionExtrusion(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/extrusion/interrupcion/${id}`);
+  }
+
+  getPrensasProductos(): Observable<any[]> {
+    return this.getPrensaProductos();
   }
 }

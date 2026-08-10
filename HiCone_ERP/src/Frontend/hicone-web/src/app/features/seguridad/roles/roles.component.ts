@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service';
+import { timer } from 'rxjs';
 
 // ─── Interfaces ──────────────────────────────────────────────────────────────
 
@@ -672,7 +673,7 @@ export class RolesComponent implements OnInit {
     this.http.put(`${this.apiUrl}/roles/${role.id}`, payload, { headers: this.headers() }).subscribe({
       next: () => {
         this.successMsg.set('Tipo de acceso actualizado.');
-        setTimeout(() => this.successMsg.set(null), 3000);
+        timer(3000).subscribe(() => this.successMsg.set(null));
       },
       error: (err) => {
         this.errorMsg.set('Error al actualizar el tipo de acceso.');

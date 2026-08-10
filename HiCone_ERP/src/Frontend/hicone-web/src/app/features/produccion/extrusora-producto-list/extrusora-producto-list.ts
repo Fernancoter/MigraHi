@@ -13,20 +13,10 @@ import autoTable from 'jspdf-autotable';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="module-page animate-fade-in" (click)="closeAllDropdowns()">
-      <!-- TOAST NOTIFICATION -->
-      <div class="custom-toast" *ngIf="notification.type" [ngClass]="notification.type">
-        <div class="toast-content">
-          <span class="toast-icon" *ngIf="notification.type === 'success'">✔️</span>
-          <span class="toast-icon" *ngIf="notification.type === 'danger'">❌</span>
-          <span class="toast-icon" *ngIf="notification.type === 'info'">ℹ️</span>
-          <span class="toast-text">{{ notification.message }}</span>
-        </div>
-        <button class="toast-close" (click)="clearNotification()">✖️</button>
-      </div>
-
       <!-- HEADER PRINCIPAL -->
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">{{ viewState === 'list' ? 'Extrusora Producto' : 'Gestionar Extrusora Producto' }}</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Extrusión</span>
             <span class="sep">&rsaquo;</span>
@@ -34,7 +24,6 @@ import autoTable from 'jspdf-autotable';
             <span class="active" *ngIf="viewState === 'list'">Extrusora Producto</span>
             <span class="active" *ngIf="viewState !== 'list'"> &rsaquo; {{ viewState === 'view' ? 'Visualizar Extrusora Producto' : 'Gestionar Extrusora Producto' }}</span>
           </nav>
-          <h1 class="premium-title">{{ viewState === 'list' ? 'Extrusora Producto' : 'Gestionar Extrusora Producto' }}</h1>
         </div>
       </div>
 
@@ -46,17 +35,16 @@ import autoTable from 'jspdf-autotable';
         <div class="toolbar-premium" (click)="$event.stopPropagation()">
           <div class="toolbar-left">
             <!-- Botón Exportar -->
-            <div class="dropdown-wrapper">
-              <button class="btn-premium-secondary" (click)="toggleExportDropdown($event)">
-                <span>📥 Exportar</span>
-                <span class="chevron-down">▾</span>
+            <div class="export-dropdown-wrapper">
+              <button class="btn-export-qa" (click)="toggleExportDropdown($event)" title="Exportar datos">
+                📥 Exportar <span class="chevron-down-qa">▾</span>
               </button>
-              <div class="opciones-export-popover animate-slide-up" *ngIf="showExportOptions">
-                <button class="btn-export-option" (click)="exportarExcel()">
-                  <span>📊 Exportar to XLSX</span>
+              <div class="export-popover-qa shadow-premium" *ngIf="showExportOptions" (click)="$event.stopPropagation()">
+                <button class="export-item-qa" (click)="exportarExcel()">
+                  <span class="export-icon">📊</span> Excel (CSV)
                 </button>
-                <button class="btn-export-option" (click)="exportarPDF()">
-                  <span>📄 Exportar to PDF</span>
+                <button class="export-item-qa" (click)="exportarPDF()">
+                  <span class="export-icon">📕</span> PDF
                 </button>
               </div>
             </div>
@@ -135,8 +123,35 @@ import autoTable from 'jspdf-autotable';
           </div>
 
           <div class="toolbar-right">
-            <div class="search-modern-underline">
-              <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="onSearch()">
+            <div class="filter-search-group-qa">
+              <!-- Botón Filtro Avanzado -->
+              <div class="dropdown-wrapper">
+                <button class="btn-filter-funnel-qa" (click)="$event.stopPropagation(); toggleFilterMenu($event)" title="Filtros avanzados">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                  </svg>
+                  <span class="chevron-down-funnel">▾</span>
+                </button>
+                
+                <!-- Filter Dropdown -->
+                <div *ngIf="isFilterMenuOpen" style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 99999; width: 210px; padding: 0.5rem;" (click)="$event.stopPropagation()">
+                  <button (click)="clearFilters(); $event.stopPropagation()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Limpiar Filtros</button>
+                  <button (click)="saveFilter(); $event.stopPropagation()" style="display: block; width: 100%; text-align: left; padding: 0.5rem; border: none; background: none; cursor: pointer; color: #334155; font-size: 0.85rem;">Guardar Filtro como...</button>
+                  <div *ngIf="savedFilters.length > 0">
+                    <div style="height: 1px; background: #e2e8f0; margin: 0.5rem 0;"></div>
+                    <div style="font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; padding: 0.25rem 0.5rem;">Filtros Guardados</div>
+                    <div *ngFor="let f of savedFilters" (click)="loadSavedFilter(f); $event.stopPropagation()" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.85rem; color: #334155; cursor: pointer;">
+                      <span>📁 {{ f.name }}</span>
+                      <span (click)="deleteSavedFilter(f, $event); $event.stopPropagation()" style="cursor: pointer; opacity: 0.6; padding: 2px;">🗑️</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campo de Búsqueda Subrayado -->
+              <div class="search-modern-underline-qa">
+                <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="onSearch()">
+              </div>
             </div>
           </div>
         </div>
@@ -405,8 +420,6 @@ import autoTable from 'jspdf-autotable';
     .module-page { padding: 3rem; }
     .ml-3 { margin-left: 0.75rem; }
     .ext-name-cell { font-size: 0.85rem; color: #0f172a; font-weight: bold; }
-    .actions-col { width: 330px; min-width: 330px; }
-    .actions-cell { white-space: nowrap !important; width: 330px; min-width: 330px; }
 
     /* Dropdowns & Popovers */
     .dropdown-wrapper { position: relative; display: inline-block; }
@@ -479,60 +492,6 @@ import autoTable from 'jspdf-autotable';
     .animate-slide-up { animation: slideUp .15s ease-out; }
     @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* Custom Toast Notification */
-    .custom-toast {
-      position: fixed;
-      top: 24px;
-      right: 24px;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 1.25rem;
-      min-width: 300px;
-      z-index: 10000;
-      border-left: 4px solid #10b981;
-      animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    .custom-toast.danger {
-      border-left-color: #ef4444;
-    }
-    .custom-toast.info {
-      border-left-color: #3b82f6;
-    }
-    .toast-content {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .toast-icon {
-      font-size: 1.1rem;
-    }
-    .toast-text {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #1e293b;
-    }
-    .toast-close {
-      background: transparent;
-      border: none;
-      font-size: 0.75rem;
-      color: #94a3b8;
-      cursor: pointer;
-      padding: 0;
-      margin-left: 1rem;
-      transition: color 0.2s;
-    }
-    .toast-close:hover {
-      color: #475569;
-    }
-    @keyframes slideInRight {
-      from { transform: translateX(120%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
   `]
 })
 export class ExtrusoraProductoListComponent implements OnInit {
@@ -562,9 +521,8 @@ export class ExtrusoraProductoListComponent implements OnInit {
 
   // Popover de Exportación
   showExportOptions = false;
-
-  // Toast notifications state
-  notification: { message: string, type: 'success' | 'danger' | 'info' | null } = { message: '', type: null };
+  isFilterMenuOpen = false;
+  savedFilters: any[] = [];
 
   // Selector de columnas
   showColumnSelector = false;
@@ -582,20 +540,8 @@ export class ExtrusoraProductoListComponent implements OnInit {
   auditCurrentPage = 1;
   auditPageSize = 5;
 
-  showNotification(message: string, type: 'success' | 'danger' | 'info' = 'success') {
-    this.notification = { message, type };
-    this.cdr.detectChanges();
-    setTimeout(() => {
-      this.clearNotification();
-    }, 4000);
-  }
-
-  clearNotification() {
-    this.notification = { message: '', type: null };
-    this.cdr.detectChanges();
-  }
-
   ngOnInit() {
+    this.loadSavedFiltersFromStorage();
     this.loadData();
     this.loadCatalogos();
   }
@@ -664,11 +610,13 @@ export class ExtrusoraProductoListComponent implements OnInit {
   closeAllDropdowns() {
     this.showColumnSelector = false;
     this.showExportOptions = false;
+    this.isFilterMenuOpen = false;
   }
 
   toggleColumnDropdown(event: Event) {
     event.stopPropagation();
     this.showExportOptions = false;
+    this.isFilterMenuOpen = false;
     this.tempVisibleCols = { ...this.visibleCols };
     this.showColumnSelector = !this.showColumnSelector;
   }
@@ -676,7 +624,53 @@ export class ExtrusoraProductoListComponent implements OnInit {
   toggleExportDropdown(event: Event) {
     event.stopPropagation();
     this.showColumnSelector = false;
+    this.isFilterMenuOpen = false;
     this.showExportOptions = !this.showExportOptions;
+  }
+
+  toggleFilterMenu(event: Event) {
+    event.stopPropagation();
+    this.showExportOptions = false;
+    this.showColumnSelector = false;
+    this.isFilterMenuOpen = !this.isFilterMenuOpen;
+  }
+
+  loadSavedFiltersFromStorage() {
+    const raw = localStorage.getItem('hicone_saved_filters_ext_prod_list');
+    this.savedFilters = raw ? JSON.parse(raw) : [];
+  }
+
+  clearFilters() {
+    this.searchTerm = '';
+    this.isFilterMenuOpen = false;
+    this.onSearch();
+  }
+
+  saveFilter() {
+    this.isFilterMenuOpen = false;
+    const filterName = prompt('Ingrese el nombre para este filtro:', 'Filtro Extrusora Producto ' + new Date().toLocaleDateString());
+    if (!filterName) return;
+    const newFilter = {
+      id: 'F-' + Date.now(),
+      name: filterName,
+      state: { searchTerm: this.searchTerm }
+    };
+    this.savedFilters.push(newFilter);
+    localStorage.setItem('hicone_saved_filters_ext_prod_list', JSON.stringify(this.savedFilters));
+    alert('Filtro guardado con éxito.');
+  }
+
+  loadSavedFilter(f: any) {
+    this.searchTerm = f.state?.searchTerm || '';
+    this.currentPage = 1;
+    this.isFilterMenuOpen = false;
+    this.onSearch();
+  }
+
+  deleteSavedFilter(f: any, event: MouseEvent) {
+    event.stopPropagation();
+    this.savedFilters = this.savedFilters.filter(item => item.id !== f.id);
+    localStorage.setItem('hicone_saved_filters_ext_prod_list', JSON.stringify(this.savedFilters));
   }
 
   resetColumns() {
@@ -822,36 +816,36 @@ export class ExtrusoraProductoListComponent implements OnInit {
 
   save() {
     if (!this.form.extrusoraId || !this.form.productoId) {
-      this.showNotification('Debe seleccionar la Extrusora y el Producto', 'danger');
+      alert('Debe seleccionar la Extrusora y el Producto');
       return;
     }
 
-    const selectedProducto = this.productos.find(p => p.id === this.form.productoId);
+    const selectedProd = this.productos.find(p => p.id === this.form.productoId);
     const payload = {
       extrusoraId: this.form.extrusoraId,
-      productoNombre: selectedProducto ? selectedProducto.nombre : '',
-      productoCalibre: Number(this.form.defaultCalibre) || 0,
-      productoAncho: String(this.form.defaultAncho ?? ''),
-      productoLongitud: Number(this.form.defaultLongitud) || 0,
-      reposoMin: Number(this.form.defaultMinutosReposo) || 0,
-      procesoMin: Number(this.procesoMin) || 90
+      productoNombre: selectedProd?.nombre || '',
+      productoCalibre: Number(this.form.defaultCalibre || 0),
+      productoAncho: String(this.form.defaultAncho || '0'),
+      productoLongitud: Number(this.form.defaultLongitud || 0),
+      reposoMin: Number(this.form.defaultMinutosReposo || 0),
+      procesoMin: Number(this.procesoMin || 90)
     };
 
     if (this.viewState === 'add') {
-      this.prodService.createExtrusoraProducto(payload).subscribe({
+      this.prodService.createExtrusoraProducto(payload as any).subscribe({
         next: () => {
-          this.showNotification('Configuración agregada correctamente', 'success');
+          alert('Configuración agregada correctamente');
           this.goToList();
         },
-        error: (err) => this.showNotification('Error al agregar configuración: ' + (err.error?.message || err.message), 'danger')
+        error: (err) => alert('Error al agregar configuración: ' + (err.error?.message || err.message))
       });
     } else {
-      this.prodService.updateExtrusoraProducto(this.form.id!, payload).subscribe({
+      this.prodService.updateExtrusoraProducto(this.form.id!, payload as any).subscribe({
         next: () => {
-          this.showNotification('Configuración modificada correctamente', 'success');
+          alert('Configuración modificada correctamente');
           this.goToList();
         },
-        error: (err) => this.showNotification('Error al modificar configuración: ' + (err.error?.message || err.message), 'danger')
+        error: (err) => alert('Error al modificar configuración: ' + (err.error?.message || err.message))
       });
     }
   }
@@ -872,13 +866,13 @@ export class ExtrusoraProductoListComponent implements OnInit {
     if (!this.itemAEliminar) return;
     this.prodService.deleteExtrusoraProducto(this.itemAEliminar.id).subscribe({
       next: () => {
-        this.showNotification('Configuración eliminada correctamente', 'success');
+        alert('Configuración eliminada correctamente');
         this.mostrarConfirmarEliminar = false;
         this.itemAEliminar = null;
         this.loadData();
       },
       error: (err) => {
-        this.showNotification('Error al eliminar configuración', 'danger');
+        alert('Error al eliminar configuración');
         this.mostrarConfirmarEliminar = false;
         this.itemAEliminar = null;
         this.cdr.detectChanges();

@@ -12,46 +12,56 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
     <div class="module-page animate-fade-in">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Silo</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Inventarios</span>
             <span class="sep">&rsaquo;</span>
             <span class="active">Silos</span>
           </nav>
-          <h1 class="premium-title">Silo</h1>
         </div>
       </div>
       
-      <div class="card-premium" style="margin-bottom: 1rem; border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+      <div class="card-premium card-toolbar-top" style="margin-bottom: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; position: relative; z-index: 100; overflow: visible;">
         <div class="toolbar-premium">
           <div class="toolbar-left">
-            <div class="dropdown-wrapper">
-              <button class="btn-premium-secondary" (click)="showExportSelector = !showExportSelector">📥 Exportar <span class="chevron-down">▼</span></button>
-              <div class="dropdown-menu-custom shadow-premium" *ngIf="showExportSelector" style="width: 150px; position: absolute; z-index: 10;">
-                <button class="dropdown-item-custom" (click)="exportToCSV(); showExportSelector = false">📊 Excel (CSV)</button>
-                <button class="dropdown-item-custom" (click)="exportToPDF(); showExportSelector = false">📕 PDF</button>
+            <div class="export-dropdown-wrapper">
+              <button class="btn-export-qa" (click)="toggleExport($event)" title="Exportar datos">
+                📥 Exportar <span class="chevron-down-qa">▾</span>
+              </button>
+              <div class="export-popover-qa shadow-premium" *ngIf="showExportSelector" (click)="$event.stopPropagation()">
+                <button class="export-item-qa" (click)="exportToCSV(); showExportSelector = false">
+                  <span class="export-icon">📊</span> Excel (CSV)
+                </button>
+                <button class="export-item-qa" (click)="exportToPDF(); showExportSelector = false">
+                  <span class="export-icon">📕</span> PDF
+                </button>
               </div>
             </div>
             <button class="btn-premium" (click)="openModal()">Agregar</button>
             
-            <!-- Selector de Columnas (Imagen 1) -->
+            <!-- Selector de Columnas (Imagen 1 y 2) -->
             <div class="dropdown-wrapper">
-              <button class="btn-premium-secondary" (click)="toggleColumnSelector()">Selecciona columnas <span class="chevron-down">▼</span></button>
-              <div class="column-selector-popover shadow-premium" *ngIf="showColumnSelector" style="position: absolute; z-index: 10;">
+              <button class="btn-primary-green btn-cols" (click)="toggleColumnSelector($event)">Selecciona columnas <span class="chevron-down">▾</span></button>
+              <div class="column-selector-popover shadow-premium" *ngIf="showColumnSelector" style="position: absolute; top: calc(100% + 4px); left: 0; z-index: 99999;">
                 <div class="popover-search">
-                  <input type="text" placeholder="Filtrar..." class="search-mini">
+                  <input type="text" placeholder="" class="search-mini">
                 </div>
                 <div class="popover-sections custom-scroll">
                   <div class="popover-section">
-                    <div class="section-title"><input type="checkbox" checked disabled> Fijas a la izquierda</div>
-                    <label class="popover-item disabled"><input type="checkbox" checked disabled> (Ninguna)</label>
+                    <div class="section-title"><input type="checkbox" checked disabled> Fijas a la izquierda <span class="chevron-down">▾</span></div>
+                    <label class="popover-item disabled" style="padding-left: 20px;"><input type="checkbox" checked disabled> (Ninguna)</label>
                   </div>
                   <div class="popover-section">
-                    <div class="section-title"><input type="checkbox" [checked]="allNonFixedVisible()" (change)="toggleAllNonFixed()"> No fijas</div>
-                    <div class="section-list">
+                    <div class="section-title"><input type="checkbox" [checked]="allNonFixedVisible()" (change)="toggleAllNonFixed()"> No fijas <span class="chevron-down">▾</span></div>
+                    <div class="section-list" style="padding-left: 20px;">
                       <label *ngFor="let col of columns" class="popover-item">
                         <input type="checkbox" [(ngModel)]="col.visible"> {{ col.label }}
                       </label>
                     </div>
+                  </div>
+                  <div class="popover-section">
+                    <div class="section-title"><input type="checkbox" checked disabled> Fijas a la derecha <span class="chevron-down">▾</span></div>
+                    <label class="popover-item disabled" style="padding-left: 20px;"><input type="checkbox" checked disabled> (Ninguna)</label>
                   </div>
                 </div>
                 <div class="popover-footer">
@@ -63,59 +73,39 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
           </div>
           
           <div class="toolbar-right">
-            <div class="dropdown-wrapper">
-              <button class="btn-premium-secondary" (click)="toggleSearchFilterDropdown($event)">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                  <path d="M10,18H14V16H10V18M3,6V8H21V6H3M6,13H18V11H6V13Z" />
-                </svg>
-                <span class="chevron-down">▼</span>
-              </button>
-              
-              <div class="column-selector-popover shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()" style="position: absolute; right: 0; z-index: 10; width: 280px; padding: 1rem;">
-                <!-- Sección de Filtros Avanzados Compactos dentro del Embudo -->
-                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                  <div class="form-group-premium">
-                    <label>TIPO MATERIAL</label>
-                    <select class="input-premium" [(ngModel)]="filterTipoMaterial" (change)="cdr.detectChanges()">
-                      <option value="">-- Todos --</option>
-                      <option value="PCR">PCR</option>
-                      <option value="HDPE">HDPE</option>
-                      <option value="PP">PP</option>
-                      <option value="Mezcla">Mezcla</option>
-                    </select>
-                  </div>
-                  <div class="form-group-premium">
-                    <label>ESTADO SILO</label>
-                    <select class="input-premium" [(ngModel)]="filterEstadoSilo" (change)="cdr.detectChanges()">
-                      <option value="all">Todos</option>
-                      <option value="true">Activos</option>
-                      <option value="false">Inactivos</option>
-                    </select>
-                  </div>
-                </div>
+            <div class="filter-search-group-qa">
+              <!-- Botón Filtro Avanzado -->
+              <div class="dropdown-wrapper">
+                <button class="btn-filter-funnel-qa" (click)="toggleSearchFilterDropdown($event)" title="Filtros avanzados">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                  </svg>
+                  <span class="chevron-down-funnel">▾</span>
+                </button>
                 
-                <div class="dropdown-divider"></div>
-                
-                <div class="dropdown-item-action" (click)="clearAllFilters()" style="padding: 0.5rem 0;">
-                  <span class="icon-circle-cross">✖</span> Limpiar filtros
-                </div>
-                <div class="dropdown-item-action" (click)="saveActiveFilters()" style="padding: 0.5rem 0;">
-                  <span class="icon-floppy">💾</span> Guardar filtro como...
-                </div>
-                
-                <ng-container *ngIf="savedFilters.length > 0">
-                  <div class="dropdown-divider"></div>
-                  <div class="dropdown-header-saved">Filtros Guardados</div>
-                  <div class="dropdown-item-action saved-filter-item" *ngFor="let f of savedFilters" (click)="loadSavedFilter(f)">
-                    <span><span class="icon">📁</span> {{ f.name }}</span>
-                    <span class="btn-delete-saved-filter" (click)="deleteSavedFilter(f, $event)">🗑️</span>
+                <div class="filter-popover-qa shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()">
+                  <div class="filter-item-qa" (click)="clearAllFilters()">
+                    <span class="icon-circle-cross-dark">✖</span> Limpiar filtros
                   </div>
-                </ng-container>
+                  <div class="filter-item-qa" (click)="saveActiveFilters()">
+                    <span class="icon-floppy-dark">💾</span> Guardar filtro como...
+                  </div>
+                  
+                  <ng-container *ngIf="savedFilters.length > 0">
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-header-saved">Filtros Guardados</div>
+                    <div class="filter-item-qa saved-filter-item" *ngFor="let f of savedFilters" (click)="loadSavedFilter(f)">
+                      <span>📁 {{ f.name }}</span>
+                      <span class="btn-delete-saved-filter" (click)="deleteSavedFilter(f, $event)">🗑️</span>
+                    </div>
+                  </ng-container>
+                </div>
               </div>
-            </div>
-            
-            <div class="search-modern-underline">
-              <input type="text" placeholder="Buscar..." [(ngModel)]="searchQuery" (input)="cdr.detectChanges()">
+              
+              <!-- Campo de Búsqueda Subrayado -->
+              <div class="search-modern-underline-qa">
+                <input type="text" placeholder="Buscar..." [(ngModel)]="searchQuery" (input)="cdr.detectChanges()">
+              </div>
             </div>
           </div>
         </div>
@@ -263,7 +253,7 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
         </div>
       </div>
 
-      <div class="card-premium" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
+      <div class="card-premium" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none; position: relative; z-index: 1;">
         <div class="table-modern-container">
           <table class="table-modern">
             <thead>
@@ -553,6 +543,51 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
     </div>
   `,
   styles: [`
+    .dropdown-wrapper { position: relative; display: inline-block; }
+    .btn-cols { background: #4caf50 !important; color: white !important; border: 1px solid #43a047 !important; padding: 0.45rem 0.85rem !important; border-radius: 6px !important; font-weight: 600 !important; font-size: 0.85rem !important; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; }
+    .btn-cols:hover { background: #43a047 !important; }
+
+    .column-selector-popover { 
+      position: absolute; top: calc(100% + 4px); left: 0; 
+      background: #ffffff !important; width: 230px !important; 
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2) !important; z-index: 1000 !important; 
+      border-radius: 8px !important; border: 1px solid #cbd5e1 !important; padding: 12px !important; 
+      box-sizing: border-box; text-align: left;
+    }
+    .popover-search { margin-bottom: 8px; }
+    .search-mini { width: 100%; box-sizing: border-box; padding: 6px 8px; border: 1px solid #4caf50; border-radius: 4px; font-size: 0.83rem; outline: none; background: white; color: #333; }
+    .search-mini:focus { border-color: #388e3c; }
+    .popover-sections { max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+    .popover-section { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+    .section-title { font-size: 0.83rem; font-weight: 600; color: #2e7d32; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .section-list { padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+    .popover-item { font-size: 0.82rem; color: #424242; display: flex; align-items: center; gap: 6px; cursor: pointer; margin: 0; }
+    .popover-footer { margin-top: 12px; display: flex; gap: 8px; align-items: center; }
+    .btn-popover-reset { background: #4caf50 !important; color: white !important; border: none !important; width: 34px !important; height: 32px !important; border-radius: 4px !important; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem !important; }
+    .btn-popover-reset:hover { background: #43a047 !important; }
+    .btn-popover-apply { flex: 1; background: #4caf50 !important; color: white !important; border: none !important; padding: 6px 0 !important; border-radius: 4px !important; font-weight: bold !important; font-size: 0.85rem !important; cursor: pointer; text-align: center; }
+    .btn-popover-apply:hover { background: #43a047 !important; }
+
+    /* Filtro Embudo & Buscador (IMAGEN 1 QA EXACTO) */
+    .toolbar-right { display: flex; gap: 12px; align-items: center; }
+    .btn-filter-funnel-qa { background: #ffffff; border: 1px solid #dcdde1; border-radius: 4px; padding: 0.4rem 0.6rem; height: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: background 0.2s; }
+    .btn-filter-funnel-qa:hover { background: #f8fafc; border-color: #cbd5e1; }
+    .chevron-down-dark { font-size: 0.7rem; color: #334155; }
+
+    .filter-popover-qa { position: absolute; top: calc(100% + 4px); right: 0; background: #ffffff !important; border: 1px solid #cbd5e1 !important; border-radius: 6px !important; width: 180px !important; box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important; z-index: 99999 !important; padding: 6px 0 !important; box-sizing: border-box; }
+    .filter-item-qa { display: flex; align-items: center; gap: 8px; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: #334155; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+    .filter-item-qa:hover { background: #f1f5f9; color: #2e7d32; }
+
+    .icon-circle-cross-dark { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; background: #475569; color: white; border-radius: 50%; font-size: 8px; font-weight: bold; }
+    .filter-item-qa:hover .icon-circle-cross-dark { background: #2e7d32; }
+    .icon-floppy-dark { font-size: 0.9rem; color: #475569; }
+    .filter-item-qa:hover .icon-floppy-dark { color: #2e7d32; }
+
+    .search-underline-box { display: inline-flex; align-items: center; border-bottom: 1.5px solid #cbd5e1; padding-bottom: 2px; transition: border-bottom-color 0.2s; width: 140px; }
+    .search-underline-box:focus-within { border-bottom-color: #4caf50; }
+    .search-input-underline { border: none; background: transparent; outline: none; font-size: 0.88rem; color: #334155; width: 100%; padding: 2px 0; }
+    .search-input-underline::placeholder { color: #94a3b8; font-weight: 400; }
+
     .module-page { padding: 3rem; background: #fdfdfd; min-height: 100vh; font-family: 'Open Sans', Arial, sans-serif; position: relative; }
     .page-header-premium { margin-bottom: 3rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 1.5rem; }
     .premium-title { font-size: 2.2rem; color: #2c3e50; margin: 0; font-weight: 700; letter-spacing: -0.5px; }
@@ -1129,6 +1164,18 @@ export class SilosComponent implements OnInit {
   closeDropdowns() {
     this.activeDropdown = null;
     this.showSearchFilterDropdown = false;
+    this.showColumnSelector = false;
+    this.showExportSelector = false;
+  }
+
+  toggleExport(event: Event) {
+    event.stopPropagation();
+    this.showExportSelector = !this.showExportSelector;
+    if (this.showExportSelector) {
+      this.showColumnSelector = false;
+      this.showSearchFilterDropdown = false;
+      this.activeDropdown = null;
+    }
   }
 
   toggleSearchFilterDropdown(event: Event) {
@@ -1252,7 +1299,6 @@ export class SilosComponent implements OnInit {
   columns = [
     { id: 'nombre', label: 'Nombre', visible: true },
     { id: 'capacidad', label: 'Capacidad (kg)', visible: true },
-    { id: 'existencia', label: 'Existencia (kg)', visible: true },
     { id: 'minimo', label: 'Mínimo (kg)', visible: true },
     { id: 'maximo', label: 'Máximo (kg)', visible: true },
     { id: 'estadoMat', label: 'Estado de Material', visible: true },
@@ -1435,8 +1481,13 @@ export class SilosComponent implements OnInit {
   }
 
   // Lógica del Selector de Columnas
-  toggleColumnSelector() {
+  toggleColumnSelector(event?: Event) {
+    event?.stopPropagation();
     this.showColumnSelector = !this.showColumnSelector;
+    if (this.showColumnSelector) {
+      this.showExportSelector = false;
+      this.showSearchFilterDropdown = false;
+    }
   }
 
   isColVisible(id: string): boolean {

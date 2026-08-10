@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, HostListener } from '@angular/core';
+import { Component, OnInit, inject, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -58,7 +58,7 @@ import { CalidadService } from '../../core/services/calidad';
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let def of filteredDefectos; let i = index">
+            <tr *ngFor="let def of paginatedDefectos; let i = index">
               <td class="action-cell"><span class="icon-edit">✏️</span></td>
               <td class="action-cell"><span class="icon-delete">✖</span></td>
               <td class="text-green" *ngIf="isColVisible('nombre')">{{ getDefectoNombre(def.tipoDefecto) }}</td>
@@ -70,11 +70,11 @@ import { CalidadService } from '../../core/services/calidad';
         </table>
 
         <div class="pagination-bar">
-          <div class="page-info">Página 1 de 1</div>
+          <div class="page-info">Página {{ currentPage }} de {{ totalPages }}</div>
           <div class="page-controls">
-            <button class="page-btn">Ant</button>
-            <button class="page-btn active">1</button>
-            <button class="page-btn">Sig</button>
+            <button class="page-btn" [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)">Ant</button>
+            <button class="page-btn active">{{ currentPage }}</button>
+            <button class="page-btn" [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)">Sig</button>
           </div>
         </div>
       </div>
@@ -136,7 +136,7 @@ import { CalidadService } from '../../core/services/calidad';
       margin-bottom: 10px;
     }
     .breadcrumb-item { color: #999; }
-    .breadcrumb-separator { font-size: 14px; }
+    .breadcrumb-separator { font-size: 14px; color: #4caf50; font-weight: bold; }
     .breadcrumb-item.active { color: #777; }
     
     .page-content {
@@ -268,11 +268,31 @@ import { CalidadService } from '../../core/services/calidad';
 })
 export class DefectosListComponent implements OnInit {
   private calidadService = inject(CalidadService);
+  private cdr = inject(ChangeDetectorRef);
 
   defectos: any[] = [];
   filteredDefectos: any[] = [];
 
   filterSerie = '';
+
+  currentPage: number = 1;
+  pageSize: number = 10;
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredDefectos.length / this.pageSize) || 1;
+  }
+
+  get paginatedDefectos(): any[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredDefectos.slice(start, start + this.pageSize);
+  }
+
+  setPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.cdr.detectChanges();
+    }
+  }
 
   mostrarModalReportar = false;
   nuevoReporte = {
@@ -302,8 +322,12 @@ export class DefectosListComponent implements OnInit {
       next: (data) => {
         this.defectos = data;
         this.aplicarFiltros();
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error al cargar defectos:', err)
+      error: (err) => {
+        console.error('Error al cargar defectos:', err);
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -312,15 +336,18 @@ export class DefectosListComponent implements OnInit {
       const matchSerie = d.noSerieCarrete.toLowerCase().includes(this.filterSerie.trim().toLowerCase());
       return matchSerie;
     });
+    this.currentPage = 1;
   }
 
   abrirModalReportar() {
     this.nuevoReporte = { noSerieCarrete: '', tipo: 1, descripcion: '' };
     this.mostrarModalReportar = true;
+    this.cdr.detectChanges();
   }
 
   cerrarModalReportar() {
     this.mostrarModalReportar = false;
+    this.cdr.detectChanges();
   }
 
   reportarFalla() {
@@ -332,6 +359,7 @@ export class DefectosListComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al reportar defecto:', err);
+        this.cdr.detectChanges();
       }
     });
   }

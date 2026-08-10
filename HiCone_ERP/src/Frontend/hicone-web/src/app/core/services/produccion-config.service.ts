@@ -7,6 +7,7 @@ export interface Turno      { id: string; nombre: string; clave?: string; horaIn
 export interface Extrusora  { id: string; nombre: string; numeroExtrusora: string; imagen?: string; }
 export interface ExtrusoraOperarioRow { id?: string; turnoId: string; turno: string; operarioId?: string; operario?: string; }
 export interface Prensa     { id: string; numeroPrensa?: string; nombre: string; imagen?: string; marca?: string; modelo?: string; }
+export interface Troquel    { id: string; secuencialId?: number; codigo: string; nombre: string; enPrensa?: string; estado: number; estadoNombre?: string; isActive: boolean; observaciones?: string; ciclosAcumulados?: number; ciclosVideoMantenimiento?: number; fechaUltimoMantenimiento?: string; productos?: any[]; prensaTroqueles?: any[]; }
 export interface Silo       { id: string; nombre: string; capacidadKg: number; minimoKg: number; maximoKg: number; estadoMaterial?: string; tipoMaterial?: string; siloActivo: boolean; }
 export interface Categoria  { id: string; nombre: string; }
 export interface Producto   { id: string; categoriaId?: string; categoria?: string; productoBase?: string; clave: string; nombre: string; descripcion?: string; precioUnitario: number; tipoMaterial?: string; isActive: boolean; productoSAE?: string; }
@@ -62,6 +63,23 @@ export interface PrensadoDetail {
   iniciaProceso?: string;
   finProceso?: string;
   loteSilo?: string;
+  idLegacy?: number;
+  prensaId?: string;
+  turnoId?: string;
+  productoId?: string;
+  estado?: number;
+  levasUnidadMedida?: string;
+  levasKgEntrada?: number;
+  levasKgSalida?: number;
+  levasGradosEntrada?: number;
+  levasGradosSalida?: number;
+  rodillosUnidadMedida?: string;
+  rodillosKgEntrada?: number;
+  rodillosKgSalida?: number;
+  rodillosGradosEntrada?: number;
+  rodillosGradosSalida?: number;
+  troquelId?: string | null;
+  troquelNombre?: string;
 }
 
 export interface ExtrusionProgramacion {
@@ -159,6 +177,7 @@ export class ProduccionConfigService {
 
   getPrensadoProgramacion() { return this.http.get<PrensadoProgramacion[]>(`${this.base}/prensado/programacion`); }
   getPrensadoOperacion()   { return this.http.get<PrensadoOperacion[]>(`${this.base}/prensado/operacion`); }
+  getPrensados()           { return this.http.get<any[]>(`${this.base}/prensados`); }
   getPrensadoDetail(id: string) { return this.http.get<PrensadoDetail>(`${this.base}/prensado/${id}`); }
   patchPrensadoOperador(id: string, operarioId: string | null) {
     return this.http.patch(`${this.base}/prensado/${id}/operador`, { operarioId });
@@ -226,13 +245,10 @@ export class ProduccionConfigService {
   getMaterialEstados() { return this.http.get<{id: string, nombre: string}[]>(`${this.base}/catalogos/material-estados`); }
   getMaterialTipos() { return this.http.get<{id: string, nombre: string}[]>(`${this.base}/catalogos/material-tipos`); }
 
-  // ── CAUSAS INTERRUPCIÓN ──────────────────────────────────────────────────────
-  getCausasInterrupcion() { return this.http.get<any[]>(`${this.base}/catalogos/causas-interrupcion`); }
-  createCausaInterrupcion(causa: any) { return this.http.post<string>(`${this.base}/catalogos/causas-interrupcion`, causa); }
-  updateCausaInterrupcion(id: string, causa: any) { return this.http.put(`${this.base}/catalogos/causas-interrupcion/${id}`, causa); }
-  deleteCausaInterrupcion(id: string) { return this.http.delete(`${this.base}/catalogos/causas-interrupcion/${id}`); }
-
-  // ── OBSERVACIONES ────────────────────────────────────────────────────────────
-  getExtrusorasObservaciones() { return this.http.get<any[]>(`${this.base}/observaciones/extrusoras`); }
-  getPrensasObservaciones() { return this.http.get<any[]>(`${this.base}/observaciones/prensas`); }
+  // ── TROQUELES ──────────────────────────────────────────────────────────────
+  getTroqueles(search = '') { return this.http.get<Troquel[]>(`${this.base}/catalogos/troqueles?search=${search}`); }
+  getTroquelById(id: string) { return this.http.get<any>(`${this.base}/catalogos/troqueles/${id}`); }
+  createTroquel(t: Partial<Troquel>) { return this.http.post<string>(`${this.base}/catalogos/troqueles`, t); }
+  updateTroquel(id: string, t: Partial<Troquel>) { return this.http.put(`${this.base}/catalogos/troqueles/${id}`, t); }
+  deleteTroquel(id: string) { return this.http.delete(`${this.base}/catalogos/troqueles/${id}`); }
 }

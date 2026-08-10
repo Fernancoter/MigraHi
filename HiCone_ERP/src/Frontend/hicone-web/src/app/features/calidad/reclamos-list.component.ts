@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, HostListener } from '@angular/core';
+import { Component, OnInit, inject, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -64,7 +64,7 @@ import { CalidadService, Reclamo } from '../../core/services/calidad';
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let r of filteredReclamos; let i = index">
+            <tr *ngFor="let r of paginatedReclamos; let i = index">
               <td class="action-cell"><span class="icon-edit">✏️</span></td>
               <td class="action-cell"><span class="icon-delete">✖</span></td>
               <td class="action-cell"><span class="icon-gear">⚙️</span></td>
@@ -88,11 +88,11 @@ import { CalidadService, Reclamo } from '../../core/services/calidad';
         </table>
 
         <div class="pagination-bar">
-          <div class="page-info">Página 1 de 1</div>
+          <div class="page-info">Página {{ currentPage }} de {{ totalPages }}</div>
           <div class="page-controls">
-            <button class="page-btn">Ant</button>
-            <button class="page-btn active">1</button>
-            <button class="page-btn">Sig</button>
+            <button class="page-btn" [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)">Ant</button>
+            <button class="page-btn active">{{ currentPage }}</button>
+            <button class="page-btn" [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)">Sig</button>
           </div>
         </div>
       </div>
@@ -147,7 +147,7 @@ import { CalidadService, Reclamo } from '../../core/services/calidad';
       margin-bottom: 10px;
     }
     .breadcrumb-item { color: #999; }
-    .breadcrumb-separator { font-size: 14px; }
+    .breadcrumb-separator { font-size: 14px; color: #4caf50; font-weight: bold; }
     .breadcrumb-item.active { color: #777; }
     
     .page-content {
@@ -291,11 +291,31 @@ import { CalidadService, Reclamo } from '../../core/services/calidad';
 })
 export class ReclamosListComponent implements OnInit {
   private calidadService = inject(CalidadService);
+  private cdr = inject(ChangeDetectorRef);
 
   reclamos: Reclamo[] = [];
   filteredReclamos: Reclamo[] = [];
 
   filterCodigo = '';
+
+  currentPage: number = 1;
+  pageSize: number = 10;
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredReclamos.length / this.pageSize) || 1;
+  }
+
+  get paginatedReclamos(): Reclamo[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredReclamos.slice(start, start + this.pageSize);
+  }
+
+  setPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.cdr.detectChanges();
+    }
+  }
 
   mostrarModal = false;
   nuevoReclamo = {
@@ -328,8 +348,12 @@ export class ReclamosListComponent implements OnInit {
       next: (data) => {
         this.reclamos = data;
         this.aplicarFiltros();
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error al obtener reclamos:', err)
+      error: (err) => {
+        console.error('Error al obtener reclamos:', err);
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -338,15 +362,18 @@ export class ReclamosListComponent implements OnInit {
       const matchCodigo = r.codigo.toLowerCase().includes(this.filterCodigo.trim().toLowerCase());
       return matchCodigo;
     });
+    this.currentPage = 1;
   }
 
   abrirModalCrear() {
     this.nuevoReclamo = { cliente: '', orderDoc: '', descripcion: '' };
     this.mostrarModal = true;
+    this.cdr.detectChanges();
   }
 
   cerrarModalCrear() {
     this.mostrarModal = false;
+    this.cdr.detectChanges();
   }
 
   guardarReclamo() {
@@ -358,6 +385,7 @@ export class ReclamosListComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al abrir reclamo:', err);
+        this.cdr.detectChanges();
       }
     });
   }

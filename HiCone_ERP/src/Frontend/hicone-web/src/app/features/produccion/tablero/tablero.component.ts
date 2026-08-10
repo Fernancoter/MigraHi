@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal, HostListener, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, ExtrusionProgramacion, ExtrusionOperacion, PrensadoProgramacion, PrensadoOperacion } from '../../../core/services/produccion-config.service';
 import * as XLSX from 'xlsx';
@@ -14,12 +15,12 @@ import autoTable from 'jspdf-autotable';
     <div class="module-page animate-move-up">
       <div class="page-header-premium">
         <div class="title-section">
+          <h1 class="premium-title">Tablero de Producción</h1>
           <nav class="breadcrumb-modern">
             <span class="root">Producción</span>
             <span class="sep">&rsaquo;</span>
             <span class="active">Inicio</span>
           </nav>
-          <h1 class="premium-title">Tablero de Producción</h1>
         </div>
       </div>
 
@@ -520,23 +521,105 @@ import autoTable from 'jspdf-autotable';
       <!-- TAB PRENSADO -->
       @if (activeTab() === 'prensado') {
         <div class="tab-content animate-move-up">
-          
-          <!-- TABLA 1: PROGRAMACIÓN -->
+          @if (showTableroDirectivo()) {
+            <!-- TABLA TABLERO DIRECTIVO -->
+            <div class="section-card" style="margin-bottom: 2rem;">
+              <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="header-title">
+                  <span class="dot-indicator blue"></span>
+                  <h3>Tablero Directivo</h3>
+                </div>
+                <button class="btn-cancel" (click)="showTableroDirectivo.set(false)" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Volver al Inicio</button>
+              </div>
+              
+              <div class="table-wrapper">
+                <table class="premium-table">
+                  <thead>
+                    <tr>
+                      <th class="header-empty">Estado</th>
+                      <th class="header-empty">Editar</th>
+                      <th class="header-empty">Eliminar</th>
+                      <th>Fecha</th>
+                      <th>Prensa</th>
+                      <th>Turno</th>
+                      <th>Producto</th>
+                      <th>Operador</th>
+                      <th class="text-right">Programado</th>
+                      <th class="text-right">Producido</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @if (loading()) {
+                      <tr><td colspan="10" class="loading-cell">Cargando tablero directivo...</td></tr>
+                    } @else if (getPaginatedTableroDirectivo().length === 0) {
+                      <tr><td colspan="10" class="empty-cell">Sin registros en el tablero directivo.</td></tr>
+                    } @else {
+                      @for (item of getPaginatedTableroDirectivo(); track item.id) {
+                        <tr>
+                          <td>
+                            <span class="status-indicator" [attr.data-status]="getPrensadoStatusName(item.estado)">
+                              {{ getPrensadoStatusLabel(item.estado) }}
+                            </span>
+                          </td>
+                          <td class="actions-cell" style="width: auto;">
+                            <button class="btn-icon-edit" title="Editar" (click)="openPrensadoEditModal(item.id)">
+                              <span class="icon">✎</span>
+                            </button>
+                          </td>
+                          <td class="actions-cell" style="width: auto;">
+                            <button class="btn-icon-delete" title="Eliminar" (click)="deletePrensado(item.id)">
+                              <span class="icon">×</span>
+                            </button>
+                          </td>
+                          <td>{{ item.fecha | date:'dd/MM/yyyy' }}</td>
+                          <td><strong>{{ item.prensa }}</strong></td>
+                          <td><span class="turno-badge">{{ item.turno }}</span></td>
+                          <td><strong>{{ item.producto }}</strong></td>
+                          <td>{{ item.operador || 'Sin asignar' }}</td>
+                          <td class="text-right font-bold">{{ item.programado | number }}</td>
+                          <td class="text-right font-bold">{{ item.producido | number }}</td>
+                        </tr>
+                      }
+                      <!-- SUMAS Y TOTALES -->
+                      <tr style="background: #f8fafc; font-weight: bold; border-top: 2px solid #e2e8f0;">
+                        <td colspan="3" class="font-bold">CNT: {{ tableroDirectivoList().length | number }}</td>
+                        <td colspan="5"></td>
+                        <td class="text-right font-bold" style="color: #1e293b;">{{ getTableroSumProgramado() | number }}</td>
+                        <td class="text-right font-bold" style="color: #1e293b;">{{ getTableroSumProducido() | number }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              
+              <!-- PAGINACIÓN -->
+              @if (tableroDirectivoList().length > tableroDirectivoPageSize) {
+                <div class="pagination-bar" style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; padding: 1.5rem; background: white; border-top: 1px solid #e2e8f0;">
+                  <button class="btn-cancel" [disabled]="tableroDirectivoPage() === 1" (click)="tableroDirectivoPage.set(tableroDirectivoPage() - 1)" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Ant</button>
+                  @for (p of getTableroPages(); track p) {
+                    <button class="btn-cancel" [class.btn-confirm]="tableroDirectivoPage() === p" (click)="tableroDirectivoPage.set(p)" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; min-width: 35px;">
+                      {{ p }}
+                    </button>
+                  }
+                  <button class="btn-cancel" [disabled]="tableroDirectivoPage() === getTableroTotalPages()" (click)="tableroDirectivoPage.set(tableroDirectivoPage() + 1)" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Sig</button>
+                </div>
+              }
+            </div>
+          } @else {
+            <!-- TABLA 1: PROGRAMACIÓN -->
           <div class="section-card mb-6">
-            <div class="section-header">
+            <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
               <div class="header-title">
                 <span class="dot-indicator blue"></span>
                 <h3>Programación</h3>
               </div>
+              <button class="btn-confirm" (click)="showTableroDirectivo.set(true); loadPrensado()" style="background: #10b981; font-size: 0.85rem; padding: 0.5rem 1rem;">Tablero Directivo</button>
             </div>
             
             <div class="table-wrapper">
               <table class="premium-table">
                 <thead>
                   <tr>
-                    <th class="header-empty"></th>
-                    <th class="header-empty"></th>
-                    <th class="header-empty"></th>
                     <th (click)="progPrenSortCol.set('fecha'); progPrenSortDir.set(progPrenSortDir() === 'asc' ? 'desc' : 'asc')">
                       Fecha Prensado <span class="sort-icon">{{ progPrenSortCol() === 'fecha' ? (progPrenSortDir() === 'asc' ? '↑' : '↓') : '' }}</span>
                     </th>
@@ -609,15 +692,12 @@ import autoTable from 'jspdf-autotable';
                 </thead>
                 <tbody>
                   @if (loading()) {
-                    <tr><td colspan="9" class="loading-cell">Cargando programación...</td></tr>
+                    <tr><td colspan="6" class="loading-cell">Cargando programación...</td></tr>
                   } @else if (filteredProgramacionPren().length === 0) {
-                    <tr><td colspan="9" class="empty-cell">No hay órdenes programadas que coincidan con los filtros.</td></tr>
+                    <tr><td colspan="6" class="empty-cell">No hay órdenes programadas que coincidan con los filtros.</td></tr>
                   } @else {
                     @for (item of filteredProgramacionPren(); track item.id) {
                       <tr>
-                        <td class="td-empty"></td>
-                        <td class="td-empty"></td>
-                        <td class="td-empty"></td>
                         <td>{{ item.fecha | date:'dd/MM/yyyy' }}</td>
                         <td><strong>{{ item.prensa }}</strong></td>
                         <td><span class="turno-badge">{{ item.turno }}</span></td>
@@ -720,6 +800,18 @@ import autoTable from 'jspdf-autotable';
                         </div>
                       }
                     </th>
+                    <th class="text-right" (click)="toggleFilter('oper-interrupcion-filter', $event)">
+                      <span class="th-inner">Tiempo Interrupción (min) <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      @if (activeFilter() === 'oper-interrupcion-filter') {
+                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
+                          <div class="range-group">
+                            <div class="range-field"><label>Desde</label><input type="number" class="search-input" [ngModel]="operPrenInterrupcionDesde()" (ngModelChange)="operPrenInterrupcionDesde.set($event)"></div>
+                            <div class="range-field"><label>Hasta</label><input type="number" class="search-input" [ngModel]="operPrenInterrupcionHasta()" (ngModelChange)="operPrenInterrupcionHasta.set($event)"></div>
+                            <button class="sort-btn" style="background: #10b981; color: white; margin-top: 0.5rem; justify-content: center; font-weight: bold;" (click)="activeFilter.set(null)">Buscar</button>
+                          </div>
+                        </div>
+                      }
+                    </th>
                     <th class="text-right" (click)="toggleFilter('oper-producido-filter', $event)">
                       <span class="th-inner">Producido <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                       @if (activeFilter() === 'oper-producido-filter') {
@@ -732,33 +824,26 @@ import autoTable from 'jspdf-autotable';
                         </div>
                       }
                     </th>
-                    <th class="text-right" (click)="toggleFilter('oper-interrupcion-filter', $event)">
-                      <span class="th-inner">Tiempo Interrupción <svg class="chevron-icon" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                      @if (activeFilter() === 'oper-interrupcion-filter') {
-                        <div class="filter-popover animate-slide-up" (click)="$event.stopPropagation()">
-                          <div class="range-group">
-                            <div class="range-field"><label>Desde</label><input type="number" class="search-input" [ngModel]="operPrenInterrupcionDesde()" (ngModelChange)="operPrenInterrupcionDesde.set($event)"></div>
-                            <div class="range-field"><label>Hasta</label><input type="number" class="search-input" [ngModel]="operPrenInterrupcionHasta()" (ngModelChange)="operPrenInterrupcionHasta.set($event)"></div>
-                            <button class="sort-btn" style="background: #10b981; color: white; margin-top: 0.5rem; justify-content: center; font-weight: bold;" (click)="activeFilter.set(null)">Buscar</button>
-                          </div>
-                        </div>
-                      }
-                    </th>
-                    <th>En Curso</th>
-                    <th>Prensa ID</th>
                   </tr>
                 </thead>
                 <tbody>
                   @if (loading()) {
-                    <tr><td colspan="12" class="loading-cell">Cargando operación...</td></tr>
+                    <tr><td colspan="10" class="loading-cell">Cargando operación...</td></tr>
                   } @else if (filteredOperacionPren().length === 0) {
-                    <tr><td colspan="12" class="empty-cell">Sin registros en curso que coincidan con los filtros.</td></tr>
+                    <tr><td colspan="10" class="empty-cell">Sin registros en curso que coincidan con los filtros.</td></tr>
                   } @else {
                     @for (item of filteredOperacionPren(); track item.id) {
-                      <tr [class.row-active]="item.enCurso">
+                       <tr [class.row-active]="item.enCurso">
                         <td>
                           <span class="status-indicator" [attr.data-status]="item.status">
-                            {{ item.status }}
+                            {{ 
+                              item.status === 'EnProceso' ? 'En Proceso' : 
+                              item.status === 'Intermedia' ? 'Intermedio' : 
+                              item.status === 'Parada' ? 'Detenido' : 
+                              item.status === 'Terminada' ? 'Terminado' : 
+                              item.status === 'PorProgramar' ? 'Por Programar' : 
+                              item.status === 'Programada' ? 'Programado' : item.status 
+                            }}
                           </span>
                         </td>
                         <td class="actions-cell" style="width: auto;">
@@ -776,22 +861,23 @@ import autoTable from 'jspdf-autotable';
                             <span class="icon" style="font-weight: bold;">!</span>
                           </button>
                         </td>
-                        <td><strong>{{ item.prensa }}</strong></td>
+                        <td>
+                          <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: #10b981; display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #10b981; font-size: 0.75rem; font-weight: bold;">✓</span>
+                            <strong>{{ item.prensa }}</strong>
+                          </div>
+                        </td>
                         <td>{{ item.turno }}</td>
                         <td>{{ item.producto }}</td>
                         <td>{{ item.operador || 'Sin asignar' }}</td>
-                        <td class="text-right font-bold">{{ item.producido | number }}</td>
                         <td class="text-right">{{ item.tiempoInterrupcion }}</td>
-                        <td class="text-center">
-                          <div class="toggle-status" [class.on]="item.enCurso"></div>
-                        </td>
-                        <td><code class="id-tag">{{ item.id.substring(0, 8) }}</code></td>
+                        <td class="text-right font-bold">{{ item.producido | number }}</td>
                       </tr>
 
                       <!-- BLOQUE EXPANDIBLE DE DETALLES Y CARRERAS -->
                       @if (isPrensadoRowExpanded(item.id)) {
                         <tr class="expanded-row-tr">
-                          <td colspan="12" class="expanded-row-td" style="padding: 1.5rem 2rem; background: rgba(248, 250, 252, 0.6); border-bottom: 1.5px solid #e2e8f0;">
+                          <td colspan="10" class="expanded-row-td" style="padding: 1.5rem 2rem; background: rgba(248, 250, 252, 0.6); border-bottom: 1.5px solid #e2e8f0;">
                             <div class="expanded-detail-container animate-slide-up" style="display: flex; flex-direction: column; gap: 1rem;">
                               
                               <!-- Header & Export Toolbar -->
@@ -855,137 +941,181 @@ import autoTable from 'jspdf-autotable';
               </table>
             </div>
           </div>
-        </div>
-      }
-
-      <!-- MODAL DE EDICIÓN PRENSADO -->
-      @if (showPrensadoModal()) {
+        }
+        @if (showPrensadoModal()) {
         <div class="modal-backdrop animate-fade-in" (click)="closePrensadoModal()">
-          <div class="modal-container animate-slide-up" (click)="$event.stopPropagation()">
+          <div class="modal-container animate-slide-up" style="max-width: 950px; width: 95%;" (click)="$event.stopPropagation()">
             <header class="modal-header">
               <h2>Información general</h2>
               <button class="btn-close" (click)="closePrensadoModal()">×</button>
             </header>
             
             <div class="modal-body" *ngIf="selectedPrensado()">
-              <!-- Top borderless grid section -->
-              <div class="info-grid borderless" style="margin-bottom: 2rem;">
-                <div class="info-col">
-                  <label>Prensa</label>
-                  <p>{{ selectedPrensado()?.prensa || '---' }}</p>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; align-items: start;">
+                <!-- COLUMNA 1 -->
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Id</label>
+                    <input type="text" class="form-input" [ngModel]="selectedPrensado()?.idLegacy || '---'" readonly style="background: #f1f5f9; color: #64748b;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Nombre</label>
+                    <input type="text" class="form-input" [ngModel]="selectedPrensado()?.prensa || '---'" readonly style="background: #f1f5f9; color: #64748b;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Producto Id</label>
+                    <input type="text" class="form-input" [ngModel]="selectedPrensado()?.productoId || '---'" readonly style="background: #f1f5f9; color: #64748b;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Operador Nombre</label>
+                    <input type="text" class="form-input" [ngModel]="selectedPrensado()?.operador || '---'" readonly style="background: #f1f5f9; color: #64748b;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Unidad Medida (Levas)</label>
+                    <select class="form-select" [ngModel]="selectedPrensado()?.levasUnidadMedida || 'Kg'" (ngModelChange)="selectedPrensado().levasUnidadMedida = $event">
+                      <option value="Kg">Kg</option>
+                      <option value="Grados">Grados</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Grados Entrada (Levas)</label>
+                    <input type="number" step="0.1" class="form-input" [ngModel]="selectedPrensado()?.levasGradosEntrada" (ngModelChange)="selectedPrensado().levasGradosEntrada = $event">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Kg Salida (Levas)</label>
+                    <input type="number" step="0.1" class="form-input" [ngModel]="selectedPrensado()?.levasKgSalida" (ngModelChange)="selectedPrensado().levasKgSalida = $event">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Troquel Id</label>
+                    <div style="display: flex; gap: 0.25rem;">
+                      <input type="text" class="form-input" [ngModel]="selectedPrensado()?.troquelId || ''" (ngModelChange)="selectedPrensado().troquelId = $event" placeholder="Buscar troquel...">
+                      <button class="btn-icon-edit" style="width: 38px; height: 38px; flex-shrink: 0;" title="Buscar troquel">
+                        <span class="icon">🔍</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Fin Proceso</label>
+                    <input type="datetime-local" class="form-input" [ngModel]="selectedPrensado()?.finProceso | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="selectedPrensado().finProceso = $event">
+                  </div>
                 </div>
-                <div class="info-col">
-                  <label>Turno</label>
-                  <p>{{ selectedPrensado()?.turno || '---' }}</p>
+
+                <!-- COLUMNA 2 -->
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Fecha</label>
+                    <input type="date" class="form-input" [ngModel]="selectedPrensado()?.fecha | date:'yyyy-MM-dd'" (ngModelChange)="onPressingDateChange($event)">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Turno Id</label>
+                    <input type="text" class="form-input" [ngModel]="selectedPrensado()?.turnoId || '---'" readonly style="background: #f1f5f9; color: #64748b;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Producto Nombre</label>
+                    <input type="text" class="form-input" [ngModel]="selectedPrensado()?.producto || '---'" readonly style="background: #f1f5f9; color: #64748b;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Estado</label>
+                    <select class="form-select" [ngModel]="selectedPrensado()?.estado" (ngModelChange)="selectedPrensado().estado = $event">
+                      <option [value]="0">Programado</option>
+                      <option [value]="1">En Proceso</option>
+                      <option [value]="2">Intermedio</option>
+                      <option [value]="3">Detenido</option>
+                      <option [value]="4">Terminado</option>
+                      <option [value]="5">Por Programar</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Kg Entrada (Levas)</label>
+                    <input type="number" step="0.1" class="form-input" [ngModel]="selectedPrensado()?.levasKgEntrada" (ngModelChange)="selectedPrensado().levasKgEntrada = $event">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Grados Salida (Levas)</label>
+                    <input type="number" step="0.1" class="form-input" [ngModel]="selectedPrensado()?.levasGradosSalida" (ngModelChange)="selectedPrensado().levasGradosSalida = $event">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Grados Entrada (Rodillos)</label>
+                    <input type="number" step="0.1" class="form-input" [ngModel]="selectedPrensado()?.rodillosGradosEntrada" (ngModelChange)="selectedPrensado().rodillosGradosEntrada = $event">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Troquel Nombre</label>
+                    <input type="text" class="form-input" [ngModel]="selectedPrensado()?.troquelNombre || '---'" readonly style="background: #f1f5f9; color: #64748b;">
+                  </div>
                 </div>
-                <div class="info-col">
-                  <label>Producto</label>
-                  <p>{{ selectedPrensado()?.producto || '---' }}</p>
+
+                <!-- COLUMNA 3 -->
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Id (Turno/Legacy)</label>
+                    <input type="text" class="form-input" [ngModel]="selectedPrensado()?.idLegacy || '---'" readonly style="background: #f1f5f9; color: #64748b;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Turno Nombre</label>
+                    <input type="text" class="form-input" [ngModel]="selectedPrensado()?.turno || '---'" readonly style="background: #f1f5f9; color: #64748b;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Operador Id</label>
+                    <input type="text" class="form-input" [ngModel]="selectedPrensado()?.operadorId || '---'" readonly style="background: #f1f5f9; color: #64748b;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Unidad Medida (Rodillos)</label>
+                    <select class="form-select" [ngModel]="selectedPrensado()?.rodillosUnidadMedida || 'Kg'" (ngModelChange)="selectedPrensado().rodillosUnidadMedida = $event">
+                      <option value="Kg">Kg</option>
+                      <option value="Grados">Grados</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Kg Salida (Rodillos)</label>
+                    <input type="number" step="0.1" class="form-input" [ngModel]="selectedPrensado()?.rodillosKgSalida" (ngModelChange)="selectedPrensado().rodillosKgSalida = $event">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Kg Entrada (Rodillos)</label>
+                    <input type="number" step="0.1" class="form-input" [ngModel]="selectedPrensado()?.rodillosKgEntrada" (ngModelChange)="selectedPrensado().rodillosKgEntrada = $event">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Grados Salida (Rodillos)</label>
+                    <input type="number" step="0.1" class="form-input" [ngModel]="selectedPrensado()?.rodillosGradosSalida" (ngModelChange)="selectedPrensado().rodillosGradosSalida = $event">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Inicia Proceso</label>
+                    <input type="datetime-local" class="form-input" [ngModel]="selectedPrensado()?.iniciaProceso | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="selectedPrensado().iniciaProceso = $event">
+                  </div>
                 </div>
               </div>
 
-              <!-- Operator Section -->
-              <div class="sub-section">
-                <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Operador</label>
-                <select class="op-selector" [ngModel]="selectedPrensado()?.operadorId || ''" (ngModelChange)="selectedPrensado().operadorId = $event">
-                  <option value="">Sin asignar</option>
-                  @for (op of operariosDisponibles(); track op.id) {
-                    <option [value]="op.id">{{ op.nombre }}</option>
-                  }
-                </select>
-              </div>
-
-              <!-- Status Section -->
+              <!-- Opciones Adicionales de Producción -->
               <div class="sub-section" style="margin-top: 1.5rem;">
-                <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Estado</label>
-                <select class="op-selector" [ngModel]="selectedPrensado()?.status || ''" (ngModelChange)="selectedPrensado().status = $event">
-                  <option value="Programada">Programada</option>
-                  <option value="EnProceso">En Proceso</option>
-                  <option value="Intermedia">Intermedia</option>
-                  <option value="Parada">Parada</option>
-                  <option value="Terminada">Terminada</option>
-                  <option value="PorProgramar">Por Programar</option>
-                </select>
-              </div>
-
-              <!-- Bottom section borderless table -->
-              <div class="sub-section" style="margin-top: 1.5rem;">
-                <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Detalles de Producción</label>
-                <div class="bobbin-card" style="border: none; padding-top: 0.5rem; display: flex; flex-direction: column; gap: 1rem;">
-                  <!-- Renglón 1: Fecha e input interactivo con calendario -->
-                  <div class="bc-block">
-                    <div class="bc-item">
-                      <label>Fecha de Producción 📅</label>
-                      <input type="date" class="form-input" [ngModel]="selectedPrensado()?.fecha | date:'yyyy-MM-dd'" (ngModelChange)="onPressingDateChange($event)">
-                    </div>
-                    <div class="bc-item">
-                      <label>Calibre</label>
-                      <input type="number" step="0.001" class="form-input" [ngModel]="selectedPrensado()?.calibre" (ngModelChange)="selectedPrensado().calibre = $event" placeholder="0.000">
-                    </div>
+                <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Especificaciones Adicionales</label>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.4rem;">Calibre</label>
+                    <input type="number" step="0.001" class="form-input" [ngModel]="selectedPrensado()?.calibre" (ngModelChange)="selectedPrensado().calibre = $event">
                   </div>
-
-                  <!-- Renglón 2: Ancho y Longitud -->
-                  <div class="bc-block">
-                    <div class="bc-item">
-                      <label>Ancho</label>
-                      <input type="text" class="form-input" [ngModel]="selectedPrensado()?.ancho" (ngModelChange)="selectedPrensado().ancho = $event" placeholder="0000/00">
-                    </div>
-                    <div class="bc-item">
-                      <label>Longitud</label>
-                      <input type="number" class="form-input" [ngModel]="selectedPrensado()?.longitud" (ngModelChange)="selectedPrensado().longitud = $event" placeholder="00000">
-                    </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.4rem;">Ancho</label>
+                    <input type="text" class="form-input" [ngModel]="selectedPrensado()?.ancho" (ngModelChange)="selectedPrensado().ancho = $event">
                   </div>
-
-                  <!-- Renglón 3: Información Adicional (Virgen Kg, Meta, Molido Kg, Estado) -->
-                  <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.5rem;">Información Adicional</label>
-                  <div class="bc-block">
-                    <div class="bc-item">
-                      <label>Virgen Kg</label>
-                      <input type="number" step="0.01" class="form-input" [ngModel]="selectedPrensado()?.virgenKg" (ngModelChange)="selectedPrensado().virgenKg = $event" placeholder="00.00">
-                    </div>
-                    <div class="bc-item">
-                      <label>Meta</label>
-                      <input type="number" class="form-input" [ngModel]="selectedPrensado()?.meta" (ngModelChange)="selectedPrensado().meta = $event" placeholder="0000">
-                    </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.4rem;">Longitud</label>
+                    <input type="number" class="form-input" [ngModel]="selectedPrensado()?.longitud" (ngModelChange)="selectedPrensado().longitud = $event">
                   </div>
-                  <div class="bc-block">
-                    <div class="bc-item">
-                      <label>Molido Kg</label>
-                      <input type="number" step="0.01" class="form-input" [ngModel]="selectedPrensado()?.molidoKg" (ngModelChange)="selectedPrensado().molidoKg = $event" placeholder="00.00">
-                    </div>
-                    <div class="bc-item">
-                      <label>Estado</label>
-                      <select class="form-select" [ngModel]="selectedPrensado()?.status" (ngModelChange)="selectedPrensado().status = $event">
-                        <option value="Programada">Programada</option>
-                        <option value="EnProceso">En Proceso</option>
-                        <option value="Intermedia">Intermedia</option>
-                        <option value="Parada">Parada</option>
-                        <option value="Terminada">Terminada</option>
-                        <option value="PorProgramar">Por Programar</option>
-                      </select>
-                    </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.4rem;">Meta</label>
+                    <input type="number" class="form-input" [ngModel]="selectedPrensado()?.meta" (ngModelChange)="selectedPrensado().meta = $event">
                   </div>
-
-                  <!-- Renglón 4: Tiempos de Proceso (Inicia Proceso, Fin Proceso) -->
-                  <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.5rem;">Tiempos de Proceso</label>
-                  <div class="bc-block">
-                    <div class="bc-item">
-                      <label>Inicia Proceso</label>
-                      <input type="datetime-local" class="form-input" [ngModel]="selectedPrensado()?.iniciaProceso | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="selectedPrensado().iniciaProceso = $event">
-                    </div>
-                    <div class="bc-item">
-                      <label>Fin Proceso</label>
-                      <input type="datetime-local" class="form-input" [ngModel]="selectedPrensado()?.finProceso | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="selectedPrensado().finProceso = $event">
-                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.4rem;">Virgen Kg</label>
+                    <input type="number" step="0.01" class="form-input" [ngModel]="selectedPrensado()?.virgenKg" (ngModelChange)="selectedPrensado().virgenKg = $event">
                   </div>
-
-                  <!-- Renglón 5: Lote Silo -->
-                  <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.5rem;">Lote Silo</label>
-                  <div class="bc-block">
-                    <div class="bc-item" style="flex: 1;">
-                      <label>Lote Silo</label>
-                      <input type="text" class="form-input" [ngModel]="selectedPrensado()?.loteSilo" (ngModelChange)="selectedPrensado().loteSilo = $event" placeholder="Información del lote de silo...">
-                    </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.4rem;">Molido Kg</label>
+                    <input type="number" step="0.01" class="form-input" [ngModel]="selectedPrensado()?.molidoKg" (ngModelChange)="selectedPrensado().molidoKg = $event">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.4rem;">Lote Silo</label>
+                    <input type="text" class="form-input" [ngModel]="selectedPrensado()?.loteSilo" (ngModelChange)="selectedPrensado().loteSilo = $event">
                   </div>
                 </div>
               </div>
@@ -1020,6 +1150,8 @@ import autoTable from 'jspdf-autotable';
         </div>
       }
     </div>
+  }
+  </div>
   `,
   styles: [`
     .module-page { padding: 3rem; background: #f1f5f9; min-height: 100vh; }
@@ -1203,6 +1335,7 @@ import autoTable from 'jspdf-autotable';
 })
 export class TableroProduccionComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
+  private route = inject(ActivatedRoute);
 
   activeTab   = signal<'extrusion' | 'prensado'>('extrusion');
   loading     = signal(false);
@@ -1260,13 +1393,17 @@ export class TableroProduccionComponent implements OnInit {
   operPrenSortCol = signal<string>('prensa');
   operPrenSortDir = signal<'asc' | 'desc'>('asc');
 
-  // Prensado arrays
+  // Prensado arrays and Tablero Directivo
   programacionPren = signal<PrensadoProgramacion[]>([]);
   operacionPren = signal<PrensadoOperacion[]>([]);
   selectedPrensado = signal<any>(null);
   showPrensadoModal = signal(false);
   showDeleteConfirmModalPrensado = signal(false);
   activePrensadoId = signal<string | null>(null);
+  showTableroDirectivo = signal(false);
+  tableroDirectivoPage = signal(1);
+  tableroDirectivoPageSize = 10;
+  tableroDirectivoList = signal<any[]>([]);
 
   sortDirProg = signal<'asc' | 'desc'>('asc');
   sortDirOper = signal<'asc' | 'desc'>('asc');
@@ -1480,6 +1617,12 @@ export class TableroProduccionComponent implements OnInit {
   });
 
   ngOnInit() { 
+    this.route.queryParams.subscribe(params => {
+      const tab = params['tab'];
+      if (tab === 'prensado' || tab === 'extrusion') {
+        this.activeTab.set(tab);
+      }
+    });
     this.loadExtrusion(); 
     this.loadPrensado();
     this.loadOperarios();
@@ -1525,6 +1668,54 @@ export class TableroProduccionComponent implements OnInit {
       },
       error: ()  => this.loading.set(false)
     });
+
+    this.svc.getPrensados().subscribe({
+      next: res => this.tableroDirectivoList.set(res),
+      error: () => {}
+    });
+  }
+
+  getPrensadoStatusName(estado: number): string {
+    const names = ['Programada', 'EnProceso', 'Intermedia', 'Parada', 'Terminada', 'PorProgramar'];
+    return names[estado] || 'Programada';
+  }
+
+  getPrensadoStatusLabel(estado: number): string {
+    const labels = ['Programado', 'En Proceso', 'Intermedio', 'Detenido', 'Terminado', 'Por Programar'];
+    return labels[estado] || 'Programado';
+  }
+
+  getPaginatedTableroDirectivo(): any[] {
+    const start = (this.tableroDirectivoPage() - 1) * this.tableroDirectivoPageSize;
+    const end = start + this.tableroDirectivoPageSize;
+    return this.tableroDirectivoList().slice(start, end);
+  }
+
+  getTableroTotalPages(): number {
+    return Math.ceil(this.tableroDirectivoList().length / this.tableroDirectivoPageSize) || 1;
+  }
+
+  getTableroPages(): number[] {
+    const total = this.getTableroTotalPages();
+    const current = this.tableroDirectivoPage();
+    const pages: number[] = [];
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, start + 4);
+    if (end - start < 4) {
+      start = Math.max(1, end - 4);
+    }
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  getTableroSumProgramado(): number {
+    return this.tableroDirectivoList().reduce((acc, item) => acc + (item.programado || 0), 0);
+  }
+
+  getTableroSumProducido(): number {
+    return this.tableroDirectivoList().reduce((acc, item) => acc + (item.producido || 0), 0);
   }
 
   openPrensadoEditModal(id: string) {
@@ -1583,16 +1774,27 @@ export class TableroProduccionComponent implements OnInit {
     if (!p) return;
     const body = {
       fecha: p.fecha,
-      calibre: Number(p.calibre),
-      ancho: p.ancho,
-      longitud: Number(p.longitud),
-      status: p.status,
+      estado: Number(p.estado),
       operarioId: p.operadorId || null,
-      kgVirgen: Number(p.virgenKg || 0),
-      target: Number(p.meta || 0),
-      kgMolido: Number(p.molidoKg || 0),
-      processStart: p.iniciaProceso || null,
-      processEnd: p.finProceso || null,
+      troquelId: p.troquelId || null,
+      levasUnidadMedida: p.levasUnidadMedida || 'Kg',
+      rodillosUnidadMedida: p.rodillosUnidadMedida || 'Kg',
+      levasKgEntrada: Number(p.levasKgEntrada || 0),
+      levasKgSalida: Number(p.levasKgSalida || 0),
+      levasGradosEntrada: Number(p.levasGradosEntrada || 0),
+      levasGradosSalida: Number(p.levasGradosSalida || 0),
+      rodillosKgEntrada: Number(p.rodillosKgEntrada || 0),
+      rodillosKgSalida: Number(p.rodillosKgSalida || 0),
+      rodillosGradosEntrada: Number(p.rodillosGradosEntrada || 0),
+      rodillosGradosSalida: Number(p.rodillosGradosSalida || 0),
+      iniciaProceso: p.iniciaProceso || null,
+      finProceso: p.finProceso || null,
+      calibre: Number(p.calibre || 0),
+      ancho: p.ancho || '',
+      longitud: Number(p.longitud || 0),
+      virgenKg: Number(p.virgenKg || 0),
+      molidoKg: Number(p.molidoKg || 0),
+      meta: Number(p.meta || 0),
       loteSilo: p.loteSilo || null
     };
     this.svc.updatePrensado(p.id, body).subscribe({

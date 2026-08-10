@@ -307,12 +307,13 @@ export class CapturaHomeComponent implements OnInit {
     {
       id: 'reportes',
       title: 'Reportes',
-      description: 'Monitor de sincronización de datos y cola offline.',
-      action: () => this.openSyncMonitor(),
+      description: 'Consultas y reportes de producción por fecha y máquina.',
+      route: 'reportes',
       iconClass: 'icon-blue',
       svg: 'reportes',
-      allowedRoles: ['SuperAdmin', 'Administrator', 'Supervisor']
+      allowedRoles: ['SuperAdmin', 'Administrator', 'Supervisor', 'Operador', 'Mantenimiento']
     },
+
     {
       id: 'manual',
       title: 'Manual de Ayuda',
@@ -335,11 +336,12 @@ export class CapturaHomeComponent implements OnInit {
       id: 'etiquetado',
       title: 'Etiquetado Pallets',
       description: 'Generación de etiquetas físicas de producto terminado.',
-      action: () => this.showDevAlert('Etiquetado Pallets'),
+      route: 'etiquetado-pallets',
       iconClass: 'icon-blue',
       svg: 'etiquetado',
       allowedRoles: ['SuperAdmin', 'Administrator', 'Supervisor', 'Operador']
     }
+
   ];
 
   // Filtra los módulos visibles según los roles del usuario autenticado

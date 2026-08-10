@@ -1,9 +1,12 @@
-import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, inject, signal } from '@angular/core';
+import { Subscription, interval } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { SyncQueueService } from '../../core/offline/sync-queue.service';
 import { OfflineStoreService } from '../../core/offline/offline-store.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ProduccionService, Extrusora, Turno } from '../../core/services/produccion';
+import { ExtrusionStateService } from '../../core/services/extrusion-state.service';
 
 @Component({
   selector: 'app-captura-shell',
@@ -23,24 +26,28 @@ import { AuthService } from '../../core/services/auth.service';
         <h1 class="captura-title">{{ getTitle() }}</h1>
         
         <div class="header-right">
-          <!-- Reloj y botones contextuales -->
+          <!-- Botones contextuales para Prensado y Extrusión -->
           <ng-container *ngIf="router.url === '/prensado' || router.url === '/extrusion'">
-            <!-- Botón del Relojito (Común para Prensado y Extrusión) -->
-            <button class="header-action-btn clock-btn" (click)="toggleShiftsMenu()" title="Turnos">
+            <!-- Botón del Relojito (Turnos) -->
+            <button class="header-action-btn clock-btn" (click)="toggleShiftsMenu()" title="Turnos"
+                    [class.active-btn]="extrusionState.turnoActivo() !== null && router.url === '/extrusion'">
               <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
+              <span *ngIf="extrusionState.turnoActivo() && router.url === '/extrusion'"
+                    class="selection-indicator">{{ extrusionState.turnoActivo()!.nombre | slice:0:3 }}</span>
             </button>
 
-            <!-- Botón del Sandwich (Solo Prensado) -->
+            <!-- Botón Sandwich (Solo Prensado) -->
             <button *ngIf="router.url === '/prensado'" class="header-action-btn layers-btn" (click)="togglePrensasMenu()" title="Prensas">
               <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
             </button>
 
-            <!-- Botón de Engrane (Solo Extrusión) -->
-            <button *ngIf="router.url === '/extrusion'" class="header-action-btn layers-btn" (click)="toggleExtrusorasMenu()" title="Extrusoras">
+            <!-- Botón Engrane (Solo Extrusión) -->
+            <button *ngIf="router.url === '/extrusion'" class="header-action-btn layers-btn" (click)="toggleExtrusorasMenu()" title="Extrusoras"
+                    [class.active-btn]="extrusionState.extrusoraActiva() !== null">
               <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="3"></circle>
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -99,13 +106,15 @@ import { AuthService } from '../../core/services/auth.service';
         </button>
       </div>
 
-      <!-- Overlay invisible para cerrar dropdowns -->
+      <!-- Overlay para cerrar dropdowns -->
       <div *ngIf="showShiftsMenu || showPrensasMenu || showExtrusorasMenu" class="dropdown-overlay" (click)="closeDropdowns()"></div>
 
       <!-- Dropdown de Turnos -->
       <div *ngIf="showShiftsMenu" class="header-dropdown shifts-dropdown">
-        <button class="dropdown-item" *ngFor="let t of turnos" (click)="selectTurno(t)">
-          {{ t }}
+        <div *ngIf="loadingTurnos" class="dropdown-loading">Cargando...</div>
+        <button class="dropdown-item" *ngFor="let t of turnos" (click)="selectTurno(t)"
+                [class.selected]="extrusionState.turnoActivo()?.id === t.id">
+          {{ t.nombre }}
         </button>
       </div>
 
@@ -116,10 +125,13 @@ import { AuthService } from '../../core/services/auth.service';
         </button>
       </div>
 
-      <!-- Dropdown de Extrusoras -->
+      <!-- Dropdown de Extrusoras (carga desde API) -->
       <div *ngIf="showExtrusorasMenu" class="header-dropdown prensas-dropdown">
-        <button class="dropdown-item" *ngFor="let e of extrusoras" (click)="selectExtrusora(e)">
-          {{ e }}
+        <div *ngIf="loadingExtrusoras" class="dropdown-loading">Cargando...</div>
+        <button class="dropdown-item" *ngFor="let e of extrusorasApi" (click)="selectExtrusora(e)"
+                [class.selected]="extrusionState.extrusoraActiva()?.id === e.id">
+          <span class="ext-nombre">{{ e.nombre }}</span>
+          <span class="ext-codigo">{{ e.codigo }}</span>
         </button>
       </div>
 
@@ -177,8 +189,10 @@ import { AuthService } from '../../core/services/auth.service';
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 4px;
       transition: var(--transition-smooth);
       position: relative;
+      flex-direction: column;
     }
 
     .header-action-btn:hover {
@@ -187,12 +201,27 @@ import { AuthService } from '../../core/services/auth.service';
       border-color: var(--border-color);
     }
 
+    .header-action-btn.active-btn {
+      color: var(--primary);
+      border-color: var(--primary);
+      background-color: rgba(56, 189, 248, 0.08);
+    }
+
+    .selection-indicator {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      line-height: 1;
+    }
+
     .header-icon {
       width: 24px;
       height: 24px;
     }
 
-    /* Dropdowns de cabecera */
+    /* Dropdowns */
     .dropdown-overlay {
       position: fixed;
       top: 0;
@@ -206,15 +235,15 @@ import { AuthService } from '../../core/services/auth.service';
     .header-dropdown {
       position: absolute;
       top: 65px;
-      background-color: #212121;
+      background-color: #1a1a2e;
       border: 1px solid var(--border-color);
-      border-radius: 4px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+      border-radius: 8px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
       z-index: 100;
       display: flex;
       flex-direction: column;
-      min-width: 140px;
-      padding: 4px 0;
+      min-width: 180px;
+      padding: 6px 0;
       animation: fadeInDropdown 0.15s ease-out;
     }
 
@@ -224,6 +253,13 @@ import { AuthService } from '../../core/services/auth.service';
 
     .prensas-dropdown {
       right: 76px;
+    }
+
+    .dropdown-loading {
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
     }
 
     .dropdown-item {
@@ -236,11 +272,33 @@ import { AuthService } from '../../core/services/auth.service';
       width: 100%;
       cursor: pointer;
       transition: var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
 
     .dropdown-item:hover {
-      background-color: rgba(56, 189, 248, 0.15);
+      background-color: rgba(56, 189, 248, 0.1);
       color: var(--primary);
+    }
+
+    .dropdown-item.selected {
+      background-color: rgba(56, 189, 248, 0.12);
+      color: var(--primary);
+    }
+
+    .ext-nombre {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .ext-codigo {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .dropdown-item.selected .ext-codigo {
+      color: rgba(56, 189, 248, 0.7);
     }
 
     @keyframes fadeInDropdown {
@@ -291,7 +349,7 @@ import { AuthService } from '../../core/services/auth.service';
       box-shadow: 0 0 8px var(--danger);
     }
 
-    /* Floating Notifications Panel */
+    /* Panel Notificaciones */
     .notifications-panel {
       position: absolute;
       top: 80px;
@@ -330,9 +388,7 @@ import { AuthService } from '../../core/services/auth.service';
       transition: var(--transition-smooth);
     }
 
-    .close-panel-btn:hover {
-      color: var(--text-main);
-    }
+    .close-panel-btn:hover { color: var(--text-main); }
 
     .panel-body {
       display: flex;
@@ -372,9 +428,7 @@ import { AuthService } from '../../core/services/auth.service';
       color: var(--primary);
     }
 
-    .panel-actions {
-      margin-top: 16px;
-    }
+    .panel-actions { margin-top: 16px; }
 
     .sync-now-btn {
       width: 100%;
@@ -388,14 +442,8 @@ import { AuthService } from '../../core/services/auth.service';
       transition: var(--transition-smooth);
     }
 
-    .sync-now-btn:hover:not(:disabled) {
-      background: var(--primary-hover);
-    }
-
-    .sync-now-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+    .sync-now-btn:hover:not(:disabled) { background: var(--primary-hover); }
+    .sync-now-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .sync-banner {
       background-color: var(--warning);
@@ -427,14 +475,8 @@ import { AuthService } from '../../core/services/auth.service';
       transition: var(--transition-smooth);
     }
 
-    .sync-banner.offline .sync-btn {
-      display: none;
-    }
-
-    .sync-btn:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
+    .sync-banner.offline .sync-btn { display: none; }
+    .sync-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
     .captura-content {
       flex: 1;
@@ -449,16 +491,9 @@ import { AuthService } from '../../core/services/auth.service';
     }
 
     @media (max-width: 768px) {
-      .captura-header {
-        padding: 12px 16px;
-      }
-      .captura-content {
-        padding: 16px;
-      }
-      .notifications-panel {
-        right: 16px;
-        width: calc(100% - 32px);
-      }
+      .captura-header { padding: 12px 16px; }
+      .captura-content { padding: 16px; }
+      .notifications-panel { right: 16px; width: calc(100% - 32px); }
     }
   `]
 })
@@ -467,6 +502,8 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
   private offlineStore = inject(OfflineStoreService);
   public router = inject(Router);
   private authService = inject(AuthService);
+  private produccionService = inject(ProduccionService);
+  public extrusionState = inject(ExtrusionStateService);
 
   isOnline = navigator.onLine;
   pendingCount = 0;
@@ -477,48 +514,40 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
   showPrensasMenu = false;
   showExtrusorasMenu = false;
 
-  turnos = ['Matutino', 'Vespertino', 'Nocturno'];
+  // Datos desde API
+  turnos: Turno[] = [];
+  extrusorasApi: Extrusora[] = [];
+  loadingTurnos = false;
+  loadingExtrusoras = false;
+
+  // Prensas (todavía hardcoded)
   prensas = ['Prensa #1', 'Prensa #2', 'Prensa #3', 'Prensa #4'];
-  extrusoras = ['Ext #1', 'Ext #2', 'Ext #3'];
 
-  selectedTurno = signal('Matutino');
-  selectedPrensa = signal('Prensa #1');
-  selectedExtrusora = signal('Ext #1');
+  private syncSub?: Subscription;
 
-  private intervalId: any;
+  @HostListener('window:online')
+  onOnline() {
+    this.isOnline = true;
+    this.forceSync();
+  }
 
-  private onlineListener = () => { this.isOnline = true; this.forceSync(); };
-  private offlineListener = () => { this.isOnline = false; };
+  @HostListener('window:offline')
+  onOffline() {
+    this.isOnline = false;
+  }
 
   ngOnInit() {
-    window.addEventListener('online', this.onlineListener);
-    window.addEventListener('offline', this.offlineListener);
-
     this.updatePendingCount();
-    this.intervalId = setInterval(() => this.updatePendingCount(), 3000);
-    this.loadSelectedParameters();
+    this.syncSub = interval(3000).subscribe(() => {
+      this.updatePendingCount();
+    });
+    // Resetear selección de extrusión al entrar
+    this.extrusionState.reset();
   }
 
   ngOnDestroy() {
-    window.removeEventListener('online', this.onlineListener);
-    window.removeEventListener('offline', this.offlineListener);
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
-  }
-
-  async loadSelectedParameters() {
-    const cachedTurno = await this.offlineStore.get<string>('active_shift');
-    if (cachedTurno) {
-      this.selectedTurno.set(cachedTurno);
-    }
-    const cachedPrensa = await this.offlineStore.get<string>('active_press');
-    if (cachedPrensa) {
-      this.selectedPrensa.set(cachedPrensa);
-    }
-    const cachedExt = await this.offlineStore.get<string>('active_ext');
-    if (cachedExt) {
-      this.selectedExtrusora.set(cachedExt);
+    if (this.syncSub) {
+      this.syncSub.unsubscribe();
     }
   }
 
@@ -526,6 +555,9 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     this.showShiftsMenu = !this.showShiftsMenu;
     this.showPrensasMenu = false;
     this.showExtrusorasMenu = false;
+    if (this.showShiftsMenu && this.turnos.length === 0) {
+      this.cargarTurnos();
+    }
   }
 
   togglePrensasMenu() {
@@ -538,6 +570,9 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     this.showExtrusorasMenu = !this.showExtrusorasMenu;
     this.showShiftsMenu = false;
     this.showPrensasMenu = false;
+    if (this.showExtrusorasMenu && this.extrusorasApi.length === 0) {
+      this.cargarExtrusorasApi();
+    }
   }
 
   closeDropdowns() {
@@ -546,21 +581,42 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     this.showExtrusorasMenu = false;
   }
 
-  async selectTurno(turno: string) {
-    this.selectedTurno.set(turno);
-    await this.offlineStore.set('active_shift', turno);
+  cargarTurnos() {
+    this.loadingTurnos = true;
+    this.produccionService.getTurnos().subscribe({
+      next: (data) => {
+        this.turnos = data;
+        this.loadingTurnos = false;
+      },
+      error: () => { this.loadingTurnos = false; }
+    });
+  }
+
+  cargarExtrusorasApi() {
+    this.loadingExtrusoras = true;
+    this.produccionService.getExtrusoras().subscribe({
+      next: (data) => {
+        this.extrusorasApi = data;
+        this.loadingExtrusoras = false;
+      },
+      error: () => { this.loadingExtrusoras = false; }
+    });
+  }
+
+  selectTurno(turno: Turno) {
+    this.extrusionState.setTurno({ id: turno.id, nombre: turno.nombre });
+    this.offlineStore.set('active_shift', turno.nombre);
     this.closeDropdowns();
   }
 
-  async selectPrensa(prensa: string) {
-    this.selectedPrensa.set(prensa);
-    await this.offlineStore.set('active_press', prensa);
+  selectPrensa(prensa: string) {
+    this.offlineStore.set('active_press', prensa);
     this.closeDropdowns();
   }
 
-  async selectExtrusora(ext: string) {
-    this.selectedExtrusora.set(ext);
-    await this.offlineStore.set('active_ext', ext);
+  selectExtrusora(ext: Extrusora) {
+    this.extrusionState.setExtrusora(ext);
+    this.offlineStore.set('active_extrusora_id', ext.id);
     this.closeDropdowns();
   }
 
@@ -579,7 +635,11 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     if (url.includes('/escanear')) return 'Escanear Código';
     if (url.includes('/prensado')) return 'Prensados';
     if (url.includes('/extrusion')) return 'Extrusiones';
-    if (url.includes('/reportes') || url.includes('/sync')) return 'Historial / Sync';
+    if (url.includes('/etiquetado-pallets')) return 'Etiquetado Pallet';
+    if (url.includes('/reportes')) return 'Reportes';
+    if (url.includes('/sync')) return 'Historial / Sync';
+
+
     return 'Inicio';
   }
 
@@ -587,7 +647,6 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     if (this.router.url.includes('/prensado/')) {
       this.router.navigate(['/prensado']);
     } else if (this.router.url === '/troquel' || this.router.url === '/carrera') {
-      // If we came from the prensado menu, let's go back to it
       this.router.navigate(['/prensado']);
     } else {
       this.router.navigate(['/']);
@@ -616,4 +675,3 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     }
   }
 }
-

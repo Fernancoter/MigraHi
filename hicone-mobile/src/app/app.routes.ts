@@ -4,11 +4,13 @@ import { CapturaHomeComponent } from './features/captura/home/home.component';
 import { EscanearComponent } from './features/captura/escanear/escanear.component';
 import { TroquelComponent } from './features/captura/troquel/troquel.component';
 import { CarreraComponent } from './features/captura/carrera/carrera.component';
-import { PrensadoMenuComponent } from './features/captura/prensado-menu/prensado-menu.component';
+import { PrensadoListComponent } from './features/captura/prensado-list/prensado-list.component';
 import { WizardComponent } from './features/captura/wizard/wizard.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { authGuard } from './core/guards/auth.guard';
 import { ExtrusionMainComponent } from './features/captura/extrusion-main/extrusion-main.component';
+import { ReportesComponent } from './features/captura/reportes/reportes.component';
+import { EtiquetadoPalletsComponent } from './features/captura/etiquetado-pallets/etiquetado-pallets.component';
 
 export const routes: Routes = [
   {
@@ -18,13 +20,17 @@ export const routes: Routes = [
     children: [
       { path: '', component: CapturaHomeComponent },
       { path: 'escanear', component: EscanearComponent },
-      { path: 'prensado', component: PrensadoMenuComponent },
+      { path: 'prensado', component: PrensadoListComponent },
       { path: 'troquel', component: TroquelComponent },
       { path: 'carrera', component: CarreraComponent },
       { path: 'wizard', component: WizardComponent },
-      { path: 'extrusion', component: ExtrusionMainComponent }
+      { path: 'extrusion', component: ExtrusionMainComponent },
+      { path: 'reportes', component: ReportesComponent },
+      { path: 'etiquetado-pallets', component: EtiquetadoPalletsComponent }
     ]
   },
+
+
   { path: 'login', component: LoginComponent },
   { path: '**', redirectTo: '' }
 ];

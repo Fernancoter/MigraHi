@@ -21,14 +21,14 @@ import { NavigationService } from '../../core/services/navigation.service';
                 <path d="M19.5 21v-3.5a3 3 0 0 0-3-3H12M4.5 21v-3.5a3 3 0 0 1 3-3H12" />
             </svg>
         <div class="banner-text">
-          <h2 class="module-title">{{ (activeModule$ | async) | titlecase }}</h2>
-          <span class="module-subtitle">{{ (activeModule$ | async) | titlecase }}</span>
+          <h2 class="module-title">{{ getModuleTitle(activeModule$ | async) }}</h2>
+          <span class="module-subtitle">{{ getModuleTitle(activeModule$ | async) }}</span>
         </div>
       </div>
       
       <!-- Navegación Dinámica -->
       <nav class="sidebar-nav">
-        <div class="nav-section-modern"><span class="section-text">{{ activeModule$ | async }}</span></div>
+        <div class="nav-section-modern"><span class="section-text">{{ getModuleTitle(activeModule$ | async) }}</span></div>
         
         <ng-container *ngIf="(activeModule$ | async) === 'INVENTARIO'">
           <a routerLink="/inventario/inicio" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-item" title="Inicio">
@@ -86,6 +86,75 @@ import { NavigationService } from '../../core/services/navigation.service';
               <a routerLink="/produccion/extrusion/operacion/bobinas" routerLinkActive="active" class="nav-subitem" title="Bobinas">
                 <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></div>
                 <span class="item-label">Bobinas</span>
+              </a>
+              <a routerLink="/produccion/extrusion/operacion/interrupciones" routerLinkActive="active" class="nav-subitem" title="Interrupciones">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></div>
+                <span class="item-label">Interrupciones</span>
+              </a>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="(activeModule$ | async) === 'PRENSADO'">
+          <!-- Inicio (Tablero) -->
+          <a routerLink="/produccion/prensado/inicio" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-item" title="Inicio">
+            <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+            <span class="item-label">Inicio</span>
+          </a>
+          <!-- Turnos Por Semana -->
+          <a routerLink="/produccion/prensado/turnos-semana" routerLinkActive="active" class="nav-item" title="Turnos Por Semana">
+            <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg></div>
+            <span class="item-label">Turnos Por Semana</span>
+          </a>
+
+          <!-- Troqueles -->
+          <a routerLink="/produccion/prensado/catalogos/troqueles" routerLinkActive="active" class="nav-item" title="Troqueles">
+            <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg></div>
+            <span class="item-label">Troqueles</span>
+          </a>
+          <!-- Prensas -->
+          <a routerLink="/produccion/prensado/catalogos/prensas" routerLinkActive="active" class="nav-item" title="Prensas">
+            <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+            <span class="item-label">Prensas</span>
+          </a>
+          <!-- Prensa Producto -->
+          <a routerLink="/produccion/prensado/referencias/prensa-producto" routerLinkActive="active" class="nav-item" title="Prensa Producto">
+            <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+            <span class="item-label">Prensa Producto</span>
+          </a>
+          <!-- Producto Terminado -->
+          <a routerLink="/produccion/prensado/referencias/producto-terminado" routerLinkActive="active" class="nav-item" title="Producto Terminado">
+            <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+            <span class="item-label">Producto Terminado</span>
+          </a>
+
+          <!-- Submenú Operación (PRENSADO) -->
+          <div class="collapsible-group">
+            <div class="nav-item group-header" (click)="toggleOperacion()" [class.expanded]="operacionExpanded" title="Operación">
+              <div class="item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+              <span class="item-label">Operación</span>
+              <span class="chevron" [class.rotated]="operacionExpanded">▾</span>
+            </div>
+            <div class="group-items animate-dropdown" *ngIf="operacionExpanded">
+              <a routerLink="/produccion/prensado/operacion/prensados" routerLinkActive="active" class="nav-subitem" title="Prensados">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></div>
+                <span class="item-label">Prensados</span>
+              </a>
+              <a routerLink="/produccion/prensado/operacion/carreras" routerLinkActive="active" class="nav-subitem" title="Carreras">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></div>
+                <span class="item-label">Carreras</span>
+              </a>
+              <a routerLink="/produccion/prensado/operacion/carretes" routerLinkActive="active" class="nav-subitem" title="Carretes">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></div>
+                <span class="item-label">Carretes</span>
+              </a>
+              <a routerLink="/produccion/prensado/operacion/palets" routerLinkActive="active" class="nav-subitem" title="Palets">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></div>
+                <span class="item-label">Palets</span>
+              </a>
+              <a routerLink="/produccion/prensado/operacion/interrupciones" routerLinkActive="active" class="nav-subitem" title="Interrupciones">
+                <div class="subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></div>
+                <span class="item-label">Interrupciones</span>
               </a>
             </div>
           </div>
@@ -527,6 +596,23 @@ export class SidebarComponent {
   constructor(private navService: NavigationService) {
     this.activeModule$ = this.navService.activeModule$;
     this.isSidebarVisible$ = this.navService.isSidebarVisible$;
+  }
+
+  getModuleTitle(moduleType: string | null): string {
+    if (!moduleType) return '';
+    const titles: { [key: string]: string } = {
+      'INVENTARIO': 'Inventario',
+      'EXTRUSIÓN': 'Extrusión',
+      'PRENSADO': 'Prensado',
+      'EMBARQUES': 'Embarques',
+      'CALIDAD': 'Calidad',
+      'SEGURIDAD': 'Seguridad',
+      'CONFIGURACION_PRODUCCION': 'Configurar Producción',
+      'REPORTES_SAE': 'Reportes SAE',
+      'CATÁLOGOS_SAE': 'Catálogos SAE',
+      'SISTEMA': 'Sistema'
+    };
+    return titles[moduleType.toUpperCase()] || moduleType;
   }
 
   toggleOperacion() {

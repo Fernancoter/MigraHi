@@ -309,6 +309,21 @@ import { AuthService } from '../../../core/services/auth.service';
       color: rgba(255, 255, 255, 0.55);
     }
 
+    /* ── Corregir fondo blanco del autofill del navegador ───────────────────── */
+    .input-line-wrapper input:-webkit-autofill,
+    .input-line-wrapper input:-webkit-autofill:hover,
+    .input-line-wrapper input:-webkit-autofill:focus,
+    .input-line-wrapper input:-webkit-autofill:active {
+      /* Truco: un box-shadow inset enorme cubre el fondo blanco del autofill */
+      -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+      box-shadow: 0 0 0 1000px transparent inset !important;
+      /* Forzar color de texto blanco aunque el navegador aplique su tema */
+      -webkit-text-fill-color: #ffffff !important;
+      /* Transición muy lenta para que el browser no pueda "flashear" el blanco */
+      transition: background-color 99999s ease-in-out 0s;
+      caret-color: #ffffff;
+    }
+
     .error-msg-inline {
       color: #f87171;
       font-size: 11px;

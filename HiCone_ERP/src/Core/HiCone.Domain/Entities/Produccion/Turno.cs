@@ -11,5 +11,5 @@ public class Turno : TenantEntity
     public string? Color { get; set; }
 
     // Retrocompatibilidad
-    public string? Clave { get; set; }
+    public string Clave { get; set; } = null!;
 }
