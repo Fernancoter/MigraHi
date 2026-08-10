@@ -3,13 +3,11 @@
 ## Rama Activa
 `QA` — activa y con los servidores del backend (5007), frontend web (4200) y frontend móvil (4201) iniciados.
 
-## Estado Actual (2026-07-13)
-- **Backend:** Operativo (Puerto 5007, levantado en segundo plano con dotnet run).
-- **Frontend Web (`hicone-web`):** Operativo (Puerto 4200, levantado en segundo plano con ng serve).
-- **Frontend Móvil (`hicone-mobile`):** Operativo (Puerto 4201, levantado en segundo plano con ng serve --port 4201).
-- **Correcciones:** 
-  - Se corrigió un error de compilación en el backend (el controlador `ProduccionController` dependía de `MontarBobinaEnPrensadoAsync` en `IProduccionService`, el cual había sido removido en la rama remota). Se restauró e implementó la función en el servicio restableciendo la vinculación lógica de bobinas montadas en prensas.
-- **Base de Datos:** Migración `AddEmbarqueProperties` aplicada exitosamente sobre el servidor local de SQL Server.
+## Estado Actual (2026-08-09)
+- **Backend (.NET API):** Operativo en `http://localhost:5007` y Swagger en `http://localhost:5007/swagger` (dotnet run).
+- **Frontend Web (`hicone-web`):** Operativo en `http://localhost:4200` (ng serve).
+- **Frontend Móvil (`hicone-mobile`):** Operativo en `http://localhost:4201` (ng serve --port 4201).
+- **Sincronización:** Rama `QA` actualizada e integrada con el remoto. Compilación exitosa con 0 errores.
 
 ✅ **Reporte de Existencia y Columnas de Extrusión COMPLETADOS** (2026-06-29)
 - [x] **Backend API**: Implementado listado de cortes (`GET /api/v1/inventario/existencias`) y seeding automatizado de datos de Silos y Existencias.
