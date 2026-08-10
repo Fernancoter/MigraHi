@@ -204,6 +204,30 @@ public class ProduccionController : ControllerBase
         return Ok(result);
     }
 
+    [AllowAnonymous]
+    [HttpGet("extrusora-mezcladora")]
+    public async Task<ActionResult<IEnumerable<ExtrusoraMezcladora>>> GetExtrusoraMezcladoras()
+    {
+        var result = await _produccionService.GetExtrusoraMezcladorasAsync();
+        return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("extrusora-mezcladora")]
+    public async Task<ActionResult<ExtrusoraMezcladora>> SaveExtrusoraMezcladora([FromBody] ExtrusoraMezcladora item)
+    {
+        var result = await _produccionService.SaveExtrusoraMezcladoraAsync(item);
+        return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpDelete("extrusora-mezcladora/{id}")]
+    public async Task<IActionResult> DeleteExtrusoraMezcladora(Guid id)
+    {
+        var result = await _produccionService.DeleteExtrusoraMezcladoraAsync(id);
+        return result ? Ok() : NotFound();
+    }
+
     [HttpGet("operarios")]
     public async Task<ActionResult<IEnumerable<Operario>>> GetOperarios()
     {

@@ -198,6 +198,18 @@ export class ProduccionService {
     return this.http.get<Prensado[]>(`${this.apiUrl}/prensados`);
   }
 
+  getExtrusoraMezcladoras(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/extrusora-mezcladora`);
+  }
+
+  saveExtrusoraMezcladora(item: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/extrusora-mezcladora`, item);
+  }
+
+  deleteExtrusoraMezcladora(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/extrusora-mezcladora/${id}`);
+  }
+
   iniciarPrensado(request: any): Observable<Prensado> {
     return this.http.post<Prensado>(`${this.apiUrl}/prensado/iniciar`, request);
   }
