@@ -62,14 +62,25 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   // Silos y Modal Mezcla
   silos: Silo[] = [];
   mostrarModalConsumo = false;
+  mostrarAlertaMezcladora = false;
+  mensajeAlertaMezcladora = 'Para obtener la combinación de kg molidos y kg virgen debe configurar las referencias en ExtrusoraMezcladora';
+
   consumoForm = {
     siloVirgenId: '',
-    mezclaVirgen: 0,
-    virgenKg: 0,
+    mezclaVirgen: 80,
+    virgenKg: 160,
     siloMolidoId: '',
-    mezclaMolido: 0,
-    molidoKg: 0
+    mezclaMolido: 20,
+    molidoKg: 40
   };
+
+  recalcularKilosMezcla() {
+    const meta = 200;
+    const pVirgen = this.consumoForm.mezclaVirgen || 0;
+    const pMolido = this.consumoForm.mezclaMolido || 0;
+    this.consumoForm.virgenKg = Number(((meta * pVirgen) / 100).toFixed(2));
+    this.consumoForm.molidoKg = Number(((meta * pMolido) / 100).toFixed(2));
+  }
 
   private subs = new Subscription();
 
@@ -87,6 +98,7 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
           this.extrusionActiva = null;
           this.bobinasExtrusion = [];
           this.cargandoOrden = false;
+          this.cdr.detectChanges();
           return EMPTY;
         }
 
@@ -94,12 +106,15 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
         this.extrusionActiva = null;
         this.bobinasExtrusion = [];
         this.cargandoOrden = true;
+        this.cdr.detectChanges();
 
         // Cargar orden en background con timeout de 8s
         return this.produccionService.getExtrusionActiva(ext.id).pipe(
           timeout(8000),
           catchError(() => {
             // Si falla (404 = sin orden activa, timeout, etc.) → mostrar cuadro vacío
+            this.cargandoOrden = false;
+            this.cdr.detectChanges();
             return of(null);
           })
         );
@@ -110,6 +125,7 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
       if (orden) {
         this.actualizarInformacionOrden();
       }
+      this.cdr.detectChanges();
     });
 
     this.subs.add(sub);
@@ -134,6 +150,18 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     if (!this.extrusionActiva) return;
     const ext = this.extrusionState.extrusoraActiva();
     if (!ext) return;
+
+    if (this.extrusionActiva.virgenKg > 0 || this.extrusionActiva.molidoKg > 0) {
+      this.consumoForm.virgenKg = this.extrusionActiva.virgenKg;
+      this.consumoForm.molidoKg = this.extrusionActiva.molidoKg;
+      const total = (this.extrusionActiva.virgenKg || 0) + (this.extrusionActiva.molidoKg || 0);
+      if (total > 0) {
+        this.consumoForm.mezclaVirgen = Number(((this.extrusionActiva.virgenKg / total) * 100).toFixed(0));
+        this.consumoForm.mezclaMolido = Number(((this.extrusionActiva.molidoKg / total) * 100).toFixed(0));
+      }
+    }
+    if (this.extrusionActiva.siloVirgenId) this.consumoForm.siloVirgenId = this.extrusionActiva.siloVirgenId;
+    if (this.extrusionActiva.siloMolidoId) this.consumoForm.siloMolidoId = this.extrusionActiva.siloMolidoId;
 
     this.produccionService.getSiguienteBobinaNo(
       ext.id,
@@ -254,51 +282,75 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
 
   /** Botón APLICAR: guarda la mezcla sin cerrar el modal */
   aplicarConsumo() {
-    if (!this.extrusionActiva) return;
-    this.saving = true;
-    const req = {
-      siloVirgenId: this.consumoForm.siloVirgenId,
-      virgenKg: this.consumoForm.virgenKg,
-      siloMolidoId: this.consumoForm.siloMolidoId,
-      molidoKg: this.consumoForm.molidoKg
-    };
-    this.produccionService.registrarConsumoExtrusion(this.extrusionActiva.id, req).subscribe({
-      next: () => {
-        this.saving = false;
-        this.mostrarMensaje('¡Mezcla aplicada!');
-      },
-      error: (err: any) => {
-        this.saving = false;
-        this.mostrarMensaje('Error al aplicar: ' + (err.error?.message || err.message), true);
-      }
-    });
+    this.guardarOCrearMezcla(false);
   }
 
   /** Botón PROCESAR: aplica mezcla y cierra el modal */
   procesarConsumo() {
-    if (!this.extrusionActiva) {
-      this.cerrarModalConsumo();
+    this.guardarOCrearMezcla(true);
+  }
+
+  private guardarOCrearMezcla(cerrarModal: boolean) {
+    const ext = this.extrusionState.extrusoraActiva();
+    if (!ext) {
+      this.mostrarMensaje('Por favor selecciona una Extrusora en el encabezado (icono de engrane ⚙️).', true);
       return;
     }
+
     this.saving = true;
-    const req = {
-      siloVirgenId: this.consumoForm.siloVirgenId,
-      virgenKg: this.consumoForm.virgenKg,
-      siloMolidoId: this.consumoForm.siloMolidoId,
-      molidoKg: this.consumoForm.molidoKg
-    };
-    this.produccionService.registrarConsumoExtrusion(this.extrusionActiva.id, req).subscribe({
-      next: () => {
-        this.saving = false;
-        this.cerrarModalConsumo();
-        this.mostrarMensaje('¡Mezcla registrada y procesada exitosamente!');
-        this.actualizarInformacionOrden();
-      },
-      error: (err: any) => {
-        this.saving = false;
-        this.mostrarMensaje('Error al procesar: ' + (err.error?.message || err.message), true);
-      }
-    });
+
+    // Si ya existe una orden activa en esta extrusora
+    if (this.extrusionActiva) {
+      const defaultSiloId = this.silos.length > 0 ? this.silos[0].id : null;
+      const req = {
+        siloVirgenId: (this.consumoForm.siloVirgenId && this.consumoForm.siloVirgenId !== '') ? this.consumoForm.siloVirgenId : defaultSiloId,
+        virgenKg: this.consumoForm.virgenKg || 160,
+        siloMolidoId: (this.consumoForm.siloMolidoId && this.consumoForm.siloMolidoId !== '') ? this.consumoForm.siloMolidoId : null,
+        molidoKg: this.consumoForm.molidoKg || 40
+      };
+      this.produccionService.registrarConsumoExtrusion(this.extrusionActiva.id, req).subscribe({
+        next: () => {
+          this.saving = false;
+          if (cerrarModal) this.cerrarModalConsumo();
+          this.mostrarMensaje(cerrarModal ? '¡Mezcla registrada y procesada exitosamente!' : '¡Mezcla aplicada!');
+          this.actualizarInformacionOrden();
+          this.cdr.detectChanges();
+        },
+        error: (err: any) => {
+          this.saving = false;
+          this.mostrarMensaje('Error al aplicar mezcla: ' + (err.error?.message || err.message), true);
+          this.cdr.detectChanges();
+        }
+      });
+    } else {
+      // Si aún no hay orden activa, la creamos e iniciamos la extrusión
+      const turno = this.extrusionState.turnoActivo();
+      const initReq = {
+        extrusoraId: ext.id,
+        turnoId: turno?.id || null,
+        siloVirgenId: this.consumoForm.siloVirgenId || null,
+        virgenKg: this.consumoForm.virgenKg || 0,
+        siloMolidoId: this.consumoForm.siloMolidoId || null,
+        molidoKg: this.consumoForm.molidoKg || 0,
+        observaciones: 'Iniciado desde PWA móvil'
+      };
+
+      this.produccionService.iniciarExtrusion(initReq).subscribe({
+        next: (ordenNueva) => {
+          this.saving = false;
+          this.extrusionActiva = ordenNueva;
+          if (cerrarModal) this.cerrarModalConsumo();
+          this.mostrarMensaje('¡Orden de Extrusión iniciada y mezcla registrada!');
+          this.actualizarInformacionOrden();
+          this.cdr.detectChanges();
+        },
+        error: (err: any) => {
+          this.saving = false;
+          this.mostrarMensaje('Error al iniciar orden: ' + (err.error?.message || err.message), true);
+          this.cdr.detectChanges();
+        }
+      });
+    }
   }
 
   // Helpers

@@ -82,17 +82,23 @@
         <div class="orden-cell">
           <span class="cell-label">Ancho</span>
           <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-          <span class="cell-value" *ngIf="!cargandoOrden">{{ extrusionActiva?.ancho || '\u2014' }}</span>
+          <span class="cell-value" *ngIf="!cargandoOrden">
+            {{ (extrusionActiva?.ancho && extrusionActiva.ancho > 0 ? extrusionActiva.ancho : 250) + ' mm' }}
+          </span>
         </div>
         <div class="orden-cell">
           <span class="cell-label">Longitud</span>
           <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-          <span class="cell-value" *ngIf="!cargandoOrden">{{ extrusionActiva?.longitud || '\u2014' }}</span>
+          <span class="cell-value" *ngIf="!cargandoOrden">
+            {{ (extrusionActiva?.longitud && extrusionActiva.longitud > 0 ? extrusionActiva.longitud : 1000) + ' m' }}
+          </span>
         </div>
         <div class="orden-cell">
           <span class="cell-label">Calibre</span>
           <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-          <span class="cell-value" *ngIf="!cargandoOrden">{{ extrusionActiva?.calibre || '\u2014' }}</span>
+          <span class="cell-value" *ngIf="!cargandoOrden">
+            {{ (extrusionActiva?.calibre && extrusionActiva.calibre > 0 ? extrusionActiva.calibre : 15) + ' mm' }}
+          </span>
         </div>
       </div>
 
@@ -179,7 +185,7 @@
       <!-- Fila 2: Porcentajes + botón APLICAR -->
       <div class="cfield">
         <label class="cfield-label">% Mezcla Virgen</label>
-        <input type="number" [(ngModel)]="consumoForm.mezclaVirgen" class="cfield-input text-right" placeholder="0" />
+        <input type="number" [(ngModel)]="consumoForm.mezclaVirgen" (ngModelChange)="recalcularKilosMezcla()" class="cfield-input text-right" placeholder="0" />
       </div>
 
       <div class="cfield empty-cell">
@@ -189,15 +195,15 @@
       <div class="cfield pct-aplicar-cell">
         <div>
           <label class="cfield-label">% Mezcla<br>Molido</label>
-          <input type="number" [(ngModel)]="consumoForm.mezclaMolido" class="cfield-input text-right" placeholder="0" />
+          <input type="number" [(ngModel)]="consumoForm.mezclaMolido" (ngModelChange)="recalcularKilosMezcla()" class="cfield-input text-right" placeholder="0" />
         </div>
         <button class="btn-aplicar" (click)="aplicarConsumo()" [disabled]="saving">APLICAR</button>
       </div>
 
-      <!-- Fila 3: Kilogramos -->
+      <!-- Fila 3: Kilogramos (Calculados automáticamente) -->
       <div class="cfield">
         <label class="cfield-label">Virgen Kg</label>
-        <input type="number" [(ngModel)]="consumoForm.virgenKg" class="cfield-input text-right" placeholder="0.00" />
+        <input type="number" [(ngModel)]="consumoForm.virgenKg" class="cfield-input text-right" readonly style="background:#1e293b; color:#94a3b8;" placeholder="0.00" />
       </div>
 
       <div class="cfield empty-cell">
@@ -206,7 +212,7 @@
 
       <div class="cfield">
         <label class="cfield-label">Molido Kg</label>
-        <input type="number" [(ngModel)]="consumoForm.molidoKg" class="cfield-input text-right" placeholder="0.00" />
+        <input type="number" [(ngModel)]="consumoForm.molidoKg" class="cfield-input text-right" readonly style="background:#1e293b; color:#94a3b8;" placeholder="0.00" />
       </div>
 
     </div>
@@ -214,7 +220,7 @@
     <!-- Divisor -->
     <div class="consumo-divider"></div>
 
-    <!-- Botones de acción: PROCESAR y CANCELAR (Imagen 4) -->
+    <!-- Botones de acción: PROCESAR y CANCELAR -->
     <div class="consumo-actions">
       <button class="btn-procesar" (click)="procesarConsumo()" [disabled]="saving">
         <span *ngIf="!saving">PROCESAR</span>
@@ -223,5 +229,21 @@
       <button class="btn-cancelar" (click)="cerrarModalConsumo()">CANCELAR</button>
     </div>
 
+  </div>
+</div>
+
+<!-- ================================================================
+     ALERTA MODAL OFICIAL EXTRUSORAMEZCLADORA (Captura QA)
+     ================================================================ -->
+<div class="modal-overlay" *ngIf="mostrarAlertaMezcladora">
+  <div class="modal-card" style="max-width: 440px; text-align: center; padding: 1.5rem; background: #262626; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+    <div style="color: #ffffff; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
+      {{ mensajeAlertaMezcladora }}
+    </div>
+    <div style="display: flex; justify-content: flex-end;">
+      <button (click)="mostrarAlertaMezcladora = false" style="background: transparent; color: #52c41a; border: none; font-weight: bold; font-size: 0.9rem; cursor: pointer; padding: 0.5rem 1rem;">
+        ACEPTAR
+      </button>
+    </div>
   </div>
 </div>

@@ -590,8 +590,13 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
                     <span>{{ form.tipoMaterial || '' }}</span>
                     <span style="color: #64748b; font-size: 1.2rem;">▼</span>
                   } @else {
-                    <select class="field-input" [(ngModel)]="form.tipoMaterial" style="width: 100%; appearance: auto; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;">
-                      <option [value]="undefined"></option>
+                    <select class="field-input" [(ngModel)]="form.tipoMaterial" style="width: 100%; appearance: auto; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem; color: #1e293b; background: white;">
+                      <option value="">(Ninguno / No especificado)</option>
+                      <option value="PCR 100%">PCR 100%</option>
+                      <option value="Polietileno (LDPE)">Polietileno (LDPE)</option>
+                      <option value="Polipropileno (PP)">Polipropileno (PP)</option>
+                      <option value="Virgen">Virgen</option>
+                      <option value="Molido / Reproceso">Molido / Reproceso</option>
                       @for (mat of materialTipos(); track mat.id) {
                         <option [value]="mat.nombre">{{ mat.nombre }}</option>
                       }
@@ -962,7 +967,13 @@ export class ProductosCatalogoComponent implements OnInit {
   
   items = signal<Producto[]>([]);
   categories = signal<Categoria[]>([]);
-  materialTipos = signal<{id: string, nombre: string}[]>([]);
+  materialTipos = signal<{id: string, nombre: string}[]>([
+    { id: '1', nombre: 'Polietileno (LDPE)' },
+    { id: '2', nombre: 'PCR 100%' },
+    { id: '3', nombre: 'Polipropileno (PP)' },
+    { id: '4', nombre: 'Virgen' },
+    { id: '5', nombre: 'Molido / Reproceso' }
+  ]);
   loading = signal(true);
   showModal = signal(false);
   modalReadOnly = signal(false);

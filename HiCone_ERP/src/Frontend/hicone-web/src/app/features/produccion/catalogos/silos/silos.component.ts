@@ -388,8 +388,57 @@ export class SilosCatalogoComponent implements OnInit {
   ngOnInit() {
     this.loadSavedFiltersFromStorage();
     this.load();
-    this.svc.getMaterialEstados().subscribe(res => this.estadosMaterial.set(res));
-    this.svc.getMaterialTipos().subscribe(res => this.tiposMaterial.set(res));
+    this.svc.getMaterialEstados().subscribe({
+      next: res => {
+        if (res && res.length > 0) {
+          this.estadosMaterial.set(res);
+        } else {
+          this.estadosMaterial.set([
+            { id: '1', nombre: 'Virgen' },
+            { id: '2', nombre: 'Molido' },
+            { id: '3', nombre: 'Mezcla' },
+            { id: '4', nombre: 'Reproceso' },
+            { id: '5', nombre: 'Pellet' }
+          ]);
+        }
+      },
+      error: () => {
+        this.estadosMaterial.set([
+          { id: '1', nombre: 'Virgen' },
+          { id: '2', nombre: 'Molido' },
+          { id: '3', nombre: 'Mezcla' },
+          { id: '4', nombre: 'Reproceso' },
+          { id: '5', nombre: 'Pellet' }
+        ]);
+      }
+    });
+
+    this.svc.getMaterialTipos().subscribe({
+      next: res => {
+        if (res && res.length > 0) {
+          this.tiposMaterial.set(res);
+        } else {
+          this.tiposMaterial.set([
+            { id: '1', nombre: 'Polietileno (PE)' },
+            { id: '2', nombre: 'Polipropileno (PP)' },
+            { id: '3', nombre: 'HDPE' },
+            { id: '4', nombre: 'LDPE' },
+            { id: '5', nombre: 'Virgen' },
+            { id: '6', nombre: 'Molido' }
+          ]);
+        }
+      },
+      error: () => {
+        this.tiposMaterial.set([
+          { id: '1', nombre: 'Polietileno (PE)' },
+          { id: '2', nombre: 'Polipropileno (PP)' },
+          { id: '3', nombre: 'HDPE' },
+          { id: '4', nombre: 'LDPE' },
+          { id: '5', nombre: 'Virgen' },
+          { id: '6', nombre: 'Molido' }
+        ]);
+      }
+    });
   }
 
   load() {

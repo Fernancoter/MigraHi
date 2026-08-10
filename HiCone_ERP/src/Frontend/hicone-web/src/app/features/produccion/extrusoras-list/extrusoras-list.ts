@@ -170,8 +170,8 @@ import autoTable from 'jspdf-autotable';
           </table>
         </div>
 
-        <!-- Paginación -->
-        <div class="pagination-container-premium" *ngIf="totalPages > 1">
+        <!-- Paginación estilo QA (Imagen 2) -->
+        <div class="pagination-container-premium">
           <span class="pagination-info">Página {{ currentPage }} de {{ totalPages }}</span>
           <div class="pagination-controls">
             <button class="btn-page" [disabled]="currentPage === 1" (click)="prevPage()">Ant</button>

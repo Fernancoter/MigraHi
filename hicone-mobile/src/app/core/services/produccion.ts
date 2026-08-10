@@ -166,7 +166,7 @@ export class ProduccionService {
     return this.http.post<Bobina>(`${this.apiUrl}/extrusion/${extrusionId}/registrar-bobina`, request);
   }
 
-  registrarConsumoExtrusion(extrusionId: string, request: { siloVirgenId: string, virgenKg: number, siloMolidoId: string, molidoKg: number }): Observable<void> {
+  registrarConsumoExtrusion(extrusionId: string, request: { siloVirgenId?: string | null, virgenKg?: number, siloMolidoId?: string | null, molidoKg?: number }): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/extrusion/${extrusionId}/consumo`, request);
   }
 

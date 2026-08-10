@@ -314,6 +314,8 @@ namespace HiCone.Application.Services.Identity
         {
             var user = new User
             {
+                Id = Guid.NewGuid(),
+                TenantId = new Guid("00000000-0000-0000-0000-000000000001"),
                 Username = dto.Username,
                 Email = dto.Email,
                 PasswordHash = BC.HashPassword(dto.Password),
@@ -339,6 +341,16 @@ namespace HiCone.Application.Services.Identity
                 EmailConfirmed = false,
                 IsDeleted = false
             };
+
+            if (user.OperadorId.HasValue && user.OperadorId.Value != Guid.Empty)
+            {
+                var opExists = await _context.Operadores.AnyAsync(o => o.Id == user.OperadorId.Value);
+                if (!opExists) user.OperadorId = null;
+            }
+            else
+            {
+                user.OperadorId = null;
+            }
 
             _context.Users.Add(user);
 
@@ -372,7 +384,16 @@ namespace HiCone.Application.Services.Identity
                 }
             }
 
-            await _context.SaveChangesAsync(default);
+            try
+            {
+                await _context.SaveChangesAsync(default);
+            }
+            catch (DbUpdateException ex)
+            {
+                var innerMsg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                throw new Exception($"Error al guardar en base de datos: {innerMsg}");
+            }
+
             return (await GetUserByIdAsync(user.Id))!;
         }
 
@@ -392,7 +413,15 @@ namespace HiCone.Application.Services.Identity
             user.IsActive = dto.IsActive;
             user.IsLockedOut = dto.IsLockedOut;
             user.MustChangePassword = dto.MustChangePassword;
-            user.OperadorId = dto.OperadorId;
+            if (dto.OperadorId.HasValue && dto.OperadorId.Value != Guid.Empty)
+            {
+                var opExists = await _context.Operadores.AnyAsync(o => o.Id == dto.OperadorId.Value);
+                user.OperadorId = opExists ? dto.OperadorId : null;
+            }
+            else
+            {
+                user.OperadorId = null;
+            }
             user.Gender = dto.Gender;
             user.AuthenticationType = dto.AuthenticationType;
             user.CompanyId = dto.CompanyId;

@@ -995,3 +995,84 @@ h1, h2, h3, h4 {
     margin-left: 8px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PAGINACIÓN ESTÁNDAR ESTILO QA (Coincide exacto con la Imagen 2)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.pagination-container-premium,
+.pagination-footer-legacy,
+.pagination-container,
+.pagination-footer {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 0.75rem 1.25rem !important;
+  background-color: #ffffff !important;
+  border-top: 1px solid #e2e8f0 !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+.pagination-info,
+.page-info-legacy,
+.page-info {
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.pagination-controls,
+.page-buttons-legacy,
+.pagination-buttons {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+}
+
+.btn-page,
+.btn-page-legacy,
+.btn-page-num {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 4px !important;
+  padding: 0.35rem 0.75rem !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.825rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease-in-out !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  line-height: 1 !important;
+
+  &:hover:not(:disabled) {
+    background: #f8fafc !important;
+    border-color: #94a3b8 !important;
+    color: #0f172a !important;
+  }
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    background: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+    color: #94a3b8 !important;
+    box-shadow: none !important;
+  }
+
+  &.active {
+    background: #2e7d32 !important; /* Verde QA */
+    color: #ffffff !important;
+    border-color: #2e7d32 !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 4px rgba(46, 125, 50, 0.25) !important;
+  }
+}

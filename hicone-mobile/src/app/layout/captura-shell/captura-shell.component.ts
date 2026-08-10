@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { Subscription, interval } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
@@ -504,6 +504,7 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private produccionService = inject(ProduccionService);
   public extrusionState = inject(ExtrusionStateService);
+  private cdr = inject(ChangeDetectorRef);
 
   isOnline = navigator.onLine;
   pendingCount = 0;
@@ -555,6 +556,7 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     this.showShiftsMenu = !this.showShiftsMenu;
     this.showPrensasMenu = false;
     this.showExtrusorasMenu = false;
+    this.cdr.detectChanges();
     if (this.showShiftsMenu && this.turnos.length === 0) {
       this.cargarTurnos();
     }
@@ -564,12 +566,14 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     this.showPrensasMenu = !this.showPrensasMenu;
     this.showShiftsMenu = false;
     this.showExtrusorasMenu = false;
+    this.cdr.detectChanges();
   }
 
   toggleExtrusorasMenu() {
     this.showExtrusorasMenu = !this.showExtrusorasMenu;
     this.showShiftsMenu = false;
     this.showPrensasMenu = false;
+    this.cdr.detectChanges();
     if (this.showExtrusorasMenu && this.extrusorasApi.length === 0) {
       this.cargarExtrusorasApi();
     }
@@ -579,27 +583,38 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     this.showShiftsMenu = false;
     this.showPrensasMenu = false;
     this.showExtrusorasMenu = false;
+    this.cdr.detectChanges();
   }
 
   cargarTurnos() {
     this.loadingTurnos = true;
+    this.cdr.detectChanges();
     this.produccionService.getTurnos().subscribe({
       next: (data) => {
         this.turnos = data;
         this.loadingTurnos = false;
+        this.cdr.detectChanges();
       },
-      error: () => { this.loadingTurnos = false; }
+      error: () => { 
+        this.loadingTurnos = false; 
+        this.cdr.detectChanges(); 
+      }
     });
   }
 
   cargarExtrusorasApi() {
     this.loadingExtrusoras = true;
+    this.cdr.detectChanges();
     this.produccionService.getExtrusoras().subscribe({
       next: (data) => {
         this.extrusorasApi = data;
         this.loadingExtrusoras = false;
+        this.cdr.detectChanges();
       },
-      error: () => { this.loadingExtrusoras = false; }
+      error: () => { 
+        this.loadingExtrusoras = false; 
+        this.cdr.detectChanges(); 
+      }
     });
   }
 
@@ -607,17 +622,20 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     this.extrusionState.setTurno({ id: turno.id, nombre: turno.nombre });
     this.offlineStore.set('active_shift', turno.nombre);
     this.closeDropdowns();
+    this.cdr.detectChanges();
   }
 
   selectPrensa(prensa: string) {
     this.offlineStore.set('active_press', prensa);
     this.closeDropdowns();
+    this.cdr.detectChanges();
   }
 
   selectExtrusora(ext: Extrusora) {
     this.extrusionState.setExtrusora(ext);
     this.offlineStore.set('active_extrusora_id', ext.id);
     this.closeDropdowns();
+    this.cdr.detectChanges();
   }
 
   async updatePendingCount() {
