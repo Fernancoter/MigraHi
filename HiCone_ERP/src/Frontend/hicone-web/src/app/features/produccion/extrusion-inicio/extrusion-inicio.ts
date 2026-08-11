@@ -56,7 +56,7 @@ import { NotificationService } from '../../../core/services/notification.service
                       <button *ngIf="isTerminada(ex.estado)" class="btn-icon-action info" (click)="ver(ex)" title="Información">ℹ️</button>
                     </div>
                   </td>
-                  <td>{{ ex.fechaInicio | date:'dd/MM/yy HH:mm' }}</td>
+                  <td>{{ formatDateLocal(ex.fechaInicio) }}</td>
                   <td><a class="action-link-green bold" (click)="ver(ex)">{{ ex.extrusora?.nombre || 'Extrusora' }}</a></td>
                   <td>{{ ex.turno?.nombre }}</td>
                   <td>{{ ex.producto?.nombre || ex.productoNombre }}</td>
@@ -118,7 +118,7 @@ import { NotificationService } from '../../../core/services/notification.service
                         <button *ngIf="isTerminada(p.estado)" class="btn-icon-action info" (click)="ver(p)" title="Información">ℹ️</button>
                       </div>
                     </td>
-                    <td>{{ p.fechaInicio | date:'dd/MM/yy HH:mm' }}</td>
+                    <td>{{ formatDateLocal(p.fechaInicio) }}</td>
                     <td><a class="action-link-green bold" (click)="ver(p)">{{ p.extrusora?.nombre }}</a></td>
                     <td>{{ p.turno?.nombre }}</td>
                     <td>{{ p.producto?.nombre || p.productoNombre }}</td>
@@ -1203,6 +1203,30 @@ export class ExtrusionInicioComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  formatDateLocal(dateVal: any): string {
+    if (!dateVal) return '-';
+    try {
+      let d: Date;
+      if (typeof dateVal === 'string') {
+        const isIsoNoZone = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?$/.test(dateVal);
+        d = isIsoNoZone ? new Date(dateVal + 'Z') : new Date(dateVal);
+      } else {
+        d = new Date(dateVal);
+      }
+      if (isNaN(d.getTime())) return String(dateVal);
+      
+      const pad = (n: number) => n < 10 ? '0' + n : n.toString();
+      const day = pad(d.getDate());
+      const month = pad(d.getMonth() + 1);
+      const year = d.getFullYear();
+      const hours = pad(d.getHours());
+      const mins = pad(d.getMinutes());
+      return `${day}/${month}/${year} ${hours}:${mins}`;
+    } catch {
+      return String(dateVal);
+    }
   }
 }
 

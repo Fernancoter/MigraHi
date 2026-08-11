@@ -7,6 +7,11 @@
 - **Backend (.NET API):** Operativo en `http://localhost:5007` y Swagger en `http://localhost:5007/swagger` (dotnet run).
 - **Frontend Web (`hicone-web`):** Operativo en `http://localhost:4200` (ng serve). Compilación con 0 errores y 11 suites de pruebas unitarias Vitest pasando al 100%.
 - **Frontend Móvil (`hicone-mobile`):** Operativo en `http://localhost:4201` (ng serve --port 4201). Compilación con 0 errores y 5 suites de pruebas unitarias Vitest pasando al 100%.
+- **Correcciones en Operación Bobinas & Extrusiones (2026-08-11):**
+  - **Estado de Bobinas:** Resuelto problema donde el modal forzaba siempre estado `2` (`En Reposo`). Se implementó mapeo bidireccional exhaustivo para los 12 estados de `EstadoBobina` en frontend y persistencia real con `PUT /api/v1/produccion/bobina/{id}`.
+  - **Zona Horaria:** Corregido desfase de 6 horas (UTC vs Hora local de México) mediante `formatDateLocal` en Bobinas y Extrusiones (listados, modales y tablas inline).
+  - **Identificadores Limpios:** Producto ID ahora muestra clave/código legible o primeros 8 caracteres legibles en vez de GUID de 36 caracteres.
+  - **Prensa e Interrupciones:** Eliminados fallbacks hardcodeados ('Prensa 4' y motivo de limpieza por defecto), mostrando '-' cuando no tienen asignaciones.
 - **Hardware Industrial & Pipelines (MOB-03, MOB-04, WEB-01, WEB-02, WEB-03):**
   - Drivers de impresión Zebra ZPL II (Red TCP 9100, Bluetooth BLE y descarga ZPL) y NFC NDEF (`printer.service.ts`, `nfc.service.ts`).
   - Desacopladas 22 URLs fijas en `hicone-web` mediante `environment.apiUrl`.
