@@ -1,7 +1,7 @@
 # Project Memory: HiCone ERP Modernization
 
 ## Rama Activa
-`QA` — activa y con los servidores del backend (5007), frontend web (4200) y frontend móvil (4201) iniciados.
+`QA` — sincronizada y actualizada en remoto (`origin/QA`). Servidores operativos: Backend (5007), Web (4200), Móvil (4201).
 
 ## Estado Actual (2026-08-11)
 - **Backend (.NET API):** Operativo en `http://localhost:5007` y Swagger en `http://localhost:5007/swagger` (dotnet run).
