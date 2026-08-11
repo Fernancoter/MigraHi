@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ProduccionConfigService } from '../../../core/services/produccion-config.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { ColumnFilterComponent } from '../../../shared/components/column-filter.component';
 
 @Component({
@@ -1598,6 +1599,7 @@ export class ExtrusionesListComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
+  private notify = inject(NotificationService);
 
   viewState: 'list' | 'add' | 'edit' | 'bobinas' | 'detail' = 'list';
   activeTabDetail: 'bobina' | 'interrupcion' | 'resultado' | 'auditoria' = 'bobina';
@@ -1965,7 +1967,7 @@ export class ExtrusionesListComponent implements OnInit {
     };
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_extrusiones', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {
@@ -2184,10 +2186,10 @@ export class ExtrusionesListComponent implements OnInit {
 
   guardarCambios() {
     if (this.viewState === 'add') {
-      if (!this.editForm.extrusoraId) { alert('Seleccione la extrusora.'); return; }
-      if (!this.editForm.turnoId) { alert('Seleccione el turno.'); return; }
-      if (!this.editForm.productoId) { alert('Seleccione el producto.'); return; }
-      if (!this.editForm.operarioId) { alert('Seleccione el operador.'); return; }
+      if (!this.editForm.extrusoraId) { this.notify.warning('Seleccione la extrusora.'); return; }
+      if (!this.editForm.turnoId) { this.notify.warning('Seleccione el turno.'); return; }
+      if (!this.editForm.productoId) { this.notify.warning('Seleccione el producto.'); return; }
+      if (!this.editForm.operarioId) { this.notify.warning('Seleccione el operador.'); return; }
 
       this.saving = true;
       const payload = {
@@ -2212,14 +2214,14 @@ export class ExtrusionesListComponent implements OnInit {
       this.prodService.createExtrusion(payload).subscribe({
         next: () => {
           this.saving = false;
-          alert('Orden de extrusión creada con éxito.');
+          this.notify.success('Orden de extrusión creada con éxito.');
           this.viewState = 'list';
           this.cargarExtrusiones();
         },
         error: (err) => {
           this.saving = false;
           console.error(err);
-          alert('Error al guardar la orden de extrusión.');
+          this.notify.error('Error al guardar la orden de extrusión.');
         }
       });
     } else {
@@ -2247,14 +2249,14 @@ export class ExtrusionesListComponent implements OnInit {
       this.prodService.updateExtrusion(this.editForm.id, payload).subscribe({
         next: () => {
           this.saving = false;
-          alert('Orden de extrusión actualizada con éxito.');
+          this.notify.success('Orden de extrusión actualizada con éxito.');
           this.viewState = 'list';
           this.cargarExtrusiones();
         },
         error: (err) => {
           this.saving = false;
           console.error(err);
-          alert('Error al actualizar la orden de extrusión.');
+          this.notify.error('Error al actualizar la orden de extrusión.');
         }
       });
     }
@@ -2280,7 +2282,7 @@ export class ExtrusionesListComponent implements OnInit {
     if (this.tipoEliminacion === 'extrusion') {
       this.prodService.deleteExtrusion(this.itemAEliminar.id).subscribe({
         next: () => {
-          alert('Orden de extrusión eliminada con éxito.');
+          this.notify.success('Orden de extrusión eliminada con éxito.');
           this.mostrarConfirmarEliminar = false;
           this.itemAEliminar = null;
           this.viewState = 'list';
@@ -2288,7 +2290,7 @@ export class ExtrusionesListComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error al eliminar extrusión:', err);
-          alert(err.error?.message || 'Error del servidor al eliminar la extrusión.');
+          this.notify.error(err.error?.message || 'Error del servidor al eliminar la extrusión.');
           this.mostrarConfirmarEliminar = false;
           this.itemAEliminar = null;
           this.cdr.detectChanges();
@@ -2297,7 +2299,7 @@ export class ExtrusionesListComponent implements OnInit {
     } else if (this.tipoEliminacion === 'bobina') {
       this.configService.deleteBobina(this.extrusionSeleccionada.id, this.itemAEliminar.id).subscribe({
         next: () => {
-          alert('Bobina eliminada con éxito.');
+          this.notify.success('Bobina eliminada con éxito.');
           this.mostrarConfirmarEliminar = false;
           const selected = this.extrusionSeleccionada;
           this.itemAEliminar = null;
@@ -2306,7 +2308,7 @@ export class ExtrusionesListComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error al eliminar bobina:', err);
-          alert('Error al eliminar la bobina.');
+          this.notify.error('Error al eliminar la bobina.');
           this.mostrarConfirmarEliminar = false;
           this.itemAEliminar = null;
           this.cdr.detectChanges();
@@ -2526,7 +2528,7 @@ export class ExtrusionesListComponent implements OnInit {
     this.showExportOptionsBobina = false;
   }
 
-  verInterrupciones(ex: Extrusion) {
+  verInterrupciones(ex: any) {
     this.loadingDetalle = true;
     this.cdr.detectChanges();
     this.prodService.getExtrusion(ex.id).subscribe({
@@ -2540,7 +2542,7 @@ export class ExtrusionesListComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar interrupciones:', err);
-        alert('No se pudo cargar el detalle de interrupciones.');
+        this.notify.error('No se pudo cargar el detalle de interrupciones.');
         this.loadingDetalle = false;
         this.cdr.detectChanges();
       }
@@ -2680,6 +2682,6 @@ export class ExtrusionesListComponent implements OnInit {
   }
 
   imprimir(ex: Extrusion) {
-    alert(`Imprimiendo registro de extrusión ID: ${ex.id}`);
+    this.notify.info(`Imprimiendo registro de extrusión ID: ${ex.id}`);
   }
 }

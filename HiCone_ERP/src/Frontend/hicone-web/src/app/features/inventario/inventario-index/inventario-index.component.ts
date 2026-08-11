@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { InventarioService } from '../../../core/services/inventario';
+import { NotificationService } from '../../../core/services/notification.service';
 
 interface InventarioRecord {
   id: string;
@@ -404,6 +405,7 @@ export class InventarioIndexComponent implements OnInit {
   private router = inject(Router);
   private inventarioService = inject(InventarioService);
   private cdr = inject(ChangeDetectorRef);
+  private notify = inject(NotificationService);
 
   registros: InventarioRecord[] = [];
   filteredRegistros: InventarioRecord[] = [];
@@ -580,7 +582,7 @@ export class InventarioIndexComponent implements OnInit {
 
   saveFilterPreset() {
     this.showFilterMenu = false;
-    alert('Filtro guardado correctamente.');
+    this.notify.success('Filtro guardado correctamente.');
   }
 
   setSort(col: string) {

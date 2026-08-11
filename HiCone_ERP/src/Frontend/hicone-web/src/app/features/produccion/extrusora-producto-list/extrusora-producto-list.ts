@@ -2,6 +2,7 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProduccionService, ExtrusoraProducto, Extrusora, Producto } from '../../../core/services/produccion';
 import { InventarioService, AuditLog } from '../../../core/services/inventario';
+import { NotificationService } from '../../../core/services/notification.service';
 import { FormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
@@ -498,6 +499,7 @@ export class ExtrusoraProductoListComponent implements OnInit {
   private prodService = inject(ProduccionService);
   private auditSvc = inject(InventarioService);
   private cdr = inject(ChangeDetectorRef);
+  private notify = inject(NotificationService);
 
   // Estados de la vista
   viewState: 'list' | 'add' | 'edit' | 'view' = 'list';
@@ -657,7 +659,7 @@ export class ExtrusoraProductoListComponent implements OnInit {
     };
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_ext_prod_list', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {
@@ -816,7 +818,7 @@ export class ExtrusoraProductoListComponent implements OnInit {
 
   save() {
     if (!this.form.extrusoraId || !this.form.productoId) {
-      alert('Debe seleccionar la Extrusora y el Producto');
+      this.notify.warning('Debe seleccionar la Extrusora y el Producto');
       return;
     }
 
@@ -834,18 +836,18 @@ export class ExtrusoraProductoListComponent implements OnInit {
     if (this.viewState === 'add') {
       this.prodService.createExtrusoraProducto(payload as any).subscribe({
         next: () => {
-          alert('Configuración agregada correctamente');
+          this.notify.success('Configuración agregada correctamente');
           this.goToList();
         },
-        error: (err) => alert('Error al agregar configuración: ' + (err.error?.message || err.message))
+        error: (err) => this.notify.error('Error al agregar configuración: ' + (err.error?.message || err.message))
       });
     } else {
       this.prodService.updateExtrusoraProducto(this.form.id!, payload as any).subscribe({
         next: () => {
-          alert('Configuración modificada correctamente');
+          this.notify.success('Configuración modificada correctamente');
           this.goToList();
         },
-        error: (err) => alert('Error al modificar configuración: ' + (err.error?.message || err.message))
+        error: (err) => this.notify.error('Error al modificar configuración: ' + (err.error?.message || err.message))
       });
     }
   }
@@ -866,13 +868,13 @@ export class ExtrusoraProductoListComponent implements OnInit {
     if (!this.itemAEliminar) return;
     this.prodService.deleteExtrusoraProducto(this.itemAEliminar.id).subscribe({
       next: () => {
-        alert('Configuración eliminada correctamente');
+        this.notify.success('Configuración eliminada correctamente');
         this.mostrarConfirmarEliminar = false;
         this.itemAEliminar = null;
         this.loadData();
       },
       error: (err) => {
-        alert('Error al eliminar configuración');
+        this.notify.error('Error al eliminar configuración');
         this.mostrarConfirmarEliminar = false;
         this.itemAEliminar = null;
         this.cdr.detectChanges();

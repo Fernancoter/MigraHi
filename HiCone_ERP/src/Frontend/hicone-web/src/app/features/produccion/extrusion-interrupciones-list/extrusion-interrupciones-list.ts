@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionService, CausaInterrupcion, Extrusion } from '../../../core/services/produccion';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-extrusion-interrupciones-list',
@@ -461,6 +462,7 @@ import { ProduccionService, CausaInterrupcion, Extrusion } from '../../../core/s
 export class ExtrusionInterrupcionesListComponent implements OnInit {
   private svc = inject(ProduccionService);
   private router = inject(Router);
+  private notify = inject(NotificationService);
 
   viewState = signal<'list' | 'add' | 'edit'>('list');
   items = signal<any[]>([]);
@@ -660,7 +662,7 @@ export class ExtrusionInterrupcionesListComponent implements OnInit {
     };
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_ext_interrupc', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {
@@ -725,9 +727,13 @@ export class ExtrusionInterrupcionesListComponent implements OnInit {
     if (confirm(`¿Estás seguro de eliminar la interrupción ID ${this.getShortId(item.id)} asociada a la Extrusión ${idLegacy}?`)) {
       this.svc.deleteInterrupcionExtrusion(item.id).subscribe({
         next: () => {
+          this.notify.success('Interrupción eliminada exitosamente.');
           this.load();
         },
-        error: (err) => console.error(err)
+        error: (err) => {
+          console.error(err);
+          this.notify.error('Error al eliminar la interrupción.');
+        }
       });
     }
   }
@@ -755,18 +761,20 @@ export class ExtrusionInterrupcionesListComponent implements OnInit {
     if (this.viewState() === 'add') {
       this.svc.registrarInterrupcionManual(payload).subscribe({
         next: () => {
+          this.notify.success('Interrupción guardada exitosamente.');
           this.load();
           this.volverAListado();
         },
-        error: (err) => alert(err.error?.message || 'Error al guardar')
+        error: (err) => this.notify.error(err.error?.message || 'Error al guardar')
       });
     } else {
       this.svc.updateInterrupcionExtrusion(this.formModel.id, payload).subscribe({
         next: () => {
+          this.notify.success('Interrupción actualizada exitosamente.');
           this.load();
           this.volverAListado();
         },
-        error: (err) => alert(err.error?.message || 'Error al actualizar')
+        error: (err) => this.notify.error(err.error?.message || 'Error al actualizar')
       });
     }
   }
@@ -828,7 +836,7 @@ export class ExtrusionInterrupcionesListComponent implements OnInit {
 
   exportPDF() {
     this.showExportOptions.set(false);
-    alert('Función de exportar a PDF en desarrollo. Descargue en CSV (Excel) para ver todos los datos.');
+    this.notify.info('Función de exportar a PDF en desarrollo. Descargue en CSV (Excel) para ver todos los datos.');
   }
 
   // Date formatting utility

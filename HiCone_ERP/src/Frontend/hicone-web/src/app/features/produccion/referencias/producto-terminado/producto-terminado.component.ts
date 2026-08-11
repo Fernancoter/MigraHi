@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
 import { ProduccionService } from '../../../../core/services/produccion';
+import { NotificationService } from '../../../../core/services/notification.service';
 import * as XLSX from 'xlsx';
 
 export interface ProductoTerminado {
@@ -348,6 +349,7 @@ export interface ColumnDef {
 })
 export class ProductoTerminadoComponent implements OnInit {
   private svc = inject(ProduccionService);
+  private notify = inject(NotificationService);
 
   searchText = signal<string>('');
   sortColumn = signal<keyof ProductoTerminado | null>(null);
@@ -531,7 +533,7 @@ export class ProductoTerminadoComponent implements OnInit {
 
   saveFilters() {
     this.isFilterMenuOpen = false;
-    const filterName = prompt('Ingrese el nombre para este filtro:', 'Filtro Prod.Terminado ' + new Date().toLocaleDateString());
+    const filterName = prompt('Ingrese el nombre para este filtro:', 'Filtro Producto Terminado ' + new Date().toLocaleDateString());
     if (!filterName) return;
     const newFilter = {
       id: 'F-' + Date.now(),
@@ -540,7 +542,7 @@ export class ProductoTerminadoComponent implements OnInit {
     };
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_prod_term', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {
@@ -632,8 +634,17 @@ export class ProductoTerminadoComponent implements OnInit {
       tenantId: '00000000-0000-0000-0000-000000000001'
     };
 
-    const done = () => { this.saving.set(false); this.cancelView(); this.loadData(); };
-    const onError = (err: any) => { this.saving.set(false); this.saveError.set(err?.error?.message || 'Ocurrió un error al guardar.'); };
+    const done = () => {
+      this.saving.set(false);
+      this.notify.success('Producto terminado guardado exitosamente.');
+      this.cancelView();
+      this.loadData();
+    };
+    const onError = (err: any) => {
+      this.saving.set(false);
+      this.notify.error(err?.error?.message || 'Ocurrió un error al guardar.');
+      this.saveError.set(err?.error?.message || 'Ocurrió un error al guardar.');
+    };
 
     if (this.form.id) {
       this.svc.updateProductoTerminado(this.form.id, request).subscribe({ next: done, error: onError });
@@ -652,6 +663,7 @@ export class ProductoTerminadoComponent implements OnInit {
     if (id) {
       this.svc.deleteProductoTerminado(id).subscribe({
         next: () => {
+          this.notify.success('Registro eliminado exitosamente.');
           this.showDeleteModal.set(false);
           this.itemToDelete.set(null);
           if (this.viewMode() || this.editMode()) this.cancelView();
@@ -659,7 +671,7 @@ export class ProductoTerminadoComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          alert('No se pudo eliminar el registro.');
+          this.notify.error('No se pudo eliminar el registro.');
           this.showDeleteModal.set(false);
           this.itemToDelete.set(null);
         }

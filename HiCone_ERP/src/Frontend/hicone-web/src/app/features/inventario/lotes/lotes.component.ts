@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InventarioService, Lote, Silo, AuditLog } from '../../../core/services/inventario';
 import { PdfExportService } from '../../../core/services/pdf-export.service';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-lotes',
@@ -879,73 +880,6 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
       border-color: #cbd5e1;
     }
     .card-meta {
-      display: flex; justify-content: space-between; font-size: 0.85rem;
-      color: #94a3b8; margin-bottom: 0.6rem; font-weight: 600;
-    }
-    .meta-user { display: flex; align-items: center; gap: 0.3rem; }
-    .card-action-title {
-      font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;
-    }
-    .card-action-title.insert { color: #137333; }
-    .card-action-title.update { color: #1a73e8; }
-    .card-action-title.delete { color: #c5221f; }
-    .card-action-title.archive { color: #b06000; }
-
-    .changes-list {
-      display: flex; flex-direction: column; gap: 0.8rem; background: #f8fafc;
-      border-radius: 8px; padding: 1rem; border: 1px solid #edf2f7;
-    }
-    .change-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding-bottom: 0.5rem; border-bottom: 1px dashed #edf2f7;
-    }
-    .change-row:last-child { padding-bottom: 0; border-bottom: none; }
-    .change-field {
-      font-size: 0.95rem; font-weight: 700; color: #475569;
-    }
-    .change-values {
-      display: flex; align-items: center; gap: 0.6rem; font-family: 'JetBrains Mono', monospace;
-      font-size: 0.95rem; font-weight: 600;
-    }
-    .val-old {
-      color: #9b1c1c; background: #fde8e8; padding: 0.2rem 0.5rem; border-radius: 4px;
-    }
-    .val-arrow { color: #64748b; font-weight: bold; }
-    .val-new {
-      color: #137333; background: #e6f4ea; padding: 0.2rem 0.5rem; border-radius: 4px;
-    }
-    .action-details {
-      font-size: 0.95rem; color: #64748b; line-height: 1.5;
-    }
-    
-    @keyframes fadeInDropdown {
-      from { opacity: 0; transform: translateY(5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  `]
-})
-export class LotesComponent implements OnInit {
-  private inventarioService = inject(InventarioService);
-  private pdfService = inject(PdfExportService);
-  public cdr = inject(ChangeDetectorRef);
-  
-  lotes: Lote[] = [];
-  silos: Silo[] = [];
-  selectedSilo: Silo | null = null;
-  searchQuery = '';
-  showModal = false;
-  showColumnSelector = false;
-  showExportSelector = false;
-  modalMode: 'ADD' | 'VIEW' | 'EDIT' | 'DELETE' = 'ADD';
-  newLote: Partial<Lote> = this.getDefaultLote();
-
-  // Filtros Avanzados (QA Parity)
-  filterSiloId = '';
-  filterDateStart = '';
-  filterDateEnd = '';
-  filterConsumido = 'all';
-
-  showSearchFilterDropdown = false;
   savedFilters: { name: string, state: any }[] = [];
 
   // Paginación

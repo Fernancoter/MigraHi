@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Producto, Categoria } from '../../../../core/services/produccion-config.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-productos-catalogo',
@@ -75,7 +76,7 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                       Limpiar filtros
                     </div>
-                    <div class="popover-item" (click)="saveFilterAs()" style="display: flex; align-items: center; gap: 8px; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: #334155; cursor: pointer;">
+                    <div class="popover-item" (click)="saveFilter()" style="display: flex; align-items: center; gap: 8px; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: #334155; cursor: pointer;">
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                       Guardar filtro como...
                     </div>
@@ -964,6 +965,7 @@ import { ProduccionConfigService, Producto, Categoria } from '../../../../core/s
 })
 export class ProductosCatalogoComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
+  private notify = inject(NotificationService);
   
   items = signal<Producto[]>([]);
   categories = signal<Categoria[]>([]);
@@ -1166,7 +1168,7 @@ export class ProductosCatalogoComponent implements OnInit {
     this.savedFilters = raw ? JSON.parse(raw) : [];
   }
 
-  saveFilterAs() {
+  saveFilter() {
     this.showFilterDropdown.set(false);
     const filterName = prompt('Ingrese el nombre para este filtro:', 'Filtro Productos ' + new Date().toLocaleDateString());
     if (!filterName) return;
@@ -1181,7 +1183,11 @@ export class ProductosCatalogoComponent implements OnInit {
 
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_productos', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
+  }
+
+  saveFilterAs() {
+    this.saveFilter();
   }
 
   loadSavedFilter(f: any) {
@@ -1376,11 +1382,11 @@ export class ProductosCatalogoComponent implements OnInit {
 
   save() {
     if (!this.form.clave || !this.form.clave.trim()) {
-      alert('El campo Clave es requerido.');
+      this.notify.warning('El campo Clave es requerido.');
       return;
     }
     if (!this.form.nombre || !this.form.nombre.trim()) {
-      alert('El campo Nombre es requerido.');
+      this.notify.warning('El campo Nombre es requerido.');
       return;
     }
 
@@ -1402,23 +1408,25 @@ export class ProductosCatalogoComponent implements OnInit {
     if (!this.form.id) {
       this.svc.createProducto(payload).subscribe({
         next: () => {
+          this.notify.success('Producto creado exitosamente.');
           this.closeModal();
           this.load();
         },
         error: (err) => {
           console.error('Error al crear producto:', err);
-          alert('Error: ' + (err.error?.title || err.error?.message || err.message) + '\n\nAsegúrate de haber llenado todos los campos requeridos correctamente.');
+          this.notify.error('Error: ' + (err.error?.title || err.error?.message || err.message));
         }
       });
     } else {
       this.svc.updateProducto(this.form.id, payload).subscribe({
         next: () => {
+          this.notify.success('Producto actualizado exitosamente.');
           this.closeModal();
           this.load();
         },
         error: (err) => {
           console.error('Error al actualizar producto:', err);
-          alert('Error: ' + (err.error?.title || err.error?.message || err.message));
+          this.notify.error('Error: ' + (err.error?.title || err.error?.message || err.message));
         }
       });
     }

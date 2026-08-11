@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed, ChangeDetectorRef } from '
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Operario } from '../../../../core/services/produccion-config.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-operarios-catalogo',
@@ -432,6 +433,7 @@ import { ProduccionConfigService, Operario } from '../../../../core/services/pro
 export class OperariosCatalogoComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
   private cdr = inject(ChangeDetectorRef);
+  private notify = inject(NotificationService);
   
   items = signal<Operario[]>([]);
   loading = signal(true);
@@ -679,7 +681,7 @@ export class OperariosCatalogoComponent implements OnInit {
 
   save() {
     if (!this.form.nombre || !this.form.nombre.trim()) {
-      alert('El campo Nombre es requerido.');
+      this.notify.warning('El campo Nombre es requerido.');
       return;
     }
     
@@ -691,26 +693,28 @@ export class OperariosCatalogoComponent implements OnInit {
     if (!this.form.id) {
       this.svc.createOperario(payload).subscribe({
         next: () => {
+          this.notify.success('Operario creado exitosamente.');
           this.closeModal();
           this.load();
           this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error al crear operario:', err);
-          alert(err.error?.message || 'Error del servidor al guardar el operario.');
+          this.notify.error(err.error?.message || 'Error del servidor al guardar el operario.');
           this.cdr.detectChanges();
         }
       });
     } else {
       this.svc.updateOperario(this.form.id, payload).subscribe({
         next: () => {
+          this.notify.success('Operario actualizado exitosamente.');
           this.closeModal();
           this.load();
           this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error al actualizar operario:', err);
-          alert(err.error?.message || 'Error del servidor al actualizar el operario.');
+          this.notify.error(err.error?.message || 'Error del servidor al actualizar el operario.');
           this.cdr.detectChanges();
         }
       });
@@ -721,6 +725,7 @@ export class OperariosCatalogoComponent implements OnInit {
     if (confirm(`¿Está seguro de que desea eliminar al operario "${item.nombre}"?`)) {
       this.svc.deleteOperario(item.id).subscribe({
         next: () => {
+          this.notify.success('Operario eliminado exitosamente.');
           this.load();
           if (this.currentPage() > this.totalPages()) {
             this.currentPage.set(this.totalPages());
@@ -729,7 +734,7 @@ export class OperariosCatalogoComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error al eliminar operario:', err);
-          alert(err.error?.message || 'No se pudo eliminar el operario.');
+          this.notify.error(err.error?.message || 'No se pudo eliminar el operario.');
           this.cdr.detectChanges();
         }
       });

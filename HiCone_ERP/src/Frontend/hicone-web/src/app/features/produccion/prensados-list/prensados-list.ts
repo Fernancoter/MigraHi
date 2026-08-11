@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { ProduccionService } from '../../../core/services/produccion';
+import { NotificationService } from '../../../core/services/notification.service';
 
 const ALL_COLUMNS = [
   'fecha', 'prensa', 'turno', 'producto', 'operador', 'interrupcion', 'estado',
@@ -590,6 +591,7 @@ const ESTADO_CLASS: Record<number, string> = {
 })
 export class PrensadosListComponent implements OnInit {
   private svc = inject(ProduccionService);
+  private notify = inject(NotificationService);
 
   items = signal<any[]>([]);
   searchText = signal('');
@@ -694,7 +696,7 @@ export class PrensadosListComponent implements OnInit {
   visualizar(item: any) {
     this.svc.getPrensadoDetail(item.id).subscribe({
       next: (detail) => this.viewingItem.set(detail),
-      error: (err) => { console.error(err); alert('No se pudo cargar el detalle del prensado.'); }
+      error: (err) => { console.error(err); this.notify.error('No se pudo cargar el detalle del prensado.'); }
     });
   }
   cerrarVisualizar() { this.viewingItem.set(null); }
@@ -713,7 +715,7 @@ export class PrensadosListComponent implements OnInit {
         const interrupcionesPrensado = (interrupciones || []).filter((i: any) => i.prensadoId === item.id);
         this.abrirVentanaImpresion(detail, carreras || [], calidadCarretes || [], interrupcionesPrensado);
       },
-      error: (err) => { console.error(err); alert('No se pudo generar la impresión.'); }
+      error: (err) => { console.error(err); this.notify.error('No se pudo generar la impresión.'); }
     });
   }
 
@@ -812,7 +814,7 @@ export class PrensadosListComponent implements OnInit {
       </body></html>`;
 
     const w = window.open('', '_blank');
-    if (!w) { alert('El navegador bloqueó la ventana de impresión. Permite ventanas emergentes para este sitio.'); return; }
+    if (!w) { this.notify.warning('El navegador bloqueó la ventana de impresión. Permite ventanas emergentes para este sitio.'); return; }
     w.document.write(html);
     w.document.close();
   }
@@ -861,7 +863,7 @@ export class PrensadosListComponent implements OnInit {
           loteSilo: detail.loteSilo
         });
       },
-      error: (err) => { console.error(err); alert('No se pudo cargar el prensado para modificar.'); }
+      error: (err) => { console.error(err); this.notify.error('No se pudo cargar el prensado para modificar.'); }
     });
   }
 
@@ -901,11 +903,13 @@ export class PrensadosListComponent implements OnInit {
     this.svc.updatePrensado(this.editingId, request).subscribe({
       next: () => {
         this.saving.set(false);
+        this.notify.success('Orden de prensado actualizada exitosamente.');
         this.cerrarModificar();
         this.load();
       },
       error: (err) => {
         this.saving.set(false);
+        this.notify.error(err?.error?.message || 'Ocurrió un error al guardar los cambios.');
         this.saveError.set(err?.error?.message || 'Ocurrió un error al guardar los cambios.');
       }
     });
@@ -923,13 +927,14 @@ export class PrensadosListComponent implements OnInit {
     this.svc.deletePrensado(item.id).subscribe({
       next: () => {
         this.deleting.set(false);
+        this.notify.success('Orden de prensado eliminada exitosamente.');
         this.itemToDelete.set(null);
         this.load();
       },
       error: (err) => {
         this.deleting.set(false);
         console.error(err);
-        alert(err?.error?.message || 'No se pudo eliminar la orden de prensado.');
+        this.notify.error(err?.error?.message || 'No se pudo eliminar la orden de prensado.');
       }
     });
   }

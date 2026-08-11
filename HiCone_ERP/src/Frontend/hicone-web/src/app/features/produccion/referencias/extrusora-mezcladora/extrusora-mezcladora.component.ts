@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
 import { ProduccionService } from '../../../../core/services/produccion';
+import { NotificationService } from '../../../../core/services/notification.service';
 import * as XLSX from 'xlsx';
 
 export interface ExtrusoraMezcladora {
@@ -317,6 +318,7 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
   form: ExtrusoraMezcladora = this.getEmptyForm();
 
   private produccionService = inject(ProduccionService);
+  private notify = inject(NotificationService);
 
   ngOnInit() {
     this.loadSavedFiltersFromStorage();
@@ -408,7 +410,7 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
 
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_ext_mezc', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {
@@ -476,8 +478,13 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
       kgMolido: this.form.kgMolido
     };
     this.produccionService.saveExtrusoraMezcladora(apiPayload).subscribe({
-      next: () => console.log('ExtrusoraMezcladora guardada en DB'),
-      error: (err) => console.error('Error guardando ExtrusoraMezcladora:', err)
+      next: () => {
+        this.notify.success('Extrusora mezcladora guardada exitosamente.');
+      },
+      error: (err) => {
+        console.error('Error guardando ExtrusoraMezcladora:', err);
+        this.notify.error('Error al guardar la extrusora mezcladora.');
+      }
     });
 
     this.closeModal();
@@ -488,6 +495,7 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
       const current = this.items().filter(x => x.id !== item.id);
       this.items.set(current);
       localStorage.setItem('hicone_extrusora_mezcladoras_cache', JSON.stringify(current));
+      this.notify.success('Registro eliminado exitosamente.');
 
       if (item.id && !item.id.includes('-') && item.id.length > 10) {
         this.produccionService.deleteExtrusoraMezcladora(item.id).subscribe({

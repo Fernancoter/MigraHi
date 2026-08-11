@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Extrusora, ExtrusoraOperarioRow, Operario, Turno } from '../../../../core/services/produccion-config.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-extrusoras-catalogo',
@@ -560,6 +561,7 @@ import { ProduccionConfigService, Extrusora, ExtrusoraOperarioRow, Operario, Tur
 })
 export class ExtrusorasCatalogoComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
+  private notify = inject(NotificationService);
 
   items = signal<Extrusora[]>([]);
   claves = signal<{id: string, valor: string}[]>([]);
@@ -813,8 +815,8 @@ export class ExtrusorasCatalogoComponent implements OnInit {
 
   /* ── Save ─────────────────────────────────────────── */
   save() {
-    if (!this.form.nombre?.trim())           { alert('El campo Extrusora es requerido.'); return; }
-    if (!this.form.numeroExtrusora?.trim())   { alert('El Número de Extrusora es requerido.'); return; }
+    if (!this.form.nombre?.trim())           { this.notify.warning('El campo Extrusora es requerido.'); return; }
+    if (!this.form.numeroExtrusora?.trim())   { this.notify.warning('El Número de Extrusora es requerido.'); return; }
 
     const dto = {
       nombre:          this.form.nombre!,
@@ -827,19 +829,21 @@ export class ExtrusorasCatalogoComponent implements OnInit {
         next: (id: string) => {
           // Save operario rows
           this.saveOperarioRows(id);
+          this.notify.success('Extrusora creada exitosamente.');
           this.closeModal();
           this.load();
         },
-        error: (e) => { console.error(e); alert('Error al guardar.'); }
+        error: (e) => { console.error(e); this.notify.error('Error al guardar la extrusora.'); }
       });
     } else {
       this.svc.updateExtrusora(this.form.id, dto).subscribe({
         next: () => {
           this.saveOperarioRows(this.form.id!);
+          this.notify.success('Extrusora actualizada exitosamente.');
           this.closeModal();
           this.load();
         },
-        error: (e) => { console.error(e); alert('Error al actualizar.'); }
+        error: (e) => { console.error(e); this.notify.error('Error al actualizar la extrusora.'); }
       });
     }
   }

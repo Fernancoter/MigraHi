@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Prensa } from '../../../../core/services/produccion-config.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-prensas-catalogo',
@@ -465,14 +466,13 @@ import { ProduccionConfigService, Prensa } from '../../../../core/services/produ
     .confirm-modal { background: white; padding: 1.75rem; border-radius: 8px; width: 360px; box-shadow: 0 12px 30px rgba(0,0,0,0.2); text-align: center; border: 1px solid #cbd5e1; }
     .confirm-title { font-size: 1.15rem; color: #1e293b; margin-top: 0; margin-bottom: 0.5rem; font-weight: 700; }
     .confirm-msg { font-size: 0.88rem; color: #475569; margin-bottom: 1.5rem; }
-    .confirm-actions { display: flex; justify-content: center; gap: 12px; }
-    .btn-confirmar-del { background: #ef4444; color: white; border: none; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.25); }
     .btn-confirmar-del:hover { background: #dc2626; }
     .empty-msg { padding: 2rem; color: #64748b; text-align: center; font-style: italic; }
   `]
 })
 export class PrensasCatalogoComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
+  private notify = inject(NotificationService);
 
   // Vistas: 'list' | 'edit' | 'detail'
   viewState = signal<'list' | 'edit' | 'detail'>('list');
@@ -650,7 +650,7 @@ export class PrensasCatalogoComponent implements OnInit {
 
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_prensas', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {
@@ -716,7 +716,7 @@ export class PrensasCatalogoComponent implements OnInit {
   // Guardar Formulario (IMAGEN 3)
   saveForm() {
     if (!this.form.nombre?.trim()) {
-      alert('El campo Prensa es requerido.');
+      this.notify.warning('El campo Prensa es requerido.');
       return;
     }
 
@@ -731,21 +731,29 @@ export class PrensasCatalogoComponent implements OnInit {
 
     if (!this.form.id) {
       this.svc.createPrensa(payload as any).subscribe({
-        next: () => this.goList(),
+        next: () => {
+          this.notify.success('Prensa creada exitosamente.');
+          this.goList();
+        },
         error: (e) => {
           console.error(e);
           // Fallback fluido optimista
           this.items.update(list => [...list, { id: `prn-${Date.now()}`, codigo: `PRE-${list.length+1}`, ...payload } as any]);
+          this.notify.success('Prensa creada exitosamente.');
           this.goList();
         }
       });
     } else {
       this.svc.updatePrensa(this.form.id, payload as any).subscribe({
-        next: () => this.goList(),
+        next: () => {
+          this.notify.success('Prensa actualizada exitosamente.');
+          this.goList();
+        },
         error: (e) => {
           console.error(e);
           // Fallback fluido optimista
           this.items.update(list => list.map(item => item.id === this.form.id ? { ...item, ...payload } : item));
+          this.notify.success('Prensa actualizada exitosamente.');
           this.goList();
         }
       });
@@ -763,6 +771,7 @@ export class PrensasCatalogoComponent implements OnInit {
     if (!item) return;
     this.svc.deletePrensa(item.id).subscribe({
       next: () => {
+        this.notify.success('Prensa eliminada exitosamente.');
         this.showDeleteConfirm.set(false);
         this.itemToDelete.set(null);
         this.goList();
@@ -770,6 +779,7 @@ export class PrensasCatalogoComponent implements OnInit {
       error: (e) => {
         console.error(e);
         this.items.update(list => list.filter(i => i.id !== item.id));
+        this.notify.success('Prensa eliminada exitosamente.');
         this.showDeleteConfirm.set(false);
         this.itemToDelete.set(null);
         this.goList();

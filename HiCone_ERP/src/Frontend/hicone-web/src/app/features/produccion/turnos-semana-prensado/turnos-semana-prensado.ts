@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProduccionService, Prensa, Producto, Operario } from '../../../core/services/produccion';
+import { NotificationService } from '../../../core/services/notification.service';
 import { FormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
@@ -612,6 +613,7 @@ import { timer } from 'rxjs';
 export class TurnosSemanaPrensadoComponent implements OnInit {
   private prodService = inject(ProduccionService);
   private cdr = inject(ChangeDetectorRef);
+  private notify = inject(NotificationService);
   
   prensas: any[] = [];
   selectedTabIndex = 0;
@@ -795,7 +797,7 @@ export class TurnosSemanaPrensadoComponent implements OnInit {
 
   consultarTurnos(clearMsg: boolean = true) {
     if (!this.fechaInicio || !this.fechaFin) {
-      alert('Por favor especifique la Fecha de Inicio y Fecha Fin.');
+      this.notify.warning('Por favor especifique la Fecha de Inicio y Fecha Fin.');
       return;
     }
     this.loading = true;
@@ -819,7 +821,7 @@ export class TurnosSemanaPrensadoComponent implements OnInit {
       error: (err) => {
         this.loading = false;
         console.error('Error al consultar turnos de prensado:', err);
-        alert(err.error?.message || err.message || 'Ocurrió un error en el servidor.');
+        this.notify.error(err.error?.message || err.message || 'Ocurrió un error en el servidor.');
         this.cdr.detectChanges();
       }
     });
@@ -839,15 +841,15 @@ export class TurnosSemanaPrensadoComponent implements OnInit {
       }));
 
     if (batch.length === 0) {
-      alert('No hay registros modificables en este turno.');
+      this.notify.info('No hay registros modificables en este turno.');
       return;
     }
 
     this.prodService.guardarTurnosSemanaPrensado(batch).subscribe({
       next: (res: any) => {
-        const msg = res?.message || 'Información actualizada';
+        const msg = res?.message || 'Información actualizada exitosamente.';
         this.mensajeExito = msg;
-        alert(msg);
+        this.notify.success(msg);
         this.cdr.markForCheck();
         timer(5000).subscribe(() => {
           this.mensajeExito = '';
@@ -857,7 +859,7 @@ export class TurnosSemanaPrensadoComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al guardar programación:', err);
-        alert(err.error?.message || 'Error al guardar la programación de turno de prensado.');
+        this.notify.error(err.error?.message || 'Error al guardar la programación de turno de prensado.');
       }
     });
   }
@@ -866,7 +868,7 @@ export class TurnosSemanaPrensadoComponent implements OnInit {
   // Exportaciones
   exportarExcel() {
     if (this.resumen.length === 0) {
-      alert('No hay datos en la tabla para exportar.');
+      this.notify.warning('No hay datos en la tabla para exportar.');
       return;
     }
 
@@ -890,7 +892,7 @@ export class TurnosSemanaPrensadoComponent implements OnInit {
 
   exportarPDF() {
     if (this.resumen.length === 0) {
-      alert('No hay datos en la tabla para exportar.');
+      this.notify.warning('No hay datos en la tabla para exportar.');
       return;
     }
 
@@ -939,7 +941,7 @@ export class TurnosSemanaPrensadoComponent implements OnInit {
 
   exportarHTML() {
     if (this.resumen.length === 0) {
-      alert('No hay datos en la tabla para exportar.');
+      this.notify.warning('No hay datos en la tabla para exportar.');
       return;
     }
 
@@ -1033,7 +1035,7 @@ export class TurnosSemanaPrensadoComponent implements OnInit {
       printWindow.focus();
       printWindow.print();
     } else {
-      alert('El navegador bloqueó la ventana emergente de impresión.');
+      this.notify.warning('El navegador bloqueó la ventana emergente de impresión.');
     }
   }
 }

@@ -30,6 +30,7 @@ public class CatalogosController : ControllerBase
     // CATEGORÍAS
     // ─────────────────────────────────────────────────────────────────────────
 
+    [AllowAnonymous]
     [HttpGet("categorias")]
     public async Task<ActionResult<IEnumerable<object>>> GetCategorias([FromQuery] string? search = null)
     {
@@ -98,6 +99,7 @@ public class CatalogosController : ControllerBase
     // TURNOS
     // ─────────────────────────────────────────────────────────────────────────
 
+    [AllowAnonymous]
     [HttpGet("turnos")]
     public async Task<ActionResult<IEnumerable<object>>> GetTurnos()
     {
@@ -293,6 +295,7 @@ public class CatalogosController : ControllerBase
     // OPERARIOS
     // ─────────────────────────────────────────────────────────────────────────
 
+    [AllowAnonymous]
     [HttpGet("operarios")]
     public async Task<ActionResult<IEnumerable<Operario>>> GetOperariosCatalog([FromQuery] string? search = null)
     {
@@ -568,6 +571,7 @@ public class CatalogosController : ControllerBase
     // SILOS DE PRODUCCIÓN
     // ─────────────────────────────────────────────────────────────────────────
 
+    [AllowAnonymous]
     [HttpGet("silos")]
     public async Task<ActionResult<IEnumerable<object>>> GetSilos([FromQuery] bool? activo = null)
     {
