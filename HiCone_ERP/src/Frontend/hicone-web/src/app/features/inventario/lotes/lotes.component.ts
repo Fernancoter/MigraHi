@@ -482,27 +482,8 @@ import { NotificationService } from '../../../core/services/notification.service
     .btn-popover-reset { background: #4caf50 !important; color: white !important; border: none !important; width: 34px !important; height: 32px !important; border-radius: 4px !important; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem !important; }
     .btn-popover-reset:hover { background: #43a047 !important; }
     .btn-popover-apply { flex: 1; background: #4caf50 !important; color: white !important; border: none !important; padding: 6px 0 !important; border-radius: 4px !important; font-weight: bold !important; font-size: 0.85rem !important; cursor: pointer; text-align: center; }
-    .dropdown-container { position: relative; }
-    .export-dropdown {
-      position: absolute; top: 120%; left: 0; width: 200px; background: #ffffff;
-      border: 1px solid #ddd; border-radius: 8px; z-index: 1000; 
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15); padding: 0.6rem 0;
-      animation: slideIn 0.2s ease-out;
-    }
-    @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .btn-popover-apply:hover { background: #43a047 !important; }
 
-    .export-option {
-      padding: 1rem 1.5rem; cursor: pointer; display: block; font-size: 1.05rem; color: #2f3640;
-      transition: all 0.2s;
-    }
-    .export-option:hover { background: #f1f2f6; color: #5cb85c; padding-left: 1.8rem; }
-
-    .premium-grid { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #f0f0f0; border-radius: 12px; overflow: hidden; }
-    .premium-grid th { 
-      padding: 1.2rem 1rem; background: #f8f9fa; text-align: left; 
-      font-size: 0.95rem; font-weight: 700; color: #34495e; 
-      border-bottom: 2px solid #edf2f7; text-transform: uppercase; letter-spacing: 0.5px;
-    }
     /* Filtro Embudo & Buscador (IMAGEN 1 QA EXACTO) */
     .toolbar-right { display: flex; gap: 12px; align-items: center; }
     .btn-filter-funnel-qa { background: #ffffff; border: 1px solid #dcdde1; border-radius: 4px; padding: 0.4rem 0.6rem; height: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: background 0.2s; }
@@ -523,34 +504,6 @@ import { NotificationService } from '../../../core/services/notification.service
     .search-input-underline { border: none; background: transparent; outline: none; font-size: 0.88rem; color: #334155; width: 100%; padding: 2px 0; }
     .search-input-underline::placeholder { color: #94a3b8; font-weight: 400; }
 
-    .grid-row { transition: background 0.2s; }
-    .grid-row:hover { background: #f9fbf9 !important; }
-    .grid-row td { padding: 1.2rem 1rem; font-size: 1.05rem; color: #2c3e50; border-bottom: 1px solid #f0f0f0; }
-
-    .link-btn { 
-      background: none; border: none; color: #2e7d32; padding: 0.2rem 0.5rem; 
-      cursor: pointer; font-size: 0.95rem; font-weight: 600;
-      transition: color 0.2s;
-    }
-    .link-btn:hover { color: #1b5e20; text-decoration: underline; }
-    .link-btn.delete { color: #d9534f; }
-    .link-btn.delete:hover { color: #c9302c; }
-
-    .text-right { text-align: right; }
-    .text-center { text-align: center; }
-    .font-mono { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
-    .arrow { font-size: 0.8rem; margin-left: 0.6rem; transition: transform 0.3s; }
-    .dropdown-container:hover .arrow { transform: rotate(180deg); }
-
-    .alert-delete {
-      background: #fdf2f2; border: 1px solid #f8b4b4; color: #9b1c1c;
-      padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 1rem;
-      font-weight: 600;
-    }
-    .btn-danger:hover { background: #c9302c !important; }
-
-    /* Modal Legacy (Imagen 2) */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
     .legacy-card { background: white; width: 90%; max-width: 800px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 20px 40px rgba(0,0,0,0.2); overflow: hidden; }
     .modal-header-legacy { padding: 1.5rem 2rem; background: #fcfcfc; border-bottom: 1px solid #eee; color: #2c3e50; font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 1rem; }
     .modal-body-legacy { padding: 2.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
@@ -814,6 +767,7 @@ import { NotificationService } from '../../../core/services/notification.service
       cursor: not-allowed;
     }
 
+
     /* Premium Modals Tabs */
     .modal-tabs {
       display: flex; background: #f8fafc; border-bottom: 2px solid #edf2f7;
@@ -880,9 +834,77 @@ import { NotificationService } from '../../../core/services/notification.service
       border-color: #cbd5e1;
     }
     .card-meta {
-  savedFilters: { name: string, state: any }[] = [];
+      display: flex; justify-content: space-between; font-size: 0.85rem;
+      color: #94a3b8; margin-bottom: 0.6rem; font-weight: 600;
+    }
+    .meta-user { display: flex; align-items: center; gap: 0.3rem; }
+    .card-action-title {
+      font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;
+    }
+    .card-action-title.insert { color: #137333; }
+    .card-action-title.update { color: #1a73e8; }
+    .card-action-title.delete { color: #c5221f; }
+    .card-action-title.archive { color: #b06000; }
 
-  // Paginación
+    .changes-list {
+      display: flex; flex-direction: column; gap: 0.8rem; background: #f8fafc;
+      border-radius: 8px; padding: 1rem; border: 1px solid #edf2f7;
+    }
+    .change-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 0.5rem; border-bottom: 1px dashed #edf2f7;
+    }
+    .change-row:last-child { padding-bottom: 0; border-bottom: none; }
+    .change-field {
+      font-size: 0.95rem; font-weight: 700; color: #475569;
+    }
+    .change-values {
+      display: flex; align-items: center; gap: 0.6rem; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem; font-weight: 600;
+    }
+    .val-old {
+      color: #9b1c1c; background: #fde8e8; padding: 0.2rem 0.5rem; border-radius: 4px;
+    }
+    .val-new {
+      color: #137333; background: #e6f4ea; padding: 0.2rem 0.5rem; border-radius: 4px;
+    }
+    .action-details {
+      font-size: 0.95rem; color: #64748b; line-height: 1.5;
+    }
+    
+    @keyframes fadeInDropdown {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  `]
+})
+export class LotesComponent implements OnInit {
+  private inventarioService = inject(InventarioService);
+  private pdfService = inject(PdfExportService);
+  private notify = inject(NotificationService);
+  public cdr = inject(ChangeDetectorRef);
+
+  lotes: Lote[] = [];
+  silos: Silo[] = [];
+  selectedSilo: Silo | null = null;
+  searchQuery = '';
+  showModal = false;
+  showColumnSelector = false;
+  showExportSelector = false;
+  modalMode: 'ADD' | 'VIEW' | 'EDIT' | 'DELETE' = 'ADD';
+  activeTab: 'details' | 'audit' = 'details';
+  auditLogs: AuditLog[] = [];
+  loadingAudit = false;
+  newLote: Partial<Lote> = this.getDefaultLote();
+
+  // Filtros Avanzados (QA Parity)
+  filterSiloId = '';
+  filterDateStart = '';
+  filterDateEnd = '';
+  filterConsumido = 'all';
+
+  showSearchFilterDropdown = false;
+  savedFilters: { name: string, state: any }[] = [];
   currentPage = 1;
   pageSize = 10;
   
@@ -963,10 +985,6 @@ import { NotificationService } from '../../../core/services/notification.service
       loteTrunkNo: ''
     };
   }
-
-  activeTab: 'details' | 'audit' = 'details';
-  auditLogs: AuditLog[] = [];
-  loadingAudit = false;
 
   openModal(mode: 'ADD' | 'VIEW' | 'EDIT' | 'DELETE' = 'ADD', item: Lote | null = null) { 
     this.modalMode = mode;
@@ -1067,12 +1085,13 @@ import { NotificationService } from '../../../core/services/notification.service
 
     obs.subscribe({
       next: () => { 
+        this.notify.success('Lote guardado exitosamente.');
         this.loadData(); 
         this.closeModal(); 
       },
       error: (err) => {
         const errorMsg = err.error?.message || err.error || 'Error al guardar el lote';
-        alert('❌ ' + errorMsg);
+        this.notify.error(errorMsg);
       }
     });
   }
@@ -1081,10 +1100,11 @@ import { NotificationService } from '../../../core/services/notification.service
     if (this.newLote.id) {
       this.inventarioService.deleteLote(this.newLote.id).subscribe({
         next: () => {
+          this.notify.success('Lote eliminado exitosamente.');
           this.loadData();
           this.closeModal();
         },
-        error: (err) => alert('Error al eliminar: ' + err.message)
+        error: (err) => this.notify.error('Error al eliminar: ' + err.message)
       });
     }
   }
@@ -1255,7 +1275,7 @@ import { NotificationService } from '../../../core/services/notification.service
 
     this.savedFilters.push({ name: filterName, state: filterState });
     localStorage.setItem('loteSavedFilters', JSON.stringify(this.savedFilters));
-    alert(`El filtro "${filterName}" se ha guardado exitosamente.`);
+    this.notify.success(`El filtro "${filterName}" se ha guardado exitosamente.`);
     this.cdr.detectChanges();
   }
 
