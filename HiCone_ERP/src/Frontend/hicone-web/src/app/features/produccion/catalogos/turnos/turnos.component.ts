@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed, HostListener } from '@angu
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Turno } from '../../../../core/services/produccion-config.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-turnos-catalogo',
@@ -587,6 +588,7 @@ import { ProduccionConfigService, Turno } from '../../../../core/services/produc
 })
 export class TurnosCatalogoComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
+  private notify = inject(NotificationService);
 
   items    = signal<Turno[]>([]);
   claves = signal<{id: string, valor: string}[]>([]);
@@ -833,9 +835,9 @@ export class TurnosCatalogoComponent implements OnInit {
   }
 
   save() {
-    if (!this.form.nombre?.trim()) { alert('El campo Turno es requerido.'); return; }
-    if (!this.form.horaInicio)     { alert('Hora Inicio es requerida.'); return; }
-    if (!this.form.horaFin)        { alert('Hora Fin es requerida.'); return; }
+    if (!this.form.nombre?.trim()) { this.notify.warning('El campo Turno es requerido.'); return; }
+    if (!this.form.horaInicio)     { this.notify.warning('Hora Inicio es requerida.'); return; }
+    if (!this.form.horaFin)        { this.notify.warning('Hora Fin es requerida.'); return; }
 
     if (!this.form.id) {
       this.svc.createTurno({
@@ -845,8 +847,15 @@ export class TurnosCatalogoComponent implements OnInit {
         horaFin:    this.form.horaFin!,
         tenantId:   '00000000-0000-0000-0000-000000000001'
       }).subscribe({
-        next: () => { this.closeModal(); this.load(); },
-        error: (e) => { console.error('Error al crear turno:', e); alert('Error al guardar. Revise la consola.'); }
+        next: () => {
+          this.notify.success('Turno creado exitosamente.');
+          this.closeModal();
+          this.load();
+        },
+        error: (e) => {
+          console.error('Error al crear turno:', e);
+          this.notify.error('Error al guardar el turno.');
+        }
       });
     } else {
       this.svc.updateTurno(this.form.id, {
@@ -856,8 +865,15 @@ export class TurnosCatalogoComponent implements OnInit {
         horaFin:    this.form.horaFin!,
         tenantId:   '00000000-0000-0000-0000-000000000001'
       }).subscribe({
-        next: () => { this.closeModal(); this.load(); },
-        error: (e) => { console.error('Error al actualizar turno:', e); alert('Error al guardar. Revise la consola.'); }
+        next: () => {
+          this.notify.success('Turno actualizado exitosamente.');
+          this.closeModal();
+          this.load();
+        },
+        error: (e) => {
+          console.error('Error al actualizar turno:', e);
+          this.notify.error('Error al actualizar el turno.');
+        }
       });
     }
   }

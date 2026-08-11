@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Categoria } from '../../../../core/services/produccion-config.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-categorias-catalogo',
@@ -490,6 +491,7 @@ import { ProduccionConfigService, Categoria } from '../../../../core/services/pr
 })
 export class CategoriasComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
+  private notify = inject(NotificationService);
   
   items = signal<Categoria[]>([]);
   loading = signal(true);
@@ -635,7 +637,7 @@ export class CategoriasComponent implements OnInit {
 
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_categorias', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {
@@ -722,19 +724,27 @@ export class CategoriasComponent implements OnInit {
   /* ------------------- SAVE ------------------- */
   save() {
     if (!this.form.nombre || !this.form.nombre.trim()) {
-      alert('El campo Nombre es requerido.');
+      this.notify.warning('El campo Nombre es requerido.');
       return;
     }
     
     if (!this.form.id) {
-      this.svc.createCategoria(this.form).subscribe(() => {
-        this.closeModal();
-        this.load();
+      this.svc.createCategoria(this.form).subscribe({
+        next: () => {
+          this.notify.success('Categoría creada exitosamente.');
+          this.closeModal();
+          this.load();
+        },
+        error: () => this.notify.error('Error al crear la categoría.')
       });
     } else {
-      this.svc.updateCategoria(this.form.id, this.form).subscribe(() => {
-        this.closeModal();
-        this.load();
+      this.svc.updateCategoria(this.form.id, this.form).subscribe({
+        next: () => {
+          this.notify.success('Categoría actualizada exitosamente.');
+          this.closeModal();
+          this.load();
+        },
+        error: () => this.notify.error('Error al actualizar la categoría.')
       });
     }
   }

@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Troquel } from '../../../../core/services/produccion-config.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-troqueles-catalogo',
@@ -645,6 +646,7 @@ import { ProduccionConfigService, Troquel } from '../../../../core/services/prod
 })
 export class TroquelesCatalogoComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
+  private notify = inject(NotificationService);
 
   // Vistas: 'list' | 'edit' | 'detail'
   viewState = signal<'list' | 'edit' | 'detail'>('list');
@@ -902,7 +904,7 @@ export class TroquelesCatalogoComponent implements OnInit {
 
   saveForm() {
     if (!this.form.nombre?.trim()) {
-      alert('El campo Nombre es requerido.');
+      this.notify.warning('El campo Nombre es requerido.');
       return;
     }
 
@@ -916,21 +918,29 @@ export class TroquelesCatalogoComponent implements OnInit {
 
     if (!this.form.id) {
       this.svc.createTroquel(payload as any).subscribe({
-        next: () => this.goList(),
+        next: () => {
+          this.notify.success('Troquel creado exitosamente.');
+          this.goList();
+        },
         error: (e) => {
           console.error(e);
           // Fallback fluido optimista
           this.items.update(list => [...list, { id: `trq-${Date.now()}`, secuencialId: Math.floor(Math.random()*80)+10, codigo: payload.codigo, nombre: payload.nombre, estado: payload.estado, estadoNombre: payload.estado === 2 ? 'En Prensa' : 'Registrado', isActive: true }]);
+          this.notify.success('Troquel creado exitosamente.');
           this.goList();
         }
       });
     } else {
       this.svc.updateTroquel(this.form.id, payload as any).subscribe({
-        next: () => this.goList(),
+        next: () => {
+          this.notify.success('Troquel actualizado exitosamente.');
+          this.goList();
+        },
         error: (e) => {
           console.error(e);
           // Fallback fluido optimista
           this.items.update(list => list.map(item => item.id === this.form.id ? { ...item, nombre: payload.nombre, estado: payload.estado, estadoNombre: payload.estado === 2 ? 'En Prensa' : 'Registrado' } : item));
+          this.notify.success('Troquel actualizado exitosamente.');
           this.goList();
         }
       });

@@ -42,6 +42,9 @@ public interface IProduccionService
     Task<IEnumerable<Operario>> GetOperariosAsync();
     Task<IEnumerable<Producto>> GetProductosAsync();
     Task<IEnumerable<Turno>> GetTurnosAsync();
+    Task<IEnumerable<ExtrusoraMezcladora>> GetExtrusoraMezcladorasAsync();
+    Task<ExtrusoraMezcladora> SaveExtrusoraMezcladoraAsync(ExtrusoraMezcladora item);
+    Task<bool> DeleteExtrusoraMezcladoraAsync(Guid id);
     
     // ── Prensado (Carreras y Carretes) ─────────────────────────────────────
     Task<Prensado> IniciarPrensadoAsync(Guid prensaId, Guid operarioId, Guid turnoId, Guid productoId, Guid troquelId);

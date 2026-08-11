@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionService } from '../../../core/services/produccion';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-interrupciones-prensado-list',
@@ -337,6 +338,7 @@ import { ProduccionService } from '../../../core/services/produccion';
 })
 export class InterrupcionesListComponent implements OnInit {
   private svc = inject(ProduccionService);
+  private notify = inject(NotificationService);
 
   causas = signal<any[]>([]);
 
@@ -434,7 +436,7 @@ export class InterrupcionesListComponent implements OnInit {
   visualizar(item: any) {
     this.svc.getInterrupcionPrensado(item.id).subscribe({
       next: (detail) => this.viewingItem.set(detail),
-      error: (err) => { console.error(err); alert('No se pudo cargar el detalle de la interrupción.'); }
+      error: (err) => { console.error(err); this.notify.error('No se pudo cargar el detalle de la interrupción.'); }
     });
   }
   cerrarVisualizar() { this.viewingItem.set(null); }
@@ -450,7 +452,7 @@ export class InterrupcionesListComponent implements OnInit {
           horaFin: this.toLocalInput(detail.horaFin)
         });
       },
-      error: (err) => { console.error(err); alert('No se pudo cargar la interrupción para modificar.'); }
+      error: (err) => { console.error(err); this.notify.error('No se pudo cargar la interrupción para modificar.'); }
     });
   }
 
@@ -472,8 +474,17 @@ export class InterrupcionesListComponent implements OnInit {
     };
 
     this.svc.updateInterrupcionPrensado(this.editingId, request).subscribe({
-      next: () => { this.saving.set(false); this.cerrarModal(); this.load(); },
-      error: (err) => { this.saving.set(false); this.saveError.set(err?.error?.message || 'Ocurrió un error al guardar.'); }
+      next: () => {
+        this.saving.set(false);
+        this.notify.success('Interrupción actualizada exitosamente.');
+        this.cerrarModal();
+        this.load();
+      },
+      error: (err) => {
+        this.saving.set(false);
+        this.notify.error(err?.error?.message || 'Ocurrió un error al guardar.');
+        this.saveError.set(err?.error?.message || 'Ocurrió un error al guardar.');
+      }
     });
   }
 
@@ -485,8 +496,17 @@ export class InterrupcionesListComponent implements OnInit {
     if (!item) return;
     this.deleting.set(true);
     this.svc.deleteInterrupcionPrensado(item.id).subscribe({
-      next: () => { this.deleting.set(false); this.itemToDelete.set(null); this.load(); },
-      error: (err) => { this.deleting.set(false); console.error(err); alert('No se pudo eliminar la interrupción.'); }
+      next: () => {
+        this.deleting.set(false);
+        this.notify.success('Interrupción eliminada exitosamente.');
+        this.itemToDelete.set(null);
+        this.load();
+      },
+      error: (err) => {
+        this.deleting.set(false);
+        console.error(err);
+        this.notify.error('No se pudo eliminar la interrupción.');
+      }
     });
   }
 

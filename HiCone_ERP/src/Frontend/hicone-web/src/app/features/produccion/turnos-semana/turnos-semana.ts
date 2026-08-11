@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProduccionService, Extrusora, Producto, Operario } from '../../../core/services/produccion';
+import { NotificationService } from '../../../core/services/notification.service';
 import { FormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
@@ -673,6 +674,7 @@ import autoTable from 'jspdf-autotable';
 export class TurnosSemanaComponent implements OnInit {
   private prodService = inject(ProduccionService);
   private cdr = inject(ChangeDetectorRef);
+  private notify = inject(NotificationService);
   
   extrusoras: Extrusora[] = [];
   selectedTabIndex = 0;
@@ -809,7 +811,7 @@ export class TurnosSemanaComponent implements OnInit {
   // Consulta/Programación de turnos del backend
   consultarTurnos() {
     if (!this.fechaInicio || !this.fechaFin) {
-      alert('Por favor especifique la Fecha de Inicio y Fecha Fin.');
+      this.notify.warning('Por favor especifique la Fecha de Inicio y Fecha Fin.');
       return;
     }
     this.loading = true;
@@ -829,7 +831,7 @@ export class TurnosSemanaComponent implements OnInit {
       error: (err) => {
         this.loading = false;
         console.error('Error al consultar turnos semanales:', err);
-        alert(err.error?.message || err.message || 'Ocurrió un error en el servidor al generar la plantilla.');
+        this.notify.error(err.error?.message || err.message || 'Ocurrió un error en el servidor al generar la plantilla.');
         this.cdr.detectChanges();
       }
     });
@@ -848,19 +850,19 @@ export class TurnosSemanaComponent implements OnInit {
       }));
 
     if (batch.length === 0) {
-      alert('No hay registros modificables (en estado Programada) en este turno.');
+      this.notify.warning('No hay registros modificables (en estado Programada) en este turno.');
       return;
     }
 
     this.prodService.guardarTurnosSemana(batch).subscribe({
       next: () => {
-        alert('Programación de turno guardada con éxito.');
+        this.notify.success('Programación de turno guardada con éxito.');
         this.consultarTurnos(); // Recargar datos para recalcular resumen
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al guardar programación:', err);
-        alert(err.error?.message || 'Error al guardar la programación de turno.');
+        this.notify.error(err.error?.message || 'Error al guardar la programación de turno.');
         this.cdr.detectChanges();
       }
     });
@@ -870,7 +872,7 @@ export class TurnosSemanaComponent implements OnInit {
 
   exportarExcel() {
     if (this.resumen.length === 0) {
-      alert('No hay datos en la tabla para exportar.');
+      this.notify.warning('No hay datos en la tabla para exportar.');
       return;
     }
 
@@ -894,7 +896,7 @@ export class TurnosSemanaComponent implements OnInit {
 
   exportarPDF() {
     if (this.resumen.length === 0) {
-      alert('No hay datos en la tabla para exportar.');
+      this.notify.warning('No hay datos en la tabla para exportar.');
       return;
     }
 
@@ -953,7 +955,7 @@ export class TurnosSemanaComponent implements OnInit {
 
   exportarHTML() {
     if (this.resumen.length === 0) {
-      alert('No hay datos en la tabla para exportar.');
+      this.notify.warning('No hay datos en la tabla para exportar.');
       return;
     }
 
@@ -1049,7 +1051,7 @@ export class TurnosSemanaComponent implements OnInit {
       printWindow.focus();
       printWindow.print();
     } else {
-      alert('El navegador bloqueó la ventana emergente de impresión.');
+      this.notify.warning('El navegador bloqueó la ventana emergente de impresión.');
     }
   }
 }

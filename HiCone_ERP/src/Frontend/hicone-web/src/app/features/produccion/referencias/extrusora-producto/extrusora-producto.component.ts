@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
 import { environment } from '../../../../../environments/environment';
+import { NotificationService } from '../../../../core/services/notification.service';
 import * as XLSX from 'xlsx';
 
 export interface ExtrusoraProducto {
@@ -252,6 +253,7 @@ export interface Producto {
 export class ExtrusoraProductoComponent implements OnInit {
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
+  private notify = inject(NotificationService);
   private apiUrl = `${environment.apiUrl}/api/v1/produccion/referencias/extrusora-producto`;
   private catalogosUrl = `${environment.apiUrl}/api/v1/produccion/catalogos`; // URL genérica para extrusoras
 
@@ -390,7 +392,7 @@ export class ExtrusoraProductoComponent implements OnInit {
     };
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_ext_prod', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {
@@ -440,7 +442,7 @@ export class ExtrusoraProductoComponent implements OnInit {
 
   saveModal() {
     if (!this.form.extrusoraId || !this.form.productoNombre) {
-      alert("Por favor complete todos los campos obligatorios.");
+      this.notify.warning("Por favor complete todos los campos obligatorios.");
       return;
     }
     this.isSaving = true;
@@ -448,24 +450,26 @@ export class ExtrusoraProductoComponent implements OnInit {
     if (this.isEditing && this.form.id) {
       this.http.put(`${this.apiUrl}/${this.form.id}`, this.form).subscribe({
         next: () => {
+          this.notify.success('Registro actualizado con éxito.');
           this.loadData();
           this.closeModal();
         },
         error: (err) => {
           console.error('Error actualizando:', err);
-          alert('Error al actualizar el registro. Por favor revise los datos e intente de nuevo.');
+          this.notify.error('Error al actualizar el registro. Por favor revise los datos e intente de nuevo.');
           this.isSaving = false;
         }
       });
     } else {
       this.http.post(this.apiUrl, this.form).subscribe({
         next: () => {
+          this.notify.success('Registro creado con éxito.');
           this.loadData();
           this.closeModal();
         },
         error: (err) => {
           console.error('Error creando:', err);
-          alert('Error al crear el registro. Verifique que la API esté respondiendo correctamente.');
+          this.notify.error('Error al crear el registro. Verifique que la API esté respondiendo correctamente.');
           this.isSaving = false;
         }
       });
@@ -476,8 +480,14 @@ export class ExtrusoraProductoComponent implements OnInit {
     if (!item.id) return;
     if (confirm(`¿Estás seguro de eliminar el producto '${item.productoNombre}'?`)) {
       this.http.delete(`${this.apiUrl}/${item.id}`).subscribe({
-        next: () => this.loadData(),
-        error: (err) => console.error('Error eliminando:', err)
+        next: () => {
+          this.notify.success('Registro eliminado con éxito.');
+          this.loadData();
+        },
+        error: (err) => {
+          console.error('Error eliminando:', err);
+          this.notify.error('Error al eliminar el registro.');
+        }
       });
     }
   }

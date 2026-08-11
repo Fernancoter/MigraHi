@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InventarioService } from '../../../core/services/inventario';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-existencias',
@@ -114,6 +115,7 @@ export class ExistenciasComponent implements OnInit {
   private router = inject(Router);
   private inventarioService = inject(InventarioService);
   private cdr = inject(ChangeDetectorRef);
+  private notify = inject(NotificationService);
   
   existenciaId: string = '';
   fechaHora: string = '';
@@ -207,10 +209,10 @@ export class ExistenciasComponent implements OnInit {
       }));
       this.inventarioService.updateExistenciasSilos(ajustes).subscribe({
         next: () => {
-          alert('Inventario de silos guardado correctamente.');
+          this.notify.success('Inventario de silos guardado correctamente.');
           this.cargarExistencias();
         },
-        error: (err) => alert('Error al guardar existencias de silos: ' + err.message)
+        error: (err) => this.notify.error('Error al guardar existencias de silos: ' + err.message)
       });
     } else {
       const inventory = this.activeTab === 'bobinas' ? this.bobinasInventory : this.palletsInventory;
@@ -225,10 +227,10 @@ export class ExistenciasComponent implements OnInit {
       }));
       this.inventarioService.guardarExistenciaProducto(items).subscribe({
         next: () => {
-          alert(`Inventario de ${this.activeTab} guardado correctamente.`);
+          this.notify.success(`Inventario de ${this.activeTab} guardado correctamente.`);
           this.cargarExistencias();
         },
-        error: (err) => alert(`Error al guardar existencias de ${this.activeTab}: ` + err.message)
+        error: (err) => this.notify.error(`Error al guardar existencias de ${this.activeTab}: ` + err.message)
       });
     }
   }

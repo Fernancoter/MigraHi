@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, HostListener, computed } from '@angu
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, PrensadoProgramacion, PrensadoOperacion } from '../../../core/services/produccion-config.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -655,6 +656,7 @@ import autoTable from 'jspdf-autotable';
 })
 export class InicioPrensadoComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
+  private notify = inject(NotificationService);
 
   loading = signal(false);
 
@@ -943,12 +945,13 @@ export class InicioPrensadoComponent implements OnInit {
     };
     this.svc.updatePrensado(p.id, body).subscribe({
       next: () => {
+        this.notify.success('Orden de prensado guardada exitosamente.');
         this.closePrensadoModal();
         this.loadPrensado();
       },
       error: err => {
         console.error('Error al guardar prensado:', err);
-        alert('Error al guardar los cambios.');
+        this.notify.error('Error al guardar los cambios.');
       }
     });
   }
@@ -968,12 +971,13 @@ export class InicioPrensadoComponent implements OnInit {
     if (!id) return;
     this.svc.deletePrensado(id).subscribe({
       next: () => {
+        this.notify.success('Orden de prensado eliminada exitosamente.');
         this.closeDeleteConfirmPrensado();
         this.loadPrensado();
       },
       error: err => {
         console.error('Error al eliminar:', err);
-        alert('Error al eliminar el registro.');
+        this.notify.error('Error al eliminar el registro.');
       }
     });
   }

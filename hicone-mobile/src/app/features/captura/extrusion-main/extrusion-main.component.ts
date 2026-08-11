@@ -54,6 +54,13 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   errorMessage = '';
   successMessage = '';
 
+  // Menú Intermedio (HICONE_SDExtrusionIntermedia)
+  mostrarMenuIntermedio = false;
+  mostrarListaBobinasModal = false;
+
+  // Modal Bobina
+  mostrarModalBobina = false;
+
   // Modal Cierre
   mostrarModalCierre = false;
   cierreObservaciones = '';
@@ -208,6 +215,85 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
       error: (err: any) => {
         this.saving = false;
         this.mostrarMensaje('Error: ' + (err.error?.message || err.message || 'Error al guardar bobina'), true);
+      }
+    });
+  }
+
+  abrirMenuIntermedio() {
+    if (!this.extrusionActiva) {
+      this.abrirWizard();
+      return;
+    }
+    this.mostrarMenuIntermedio = true;
+  }
+
+  cerrarMenuIntermedio() {
+    this.mostrarMenuIntermedio = false;
+  }
+
+  opcionRegistrarBobina() {
+    this.cerrarMenuIntermedio();
+    this.abrirModalBobina();
+  }
+
+  opcionConfigurarMezcla() {
+    this.cerrarMenuIntermedio();
+    this.abrirModalConsumo();
+  }
+
+  opcionVerBobinas() {
+    this.cerrarMenuIntermedio();
+    this.mostrarListaBobinasModal = true;
+  }
+
+  opcionCerrarOrden() {
+    this.cerrarMenuIntermedio();
+    this.abrirCierre();
+  }
+
+  abrirModalBobina() {
+    this.nuevaBobina.calibre = this.extrusionActiva?.calibre || 15;
+    this.mostrarModalBobina = true;
+  }
+
+  cerrarModalBobina() {
+    this.mostrarModalBobina = false;
+  }
+
+  guardarBobinaCompleta() {
+    if (this.nuevaBobina.peso <= 0) {
+      this.mostrarMensaje('Ingrese un peso válido mayor a 0 Kg.', true);
+      return;
+    }
+    this.saving = true;
+
+    const request = {
+      extrusionId: this.extrusionActiva.id,
+      bobinaNo: this.siguienteBobinaNo,
+      origen: this.nuevaBobina.origen,
+      peso: this.nuevaBobina.peso,
+      calibre: this.nuevaBobina.calibre,
+      desviacion: this.nuevaBobina.desviacion,
+      color: this.nuevaBobina.color,
+      mermaKg: this.nuevaBobina.enviarMolino ? this.nuevaBobina.mermaKg : 0,
+      motivo: this.nuevaBobina.enviarMolino ? this.nuevaBobina.motivo : 0,
+      observaciones: this.nuevaBobina.observaciones || 'Registrado desde PWA móvil'
+    };
+
+    this.produccionService.guardarBobina(request).subscribe({
+      next: () => {
+        this.saving = false;
+        this.cerrarModalBobina();
+        this.mostrarMensaje('¡Bobina registrada exitosamente!');
+        this.nuevaBobina.peso = 0;
+        this.nuevaBobina.observaciones = '';
+        this.actualizarInformacionOrden();
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        this.saving = false;
+        this.mostrarMensaje('Error al registrar bobina: ' + (err.error?.message || err.message), true);
+        this.cdr.detectChanges();
       }
     });
   }

@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionService } from '../../../core/services/produccion';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-carreras-list',
@@ -359,6 +360,7 @@ import { ProduccionService } from '../../../core/services/produccion';
 })
 export class CarrerasListComponent implements OnInit {
   private svc = inject(ProduccionService);
+  private notify = inject(NotificationService);
 
   viewingItem = signal<any | null>(null);
   editForm = signal<any | null>(null);
@@ -483,7 +485,7 @@ export class CarrerasListComponent implements OnInit {
   visualizar(item: any) {
     this.svc.getCarrera(item.id).subscribe({
       next: (detail) => this.viewingItem.set(detail),
-      error: (err) => { console.error(err); alert('No se pudo cargar el detalle de la carrera.'); }
+      error: (err) => { console.error(err); this.notify.error('No se pudo cargar el detalle de la carrera.'); }
     });
   }
   cerrarVisualizar() { this.viewingItem.set(null); }
@@ -492,7 +494,7 @@ export class CarrerasListComponent implements OnInit {
     this.saveError.set('');
     this.svc.getCarrera(item.id).subscribe({
       next: (detail) => { this.editingId = detail.id; this.editForm.set({ ...detail }); },
-      error: (err) => { console.error(err); alert('No se pudo cargar la carrera para modificar.'); }
+      error: (err) => { console.error(err); this.notify.error('No se pudo cargar la carrera para modificar.'); }
     });
   }
 
@@ -513,8 +515,17 @@ export class CarrerasListComponent implements OnInit {
     };
 
     this.svc.updateCarrera(this.editingId, request).subscribe({
-      next: () => { this.saving.set(false); this.cerrarModal(); this.load(); },
-      error: (err: any) => { this.saving.set(false); this.saveError.set(err?.error?.message || 'Ocurrió un error al guardar.'); }
+      next: () => {
+        this.saving.set(false);
+        this.notify.success('Carrera actualizada exitosamente.');
+        this.cerrarModal();
+        this.load();
+      },
+      error: (err: any) => {
+        this.saving.set(false);
+        this.notify.error(err?.error?.message || 'Ocurrió un error al guardar.');
+        this.saveError.set(err?.error?.message || 'Ocurrió un error al guardar.');
+      }
     });
   }
 
@@ -527,8 +538,17 @@ export class CarrerasListComponent implements OnInit {
     this.deleting.set(true);
     const deleteObs = (this.svc as any).deleteCarrera ? (this.svc as any).deleteCarrera(item.id) : (this.svc as any).deleteCarrete(item.id);
     deleteObs.subscribe({
-      next: () => { this.deleting.set(false); this.itemToDelete.set(null); this.load(); },
-      error: (err: any) => { this.deleting.set(false); console.error(err); alert('No se pudo eliminar la carrera.'); }
+      next: () => {
+        this.deleting.set(false);
+        this.notify.success('Carrera eliminada exitosamente.');
+        this.itemToDelete.set(null);
+        this.load();
+      },
+      error: (err: any) => {
+        this.deleting.set(false);
+        console.error(err);
+        this.notify.error('No se pudo eliminar la carrera.');
+      }
     });
   }
 
@@ -553,7 +573,7 @@ export class CarrerasListComponent implements OnInit {
     };
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_carreras', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {

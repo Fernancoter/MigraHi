@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Extrusora, ExtrusoraOperarioRow, Operario, Turno } from '../../../core/services/produccion-config.service';
 import { InventarioService, AuditLog } from '../../../core/services/inventario';
+import { NotificationService } from '../../../core/services/notification.service';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -515,6 +516,7 @@ export class ExtrusorasListComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
   private auditSvc = inject(InventarioService);
   private cdr = inject(ChangeDetectorRef);
+  private notify = inject(NotificationService);
 
   // Estados de Vista
   viewState: 'list' | 'add' | 'edit' | 'view' = 'list';
@@ -674,7 +676,7 @@ export class ExtrusorasListComponent implements OnInit {
     };
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_extr_list', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {
@@ -827,11 +829,11 @@ export class ExtrusorasListComponent implements OnInit {
   // Guardar (Confirmar)
   save() {
     if (!this.form.nombre?.trim()) {
-      alert('El nombre de la extrusora es requerido.');
+      this.notify.warning('El nombre de la extrusora es requerido.');
       return;
     }
     if (!this.form.numeroExtrusora?.trim()) {
-      alert('El número de extrusora es requerido.');
+      this.notify.warning('El número de extrusora es requerido.');
       return;
     }
 
@@ -845,21 +847,23 @@ export class ExtrusorasListComponent implements OnInit {
     if (this.viewState === 'add') {
       this.svc.createExtrusora(dto).subscribe({
         next: (id: string) => {
+          this.notify.success('Extrusora creada con éxito.');
           this.saveOperariosBatch(id);
         },
         error: e => {
           console.error(e);
-          alert('Error al guardar la extrusora.');
+          this.notify.error('Error al guardar la extrusora.');
         }
       });
     } else {
       this.svc.updateExtrusora(this.form.id!, dto).subscribe({
         next: () => {
+          this.notify.success('Extrusora actualizada con éxito.');
           this.saveOperariosBatch(this.form.id!);
         },
         error: e => {
           console.error(e);
-          alert('Error al actualizar la extrusora.');
+          this.notify.error('Error al actualizar la extrusora.');
         }
       });
     }
@@ -881,7 +885,7 @@ export class ExtrusorasListComponent implements OnInit {
       },
       error: e => {
         console.error(e);
-        alert('Se guardó la extrusora pero ocurrió un error al guardar los operadores por turno.');
+        this.notify.warning('Se guardó la extrusora pero ocurrió un error al guardar los operadores por turno.');
         this.goToList();
       }
     });
@@ -904,6 +908,7 @@ export class ExtrusorasListComponent implements OnInit {
     if (!this.itemAEliminar) return;
     this.svc.deleteExtrusora(this.itemAEliminar.id).subscribe({
       next: () => {
+        this.notify.success('Extrusora eliminada con éxito.');
         this.mostrarConfirmarEliminar = false;
         this.itemAEliminar = null;
         this.loadData();
@@ -912,7 +917,7 @@ export class ExtrusorasListComponent implements OnInit {
       },
       error: e => {
         console.error(e);
-        alert('Error al eliminar la extrusora.');
+        this.notify.error('Error al eliminar la extrusora.');
         this.mostrarConfirmarEliminar = false;
         this.itemAEliminar = null;
         this.cdr.detectChanges();

@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Silo } from '../../../../core/services/produccion-config.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -365,6 +366,7 @@ import * as XLSX from 'xlsx';
 })
 export class SilosCatalogoComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
+  private notify = inject(NotificationService);
   
   items = signal<Silo[]>([]);
   loading = signal(true);
@@ -517,7 +519,7 @@ export class SilosCatalogoComponent implements OnInit {
 
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_silos_prod', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {
@@ -602,28 +604,40 @@ export class SilosCatalogoComponent implements OnInit {
 
   save() {
     if (!this.form.nombre || !this.form.nombre.trim()) {
-      alert('El campo Nombre es requerido.');
+      this.notify.warning('El campo Nombre es requerido.');
       return;
     }
     
     if (!this.form.id) {
-      this.svc.createSilo(this.form).subscribe(() => {
-        this.closeModal();
-        this.load();
+      this.svc.createSilo(this.form).subscribe({
+        next: () => {
+          this.notify.success('Silo creado exitosamente.');
+          this.closeModal();
+          this.load();
+        },
+        error: () => this.notify.error('Error al crear el silo.')
       });
     } else {
-      this.svc.updateSilo(this.form.id, this.form).subscribe(() => {
-        this.closeModal();
-        this.load();
+      this.svc.updateSilo(this.form.id, this.form).subscribe({
+        next: () => {
+          this.notify.success('Silo actualizado exitosamente.');
+          this.closeModal();
+          this.load();
+        },
+        error: () => this.notify.error('Error al actualizar el silo.')
       });
     }
   }
 
   del(item: Silo) {
     if (confirm(`¿Está seguro de que desea eliminar el silo "${item.nombre}" permanentemente?`)) {
-      this.svc.deleteSilo(item.id).subscribe(() => {
-        this.load();
-        if (this.currentPage() > this.totalPages()) this.currentPage.set(this.totalPages());
+      this.svc.deleteSilo(item.id).subscribe({
+        next: () => {
+          this.notify.success('Silo eliminado exitosamente.');
+          this.load();
+          if (this.currentPage() > this.totalPages()) this.currentPage.set(this.totalPages());
+        },
+        error: () => this.notify.error('Error al eliminar el silo.')
       });
     }
   }

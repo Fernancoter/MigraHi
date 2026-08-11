@@ -1,7 +1,9 @@
-import { Component, signal, computed, OnInit } from '@angular/core';
+import { Component, signal, computed, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
+import { ProduccionService } from '../../../../core/services/produccion';
+import { NotificationService } from '../../../../core/services/notification.service';
 import * as XLSX from 'xlsx';
 
 export interface ExtrusoraMezcladora {
@@ -315,22 +317,53 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
   isViewing = false;
   form: ExtrusoraMezcladora = this.getEmptyForm();
 
+  private produccionService = inject(ProduccionService);
+  private notify = inject(NotificationService);
+
   ngOnInit() {
     this.loadSavedFiltersFromStorage();
-    // La data será proveída por la API o cargada dinámicamente.
-    this.items.set([]);
+
+    // 1. Cargar cache local inmediato
+    const cached = localStorage.getItem('hicone_extrusora_mezcladoras_cache');
+    if (cached) {
+      try {
+        this.items.set(JSON.parse(cached));
+      } catch (e) {}
+    }
+
+    // 2. Consultar API backend
+    this.produccionService.getExtrusoraMezcladoras().subscribe({
+      next: (data: any[]) => {
+        if (data && data.length > 0) {
+          const mapped: ExtrusoraMezcladora[] = data.map(d => ({
+            id: d.id,
+            extrusoraId: d.extrusoraId || '3',
+            extrusora: d.extrusora?.nombre || d.nombre || 'Extrusora 3',
+            virgenMin: d.virgenMin ?? 50,
+            virgenMax: d.virgenMax ?? 100,
+            molidoMin: d.molidoMin ?? 0,
+            molidoMax: d.molidoMax ?? 50,
+            kgVirgen: d.kgVirgen ?? 80,
+            kgMolido: d.kgMolido ?? 20
+          }));
+          this.items.set(mapped);
+          localStorage.setItem('hicone_extrusora_mezcladoras_cache', JSON.stringify(mapped));
+        }
+      },
+      error: (err) => console.error('Error al cargar extrusoras mezcladoras:', err)
+    });
   }
 
   getEmptyForm(): ExtrusoraMezcladora {
     return {
-      extrusoraId: '0',
-      extrusora: '',
-      virgenMin: 0.00,
-      virgenMax: 0.00,
+      extrusoraId: '3',
+      extrusora: 'Extrusora 3',
+      virgenMin: 50.00,
+      virgenMax: 100.00,
       molidoMin: 0.00,
-      molidoMax: 0.00,
-      kgVirgen: 0.00,
-      kgMolido: 0.00
+      molidoMax: 50.00,
+      kgVirgen: 80.00,
+      kgMolido: 20.00
     };
   }
 
@@ -377,7 +410,7 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
 
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_ext_mezc', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {
@@ -416,19 +449,44 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
   }
 
   saveModal() {
-    // Si estamos editando y tiene ID
+    let updatedList: ExtrusoraMezcladora[] = [];
     if (this.form.id) {
       const current = this.items();
       const index = current.findIndex(x => x.id === this.form.id);
       if (index !== -1) {
         current[index] = { ...this.form };
-        this.items.set([...current]);
+        updatedList = [...current];
+      } else {
+        updatedList = [this.form, ...current];
       }
     } else {
-      // Es un registro nuevo
       const newItem = { ...this.form, id: Date.now().toString() };
-      this.items.set([newItem, ...this.items()]);
+      updatedList = [newItem, ...this.items()];
     }
+
+    this.items.set(updatedList);
+    localStorage.setItem('hicone_extrusora_mezcladoras_cache', JSON.stringify(updatedList));
+
+    const apiPayload = {
+      id: (this.form.id && !this.form.id.includes('-') && this.form.id.length > 10) ? this.form.id : null,
+      nombre: this.form.extrusora || 'Mezcladora Extrusora 3',
+      virgenMin: this.form.virgenMin,
+      virgenMax: this.form.virgenMax,
+      molidoMin: this.form.molidoMin,
+      molidoMax: this.form.molidoMax,
+      kgVirgen: this.form.kgVirgen,
+      kgMolido: this.form.kgMolido
+    };
+    this.produccionService.saveExtrusoraMezcladora(apiPayload).subscribe({
+      next: () => {
+        this.notify.success('Extrusora mezcladora guardada exitosamente.');
+      },
+      error: (err) => {
+        console.error('Error guardando ExtrusoraMezcladora:', err);
+        this.notify.error('Error al guardar la extrusora mezcladora.');
+      }
+    });
+
     this.closeModal();
   }
 
@@ -436,6 +494,15 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
     if (confirm(`¿Estás seguro de eliminar el registro de ${item.extrusora}?`)) {
       const current = this.items().filter(x => x.id !== item.id);
       this.items.set(current);
+      localStorage.setItem('hicone_extrusora_mezcladoras_cache', JSON.stringify(current));
+      this.notify.success('Registro eliminado exitosamente.');
+
+      if (item.id && !item.id.includes('-') && item.id.length > 10) {
+        this.produccionService.deleteExtrusoraMezcladora(item.id).subscribe({
+          next: () => console.log('ExtrusoraMezcladora eliminada en DB'),
+          error: (err) => console.error('Error eliminando ExtrusoraMezcladora:', err)
+        });
+      }
     }
   }
 

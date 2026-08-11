@@ -447,6 +447,49 @@ public class ProduccionService : IProduccionService
         return await _context.Turnos.Where(t => t.IsActive && !t.IsDeleted).ToListAsync();
     }
 
+    public async Task<IEnumerable<ExtrusoraMezcladora>> GetExtrusoraMezcladorasAsync()
+    {
+        return await _context.ExtrusoraMezcladoras
+            .Include(m => m.Extrusora)
+            .Where(m => m.IsActive && !m.IsDeleted)
+            .ToListAsync();
+    }
+
+    public async Task<ExtrusoraMezcladora> SaveExtrusoraMezcladoraAsync(ExtrusoraMezcladora item)
+    {
+        var existing = await _context.ExtrusoraMezcladoras.FirstOrDefaultAsync(m => m.Id == item.Id || (item.ExtrusoraId != Guid.Empty && m.ExtrusoraId == item.ExtrusoraId));
+        if (existing != null)
+        {
+            if (!string.IsNullOrEmpty(item.Nombre)) existing.Nombre = item.Nombre;
+            if (!string.IsNullOrEmpty(item.Codigo)) existing.Codigo = item.Codigo;
+            existing.VirgenMin = item.VirgenMin;
+            existing.VirgenMax = item.VirgenMax;
+            existing.MolidoMin = item.MolidoMin;
+            existing.MolidoMax = item.MolidoMax;
+            existing.KgVirgen = item.KgVirgen;
+            existing.KgMolido = item.KgMolido;
+            existing.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync(default);
+            return existing;
+        }
+
+        if (item.Id == Guid.Empty) item.Id = Guid.NewGuid();
+        item.CreatedAt = DateTime.UtcNow;
+        item.IsActive = true;
+        _context.ExtrusoraMezcladoras.Add(item);
+        await _context.SaveChangesAsync(default);
+        return item;
+    }
+
+    public async Task<bool> DeleteExtrusoraMezcladoraAsync(Guid id)
+    {
+        var item = await _context.ExtrusoraMezcladoras.FindAsync(id);
+        if (item == null) return false;
+        item.IsDeleted = true;
+        item.DeletedAt = DateTime.UtcNow;
+        return await _context.SaveChangesAsync(default) > 0;
+    }
+
     // ── Prensado ───────────────────────────────────────────────────────────
 
     public async Task<Prensado> IniciarPrensadoAsync(Guid prensaId, Guid operarioId, Guid turnoId, Guid productoId, Guid troquelId)

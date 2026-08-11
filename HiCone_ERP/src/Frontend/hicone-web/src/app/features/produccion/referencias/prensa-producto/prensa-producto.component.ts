@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
 import { ProduccionService } from '../../../../core/services/produccion';
+import { NotificationService } from '../../../../core/services/notification.service';
 import * as XLSX from 'xlsx';
 
 export interface PrensaProducto {
@@ -299,6 +300,7 @@ export interface PrensaProducto {
 })
 export class PrensaProductoComponent implements OnInit {
   private svc = inject(ProduccionService);
+  private notify = inject(NotificationService);
 
   searchText = signal<string>('');
   currentPage = signal<number>(1);
@@ -411,8 +413,8 @@ export class PrensaProductoComponent implements OnInit {
       state: { searchText: this.searchText() }
     };
     this.savedFilters.push(newFilter);
-    localStorage.setItem('hicone_saved_filters_prensa_prod', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    localStorage.setItem('hicone_saved_filters_prensa_producto', JSON.stringify(this.savedFilters));
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {
@@ -451,7 +453,7 @@ export class PrensaProductoComponent implements OnInit {
 
   saveModal() {
     if (!this.form.id && !this.form.prensaId) {
-      alert('Selecciona una prensa.');
+      this.notify.warning('Selecciona una prensa.');
       return;
     }
 
@@ -464,13 +466,21 @@ export class PrensaProductoComponent implements OnInit {
 
     if (this.form.id) {
       this.svc.updatePrensaProducto(this.form.id, request).subscribe({
-        next: () => { this.closeModal(); this.loadData(); },
-        error: (err) => { console.error(err); alert('No se pudo guardar el cambio.'); }
+        next: () => {
+          this.notify.success('Registro de prensa producto actualizado exitosamente.');
+          this.closeModal();
+          this.loadData();
+        },
+        error: (err) => { console.error(err); this.notify.error('No se pudo guardar el cambio.'); }
       });
     } else {
       this.svc.createPrensaProducto(request).subscribe({
-        next: () => { this.closeModal(); this.loadData(); },
-        error: (err) => { console.error(err); alert('No se pudo crear el registro.'); }
+        next: () => {
+          this.notify.success('Registro de prensa producto creado exitosamente.');
+          this.closeModal();
+          this.loadData();
+        },
+        error: (err) => { console.error(err); this.notify.error('No se pudo crear el registro.'); }
       });
     }
   }
@@ -479,8 +489,11 @@ export class PrensaProductoComponent implements OnInit {
     if (!item.id) return;
     if (confirm(`¿Estás seguro de eliminar el registro de la prensa ${item.prensa}?`)) {
       this.svc.deletePrensaProducto(item.id).subscribe({
-        next: () => this.loadData(),
-        error: (err) => { console.error(err); alert('No se pudo eliminar el registro.'); }
+        next: () => {
+          this.notify.success('Registro eliminado exitosamente.');
+          this.loadData();
+        },
+        error: (err) => { console.error(err); this.notify.error('No se pudo eliminar el registro.'); }
       });
     }
   }

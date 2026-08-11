@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProduccionService, Bobina } from '../../../core/services/produccion';
+import { NotificationService } from '../../../core/services/notification.service';
 import { FormsModule } from '@angular/forms';
 
 interface ColumnConfig {
@@ -985,6 +986,7 @@ interface ColumnConfig {
 export class BobinasListComponent implements OnInit {
   private prodService = inject(ProduccionService);
   private cdr = inject(ChangeDetectorRef);
+  private notify = inject(NotificationService);
   
   bobinas: (Bobina & { selected?: boolean })[] = [];
   filteredBobinas: (Bobina & { selected?: boolean })[] = [];
@@ -1136,7 +1138,7 @@ export class BobinasListComponent implements OnInit {
   obtenerInterrupcion() {
     this.prodService.llenadoBobinaInterrupcion().subscribe({
       next: (res) => {
-        alert(`Se han asignado ${res.asignadas || 0} interrupciones a bobinas recientes.`);
+        this.notify.info(`Se han asignado ${res.asignadas || 0} interrupciones a bobinas recientes.`);
       },
       error: (err) => console.error('Error al obtener interrupción:', err)
     });
@@ -1252,7 +1254,7 @@ export class BobinasListComponent implements OnInit {
 
   imprimirEtiqueta(b: any) {
     this.activeRowId = null;
-    alert(`Imprimiendo etiqueta para la bobina ${b.noSerie || b.id}...`);
+    this.notify.info(`Imprimiendo etiqueta para la bobina ${b.noSerie || b.id}...`);
   }
 
   // Helpers
@@ -1381,7 +1383,7 @@ export class BobinasListComponent implements OnInit {
 
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_bobinas', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {

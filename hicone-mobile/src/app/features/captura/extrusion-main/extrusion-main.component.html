@@ -37,7 +37,7 @@
          CUADRO DE INFORMACIÓN DE ORDEN (Imagen 2)
          Se muestra de inmediato; las celdas muestran skeleton si aún carga
          ================================================================ -->
-    <div class="orden-info-card" (click)="abrirModalConsumo()" role="button">
+    <div class="orden-info-card" (click)="abrirMenuIntermedio()" role="button" style="cursor: pointer; position: relative;">
 
       <div class="orden-row">
         <div class="orden-cell">
@@ -100,6 +100,10 @@
             {{ (extrusionActiva?.calibre && extrusionActiva.calibre > 0 ? extrusionActiva.calibre : 15) + ' mm' }}
           </span>
         </div>
+      </div>
+
+      <div class="card-hint" *ngIf="!cargandoOrden && extrusionActiva" style="margin-top: 0.75rem; text-align: center; color: #38bdf8; font-weight: 600; font-size: 0.85rem; background: rgba(56, 189, 248, 0.1); padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.2);">
+        <span>⚡ Toca para abrir Menú de Acciones (Bobina, Mezcla, Cierre) ➔</span>
       </div>
 
       <div class="card-hint" *ngIf="!cargandoOrden && !extrusionActiva">
@@ -243,6 +247,145 @@
     <div style="display: flex; justify-content: flex-end;">
       <button (click)="mostrarAlertaMezcladora = false" style="background: transparent; color: #52c41a; border: none; font-weight: bold; font-size: 0.9rem; cursor: pointer; padding: 0.5rem 1rem;">
         ACEPTAR
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     MODAL REGISTRAR BOBINA / PESAJE (Con Folio QR)
+     ================================================================ -->
+<div class="modal-overlay" *ngIf="mostrarModalBobina" (click)="cerrarModalBobina()">
+  <div class="modal-card" (click)="$event.stopPropagation()" style="max-width: 480px; background: #0f172a; border: 1px solid #1e293b;">
+    <div class="modal-header" style="border-bottom: 1px solid #334155; padding-bottom: 0.75rem;">
+      <h3 style="margin: 0; color: #f8fafc; font-size: 1.1rem; font-weight: 700;">📦 Registrar Nueva Bobina</h3>
+      <button class="close-btn-x" (click)="cerrarModalBobina()">✕</button>
+    </div>
+
+    <div class="modal-body" style="padding-top: 1rem;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+        <div class="cfield">
+          <label class="cfield-label" style="color: #94a3b8;">Bobina No.</label>
+          <input type="text" [value]="siguienteBobinaNo" readonly class="cfield-input text-right" style="background:#1e293b; color:#38bdf8; font-weight: 700;" />
+        </div>
+
+        <div class="cfield">
+          <label class="cfield-label" style="color: #94a3b8;">Origen Estación</label>
+          <select [(ngModel)]="nuevaBobina.origen" class="cfield-select" style="background: #1e293b; color: #f8fafc;">
+            <option value="A">Origen A</option>
+            <option value="B">Origen B</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+        <div class="cfield">
+          <label class="cfield-label" style="color: #94a3b8;">Peso Real (Kg) *</label>
+          <input type="number" [(ngModel)]="nuevaBobina.peso" class="cfield-input text-right" placeholder="0.00" style="font-size: 1.1rem; font-weight: 700; color: #22c55e; background: #1e293b;" />
+        </div>
+
+        <div class="cfield">
+          <label class="cfield-label" style="color: #94a3b8;">Calibre (mm)</label>
+          <input type="number" [(ngModel)]="nuevaBobina.calibre" class="cfield-input text-right" placeholder="15" style="background: #1e293b; color: #f8fafc;" />
+        </div>
+      </div>
+
+      <div class="cfield" style="margin-bottom: 1rem;">
+        <label class="cfield-label" style="color: #94a3b8;">Previsualización Folio de Serie QR</label>
+        <div style="background: #1e293b; padding: 0.6rem; border-radius: 6px; color: #38bdf8; font-family: monospace; font-size: 0.95rem; font-weight: 700; text-align: center; border: 1px dashed #334155;">
+          B-EXT3-{{ siguienteBobinaNo }}{{ nuevaBobina.origen }}
+        </div>
+      </div>
+
+      <div class="cfield" style="margin-bottom: 1rem;">
+        <label class="cfield-label" style="color: #94a3b8;">Observaciones / Notas</label>
+        <input type="text" [(ngModel)]="nuevaBobina.observaciones" class="cfield-input" placeholder="Opcional..." style="background: #1e293b; color: #f8fafc;" />
+      </div>
+    </div>
+
+    <div class="modal-footer" style="display: flex; gap: 0.75rem; margin-top: 1rem; border-top: 1px solid #334155; padding-top: 1rem;">
+      <button (click)="guardarBobinaCompleta()" [disabled]="saving" style="flex: 1; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; font-weight: 700; border: none; border-radius: 8px; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); padding: 0.75rem 1rem; font-size: 0.9rem; cursor: pointer;">
+        <span *ngIf="!saving">REGISTRAR Y GENERAR QR</span>
+        <span *ngIf="saving">GUARDANDO...</span>
+      </button>
+      <button (click)="cerrarModalBobina()" style="background: #334155; color: #94a3b8; border: 1px solid #475569; border-radius: 8px; font-weight: 600; padding: 0.75rem 1.25rem; font-size: 0.9rem; cursor: pointer;">
+        CANCELAR
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     MODAL MENÚ INTERMEDIO DE ACCIONES (HICONE_SDExtrusionIntermedia)
+     ================================================================ -->
+<div class="modal-overlay" *ngIf="mostrarMenuIntermedio" (click)="cerrarMenuIntermedio()">
+  <div class="modal-card" (click)="$event.stopPropagation()" style="max-width: 440px; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 1.25rem;">
+    <div class="modal-header" style="border-bottom: 1px solid #334155; padding-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="margin: 0; color: #f8fafc; font-size: 1.1rem; font-weight: 700;">⚡ Acciones de Extrusión</h3>
+      <button class="close-btn-x" (click)="cerrarMenuIntermedio()" style="background: none; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✕</button>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.25rem;">
+      <button (click)="opcionRegistrarBobina()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; font-weight: 700; border: none; border-radius: 10px; padding: 0.9rem 1rem; font-size: 0.95rem; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+        <span>📦 Registrar Nueva Bobina</span>
+        <span>➔</span>
+      </button>
+
+      <button (click)="opcionConfigurarMezcla()" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #38bdf8; font-weight: 700; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 10px; padding: 0.9rem 1rem; font-size: 0.95rem; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between;">
+        <span>⚙️ Configurar Mezcla y Silos</span>
+        <span>➔</span>
+      </button>
+
+      <button (click)="opcionVerBobinas()" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #f8fafc; font-weight: 700; border: 1px solid #334155; border-radius: 10px; padding: 0.9rem 1rem; font-size: 0.95rem; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between;">
+        <span>📋 Ver Bobinas del Turno ({{ bobinasExtrusion.length }})</span>
+        <span>➔</span>
+      </button>
+
+      <button (click)="opcionCerrarOrden()" style="background: linear-gradient(135deg, #334155 0%, #1e293b 100%); color: #f59e0b; font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 10px; padding: 0.9rem 1rem; font-size: 0.95rem; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between;">
+        <span>🏁 Consolidar y Cerrar Turno</span>
+        <span>➔</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     MODAL LISTA DE BOBINAS DEL TURNO
+     ================================================================ -->
+<div class="modal-overlay" *ngIf="mostrarListaBobinasModal" (click)="mostrarListaBobinasModal = false">
+  <div class="modal-card" (click)="$event.stopPropagation()" style="max-width: 500px; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 1.25rem;">
+    <div class="modal-header" style="border-bottom: 1px solid #334155; padding-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="margin: 0; color: #f8fafc; font-size: 1.1rem; font-weight: 700;">📦 Bobinas Registradas</h3>
+      <button class="close-btn-x" (click)="mostrarListaBobinasModal = false" style="background: none; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✕</button>
+    </div>
+
+    <div style="margin-top: 1rem; max-height: 350px; overflow-y: auto;">
+      <div *ngIf="bobinasExtrusion.length === 0" style="text-align: center; color: #64748b; padding: 2rem 0; font-size: 0.9rem;">
+        No hay bobinas registradas aún en esta orden.
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.6rem;" *ngIf="bobinasExtrusion.length > 0">
+        <div *ngFor="let b of bobinasExtrusion" style="background: #1e293b; padding: 0.85rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #10b981;">
+          <div>
+            <div style="font-weight: 700; color: #f8fafc; font-size: 0.95rem;">
+              {{ b.noSerie || ('B-EXT3-' + b.bobinaNo + b.bobinaOrigen) }}
+            </div>
+            <div style="font-size: 0.82rem; color: #94a3b8; margin-top: 0.2rem;">
+              Peso: <strong style="color: #38bdf8;">{{ b.kg }} Kg</strong> | Calibre: {{ b.espesor }} mm | Origen: {{ b.bobinaOrigen }}
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <span style="background: #064e3b; color: #34d399; padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600;">
+              {{ b.estado === 'Molido' ? 'Molino' : 'En Reposo' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer" style="margin-top: 1rem; border-top: 1px solid #334155; padding-top: 1rem; text-align: right;">
+      <button (click)="mostrarListaBobinasModal = false" style="background: #334155; color: #f8fafc; border: none; border-radius: 6px; font-weight: 600; padding: 0.6rem 1.2rem; font-size: 0.9rem; cursor: pointer;">
+        CERRAR
       </button>
     </div>
   </div>

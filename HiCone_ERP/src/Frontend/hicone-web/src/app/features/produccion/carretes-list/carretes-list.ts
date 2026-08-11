@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionService } from '../../../core/services/produccion';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-carretes-list',
@@ -372,6 +373,7 @@ import { ProduccionService } from '../../../core/services/produccion';
 })
 export class CarretesListComponent implements OnInit {
   private svc = inject(ProduccionService);
+  private notify = inject(NotificationService);
 
   viewingItem = signal<any | null>(null);
   editForm = signal<any | null>(null);
@@ -503,7 +505,7 @@ export class CarretesListComponent implements OnInit {
   visualizar(item: any) {
     this.svc.getCarrete(item.id).subscribe({
       next: (detail) => this.viewingItem.set(detail),
-      error: (err) => { console.error(err); alert('No se pudo cargar el detalle del carrete.'); }
+      error: (err) => { console.error(err); this.notify.error('No se pudo cargar el detalle del carrete.'); }
     });
   }
   cerrarVisualizar() { this.viewingItem.set(null); }
@@ -512,7 +514,7 @@ export class CarretesListComponent implements OnInit {
     this.saveError.set('');
     this.svc.getCarrete(item.id).subscribe({
       next: (detail) => { this.editingId = detail.id; this.editForm.set({ ...detail }); },
-      error: (err) => { console.error(err); alert('No se pudo cargar el carrete para modificar.'); }
+      error: (err) => { console.error(err); this.notify.error('No se pudo cargar el carrete para modificar.'); }
     });
   }
 
@@ -535,8 +537,17 @@ export class CarretesListComponent implements OnInit {
     };
 
     this.svc.updateCarrete(this.editingId, request).subscribe({
-      next: () => { this.saving.set(false); this.cerrarModal(); this.load(); },
-      error: (err) => { this.saving.set(false); this.saveError.set(err?.error?.message || 'Ocurrió un error al guardar.'); }
+      next: () => {
+        this.saving.set(false);
+        this.notify.success('Carrete actualizado exitosamente.');
+        this.cerrarModal();
+        this.load();
+      },
+      error: (err) => {
+        this.saving.set(false);
+        this.notify.error(err?.error?.message || 'Ocurrió un error al guardar.');
+        this.saveError.set(err?.error?.message || 'Ocurrió un error al guardar.');
+      }
     });
   }
 
@@ -548,8 +559,17 @@ export class CarretesListComponent implements OnInit {
     if (!item) return;
     this.deleting.set(true);
     this.svc.deleteCarrete(item.id).subscribe({
-      next: () => { this.deleting.set(false); this.itemToDelete.set(null); this.load(); },
-      error: (err) => { this.deleting.set(false); console.error(err); alert('No se pudo eliminar el carrete.'); }
+      next: () => {
+        this.deleting.set(false);
+        this.notify.success('Carrete eliminado exitosamente.');
+        this.itemToDelete.set(null);
+        this.load();
+      },
+      error: (err) => {
+        this.deleting.set(false);
+        console.error(err);
+        this.notify.error('No se pudo eliminar el carrete.');
+      }
     });
   }
 
@@ -574,7 +594,7 @@ export class CarretesListComponent implements OnInit {
     };
     this.savedFilters.push(newFilter);
     localStorage.setItem('hicone_saved_filters_carretes', JSON.stringify(this.savedFilters));
-    alert('Filtro guardado con éxito.');
+    this.notify.success('Filtro guardado con éxito.');
   }
 
   loadSavedFilter(f: any) {

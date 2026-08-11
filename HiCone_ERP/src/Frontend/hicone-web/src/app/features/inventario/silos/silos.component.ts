@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InventarioService, Silo, AuditLog } from '../../../core/services/inventario';
 import { PdfExportService } from '../../../core/services/pdf-export.service';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-silos',
@@ -588,45 +589,6 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
     .search-input-underline { border: none; background: transparent; outline: none; font-size: 0.88rem; color: #334155; width: 100%; padding: 2px 0; }
     .search-input-underline::placeholder { color: #94a3b8; font-weight: 400; }
 
-    .module-page { padding: 3rem; background: #fdfdfd; min-height: 100vh; font-family: 'Open Sans', Arial, sans-serif; position: relative; }
-    .page-header-premium { margin-bottom: 3rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 1.5rem; }
-    .premium-title { font-size: 2.2rem; color: #2c3e50; margin: 0; font-weight: 700; letter-spacing: -0.5px; }
-    .breadcrumb-modern { font-size: 1rem; color: #7f8c8d; margin-top: 0.5rem; }
-    
-    .toolbar-premium { 
-      display: flex; justify-content: space-between; align-items: center; 
-      margin-top: 2rem; gap: 1rem; flex-wrap: wrap;
-    }
-    .btn-group-modern { display: flex; gap: 1.2rem; align-items: center; }
-    
-    .btn-legacy {
-      padding: 0.8rem 1.6rem; border-radius: 8px; font-size: 1.1rem; cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #dcdde1; 
-      background: #fff; color: #2f3640; font-weight: 600;
-      display: flex; align-items: center; gap: 0.5rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    .btn-legacy:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-      border-color: #5cb85c;
-    }
-    .btn-legacy:active { transform: translateY(0); }
-    .btn-legacy.primary { background: #5cb85c; color: white; border-color: #4cae4c; }
-    .btn-legacy.primary:hover { background: #449d44; }
-    
-    .btn-quick-xls {
-      background: white; border: 1px solid #2e7d32; color: #2e7d32;
-      padding: 0.8rem 1.2rem; border-radius: 8px; font-size: 1.1rem; cursor: pointer;
-      font-weight: 600; display: flex; align-items: center; gap: 0.4rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s;
-    }
-    .btn-quick-xls:hover {
-      background: #e8f5e9; transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(46,125,50,0.1);
-    }
-    
-    .dropdown-container { position: relative; }
     .export-dropdown {
       position: absolute; top: 120%; left: 0; width: 200px; background: #ffffff;
       border: 1px solid #ddd; border-radius: 8px; z-index: 1000; 
@@ -1047,10 +1009,12 @@ import { PdfExportService } from '../../../core/services/pdf-export.service';
       from { opacity: 0; transform: translateY(5px); }
       to { opacity: 1; transform: translateY(0); }
     }
-  `] })
+  `] 
+})
 export class SilosComponent implements OnInit {
   private inventarioService = inject(InventarioService);
   private pdfService = inject(PdfExportService);
+  private notify = inject(NotificationService);
   public cdr = inject(ChangeDetectorRef);
   
   searchQuery = '';
@@ -1099,8 +1063,35 @@ export class SilosComponent implements OnInit {
   uniqueEstados: string[] = [];
   uniqueTipos: string[] = [];
 
+  newSilo: Partial<Silo> = this.getDefaultSilo();
+
+  columns = [
+    { id: 'nombre', label: 'Nombre', visible: true },
+    { id: 'capacidad', label: 'Capacidad (kg)', visible: true },
+    { id: 'minimo', label: 'Mínimo (kg)', visible: true },
+    { id: 'maximo', label: 'Máximo (kg)', visible: true },
+    { id: 'estadoMat', label: 'Estado de Material', visible: true },
+    { id: 'tipoMat', label: 'Tipo de Material', visible: true },
+    { id: 'activo', label: 'Silo Activo', visible: true }
+  ];
+
+  ngOnInit() {
+    this.loadSilos();
+    this.loadFiltersFromStorage();
+  }
+
+  loadSilos() {
+    this.inventarioService.getSilos().subscribe({
+      next: (data) => {
+        this.silos = data;
+        this.updateUniqueFilters();
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error al cargar silos:', err)
+    });
+  }
+
   updateUniqueFilters() {
-    // 1. Unique Names
     const nameCounts: { [key: string]: number } = {};
     this.silos.forEach(s => {
       if (s.nombre) {
@@ -1113,14 +1104,12 @@ export class SilosComponent implements OnInit {
     }));
     this.filterNamesList();
 
-    // 2. Unique Estados
     const estadoSet = new Set<string>();
     this.silos.forEach(s => {
       if (s.estadoMaterial) estadoSet.add(s.estadoMaterial);
     });
     this.uniqueEstados = estadoSet.size > 0 ? Array.from(estadoSet) : ['Virgen (pelet)', 'Molido'];
 
-    // 3. Unique Tipos
     const tipoSet = new Set<string>();
     this.silos.forEach(s => {
       if (s.tipoMaterial) tipoSet.add(s.tipoMaterial);
@@ -1182,7 +1171,7 @@ export class SilosComponent implements OnInit {
     event.stopPropagation();
     this.showSearchFilterDropdown = !this.showSearchFilterDropdown;
     if (this.showSearchFilterDropdown) {
-      this.activeDropdown = null; // close other column dropdowns
+      this.activeDropdown = null;
     }
   }
 
@@ -1195,6 +1184,12 @@ export class SilosComponent implements OnInit {
     this.showSearchFilterDropdown = false;
     const filterName = prompt('Ingrese un nombre para guardar el filtro activo:', 'Filtro Silos ' + new Date().toLocaleDateString());
     if (!filterName) return;
+
+    this.saveFilterPreset(filterName);
+  }
+
+  saveFilterPreset(filterName: string) {
+    if (!filterName.trim()) return;
 
     const filterState = {
       tipoMaterial: this.filterTipoMaterial,
@@ -1219,7 +1214,7 @@ export class SilosComponent implements OnInit {
 
     this.savedFilters.push({ name: filterName, state: filterState });
     localStorage.setItem('siloSavedFilters', JSON.stringify(this.savedFilters));
-    alert(`El filtro "${filterName}" se ha guardado exitosamente.`);
+    this.notify.success(`El filtro "${filterName}" se ha guardado exitosamente.`);
     this.cdr.detectChanges();
   }
 
@@ -1292,34 +1287,6 @@ export class SilosComponent implements OnInit {
   applyNumericFilter() {
     this.activeDropdown = null;
     this.cdr.detectChanges();
-  }
-
-  newSilo: Partial<Silo> = this.getDefaultSilo();
-
-  columns = [
-    { id: 'nombre', label: 'Nombre', visible: true },
-    { id: 'capacidad', label: 'Capacidad (kg)', visible: true },
-    { id: 'minimo', label: 'Mínimo (kg)', visible: true },
-    { id: 'maximo', label: 'Máximo (kg)', visible: true },
-    { id: 'estadoMat', label: 'Estado de Material', visible: true },
-    { id: 'tipoMat', label: 'Tipo de Material', visible: true },
-    { id: 'activo', label: 'Silo Activo', visible: true }
-  ];
-
-  ngOnInit() {
-    this.loadSilos();
-    this.loadFiltersFromStorage();
-  }
-
-  loadSilos() {
-    this.inventarioService.getSilos().subscribe({
-      next: (data) => {
-        this.silos = data;
-        this.updateUniqueFilters();
-        this.cdr.detectChanges();
-      },
-      error: (err) => console.error('Error al cargar silos:', err)
-    });
   }
 
   getDefaultSilo(): Partial<Silo> {
@@ -1428,10 +1395,11 @@ export class SilosComponent implements OnInit {
     if (!this.newSilo.id || this.consumoKilos <= 0 || !this.consumoMotivo) return;
     this.inventarioService.registrarConsumoSilo(this.newSilo.id, this.consumoKilos, this.consumoMotivo).subscribe({
       next: () => {
+        this.notify.success('Consumo registrado correctamente.');
         this.loadSilos();
         this.closeModal();
       },
-      error: (err) => alert('Error al registrar consumo: ' + err?.error?.message || err.message)
+      error: (err) => this.notify.error('Error al registrar consumo: ' + (err?.error?.message || err.message))
     });
   }
 
@@ -1444,10 +1412,11 @@ export class SilosComponent implements OnInit {
 
     obs.subscribe({
       next: () => { 
+        this.notify.success('Silo guardado exitosamente.');
         this.loadSilos(); 
         this.closeModal(); 
       },
-      error: (err) => alert('Error: ' + err.message)
+      error: (err) => this.notify.error('Error: ' + err.message)
     });
   }
 
@@ -1455,10 +1424,11 @@ export class SilosComponent implements OnInit {
     if (this.newSilo.id) {
       this.inventarioService.deleteSilo(this.newSilo.id).subscribe({
         next: () => {
+          this.notify.success('Silo eliminado exitosamente.');
           this.loadSilos();
           this.closeModal();
         },
-        error: (err) => alert('Error al eliminar: ' + err.message)
+        error: (err) => this.notify.error('Error al eliminar: ' + err.message)
       });
     }
   }
@@ -1480,7 +1450,6 @@ export class SilosComponent implements OnInit {
     }
   }
 
-  // Lógica del Selector de Columnas
   toggleColumnSelector(event?: Event) {
     event?.stopPropagation();
     this.showColumnSelector = !this.showColumnSelector;

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProduccionService, Extrusion, CausaInterrupcion } from '../../../core/services/produccion';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-extrusion-inicio',
@@ -706,6 +707,7 @@ export class ExtrusionInicioComponent implements OnInit {
   private prodService = inject(ProduccionService);
   private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
+  private notify = inject(NotificationService);
 
   showTableroDirectivo = false;
   allExtrusiones: any[] = [];
@@ -1010,7 +1012,7 @@ export class ExtrusionInicioComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar datos para edición:', err);
-        alert('No se pudo cargar el registro para modificar.');
+        this.notify.error('No se pudo cargar el registro para modificar.');
         this.loadingDetalle = false;
         this.cdr.detectChanges();
       }
@@ -1043,7 +1045,7 @@ export class ExtrusionInicioComponent implements OnInit {
       this.operacion = this.allExtrusiones.filter(e => e.estado === 'EnProceso' || e.estado === 'Detenida');
       this.programados = this.allExtrusiones.filter(e => e.estado !== 'EnProceso' && e.estado !== 'Detenida');
       this.cdr.detectChanges();
-      alert('Registro realizado con éxito.');
+      this.notify.success('Registro realizado con éxito.');
       return;
     }
 
@@ -1074,11 +1076,11 @@ export class ExtrusionInicioComponent implements OnInit {
       next: () => {
         this.cerrarModales();
         this.cargarExtrusiones();
-        alert('Registro realizado con éxito.');
+        this.notify.success('Registro realizado con éxito.');
       },
       error: (err) => {
         console.error('Error al guardar cambios:', err);
-        alert(err.error?.message || 'Error del servidor al actualizar el registro.');
+        this.notify.error(err.error?.message || 'Error del servidor al actualizar el registro.');
         this.savingEdicion = false;
         this.cdr.detectChanges();
       }
@@ -1112,18 +1114,18 @@ export class ExtrusionInicioComponent implements OnInit {
         this.operacion = this.allExtrusiones.filter(e => e.estado === 'EnProceso' || e.estado === 'Detenida' || Number(e.estado) === 2);
         this.programados = this.allExtrusiones.filter(e => e.estado !== 'EnProceso' && e.estado !== 'Detenida' && Number(e.estado) !== 2);
         this.cdr.detectChanges();
-        alert('Orden de extrusión eliminada.');
+        this.notify.success('Orden de extrusión eliminada.');
         return;
       }
 
       this.prodService.deleteExtrusion(ex.id).subscribe({
         next: () => {
-          alert('Orden de extrusión eliminada.');
+          this.notify.success('Orden de extrusión eliminada.');
           this.cargarExtrusiones();
         },
         error: (err) => {
           console.error('Error al eliminar orden de extrusión:', err);
-          alert(err.error?.message || 'No se pudo eliminar la orden de extrusión.');
+          this.notify.error(err.error?.message || 'No se pudo eliminar la orden de extrusión.');
           this.cdr.detectChanges();
         }
       });
@@ -1132,11 +1134,11 @@ export class ExtrusionInicioComponent implements OnInit {
 
 
   ver(ex: any) {
-    alert(`Visualizar detalle de extrusión ID: ${ex.id}`);
+    this.notify.info(`Visualizar detalle de extrusión ID: ${ex.id}`);
   }
 
   imprimir(ex: any) {
-    alert(`Imprimiendo registro de extrusión ID: ${ex.id}`);
+    this.notify.info(`Imprimiendo registro de extrusión ID: ${ex.id}`);
   }
 
   abrirInterrupcion(ext: Extrusion) {
@@ -1162,7 +1164,7 @@ export class ExtrusionInicioComponent implements OnInit {
   confirmarRegistrarInterrupcion() {
     if (!this.extrusionSeleccionada) return;
     if (!this.interrupcion.causaId) {
-      alert('Debe seleccionar una causa de interrupción.');
+      this.notify.warning('Debe seleccionar una causa de interrupción.');
       return;
     }
 
@@ -1174,12 +1176,13 @@ export class ExtrusionInicioComponent implements OnInit {
 
     this.prodService.registrarInterrupcionExtrusion(req).subscribe({
       next: () => {
+        this.notify.success('Interrupción registrada exitosamente.');
         this.cargarExtrusiones();
         this.cerrarModalInterrupcion();
       },
       error: (err) => {
         console.error('Error al registrar interrupción:', err);
-        alert(err.error?.message || 'Error del servidor al registrar interrupción.');
+        this.notify.error(err.error?.message || 'Error del servidor al registrar interrupción.');
         this.cdr.detectChanges();
       }
     });
@@ -1190,12 +1193,13 @@ export class ExtrusionInicioComponent implements OnInit {
 
     this.prodService.finalizarInterrupcionExtrusionActiva(this.extrusionSeleccionada.id).subscribe({
       next: () => {
+        this.notify.success('Interrupción finalizada exitosamente.');
         this.cargarExtrusiones();
         this.cerrarModalInterrupcion();
       },
       error: (err) => {
         console.error('Error al finalizar interrupción:', err);
-        alert(err.error?.message || 'Error del servidor al finalizar interrupción.');
+        this.notify.error(err.error?.message || 'Error del servidor al finalizar interrupción.');
         this.cdr.detectChanges();
       }
     });

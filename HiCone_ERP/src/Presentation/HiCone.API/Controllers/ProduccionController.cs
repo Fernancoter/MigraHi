@@ -189,9 +189,26 @@ public class ProduccionController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("extrusion/activa/{extrusoraId}")]
-    public async Task<ActionResult<Extrusion>> GetExtrusionActiva(Guid extrusoraId)
+    public async Task<ActionResult<Extrusion>> GetExtrusionActiva(string extrusoraId)
     {
-        var result = await _produccionService.GetExtrusionActivaAsync(extrusoraId);
+        Guid targetId = Guid.Empty;
+        if (Guid.TryParse(extrusoraId, out var g))
+        {
+            targetId = g;
+        }
+        else
+        {
+            var ext = await _context.Extrusoras.FirstOrDefaultAsync(e => e.Nombre.Contains(extrusoraId) || e.NumeroExtrusora == extrusoraId || e.Codigo == extrusoraId);
+            if (ext != null) targetId = ext.Id;
+        }
+
+        if (targetId == Guid.Empty)
+        {
+            var firstExt = await _context.Extrusoras.FirstOrDefaultAsync();
+            if (firstExt != null) targetId = firstExt.Id;
+        }
+
+        var result = await _produccionService.GetExtrusionActivaAsync(targetId);
         if (result == null) return NotFound(new { message = "No hay extrusión activa para esta extrusora." });
         return Ok(result);
     }
@@ -204,6 +221,31 @@ public class ProduccionController : ControllerBase
         return Ok(result);
     }
 
+    [AllowAnonymous]
+    [HttpGet("extrusora-mezcladora")]
+    public async Task<ActionResult<IEnumerable<ExtrusoraMezcladora>>> GetExtrusoraMezcladoras()
+    {
+        var result = await _produccionService.GetExtrusoraMezcladorasAsync();
+        return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("extrusora-mezcladora")]
+    public async Task<ActionResult<ExtrusoraMezcladora>> SaveExtrusoraMezcladora([FromBody] ExtrusoraMezcladora item)
+    {
+        var result = await _produccionService.SaveExtrusoraMezcladoraAsync(item);
+        return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpDelete("extrusora-mezcladora/{id}")]
+    public async Task<IActionResult> DeleteExtrusoraMezcladora(Guid id)
+    {
+        var result = await _produccionService.DeleteExtrusoraMezcladoraAsync(id);
+        return result ? Ok() : NotFound();
+    }
+
+    [AllowAnonymous]
     [HttpGet("operarios")]
     public async Task<ActionResult<IEnumerable<Operario>>> GetOperarios()
     {
@@ -604,6 +646,7 @@ public class ProduccionController : ControllerBase
 
     // ── Dashboards y Estado ────────────────────────────────────────────────
 
+    [AllowAnonymous]
     [HttpGet("disponibilidad/bobinas")]
     public async Task<ActionResult<IEnumerable<Bobina>>> GetBobinasDisponibles()
         => Ok(await _produccionService.GetBobinasDisponiblesParaPrensadoAsync());
@@ -828,12 +871,14 @@ public class ProduccionController : ControllerBase
 
     // ── Historial de Extrusiones ───────────────────────────────────────────
 
+    [AllowAnonymous]
     [HttpGet("extrusiones/historial")]
     public async Task<ActionResult<IEnumerable<Extrusion>>> GetHistorialExtrusiones(
         [FromQuery] DateTime? desde, [FromQuery] DateTime? hasta,
         [FromQuery] Guid? extrusoraId, [FromQuery] Guid? productoId)
         => Ok(await _produccionService.GetHistorialExtrusionesAsync(desde, hasta, extrusoraId, productoId));
 
+    [AllowAnonymous]
     [HttpGet("extrusiones")]
     public async Task<ActionResult<IEnumerable<object>>> GetExtrusiones()
         => Ok(await _produccionService.GetExtrusionesAsync());
@@ -863,6 +908,7 @@ public class ProduccionController : ControllerBase
 
     // ── Turnos Por Semana Prensado ─────────────────────────────────────────
 
+    [AllowAnonymous]
     [HttpGet("prensado/turnos-semana")]
     public async Task<IActionResult> GetTurnosSemanaPrensas([FromQuery] DateTime fechaInicio, [FromQuery] DateTime fechaFin)
     {
@@ -940,6 +986,7 @@ public class ProduccionController : ControllerBase
         return Ok(items);
     }
 
+    [AllowAnonymous]
     [HttpGet("prensado/operacion")]
     public async Task<ActionResult<IEnumerable<object>>> GetPrensadoOperacion()
     {
@@ -1068,6 +1115,7 @@ public class ProduccionController : ControllerBase
         return NoContent();
     }
 
+    [AllowAnonymous]
     [HttpGet("prensados")]
     public async Task<ActionResult<IEnumerable<Prensado>>> GetPrensados()
         => Ok(await _produccionService.GetPrensadosAsync());
@@ -1505,6 +1553,7 @@ public class ProduccionController : ControllerBase
     public async Task<ActionResult<IEnumerable<ExtrusoraProducto>>> GetExtrusoraProductos()
         => Ok(await _produccionService.GetExtrusoraProductosAsync());
 
+    [AllowAnonymous]
     [HttpGet("extrusion/turnos-semana")]
     public async Task<ActionResult<TurnosSemanaResponseDto>> GetTurnosSemana([FromQuery] string fechaInicio, [FromQuery] string fechaFin)
     {

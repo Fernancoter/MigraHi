@@ -4,13 +4,15 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HeaderComponent } from '../header/header.component';
+import { ToastContainerComponent } from '../toast-container/toast-container.component';
 import { NavigationService } from '../../core/services/navigation.service';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, SidebarComponent, HeaderComponent],
+  imports: [CommonModule, RouterModule, FormsModule, SidebarComponent, HeaderComponent, ToastContainerComponent],
   template: `
+    <app-toast-container></app-toast-container>
     <div class="layout-container" (click)="onDocumentClick()">
       <app-header></app-header>
       
