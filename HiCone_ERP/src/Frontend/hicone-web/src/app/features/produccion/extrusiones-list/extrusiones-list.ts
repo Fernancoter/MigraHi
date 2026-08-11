@@ -1175,7 +1175,7 @@ import { ColumnFilterComponent } from '../../../shared/components/column-filter.
         </div>
       </div>
     </div>
-    </div>
+  </div>
   `,
   styles: [`
     .module-page { padding: 3rem; background: #f8fafc; min-height: 100%; font-family: 'Outfit', sans-serif; }

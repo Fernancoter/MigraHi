@@ -289,6 +289,64 @@ public class CatalogosController : ControllerBase
         return NoContent();
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // OPERARIOS
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [HttpGet("operarios")]
+    public async Task<ActionResult<IEnumerable<Operario>>> GetOperariosCatalog([FromQuery] string? search = null)
+    {
+        var query = _context.Operarios.Where(o => !o.IsDeleted).AsQueryable();
+        if (!string.IsNullOrWhiteSpace(search))
+            query = query.Where(o => o.NombreCompleto.Contains(search) || o.NumeroEmpleado.Contains(search));
+
+        var items = await query.OrderBy(o => o.NombreCompleto).ToListAsync();
+        return Ok(items);
+    }
+
+    [HttpPost("operarios")]
+    public async Task<ActionResult<Operario>> CreateOperarioCatalog([FromBody] OperarioCreateCatalogDto dto)
+    {
+        var count = await _context.Operarios.CountAsync();
+        var operario = new Operario
+        {
+            Id = Guid.NewGuid(),
+            NumeroEmpleado = !string.IsNullOrWhiteSpace(dto.NumeroEmpleado) ? dto.NumeroEmpleado : $"EMP-{(count + 1):D3}",
+            NombreCompleto = dto.Nombre ?? dto.NombreCompleto ?? "Nuevo Operario",
+            IsActive = dto.Activo ?? dto.IsActive ?? true
+        };
+        _context.Operarios.Add(operario);
+        await _context.SaveChangesAsync(default);
+        return Ok(operario);
+    }
+
+    [HttpPut("operarios/{id}")]
+    public async Task<IActionResult> UpdateOperarioCatalog(Guid id, [FromBody] OperarioCreateCatalogDto dto)
+    {
+        var item = await _context.Operarios.FindAsync(id);
+        if (item == null) return NotFound();
+
+        if (!string.IsNullOrWhiteSpace(dto.Nombre) || !string.IsNullOrWhiteSpace(dto.NombreCompleto))
+            item.NombreCompleto = dto.Nombre ?? dto.NombreCompleto!;
+
+        if (dto.Activo.HasValue) item.IsActive = dto.Activo.Value;
+        else if (dto.IsActive.HasValue) item.IsActive = dto.IsActive.Value;
+
+        await _context.SaveChangesAsync(default);
+        return Ok(item);
+    }
+
+    [HttpDelete("operarios/{id}")]
+    public async Task<IActionResult> DeleteOperarioCatalog(Guid id)
+    {
+        var item = await _context.Operarios.FindAsync(id);
+        if (item == null) return NotFound();
+
+        item.IsDeleted = true;
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
     [HttpGet("extrusoras/{extrusoraId}/operarios")]
     public async Task<ActionResult<IEnumerable<object>>> GetExtrusoraOperarios(Guid extrusoraId)
     {
@@ -581,6 +639,18 @@ public class CatalogosController : ControllerBase
             .OrderBy(c => c.Nombre)
             .Select(c => new { c.Id, c.Nombre })
             .ToListAsync();
+
+        if (!items.Any())
+        {
+            items = new()
+            {
+                new { Id = Guid.NewGuid(), Nombre = "Virgen" },
+                new { Id = Guid.NewGuid(), Nombre = "Molido" },
+                new { Id = Guid.NewGuid(), Nombre = "Mezcla" },
+                new { Id = Guid.NewGuid(), Nombre = "Reproceso" },
+                new { Id = Guid.NewGuid(), Nombre = "Pellet" }
+            };
+        }
         return Ok(items);
     }
 
@@ -591,6 +661,19 @@ public class CatalogosController : ControllerBase
             .OrderBy(c => c.Nombre)
             .Select(c => new { c.Id, c.Nombre })
             .ToListAsync();
+
+        if (!items.Any())
+        {
+            items = new()
+            {
+                new { Id = Guid.NewGuid(), Nombre = "Polietileno (PE)" },
+                new { Id = Guid.NewGuid(), Nombre = "Polipropileno (PP)" },
+                new { Id = Guid.NewGuid(), Nombre = "HDPE" },
+                new { Id = Guid.NewGuid(), Nombre = "LDPE" },
+                new { Id = Guid.NewGuid(), Nombre = "Virgen" },
+                new { Id = Guid.NewGuid(), Nombre = "Molido" }
+            };
+        }
         return Ok(items);
     }
 
@@ -975,6 +1058,7 @@ public record TurnoDto(string Nombre, string? Clave, string HoraInicio, string H
 public record ExtrusoraDto(string Nombre, string NumeroExtrusora, string? Imagen, Guid TenantId);
 public record ExtrusoraOperarioDto(Guid? OperarioId, Guid TenantId);
 public record ExtrusoraOperarioBatchItemDto(Guid? TurnoId, Guid? OperarioId, Guid? TenantId);
+public record OperarioCreateCatalogDto(string? Nombre, string? NombreCompleto, string? NumeroEmpleado, bool? Activo, bool? IsActive);
 public record PrensaDto(string? NumeroPrensa, string Nombre, string? Imagen, string? Marca, string? Modelo, Guid TenantId);
 public record TroquelDto(string Codigo, string Nombre, string? Observaciones, int Estado, Guid TenantId);
 

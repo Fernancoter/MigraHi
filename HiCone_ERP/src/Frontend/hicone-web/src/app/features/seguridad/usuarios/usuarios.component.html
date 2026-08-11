@@ -292,6 +292,7 @@
     </div>
 
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="modal-form">
+      <div class="alert alert-danger" *ngIf="errorMsg()" style="background:#fee2e2; color:#b91c1c; padding:0.75rem 1rem; border-radius:6px; margin-bottom:1rem; font-size:0.85rem; font-weight:600;">⚠️ {{ errorMsg() }}</div>
       <!-- Avatar Section -->
       <div class="avatar-section" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
         <img *ngIf="userForm.get('avatarUrl')?.value" [src]="userForm.get('avatarUrl')?.value" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0;">
@@ -398,7 +399,7 @@
             <label>Operador Vinculado</label>
             <select formControlName="operadorId" class="form-control">
               <option [ngValue]="null">Seleccione un operador...</option>
-              <option *ngFor="let op of availableOperadores()" [value]="op.id">{{ op.operadorNombre }}</option>
+              <option *ngFor="let op of availableOperadores()" [value]="op.id">{{ op.nombreCompleto || op.nombre || op.operadorNombre || op.numeroEmpleado }}</option>
             </select>
           </div>
 

@@ -1524,7 +1524,11 @@ public class ApplicationDbContextSeeder
                 new Turno { Nombre = "Vespertino", Clave = "2", HoraInicio = new TimeSpan(14, 0, 0), HoraFin = new TimeSpan(22, 0, 0), TenantId = defaultTenantId },
                 new Turno { Nombre = "Nocturno", Clave = "3", HoraInicio = new TimeSpan(22, 0, 0), HoraFin = new TimeSpan(6, 0, 0), TenantId = defaultTenantId }
             );
+            await _context.SaveChangesAsync(default);
+        }
 
+        if (!await _context.Operarios.AnyAsync())
+        {
             _context.Operarios.AddRange(
                 new Operario { NumeroEmpleado = "OP-001", NombreCompleto = "Juan Producción", Especialidad = "Extrusión", TenantId = defaultTenantId },
                 new Operario { NumeroEmpleado = "OP-002", NombreCompleto = "Pedro Prensa", Especialidad = "Prensado", TenantId = defaultTenantId }

@@ -41,7 +41,9 @@ export class NavigationService {
 
   private detectModule(url: string) {
     const lowerUrl = url.toLowerCase();
-    if (lowerUrl.includes('/inventario') || lowerUrl.includes('/silos') || lowerUrl.includes('/lotes') || lowerUrl.includes('/cierre-mes')) {
+    if (lowerUrl.includes('/configurar-produccion')) {
+      this.activeModuleSubject.next('CONFIGURACION_PRODUCCION');
+    } else if (lowerUrl.includes('/inventario') || lowerUrl.includes('/silos') || lowerUrl.includes('/lotes') || lowerUrl.includes('/cierre-mes')) {
       this.activeModuleSubject.next('INVENTARIO');
     } else if (lowerUrl.includes('/produccion/prensado') || lowerUrl.includes('tab=prensado')) {
       this.activeModuleSubject.next('PRENSADO');
@@ -59,9 +61,6 @@ export class NavigationService {
       this.activeModuleSubject.next('EMBARQUES');
     } else if (lowerUrl.includes('/seguridad')) {
       this.activeModuleSubject.next('SEGURIDAD');
-    } else if (lowerUrl.includes('/configurar-produccion')) {
-      // Si no es prensado ni extrusión, entonces es configuración general
-      this.activeModuleSubject.next('CONFIGURACION_PRODUCCION');
     } else if (lowerUrl.includes('/configuracion')) {
       this.activeModuleSubject.next('CONFIGURACIÓN');
     } else if (lowerUrl.includes('/reportes-sae')) {

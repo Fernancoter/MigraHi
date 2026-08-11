@@ -244,9 +244,14 @@ export class UsuariosComponent implements OnInit {
   }
 
   loadOperadores() {
-    this.http.get<any[]>(`${this.apiUrl}/Operadores`, { headers: this.headers() }).subscribe({
-      next: (data) => { this.availableOperadores.set(data); },
-      error: () => { console.error('Error al cargar operadores para dropdown.'); }
+    this.http.get<any[]>(`${this.apiUrl}/v1/produccion/operarios`, { headers: this.headers() }).subscribe({
+      next: (data) => { this.availableOperadores.set(data || []); },
+      error: () => {
+        this.http.get<any[]>(`${this.apiUrl}/produccion/operarios`, { headers: this.headers() }).subscribe({
+          next: (data) => { this.availableOperadores.set(data || []); },
+          error: (err) => console.error('Error al cargar operadores para dropdown:', err)
+        });
+      }
     });
   }
 
@@ -492,7 +497,16 @@ export class UsuariosComponent implements OnInit {
     this.isSaving.set(true);
     this.errorMsg.set(null);
 
-    const payload = { ...this.userForm.getRawValue(), roleIds: this.selectedRoleIds() };
+    const val = this.userForm.getRawValue();
+    const payload: any = {
+      ...val,
+      operadorId: (val.operadorId && val.operadorId !== 'null' && val.operadorId !== '') ? val.operadorId : null,
+      securityPolicyId: (val.securityPolicyId && val.securityPolicyId !== '') ? val.securityPolicyId : null,
+      birthday: (val.birthday && val.birthday !== '') ? val.birthday : null,
+      activationDate: (val.activationDate && val.activationDate !== '') ? val.activationDate : null,
+      companyId: val.companyId ? Number(val.companyId) : null,
+      roleIds: this.selectedRoleIds()
+    };
 
     const req = this.editingUser
       ? this.http.put(`${this.apiUrl}/users/${this.editingUser.id}`, payload, { headers: this.headers() })
@@ -507,7 +521,12 @@ export class UsuariosComponent implements OnInit {
       },
       error: (err) => {
         this.isSaving.set(false);
-        this.errorMsg.set(err.error?.message || 'Error al guardar el usuario.');
+        let msg = err.error?.message || err.error?.title;
+        if (!msg && err.error?.errors) {
+          msg = Object.values(err.error.errors).flat().join(', ');
+        }
+        if (!msg) msg = typeof err.error === 'string' ? err.error : 'Error al guardar el usuario.';
+        this.errorMsg.set(msg);
       }
     });
   }

@@ -736,12 +736,26 @@ export class ExtrusorasCatalogoComponent implements OnInit {
   }
 
   /* ── Modals ───────────────────────────────────────── */
+  private populateDefaultTurnoRows(existingRows: ExtrusoraOperarioRow[] = []) {
+    const turnos = this.turnosList();
+    const rows: ExtrusoraOperarioRow[] = turnos.map(t => {
+      const existing = existingRows.find(r => r.turnoId === t.id);
+      return existing || {
+        turnoId: t.id,
+        turno: t.nombre,
+        operarioId: '',
+        operario: ''
+      };
+    });
+    this.operariosRows.set(rows);
+  }
+
   openCreate() {
     this.form = { nombre: '', numeroExtrusora: '', imagen: '' };
-    this.operariosRows.set([]);
     this.modalReadOnly.set(false);
     this.showModal.set(true);
     this.closeAllDropdowns();
+    this.populateDefaultTurnoRows();
   }
 
   openEditModal(item: Extrusora) {
@@ -750,7 +764,12 @@ export class ExtrusorasCatalogoComponent implements OnInit {
     this.showModal.set(true);
     this.closeAllDropdowns();
     if (item.id) {
-      this.svc.getExtrusoraOperarios(item.id).subscribe({ next: d => this.operariosRows.set(d), error: () => {} });
+      this.svc.getExtrusoraOperarios(item.id).subscribe({ 
+        next: d => this.populateDefaultTurnoRows(d || []), 
+        error: () => this.populateDefaultTurnoRows([]) 
+      });
+    } else {
+      this.populateDefaultTurnoRows([]);
     }
   }
 
@@ -760,15 +779,19 @@ export class ExtrusorasCatalogoComponent implements OnInit {
     this.showModal.set(true);
     this.closeAllDropdowns();
     if (item.id) {
-      this.svc.getExtrusoraOperarios(item.id).subscribe({ next: d => this.operariosRows.set(d), error: () => {} });
+      this.svc.getExtrusoraOperarios(item.id).subscribe({ 
+        next: d => this.populateDefaultTurnoRows(d || []), 
+        error: () => this.populateDefaultTurnoRows([]) 
+      });
+    } else {
+      this.populateDefaultTurnoRows([]);
     }
   }
 
   closeModal() { this.showModal.set(false); this.form = {}; this.operariosRows.set([]); }
 
   addOperarioRow() {
-    // Placeholder — no adds new rows freely (table is driven by turnos from DB)
-    alert('Las filas de turno se cargan automáticamente desde los turnos registrados en el sistema.');
+    this.populateDefaultTurnoRows(this.operariosRows());
   }
 
   /* ── Delete ───────────────────────────────────────── */
