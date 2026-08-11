@@ -115,6 +115,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<CatTipoMaterial> CatTiposMaterial => Set<CatTipoMaterial>();
     public DbSet<CatalogoClave> CatalogoClaves => Set<CatalogoClave>();
     public DbSet<ExtrusoraOperario> ExtrusoraOperarios => Set<ExtrusoraOperario>();
+    public DbSet<IdempotencyRecord> IdempotencyRecords => Set<IdempotencyRecord>();
 
     // ── Retrocompatibilidad con Maquina ────────────────────────────────────
 
@@ -123,6 +124,17 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<IdempotencyRecord>(b =>
+        {
+            b.ToTable("idempotency_records");
+            b.HasKey(e => e.Key);
+            b.Property(e => e.Key).HasMaxLength(128);
+            b.Property(e => e.Path).HasMaxLength(255);
+            b.Property(e => e.Method).HasMaxLength(10);
+            b.Property(e => e.ResponseContentType).HasMaxLength(100);
+            b.HasIndex(e => e.ExpiresAt);
+        });
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 

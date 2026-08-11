@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, of, map, BehaviorSubject, from, switchMap } from 'rxjs';
 import { OfflineStoreService } from '../offline/offline-store.service';
+import { ApiConfigService } from './api-config.service';
 
 export interface UserDto {
   id: string;
@@ -28,7 +29,8 @@ export interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly apiUrl = 'http://localhost:5007/api/auth';
+  private apiConfig = inject(ApiConfigService);
+  private get apiUrl() { return this.apiConfig.authUrl; }
   private readonly AUTH_KEY = 'hicone_auth_token';
   private readonly REFRESH_KEY = 'hicone_refresh_token';
   private readonly USER_KEY = 'hicone_user_data';

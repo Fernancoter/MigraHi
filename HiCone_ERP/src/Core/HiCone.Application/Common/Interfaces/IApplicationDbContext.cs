@@ -109,6 +109,7 @@ public interface IApplicationDbContext
     DbSet<CatTipoMaterial> CatTiposMaterial { get; }
     DbSet<CatalogoClave> CatalogoClaves { get; }
     DbSet<ExtrusoraOperario> ExtrusoraOperarios { get; }
+    DbSet<IdempotencyRecord> IdempotencyRecords { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

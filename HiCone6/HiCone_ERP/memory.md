@@ -3,11 +3,11 @@
 ## Rama Activa
 `QA` — activa y con los servidores del backend (5007), frontend web (4200) y frontend móvil (4201) iniciados.
 
-## Estado Actual (2026-08-10)
+## Estado Actual (2026-08-11)
 - **Backend (.NET API):** Operativo en `http://localhost:5007` y Swagger en `http://localhost:5007/swagger` (dotnet run).
 - **Frontend Web (`hicone-web`):** Operativo en `http://localhost:4200` (ng serve).
 - **Frontend Móvil (`hicone-mobile`):** Operativo en `http://localhost:4201` (ng serve --port 4201).
-- **Sincronización:** Rama `QA` sincronizada e integrada con `origin/QA` (commit `3bf780e5` "Front y Back"). Conflicto en `CatalogosController.cs` resuelto. Compilación exitosa con 0 errores.
+- **Capa Móvil & Idempotencia (MOB-01 / MOB-02):** Implementados `ApiConfigService` y `environment.ts` para desacoplamiento dinámico de red en `hicone-mobile`. Implementado `IdempotencyMiddleware`, tabla `idempotency_records` y cabeceras CORS en el Backend .NET. Compilación limpia y pruebas de deduplicación exitosas.
 
 ✅ **Reporte de Existencia y Columnas de Extrusión COMPLETADOS** (2026-06-29)
 - [x] **Backend API**: Implementado listado de cortes (`GET /api/v1/inventario/existencias`) y seeding automatizado de datos de Silos y Existencias.

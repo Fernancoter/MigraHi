@@ -130,12 +130,15 @@ export interface Interrupcion {
   duracionMinutos?: number;
 }
 
+import { ApiConfigService } from './api-config.service';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ProduccionService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5007/api/v1/produccion';
+  private apiConfig = inject(ApiConfigService);
+  private get apiUrl() { return this.apiConfig.produccionUrl; }
 
   // ── Extrusión ─────────────────────────────────────────────────────────
   getExtrusiones(): Observable<Extrusion[]> {
@@ -242,7 +245,7 @@ export class ProduccionService {
   }
 
   getTroqueles(): Observable<any[]> {
-    return this.http.get<any[]>(`http://localhost:5007/api/v1/catalogos/troqueles`);
+    return this.http.get<any[]>(`${this.apiConfig.catalogosUrl}/troqueles`);
   }
 
   getPalets(productoCodigo?: string, noSerie?: string): Observable<any[]> {

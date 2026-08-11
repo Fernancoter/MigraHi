@@ -5,6 +5,8 @@ using HiCone.Persistence;
 using HiCone.Persistence.Seeds;
 using Microsoft.EntityFrameworkCore;
 
+using HiCone.API.Middlewares;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Serilog
@@ -43,9 +45,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? ["http://localhost:4200"])
+        policy.WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? ["http://localhost:4200", "http://localhost:4201"])
             .AllowAnyMethod()
             .AllowAnyHeader()
+            .WithExposedHeaders("X-Idempotency-Hit", "Content-Disposition")
             .AllowCredentials();
     });
 });
@@ -64,6 +67,7 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
+app.UseMiddleware<IdempotencyMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
