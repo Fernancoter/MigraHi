@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, of, map, BehaviorSubject } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
+
 export interface UserDto {
   id: string;
   email: string;
@@ -27,7 +29,7 @@ export interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly apiUrl = 'http://localhost:5007/api/auth';
+  private readonly apiUrl = `${environment.apiUrl}/api/auth`;
   private readonly AUTH_KEY = 'hicone_auth_token';
   private readonly REFRESH_KEY = 'hicone_refresh_token';
   private readonly USER_KEY = 'hicone_user_data';
@@ -103,9 +105,22 @@ export class AuthService {
 
   private setSession(response: LoginResponse) {
     // Calcular campos de compatibilidad para el header y sidebar
-    response.user.fullName = `${response.user.firstName} ${response.user.lastName}`;
-    response.user.roles = ['Administrador']; // Rol por defecto
-    response.user.permissions = []; // Mapeo de permisos si corresponde
+    response.user.fullName = response.user.fullName || `${response.user.firstName || ''} ${response.user.lastName || ''}`.trim();
+    
+    // Superusuario admin y roles calculados por el backend
+    if (!response.user.roles || response.user.roles.length === 0) {
+      if (response.user.email?.toLowerCase().includes('admin') || response.user.firstName?.toLowerCase().includes('admin')) {
+        response.user.roles = ['Administrador'];
+      } else {
+        response.user.roles = ['Usuario'];
+      }
+    } else if (response.user.email?.toLowerCase().includes('admin') && !response.user.roles.includes('Administrador')) {
+      response.user.roles.push('Administrador');
+    }
+
+    if (!response.user.permissions) {
+      response.user.permissions = [];
+    }
 
     localStorage.setItem(this.AUTH_KEY, response.accessToken);
     localStorage.setItem(this.REFRESH_KEY, response.refreshToken);

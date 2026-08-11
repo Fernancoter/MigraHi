@@ -15,12 +15,14 @@ export interface Embarque {
   conductor?: string;
 }
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class LogisticaService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5007/api/v1/logistica';
+  private apiUrl = `${environment.apiUrl}/api/v1/logistica`;
 
   getEmbarquesActivos(): Observable<Embarque[]> {
     return this.http.get<Embarque[]>(`${this.apiUrl}/embarques/activos`);

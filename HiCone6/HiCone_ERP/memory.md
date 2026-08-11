@@ -5,9 +5,13 @@
 
 ## Estado Actual (2026-08-11)
 - **Backend (.NET API):** Operativo en `http://localhost:5007` y Swagger en `http://localhost:5007/swagger` (dotnet run).
-- **Frontend Web (`hicone-web`):** Operativo en `http://localhost:4200` (ng serve).
-- **Frontend Móvil (`hicone-mobile`):** Operativo en `http://localhost:4201` (ng serve --port 4201).
-- **Capa Móvil & Idempotencia (MOB-01 / MOB-02):** Implementados `ApiConfigService` y `environment.ts` para desacoplamiento dinámico de red en `hicone-mobile`. Implementado `IdempotencyMiddleware`, tabla `idempotency_records` y cabeceras CORS en el Backend .NET. Compilación limpia y pruebas de deduplicación exitosas.
+- **Frontend Web (`hicone-web`):** Operativo en `http://localhost:4200` (ng serve). Compilación con 0 errores y 11 suites de pruebas unitarias Vitest pasando al 100%.
+- **Frontend Móvil (`hicone-mobile`):** Operativo en `http://localhost:4201` (ng serve --port 4201). Compilación con 0 errores y 5 suites de pruebas unitarias Vitest pasando al 100%.
+- **Hardware Industrial & Pipelines (MOB-03, MOB-04, WEB-01, WEB-02, WEB-03):**
+  - Drivers de impresión Zebra ZPL II (Red TCP 9100, Bluetooth BLE y descarga ZPL) y NFC NDEF (`printer.service.ts`, `nfc.service.ts`).
+  - Desacopladas 22 URLs fijas en `hicone-web` mediante `environment.apiUrl`.
+  - Roles y permisos reales preservados en `auth.service.ts` con soporte superusuario `admin` / `hicone123`.
+  - Pipelines de Vitest en Web y Móvil configurados con JSDOM y BrowserTestingModule (100% pruebas en verde).
 
 ✅ **Reporte de Existencia y Columnas de Extrusión COMPLETADOS** (2026-06-29)
 - [x] **Backend API**: Implementado listado de cortes (`GET /api/v1/inventario/existencias`) y seeding automatizado de datos de Silos y Existencias.

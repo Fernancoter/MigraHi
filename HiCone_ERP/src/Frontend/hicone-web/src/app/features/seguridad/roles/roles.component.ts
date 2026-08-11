@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service';
+import { environment } from '../../../../environments/environment';
 import { timer } from 'rxjs';
 
 // ─── Interfaces ──────────────────────────────────────────────────────────────
@@ -52,7 +53,7 @@ interface PaginatedResult<T> {
   styleUrls: ['./roles.component.css']
 })
 export class RolesComponent implements OnInit {
-  private apiUrl = 'http://localhost:5007/api';
+  private apiUrl = `${environment.apiUrl}/api`;
 
   // ── View State ──────────────────────────────────────────────────────────
   viewState = signal<'main' | 'hijos' | 'permisos' | 'suscripciones' | 'add-permisos'>('main');

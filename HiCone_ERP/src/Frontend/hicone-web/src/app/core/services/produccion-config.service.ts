@@ -147,10 +147,12 @@ export interface ExtrusionDetail {
   bobinas: Bobina[];
 }
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({ providedIn: 'root' })
 export class ProduccionConfigService {
   private http = inject(HttpClient);
-  private base = `http://localhost:5007/api/v1/produccion`;
+  private base = `${environment.apiUrl}/api/v1/produccion`;
 
   // ── TABLERO ────────────────────────────────────────────────────────────────
   // ── TABLERO / EXTRUSIÓN ───────────────────────────────────────────────────
