@@ -10,15 +10,10 @@ namespace HiCone.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // virgen_min/virgen_max/kg_virgen ya existen en la BD real (solo el lado
+            // "molido" tenia el typo legado "moldo" y le faltaban las columnas nuevas).
             migrationBuilder.AddColumn<decimal>(
                 name: "kg_molido",
-                table: "extrusora_mezcladoras",
-                type: "decimal(18,2)",
-                nullable: false,
-                defaultValue: 0m);
-
-            migrationBuilder.AddColumn<decimal>(
-                name: "kg_virgen",
                 table: "extrusora_mezcladoras",
                 type: "decimal(18,2)",
                 nullable: false,
@@ -33,20 +28,6 @@ namespace HiCone.Persistence.Migrations
 
             migrationBuilder.AddColumn<decimal>(
                 name: "molido_min",
-                table: "extrusora_mezcladoras",
-                type: "decimal(18,2)",
-                nullable: false,
-                defaultValue: 0m);
-
-            migrationBuilder.AddColumn<decimal>(
-                name: "virgen_max",
-                table: "extrusora_mezcladoras",
-                type: "decimal(18,2)",
-                nullable: false,
-                defaultValue: 0m);
-
-            migrationBuilder.AddColumn<decimal>(
-                name: "virgen_min",
                 table: "extrusora_mezcladoras",
                 type: "decimal(18,2)",
                 nullable: false,
@@ -61,23 +42,11 @@ namespace HiCone.Persistence.Migrations
                 table: "extrusora_mezcladoras");
 
             migrationBuilder.DropColumn(
-                name: "kg_virgen",
-                table: "extrusora_mezcladoras");
-
-            migrationBuilder.DropColumn(
                 name: "molido_max",
                 table: "extrusora_mezcladoras");
 
             migrationBuilder.DropColumn(
                 name: "molido_min",
-                table: "extrusora_mezcladoras");
-
-            migrationBuilder.DropColumn(
-                name: "virgen_max",
-                table: "extrusora_mezcladoras");
-
-            migrationBuilder.DropColumn(
-                name: "virgen_min",
                 table: "extrusora_mezcladoras");
         }
     }
