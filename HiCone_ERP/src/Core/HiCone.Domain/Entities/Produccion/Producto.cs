@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using HiCone.Domain.Common;
 using HiCone.Domain.Enums;
 
@@ -14,6 +15,7 @@ public class Producto : TenantEntity
     public string? Descripcion { get; set; }
 
     // Retrocompatibilidad con el módulo de configuración de producción
+    [NotMapped]
     public string Clave { get => Codigo; set => Codigo = value; }
     public string? ProductoBase { get; set; }
     public decimal PrecioUnitario { get; set; }

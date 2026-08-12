@@ -27,7 +27,7 @@ export interface Extrusora {
   id: string;
   codigo: string;
   nombre: string;
-  estado: string;
+  estado: number;
   capacidadKgHora?: number;
 }
 
@@ -78,6 +78,7 @@ export interface Extrusion {
   turno?: Turno;
   producto?: Producto;
   productoNombre?: string;
+  interrupcionEnCurso?: boolean;
   totalBobinas?: number;
   metaKg?: number;
   tiempoInterrupcion?: number;
@@ -87,7 +88,11 @@ export interface Extrusion {
   extrusionIdLegacy?: number;
   programado?: number;
   producido?: number;
-  interrupciones?: any[];
+  interrupciones?: Interrupcion[];
+  observaciones?: string;
+  motivoAnticipado?: string;
+  siloVirgenId?: string;
+  siloMolidoId?: string;
 }
 
 export interface Bobina {
@@ -97,10 +102,10 @@ export interface Bobina {
   kg: number;
   espesor: number;
   fechaProduccion: Date;
-  estado: any;
+  estado: number;
   extrusionId?: string;
-  colorEstacion?: any;
-  motivoMolino?: any;
+  colorEstacion?: number;
+  motivoMolino?: number;
   bobinaOrigen?: string;
   mermaKg?: number;
   extrusoraNombre?: string;
@@ -109,6 +114,8 @@ export interface Bobina {
   mezclaMolidoPct?: number;
   horaInicio?: string | Date;
   horaSalida?: string | Date;
+  iniciaReposo?: string | Date;
+  minutosEnReposo?: number;
   desviacionEstandar?: number;
   reposoHr?: number;
   operadorNombre?: string;
@@ -117,7 +124,7 @@ export interface Bobina {
   siloVirgenNombre?: string;
   loteVirgen?: string;
   paqueteAditivos?: string;
-  productoId?: any;
+  productoId?: string;
   productoNombre?: string;
   tipoMaterial?: string;
   prensaNombre?: string;
@@ -125,16 +132,17 @@ export interface Bobina {
   timeCode?: string;
   timeDescription?: string;
   timeType?: string;
-  extrusion?: any;
-  siloVirgen?: any;
-  siloMolido?: any;
-  operario?: any;
+  extrusion?: Extrusion;
+  siloVirgen?: { id: string; nombre: string };
+  siloMolido?: { id: string; nombre: string };
+  operario?: Operario;
 }
 
 export interface Prensado {
   id: string;
   fecha: Date;
-  estado: string;
+  estado: number;
+  interrupcionEnCurso?: boolean;
   prensa?: Prensa;
   producto?: Producto;
   operario?: Operario;
@@ -149,11 +157,14 @@ export interface CausaInterrupcion {
 
 export interface Interrupcion {
   id: string;
+  extrusionId?: string;
+  causaId?: string;
+  causa?: CausaInterrupcion;
   horaInicio: Date;
   horaFin?: Date;
-  motivo?: string;
-  descripcion?: string;
   concluida: boolean;
+  descripcion?: string;
+  observaciones?: string;
   duracionMinutos?: number;
 }
 

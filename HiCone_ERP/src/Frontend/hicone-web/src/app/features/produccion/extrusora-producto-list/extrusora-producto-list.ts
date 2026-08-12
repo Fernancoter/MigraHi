@@ -833,10 +833,9 @@ export class ExtrusoraProductoListComponent implements OnInit {
       return;
     }
 
-    const selectedProd = this.productos.find(p => p.id === this.form.productoId);
     const payload = {
       extrusoraId: this.form.extrusoraId,
-      productoNombre: selectedProd?.nombre || '',
+      productoId: this.form.productoId,
       productoCalibre: Number(this.form.defaultCalibre || 0),
       productoAncho: String(this.form.defaultAncho || '0'),
       productoLongitud: Number(this.form.defaultLongitud || 0),

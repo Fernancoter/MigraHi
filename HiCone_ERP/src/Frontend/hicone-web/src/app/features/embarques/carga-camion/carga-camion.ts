@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LogisticaService, Embarque } from '../../../core/services/logistica';
+import { LogisticaService, Embarque, ResumenCarga } from '../../../core/services/logistica';
 
 @Component({
   selector: 'app-carga-camion',
@@ -142,7 +142,8 @@ export class CargaCamionComponent implements OnInit {
   lastMsgError = false;
   
   paletsCargados: any[] = [];
-  totalPalets = 10; // Mock, vendría del resumen
+  resumen: ResumenCarga | null = null;
+  totalPalets = 0;
   paletsEscaneados = 0;
   porcentajeCarga = 0;
 
@@ -156,21 +157,30 @@ export class CargaCamionComponent implements OnInit {
   loadResumen(id: string) {
     this.logisticaService.getEmbarquesActivos().subscribe(data => {
       this.embarque = data.find(e => e.id === id) || null;
-      // En una implementación real, aquí llamaríamos a GetResumenCarga
+    });
+
+    this.logisticaService.getResumenCarga(id).subscribe({
+      next: (resumen) => {
+        this.resumen = resumen;
+        this.totalPalets = resumen.detalles.reduce((sum, d) => sum + d.cantidadPalletsRequerida, 0);
+        this.paletsEscaneados = resumen.detalles.reduce((sum, d) => sum + d.cantidadPalletsEscaneados, 0);
+        this.updateProgress();
+      },
+      error: (err) => console.error('Error al cargar resumen de carga:', err)
     });
   }
 
   escanearPalet() {
     if (!this.noSerieScan || !this.embarque) return;
 
-    this.logisticaService.validarPalet(this.embarque.id, this.noSerieScan).subscribe({
+    const id = this.embarque.id;
+    this.logisticaService.validarPalet(id, this.noSerieScan).subscribe({
       next: (res) => {
         this.lastMsg = res.message;
         this.lastMsgError = false;
         this.paletsCargados.unshift({ noSerie: this.noSerieScan, fechaCarga: new Date() });
-        this.paletsEscaneados++;
-        this.updateProgress();
         this.noSerieScan = '';
+        this.loadResumen(id);
       },
       error: (err) => {
         this.lastMsg = err.error?.message || 'Error al validar palet';
@@ -181,14 +191,19 @@ export class CargaCamionComponent implements OnInit {
   }
 
   updateProgress() {
-    this.porcentajeCarga = Math.round((this.paletsEscaneados / this.totalPalets) * 100);
+    this.porcentajeCarga = this.totalPalets > 0 ? Math.round((this.paletsEscaneados / this.totalPalets) * 100) : 0;
   }
 
   finalizar() {
     if (!this.embarque) return;
-    this.logisticaService.finalizarEmbarque(this.embarque.id, 'OPERADOR_ACTUAL').subscribe(() => {
-      alert('Embarque finalizado con éxito');
-      this.router.navigate(['/embarques']);
+    this.logisticaService.finalizarEmbarque(this.embarque.id, 'OPERADOR_ACTUAL').subscribe({
+      next: () => {
+        alert('Embarque finalizado con éxito');
+        this.router.navigate(['/embarques']);
+      },
+      error: (err) => {
+        alert(err.error?.message || 'No se pudo finalizar el embarque. Verifique que todos los palets requeridos estén escaneados.');
+      }
     });
   }
 

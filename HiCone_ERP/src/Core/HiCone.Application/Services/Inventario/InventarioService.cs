@@ -203,7 +203,6 @@ namespace HiCone.Application.Services.Inventario
         public async Task<IEnumerable<LoteDto>> GetLotesAsync()
         {
             return await _context.Lotes
-                .Include(l => l.Extrusiones) // Example link, might not need it for basic list
                 .OrderByDescending(l => l.LoteFechaRegistro)
                 .Select(l => new LoteDto
                 {

@@ -319,9 +319,9 @@ import { NotificationService } from '../../../core/services/notification.service
 
     .status-badge { padding:.2rem .5rem; border-radius:12px; font-size:.72rem; font-weight:700; text-transform:uppercase; }
     .status-1 { background:#eff6ff; color:#2563eb; } /* En Proceso */
-    .status-2 { background:#ecfdf5; color:#059669; } /* Aprobado */
-    .status-3 { background:#fef2f2; color:#dc2626; } /* Molido / Rechazado */
-    .status-4 { background:#fffbeb; color:#d97706; } /* Retenido */
+    .status-2 { background:#ecfdf5; color:#059669; } /* Terminado */
+    .status-3 { background:#fef2f2; color:#dc2626; } /* Rechazado */
+    .status-4 { background:#fffbeb; color:#d97706; } /* Molino */
 
     .content-card { background:#fff; border-radius:12px; border:1px solid #e2e8f0; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.04); margin-top:1rem; }
     .data-table   { width:100%; border-collapse:collapse; }
@@ -460,9 +460,9 @@ export class CarretesListComponent implements OnInit {
   getEstadoLabel(estado: number): string {
     switch (estado) {
       case 1: return 'En Proceso';
-      case 2: return 'Aprobado';
-      case 3: return 'Molido';
-      case 4: return 'Retenido';
+      case 2: return 'Terminado';
+      case 3: return 'Rechazado';
+      case 4: return 'Molino';
       default: return 'Desconocido';
     }
   }

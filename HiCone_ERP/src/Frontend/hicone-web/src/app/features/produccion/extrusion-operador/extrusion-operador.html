@@ -45,12 +45,12 @@
            class="extrusora-card" 
            [class.active]="extrusoraSeleccionada?.id === ext.id"
            (click)="seleccionarExtrusora(ext)">
-        <div class="card-status" [class.in-use]="ext.estado === 'EnProceso' || ext.estado === '2'"></div>
+        <div class="card-status" [class.in-use]="ext.estado === 2"></div>
         <div class="card-icon">⚡</div>
         <h3 class="card-title">{{ ext.nombre }}</h3>
         <p class="card-code">Código: {{ ext.codigo }}</p>
-        <span class="card-badge" [class.in-process]="ext.estado === 'EnProceso' || ext.estado === '2'">
-          {{ (ext.estado === 'EnProceso' || ext.estado === '2') ? 'En Proceso' : 'Disponible' }}
+        <span class="card-badge" [class.in-process]="ext.estado === 2">
+          {{ ext.estado === 2 ? 'En Proceso' : 'Disponible' }}
         </span>
       </div>
     </div>
@@ -283,11 +283,8 @@
               <div class="form-group">
                 <label>💬 Motivo del Descarte</label>
                 <select [(ngModel)]="estacionA.motivo" name="motivoA" class="form-select text-warning">
-                  <option [value]="1">Defecto Calibre</option>
-                  <option [value]="2">Defecto Bobina</option>
-                  <option [value]="3">Defecto Carrete</option>
-                  <option [value]="4">Fuera de Peso</option>
-                  <option [value]="5">Daño Físico</option>
+                  <option [value]="1">Falla Mecánica</option>
+                  <option [value]="2">Limpieza / Contaminación</option>
                 </select>
               </div>
             </div>
@@ -310,8 +307,8 @@
                 <span class="no-serie">{{ ultimaBobinaA.noSerie }}</span>
                 <span>Peso: <strong>{{ ultimaBobinaA.kg }} Kg</strong></span>
                 <span>Calibre: <strong>{{ ultimaBobinaA.espesor }} mm</strong></span>
-                <span class="status-pill" [class.molino]="ultimaBobinaA.estado === 'Molido' || ultimaBobinaA.estado === 6">
-                  {{ (ultimaBobinaA.estado === 'Molido' || ultimaBobinaA.estado === 6) ? 'Molino: ' + getMotivoName(ultimaBobinaA.motivoMolino) : 'Listo (En Reposo)' }}
+                <span class="status-pill" [class.molino]="ultimaBobinaA.estado === 6">
+                  {{ ultimaBobinaA.estado === 6 ? 'Molino: ' + getMotivoName(ultimaBobinaA.motivoMolino) : 'Listo (En Reposo)' }}
                 </span>
               </div>
             </div>
@@ -372,11 +369,8 @@
               <div class="form-group">
                 <label>💬 Motivo del Descarte</label>
                 <select [(ngModel)]="estacionB.motivo" name="motivoB" class="form-select text-warning">
-                  <option [value]="1">Defecto Calibre</option>
-                  <option [value]="2">Defecto Bobina</option>
-                  <option [value]="3">Defecto Carrete</option>
-                  <option [value]="4">Fuera de Peso</option>
-                  <option [value]="5">Daño Físico</option>
+                  <option [value]="1">Falla Mecánica</option>
+                  <option [value]="2">Limpieza / Contaminación</option>
                 </select>
               </div>
             </div>
@@ -399,8 +393,8 @@
                 <span class="no-serie">{{ ultimaBobinaB.noSerie }}</span>
                 <span>Peso: <strong>{{ ultimaBobinaB.kg }} Kg</strong></span>
                 <span>Calibre: <strong>{{ ultimaBobinaB.espesor }} mm</strong></span>
-                <span class="status-pill" [class.molino]="ultimaBobinaB.estado === 'Molido' || ultimaBobinaB.estado === 6">
-                  {{ (ultimaBobinaB.estado === 'Molido' || ultimaBobinaB.estado === 6) ? 'Molino: ' + getMotivoName(ultimaBobinaB.motivoMolino) : 'Listo (En Reposo)' }}
+                <span class="status-pill" [class.molino]="ultimaBobinaB.estado === 6">
+                  {{ ultimaBobinaB.estado === 6 ? 'Molino: ' + getMotivoName(ultimaBobinaB.motivoMolino) : 'Listo (En Reposo)' }}
                 </span>
               </div>
             </div>
@@ -426,7 +420,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let bob of bobinasExtrusion" [class.row-molido]="bob.estado === 'Molido' || bob.estado === 6" style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='rgba(0, 242, 254, 0.02)'" onmouseout="this.style.backgroundColor='transparent'">
+                <tr *ngFor="let bob of bobinasExtrusion" [class.row-molido]="bob.estado === 6" style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='rgba(0, 242, 254, 0.02)'" onmouseout="this.style.backgroundColor='transparent'">
                   <td class="bold code" style="padding: 0.75rem; font-weight: bold; color: var(--neon-cyan); font-family: monospace;">{{ bob.noSerie }}</td>
                   <td style="padding: 0.75rem;">{{ bob.bobinaNo }}{{ bob.bobinaOrigen }}</td>
                   <td style="padding: 0.75rem;"><span class="badge-station" style="background: rgba(0, 242, 254, 0.1); color: var(--neon-cyan); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: bold; border: 1px solid rgba(0, 242, 254, 0.2);">{{ bob.bobinaOrigen }}</span></td>
@@ -434,12 +428,12 @@
                   <td style="padding: 0.75rem;">{{ bob.espesor }} mm</td>
                   <td style="padding: 0.75rem;">{{ getColorName(bob.colorEstacion) }}</td>
                   <td style="padding: 0.75rem;">
-                    <span class="status-pill" [class.reposo]="bob.estado === 'EnReposo' || bob.estado === 2"
-                          [class.proceso]="bob.estado === 'EnProceso' || bob.estado === 1"
-                          [class.molido]="bob.estado === 'Molido' || bob.estado === 6"
-                          [class.disponible]="bob.estado === 'Disponible' || bob.estado === 12"
-                          [class.pausada]="bob.estado === 'Pausada' || bob.estado === 7"
-                          [class.rechazada]="bob.estado === 'Rechazada' || bob.estado === 5"
+                    <span class="status-pill" [class.reposo]="bob.estado === 2"
+                          [class.proceso]="bob.estado === 1"
+                          [class.molido]="bob.estado === 6"
+                          [class.disponible]="bob.estado === 12"
+                          [class.pausada]="bob.estado === 7"
+                          [class.rechazada]="bob.estado === 5"
                           style="padding: 0.25rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">
                       {{ getEstadoBobinaName(bob.estado) }}
                     </span>
@@ -447,16 +441,16 @@
                   <td style="padding: 0.75rem; font-size: 0.85rem; color: rgba(255, 255, 255, 0.6);">{{ bob.fechaProduccion | date:'dd/MM/yyyy HH:mm' }}</td>
                   <td class="actions-cell" style="padding: 0.75rem; display: flex; gap: 6px; flex-wrap: wrap;">
                     <!-- Pausar (solo si está en proceso o en reposo) -->
-                    <button *ngIf="bob.estado !== 'Pausada' && bob.estado !== 7 && bob.estado !== 'Molido' && bob.estado !== 6" 
+                    <button *ngIf="bob.estado !== 7 && bob.estado !== 6"
                             class="btn-action pause" (click)="pausarBobina(bob)" title="Pausar Bobina" style="background-color: var(--neon-orange); color: var(--deep-bg); border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: bold; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">⏸️ Pausar</button>
                     <!-- Validar (para quitar pausa o reposo e ir a Disponible) -->
-                    <button *ngIf="bob.estado !== 'Disponible' && bob.estado !== 12 && bob.estado !== 'Molido' && bob.estado !== 6" 
+                    <button *ngIf="bob.estado !== 12 && bob.estado !== 6"
                             class="btn-action validate" (click)="validarBobina(bob)" title="Validar Bobina" style="background-color: var(--neon-green); color: var(--deep-bg); border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: bold; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">✔️ Validar</button>
                     <!-- Rechazar (enviar a molino) -->
-                    <button *ngIf="bob.estado !== 'Molido' && bob.estado !== 6" 
+                    <button *ngIf="bob.estado !== 6"
                             class="btn-action reject" (click)="abrirRechazarBobina(bob)" title="Rechazar Bobina" style="background-color: var(--neon-red); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: bold; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">❌ Rechazar</button>
                     <!-- Transferir -->
-                    <button *ngIf="bob.estado !== 'Molido' && bob.estado !== 6" 
+                    <button *ngIf="bob.estado !== 6"
                             class="btn-action transfer" (click)="abrirTransferirBobina(bob)" title="Reasignar a otro turno/extrusión" style="background-color: var(--neon-cyan); color: var(--deep-bg); border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: bold; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🔄 Reasignar</button>
                   </td>
                 </tr>
@@ -659,11 +653,8 @@
         <div class="form-group" style="display: flex; flex-direction: column; gap: 0.4rem;">
           <label style="font-weight: bold; font-size: 0.9rem; color: var(--neon-red);">💬 Motivo del Rechazo / Descarte</label>
           <select [(ngModel)]="motivoRechazo" name="motivoRechazoVal" class="form-select text-warning" style="width: 100%; box-sizing: border-box;">
-            <option [value]="1">Defecto Calibre</option>
-            <option [value]="2">Defecto Bobina</option>
-            <option [value]="3">Defecto Carrete</option>
-            <option [value]="4">Fuera de Peso</option>
-            <option [value]="5">Daño Físico</option>
+            <option [value]="1">Falla Mecánica</option>
+            <option [value]="2">Limpieza / Contaminación</option>
           </select>
         </div>
         <div class="form-group" style="display: flex; flex-direction: column; gap: 0.4rem;">

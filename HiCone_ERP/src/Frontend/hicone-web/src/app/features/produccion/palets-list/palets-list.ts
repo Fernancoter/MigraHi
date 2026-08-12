@@ -143,7 +143,7 @@ import { ProduccionService } from '../../../core/services/produccion';
                 @if (isColVisible('prensaNombre')) { <td>{{ item.prensaNombre }}</td> }
                 @if (isColVisible('operarioNombre')) { <td>{{ item.operarioNombre }}</td> }
                 @if (isColVisible('totalCarretes')) { <td><strong>{{ item.totalCarretes }}</strong> / {{ item.capacidad }}</td> }
-                @if (isColVisible('tipo')) { <td>{{ item.tipo === 1 ? 'Normal' : 'Especial' }}</td> }
+                @if (isColVisible('tipo')) { <td>{{ item.tipo === 1 ? 'Normal' : 'Externo' }}</td> }
                 @if (isColVisible('estatus')) { 
                   <td>
                     <span class="status-badge" [ngClass]="'status-' + item.estatus">
@@ -329,8 +329,10 @@ import { ProduccionService } from '../../../core/services/produccion';
 
     .status-badge { padding:.2rem .5rem; border-radius:12px; font-size:.72rem; font-weight:700; text-transform:uppercase; }
     .status-1 { background:#fffbeb; color:#d97706; } /* En Ensamble */
-    .status-2 { background:#ecfdf5; color:#059669; } /* Completo */
+    .status-2 { background:#ecfdf5; color:#059669; } /* Terminado */
     .status-3 { background:#eff6ff; color:#2563eb; } /* Embarcado */
+    .status-4 { background:#fef2f2; color:#dc2626; } /* Rechazado */
+    .status-5 { background:#f0fdf4; color:#16a34a; } /* Aprobado */
 
     .content-card { background:#fff; border-radius:12px; border:1px solid #e2e8f0; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.04); margin-top:1rem; }
     .data-table   { width:100%; border-collapse:collapse; }
@@ -475,8 +477,10 @@ export class PaletsListComponent implements OnInit {
   getEstatusLabel(estatus: number): string {
     switch (estatus) {
       case 1: return 'En Ensamble';
-      case 2: return 'Completo';
+      case 2: return 'Terminado';
       case 3: return 'Embarcado';
+      case 4: return 'Rechazado';
+      case 5: return 'Aprobado';
       default: return 'Desconocido';
     }
   }
@@ -617,7 +621,7 @@ export class PaletsListComponent implements OnInit {
       if (this.isColVisible('prensaNombre')) row.push(item.prensaNombre || '');
       if (this.isColVisible('operarioNombre')) row.push(item.operarioNombre || '');
       if (this.isColVisible('totalCarretes')) row.push(item.totalCarretes?.toString() || '0');
-      if (this.isColVisible('tipo')) row.push(item.tipo === 1 ? 'Normal' : 'Especial');
+      if (this.isColVisible('tipo')) row.push(item.tipo === 1 ? 'Normal' : 'Externo');
       if (this.isColVisible('estatus')) row.push(this.getEstatusLabel(item.estatus));
       csv += row.join(';') + '\n';
     });
@@ -648,7 +652,7 @@ export class PaletsListComponent implements OnInit {
       if (this.isColVisible('prensaNombre')) rows += `<td>${item.prensaNombre || ''}</td>`;
       if (this.isColVisible('operarioNombre')) rows += `<td>${item.operarioNombre || ''}</td>`;
       if (this.isColVisible('totalCarretes')) rows += `<td>${item.totalCarretes} / ${item.capacidad}</td>`;
-      if (this.isColVisible('tipo')) rows += `<td>${item.tipo === 1 ? 'Normal' : 'Especial'}</td>`;
+      if (this.isColVisible('tipo')) rows += `<td>${item.tipo === 1 ? 'Normal' : 'Externo'}</td>`;
       if (this.isColVisible('estatus')) rows += `<td>${this.getEstatusLabel(item.estatus)}</td>`;
       rows += '</tr>';
     });

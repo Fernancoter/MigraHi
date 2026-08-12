@@ -170,7 +170,17 @@ public class CatalogosController : ControllerBase
 
         var items = await query
             .OrderBy(e => e.Nombre)
-            .Select(e => new { e.Id, e.Nombre, e.NumeroExtrusora, e.Imagen })
+            .Select(e => new {
+                e.Id, e.Nombre, e.NumeroExtrusora, e.Imagen,
+                Estado = (int)e.Estado,
+                EstadoNombre = e.Estado.ToString(),
+                e.CapacidadKgHora,
+                e.Modelo,
+                e.NumeroSerie,
+                e.IsActive,
+                e.Observaciones,
+                e.NumeroEstaciones
+            })
             .ToListAsync();
         return Ok(items);
     }
@@ -188,6 +198,14 @@ public class CatalogosController : ControllerBase
         return Ok(new
         {
             item.Id, item.Nombre, item.NumeroExtrusora, item.Imagen,
+            Estado = (int)item.Estado,
+            EstadoNombre = item.Estado.ToString(),
+            item.CapacidadKgHora,
+            item.Modelo,
+            item.NumeroSerie,
+            item.IsActive,
+            item.Observaciones,
+            item.NumeroEstaciones,
             Operarios = item.ExtrusoraOperarios.Select(eo => new
             {
                 eo.Id, TurnoId = eo.TurnoId, Turno = eo.Turno?.Nombre,
@@ -205,7 +223,14 @@ public class CatalogosController : ControllerBase
             Nombre = dto.Nombre,
             NumeroExtrusora = dto.NumeroExtrusora,
             Imagen = dto.Imagen,
-            TenantId = dto.TenantId
+            TenantId = dto.TenantId,
+            Estado = dto.Estado.HasValue ? (EstadoExtrusora)dto.Estado.Value : EstadoExtrusora.Disponible,
+            CapacidadKgHora = dto.CapacidadKgHora ?? 0,
+            Modelo = dto.Modelo,
+            NumeroSerie = dto.NumeroSerie,
+            IsActive = dto.IsActive ?? true,
+            Observaciones = dto.Observaciones,
+            NumeroEstaciones = dto.NumeroEstaciones ?? 1
         };
         _context.Extrusoras.Add(entity);
 
@@ -243,6 +268,13 @@ public class CatalogosController : ControllerBase
         entity.Nombre = dto.Nombre;
         entity.NumeroExtrusora = dto.NumeroExtrusora;
         entity.Imagen = dto.Imagen;
+        if (dto.Estado.HasValue) entity.Estado = (EstadoExtrusora)dto.Estado.Value;
+        if (dto.CapacidadKgHora.HasValue) entity.CapacidadKgHora = dto.CapacidadKgHora.Value;
+        entity.Modelo = dto.Modelo;
+        entity.NumeroSerie = dto.NumeroSerie;
+        if (dto.IsActive.HasValue) entity.IsActive = dto.IsActive.Value;
+        entity.Observaciones = dto.Observaciones;
+        if (dto.NumeroEstaciones.HasValue) entity.NumeroEstaciones = dto.NumeroEstaciones.Value;
 
         var username = User.Identity?.Name ?? "Sistema";
         _context.AuditLogs.Add(new AuditLog
@@ -488,7 +520,20 @@ public class CatalogosController : ControllerBase
 
         var items = await query
             .OrderBy(p => p.Nombre)
-            .Select(p => new { p.Id, p.NumeroPrensa, p.Nombre, p.Imagen, p.Marca, p.Modelo })
+            .Select(p => new
+            {
+                p.Id,
+                p.NumeroPrensa,
+                p.Nombre,
+                p.Imagen,
+                p.Marca,
+                p.Modelo,
+                Estado = (int)p.Estado,
+                EstadoNombre = p.Estado.ToString(),
+                p.NumeroSerie,
+                p.IsActive,
+                p.Observaciones
+            })
             .ToListAsync();
         return Ok(items);
     }
@@ -514,6 +559,10 @@ public class CatalogosController : ControllerBase
             Imagen = dto.Imagen,
             Marca = dto.Marca,
             Modelo = dto.Modelo,
+            Estado = dto.Estado.HasValue ? (EstadoPrensa)dto.Estado.Value : EstadoPrensa.Disponible,
+            NumeroSerie = dto.NumeroSerie,
+            IsActive = dto.IsActive ?? true,
+            Observaciones = dto.Observaciones,
             TenantId = dto.TenantId == Guid.Empty ? new Guid("00000000-0000-0000-0000-000000000001") : dto.TenantId
         };
         _context.Prensas.Add(entity);
@@ -537,6 +586,10 @@ public class CatalogosController : ControllerBase
                 Imagen = dto.Imagen,
                 Marca = dto.Marca,
                 Modelo = dto.Modelo,
+                Estado = dto.Estado.HasValue ? (EstadoPrensa)dto.Estado.Value : EstadoPrensa.Disponible,
+                NumeroSerie = dto.NumeroSerie,
+                IsActive = dto.IsActive ?? true,
+                Observaciones = dto.Observaciones,
                 TenantId = dto.TenantId == Guid.Empty ? new Guid("00000000-0000-0000-0000-000000000001") : dto.TenantId
             };
             _context.Prensas.Add(entity);
@@ -548,6 +601,10 @@ public class CatalogosController : ControllerBase
             entity.Imagen = dto.Imagen;
             entity.Marca = dto.Marca;
             entity.Modelo = dto.Modelo;
+            if (dto.Estado.HasValue) entity.Estado = (EstadoPrensa)dto.Estado.Value;
+            if (dto.NumeroSerie != null) entity.NumeroSerie = dto.NumeroSerie;
+            if (dto.IsActive.HasValue) entity.IsActive = dto.IsActive.Value;
+            if (dto.Observaciones != null) entity.Observaciones = dto.Observaciones;
         }
         await _context.SaveChangesAsync(default);
         return NoContent();
@@ -1242,11 +1299,23 @@ public class CatalogosController : ControllerBase
 // DTOs
 // ─────────────────────────────────────────────────────────────────────────────
 public record TurnoDto(string Nombre, string? Clave, string HoraInicio, string HoraFin, Guid TenantId);
-public record ExtrusoraDto(string Nombre, string NumeroExtrusora, string? Imagen, Guid TenantId);
+public record ExtrusoraDto(
+    string Nombre,
+    string NumeroExtrusora,
+    string? Imagen,
+    Guid TenantId,
+    int? Estado,
+    decimal? CapacidadKgHora,
+    string? Modelo,
+    string? NumeroSerie,
+    bool? IsActive,
+    string? Observaciones,
+    int? NumeroEstaciones
+);
 public record ExtrusoraOperarioDto(Guid? OperarioId, Guid TenantId);
 public record ExtrusoraOperarioBatchItemDto(Guid? TurnoId, Guid? OperarioId, Guid? TenantId);
 public record OperarioCreateCatalogDto(string? Nombre, string? NombreCompleto, string? NumeroEmpleado, bool? Activo, bool? IsActive);
-public record PrensaDto(string? NumeroPrensa, string Nombre, string? Imagen, string? Marca, string? Modelo, Guid TenantId);
+public record PrensaDto(string? NumeroPrensa, string Nombre, string? Imagen, string? Marca, string? Modelo, Guid TenantId, int? Estado, string? NumeroSerie, bool? IsActive, string? Observaciones);
 public record TroquelDto(string Codigo, string Nombre, string? Observaciones, int Estado, Guid TenantId);
 public record AsignarPrensaTroquelDto(Guid PrensaId, string? Observaciones);
 public record TroquelProductoDto(Guid ProductoId);

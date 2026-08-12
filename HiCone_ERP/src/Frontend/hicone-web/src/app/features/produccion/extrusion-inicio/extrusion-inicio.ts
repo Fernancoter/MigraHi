@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProduccionService, Extrusion, CausaInterrupcion } from '../../../core/services/produccion';
+import { ProduccionConfigService } from '../../../core/services/produccion-config.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
@@ -369,6 +370,35 @@ import { NotificationService } from '../../../core/services/notification.service
                   <label>Lote Silo</label>
                   <input type="text" [(ngModel)]="editForm.loteSilo" class="form-control-styled">
                 </div>
+
+                <!-- Silo Virgen -->
+                <div class="form-field col-span-6">
+                  <label>Silo Virgen</label>
+                  <select [(ngModel)]="editForm.siloVirgenId" class="form-control-styled">
+                    <option value="">-- Selecciona --</option>
+                    <option *ngFor="let s of catalogos.silos" [value]="s.id">{{ s.nombre }}</option>
+                  </select>
+                </div>
+                <!-- Silo Molido -->
+                <div class="form-field col-span-6">
+                  <label>Silo Molido</label>
+                  <select [(ngModel)]="editForm.siloMolidoId" class="form-control-styled">
+                    <option value="">-- Selecciona --</option>
+                    <option *ngFor="let s of catalogos.silos" [value]="s.id">{{ s.nombre }}</option>
+                  </select>
+                </div>
+
+                <!-- Motivo Anticipado -->
+                <div class="form-field col-span-12" *ngIf="editForm.estado === 4">
+                  <label>Motivo Anticipado</label>
+                  <input type="text" [(ngModel)]="editForm.motivoAnticipado" class="form-control-styled">
+                </div>
+
+                <!-- Observaciones -->
+                <div class="form-field col-span-12">
+                  <label>Observaciones</label>
+                  <textarea [(ngModel)]="editForm.observaciones" class="form-control-styled" rows="2"></textarea>
+                </div>
               </div>
 
               <!-- Action Buttons -->
@@ -705,6 +735,7 @@ import { NotificationService } from '../../../core/services/notification.service
 })
 export class ExtrusionInicioComponent implements OnInit {
   private prodService = inject(ProduccionService);
+  private configService = inject(ProduccionConfigService);
   private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
   private notify = inject(NotificationService);
@@ -731,7 +762,8 @@ export class ExtrusionInicioComponent implements OnInit {
     operarios: [] as any[],
     turnos: [] as any[],
     productos: [] as any[],
-    extrusoras: [] as any[]
+    extrusoras: [] as any[],
+    silos: [] as any[]
   };
 
   editForm = {
@@ -751,7 +783,11 @@ export class ExtrusionInicioComponent implements OnInit {
     lotePaqueteAditivos: '',
     estado: 1,
     processStart: '',
-    processEnd: ''
+    processEnd: '',
+    observaciones: '',
+    motivoAnticipado: '',
+    siloVirgenId: '',
+    siloMolidoId: ''
   };
 
   ngOnInit() {
@@ -791,6 +827,7 @@ export class ExtrusionInicioComponent implements OnInit {
     this.prodService.getTurnos().subscribe(data => { this.catalogos.turnos = data; this.cdr.detectChanges(); });
     this.prodService.getProductos().subscribe(data => { this.catalogos.productos = data; this.cdr.detectChanges(); });
     this.prodService.getExtrusoras().subscribe(data => { this.catalogos.extrusoras = data; this.cdr.detectChanges(); });
+    this.configService.getSilos().subscribe(data => { this.catalogos.silos = data; this.cdr.detectChanges(); });
   }
 
   cargarMocks() {
@@ -961,7 +998,11 @@ export class ExtrusionInicioComponent implements OnInit {
         lotePaqueteAditivos: data.lotePaqueteAditivos || '',
         estado: data.estado === 'EnProceso' ? 2 : data.estado === 'Programada' ? 1 : 3,
         processStart: formattedStart,
-        processEnd: formattedEnd
+        processEnd: formattedEnd,
+        observaciones: data.observaciones || '',
+        motivoAnticipado: data.motivoAnticipado || '',
+        siloVirgenId: data.siloVirgenId || '',
+        siloMolidoId: data.siloMolidoId || ''
       };
       this.mostrarModalEditar = true;
       this.cdr.detectChanges();
@@ -1000,7 +1041,11 @@ export class ExtrusionInicioComponent implements OnInit {
           lotePaqueteAditivos: data.lotePaqueteAditivos || '',
           estado: data.estado || 1,
           processStart: formattedStart,
-          processEnd: formattedEnd
+          processEnd: formattedEnd,
+          observaciones: data.observaciones || '',
+          motivoAnticipado: data.motivoAnticipado || '',
+          siloVirgenId: data.siloVirgenId || '',
+          siloMolidoId: data.siloMolidoId || ''
         };
 
         this.mostrarModalEditar = true;
@@ -1068,7 +1113,11 @@ export class ExtrusionInicioComponent implements OnInit {
       lotePaqueteAditivos: this.editForm.lotePaqueteAditivos,
       estado: Number(this.editForm.estado),
       processStart: this.editForm.processStart ? new Date(this.editForm.processStart) : null,
-      processEnd: this.editForm.processEnd ? new Date(this.editForm.processEnd) : null
+      processEnd: this.editForm.processEnd ? new Date(this.editForm.processEnd) : null,
+      observaciones: this.editForm.observaciones || null,
+      motivoAnticipado: this.editForm.motivoAnticipado || null,
+      siloVirgenId: this.editForm.siloVirgenId || null,
+      siloMolidoId: this.editForm.siloMolidoId || null
     }).subscribe({
       next: () => {
         this.cerrarModales();

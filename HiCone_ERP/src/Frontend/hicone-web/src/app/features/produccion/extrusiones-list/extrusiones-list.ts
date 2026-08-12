@@ -642,6 +642,36 @@ import { ColumnFilterComponent } from '../../../shared/components/column-filter.
               <label>Lote Aditivos</label>
               <input type="text" [(ngModel)]="editForm.lotePaqueteAditivos" class="input-premium" />
             </div>
+
+            <!-- Silo Virgen -->
+            <div class="form-group-premium">
+              <label>Silo Virgen</label>
+              <select [(ngModel)]="editForm.siloVirgenId" class="input-premium">
+                <option value="">-- Selecciona --</option>
+                <option *ngFor="let s of catalogos.silos" [value]="s.id">{{ s.nombre }}</option>
+              </select>
+            </div>
+
+            <!-- Silo Molido -->
+            <div class="form-group-premium">
+              <label>Silo Molido</label>
+              <select [(ngModel)]="editForm.siloMolidoId" class="input-premium">
+                <option value="">-- Selecciona --</option>
+                <option *ngFor="let s of catalogos.silos" [value]="s.id">{{ s.nombre }}</option>
+              </select>
+            </div>
+
+            <!-- Motivo Anticipado -->
+            <div class="form-group-premium" *ngIf="editForm.estado === 4">
+              <label>Motivo Anticipado</label>
+              <input type="text" [(ngModel)]="editForm.motivoAnticipado" class="input-premium" />
+            </div>
+
+            <!-- Observaciones -->
+            <div class="form-group-premium" style="grid-column: 1 / -1;">
+              <label>Observaciones</label>
+              <textarea [(ngModel)]="editForm.observaciones" class="input-premium" rows="2"></textarea>
+            </div>
           </div>
         </div>
 
@@ -1699,7 +1729,8 @@ export class ExtrusionesListComponent implements OnInit {
     operarios: [] as any[],
     turnos: [] as any[],
     productos: [] as any[],
-    extrusoras: [] as any[]
+    extrusoras: [] as any[],
+    silos: [] as any[]
   };
 
   editForm = {
@@ -1719,7 +1750,11 @@ export class ExtrusionesListComponent implements OnInit {
     lotePaqueteAditivos: '',
     estado: 1,
     processStart: '',
-    processEnd: ''
+    processEnd: '',
+    observaciones: '',
+    motivoAnticipado: '',
+    siloVirgenId: '',
+    siloMolidoId: ''
   };
 
   @HostListener('document:click')
@@ -1887,6 +1922,7 @@ export class ExtrusionesListComponent implements OnInit {
     this.prodService.getTurnos().subscribe(data => { this.catalogos.turnos = data; this.cdr.detectChanges(); });
     this.prodService.getProductos().subscribe(data => { this.catalogos.productos = data; this.cdr.detectChanges(); });
     this.prodService.getExtrusoras().subscribe(data => { this.catalogos.extrusoras = data; this.cdr.detectChanges(); });
+    this.configService.getSilos().subscribe(data => { this.catalogos.silos = data; this.cdr.detectChanges(); });
   }
 
   getShortId(id: string, index: number): string {
@@ -2131,7 +2167,11 @@ export class ExtrusionesListComponent implements OnInit {
       lotePaqueteAditivos: '',
       estado: 1,
       processStart: nowStr,
-      processEnd: ''
+      processEnd: '',
+      observaciones: '',
+      motivoAnticipado: '',
+      siloVirgenId: '',
+      siloMolidoId: ''
     };
   }
 
@@ -2154,7 +2194,11 @@ export class ExtrusionesListComponent implements OnInit {
       lotePaqueteAditivos: ex.lotePaqueteAditivos || '',
       estado: this.mapEstadoToNumber(ex.estado),
       processStart: this.formatDateTimeLocal(ex.iniciaProceso),
-      processEnd: this.formatDateTimeLocal(ex.finProceso)
+      processEnd: this.formatDateTimeLocal(ex.finProceso),
+      observaciones: ex.observaciones || '',
+      motivoAnticipado: ex.motivoAnticipado || '',
+      siloVirgenId: ex.siloVirgenId || '',
+      siloMolidoId: ex.siloMolidoId || ''
     };
   }
 
@@ -2208,7 +2252,11 @@ export class ExtrusionesListComponent implements OnInit {
         lotePaqueteAditivos: this.editForm.lotePaqueteAditivos,
         estado: Number(this.editForm.estado),
         processStart: this.editForm.processStart ? new Date(this.editForm.processStart) : null,
-        processEnd: this.editForm.processEnd ? new Date(this.editForm.processEnd) : null
+        processEnd: this.editForm.processEnd ? new Date(this.editForm.processEnd) : null,
+        observaciones: this.editForm.observaciones || null,
+        motivoAnticipado: this.editForm.motivoAnticipado || null,
+        siloVirgenId: this.editForm.siloVirgenId || null,
+        siloMolidoId: this.editForm.siloMolidoId || null
       };
 
       this.prodService.createExtrusion(payload).subscribe({
@@ -2243,7 +2291,11 @@ export class ExtrusionesListComponent implements OnInit {
         lotePaqueteAditivos: this.editForm.lotePaqueteAditivos,
         estado: Number(this.editForm.estado),
         processStart: this.editForm.processStart ? new Date(this.editForm.processStart) : null,
-        processEnd: this.editForm.processEnd ? new Date(this.editForm.processEnd) : null
+        processEnd: this.editForm.processEnd ? new Date(this.editForm.processEnd) : null,
+        observaciones: this.editForm.observaciones || null,
+        motivoAnticipado: this.editForm.motivoAnticipado || null,
+        siloVirgenId: this.editForm.siloVirgenId || null,
+        siloMolidoId: this.editForm.siloMolidoId || null
       };
 
       this.prodService.updateExtrusion(this.editForm.id, payload).subscribe({

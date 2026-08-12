@@ -580,12 +580,12 @@ interface ColumnConfig {
 
               <div class="form-field-group">
                 <label>Kg</label>
-                <input type="number" step="0.01" class="input-form-qa" [(ngModel)]="selectedBobina.kg" name="kg">
+                <input type="number" step="0.01" class="input-form-qa" [(ngModel)]="selectedBobina.kg" name="kg" (ngModelChange)="onKgChange()">
               </div>
 
               <div class="form-field-group">
                 <label>Merma Kg</label>
-                <input type="number" step="0.01" class="input-form-qa" [(ngModel)]="selectedBobina.mermaKg" name="mermaKg">
+                <input type="number" step="0.01" class="input-form-qa" [(ngModel)]="selectedBobina.mermaKg" name="mermaKg" (ngModelChange)="onMermaKgChange()">
               </div>
 
               <div class="form-field-group">
@@ -636,22 +636,15 @@ interface ColumnConfig {
                 <input type="number" step="0.01" class="input-form-qa" [value]="getReposoHr(selectedBobina)" disabled>
               </div>
 
-              <!-- Motivo Molino (Dropdown Opciones exactas Imagen 2) -->
+              <!-- Motivo Molino: valores reales confirmados contra el sistema legado
+                   (ver docs/hallazgo_motivomolino_bobina.md). Se deshabilita cuando hay Kg
+                   capturado (bobina buena, no aplica motivo); se habilita cuando hay Merma Kg. -->
               <div class="form-field-group">
                 <label>Motivo Molino</label>
-                <select class="select-form-qa" [(ngModel)]="selectedBobina.motivoMolinoStr" name="motivoMolino">
-                  <option value="N/A">N/A</option>
-                  <option value="Carbón">Carbón</option>
-                  <option value="Contaminación Carbonización (piojo limpieza)">Contaminación Carbonización (piojo limpieza)</option>
-                  <option value="Contaminación Carbonización Suelta (piojo)">Contaminación Carbonización Suelta (piojo)</option>
-                  <option value="Calibre Alto (mancha con textura)">Calibre Alto (mancha con textura)</option>
-                  <option value="Calibre Bajo (mancha falta de material)">Calibre Bajo (mancha falta de material)</option>
-                  <option value="Raya Por Obstrucción En Labio">Raya Por Obstrucción En Labio</option>
-                  <option value="Marca De Rodillo Por Suciedad De Cera/Polvo">Marca De Rodillo Por Suciedad De Cera/Polvo</option>
-                  <option value="Hoyos Bobina Y Falta De Material">Hoyos Bobina Y Falta De Material</option>
-                  <option value="Mezcla De Resina (Contaminación)">Mezcla De Resina (Contaminación)</option>
-                  <option value="Hoyo Por Carbón O Grumo">Hoyo Por Carbón O Grumo</option>
-                  <option value="Pruebas">Pruebas</option>
+                <select class="select-form-qa" [(ngModel)]="selectedBobina.motivoMolino" name="motivoMolino" [disabled]="!motivoMolinoHabilitado()">
+                  <option [ngValue]="0">No Aplica</option>
+                  <option [ngValue]="1">Falla Mecánica</option>
+                  <option [ngValue]="2">Limpieza / Contaminación</option>
                 </select>
               </div>
 
@@ -988,7 +981,7 @@ export class BobinasListComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private notify = inject(NotificationService);
   
-  bobinas: (Bobina & { selected?: boolean })[] = [];
+  bobinas: (Bobina & { selected?: boolean; estadoStr?: string })[] = [];
   filteredBobinas: (Bobina & { selected?: boolean })[] = [];
   searchTerm: string = '';
   
@@ -1059,9 +1052,9 @@ export class BobinasListComponent implements OnInit {
     if (this.mostrandoEliminadas) {
       this.prodService.getBobinasEliminadas().subscribe({
         next: (data) => {
-          this.bobinas = data.map(d => ({ 
-            id: d.id, noSerie: 'ELIMINADA', bobinaNo: 0, kg: 0, 
-            espesor: 0, fechaProduccion: d.timestamp, estado: 'Eliminada', selected: false 
+          this.bobinas = data.map(d => ({
+            id: d.id, noSerie: 'ELIMINADA', bobinaNo: 0, kg: 0,
+            espesor: 0, fechaProduccion: d.timestamp, estado: 0, estadoStr: 'Eliminada', selected: false
           }));
           this.onSearch();
         },
@@ -1188,13 +1181,46 @@ export class BobinasListComponent implements OnInit {
 
   abrirEditarBobina(b: any) {
     this.activeRowId = null;
-    this.selectedBobina = { 
-      ...b, 
+    this.selectedBobina = {
+      ...b,
       estadoStr: this.getEstadoTexto(b),
-      motivoMolinoStr: this.getMotivoMolinoTexto(b),
-      bobinaOrigen: b.bobinaOrigen || 'A'
+      motivoMolino: b.motivoMolino ?? 0,
+      bobinaOrigen: b.bobinaOrigen || 'A',
+      horaInicioStr: this.formatDateTimeLocal(b.horaInicio),
+      horaSalidaStr: this.formatDateTimeLocal(b.horaSalida),
+      iniciaReposoStr: this.formatDateTimeLocal(b.iniciaReposo)
     };
     this.currentView = 'EDIT';
+  }
+
+  // Regla real del legado (ver docs/hallazgo_motivomolino_bobina.md): capturar Kg (bobina
+  // buena) fuerza Motivo Molino a "No Aplica" y deshabilita el campo; capturar Merma Kg
+  // (bobina rechazada) lo habilita para elegir el motivo real.
+  motivoMolinoHabilitado(): boolean {
+    return Number(this.selectedBobina?.mermaKg) > 0;
+  }
+
+  onKgChange() {
+    if (Number(this.selectedBobina.kg) > 0) {
+      this.selectedBobina.mermaKg = 0;
+      this.selectedBobina.motivoMolino = 0;
+    }
+  }
+
+  onMermaKgChange() {
+    if (Number(this.selectedBobina.mermaKg) > 0) {
+      this.selectedBobina.kg = 0;
+    } else {
+      this.selectedBobina.motivoMolino = 0;
+    }
+  }
+
+  // Date formatting utility
+  private formatDateTimeLocal(d: Date | string | undefined | null): string {
+    if (!d) return '';
+    const date = new Date(d);
+    const tzoffset = date.getTimezoneOffset() * 60000;
+    return (new Date(date.getTime() - tzoffset)).toISOString().slice(0, 16);
   }
 
   irALista() {
@@ -1214,10 +1240,13 @@ export class BobinasListComponent implements OnInit {
       espesor: this.selectedBobina.espesor,
       observaciones: this.selectedBobina.observaciones,
       estado: estadoNum,
-      motivoMolino: 0,
+      motivoMolino: this.motivoMolinoHabilitado() ? Number(this.selectedBobina.motivoMolino) : 0,
       bobinaNo: this.selectedBobina.bobinaNo,
       carreras: this.selectedBobina.carreras,
-      loteVirgen: this.selectedBobina.loteVirgen
+      loteVirgen: this.selectedBobina.loteVirgen,
+      horaInicio: this.selectedBobina.horaInicioStr ? new Date(this.selectedBobina.horaInicioStr).toISOString() : null,
+      horaSalida: this.selectedBobina.horaSalidaStr ? new Date(this.selectedBobina.horaSalidaStr).toISOString() : null,
+      iniciaReposo: this.selectedBobina.iniciaReposoStr ? new Date(this.selectedBobina.iniciaReposoStr).toISOString() : null
     };
 
     this.prodService.actualizarBobina(this.selectedBobina.id, payload).subscribe({
@@ -1361,7 +1390,7 @@ export class BobinasListComponent implements OnInit {
   getColorEstacionTexto(b: any): string {
     if (b.colorEstacionStr) return b.colorEstacionStr;
     const colors: { [key: number]: string } = {
-      0: 'Sin Asignar', 1: 'Estación Negra', 2: 'Estación Azul',
+      0: 'Sin Asignar', 1: 'Estación Roja', 2: 'Estación Azul',
       3: 'Estación Verde', 4: 'Estación Amarilla', 5: 'Estación Naranja', 6: 'Estación Blanca'
     };
     if (typeof b.colorEstacion === 'number') return colors[b.colorEstacion] || 'Sin Asignar';
@@ -1377,8 +1406,11 @@ export class BobinasListComponent implements OnInit {
   }
 
   getMotivoMolinoTexto(b: any): string {
-    if (b.motivoMolinoStr) return b.motivoMolinoStr;
-    return 'N/A';
+    switch (Number(b?.motivoMolino)) {
+      case 1: return 'Falla Mecánica';
+      case 2: return 'Limpieza / Contaminación';
+      default: return 'No Aplica';
+    }
   }
 
   getOperadorNombre(b: any): string {

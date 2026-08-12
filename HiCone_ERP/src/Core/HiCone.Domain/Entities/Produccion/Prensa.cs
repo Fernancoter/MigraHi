@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using HiCone.Domain.Common;
 using HiCone.Domain.Enums;
 
@@ -19,6 +20,7 @@ public class Prensa : TenantEntity
     public string? Observaciones { get; set; }
 
     // Retrocompatibilidad
+    [NotMapped]
     public string NumeroPrensa { get => Codigo; set => Codigo = value; }
     public string? Imagen { get; set; }
 
