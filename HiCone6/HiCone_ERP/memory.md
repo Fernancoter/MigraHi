@@ -1,15 +1,22 @@
 # Project Memory: HiCone ERP Modernization
 
 ## Rama Activa
-`QA` — activa y con los servidores del backend (5007), frontend web (4200) y frontend móvil (4201) iniciados.
+`QA` — sincronizada y actualizada en remoto (`origin/QA`). Servidores operativos: Backend (5007), Web (4200), Móvil (4201).
 
-## Estado Actual (2026-07-13)
-- **Backend:** Operativo (Puerto 5007, levantado en segundo plano con dotnet run).
-- **Frontend Web (`hicone-web`):** Operativo (Puerto 4200, levantado en segundo plano con ng serve).
-- **Frontend Móvil (`hicone-mobile`):** Operativo (Puerto 4201, levantado en segundo plano con ng serve --port 4201).
-- **Correcciones:** 
-  - Se corrigió un error de compilación en el backend (el controlador `ProduccionController` dependía de `MontarBobinaEnPrensadoAsync` en `IProduccionService`, el cual había sido removido en la rama remota). Se restauró e implementó la función en el servicio restableciendo la vinculación lógica de bobinas montadas en prensas.
-- **Base de Datos:** Migración `AddEmbarqueProperties` aplicada exitosamente sobre el servidor local de SQL Server.
+## Estado Actual (2026-08-11)
+- **Backend (.NET API):** Operativo en `http://localhost:5007` y Swagger en `http://localhost:5007/swagger` (dotnet run).
+- **Frontend Web (`hicone-web`):** Operativo en `http://localhost:4200` (ng serve). Compilación con 0 errores y 11 suites de pruebas unitarias Vitest pasando al 100%.
+- **Frontend Móvil (`hicone-mobile`):** Operativo en `http://localhost:4201` (ng serve --port 4201). Compilación con 0 errores y 5 suites de pruebas unitarias Vitest pasando al 100%.
+- **Correcciones en Operación Bobinas & Extrusiones (2026-08-11):**
+  - **Estado de Bobinas:** Resuelto problema donde el modal forzaba siempre estado `2` (`En Reposo`). Se implementó mapeo bidireccional exhaustivo para los 12 estados de `EstadoBobina` en frontend y persistencia real con `PUT /api/v1/produccion/bobina/{id}`.
+  - **Zona Horaria:** Corregido desfase de 6 horas (UTC vs Hora local de México) mediante `formatDateLocal` en Bobinas y Extrusiones (listados, modales y tablas inline).
+  - **Identificadores Limpios:** Producto ID ahora muestra clave/código legible o primeros 8 caracteres legibles en vez de GUID de 36 caracteres.
+  - **Prensa e Interrupciones:** Eliminados fallbacks hardcodeados ('Prensa 4' y motivo de limpieza por defecto), mostrando '-' cuando no tienen asignaciones.
+- **Hardware Industrial & Pipelines (MOB-03, MOB-04, WEB-01, WEB-02, WEB-03):**
+  - Drivers de impresión Zebra ZPL II (Red TCP 9100, Bluetooth BLE y descarga ZPL) y NFC NDEF (`printer.service.ts`, `nfc.service.ts`).
+  - Desacopladas 22 URLs fijas en `hicone-web` mediante `environment.apiUrl`.
+  - Roles y permisos reales preservados en `auth.service.ts` con soporte superusuario `admin` / `hicone123`.
+  - Pipelines de Vitest en Web y Móvil configurados con JSDOM y BrowserTestingModule (100% pruebas en verde).
 
 ✅ **Reporte de Existencia y Columnas de Extrusión COMPLETADOS** (2026-06-29)
 - [x] **Backend API**: Implementado listado de cortes (`GET /api/v1/inventario/existencias`) y seeding automatizado de datos de Silos y Existencias.
@@ -161,3 +168,10 @@ The project is in the initial phase of modernization/migration from a GeneXus-ba
 - **Servidores e Integridad**: Servidores iniciados de manera exitosa y pruebas de frontend pasando al 100%.
 - **Optimización de Base de Datos (Extrusiones y Prensados)**: Se identificó que las propiedades alias para retrocompatibilidad en las entidades C# (`Extrusion` y `Prensado`) estaban generando columnas redundantes duplicadas en SQL Server. Se agregaron atributos `[NotMapped]` en `Status`, `KgVirgen`, `KgMolido`, `Target`, `ProcessStart`, `ProcessEnd` y `MaquinaId`, y se ejecutó la migración `20260720231252_OptimizeExtrusionAndAddInterrupcionesColumn` para eliminar físicamente estas columnas y agregar la columna faltante `bobina_interrupciones_id` en la tabla `bobinas`. Con esto, la base de datos local quedó optimizada y el error de columna inexistente al consultar extrusiones se resolvió definitivamente.
 
+## 2026-07-22: Corrección en Configuración de Operarios de Extrusora y Eliminación de Semillas
+- **Backend API**: Se corrigió un error de violación de clave foránea (`FOREIGN KEY constraint conflict`) al intentar guardar turnos sin operadores asignados (`-- Sin asignar --`) en el catálogo de Extrusoras. 
+  - Anteriormente, al seleccionar "Sin asignar", el backend recibía un valor nulo y le asignaba `Guid.Empty` (`00000000-0000-0000-0000-000000000000`), el cual fallaba al validarse contra la tabla `operarios`.
+  - Se modificaron los endpoints `UpsertExtrusoraOperario` y `SaveExtrusoraOperariosBatch` en `CatalogosController.cs` para remover la relación de base de datos (`ExtrusoraOperario`) o evitar su inserción si el operador es nulo o `Guid.Empty`.
+- **Sembrador de Base de Datos**: A solicitud del usuario, se eliminó por completo la siembra automática de extrusoras, prensas, extrusiones y prensados de demostración en `ApplicationDbContextSeeder.cs`.
+- **Base de Datos**: Se ejecutó una limpieza en el servidor local de SQL Server (`HiCone_ERP_V3`) eliminando físicamente todos los registros de prueba y demostración de las tablas `extrusoras`, `maquinas` y `extrusora_operarios`.
+- **Compilación y Servidor**: Se reconstruyó el backend confirmando 0 errores, y se reinició el servidor en el puerto 5007.

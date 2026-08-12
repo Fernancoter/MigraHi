@@ -112,12 +112,14 @@ export interface RealtimeInventoryRow {
   balance: number;
 }
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class SaeService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5007/api/v1/sae';
+  private apiUrl = `${environment.apiUrl}/api/v1/sae`;
 
   // Productos
   getProductos(): Observable<SaeProducto[]> {

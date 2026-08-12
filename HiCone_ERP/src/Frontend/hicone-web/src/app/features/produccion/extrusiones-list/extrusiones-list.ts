@@ -267,7 +267,7 @@ import { ColumnFilterComponent } from '../../../shared/components/column-filter.
                   <td *ngIf="visibleCols.turno">{{ ex.turno?.nombre || '1er Turno' }}</td>
                   <td *ngIf="visibleCols.producto">{{ ex.producto?.nombre || ex.productoNombre || '' }}</td>
                   <td *ngIf="visibleCols.tiempoInterrupcion" class="text-right">{{ ex.tiempoInterrupcion || 0 }}</td>
-                  <td *ngIf="visibleCols.fecha">{{ ex.fechaInicio | date:'dd/MM/yy HH:mm' }}</td>
+                  <td *ngIf="visibleCols.fecha">{{ formatDateLocal(ex.fechaInicio) }}</td>
                   <td *ngIf="visibleCols.meta" class="text-right">{{ ex.metaKg || 0 | number:'1.0-0' }}</td>
                   <td *ngIf="visibleCols.estado">
                     <span class="badge-status" [ngClass]="getStatusClass(ex.estado)">
@@ -275,8 +275,8 @@ import { ColumnFilterComponent } from '../../../shared/components/column-filter.
                     </span>
                   </td>
                   <td *ngIf="visibleCols.operador" class="operator-name">{{ ex.operario?.nombreCompleto || 'LUIS CESAR OROPEZA ORTEGA' | uppercase }}</td>
-                  <td *ngIf="visibleCols.iniciaProceso">{{ (ex.iniciaProceso || ex.fechaInicio) | date:'dd/MM/yy' }} {{ (ex.iniciaProceso || ex.fechaInicio) | date:'HH:mm' }}</td>
-                  <td *ngIf="visibleCols.finProceso">{{ (ex.finProceso || ex.fechaFin) ? ((ex.finProceso || ex.fechaFin) | date:'dd/MM/yy') : '' }} {{ (ex.finProceso || ex.fechaFin) ? ((ex.finProceso || ex.fechaFin) | date:'HH:mm') : '' }}</td>
+                  <td *ngIf="visibleCols.iniciaProceso">{{ formatDateLocal(ex.iniciaProceso || ex.fechaInicio) }}</td>
+                  <td *ngIf="visibleCols.finProceso">{{ (ex.finProceso || ex.fechaFin) ? formatDateLocal(ex.finProceso || ex.fechaFin) : '-' }}</td>
                 </tr>
 
                 <!-- FILA DE DETALLE DE BOBINAS INLINE -->
@@ -459,8 +459,8 @@ import { ColumnFilterComponent } from '../../../shared/components/column-filter.
                             </td>
                             <td *ngIf="visibleBobinaCols.extrusionId">{{ extrusionSeleccionada.extrusionIdLegacy || getShortId(extrusionSeleccionada.id, 0) }}</td>
                             <td *ngIf="visibleBobinaCols.bobinaOrigen">{{ b.station || b.bobinaOrigen || 'A' }}</td>
-                            <td *ngIf="visibleBobinaCols.horaInicio">{{ b.horaInicio | date:'dd/MM/yyyy HH:mm' }}</td>
-                            <td *ngIf="visibleBobinaCols.horaSalida">{{ b.horaSalida | date:'dd/MM/yyyy HH:mm' }}</td>
+                            <td *ngIf="visibleBobinaCols.horaInicio">{{ formatDateLocal(b.horaInicio) }}</td>
+                            <td *ngIf="visibleBobinaCols.horaSalida">{{ formatDateLocal(b.horaSalida) }}</td>
                             <td *ngIf="visibleBobinaCols.bobinaNo" class="text-right">{{ b.bobbinNo }}</td>
                             <td *ngIf="visibleBobinaCols.bobinaNoSerie">{{ b.serialNo }}</td>
                             <td *ngIf="visibleBobinaCols.bobinaKg" class="text-right">{{ b.kg | number:'1.2-2' }}</td>
@@ -470,7 +470,7 @@ import { ColumnFilterComponent } from '../../../shared/components/column-filter.
                             <td *ngIf="visibleBobinaCols.bobinaMotivoMolino">{{ b.millReason || 'N/A' }}</td>
                             <td *ngIf="visibleBobinaCols.bobinaProductoNombre">{{ b.productName || extrusionSeleccionada.producto?.nombre || '' }}</td>
                             <td *ngIf="visibleBobinaCols.bobinaCarreras" class="text-right">{{ b.carreras || 0 }}</td>
-                            <td *ngIf="visibleBobinaCols.bobinaIniciaReposo">{{ b.iniciaReposo | date:'dd/MM/yyyy HH:mm' }}</td>
+                            <td *ngIf="visibleBobinaCols.bobinaIniciaReposo">{{ formatDateLocal(b.iniciaReposo) }}</td>
                             <td *ngIf="visibleBobinaCols.bobinaMinutosEnReposo" class="text-right">{{ b.restMinutes || 0 }}</td>
                             <td *ngIf="visibleBobinaCols.bobinaMolino" class="text-center">
                               <input type="checkbox" [checked]="b.scrapKg > 0 || b.mill" disabled />
@@ -715,7 +715,7 @@ import { ColumnFilterComponent } from '../../../shared/components/column-filter.
               <!-- Fila 3 -->
               <div class="info-group-legacy">
                 <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Fecha</label>
-                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ (extrusionSeleccionada.fechaInicio || '2026-05-09T00:00:00') | date:'dd/MM/yy HH:mm' }}</div>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ formatDateLocal(extrusionSeleccionada.fechaInicio || extrusionSeleccionada.fecha) }}</div>
               </div>
               <div class="info-group-legacy">
                 <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Calibre</label>
@@ -751,11 +751,11 @@ import { ColumnFilterComponent } from '../../../shared/components/column-filter.
               <!-- Fila 5 -->
               <div class="info-group-legacy">
                 <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Inicia Proceso</label>
-                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ (extrusionSeleccionada.iniciaProceso || extrusionSeleccionada.fechaInicio || '2026-05-09T00:27:00') | date:'dd/MM/yy HH:mm' }}</div>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ formatDateLocal(extrusionSeleccionada.iniciaProceso || extrusionSeleccionada.fechaInicio) }}</div>
               </div>
               <div class="info-group-legacy" style="grid-column: span 2;">
                 <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 2px;">Fin Proceso</label>
-                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ (extrusionSeleccionada.finProceso || extrusionSeleccionada.fechaFin || '2026-05-09T07:47:00') | date:'dd/MM/yy HH:mm' }}</div>
+                <div style="font-size: 0.92rem; color: #334155; font-weight: 500;">{{ formatDateLocal(extrusionSeleccionada.finProceso || extrusionSeleccionada.fechaFin) }}</div>
               </div>
 
               <!-- Fila 6 -->
@@ -827,16 +827,16 @@ import { ColumnFilterComponent } from '../../../shared/components/column-filter.
                       <td style="padding: 6px;">{{ b.bobinaIdLegacy || b.id }}</td>
                       <td style="padding: 6px; color: #10b981; font-weight: 600;">{{ b.noSerie }}</td>
                       <td style="padding: 6px;">{{ b.origen }}</td>
-                      <td style="padding: 6px;">{{ b.horaInicio | date:'dd/MM/yyyy HH:mm' }}</td>
-                      <td style="padding: 6px;">{{ b.horaSalida | date:'dd/MM/yyyy HH:mm' }}</td>
+                      <td style="padding: 6px;">{{ formatDateLocal(b.horaInicio) }}</td>
+                      <td style="padding: 6px;">{{ formatDateLocal(b.horaSalida) }}</td>
                       <td style="padding: 6px;">{{ b.bobbinNo || b.no }}</td>
                       <td style="padding: 6px;" class="text-right">{{ b.pesoKg || b.kg | number:'1.2-2' }}</td>
                       <td style="padding: 6px;" class="text-right">{{ b.mermaKg || 0 | number:'1.2-2' }}</td>
                       <td style="padding: 6px;" class="text-right">{{ b.espesor || 15.50 | number:'1.2-2' }}</td>
-                      <td style="padding: 6px; max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ b.observaciones || 'Arranque, se tuvieron bastantes problemas...' }}</td>
+                      <td style="padding: 6px; max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ b.observaciones || '' }}</td>
                       <td style="padding: 6px;">{{ b.estado || 'Consumida' }}</td>
-                      <td style="padding: 6px;" class="text-center">{{ b.carreras || 3 }}</td>
-                      <td style="padding: 6px;">{{ b.iniciaReposo | date:'dd/MM/yy HH:mm' }}</td>
+                      <td style="padding: 6px;" class="text-center">{{ b.carreras || 0 }}</td>
+                      <td style="padding: 6px;">{{ formatDateLocal(b.iniciaReposo) }}</td>
                       <td style="padding: 6px;" class="text-right">{{ b.enReposo || 0 | number:'1.2-2' }}</td>
                       <td style="padding: 6px;">{{ b.motivoMolino || 'N/A' }}</td>
                       <td style="padding: 6px;">{{ b.productoId || 2 }}</td>
@@ -1017,9 +1017,9 @@ import { ColumnFilterComponent } from '../../../shared/components/column-filter.
             <div class="info-item-legacy"><strong>Kg Molido:</strong> {{ extrusionSeleccionada.kgMolido }} Kg</div>
             <div class="info-item-legacy"><strong>Lote Silo:</strong> {{ extrusionSeleccionada.loteSilo }}</div>
             <div class="info-item-legacy"><strong>Lote Aditivos:</strong> {{ extrusionSeleccionada.lotePaqueteAditivos }}</div>
-            <div class="info-item-legacy"><strong>Fecha Programada:</strong> {{ extrusionSeleccionada.fecha | date:'dd/MM/yy' }}</div>
-            <div class="info-item-legacy"><strong>Inicia Proceso:</strong> {{ extrusionSeleccionada.processStart | date:'dd/MM/yy HH:mm' }}</div>
-            <div class="info-item-legacy"><strong>Fin Proceso:</strong> {{ extrusionSeleccionada.processEnd | date:'dd/MM/yy HH:mm' }}</div>
+            <div class="info-item-legacy"><strong>Fecha Programada:</strong> {{ formatDateLocal(extrusionSeleccionada.fechaInicio) }}</div>
+            <div class="info-item-legacy"><strong>Inicia Proceso:</strong> {{ formatDateLocal(extrusionSeleccionada.processStart || extrusionSeleccionada.iniciaProceso || extrusionSeleccionada.fechaInicio) }}</div>
+            <div class="info-item-legacy"><strong>Fin Proceso:</strong> {{ formatDateLocal(extrusionSeleccionada.processEnd || extrusionSeleccionada.finProceso || extrusionSeleccionada.fechaFin) }}</div>
             <div class="info-item-legacy"><strong>Estado:</strong> {{ getEstadoLabelByVal(extrusionSeleccionada.estado) }}</div>
           </div>
 
@@ -1096,8 +1096,8 @@ import { ColumnFilterComponent } from '../../../shared/components/column-filter.
                   <td>{{ i.descripcion || '' }}</td>
                   <td>{{ parseCausa(i.causa).id }}</td>
                   <td>{{ parseCausa(i.causa).name }}</td>
-                  <td>{{ i.horaInicio | date:'dd/MM/yy HH:mm' }}</td>
-                  <td>{{ i.horaFin ? (i.horaFin | date:'dd/MM/yy HH:mm') : '' }}</td>
+                  <td>{{ formatDateLocal(i.horaInicio) }}</td>
+                  <td>{{ i.horaFin ? formatDateLocal(i.horaFin) : '-' }}</td>
                   <td class="text-center">
                     <input type="checkbox" [checked]="i.concluida" disabled />
                   </td>
@@ -2679,6 +2679,30 @@ export class ExtrusionesListComponent implements OnInit {
 
     doc.save(`Reporte_Extrusiones_${new Date().toISOString().substring(0, 10)}.pdf`);
     this.showExportOptions = false;
+  }
+
+  formatDateLocal(dateVal: any): string {
+    if (!dateVal) return '-';
+    try {
+      let d: Date;
+      if (typeof dateVal === 'string') {
+        const isIsoNoZone = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?$/.test(dateVal);
+        d = isIsoNoZone ? new Date(dateVal + 'Z') : new Date(dateVal);
+      } else {
+        d = new Date(dateVal);
+      }
+      if (isNaN(d.getTime())) return String(dateVal);
+      
+      const pad = (n: number) => n < 10 ? '0' + n : n.toString();
+      const day = pad(d.getDate());
+      const month = pad(d.getMonth() + 1);
+      const year = d.getFullYear();
+      const hours = pad(d.getHours());
+      const mins = pad(d.getMinutes());
+      return `${day}/${month}/${year} ${hours}:${mins}`;
+    } catch {
+      return String(dateVal);
+    }
   }
 
   imprimir(ex: Extrusion) {

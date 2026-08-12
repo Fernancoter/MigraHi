@@ -325,23 +325,39 @@
       <button class="close-btn-x" (click)="cerrarMenuIntermedio()" style="background: none; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✕</button>
     </div>
 
+    <!-- Info: sin orden activa -->
+    <div *ngIf="!extrusionActiva" style="margin-top: 0.75rem; padding: 0.6rem 0.75rem; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 8px; color: #f59e0b; font-size: 0.82rem; text-align: center;">
+      ⚠️ No hay orden activa — inicie una nueva extrusión primero
+    </div>
+
     <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.25rem;">
-      <button (click)="opcionRegistrarBobina()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; font-weight: 700; border: none; border-radius: 10px; padding: 0.9rem 1rem; font-size: 0.95rem; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
-        <span>📦 Registrar Nueva Bobina</span>
+
+      <!-- Botón: Iniciar Nueva Extrusión (solo si NO hay orden activa) -->
+      <button *ngIf="!extrusionActiva" (click)="opcionIniciarExtrusion()" style="background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%); color: #ffffff; font-weight: 700; border: none; border-radius: 10px; padding: 0.9rem 1rem; font-size: 0.95rem; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);">
+        <span>🚀 Iniciar Nueva Extrusión</span>
         <span>➔</span>
       </button>
 
+      <!-- Botón: Configurar Mezcla (siempre habilitado) -->
       <button (click)="opcionConfigurarMezcla()" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #38bdf8; font-weight: 700; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 10px; padding: 0.9rem 1rem; font-size: 0.95rem; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between;">
         <span>⚙️ Configurar Mezcla y Silos</span>
         <span>➔</span>
       </button>
 
-      <button (click)="opcionVerBobinas()" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #f8fafc; font-weight: 700; border: 1px solid #334155; border-radius: 10px; padding: 0.9rem 1rem; font-size: 0.95rem; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between;">
+      <!-- Botón: Registrar Bobina (requiere orden activa) -->
+      <button (click)="opcionRegistrarBobina()" [disabled]="!extrusionActiva" [style.opacity]="extrusionActiva ? 1 : 0.4" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; font-weight: 700; border: none; border-radius: 10px; padding: 0.9rem 1rem; font-size: 0.95rem; text-align: left; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);" [style.cursor]="extrusionActiva ? 'pointer' : 'not-allowed'">
+        <span>📦 Registrar Nueva Bobina</span>
+        <span>➔</span>
+      </button>
+
+      <!-- Botón: Ver Bobinas (requiere orden activa) -->
+      <button (click)="opcionVerBobinas()" [disabled]="!extrusionActiva" [style.opacity]="extrusionActiva ? 1 : 0.4" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #f8fafc; font-weight: 700; border: 1px solid #334155; border-radius: 10px; padding: 0.9rem 1rem; font-size: 0.95rem; text-align: left; display: flex; align-items: center; justify-content: space-between;" [style.cursor]="extrusionActiva ? 'pointer' : 'not-allowed'">
         <span>📋 Ver Bobinas del Turno ({{ bobinasExtrusion.length }})</span>
         <span>➔</span>
       </button>
 
-      <button (click)="opcionCerrarOrden()" style="background: linear-gradient(135deg, #334155 0%, #1e293b 100%); color: #f59e0b; font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 10px; padding: 0.9rem 1rem; font-size: 0.95rem; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between;">
+      <!-- Botón: Cerrar Orden (requiere orden activa) -->
+      <button (click)="opcionCerrarOrden()" [disabled]="!extrusionActiva" [style.opacity]="extrusionActiva ? 1 : 0.4" style="background: linear-gradient(135deg, #334155 0%, #1e293b 100%); color: #f59e0b; font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 10px; padding: 0.9rem 1rem; font-size: 0.95rem; text-align: left; display: flex; align-items: center; justify-content: space-between;" [style.cursor]="extrusionActiva ? 'pointer' : 'not-allowed'">
         <span>🏁 Consolidar y Cerrar Turno</span>
         <span>➔</span>
       </button>

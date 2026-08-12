@@ -2,6 +2,7 @@ import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../../environments/environment';
 
 export interface ConfiguracionSistema {
   id?: string;
@@ -128,7 +129,7 @@ export interface ConfiguracionSistema {
 })
 export class ProduccionConfiguracionComponent implements OnInit {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5007/api/v1/produccion/referencias/configuracion';
+  private apiUrl = `${environment.apiUrl}/api/v1/produccion/referencias/configuracion`;
 
   searchText = signal<string>('');
   currentPage = signal<number>(1);

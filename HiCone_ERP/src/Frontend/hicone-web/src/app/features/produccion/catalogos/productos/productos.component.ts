@@ -2,12 +2,15 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Producto, Categoria } from '../../../../core/services/produccion-config.service';
+import { SaeService } from '../../../../core/services/sae';
+import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
 import { NotificationService } from '../../../../core/services/notification.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-productos-catalogo',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ClickOutsideDirective],
   template: `
     <div class="module-page animate-move-up">
       <div class="page-header-premium">
@@ -481,12 +484,27 @@ import { NotificationService } from '../../../../core/services/notification.serv
                   @if (modalReadOnly()) {
                     {{ form.productoSAE || '(Ninguno)' }}
                   } @else {
-                    <select class="field-input" [(ngModel)]="form.productoSAE" style="width: 100%; appearance: auto; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.4rem;">
-                      <option [value]="undefined">(Ninguno)</option>
-                      @for (code of saeCodes(); track code.code) {
-                        <option [value]="code.code">{{ code.code }} - {{ code.name }}</option>
+                    <div class="sae-selector-wrapper" clickOutside (clickOutside)="showSaeDropdown.set(false)">
+                      <div class="sae-select-bar" (click)="toggleSaeDropdown($event)" style="border: 1px solid #cbd5e1; border-radius: 4px; padding: 0.4rem; font-size: 0.85rem; height: auto;">
+                        <span>{{ form.productoSAE || '-- Seleccione Producto SAE --' }}</span>
+                        <span class="sae-arrow">▼</span>
+                      </div>
+                      @if (showSaeDropdown()) {
+                        <div class="sae-dropdown" style="border: 1px solid #cbd5e1; background: white; border-radius: 4px; max-height: 200px; overflow-y: auto;">
+                          <div class="sae-dropdown-header" style="font-size: 0.72rem; color: #94a3b8; font-weight: 800; padding: 0.5rem 1rem; border-bottom: 1px solid #f1f5f9;">Códigos Aspel SAE</div>
+                          @if (saeCodes().length === 0) {
+                            <div class="sae-empty" style="padding: 1rem; color: #94a3b8; text-align: center; font-style: italic;">No hay códigos de SAE cargados. Sincronice primero.</div>
+                          } @else {
+                            @for (code of saeCodes(); track code.code) {
+                              <div class="sae-item" (click)="selectSaeCode(code)" style="padding: 0.6rem 1rem; cursor: pointer; border-bottom: 1px solid #f8fafc; display: flex; flex-direction: column;">
+                                <span class="sae-code" style="font-weight: 800; font-size: 0.8rem; color: #10b981;">{{ code.code }}</span>
+                                <span class="sae-name" style="font-size: 0.85rem; color: #475569;">{{ code.name }}</span>
+                              </div>
+                            }
+                          }
+                        </div>
                       }
-                    </select>
+                    </div>
                   }
                 </div>
               </div>
@@ -965,6 +983,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
 })
 export class ProductosCatalogoComponent implements OnInit {
   private svc = inject(ProduccionConfigService);
+  private saeSvc = inject(SaeService);
   private notify = inject(NotificationService);
   
   items = signal<Producto[]>([]);
@@ -1029,6 +1048,17 @@ export class ProductosCatalogoComponent implements OnInit {
     this.loadSavedFiltersFromStorage();
     this.load();
     this.loadCategories();
+    this.loadSaeCodes();
+  }
+
+  loadSaeCodes() {
+    this.saeSvc.getProductos().subscribe({
+      next: (res) => {
+        const codes = (res || []).map(p => ({ code: p.productNumber, name: p.productName }));
+        this.saeCodes.set(codes);
+      },
+      error: (err) => console.error('Error loading SAE products:', err)
+    });
   }
 
   loadCategories() {

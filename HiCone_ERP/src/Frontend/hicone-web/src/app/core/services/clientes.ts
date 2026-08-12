@@ -14,12 +14,14 @@ export interface Cliente {
   limiteCredito?: number;
 }
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ClientesService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5007/api/v1/clientes';
+  private apiUrl = `${environment.apiUrl}/api/v1/clientes`;
 
   getClientes(): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(this.apiUrl);

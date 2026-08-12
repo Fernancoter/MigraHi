@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
+import { environment } from '../../../../../environments/environment';
 import { NotificationService } from '../../../../core/services/notification.service';
 import * as XLSX from 'xlsx';
 
@@ -253,8 +254,8 @@ export class ExtrusoraProductoComponent implements OnInit {
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
   private notify = inject(NotificationService);
-  private apiUrl = 'http://localhost:5007/api/v1/produccion/referencias/extrusora-producto';
-  private catalogosUrl = 'http://localhost:5007/api/v1/produccion/catalogos'; // URL genérica para extrusoras
+  private apiUrl = `${environment.apiUrl}/api/v1/produccion/referencias/extrusora-producto`;
+  private catalogosUrl = `${environment.apiUrl}/api/v1/produccion/catalogos`; // URL genérica para extrusoras
 
   searchText = signal<string>('');
   currentPage = signal<number>(1);

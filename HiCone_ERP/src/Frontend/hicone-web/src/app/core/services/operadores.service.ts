@@ -11,13 +11,15 @@ export interface OperadorDto {
   username?: string; // Para mostrar el usuario vinculado
 }
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class OperadoresService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = 'http://localhost:5007/api/Operadores';
+  private apiUrl = `${environment.apiUrl}/api/Operadores`;
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getToken();

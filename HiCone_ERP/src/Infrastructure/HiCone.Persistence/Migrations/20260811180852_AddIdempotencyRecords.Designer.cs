@@ -4,6 +4,7 @@ using HiCone.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HiCone.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260811180852_AddIdempotencyRecords")]
+    partial class AddIdempotencyRecords
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2844,22 +2847,6 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("is_deleted");
 
-                    b.Property<decimal>("KgMolido")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("kg_molido");
-
-                    b.Property<decimal>("KgVirgen")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("kg_virgen");
-
-                    b.Property<decimal>("MolidoMax")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("molido_max");
-
-                    b.Property<decimal>("MolidoMin")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("molido_min");
-
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -2880,14 +2867,6 @@ namespace HiCone.Persistence.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("updated_by");
-
-                    b.Property<decimal>("VirgenMax")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("virgen_max");
-
-                    b.Property<decimal>("VirgenMin")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("virgen_min");
 
                     b.HasKey("Id")
                         .HasName("pk_extrusora_mezcladoras");
@@ -4655,6 +4634,10 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("observaciones");
 
+                    b.Property<string>("ProductosCompatibles")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("productos_compatibles");
+
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("tenant_id");
@@ -4671,61 +4654,6 @@ namespace HiCone.Persistence.Migrations
                         .HasName("pk_troqueles");
 
                     b.ToTable("troqueles", (string)null);
-                });
-
-            modelBuilder.Entity("HiCone.Domain.Entities.Produccion.TroquelProducto", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("created_by");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("deleted_at");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit")
-                        .HasColumnName("is_deleted");
-
-                    b.Property<Guid>("ProductoId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("producto_id");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("tenant_id");
-
-                    b.Property<Guid>("TroquelId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("troquel_id");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("updated_at");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("updated_by");
-
-                    b.HasKey("Id")
-                        .HasName("pk_troquel_productos");
-
-                    b.HasIndex("ProductoId")
-                        .HasDatabaseName("ix_troquel_productos_producto_id");
-
-                    b.HasIndex("TroquelId")
-                        .HasDatabaseName("ix_troquel_productos_troquel_id");
-
-                    b.ToTable("troquel_productos", (string)null);
                 });
 
             modelBuilder.Entity("HiCone.Domain.Entities.Produccion.Turno", b =>
@@ -6182,27 +6110,6 @@ namespace HiCone.Persistence.Migrations
                     b.Navigation("Categoria");
                 });
 
-            modelBuilder.Entity("HiCone.Domain.Entities.Produccion.TroquelProducto", b =>
-                {
-                    b.HasOne("HiCone.Domain.Entities.Produccion.Producto", "Producto")
-                        .WithMany("TroquelProductos")
-                        .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_troquel_productos_productos_producto_id");
-
-                    b.HasOne("HiCone.Domain.Entities.Produccion.Troquel", "Troquel")
-                        .WithMany("TroquelProductos")
-                        .HasForeignKey("TroquelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_troquel_productos_troqueles_troquel_id");
-
-                    b.Navigation("Producto");
-
-                    b.Navigation("Troquel");
-                });
-
             modelBuilder.Entity("HiCone.Domain.Entities.Tenant.TenantSetting", b =>
                 {
                     b.HasOne("HiCone.Domain.Entities.Tenant.Tenant", "Tenant")
@@ -6394,8 +6301,6 @@ namespace HiCone.Persistence.Migrations
                     b.Navigation("ExtrusoraProductos");
 
                     b.Navigation("Palets");
-
-                    b.Navigation("TroquelProductos");
                 });
 
             modelBuilder.Entity("HiCone.Domain.Entities.Produccion.ProductoCategoria", b =>
@@ -6411,8 +6316,6 @@ namespace HiCone.Persistence.Migrations
             modelBuilder.Entity("HiCone.Domain.Entities.Produccion.Troquel", b =>
                 {
                     b.Navigation("PrensaTroqueles");
-
-                    b.Navigation("TroquelProductos");
                 });
 
             modelBuilder.Entity("HiCone.Domain.Entities.Tenant.Tenant", b =>

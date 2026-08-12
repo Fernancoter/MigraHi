@@ -734,7 +734,15 @@ public class ProduccionController : ControllerBase
     [HttpPut("bobina/{id}")]
     public async Task<IActionResult> ActualizarBobina(Guid id, [FromBody] ActualizarBobinaDto dto)
     {
-        var bobina = await _context.Bobinas.FirstOrDefaultAsync(b => b.Id == id);
+        var bobina = await _context.Bobinas
+            .Include(b => b.Extrusion).ThenInclude(e => e.Extrusora)
+            .Include(b => b.Extrusion).ThenInclude(e => e.Turno)
+            .Include(b => b.Extrusion).ThenInclude(e => e.Operario)
+            .Include(b => b.Producto)
+            .Include(b => b.Operario)
+            .Include(b => b.SiloVirgen)
+            .Include(b => b.SiloMolido)
+            .FirstOrDefaultAsync(b => b.Id == id);
         if (bobina == null) return NotFound(new { message = "Bobina no encontrada" });
 
         if (!string.IsNullOrEmpty(dto.NoSerie)) bobina.NoSerie = dto.NoSerie;
@@ -745,7 +753,14 @@ public class ProduccionController : ControllerBase
         if (dto.DesviacionEstandar.HasValue) bobina.DesviacionEstandar = dto.DesviacionEstandar.Value;
         if (dto.HoraInicio.HasValue) bobina.HoraInicio = dto.HoraInicio.Value;
         if (dto.HoraSalida.HasValue) bobina.HoraSalida = dto.HoraSalida.Value;
-        if (dto.Estado.HasValue) bobina.Estado = dto.Estado.Value;
+        if (dto.Estado.HasValue)
+        {
+            bobina.Estado = dto.Estado.Value;
+            if (dto.Estado.Value == EstadoBobina.EnReposo && !bobina.IniciaReposo.HasValue)
+            {
+                bobina.IniciaReposo = DateTime.UtcNow;
+            }
+        }
         if (dto.MotivoMolino.HasValue) bobina.MotivoMolino = dto.MotivoMolino.Value;
         if (dto.Observaciones != null) bobina.Observaciones = dto.Observaciones;
         if (dto.BobinaNo.HasValue) bobina.BobinaNo = dto.BobinaNo.Value;
@@ -1600,7 +1615,26 @@ public class ProduccionController : ControllerBase
 
                 if (defaultOpId == Guid.Empty)
                 {
-                    defaultOpId = operarios.First().Id;
+                    var firstOp = operarios.FirstOrDefault();
+                    if (firstOp != null)
+                    {
+                        defaultOpId = firstOp.Id;
+                    }
+                    else
+                    {
+                        var defaultOp = new Operario
+                        {
+                            Id = Guid.NewGuid(),
+                            NumeroEmpleado = "0000",
+                            Nombre = "Operador Genérico",
+                            Activo = true,
+                            TenantId = defaultTenantId
+                        };
+                        _context.Operarios.Add(defaultOp);
+                        await _context.SaveChangesAsync(default);
+                        operarios.Add(defaultOp);
+                        defaultOpId = defaultOp.Id;
+                    }
                 }
 
                 foreach (var date in dates)

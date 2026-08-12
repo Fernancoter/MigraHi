@@ -183,7 +183,7 @@ interface ColumnConfig {
                   </td>
 
                   <ng-container *ngFor="let col of visibleColumns">
-                    <td *ngIf="col.field === 'noSerie'" class="text-green-link" (click)="verDetalleBobina(b)">{{ b.noSerie || 'B-010626-01-026A' }}</td>
+                    <td *ngIf="col.field === 'noSerie'" class="text-green-link" (click)="verDetalleBobina(b)">{{ b.noSerie || '-' }}</td>
                     <td *ngIf="col.field === 'extrusora'">{{ getExtrusoraNombre(b) }}</td>
                     <td *ngIf="col.field === 'turno'">{{ getTurnoNombre(b) }}</td>
                     <td *ngIf="col.field === 'mezclaVirgen'" class="text-right">{{ (b.mezclaVirgenPct !== undefined ? b.mezclaVirgenPct : 40.00) | number:'1.2-2' }}</td>
@@ -191,12 +191,12 @@ interface ColumnConfig {
                     <td *ngIf="col.field === 'colorEstacion'">{{ getColorEstacionTexto(b) }}</td>
                     <td *ngIf="col.field === 'origen'">{{ b.bobinaOrigen || 'A' }}</td>
                     <td *ngIf="col.field === 'estado'">{{ getEstadoTexto(b) }}</td>
-                    <td *ngIf="col.field === 'horaInicio'">{{ b.horaInicio ? (b.horaInicio | date:'dd/MM/yyyy HH:mm') : '01/06/2026 00:31' }}</td>
-                    <td *ngIf="col.field === 'horaSalida'">{{ b.horaSalida ? (b.horaSalida | date:'dd/MM/yyyy HH:mm') : '01/06/2026 02:06' }}</td>
+                    <td *ngIf="col.field === 'horaInicio'">{{ formatDateLocal(b.horaInicio) }}</td>
+                    <td *ngIf="col.field === 'horaSalida'">{{ formatDateLocal(b.horaSalida) }}</td>
                     <td *ngIf="col.field === 'desviacionEstandar'" class="text-right">{{ (b.desviacionEstandar !== undefined ? b.desviacionEstandar : 0.190) | number:'1.3-3' }}</td>
-                    <td *ngIf="col.field === 'kg'" class="text-right">{{ (b.kg !== undefined ? b.kg : 520.00) | number:'1.2-2' }}</td>
+                    <td *ngIf="col.field === 'kg'" class="text-right">{{ (b.kg !== undefined ? b.kg : 0.00) | number:'1.2-2' }}</td>
                     <td *ngIf="col.field === 'mermaKg'" class="text-right">{{ (b.mermaKg !== undefined ? b.mermaKg : 0.00) | number:'1.2-2' }}</td>
-                    <td *ngIf="col.field === 'no'" class="text-right">{{ b.bobinaNo || 26 }}</td>
+                    <td *ngIf="col.field === 'no'" class="text-right">{{ b.bobinaNo || '-' }}</td>
                     <td *ngIf="col.field === 'reposoHr'" class="text-right">{{ (getReposoHr(b)) | number:'1.2-2' }}</td>
                     <td *ngIf="col.field === 'operador'" class="text-uppercase">{{ getOperadorNombre(b) }}</td>
                     <td *ngIf="col.field === 'observaciones'">{{ b.observaciones || '' }}</td>
@@ -204,14 +204,14 @@ interface ColumnConfig {
                     <td *ngIf="col.field === 'siloVirgen'">{{ getSiloVirgen(b) }}</td>
                     <td *ngIf="col.field === 'loteVirgen'">{{ getLoteVirgen(b) }}</td>
                     <td *ngIf="col.field === 'paqueteAditivos'">{{ getPaqueteAditivos(b) }}</td>
-                    <td *ngIf="col.field === 'productoId'">{{ b.productoId || 43 }}</td>
+                    <td *ngIf="col.field === 'productoId'">{{ getProductoId(b) }}</td>
                     <td *ngIf="col.field === 'productoNombre'">{{ getProductoNombre(b) }}</td>
                     <td *ngIf="col.field === 'tipoMaterial'">{{ getTipoMaterial(b) }}</td>
                     <td *ngIf="col.field === 'prensa'">{{ getPrensa(b) }}</td>
-                    <td *ngIf="col.field === 'interrupcionesMotivo'" class="text-green-link">{{ getInterrupcionMotivo(b) }}</td>
-                    <td *ngIf="col.field === 'timeCode'">{{ b.timeCode || '298' }}</td>
-                    <td *ngIf="col.field === 'timeDescription'">{{ b.timeDescription || '298-Arranque' }}</td>
-                    <td *ngIf="col.field === 'timeType'">{{ b.timeType || 'Producción' }}</td>
+                    <td *ngIf="col.field === 'interrupcionesMotivo'" [class.text-green-link]="getInterrupcionMotivo(b) !== '-'">{{ getInterrupcionMotivo(b) }}</td>
+                    <td *ngIf="col.field === 'timeCode'">{{ b.timeCode || '-' }}</td>
+                    <td *ngIf="col.field === 'timeDescription'">{{ b.timeDescription || '-' }}</td>
+                    <td *ngIf="col.field === 'timeType'">{{ b.timeType || '-' }}</td>
                   </ng-container>
                 </tr>
                 <tr *ngIf="filteredBobinas.length === 0">
@@ -324,11 +324,11 @@ interface ColumnConfig {
             </div>
             <div class="view-item">
               <span class="label">Inicia Reposo</span>
-              <span class="val">01/06/26 02:06</span>
+              <span class="val">{{ formatDateLocal(selectedBobina?.iniciaReposo) }}</span>
             </div>
             <div class="view-item">
               <span class="label">En Reposo</span>
-              <span class="val">3368.37</span>
+              <span class="val">{{ (getReposoHr(selectedBobina)) | number:'1.2-2' }}</span>
             </div>
 
             <div class="view-item">
@@ -1205,6 +1205,7 @@ export class BobinasListComponent implements OnInit {
   guardarCambiosModal() {
     if (!this.selectedBobina.id) return;
     
+    const estadoNum = this.mapEstadoToNumber(this.selectedBobina.estadoStr);
     const payload = {
       noSerie: this.selectedBobina.noSerie,
       bobinaOrigen: this.selectedBobina.bobinaOrigen,
@@ -1212,7 +1213,7 @@ export class BobinasListComponent implements OnInit {
       mermaKg: this.selectedBobina.mermaKg,
       espesor: this.selectedBobina.espesor,
       observaciones: this.selectedBobina.observaciones,
-      estado: this.selectedBobina.estadoStr === 'Consumida' ? 10 : 2,
+      estado: estadoNum,
       motivoMolino: 0,
       bobinaNo: this.selectedBobina.bobinaNo,
       carreras: this.selectedBobina.carreras,
@@ -1220,14 +1221,32 @@ export class BobinasListComponent implements OnInit {
     };
 
     this.prodService.actualizarBobina(this.selectedBobina.id, payload).subscribe({
-      next: () => {
+      next: (res) => {
+        this.notify.success('Bobina actualizada correctamente.');
+        const index = this.bobinas.findIndex(b => b.id === this.selectedBobina.id);
+        if (index !== -1) {
+          this.bobinas[index] = { 
+            ...this.bobinas[index], 
+            ...this.selectedBobina, 
+            estado: estadoNum, 
+            estadoStr: this.mapNumberToEstado(estadoNum) 
+          };
+          this.onSearch();
+        }
         this.irALista();
         this.cargarDatos();
       },
-      error: () => {
+      error: (err) => {
+        console.error('Error al actualizar bobina:', err);
+        this.notify.error('Error al guardar cambios en la bobina.');
         const index = this.bobinas.findIndex(b => b.id === this.selectedBobina.id);
         if (index !== -1) {
-          this.bobinas[index] = { ...this.bobinas[index], ...this.selectedBobina };
+          this.bobinas[index] = { 
+            ...this.bobinas[index], 
+            ...this.selectedBobina, 
+            estado: estadoNum, 
+            estadoStr: this.mapNumberToEstado(estadoNum) 
+          };
           this.onSearch();
         }
         this.irALista();
@@ -1240,6 +1259,7 @@ export class BobinasListComponent implements OnInit {
     if (confirm(`¿Está seguro de eliminar la bobina ${b.noSerie || b.id}?`)) {
       this.prodService.eliminarBobina(b.id).subscribe({
         next: () => {
+          this.notify.success('Bobina eliminada.');
           this.irALista();
           this.cargarDatos();
         },
@@ -1258,20 +1278,84 @@ export class BobinasListComponent implements OnInit {
   }
 
   // Helpers
+  mapEstadoToNumber(estado: string | number): number {
+    if (typeof estado === 'number') return estado;
+    switch (estado) {
+      case 'En Proceso': case 'EnProceso': return 1;
+      case 'En Reposo': case 'Reposo': case 'EnReposo': return 2;
+      case 'En Prensado': case 'EnPrensado': return 3;
+      case 'Utilizada': return 4;
+      case 'Rechazada': return 5;
+      case 'Molino': case 'Molido': return 6;
+      case 'Pausada': return 7;
+      case 'Desmontada': return 8;
+      case 'Transferida': return 9;
+      case 'Consumida': return 10;
+      case 'En Medición': case 'EnMedicion': return 11;
+      case 'Disponible': return 12;
+      default: return 2;
+    }
+  }
+
+  mapNumberToEstado(val: number | string): string {
+    const num = Number(val);
+    switch (num) {
+      case 1: return 'En Proceso';
+      case 2: return 'En Reposo';
+      case 3: return 'En Prensado';
+      case 4: return 'Utilizada';
+      case 5: return 'Rechazada';
+      case 6: return 'Molino';
+      case 7: return 'Pausada';
+      case 8: return 'Desmontada';
+      case 9: return 'Transferida';
+      case 10: return 'Consumida';
+      case 11: return 'En Medición';
+      case 12: return 'Disponible';
+      default: return typeof val === 'string' && val ? val : 'En Reposo';
+    }
+  }
+
+  formatDateLocal(dateVal: any): string {
+    if (!dateVal) return '-';
+    try {
+      let d: Date;
+      if (typeof dateVal === 'string') {
+        const isIsoNoZone = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?$/.test(dateVal);
+        d = isIsoNoZone ? new Date(dateVal + 'Z') : new Date(dateVal);
+      } else {
+        d = new Date(dateVal);
+      }
+      if (isNaN(d.getTime())) return String(dateVal);
+      
+      const pad = (n: number) => n < 10 ? '0' + n : n.toString();
+      const day = pad(d.getDate());
+      const month = pad(d.getMonth() + 1);
+      const year = d.getFullYear();
+      const hours = pad(d.getHours());
+      const mins = pad(d.getMinutes());
+      return `${day}/${month}/${year} ${hours}:${mins}`;
+    } catch {
+      return String(dateVal);
+    }
+  }
+
   getStatusClass(b: any): string {
     const estado = this.getEstadoTexto(b);
     if (estado === 'Consumida') return 'consumida';
-    if (estado === 'Molino') return 'molino';
+    if (estado === 'Molino' || estado === 'Rechazada') return 'molino';
     if (estado === 'En Reposo' || estado === 'Reposo') return 'reposo';
+    if (estado === 'Disponible') return 'disponible';
+    if (estado === 'Pausada') return 'pausada';
     return 'proceso';
   }
 
   getExtrusoraNombre(b: any): string {
-    return b.extrusoraNombre || b.extrusion?.extrusora?.nombre || 'Extrusora 1';
+    return b.extrusoraNombre || b.extrusion?.extrusora?.nombre || '-';
   }
 
   getTurnoNombre(b: any): string {
-    return b.turnoNombre || b.extrusion?.turno?.nombre || '1er Turno';
+    return b.turnoNombre || b.extrusion?.turno?.nombre || '-';
   }
 
   getColorEstacionTexto(b: any): string {
@@ -1280,17 +1364,16 @@ export class BobinasListComponent implements OnInit {
       0: 'Sin Asignar', 1: 'Estación Negra', 2: 'Estación Azul',
       3: 'Estación Verde', 4: 'Estación Amarilla', 5: 'Estación Naranja', 6: 'Estación Blanca'
     };
-    if (typeof b.colorEstacion === 'number') return colors[b.colorEstacion] || 'Estación Negra';
-    return b.colorEstacion || 'Estación Negra';
+    if (typeof b.colorEstacion === 'number') return colors[b.colorEstacion] || 'Sin Asignar';
+    return b.colorEstacion || '-';
   }
 
   getEstadoTexto(b: any): string {
-    if (b.estadoStr) return b.estadoStr;
-    if (b.estado === 'Consumida' || Number(b.estado) === 10) return 'Consumida';
-    if (b.estado === 'Molido' || Number(b.estado) === 6) return 'Molino';
-    if (b.estado === 'EnReposo' || Number(b.estado) === 2) return 'En Reposo';
-    if (b.estado === 'EnProceso' || Number(b.estado) === 1) return 'En Proceso';
-    return b.estado || 'Consumida';
+    if (b.estadoStr) return this.mapNumberToEstado(this.mapEstadoToNumber(b.estadoStr));
+    if (b.estado !== undefined && b.estado !== null) {
+      return this.mapNumberToEstado(b.estado);
+    }
+    return 'En Reposo';
   }
 
   getMotivoMolinoTexto(b: any): string {
@@ -1299,39 +1382,50 @@ export class BobinasListComponent implements OnInit {
   }
 
   getOperadorNombre(b: any): string {
-    return b.operadorNombre || b.operario?.nombreCompleto || b.extrusion?.operario?.nombreCompleto || 'ANTONIO GONZALEZ AYALA';
+    return b.operadorNombre || b.operario?.nombreCompleto || b.extrusion?.operario?.nombreCompleto || '-';
   }
 
   getSiloMolido(b: any): string {
-    return b.siloMolidoNombre || b.siloMolido?.nombre || b.extrusion?.siloMolido?.nombre || 'Silo 4';
+    return b.siloMolidoNombre || b.siloMolido?.nombre || b.extrusion?.siloMolido?.nombre || '-';
   }
 
   getSiloVirgen(b: any): string {
-    return b.siloVirgenNombre || b.siloVirgen?.nombre || b.extrusion?.siloVirgen?.nombre || 'Silo 1';
+    return b.siloVirgenNombre || b.siloVirgen?.nombre || b.extrusion?.siloVirgen?.nombre || '-';
   }
 
   getLoteVirgen(b: any): string {
-    return b.loteVirgen || b.extrusion?.loteSilo || '202603233240 LE';
+    return b.loteVirgen || b.extrusion?.loteSilo || '-';
   }
 
   getPaqueteAditivos(b: any): string {
-    return b.paqueteAditivos || b.extrusion?.lotePaqueteAditivos || 'Llorens-MB1';
+    return b.paqueteAditivos || b.extrusion?.lotePaqueteAditivos || '-';
+  }
+
+  getProductoId(b: any): string {
+    if (b.productoCodigo) return b.productoCodigo;
+    if (b.productoClave) return b.productoClave;
+    if (b.producto?.codigo) return b.producto.codigo;
+    if (b.productoId) {
+      const s = b.productoId.toString();
+      return s.length > 10 ? s.substring(0, 8).toUpperCase() : s;
+    }
+    return '-';
   }
 
   getProductoNombre(b: any): string {
-    return b.productoNombre || b.producto?.nombre || b.extrusion?.producto?.nombre || '8063C2';
+    return b.productoNombre || b.producto?.nombre || b.extrusion?.producto?.nombre || '-';
   }
 
   getTipoMaterial(b: any): string {
-    return b.tipoMaterial || b.producto?.tipoMaterial || 'PCR 100%';
+    return b.tipoMaterial || b.producto?.tipoMaterial || '-';
   }
 
   getPrensa(b: any): string {
-    return b.prensaNombre || 'Prensa 4';
+    return b.prensaNombre || b.prensado?.prensa?.nombre || b.prensa?.nombre || '-';
   }
 
   getInterrupcionMotivo(b: any): string {
-    return b.interrupcionesMotivo || 'Limpieza de rodillos y labio y cambio de mallas A_C';
+    return b.interrupcionesMotivo || b.motivoInterrupcion || '-';
   }
 
   getReposoHr(b: any): number {

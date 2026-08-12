@@ -70,19 +70,21 @@ export interface AuditLog {
   timestamp: string;
 }
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class InventarioService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5007/api/v1/Inventario';
+  private apiUrl = `${environment.apiUrl}/api/v1/Inventario`;
 
   getAuditHistory(entityName: string, entityId: string): Observable<AuditLog[]> {
     return this.http.get<AuditLog[]>(`${this.apiUrl}/audit/${entityName}/${entityId}`);
   }
 
   getArticulos(): Observable<Articulo[]> {
-    return this.http.get<Articulo[]>(`http://localhost:5007/api/v1/articulos`);
+    return this.http.get<Articulo[]>(`${environment.apiUrl}/api/v1/articulos`);
   }
 
   getSilos(): Observable<Silo[]> {
@@ -127,22 +129,22 @@ export class InventarioService {
 
   // --- Existencias Histórico (Cierres) ---
   getHistorialCierres(): Observable<ExistenciaHistorico[]> {
-    return this.http.get<ExistenciaHistorico[]>(`http://localhost:5007/api/v1/ExistenciasHistorico`);
+    return this.http.get<ExistenciaHistorico[]>(`${environment.apiUrl}/api/v1/ExistenciasHistorico`);
   }
 
   crearNuevoCierre(usuario: string, observaciones: string): Observable<string> {
-    return this.http.post<string>(`http://localhost:5007/api/v1/ExistenciasHistorico/Cierre`, {
+    return this.http.post<string>(`${environment.apiUrl}/api/v1/ExistenciasHistorico/Cierre`, {
       usuario,
       observaciones
     });
   }
 
   completarCierre(id: string, ajustes: ExistenciaSiloDto[]): Observable<any> {
-    return this.http.put(`http://localhost:5007/api/v1/ExistenciasHistorico/${id}/Completar`, ajustes);
+    return this.http.put(`${environment.apiUrl}/api/v1/ExistenciasHistorico/${id}/Completar`, ajustes);
   }
 
   deleteCierre(id: string): Observable<boolean> {
-    return this.http.delete<boolean>(`http://localhost:5007/api/v1/ExistenciasHistorico/${id}`);
+    return this.http.delete<boolean>(`${environment.apiUrl}/api/v1/ExistenciasHistorico/${id}`);
   }
 
   registrarConsumoSilo(id: string, kilos: number, motivo: string): Observable<Silo> {

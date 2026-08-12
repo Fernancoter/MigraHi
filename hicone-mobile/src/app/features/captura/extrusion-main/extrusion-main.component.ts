@@ -220,15 +220,16 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   }
 
   abrirMenuIntermedio() {
-    if (!this.extrusionActiva) {
-      this.abrirWizard();
-      return;
-    }
     this.mostrarMenuIntermedio = true;
   }
 
   cerrarMenuIntermedio() {
     this.mostrarMenuIntermedio = false;
+  }
+
+  opcionIniciarExtrusion() {
+    this.cerrarMenuIntermedio();
+    this.abrirWizard();
   }
 
   opcionRegistrarBobina() {

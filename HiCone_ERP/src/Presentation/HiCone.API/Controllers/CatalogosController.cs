@@ -378,36 +378,33 @@ public class CatalogosController : ControllerBase
     [HttpPut("extrusoras/{extrusoraId}/operarios/{turnoId}")]
     public async Task<IActionResult> UpsertExtrusoraOperario(Guid extrusoraId, Guid turnoId, [FromBody] ExtrusoraOperarioDto dto)
     {
-        Guid targetOperarioId = dto.OperarioId ?? Guid.Empty;
-        if (targetOperarioId == Guid.Empty || !await _context.Operadores.AnyAsync(o => o.Id == targetOperarioId))
-        {
-            var defaultOp = await _context.Operadores.FirstOrDefaultAsync(o => o.Activo);
-            if (defaultOp == null)
-            {
-                defaultOp = new Operador { Id = Guid.NewGuid(), Nombre = "Operador General", Activo = true, TenantId = dto.TenantId };
-                _context.Operadores.Add(defaultOp);
-                await _context.SaveChangesAsync(default);
-            }
-            targetOperarioId = defaultOp.Id;
-        }
-
         var existing = await _context.ExtrusoraOperarios
             .FirstOrDefaultAsync(eo => eo.ExtrusoraId == extrusoraId && eo.TurnoId == turnoId);
 
-        if (existing is null)
+        if (dto.OperarioId == null || dto.OperarioId == Guid.Empty)
         {
-            _context.ExtrusoraOperarios.Add(new ExtrusoraOperario
+            if (existing != null)
             {
-                Id = Guid.NewGuid(),
-                ExtrusoraId = extrusoraId,
-                TurnoId = turnoId,
-                OperarioId = targetOperarioId,
-                TenantId = dto.TenantId
-            });
+                _context.ExtrusoraOperarios.Remove(existing);
+            }
         }
         else
         {
-            existing.OperarioId = targetOperarioId;
+            if (existing is null)
+            {
+                _context.ExtrusoraOperarios.Add(new ExtrusoraOperario
+                {
+                    Id = Guid.NewGuid(),
+                    ExtrusoraId = extrusoraId,
+                    TurnoId = turnoId,
+                    OperarioId = dto.OperarioId.Value,
+                    TenantId = dto.TenantId
+                });
+            }
+            else
+            {
+                existing.OperarioId = dto.OperarioId.Value;
+            }
         }
         await _context.SaveChangesAsync(default);
         return NoContent();
@@ -432,14 +429,14 @@ public class CatalogosController : ControllerBase
         var newItems = new List<ExtrusoraOperario>();
         foreach (var item in items)
         {
-            if (item.TurnoId.HasValue)
+            if (item.TurnoId.HasValue && item.OperarioId.HasValue && item.OperarioId.Value != Guid.Empty)
             {
                 var newEo = new ExtrusoraOperario
                 {
                     Id = Guid.NewGuid(),
                     ExtrusoraId = extrusoraId,
                     TurnoId = item.TurnoId.Value,
-                    OperarioId = item.OperarioId ?? Guid.Empty,
+                    OperarioId = item.OperarioId.Value,
                     TenantId = item.TenantId ?? Guid.Empty
                 };
                 _context.ExtrusoraOperarios.Add(newEo);
