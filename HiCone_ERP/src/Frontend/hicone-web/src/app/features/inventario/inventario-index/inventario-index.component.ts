@@ -454,38 +454,14 @@ export class InventarioIndexComponent implements OnInit {
             turno: item.observaciones || '1er Turno'
           }));
         } else {
-          // Datos QA reales como en la Imagen 1
-          this.registros = [
-            { id: 'inv-101', fechaHora: '16/07/25', turno: '1er Turno' },
-            { id: 'inv-102', fechaHora: '14/05/26', turno: '1er Turno' },
-            { id: 'inv-103', fechaHora: '26/01/26', turno: '2do Turno' },
-            { id: 'inv-104', fechaHora: '22/01/26', turno: '1er Turno' },
-            { id: 'inv-105', fechaHora: '14/01/25', turno: '3er Turno' },
-            { id: 'inv-106', fechaHora: '30/12/25', turno: '1er Turno' },
-            { id: 'inv-107', fechaHora: '17/12/25', turno: '2do Turno' },
-            { id: 'inv-108', fechaHora: '27/11/25', turno: '3er Turno' },
-            { id: 'inv-109', fechaHora: '10/09/25', turno: '1er Turno' },
-            { id: 'inv-110', fechaHora: '16/08/25', turno: '1er Turno' }
-          ];
+          this.registros = [];
         }
         this.aplicarFiltros();
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar existencias:', err);
-        // Fallback datos muestra QA (Imagen 1)
-        this.registros = [
-          { id: 'inv-101', fechaHora: '16/07/25', turno: '1er Turno' },
-          { id: 'inv-102', fechaHora: '14/05/26', turno: '1er Turno' },
-          { id: 'inv-103', fechaHora: '26/01/26', turno: '2do Turno' },
-          { id: 'inv-104', fechaHora: '22/01/26', turno: '1er Turno' },
-          { id: 'inv-105', fechaHora: '14/01/25', turno: '3er Turno' },
-          { id: 'inv-106', fechaHora: '30/12/25', turno: '1er Turno' },
-          { id: 'inv-107', fechaHora: '17/12/25', turno: '2do Turno' },
-          { id: 'inv-108', fechaHora: '27/11/25', turno: '3er Turno' },
-          { id: 'inv-109', fechaHora: '10/09/25', turno: '1er Turno' },
-          { id: 'inv-110', fechaHora: '16/08/25', turno: '1er Turno' }
-        ];
+        this.registros = [];
         this.aplicarFiltros();
         this.cdr.detectChanges();
       }

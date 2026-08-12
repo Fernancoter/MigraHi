@@ -515,25 +515,12 @@ export class PrensasCatalogoComponent implements OnInit {
         if (data && data.length > 0) {
           this.items.set(data);
         } else {
-          // Datos de prueba temporales para visualización limpia
-          this.items.set([
-            { id: 'prn-1', codigo: 'PRE-01', numeroPrensa: 'UNO', nombre: 'Prensa 1', marca: 'Siemens', modelo: 'XR-2000' },
-            { id: 'prn-2', codigo: 'PRE-02', numeroPrensa: 'DOS', nombre: 'Prensa 2', marca: 'Schuler', modelo: 'PX-150' },
-            { id: 'prn-3', codigo: 'PRE-03', numeroPrensa: 'TRES', nombre: 'Prensa 3', marca: 'Komatsu', modelo: 'KM-500' },
-            { id: 'prn-4', codigo: 'PRE-04', numeroPrensa: 'CUATRO', nombre: 'Prensa 4', marca: 'AIDA', modelo: 'NC1-110' },
-            { id: 'prn-5', codigo: 'PRE-05', numeroPrensa: 'CINCO', nombre: 'Prensa 5', marca: 'Amada', modelo: 'TP-150X' }
-          ] as any);
+          this.items.set([]);
         }
       },
       error: (err) => {
         console.error(err);
-        this.items.set([
-          { id: 'prn-1', codigo: 'PRE-01', numeroPrensa: 'UNO', nombre: 'Prensa 1', marca: 'Siemens', modelo: 'XR-2000' },
-          { id: 'prn-2', codigo: 'PRE-02', numeroPrensa: 'DOS', nombre: 'Prensa 2', marca: 'Schuler', modelo: 'PX-150' },
-          { id: 'prn-3', codigo: 'PRE-03', numeroPrensa: 'TRES', nombre: 'Prensa 3', marca: 'Komatsu', modelo: 'KM-500' },
-          { id: 'prn-4', codigo: 'PRE-04', numeroPrensa: 'CUATRO', nombre: 'Prensa 4', marca: 'AIDA', modelo: 'NC1-110' },
-          { id: 'prn-5', codigo: 'PRE-05', numeroPrensa: 'CINCO', nombre: 'Prensa 5', marca: 'Amada', modelo: 'TP-150X' }
-        ] as any);
+        this.items.set([]);
       }
     });
   }

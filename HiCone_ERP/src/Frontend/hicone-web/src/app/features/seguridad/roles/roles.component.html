@@ -46,26 +46,26 @@
         <tbody>
           <tr *ngFor="let r of roles()">
             <td class="icon-cell">
-              <button class="gam-icon-btn edit-btn" (click)="openModal(r)" title="Editar" [disabled]="r.isSystem">✏️</button>
+              <button class="gam-icon-btn edit-btn" (click)="openModal(r)" title="Editar" [disabled]="r.isSystem"><svg lucidePencil [size]="14"></svg></button>
             </td>
             <td class="icon-cell">
-              <button class="gam-icon-btn del-btn" (click)="deleteRole(r.id)" title="Eliminar" [disabled]="r.isSystem">❌</button>
+              <button class="gam-icon-btn del-btn" (click)="confirmDeleteRole(r)" title="Eliminar" [disabled]="r.isSystem"><svg lucideX [size]="14"></svg></button>
             </td>
             <td class="icon-cell">
               <!-- Hijos (Gear) -->
-              <button class="gam-icon-btn gear-btn" (click)="openHijosView(r)" title="Hijos">⚙️</button>
+              <button class="gam-icon-btn gear-btn" (click)="openHijosView(r)" title="Hijos"><svg lucideSettings [size]="14"></svg></button>
             </td>
             <td class="icon-cell">
               <!-- Permisos (Lock) -->
-              <button class="gam-icon-btn lock-btn" (click)="openPermisosView(r)" title="Permisos">🔒</button>
+              <button class="gam-icon-btn lock-btn" (click)="openPermisosView(r)" title="Permisos"><svg lucideLock [size]="14"></svg></button>
             </td>
             <td class="icon-cell">
               <!-- Copiar (Copy) -->
-              <button class="gam-icon-btn copy-btn" (click)="copyRole(r)" title="Copiar">📄</button>
+              <button class="gam-icon-btn copy-btn" (click)="copyRole(r)" title="Copiar"><svg lucideCopy [size]="14"></svg></button>
             </td>
             <td class="icon-cell">
               <!-- Suscripciones (RSS) -->
-              <button class="gam-icon-btn rss-btn" (click)="openSuscripcionesView(r)" title="Suscripciones">📶</button>
+              <button class="gam-icon-btn rss-btn" (click)="openSuscripcionesView(r)" title="Suscripciones"><svg lucideRadio [size]="14"></svg></button>
             </td>
             <td>
               <a href="javascript:void(0)" class="gam-link" (click)="openModal(r)">{{ r.name }}</a>
@@ -98,7 +98,7 @@
       <div class="modal-box animate-scale-up" id="role-modal">
         <div class="modal-header">
           <h2>{{ editingRole ? 'Editar Rol' : 'Nuevo Rol' }}</h2>
-          <button class="modal-close" (click)="closeModal()">✕</button>
+          <button class="modal-close" (click)="closeModal()"><svg lucideX [size]="14"></svg></button>
         </div>
 
         <form [formGroup]="roleForm" (ngSubmit)="onSubmit()" class="modal-form">
@@ -504,4 +504,26 @@
       </div>
     </div>
   </ng-container>
+</div>
+
+<!-- Modal Confirmar Eliminar Rol -->
+<div class="modal-overlay" *ngIf="showDeleteModal()" (click)="showDeleteModal.set(false)">
+  <div class="modal-box animate-scale-up" style="max-width: 400px; text-align: center;" (click)="$event.stopPropagation()">
+    <div class="modal-header" style="background: #fef2f2; border-bottom: 1px solid #fee2e2;">
+      <h2 style="color: #b91c1c;">Eliminar Rol</h2>
+      <button class="modal-close" (click)="showDeleteModal.set(false)"><svg lucideX [size]="14"></svg></button>
+    </div>
+    <div style="padding: 1.5rem;">
+      <p style="color: #334155; font-size: 0.95rem; margin-bottom: 0.5rem;">
+        ¿Está seguro que desea eliminar el rol <strong>"{{ roleToDelete()?.name }}"</strong>?
+      </p>
+      <p style="color: #64748b; font-size: 0.85rem;">
+        Los usuarios que lo tengan asignado perderán sus permisos asociados.
+      </p>
+    </div>
+    <div style="padding: 1rem 1.5rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; gap: 12px;">
+      <button class="btn-primary" style="background: #ef4444; border-color: #dc2626;" (click)="doDeleteRole()">Eliminar</button>
+      <button class="btn-secondary" (click)="showDeleteModal.set(false)">Cancelar</button>
+    </div>
+  </div>
 </div>

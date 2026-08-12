@@ -1,12 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { ClientesService, Cliente } from '../../../core/services/clientes';
 import { Observable } from 'rxjs';
+import { LucidePencil, LucideX, LucideTrash2, LucideFolder, LucideSave, LucideSearch, LucideEye, LucideUser } from '@lucide/angular';
 
 @Component({
   selector: 'app-clientes-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule, LucidePencil, LucideX, LucideTrash2, LucideFolder, LucideSave, LucideSearch, LucideEye, LucideUser],
   template: `
     <div class="page-container animate-fade-in">
       <header class="page-header">
@@ -15,15 +17,44 @@ import { Observable } from 'rxjs';
           <p class="page-subtitle">Administración de la cartera de clientes y límites de crédito.</p>
         </div>
         <button class="btn-primary">
-          <span class="icon">👤</span> Nuevo Cliente
+          <span class="icon"><svg lucideUser [size]="14"></svg></span> Nuevo Cliente
         </button>
       </header>
 
       <div class="table-container glass">
         <div class="table-actions">
-          <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Buscar por nombre, RFC o código...">
+          <div class="filter-search-group-qa">
+            <div class="dropdown-wrapper">
+              <button class="btn-filter-funnel-qa" (click)="toggleSearchFilterDropdown($event)" title="Filtros avanzados">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                </svg>
+                <span class="chevron-down-funnel">▾</span>
+              </button>
+              
+              <div class="filter-popover-qa shadow-premium" *ngIf="showSearchFilterDropdown" (click)="$event.stopPropagation()">
+                <div class="filter-item-qa" (click)="clearAllFilters()">
+                  <span class="icon-circle-cross-dark"><svg lucideX [size]="12"></svg></span> Limpiar filtros
+                </div>
+                <div class="filter-item-qa" (click)="saveActiveFilters()">
+                  <span class="icon-floppy-dark"><svg lucideSave [size]="14"></svg></span> Guardar filtro como...
+                </div>
+                
+                <ng-container *ngIf="savedFilters.length > 0">
+                  <div class="dropdown-divider"></div>
+                  <div class="dropdown-header-saved">Filtros Guardados</div>
+                  <div class="filter-item-qa saved-filter-item" *ngFor="let f of savedFilters" (click)="loadSavedFilter(f)">
+                    <span><svg lucideFolder [size]="14"></svg> {{ f.name }}</span>
+                    <span class="btn-delete-saved-filter" (click)="deleteSavedFilter(f, $event)"><svg lucideTrash2 [size]="14"></svg></span>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+
+            <div class="search-box">
+              <span class="search-icon"><svg lucideSearch [size]="14"></svg></span>
+              <input type="text" placeholder="Buscar por nombre, RFC o código...">
+            </div>
           </div>
           <div class="filters">
             <button class="filter-btn active">Todos</button>
@@ -76,8 +107,8 @@ import { Observable } from 'rxjs';
               </td>
               <td class="text-right">
                 <div class="action-buttons">
-                  <button class="icon-btn info">👁️</button>
-                  <button class="icon-btn edit">✏️</button>
+                  <button class="icon-btn info"><svg lucideEye [size]="14"></svg></button>
+                  <button class="icon-btn edit"><svg lucidePencil [size]="14"></svg></button>
                 </div>
               </td>
             </tr>
@@ -129,6 +160,24 @@ import { Observable } from 'rxjs';
       align-items: center;
       border-bottom: 1px solid var(--border-color);
     }
+
+    .filter-search-group-qa { display: flex; gap: 0.6rem; align-items: center; }
+    .dropdown-wrapper { position: relative; }
+    .btn-filter-funnel-qa { background: #ffffff; border: 1px solid var(--border-color); border-radius: 4px; padding: 0.4rem 0.6rem; height: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: background 0.2s; }
+    .btn-filter-funnel-qa:hover { background: #f8fafc; border-color: #cbd5e1; }
+    .chevron-down-funnel { font-size: 0.65rem; color: #334155; }
+    .filter-popover-qa { position: absolute; top: calc(100% + 4px); left: 0; background: #ffffff !important; border: 1px solid #cbd5e1 !important; border-radius: 6px !important; width: 185px !important; box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important; z-index: 99999 !important; padding: 6px 0 !important; box-sizing: border-box; }
+    .filter-item-qa { display: flex; align-items: center; gap: 8px; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: #334155; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+    .filter-item-qa:hover { background: #f1f5f9; color: #2e7d32; }
+    .icon-circle-cross-dark { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; background: #475569; color: white; border-radius: 50%; font-size: 8px; font-weight: bold; }
+    .filter-item-qa:hover .icon-circle-cross-dark { background: #2e7d32; }
+    .icon-floppy-dark { font-size: 0.9rem; color: #475569; }
+    .filter-item-qa:hover .icon-floppy-dark { color: #2e7d32; }
+    .dropdown-divider { height: 1px; background: #e2e8f0; margin: 4px 0; }
+    .dropdown-header-saved { font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; padding: 4px 12px; }
+    .saved-filter-item { justify-content: space-between; }
+    .btn-delete-saved-filter { cursor: pointer; opacity: 0.7; font-size: 0.8rem; }
+    .btn-delete-saved-filter:hover { opacity: 1; }
 
     .search-box {
       display: flex;
@@ -243,8 +292,36 @@ import { Observable } from 'rxjs';
 export class ClientesListComponent implements OnInit {
   private clientesService = inject(ClientesService);
   clientes$!: Observable<Cliente[]>;
+  showSearchFilterDropdown = false;
+  savedFilters: any[] = [];
 
   ngOnInit() {
     this.clientes$ = this.clientesService.getClientes();
+  }
+
+  toggleSearchFilterDropdown(e: Event) {
+    e.stopPropagation();
+    this.showSearchFilterDropdown = !this.showSearchFilterDropdown;
+  }
+
+  clearAllFilters() {
+    this.showSearchFilterDropdown = false;
+  }
+
+  saveActiveFilters() {
+    const name = prompt('Nombre para este filtro guardado:');
+    if (name) {
+      this.savedFilters.push({ id: Date.now(), name });
+    }
+    this.showSearchFilterDropdown = false;
+  }
+
+  loadSavedFilter(f: any) {
+    this.showSearchFilterDropdown = false;
+  }
+
+  deleteSavedFilter(f: any, e: Event) {
+    e.stopPropagation();
+    this.savedFilters = this.savedFilters.filter(item => item.id !== f.id);
   }
 }

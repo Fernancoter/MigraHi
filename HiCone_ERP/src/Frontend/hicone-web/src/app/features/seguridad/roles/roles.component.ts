@@ -45,10 +45,12 @@ interface PaginatedResult<T> {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
+import { LucidePencil, LucideX, LucideSettings, LucideLock, LucideCopy, LucideRadio } from '@lucide/angular';
+
 @Component({
   selector: 'app-roles',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, LucidePencil, LucideX, LucideSettings, LucideLock, LucideCopy, LucideRadio],
   templateUrl: './roles.component.html',
   styleUrls: ['./roles.component.css']
 })
@@ -424,11 +426,30 @@ export class RolesComponent implements OnInit {
     });
   }
 
-  deleteRole(id: string) {
-    if (!confirm('¿Eliminar este rol? Los usuarios que lo tengan asignado perderán sus permisos.')) return;
-    this.http.delete(`${this.apiUrl}/roles/${id}`, { headers: this.headers() }).subscribe({
-      next: () => { this.successMsg.set('Rol eliminado.'); this.loadRoles(); },
-      error: (err) => { this.errorMsg.set(err.error?.message || 'Error al eliminar.'); }
+  showDeleteModal = signal(false);
+  roleToDelete = signal<RoleDto | null>(null);
+
+  confirmDeleteRole(role: RoleDto) {
+    this.roleToDelete.set(role);
+    this.showDeleteModal.set(true);
+  }
+
+  doDeleteRole() {
+    const role = this.roleToDelete();
+    if (!role) return;
+
+    this.http.delete(`${this.apiUrl}/roles/${role.id}`, { headers: this.headers() }).subscribe({
+      next: () => {
+        this.showDeleteModal.set(false);
+        this.roleToDelete.set(null);
+        this.successMsg.set('Rol eliminado.');
+        this.loadRoles();
+      },
+      error: (err) => {
+        this.showDeleteModal.set(false);
+        this.roleToDelete.set(null);
+        this.errorMsg.set(err.error?.message || 'Error al eliminar.');
+      }
     });
   }
 

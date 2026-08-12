@@ -10,10 +10,12 @@ interface ColumnDef {
   visible: boolean;
 }
 
+import { LucideFileText, LucideSearch } from '@lucide/angular';
+
 @Component({
   selector: 'app-sae-budget',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LucideFileText, LucideSearch],
   template: `
     <div class="wwp-container" (click)="onDocumentClick($event)">
       <div class="wwp-header">
@@ -32,7 +34,7 @@ interface ColumnDef {
                 <span class="icon">📥</span> Exportar <span class="caret">▼</span>
               </button>
               <div class="export-dropdown" *ngIf="showExportMenu">
-                <button class="export-option" (click)="exportPDF()">📄 Exportar a PDF</button>
+                <button class="export-option" (click)="exportPDF()"><svg lucideFileText [size]="14"></svg> Exportar a PDF</button>
                 <button class="export-option" (click)="exportXLS()">📊 Exportar a Excel (XLS)</button>
               </div>
             </div>
@@ -78,7 +80,7 @@ interface ColumnDef {
             </div>
           </div>
           <div class="wwp-toolbar-right">
-            <span class="filter-icon">🔍</span>
+            <span class="filter-icon"><svg lucideSearch [size]="14"></svg></span>
             <input type="text" class="wwp-search-input" placeholder="Buscar" [(ngModel)]="searchTxt" (input)="filterBudgets()">
           </div>
         </div>

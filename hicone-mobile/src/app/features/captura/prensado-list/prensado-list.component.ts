@@ -522,25 +522,16 @@ export class PrensadoListComponent implements OnInit {
     this.cargando = true;
     this.prodService.getPrensadosOperacion().subscribe({
       next: (data) => {
-        this.prensados = data && data.length > 0 ? data : this.getMockPrensados();
+        this.prensados = data || [];
         this.cargando = false;
         this.cdr.markForCheck();
       },
       error: () => {
-        // Fallback mock si la API aún no tiene datos
-        this.prensados = this.getMockPrensados();
+        this.prensados = [];
         this.cargando = false;
         this.cdr.markForCheck();
       }
     });
-  }
-
-  getMockPrensados() {
-    return [
-      { id: '1', estado: 'Programado', fecha: '2026-08-07T10:00:00', prensa: 'Prensa 3', producto: '747572000', turno: '3er Turno' },
-      { id: '2', estado: 'Programado', fecha: '2026-08-07T10:00:00', prensa: 'Prensa 2', producto: '747572000', turno: '3er Turno' },
-      { id: '3', estado: 'Programado', fecha: '2026-08-07T10:00:00', prensa: 'Prensa 1', producto: '747572000', turno: '2do Turno' }
-    ];
   }
 
   formatearFecha(fechaStr: any): string {

@@ -9,10 +9,12 @@ interface ColumnDef {
   visible: boolean;
 }
 
+import { LucidePencil, LucideX, LucideFileText, LucideSearch } from '@lucide/angular';
+
 @Component({
   selector: 'app-sae-product',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LucidePencil, LucideX, LucideFileText, LucideSearch],
   template: `
     <div class="wwp-container" (click)="onDocClick($event)">
       <div class="wwp-header">
@@ -31,7 +33,7 @@ interface ColumnDef {
                 <span class="icon">📥</span> Exportar <span class="caret">▼</span>
               </button>
               <div class="export-dropdown" *ngIf="showExportMenu">
-                <button class="export-option" (click)="exportPDF()">📄 Exportar a PDF</button>
+                <button class="export-option" (click)="exportPDF()"><svg lucideFileText [size]="14"></svg> Exportar a PDF</button>
                 <button class="export-option" (click)="exportXLS()">📊 Exportar a Excel (XLS)</button>
               </div>
             </div>
@@ -74,7 +76,7 @@ interface ColumnDef {
             </div>
           </div>
           <div class="wwp-toolbar-right">
-            <span class="filter-icon">🔍</span>
+            <span class="filter-icon"><svg lucideSearch [size]="14"></svg></span>
             <input type="text" class="wwp-search-input" placeholder="Buscar" [(ngModel)]="searchProd" (input)="filterProductos()">
           </div>
         </div>
@@ -101,8 +103,8 @@ interface ColumnDef {
             </thead>
             <tbody>
               <tr *ngFor="let p of filteredProductos">
-                <td class="action-cell"><button class="btn-icon" (click)="editProduct(p)">✏️</button></td>
-                <td class="action-cell"><button class="btn-icon" (click)="deleteProduct(p)">✖️</button></td>
+                <td class="action-cell"><button class="btn-icon" (click)="editProduct(p)"><svg lucidePencil [size]="14"></svg></button></td>
+                <td class="action-cell"><button class="btn-icon" (click)="deleteProduct(p)"><svg lucideX [size]="14"></svg></button></td>
                 <td *ngIf="isVis('productNumber')">{{ p.productNumber }}</td>
                 <td *ngIf="isVis('productName')">{{ p.productName }}</td>
                 <td *ngIf="isVis('unit')">{{ p.unit || 'MILLAR' }}</td>

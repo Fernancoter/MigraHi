@@ -190,7 +190,7 @@ interface SavedFilter {
                   <a class="action-link-gx mod" (click)="verDetalle(item.id)">Modificar</a>
                 </td>
                 <td class="action-cell">
-                  <a class="action-link-gx del" (click)="eliminarCierre(item.id)">Eliminar</a>
+                  <a class="action-link-gx del" (click)="confirmarEliminacion(item.id)">Eliminar</a>
                 </td>
                 
                 <!-- Datos con formato derivado -->
@@ -254,7 +254,7 @@ interface SavedFilter {
           </div>
           <div class="modal-footer-legacy">
             <button class="btn-legacy secondary" (click)="showModal = false">Cancelar</button>
-            <button class="btn-legacy" [ngClass]="modalMode === 'ADD' ? 'primary' : 'danger'" (click)="modalMode === 'ADD' ? crearCierreYContinuar() : false" [disabled]="isSubmitting">
+            <button class="btn-legacy" [ngClass]="modalMode === 'ADD' ? 'primary' : 'danger'" (click)="modalMode === 'ADD' ? crearCierreYContinuar() : ejecutarEliminacion()" [disabled]="isSubmitting">
               <span *ngIf="modalMode === 'ADD'">{{ isSubmitting ? 'Generando...' : 'Crear y Capturar Físico' }}</span>
               <span *ngIf="modalMode === 'DELETE'">{{ isSubmitting ? 'Eliminando...' : 'Eliminar Permanentemente' }}</span>
             </button>
@@ -718,18 +718,29 @@ export class CierreMesComponent implements OnInit {
     });
   }
 
-  eliminarCierre(id: string) {
-    if (!confirm('⚠️ ¿Está completamente seguro de que desea eliminar este cierre de mes? Esta acción realizará un borrado lógico (Soft-Delete) y no se mostrará en los reportes.')) {
-      return;
-    }
+  confirmarEliminacion(id: string) {
+    this.itemToDelete = id;
+    this.modalMode = 'DELETE';
+    this.showModal = true;
+  }
 
-    this.inventarioService.deleteCierre(id).subscribe({
+  ejecutarEliminacion() {
+    if (!this.itemToDelete) return;
+    this.isSubmitting = true;
+
+    this.inventarioService.deleteCierre(this.itemToDelete).subscribe({
       next: () => {
+        this.isSubmitting = false;
+        this.showModal = false;
+        this.itemToDelete = null;
         this.showTransactionAlert('Cierre de mes eliminado correctamente.', 'success');
         this.cargarHistorial();
       },
       error: (err) => {
         console.error('Error eliminando cierre de mes:', err);
+        this.isSubmitting = false;
+        this.showModal = false;
+        this.itemToDelete = null;
         this.showTransactionAlert('No se pudo eliminar el cierre de mes seleccionado.', 'error');
       }
     });

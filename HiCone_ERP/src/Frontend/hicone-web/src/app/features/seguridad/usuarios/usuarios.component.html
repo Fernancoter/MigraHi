@@ -231,9 +231,9 @@
       <!-- Acciones Adicionales -->
       <th class="icon-col"></th>
       <th class="icon-col"></th>
-      <th *ngIf="isColVisible('roles')" class="icon-col-header" title="Roles">⚙️</th>
-      <th *ngIf="isColVisible('permisos')" class="icon-col-header" title="Permisos">🔒</th>
-      <th *ngIf="isColVisible('contrasena')" class="icon-col-header" title="Contraseña">🔑</th>
+      <th *ngIf="isColVisible('roles')" class="icon-col-header" title="Roles"><svg lucideSettings [size]="14"></svg></th>
+      <th *ngIf="isColVisible('permisos')" class="icon-col-header" title="Permisos"><svg lucideLock [size]="14"></svg></th>
+      <th *ngIf="isColVisible('contrasena')" class="icon-col-header" title="Contraseña"><svg lucideKey [size]="14"></svg></th>
       
       <!-- Datos -->
       <th *ngIf="isColVisible('login')">Nombre ▾</th>
@@ -249,12 +249,12 @@
 <ng-template #tableRowsTemplate let-users>
   <tr *ngFor="let u of users">
     <!-- Acciones Iconos -->
-    <td class="icon-cell"><button class="gam-icon-btn" (click)="openModal(u, true)" title="Visualizar">🔍</button></td>
-    <td class="icon-cell"><button class="gam-icon-btn edit-btn" (click)="openModal(u)" title="Editar">✏️</button></td>
-    <td class="icon-cell"><button class="gam-icon-btn del-btn" (click)="openDeleteModal(u)" title="Eliminar">❌</button></td>
+    <td class="icon-cell"><button class="gam-icon-btn" (click)="openModal(u, true)" title="Visualizar"><svg lucideSearch [size]="14"></svg></button></td>
+    <td class="icon-cell"><button class="gam-icon-btn edit-btn" (click)="openModal(u)" title="Editar"><svg lucidePencil [size]="14"></svg></button></td>
+    <td class="icon-cell"><button class="gam-icon-btn del-btn" (click)="openDeleteModal(u)" title="Eliminar"><svg lucideX [size]="14"></svg></button></td>
     <td class="icon-cell" *ngIf="isColVisible('roles')">
       <div class="dropdown-container">
-        <button class="gam-icon-btn" (click)="toggleConfigMenu(u.id, $event)" title="Configuración">⚙️</button>
+        <button class="gam-icon-btn" (click)="toggleConfigMenu(u.id, $event)" title="Configuración"><svg lucideSettings [size]="14"></svg></button>
         <div class="dropdown-menu config-menu" *ngIf="showUserConfigId() === u.id">
           <div class="menu-title">Configuración de {{ u.username }}</div>
           
@@ -265,13 +265,13 @@
             </button>
           </ng-container>
           
-          <button class="dropdown-item" (click)="openPermisos(u)">🔒 Gestionar Permisos</button>
-          <button class="dropdown-item" (click)="openPasswordModal(u)">🔑 Cambiar Contraseña</button>
+          <button class="dropdown-item" (click)="openPermisos(u)"><svg lucideLock [size]="14"></svg> Gestionar Permisos</button>
+          <button class="dropdown-item" (click)="openPasswordModal(u)"><svg lucideKey [size]="14"></svg> Cambiar Contraseña</button>
         </div>
       </div>
     </td>
-    <td class="icon-cell" *ngIf="isColVisible('permisos')"><button class="gam-icon-btn" (click)="openPermisos(u)" title="Permisos">🔒</button></td>
-    <td class="icon-cell" *ngIf="isColVisible('contrasena')"><button class="gam-icon-btn" (click)="openPasswordModal(u)" title="Contraseña">🔑</button></td>
+    <td class="icon-cell" *ngIf="isColVisible('permisos')"><button class="gam-icon-btn" (click)="openPermisos(u)" title="Permisos"><svg lucideLock [size]="14"></svg></button></td>
+    <td class="icon-cell" *ngIf="isColVisible('contrasena')"><button class="gam-icon-btn" (click)="openPasswordModal(u)" title="Contraseña"><svg lucideKey [size]="14"></svg></button></td>
     
     <!-- Datos -->
     <td *ngIf="isColVisible('login')"><a class="gam-link" href="javascript:void(0)" (click)="openModal(u, true)">{{ u.username }}</a></td>

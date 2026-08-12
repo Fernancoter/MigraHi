@@ -50,10 +50,12 @@ interface ColumnDef {
   visible: boolean;
 }
 
+import { LucidePencil, LucideX, LucideSearch, LucideSettings, LucideLock, LucideKey } from '@lucide/angular';
+
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, LucidePencil, LucideX, LucideSearch, LucideSettings, LucideLock, LucideKey],
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.css']
 })

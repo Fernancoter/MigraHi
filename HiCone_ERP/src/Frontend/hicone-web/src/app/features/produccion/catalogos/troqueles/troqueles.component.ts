@@ -5,10 +5,12 @@ import { firstValueFrom } from 'rxjs';
 import { ProduccionConfigService, Troquel, Prensa, Producto } from '../../../../core/services/produccion-config.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 
+import { LucidePencil, LucideX } from '@lucide/angular';
+
 @Component({
   selector: 'app-troqueles-catalogo',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LucidePencil, LucideX],
   template: `
     <div class="module-page animate-fade-in" (click)="closeAllDropdowns()">
 
@@ -183,10 +185,14 @@ import { NotificationService } from '../../../../core/services/notification.serv
                 @for (item of paginatedItems(); track item.id) {
                   <tr>
                     <td class="col-icon text-center">
-                      <button class="btn-action-icon edit" (click)="openEdit(item)" title="Editar">✏️</button>
+                      <button class="btn-action-icon edit" (click)="openEdit(item)" title="Editar">
+                        <svg lucidePencil [size]="14"></svg>
+                      </button>
                     </td>
                     <td class="col-icon text-center">
-                      <button class="btn-action-icon delete" (click)="confirmDelete(item)" title="Eliminar">✕</button>
+                      <button class="btn-action-icon delete" (click)="confirmDelete(item)" title="Eliminar">
+                        <svg lucideX [size]="14"></svg>
+                      </button>
                     </td>
                     @if (isColVisible('secuencialId')) { 
                       <td class="text-center cell-id">{{ item.secuencialId }}</td> 
@@ -301,7 +307,9 @@ import { NotificationService } from '../../../../core/services/notification.serv
                   @for (prod of formProductos(); track $index) {
                     <tr>
                       <td class="col-icon text-center">
-                        <button class="btn-action-icon delete" (click)="removeProductoRow($index)" title="Quitar producto">✕</button>
+                        <button class="btn-action-icon delete" (click)="removeProductoRow($index)" title="Quitar producto">
+                          <svg lucideX [size]="14"></svg>
+                        </button>
                       </td>
                       <td>{{ prod.productoNombre }}</td>
                     </tr>
@@ -502,7 +510,9 @@ import { NotificationService } from '../../../../core/services/notification.serv
                       @for (pt of detailPrensaTroqueles(); track pt.id) {
                         <tr>
                           <td class="col-icon text-center">
-                            <button class="btn-action-icon delete" (click)="desasignarPrensa(pt)" title="Desasignar">✕</button>
+                            <button class="btn-action-icon delete" (click)="desasignarPrensa(pt)" title="Desasignar">
+                              <svg lucideX [size]="14"></svg>
+                            </button>
                           </td>
                           <td class="text-center">{{ selectedItem()?.secuencialId }}</td>
                           <td>{{ pt.prensa }}</td>

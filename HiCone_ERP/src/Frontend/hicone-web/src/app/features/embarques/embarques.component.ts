@@ -22,15 +22,15 @@ import { LogisticaService, Embarque } from '../../core/services/logistica';
       <div class="stats-grid">
         <div class="stat-card">
           <span class="stat-label">En Tránsito</span>
-          <span class="stat-value">4</span>
+          <span class="stat-value">{{ getStat('Transito') }}</span>
         </div>
         <div class="stat-card">
           <span class="stat-label">Pendientes de Carga</span>
-          <span class="stat-value">12</span>
+          <span class="stat-value">{{ getStat('Pendiente') }}</span>
         </div>
         <div class="stat-card">
           <span class="stat-label">Entregados Hoy</span>
-          <span class="stat-value">8</span>
+          <span class="stat-value">{{ getStat('Entregado') }}</span>
         </div>
       </div>
 
@@ -130,5 +130,9 @@ export class EmbarquesComponent implements OnInit {
 
   irACargar(id: string) {
     this.router.navigate(['/embarques/carga', id]);
+  }
+
+  getStat(status: string): number {
+    return this.embarques.filter(e => (e.estatus || '').toLowerCase().includes(status.toLowerCase())).length;
   }
 }

@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Extrusora, ExtrusoraOperarioRow, Operario, Turno } from '../../../../core/services/produccion-config.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 
+import { LucideX, LucideTrash2, LucideFolder, LucideFileText } from '@lucide/angular';
+
 @Component({
   selector: 'app-extrusoras-catalogo',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LucideX, LucideTrash2, LucideFolder, LucideFileText],
   template: `
     <div class="module-page animate-move-up" (click)="closeAllDropdowns()">
 
@@ -39,7 +41,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
                     <span class="export-icon">📊</span> Excel (CSV)
                   </button>
                   <button class="export-item-qa" (click)="exportPDF()">
-                    <span class="export-icon">📕</span> PDF
+                    <span class="export-icon"><svg lucideFileText [size]="14"></svg></span> PDF
                   </button>
                 </div>
               }
@@ -139,9 +141,9 @@ import { NotificationService } from '../../../../core/services/notification.serv
                       <div style="height:1px; background:#e2e8f0; margin:0.5rem 0;"></div>
                       <div style="font-size:0.7rem; font-weight:700; color:#94a3b8; text-transform:uppercase; padding:0.25rem 0.5rem;">Filtros Guardados</div>
                       @for (f of savedFilters; track f.id) {
-                        <div class="dd-item" (click)="loadSavedFilter(f)" style="display:flex; justify-content:space-between; align-items:center;">
-                          <span>📁 {{ f.name }}</span>
-                          <span (click)="deleteSavedFilter(f, $event)" style="cursor:pointer; opacity:0.6; padding:2px;">🗑️</span>
+                        <div class="dd-item" (click)="loadSavedFilter(f)" style="display:flex; justify-space-between; align-items:center;">
+                          <span><svg lucideFolder [size]="14"></svg> {{ f.name }}</span>
+                          <span (click)="deleteSavedFilter(f, $event)" style="cursor:pointer; opacity:0.6; padding:2px;"><svg lucideTrash2 [size]="14"></svg></span>
                         </div>
                       }
                     }
@@ -406,7 +408,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
       @if (showDeleteModal()) {
         <div class="modal-overlay" style="z-index:1100;" (click)="closeDeleteModal()">
           <div class="modal-card confirm-modal" (click)="$event.stopPropagation()">
-            <button class="modal-close-abs" (click)="closeDeleteModal()">✕</button>
+            <button class="modal-close-abs" (click)="closeDeleteModal()"><svg lucideX [size]="14"></svg></button>
             <div class="confirm-body"><p>¿Está seguro de eliminar la extrusora?</p></div>
             <div class="confirm-footer">
               <button class="btn-erp-confirm" (click)="executeDelete()">Sí</button>

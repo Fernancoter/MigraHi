@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Categoria } from '../../../../core/services/produccion-config.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 
+import { LucideX, LucideTrash2, LucideFolder, LucideFileText } from '@lucide/angular';
+
 @Component({
   selector: 'app-categorias-catalogo',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LucideX, LucideTrash2, LucideFolder, LucideFileText],
   template: `
     <div class="module-page animate-move-up">
       <div class="page-header-premium">
@@ -39,7 +41,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
                     <span class="export-icon">📊</span> Excel (CSV)
                   </button>
                   <button class="export-item-qa" (click)="exportPDF()">
-                    <span class="export-icon">📕</span> PDF
+                    <span class="export-icon"><svg lucideFileText [size]="14"></svg></span> PDF
                   </button>
                 </div>
               }
@@ -145,8 +147,8 @@ import { NotificationService } from '../../../../core/services/notification.serv
                       <div style="font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; padding: 0.25rem 0.5rem;">Filtros Guardados</div>
                       @for (f of savedFilters; track f.id) {
                         <div class="dropdown-item" (click)="loadSavedFilter(f)" style="display: flex; justify-content: space-between; align-items: center;">
-                          <span>📁 {{ f.name }}</span>
-                          <span (click)="deleteSavedFilter(f, $event)" style="cursor: pointer; opacity: 0.6; padding: 2px;">🗑️</span>
+                          <span><svg lucideFolder [size]="14"></svg> {{ f.name }}</span>
+                          <span (click)="deleteSavedFilter(f, $event)" style="cursor: pointer; opacity: 0.6; padding: 2px;"><svg lucideTrash2 [size]="14"></svg></span>
                         </div>
                       }
                     }
@@ -238,7 +240,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
           <div class="modal-card" (click)="$event.stopPropagation()">
             <div class="modal-header">
               <h3>Categoría</h3>
-              <button class="modal-close" (click)="closeModal()">✕</button>
+              <button class="modal-close" (click)="closeModal()"><svg lucideX [size]="14"></svg></button>
             </div>
             
             <div class="modal-body">
@@ -267,7 +269,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
           <div class="modal-card visualization-modal" (click)="$event.stopPropagation()">
             <div class="modal-header">
               <h3>Detalle de Categoría</h3>
-              <button class="modal-close" (click)="closeModal()">✕</button>
+              <button class="modal-close" (click)="closeModal()"><svg lucideX [size]="14"></svg></button>
             </div>
             
             <div class="modal-body" style="background: #f8fafc; padding: 1.5rem;">
@@ -350,7 +352,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
       @if (showArchiveModal()) {
         <div class="modal-overlay" style="z-index: 1100;" (click)="closeArchiveModal()">
           <div class="modal-card archive-modal" (click)="$event.stopPropagation()">
-            <button class="modal-close-abs" (click)="closeArchiveModal()">✕</button>
+            <button class="modal-close-abs" (click)="closeArchiveModal()"><svg lucideX [size]="14"></svg></button>
             <div class="modal-body archive-body">
               <p>¿Está seguro de archivar la categoría?</p>
             </div>

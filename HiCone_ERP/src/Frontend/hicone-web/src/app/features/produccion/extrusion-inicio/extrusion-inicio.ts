@@ -774,16 +774,13 @@ export class ExtrusionInicioComponent implements OnInit {
         // Programación shows scheduled and completed ones (non-active)
         this.programados = this.allExtrusiones.filter(e => e.estado !== 'EnProceso' && e.estado !== 'Detenida' && Number(e.estado) !== 2);
 
-        // Si ambas listas resultan vacías, forzamos los mocks para que siempre haya datos de prueba visibles
-        if (this.operacion.length === 0 && this.programados.length === 0) {
-          this.cargarMocks();
-        }
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar extrusiones en inicio:', err);
-        // En caso de error de conexión/autenticación, cargamos los mocks de respaldo
-        this.cargarMocks();
+        this.allExtrusiones = [];
+        this.operacion = [];
+        this.programados = [];
         this.cdr.detectChanges();
       }
     });

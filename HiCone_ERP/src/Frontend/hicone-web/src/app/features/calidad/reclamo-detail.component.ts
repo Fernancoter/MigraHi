@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CalidadService, Reclamo, ReclamoDetalle } from '../../core/services/calidad';
 
+import { LucideX } from '@lucide/angular';
+
 @Component({
   selector: 'app-reclamo-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, LucideX],
   template: `
     <div class="page-container animate-fade-in" *ngIf="reclamo">
       <div class="page-header-premium">
@@ -155,7 +157,7 @@ import { CalidadService, Reclamo, ReclamoDetalle } from '../../core/services/cal
         <div class="modal-card-premium animate-scale-in" (click)="$event.stopPropagation()">
           <div class="modal-header-premium">
             <h3>📦 Asociar Carrete Defectuoso</h3>
-            <button class="btn-icon-premium" (click)="cerrarModalReel()">✕</button>
+            <button class="btn-icon-premium" (click)="cerrarModalReel()"><svg lucideX [size]="14"></svg></button>
           </div>
           <div class="modal-body-premium">
             <form (ngSubmit)="guardarCarreteDefecto()" #reelForm="ngForm">
