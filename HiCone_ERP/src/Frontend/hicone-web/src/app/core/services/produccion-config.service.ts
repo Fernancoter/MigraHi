@@ -251,4 +251,17 @@ export class ProduccionConfigService {
   createTroquel(t: Partial<Troquel>) { return this.http.post<string>(`${this.base}/catalogos/troqueles`, t); }
   updateTroquel(id: string, t: Partial<Troquel>) { return this.http.put(`${this.base}/catalogos/troqueles/${id}`, t); }
   deleteTroquel(id: string) { return this.http.delete(`${this.base}/catalogos/troqueles/${id}`); }
+
+  asignarPrensaTroquel(troquelId: string, prensaId: string, observaciones?: string) {
+    return this.http.post<any>(`${this.base}/catalogos/troqueles/${troquelId}/prensa-troqueles`, { prensaId, observaciones });
+  }
+  desasignarPrensaTroquel(troquelId: string, prensaTroquelId: string) {
+    return this.http.delete(`${this.base}/catalogos/troqueles/${troquelId}/prensa-troqueles/${prensaTroquelId}`);
+  }
+  addTroquelProducto(troquelId: string, productoId: string) {
+    return this.http.post<any>(`${this.base}/catalogos/troqueles/${troquelId}/productos`, { productoId });
+  }
+  removeTroquelProducto(troquelId: string, troquelProductoId: string) {
+    return this.http.delete(`${this.base}/catalogos/troqueles/${troquelId}/productos/${troquelProductoId}`);
+  }
 }

@@ -60,6 +60,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<PrensaProducto> PrensaProductos => Set<PrensaProducto>();
     public DbSet<Troquel> Troqueles => Set<Troquel>();
     public DbSet<PrensaTroquel> PrensaTroqueles => Set<PrensaTroquel>();
+    public DbSet<TroquelProducto> TroquelProductos => Set<TroquelProducto>();
     public DbSet<Operario> Operarios => Set<Operario>();
     public DbSet<Operador> Operadores => Set<Operador>();
     public DbSet<Turno> Turnos => Set<Turno>();

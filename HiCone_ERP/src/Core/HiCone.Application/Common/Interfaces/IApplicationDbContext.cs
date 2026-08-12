@@ -51,6 +51,7 @@ public interface IApplicationDbContext
     DbSet<PrensaProducto> PrensaProductos { get; }
     DbSet<Troquel> Troqueles { get; }
     DbSet<PrensaTroquel> PrensaTroqueles { get; }
+    DbSet<TroquelProducto> TroquelProductos { get; }
     DbSet<Operario> Operarios { get; }
     DbSet<Operador> Operadores { get; }
     DbSet<Turno> Turnos { get; }

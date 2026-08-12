@@ -41,4 +41,5 @@ public class Producto : TenantEntity
     public virtual ICollection<ExtrusoraProducto> ExtrusoraProductos { get; set; } = new List<ExtrusoraProducto>();
     public virtual ICollection<Bobina> Bobinas { get; set; } = new List<Bobina>();
     public virtual ICollection<Palet> Palets { get; set; } = new List<Palet>();
+    public virtual ICollection<TroquelProducto> TroquelProductos { get; set; } = new List<TroquelProducto>();
 }

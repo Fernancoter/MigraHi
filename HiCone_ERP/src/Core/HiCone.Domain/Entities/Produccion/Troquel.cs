@@ -1,8 +1,6 @@
 using HiCone.Domain.Common;
 using HiCone.Domain.Enums;
 
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace HiCone.Domain.Entities.Produccion;
 
 /// <summary>
@@ -10,16 +8,11 @@ namespace HiCone.Domain.Entities.Produccion;
 /// </summary>
 public class Troquel : TenantEntity
 {
-    [NotMapped]
-    public int SecuencialId { get; set; }
-
     public string Codigo { get; set; } = null!;
     public string Nombre { get; set; } = null!;
     public EstadoTroquel Estado { get; set; } = EstadoTroquel.Disponible;
     public bool IsActive { get; set; } = true;
 
-    // Compatibilidades
-    public string? ProductosCompatibles { get; set; }        // JSON o lista CSV de ProductoIds
     public string? Observaciones { get; set; }
 
     // Mantenimiento
@@ -29,4 +22,5 @@ public class Troquel : TenantEntity
 
     // ── Colecciones ───────────────────────────────────────────────────────
     public virtual ICollection<PrensaTroquel> PrensaTroqueles { get; set; } = new List<PrensaTroquel>();
+    public virtual ICollection<TroquelProducto> TroquelProductos { get; set; } = new List<TroquelProducto>();
 }

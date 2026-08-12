@@ -1,7 +1,8 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProduccionConfigService, Troquel } from '../../../../core/services/produccion-config.service';
+import { firstValueFrom } from 'rxjs';
+import { ProduccionConfigService, Troquel, Prensa, Producto } from '../../../../core/services/produccion-config.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
@@ -188,7 +189,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
                       <button class="btn-action-icon delete" (click)="confirmDelete(item)" title="Eliminar">✕</button>
                     </td>
                     @if (isColVisible('secuencialId')) { 
-                      <td class="text-center cell-id">{{ item.secuencialId || 34 }}</td> 
+                      <td class="text-center cell-id">{{ item.secuencialId }}</td> 
                     }
                     @if (isColVisible('nombre')) { 
                       <td class="cell-nombre">
@@ -300,20 +301,29 @@ import { NotificationService } from '../../../../core/services/notification.serv
                   @for (prod of formProductos(); track $index) {
                     <tr>
                       <td class="col-icon text-center">
-                        <button class="btn-action-icon delete" (click)="removeProductoRow($index)" title="Eliminar fila">✕</button>
+                        <button class="btn-action-icon delete" (click)="removeProductoRow($index)" title="Quitar producto">✕</button>
                       </td>
-                      <td>
-                        <input type="text" class="input-subtable" [(ngModel)]="prod.productoNombre" placeholder="Ingrese clave o nombre de producto (Ej: 808172000)" />
-                      </td>
+                      <td>{{ prod.productoNombre }}</td>
+                    </tr>
+                  }
+                  @if (formProductos().length === 0) {
+                    <tr>
+                      <td colspan="2" class="empty-msg">Sin productos compatibles registrados.</td>
                     </tr>
                   }
                 </tbody>
               </table>
             </div>
-            <div class="subtable-footer text-center">
-              <a class="link-nuevo-fila" (click)="addProductoRow()">
-                <span>+</span> [[Nuevo fila]]
-              </a>
+            <div class="subtable-footer" style="display: flex; gap: 8px; align-items: center; padding: 0.75rem 1rem;">
+              <select class="select-gx" [(ngModel)]="productoAAgregar" style="flex: 1;">
+                <option value="">Seleccione un producto...</option>
+                @for (p of productosDisponiblesParaAgregar(); track p.id) {
+                  <option [value]="p.id">{{ p.clave }} - {{ p.nombre }}</option>
+                }
+              </select>
+              <button type="button" class="btn-primary-green" (click)="addProductoRow()" [disabled]="!productoAAgregar">
+                <span>+</span> Agregar
+              </button>
             </div>
           </div>
 
@@ -450,7 +460,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
               <!-- CONTENIDO PESTAÑA 2: PRENSA TROQUEL (IMAGEN 5) -->
               @if (detailTab() === 'prensaTroquel') {
                 <div class="sub-toolbar">
-                  <button class="btn-icon-insert" (click)="addPrensaTroquelRow()" title="Insertar Prensa Troquel">
+                  <button class="btn-icon-insert" (click)="openAsignarPrensaModal()" title="Insertar Prensa Troquel">
                     <span class="plus-icon">+</span>
                   </button>
                   <div class="right-actions">
@@ -483,25 +493,25 @@ import { NotificationService } from '../../../../core/services/notification.serv
                     <thead>
                       <tr>
                         <th class="col-icon"></th>
-                        <th class="col-icon"></th>
                         <th class="sortable text-center">Troquel Id <span class="sort-arrow">↑</span></th>
-                        <th class="sortable text-left">Prensa Id <span class="sort-arrow">▾</span></th>
                         <th class="sortable text-left">Prensa <span class="sort-arrow">▾</span></th>
+                        <th class="sortable text-left">Fecha Asignación <span class="sort-arrow">▾</span></th>
                       </tr>
                     </thead>
                     <tbody>
                       @for (pt of detailPrensaTroqueles(); track pt.id) {
                         <tr>
-                          <td class="col-icon text-center"><button class="btn-action-icon edit">✏️</button></td>
-                          <td class="col-icon text-center"><button class="btn-action-icon delete">✕</button></td>
-                          <td class="text-center">{{ selectedItem()?.secuencialId || 34 }}</td>
-                          <td>{{ pt.prensaId || 'PRE-A1' }}</td>
-                          <td>{{ pt.prensa || 'Prensa 4' }}</td>
+                          <td class="col-icon text-center">
+                            <button class="btn-action-icon delete" (click)="desasignarPrensa(pt)" title="Desasignar">✕</button>
+                          </td>
+                          <td class="text-center">{{ selectedItem()?.secuencialId }}</td>
+                          <td>{{ pt.prensa }}</td>
+                          <td>{{ pt.fechaAsignacion ? (pt.fechaAsignacion | date:'dd/MM/yyyy HH:mm') : '' }}</td>
                         </tr>
                       }
                       @if (detailPrensaTroqueles().length === 0) {
                         <tr>
-                          <td colspan="5" class="empty-msg padding-large">No se encontraron registros</td>
+                          <td colspan="4" class="empty-msg padding-large">No se encontraron registros</td>
                         </tr>
                       }
                     </tbody>
@@ -523,6 +533,28 @@ import { NotificationService } from '../../../../core/services/notification.serv
           <span>Consultas a partir de la siguiente fecha:</span>
           <input type="text" class="date-box" value="25/04/26 📅" readonly />
           <span class="copyright">Copyright 2023</span>
+        </div>
+      }
+
+      <!-- MODAL ASIGNAR PRENSA -->
+      @if (showAsignarPrensaModal()) {
+        <div class="modal-overlay" (click)="showAsignarPrensaModal.set(false)">
+          <div class="confirm-modal" (click)="$event.stopPropagation()">
+            <h3 class="confirm-title">Asignar Prensa</h3>
+            <div class="form-field-group" style="text-align: left; margin-bottom: 1.25rem;">
+              <label class="form-label-gx">Prensa</label>
+              <select class="select-gx" [(ngModel)]="prensaAAsignar" style="width: 100%;">
+                <option value="">Seleccione una prensa...</option>
+                @for (p of prensasDisponibles(); track p.id) {
+                  <option [value]="p.id">{{ p.nombre }}</option>
+                }
+              </select>
+            </div>
+            <div class="confirm-actions">
+              <button class="btn-primary-green-solid" (click)="confirmAsignarPrensa()" [disabled]="!prensaAAsignar">Asignar</button>
+              <button class="btn-secondary-grey" (click)="showAsignarPrensaModal.set(false)">Cancelar</button>
+            </div>
+          </div>
         </div>
       }
 
@@ -674,11 +706,23 @@ export class TroquelesCatalogoComponent implements OnInit {
 
   // Formulario Editar / Crear (IMAGEN 3)
   form: Partial<Troquel> = {};
-  formProductos = signal<{ productoNombre: string }[]>([]);
+  formProductos = signal<{ id?: string; productoId: string; productoNombre: string }[]>([]);
+  productosCatalogo = signal<Producto[]>([]);
+  productoAAgregar = '';
+
+  productosDisponiblesParaAgregar = computed(() => {
+    const yaAgregados = new Set(this.formProductos().map(p => p.productoId));
+    return this.productosCatalogo().filter(p => !yaAgregados.has(p.id));
+  });
 
   // Detalle Productos y Prensas (IMAGEN 4 & IMAGEN 5)
   detailProductos = signal<any[]>([]);
   detailPrensaTroqueles = signal<any[]>([]);
+
+  // Asignar Prensa
+  showAsignarPrensaModal = signal(false);
+  prensasDisponibles = signal<Prensa[]>([]);
+  prensaAAsignar = '';
 
   // Eliminar
   showDeleteConfirm = signal(false);
@@ -687,6 +731,10 @@ export class TroquelesCatalogoComponent implements OnInit {
   ngOnInit() {
     this.loadSavedFiltersFromStorage();
     this.load();
+    this.svc.getProductos().subscribe({
+      next: (data) => this.productosCatalogo.set(data),
+      error: (err) => console.error(err)
+    });
   }
 
   load() {
@@ -837,20 +885,27 @@ export class TroquelesCatalogoComponent implements OnInit {
       estado: 1,
       isActive: true
     };
-    this.formProductos.set([
-      { productoNombre: '808172000' },
-      { productoNombre: '0001C2000' }
-    ]);
+    this.formProductos.set([]);
+    this.productoAAgregar = '';
     this.viewState.set('edit');
     this.closeAllDropdowns();
   }
 
   openEdit(item: Troquel) {
     this.form = { ...item };
-    this.formProductos.set([
-      { productoNombre: '808172000' },
-      { productoNombre: '0001C2000' }
-    ]);
+    this.productoAAgregar = '';
+    this.formProductos.set([]);
+    this.svc.getTroquelById(item.id).subscribe({
+      next: (res) => {
+        const productos = (res.productos || []).map((p: any) => ({
+          id: p.id,
+          productoId: p.productoId,
+          productoNombre: `${p.productoClave} - ${p.productoNombre}`
+        }));
+        this.formProductos.set(productos);
+      },
+      error: (err) => console.error(err)
+    });
     this.viewState.set('edit');
     this.closeAllDropdowns();
   }
@@ -859,34 +914,18 @@ export class TroquelesCatalogoComponent implements OnInit {
     this.selectedItem.set(item);
     this.detailTab.set('producto');
     this.viewState.set('detail');
+    this.detailProductos.set([]);
+    this.detailPrensaTroqueles.set([]);
 
     this.svc.getTroquelById(item.id).subscribe({
       next: (res) => {
-        if (res.productos && res.productos.length > 0) {
-          this.detailProductos.set(res.productos);
-        } else {
-          this.detailProductos.set([
-            { productoId: 27, productoNombre: '808172000', productoClave: '808172000', productoDescripcion: '12 pack PCR', nombre: 'Carrete' },
-            { productoId: 57, productoNombre: '8081C2000', productoClave: '8081C2000', productoDescripcion: '8081C2 fabricada con resina 100% PCR', nombre: 'Carrete' }
-          ]);
-        }
-
-        if (res.prensaTroqueles && res.prensaTroqueles.length > 0) {
-          this.detailPrensaTroqueles.set(res.prensaTroqueles);
-        } else if (item.nombre === '234-0005' || item.nombre === '244-03') {
-          this.detailPrensaTroqueles.set([
-            { id: 'pt-1', troquelId: item.secuencialId || 34, prensaId: 'PRE-A1', prensa: item.enPrensa || 'Prensa 4' }
-          ]);
-        } else {
-          this.detailPrensaTroqueles.set([]);
-        }
+        this.selectedItem.set(res);
+        this.detailProductos.set(res.productos || []);
+        this.detailPrensaTroqueles.set(res.prensaTroqueles || []);
       },
-      error: () => {
-        this.detailProductos.set([
-          { productoId: 27, productoNombre: '808172000', productoClave: '808172000', productoDescripcion: '12 pack PCR', nombre: 'Carrete' },
-          { productoId: 57, productoNombre: '8081C2000', productoClave: '8081C2000', productoDescripcion: '8081C2 fabricada con resina 100% PCR', nombre: 'Carrete' }
-        ]);
-        this.detailPrensaTroqueles.set([]);
+      error: (err) => {
+        console.error(err);
+        this.notify.warning('No se pudo cargar el detalle del troquel.');
       }
     });
 
@@ -895,11 +934,27 @@ export class TroquelesCatalogoComponent implements OnInit {
 
   // Operaciones Formulario (IMAGEN 3)
   addProductoRow() {
-    this.formProductos.update(list => [...list, { productoNombre: '' }]);
+    if (!this.productoAAgregar) return;
+    const producto = this.productosCatalogo().find(p => p.id === this.productoAAgregar);
+    if (!producto) return;
+    this.formProductos.update(list => [...list, { productoId: producto.id, productoNombre: `${producto.clave} - ${producto.nombre}` }]);
+    this.productoAAgregar = '';
   }
 
   removeProductoRow(index: number) {
     this.formProductos.update(list => list.filter((_, i) => i !== index));
+  }
+
+  private async syncProductosCompatibles(troquelId: string, originalIds: Set<string>) {
+    const current = this.formProductos();
+    const currentIds = new Set(current.filter(p => p.id).map(p => p.id!));
+    const toRemove = [...originalIds].filter(id => !currentIds.has(id));
+    const toAdd = current.filter(p => !p.id);
+
+    await Promise.all([
+      ...toRemove.map(id => firstValueFrom(this.svc.removeTroquelProducto(troquelId, id))),
+      ...toAdd.map(p => firstValueFrom(this.svc.addTroquelProducto(troquelId, p.productoId)))
+    ]);
   }
 
   saveForm() {
@@ -916,42 +971,100 @@ export class TroquelesCatalogoComponent implements OnInit {
       tenantId: '00000000-0000-0000-0000-000000000001'
     };
 
+    const originalIds = new Set(this.formProductos().filter(p => p.id).map(p => p.id!));
+
     if (!this.form.id) {
       this.svc.createTroquel(payload as any).subscribe({
-        next: () => {
-          this.notify.success('Troquel creado exitosamente.');
-          this.goList();
+        next: async (troquelId) => {
+          try {
+            await this.syncProductosCompatibles(troquelId as unknown as string, originalIds);
+            this.notify.success('Troquel creado exitosamente.');
+            this.goList();
+          } catch (e) {
+            console.error(e);
+            this.notify.warning('El troquel se creó, pero no se pudieron guardar todos los productos compatibles.');
+            this.goList();
+          }
         },
         error: (e) => {
           console.error(e);
-          // Fallback fluido optimista
-          this.items.update(list => [...list, { id: `trq-${Date.now()}`, secuencialId: Math.floor(Math.random()*80)+10, codigo: payload.codigo, nombre: payload.nombre, estado: payload.estado, estadoNombre: payload.estado === 2 ? 'En Prensa' : 'Registrado', isActive: true }]);
-          this.notify.success('Troquel creado exitosamente.');
-          this.goList();
+          this.notify.error('No se pudo crear el troquel.');
         }
       });
     } else {
-      this.svc.updateTroquel(this.form.id, payload as any).subscribe({
-        next: () => {
-          this.notify.success('Troquel actualizado exitosamente.');
-          this.goList();
+      const troquelId = this.form.id;
+      this.svc.updateTroquel(troquelId, payload as any).subscribe({
+        next: async () => {
+          try {
+            await this.syncProductosCompatibles(troquelId, originalIds);
+            this.notify.success('Troquel actualizado exitosamente.');
+            this.goList();
+          } catch (e) {
+            console.error(e);
+            this.notify.warning('El troquel se actualizó, pero no se pudieron guardar todos los productos compatibles.');
+            this.goList();
+          }
         },
         error: (e) => {
           console.error(e);
-          // Fallback fluido optimista
-          this.items.update(list => list.map(item => item.id === this.form.id ? { ...item, nombre: payload.nombre, estado: payload.estado, estadoNombre: payload.estado === 2 ? 'En Prensa' : 'Registrado' } : item));
-          this.notify.success('Troquel actualizado exitosamente.');
-          this.goList();
+          this.notify.error('No se pudo actualizar el troquel.');
         }
       });
     }
   }
 
-  addPrensaTroquelRow() {
-    this.detailPrensaTroqueles.update(list => [
-      ...list,
-      { id: `pt-${Date.now()}`, troquelId: this.selectedItem()?.secuencialId || 34, prensaId: 'PRE-A1', prensa: 'Prensa 4' }
-    ]);
+  // Asignar / Desasignar Prensa (IMAGEN 5)
+  openAsignarPrensaModal() {
+    this.prensaAAsignar = '';
+    this.svc.getPrensas().subscribe({
+      next: (data) => this.prensasDisponibles.set(data),
+      error: (err) => console.error(err)
+    });
+    this.showAsignarPrensaModal.set(true);
+  }
+
+  confirmAsignarPrensa() {
+    const troquel = this.selectedItem();
+    if (!troquel || !this.prensaAAsignar) return;
+
+    this.svc.asignarPrensaTroquel(troquel.id, this.prensaAAsignar).subscribe({
+      next: () => {
+        this.showAsignarPrensaModal.set(false);
+        this.notify.success('Prensa asignada exitosamente.');
+        this.refreshDetail(troquel.id);
+      },
+      error: (e) => {
+        console.error(e);
+        this.notify.error(e?.error?.message || 'No se pudo asignar la prensa.');
+      }
+    });
+  }
+
+  desasignarPrensa(pt: any) {
+    const troquel = this.selectedItem();
+    if (!troquel) return;
+
+    this.svc.desasignarPrensaTroquel(troquel.id, pt.id).subscribe({
+      next: () => {
+        this.notify.success('Prensa desasignada exitosamente.');
+        this.refreshDetail(troquel.id);
+      },
+      error: (e) => {
+        console.error(e);
+        this.notify.error('No se pudo desasignar la prensa.');
+      }
+    });
+  }
+
+  private refreshDetail(troquelId: string) {
+    this.svc.getTroquelById(troquelId).subscribe({
+      next: (res) => {
+        this.selectedItem.set(res);
+        this.detailProductos.set(res.productos || []);
+        this.detailPrensaTroqueles.set(res.prensaTroqueles || []);
+      },
+      error: (err) => console.error(err)
+    });
   }
 
   // Eliminar
@@ -971,10 +1084,9 @@ export class TroquelesCatalogoComponent implements OnInit {
       },
       error: (e) => {
         console.error(e);
-        this.items.update(list => list.filter(i => i.id !== item.id));
+        this.notify.error('No se pudo eliminar el troquel.');
         this.showDeleteConfirm.set(false);
         this.itemToDelete.set(null);
-        this.goList();
       }
     });
   }
@@ -993,7 +1105,7 @@ export class TroquelesCatalogoComponent implements OnInit {
 
     this.filteredItems().forEach(t => {
       const row: string[] = [];
-      if (this.isColVisible('secuencialId')) row.push(String(t.secuencialId || 34));
+      if (this.isColVisible('secuencialId')) row.push(String(t.secuencialId));
       if (this.isColVisible('nombre')) row.push(t.nombre);
       if (this.isColVisible('enPrensa')) row.push(t.enPrensa || '');
       if (this.isColVisible('estado')) row.push(this.getEstadoText(t));
@@ -1024,7 +1136,7 @@ export class TroquelesCatalogoComponent implements OnInit {
     let rows = '';
     this.filteredItems().forEach(t => {
       rows += '<tr>';
-      if (this.isColVisible('secuencialId')) rows += `<td>${t.secuencialId || 34}</td>`;
+      if (this.isColVisible('secuencialId')) rows += `<td>${t.secuencialId}</td>`;
       if (this.isColVisible('nombre')) rows += `<td>${t.nombre}</td>`;
       if (this.isColVisible('enPrensa')) rows += `<td>${t.enPrensa || ''}</td>`;
       if (this.isColVisible('estado')) rows += `<td>${this.getEstadoText(t)}</td>`;

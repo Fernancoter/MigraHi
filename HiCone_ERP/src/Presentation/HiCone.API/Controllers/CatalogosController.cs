@@ -688,34 +688,82 @@ public class CatalogosController : ControllerBase
     // TROQUELES
     // ─────────────────────────────────────────────────────────────────────────
 
+    private static string GetEstadoTroquelNombre(EstadoTroquel estado) => estado switch
+    {
+        EstadoTroquel.EnUso => "En Prensa",
+        EstadoTroquel.Mantenimiento => "Mantenimiento",
+        EstadoTroquel.FueraDeServicio => "Fuera de Servicio",
+        _ => "Registrado"
+    };
+
+    /// <summary>
+    /// Los catálogos de Prensa y Producto tienen columnas en su entidad C# que aún no existen
+    /// en sus tablas reales (deuda técnica preexistente y ajena al módulo de Troqueles). Para no
+    /// tocar esas tablas aquí, nunca se materializa la entidad completa: solo se proyectan las
+    /// columnas que sí existen (igual que ya hace GetPrensas/GetPrensaProductos en este archivo).
+    /// </summary>
+    private async Task<Dictionary<Guid, string>> GetPrensaNombresAsync(IEnumerable<Guid> ids)
+    {
+        var idList = ids.Distinct().ToList();
+        if (idList.Count == 0) return new Dictionary<Guid, string>();
+        return await _context.Prensas
+            .Where(p => idList.Contains(p.Id))
+            .Select(p => new { p.Id, p.Nombre })
+            .ToDictionaryAsync(x => x.Id, x => x.Nombre);
+    }
+
+    private record ProductoDisplayInfo(Guid Id, string Nombre, string Clave, string? Descripcion);
+
+    private async Task<Dictionary<Guid, ProductoDisplayInfo>> GetProductosDisplayAsync(IEnumerable<Guid> ids)
+    {
+        var idList = ids.Distinct().ToList();
+        if (idList.Count == 0) return new Dictionary<Guid, ProductoDisplayInfo>();
+        var list = await _context.Productos
+            .Where(p => idList.Contains(p.Id))
+            .Select(p => new ProductoDisplayInfo(p.Id, p.Nombre, p.Clave, p.Descripcion))
+            .ToListAsync();
+        return list.ToDictionary(x => x.Id);
+    }
+
     [HttpGet("troqueles")]
     [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<object>>> GetTroqueles([FromQuery] string? search = null)
     {
-        var query = _context.Troqueles
-            .Include(t => t.PrensaTroqueles)
-            .ThenInclude(pt => pt.Prensa)
-            .AsQueryable();
+        var query = _context.Troqueles.Include(t => t.PrensaTroqueles).AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(search))
             query = query.Where(t => t.Nombre.Contains(search) || t.Codigo.Contains(search));
 
         var list = await query.ToListAsync();
+
+        var prensaIds = list.SelectMany(t => t.PrensaTroqueles.Where(pt => pt.Activo).Select(pt => pt.PrensaId));
+        var prensaNombres = await GetPrensaNombresAsync(prensaIds);
+
+        // Numeración secuencial estable basada en el orden real de alta en BD (no aleatoria/hardcodeada).
+        var secuenciales = list
+            .OrderBy(t => t.CreatedAt)
+            .Select((t, idx) => (t.Id, Sec: idx + 1))
+            .ToDictionary(x => x.Id, x => x.Sec);
+
         var items = list
             .OrderBy(t => t.Nombre)
-            .Select(t => new { 
-                t.Id, 
-                SecuencialId = t.SecuencialId != 0 ? t.SecuencialId : 34,
-                t.Codigo, 
-                t.Nombre, 
-                t.Estado, 
-                EstadoNombre = t.Estado == EstadoTroquel.EnUso ? "En Prensa" : "Registrado",
-                EnPrensa = t.PrensaTroqueles.FirstOrDefault(pt => pt.Activo)?.Prensa?.Nombre ?? (t.Nombre == "234-0005" ? "Prensa 4" : (t.Nombre == "244-03" ? "Prensa 5" : "")),
-                t.IsActive, 
-                t.Observaciones,
-                t.CiclosAcumulados,
-                t.CiclosVideoMantenimiento,
-                t.FechaUltimoMantenimiento
+            .Select(t => {
+                var activa = t.PrensaTroqueles.FirstOrDefault(pt => pt.Activo);
+                var enPrensa = activa != null && prensaNombres.TryGetValue(activa.PrensaId, out var nombrePrensa) ? nombrePrensa : "";
+                return new {
+                    t.Id,
+                    SecuencialId = secuenciales[t.Id],
+                    t.Codigo,
+                    t.Nombre,
+                    Estado = (int)t.Estado,
+                    EstadoNombre = GetEstadoTroquelNombre(t.Estado),
+                    EnPrensa = enPrensa,
+                    t.IsActive,
+                    t.Observaciones,
+                    t.CiclosAcumulados,
+                    t.CiclosVideoMantenimiento,
+                    t.FechaUltimoMantenimiento
+                };
             });
 
         return Ok(items);
@@ -726,50 +774,54 @@ public class CatalogosController : ControllerBase
     public async Task<ActionResult<object>> GetTroquel(Guid id)
     {
         var t = await _context.Troqueles
-            .Include(t => t.PrensaTroqueles)
-            .ThenInclude(pt => pt.Prensa)
+            .Include(x => x.PrensaTroqueles)
+            .Include(x => x.TroquelProductos)
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        var productosSample = new[]
-        {
-            new { productoId = 27, productoNombre = "808172000", productoClave = "808172000", productoDescripcion = "12 pack PCR", nombre = "Carrete" },
-            new { productoId = 57, productoNombre = "8081C2000", productoClave = "8081C2000", productoDescripcion = "8081C2 fabricada con resina 100% PCR", nombre = "Carrete" }
-        };
+        if (t is null) return NotFound(new { message = "Troquel no encontrado." });
 
-        if (t is null)
-        {
-            return Ok(new {
-                Id = id,
-                SecuencialId = 34,
-                Codigo = "TRQ-231-0002",
-                Nombre = "231-0002",
-                Estado = 1,
-                EstadoNombre = "Registrado",
-                EnPrensa = "",
-                IsActive = true,
-                Observaciones = "",
-                productos = productosSample,
-                prensaTroqueles = Array.Empty<object>()
-            });
-        }
+        var secuencialId = await _context.Troqueles.CountAsync(x => x.CreatedAt <= t.CreatedAt);
+
+        var prensaIds = t.PrensaTroqueles.Where(pt => pt.Activo).Select(pt => pt.PrensaId);
+        var prensaNombres = await GetPrensaNombresAsync(prensaIds);
+
+        var productoIds = t.TroquelProductos.Select(tp => tp.ProductoId);
+        var productos = await GetProductosDisplayAsync(productoIds);
+
+        var activa = t.PrensaTroqueles.FirstOrDefault(pt => pt.Activo);
+        var enPrensa = activa != null && prensaNombres.TryGetValue(activa.PrensaId, out var nombrePrensaActiva) ? nombrePrensaActiva : "";
 
         var item = new {
             t.Id,
-            SecuencialId = t.SecuencialId != 0 ? t.SecuencialId : 34,
+            SecuencialId = secuencialId,
             t.Codigo,
             t.Nombre,
-            t.Estado,
-            EstadoNombre = t.Estado == EstadoTroquel.EnUso ? "En Prensa" : "Registrado",
-            EnPrensa = t.PrensaTroqueles.FirstOrDefault(pt => pt.Activo)?.Prensa?.Nombre ?? (t.Nombre == "234-0005" ? "Prensa 4" : (t.Nombre == "244-03" ? "Prensa 5" : "")),
+            Estado = (int)t.Estado,
+            EstadoNombre = GetEstadoTroquelNombre(t.Estado),
+            EnPrensa = enPrensa,
             t.IsActive,
             t.Observaciones,
-            productos = productosSample,
-            prensaTroqueles = t.PrensaTroqueles.Select(pt => new {
-                pt.Id,
-                troquelId = pt.TroquelId,
-                prensaId = pt.PrensaId,
-                prensa = pt.Prensa?.Nombre ?? "Prensa 4"
-            })
+            productos = t.TroquelProductos.Select(tp => {
+                productos.TryGetValue(tp.ProductoId, out var p);
+                return new {
+                    id = tp.Id,
+                    productoId = tp.ProductoId,
+                    productoNombre = p?.Nombre ?? "",
+                    productoClave = p?.Clave ?? "",
+                    productoDescripcion = p?.Descripcion,
+                    nombre = p?.Nombre ?? ""
+                };
+            }),
+            prensaTroqueles = t.PrensaTroqueles
+                .Where(pt => pt.Activo)
+                .Select(pt => new {
+                    pt.Id,
+                    troquelId = pt.TroquelId,
+                    prensaId = pt.PrensaId,
+                    prensa = prensaNombres.GetValueOrDefault(pt.PrensaId, ""),
+                    fechaAsignacion = pt.FechaAsignacion,
+                    observaciones = pt.Observaciones
+                })
         };
 
         return Ok(item);
@@ -779,10 +831,12 @@ public class CatalogosController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult<Guid>> CreateTroquel([FromBody] TroquelDto dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.Nombre))
+            return BadRequest(new { message = "El nombre del troquel es requerido." });
+
         var entity = new Troquel
         {
             Id = Guid.NewGuid(),
-            SecuencialId = new Random().Next(50, 999),
             Codigo = string.IsNullOrWhiteSpace(dto.Codigo) ? $"TRQ-{dto.Nombre}" : dto.Codigo,
             Nombre = dto.Nombre,
             Estado = (EstadoTroquel)dto.Estado,
@@ -800,28 +854,12 @@ public class CatalogosController : ControllerBase
     public async Task<IActionResult> UpdateTroquel(Guid id, [FromBody] TroquelDto dto)
     {
         var entity = await _context.Troqueles.FindAsync(id);
-        if (entity is null)
-        {
-            entity = new Troquel
-            {
-                Id = id,
-                SecuencialId = new Random().Next(50, 999),
-                Codigo = string.IsNullOrWhiteSpace(dto.Codigo) ? $"TRQ-{dto.Nombre}" : dto.Codigo,
-                Nombre = dto.Nombre,
-                Estado = (EstadoTroquel)dto.Estado,
-                Observaciones = dto.Observaciones,
-                IsActive = true,
-                TenantId = dto.TenantId != Guid.Empty ? dto.TenantId : Guid.Parse("00000000-0000-0000-0000-000000000001")
-            };
-            _context.Troqueles.Add(entity);
-        }
-        else
-        {
-            entity.Codigo = string.IsNullOrWhiteSpace(dto.Codigo) ? entity.Codigo : dto.Codigo;
-            entity.Nombre = dto.Nombre;
-            entity.Estado = (EstadoTroquel)dto.Estado;
-            entity.Observaciones = dto.Observaciones;
-        }
+        if (entity is null) return NotFound(new { message = "Troquel no encontrado." });
+
+        entity.Codigo = string.IsNullOrWhiteSpace(dto.Codigo) ? entity.Codigo : dto.Codigo;
+        entity.Nombre = dto.Nombre;
+        entity.Estado = (EstadoTroquel)dto.Estado;
+        entity.Observaciones = dto.Observaciones;
 
         await _context.SaveChangesAsync(default);
         return NoContent();
@@ -835,6 +873,151 @@ public class CatalogosController : ControllerBase
         if (item != null)
         {
             _context.Troqueles.Remove(item);
+            await _context.SaveChangesAsync(default);
+        }
+        return NoContent();
+    }
+
+    // ── Asignación / desasignación de Prensa ↔ Troquel ─────────────────────────
+
+    [HttpPost("troqueles/{id}/prensa-troqueles")]
+    [AllowAnonymous]
+    public async Task<ActionResult<object>> AsignarPrensaTroquel(Guid id, [FromBody] AsignarPrensaTroquelDto dto)
+    {
+        var troquel = await _context.Troqueles.FirstOrDefaultAsync(x => x.Id == id);
+        if (troquel is null) return NotFound(new { message = "Troquel no encontrado." });
+
+        var prensa = await _context.Prensas
+            .Where(p => p.Id == dto.PrensaId)
+            .Select(p => new { p.Id, p.Nombre })
+            .FirstOrDefaultAsync();
+        if (prensa is null) return NotFound(new { message = "Prensa no encontrada." });
+
+        var yaAsignado = await _context.PrensaTroqueles
+            .AnyAsync(pt => pt.TroquelId == id && pt.PrensaId == dto.PrensaId && pt.Activo);
+        if (yaAsignado)
+            return BadRequest(new { message = "Este troquel ya está asignado a esa prensa." });
+
+        var now = DateTime.UtcNow;
+
+        // Una prensa solo puede tener un troquel montado a la vez: se desasigna el anterior.
+        var asignacionPrevia = await _context.PrensaTroqueles
+            .FirstOrDefaultAsync(pt => pt.PrensaId == dto.PrensaId && pt.Activo);
+        if (asignacionPrevia != null)
+        {
+            asignacionPrevia.Activo = false;
+            asignacionPrevia.FechaDesasignacion = now;
+
+            var troquelPrevio = await _context.Troqueles.FirstOrDefaultAsync(x => x.Id == asignacionPrevia.TroquelId);
+            if (troquelPrevio != null && troquelPrevio.Estado == EstadoTroquel.EnUso)
+                troquelPrevio.Estado = EstadoTroquel.Disponible;
+        }
+
+        // Un troquel solo puede estar montado en una prensa a la vez: se libera de la anterior si aplica.
+        var otraAsignacionDelTroquel = await _context.PrensaTroqueles
+            .FirstOrDefaultAsync(pt => pt.TroquelId == id && pt.Activo);
+        if (otraAsignacionDelTroquel != null)
+        {
+            otraAsignacionDelTroquel.Activo = false;
+            otraAsignacionDelTroquel.FechaDesasignacion = now;
+        }
+
+        var entity = new PrensaTroquel
+        {
+            Id = Guid.NewGuid(),
+            PrensaId = dto.PrensaId,
+            TroquelId = id,
+            Activo = true,
+            FechaAsignacion = now,
+            Observaciones = dto.Observaciones,
+            TenantId = troquel.TenantId
+        };
+        _context.PrensaTroqueles.Add(entity);
+
+        troquel.Estado = EstadoTroquel.EnUso;
+
+        await _context.SaveChangesAsync(default);
+
+        return Ok(new {
+            entity.Id,
+            troquelId = id,
+            prensaId = dto.PrensaId,
+            prensa = prensa.Nombre,
+            fechaAsignacion = entity.FechaAsignacion
+        });
+    }
+
+    [HttpDelete("troqueles/{id}/prensa-troqueles/{prensaTroquelId}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> DesasignarPrensaTroquel(Guid id, Guid prensaTroquelId)
+    {
+        var entity = await _context.PrensaTroqueles
+            .FirstOrDefaultAsync(pt => pt.Id == prensaTroquelId && pt.TroquelId == id);
+        if (entity is null) return NotFound(new { message = "Relación Prensa-Troquel no encontrada." });
+
+        entity.Activo = false;
+        entity.FechaDesasignacion = DateTime.UtcNow;
+
+        var quedanActivas = await _context.PrensaTroqueles.AnyAsync(pt => pt.TroquelId == id && pt.Activo && pt.Id != prensaTroquelId);
+        if (!quedanActivas)
+        {
+            var troquel = await _context.Troqueles.FirstOrDefaultAsync(x => x.Id == id);
+            if (troquel != null && troquel.Estado == EstadoTroquel.EnUso)
+                troquel.Estado = EstadoTroquel.Disponible;
+        }
+
+        await _context.SaveChangesAsync(default);
+        return NoContent();
+    }
+
+    // ── Compatibilidad Troquel ↔ Producto ───────────────────────────────────────
+
+    [HttpPost("troqueles/{id}/productos")]
+    [AllowAnonymous]
+    public async Task<ActionResult<object>> AddTroquelProducto(Guid id, [FromBody] TroquelProductoDto dto)
+    {
+        var troquel = await _context.Troqueles.FirstOrDefaultAsync(x => x.Id == id);
+        if (troquel is null) return NotFound(new { message = "Troquel no encontrado." });
+
+        var producto = await _context.Productos
+            .Where(p => p.Id == dto.ProductoId)
+            .Select(p => new { p.Id, p.Nombre, p.Clave, p.Descripcion })
+            .FirstOrDefaultAsync();
+        if (producto is null) return NotFound(new { message = "Producto no encontrado." });
+
+        var yaExiste = await _context.TroquelProductos.AnyAsync(tp => tp.TroquelId == id && tp.ProductoId == dto.ProductoId);
+        if (yaExiste)
+            return BadRequest(new { message = "Este producto ya está registrado como compatible con el troquel." });
+
+        var entity = new TroquelProducto
+        {
+            Id = Guid.NewGuid(),
+            TroquelId = id,
+            ProductoId = dto.ProductoId,
+            TenantId = troquel.TenantId
+        };
+        _context.TroquelProductos.Add(entity);
+        await _context.SaveChangesAsync(default);
+
+        return Ok(new {
+            id = entity.Id,
+            productoId = producto.Id,
+            productoNombre = producto.Nombre,
+            productoClave = producto.Clave,
+            productoDescripcion = producto.Descripcion,
+            nombre = producto.Nombre
+        });
+    }
+
+    [HttpDelete("troqueles/{id}/productos/{troquelProductoId}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> RemoveTroquelProducto(Guid id, Guid troquelProductoId)
+    {
+        var entity = await _context.TroquelProductos
+            .FirstOrDefaultAsync(tp => tp.Id == troquelProductoId && tp.TroquelId == id);
+        if (entity != null)
+        {
+            _context.TroquelProductos.Remove(entity);
             await _context.SaveChangesAsync(default);
         }
         return NoContent();
@@ -1068,6 +1251,8 @@ public record ExtrusoraOperarioBatchItemDto(Guid? TurnoId, Guid? OperarioId, Gui
 public record OperarioCreateCatalogDto(string? Nombre, string? NombreCompleto, string? NumeroEmpleado, bool? Activo, bool? IsActive);
 public record PrensaDto(string? NumeroPrensa, string Nombre, string? Imagen, string? Marca, string? Modelo, Guid TenantId);
 public record TroquelDto(string Codigo, string Nombre, string? Observaciones, int Estado, Guid TenantId);
+public record AsignarPrensaTroquelDto(Guid PrensaId, string? Observaciones);
+public record TroquelProductoDto(Guid ProductoId);
 
 
 

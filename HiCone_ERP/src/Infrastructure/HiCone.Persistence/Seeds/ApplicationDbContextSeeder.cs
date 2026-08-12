@@ -1618,28 +1618,35 @@ public class ApplicationDbContextSeeder
             var prensa4 = await _context.Prensas.FirstOrDefaultAsync(p => p.Nombre.Contains("4") || p.Nombre.Contains("A1")) ?? await _context.Prensas.FirstOrDefaultAsync();
             var prensa5 = await _context.Prensas.FirstOrDefaultAsync(p => p.Nombre.Contains("5") || p.Nombre.Contains("B2")) ?? await _context.Prensas.FirstOrDefaultAsync();
 
-            var trq1 = new Troquel { SecuencialId = 34, Codigo = "TRQ-261-0002", Nombre = "261-0002", Estado = EstadoTroquel.Disponible, IsActive = true, TenantId = defaultTenantId };
-            var trq2 = new Troquel { SecuencialId = 35, Codigo = "TRQ-298-0001", Nombre = "298-0001", Estado = EstadoTroquel.Disponible, IsActive = true, TenantId = defaultTenantId };
-            var trq3 = new Troquel { SecuencialId = 9,  Codigo = "TRQ-234-0004", Nombre = "234-0004", Estado = EstadoTroquel.Disponible, IsActive = true, TenantId = defaultTenantId };
-            var trq4 = new Troquel { SecuencialId = 46, Codigo = "TRQ-234-0005", Nombre = "234-0005", Estado = EstadoTroquel.EnUso, IsActive = true, TenantId = defaultTenantId };
-            var trq5 = new Troquel { SecuencialId = 42, Codigo = "TRQ-234-0006", Nombre = "234-0006", Estado = EstadoTroquel.Disponible, IsActive = true, TenantId = defaultTenantId };
-            var trq6 = new Troquel { SecuencialId = 39, Codigo = "TRQ-234-0008", Nombre = "234-0008", Estado = EstadoTroquel.Disponible, IsActive = true, TenantId = defaultTenantId };
-            var trq7 = new Troquel { SecuencialId = 8,  Codigo = "TRQ-234-0009", Nombre = "234-0008", Estado = EstadoTroquel.Disponible, IsActive = false, TenantId = defaultTenantId };
-            var trq8 = new Troquel { SecuencialId = 3,  Codigo = "TRQ-234-010",  Nombre = "234-010",  Estado = EstadoTroquel.Disponible, IsActive = true, TenantId = defaultTenantId };
-            var trq9 = new Troquel { SecuencialId = 7,  Codigo = "TRQ-242-0001", Nombre = "242-0001", Estado = EstadoTroquel.Disponible, IsActive = true, TenantId = defaultTenantId };
-            var trq10 = new Troquel { SecuencialId = 44, Codigo = "TRQ-244-03",   Nombre = "244-03",   Estado = EstadoTroquel.EnUso, IsActive = true, TenantId = defaultTenantId };
+            var trq1 = new Troquel { Codigo = "TRQ-261-0002", Nombre = "261-0002", Estado = EstadoTroquel.Disponible, IsActive = true, TenantId = defaultTenantId };
+            var trq2 = new Troquel { Codigo = "TRQ-298-0001", Nombre = "298-0001", Estado = EstadoTroquel.Disponible, IsActive = true, TenantId = defaultTenantId };
+            var trq3 = new Troquel { Codigo = "TRQ-234-0004", Nombre = "234-0004", Estado = EstadoTroquel.Disponible, IsActive = true, TenantId = defaultTenantId };
+            var trq4 = new Troquel { Codigo = "TRQ-234-0005", Nombre = "234-0005", Estado = EstadoTroquel.EnUso, IsActive = true, TenantId = defaultTenantId };
+            var trq5 = new Troquel { Codigo = "TRQ-234-0006", Nombre = "234-0006", Estado = EstadoTroquel.Disponible, IsActive = true, TenantId = defaultTenantId };
+            var trq6 = new Troquel { Codigo = "TRQ-234-0008", Nombre = "234-0008", Estado = EstadoTroquel.Disponible, IsActive = true, TenantId = defaultTenantId };
+            var trq7 = new Troquel { Codigo = "TRQ-234-0009", Nombre = "234-0008", Estado = EstadoTroquel.Disponible, IsActive = false, TenantId = defaultTenantId };
+            var trq8 = new Troquel { Codigo = "TRQ-234-010",  Nombre = "234-010",  Estado = EstadoTroquel.Disponible, IsActive = true, TenantId = defaultTenantId };
+            var trq9 = new Troquel { Codigo = "TRQ-242-0001", Nombre = "242-0001", Estado = EstadoTroquel.Disponible, IsActive = true, TenantId = defaultTenantId };
+            var trq10 = new Troquel { Codigo = "TRQ-244-03",   Nombre = "244-03",   Estado = EstadoTroquel.EnUso, IsActive = true, TenantId = defaultTenantId };
 
             _context.Troqueles.AddRange(trq1, trq2, trq3, trq4, trq5, trq6, trq7, trq8, trq9, trq10);
             await _context.SaveChangesAsync(default);
 
             if (prensa4 != null)
             {
-                _context.PrensaTroqueles.Add(new PrensaTroquel { PrensaId = prensa4.Id, TroquelId = trq4.Id, Activo = true, TenantId = defaultTenantId });
+                _context.PrensaTroqueles.Add(new PrensaTroquel { PrensaId = prensa4.Id, TroquelId = trq4.Id, Activo = true, FechaAsignacion = DateTime.UtcNow, TenantId = defaultTenantId });
             }
             if (prensa5 != null)
             {
-                _context.PrensaTroqueles.Add(new PrensaTroquel { PrensaId = prensa5.Id, TroquelId = trq10.Id, Activo = true, TenantId = defaultTenantId });
+                _context.PrensaTroqueles.Add(new PrensaTroquel { PrensaId = prensa5.Id, TroquelId = trq10.Id, Activo = true, FechaAsignacion = DateTime.UtcNow, TenantId = defaultTenantId });
             }
+
+            var productosParaCompat = await _context.Productos.Take(2).ToListAsync();
+            foreach (var producto in productosParaCompat)
+            {
+                _context.TroquelProductos.Add(new TroquelProducto { TroquelId = trq4.Id, ProductoId = producto.Id, TenantId = defaultTenantId });
+            }
+
             await _context.SaveChangesAsync(default);
         }
 
