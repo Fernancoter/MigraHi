@@ -74,6 +74,7 @@ public interface IProduccionService
     Task<bool> RechazarBobinaAsync(Guid bobinaId, MotivoMolino motivo, string? observaciones);
     Task<bool> ValidarBobinaAsync(Guid bobinaId);
     Task<bool> TransferirBobinaAsync(Guid bobinaId, Guid extrusionDestinoId);
+    Task<int> LlenadoBobinaInterrupcionAsync();
 
     // ── Recalibración (Legacy: SDRecalibrarExtrusion) ──
     Task<bool> RecalibrarExtrusionAsync(Guid extrusionId, decimal? calibre, decimal? ancho, decimal? longitud);

@@ -550,8 +550,19 @@ export class ExtrusoraProductoListComponent implements OnInit {
 
   loadData() {
     this.prodService.getExtrusoraProductos().subscribe({
-      next: (data) => {
-        this.items = data;
+      next: (data: any[]) => {
+        this.items = data.map(x => ({
+          id: x.id,
+          extrusoraId: x.extrusoraId,
+          extrusora: { nombre: x.extrusoraNombre },
+          productoId: x.productoId,
+          producto: { nombre: x.productoNombre },
+          defaultCalibre: x.productoCalibre,
+          defaultAncho: Number(x.productoAncho || 0),
+          defaultLongitud: x.productoLongitud,
+          defaultMinutosReposo: x.reposoMin,
+          isActive: true
+        } as any));
         this.applyFilter();
         this.cdr.detectChanges();
       },

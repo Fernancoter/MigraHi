@@ -689,6 +689,13 @@ public class ProduccionController : ControllerBase
         return result ? Ok(new { success = true }) : BadRequest("No se pudo transferir la bobina.");
     }
 
+    [HttpPost("extrusion/bobinas/llenado-interrupcion")]
+    public async Task<IActionResult> LlenadoBobinaInterrupcion()
+    {
+        var asignadas = await _produccionService.LlenadoBobinaInterrupcionAsync();
+        return Ok(new { asignadas = asignadas });
+    }
+
     // ── CRUD de Bobinas para Módulo Operación / Bobinas ─────────────────────
 
     [HttpGet("bobinas/todas")]

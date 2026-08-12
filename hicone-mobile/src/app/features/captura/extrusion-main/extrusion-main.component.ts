@@ -148,7 +148,10 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
 
   cargarSilos() {
     this.inventarioService.getSilos().subscribe({
-      next: (data) => this.silos = data,
+      next: (data) => {
+        this.silos = data;
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error('Error cargando silos', err)
     });
   }
@@ -174,12 +177,21 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
       ext.id,
       this.extrusionActiva.productoId || this.extrusionActiva.producto?.id
     ).subscribe({
-      next: (no: number) => { this.siguienteBobinaNo = no; },
-      error: () => { this.siguienteBobinaNo = 1; }
+      next: (no: number) => {
+        this.siguienteBobinaNo = no;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.siguienteBobinaNo = 1;
+        this.cdr.detectChanges();
+      }
     });
 
     this.produccionService.getBobinasByExtrusion(this.extrusionActiva.id).subscribe({
-      next: (bobs: Bobina[]) => { this.bobinasExtrusion = bobs || []; },
+      next: (bobs: Bobina[]) => {
+        this.bobinasExtrusion = bobs || [];
+        this.cdr.detectChanges();
+      },
       error: (err: any) => console.error('Error cargando bobinas:', err)
     });
   }

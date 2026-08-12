@@ -100,6 +100,7 @@ public class ReferenciasController : ControllerBase
                 ep.Id,
                 ExtrusoraId = ep.ExtrusoraId,
                 ExtrusoraNombre = ep.Extrusora.Nombre,
+                ProductoId = ep.ProductoId,
                 ProductoNombre = ep.Producto.Nombre,
                 ProductoCalibre = ep.DefaultCalibre,
                 ProductoAncho = ep.DefaultAncho.ToString(),

@@ -1023,6 +1023,38 @@ public class ProduccionService : IProduccionService
         return await _context.SaveChangesAsync(default) > 0;
     }
 
+    public async Task<int> LlenadoBobinaInterrupcionAsync()
+    {
+        var bobinas = await _context.Bobinas
+            .Where(b => b.BobinaInterrupcionesId == null)
+            .ToListAsync();
+
+        int asignadas = 0;
+
+        foreach (var b in bobinas)
+        {
+            var interrupcion = await _context.ExtrusionInterrupciones
+                .Where(i => i.ExtrusionId == b.ExtrusionId)
+                .Where(i => i.HoraInicio >= b.HoraInicio)
+                .Where(i => b.Estado == EstadoBobina.EnProceso || (i.HoraFin != null && i.HoraFin.Value <= b.HoraSalida))
+                .OrderBy(i => i.HoraInicio)
+                .FirstOrDefaultAsync();
+
+            if (interrupcion != null)
+            {
+                b.BobinaInterrupcionesId = interrupcion.Id;
+                asignadas++;
+            }
+        }
+
+        if (asignadas > 0)
+        {
+            await _context.SaveChangesAsync(default);
+        }
+
+        return asignadas;
+    }
+
     // Legacy: SDRechazarBobina - Envía bobina a molino con merma
     public async Task<bool> RechazarBobinaAsync(Guid bobinaId, MotivoMolino motivo, string? observaciones)
     {

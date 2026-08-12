@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, inject } from '@angular/core';
+import { Component, OnInit, HostListener, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionService, Extrusora, Prensa } from '../../../core/services/produccion';
@@ -586,6 +586,7 @@ import { ProduccionService, Extrusora, Prensa } from '../../../core/services/pro
 export class ReportesComponent implements OnInit {
   private prodService = inject(ProduccionService);
   private location = inject(Location);
+  private cdr = inject(ChangeDetectorRef);
 
   activeTab: 'extrusiones' | 'prensados' = 'extrusiones';
   selectedDate: Date = new Date();
@@ -607,6 +608,7 @@ export class ReportesComponent implements OnInit {
   @HostListener('document:click')
   onDocumentClick() {
     this.showMachineDropdown = false;
+    this.cdr.detectChanges();
   }
 
   ngOnInit() {
@@ -623,13 +625,13 @@ export class ReportesComponent implements OnInit {
     this.selectedMachineId = '';
     this.showMachineDropdown = false;
     this.cargarReportes();
+    this.cdr.detectChanges();
   }
 
   cargarMaquinas() {
     this.prodService.getExtrusoras().subscribe({
       next: (data) => {
         this.extrusoras = data || [];
-        // Backup defaults if backend seeding has no records yet
         if (this.extrusoras.length === 0) {
           this.extrusoras = [
             { id: 'ext-1', codigo: 'EXT-01', nombre: 'Extrusora 1', estado: 'Disponible' },
@@ -637,6 +639,7 @@ export class ReportesComponent implements OnInit {
             { id: 'ext-3', codigo: 'EXT-03', nombre: 'Extrusora 3', estado: 'Disponible' }
           ];
         }
+        this.cdr.detectChanges();
       },
       error: () => {
         this.extrusoras = [
@@ -644,13 +647,13 @@ export class ReportesComponent implements OnInit {
           { id: 'ext-2', codigo: 'EXT-02', nombre: 'Extrusora 2', estado: 'Disponible' },
           { id: 'ext-3', codigo: 'EXT-03', nombre: 'Extrusora 3', estado: 'Disponible' }
         ];
+        this.cdr.detectChanges();
       }
     });
 
     this.prodService.getPrensas().subscribe({
       next: (data) => {
         this.prensas = data || [];
-        // Backup defaults matching QA Image 5
         if (this.prensas.length === 0) {
           this.prensas = [
             { id: 'pre-1', codigo: 'PRE-01', nombre: 'Prensa 1', estado: 'Disponible' },
@@ -660,6 +663,7 @@ export class ReportesComponent implements OnInit {
             { id: 'pre-5', codigo: 'PRE-05', nombre: 'Prensa 5', estado: 'Disponible' }
           ];
         }
+        this.cdr.detectChanges();
       },
       error: () => {
         this.prensas = [
@@ -669,6 +673,7 @@ export class ReportesComponent implements OnInit {
           { id: 'pre-4', codigo: 'PRE-04', nombre: 'Prensa 4', estado: 'Disponible' },
           { id: 'pre-5', codigo: 'PRE-05', nombre: 'Prensa 5', estado: 'Disponible' }
         ];
+        this.cdr.detectChanges();
       }
     });
   }
@@ -676,12 +681,14 @@ export class ReportesComponent implements OnInit {
   toggleMachineDropdown(event: Event) {
     event.stopPropagation();
     this.showMachineDropdown = !this.showMachineDropdown;
+    this.cdr.detectChanges();
   }
 
   selectMachine(id: string) {
     this.selectedMachineId = id;
     this.showMachineDropdown = false;
     this.cargarReportes();
+    this.cdr.detectChanges();
   }
 
   getSelectedMachineName(): string {
@@ -699,10 +706,12 @@ export class ReportesComponent implements OnInit {
     if (!this.selectedMachineId) {
       this.loading = false;
       this.reportes = [];
+      this.cdr.detectChanges();
       return;
     }
 
     this.loading = true;
+    this.cdr.detectChanges();
     const dateStr = this.getFormattedIsoDate(this.selectedDate);
 
     if (this.activeTab === 'extrusiones') {
@@ -714,10 +723,12 @@ export class ReportesComponent implements OnInit {
             list = list.filter(x => x.extrusoraId === this.selectedMachineId || x.extrusora?.id === this.selectedMachineId);
           }
           this.reportes = list;
+          this.cdr.detectChanges();
         },
         error: () => {
           this.loading = false;
           this.reportes = [];
+          this.cdr.detectChanges();
         }
       });
     } else {
@@ -729,10 +740,12 @@ export class ReportesComponent implements OnInit {
             list = list.filter(x => x.prensa?.id === this.selectedMachineId);
           }
           this.reportes = list;
+          this.cdr.detectChanges();
         },
         error: () => {
           this.loading = false;
           this.reportes = [];
+          this.cdr.detectChanges();
         }
       });
     }
