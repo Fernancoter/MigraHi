@@ -414,11 +414,19 @@ public class ProduccionController : ControllerBase
 
     // ── Prensado ───────────────────────────────────────────────────────────
 
+    [AllowAnonymous]
     [HttpPost("prensado/iniciar")]
     public async Task<ActionResult<Prensado>> IniciarPrensado([FromBody] IniciarPrensadoRequest request)
     {
-        var result = await _produccionService.IniciarPrensadoAsync(request.PrensaId, request.OperarioId, request.TurnoId, request.ProductoId, request.TroquelId);
-        return Ok(result);
+        try
+        {
+            var result = await _produccionService.IniciarPrensadoAsync(request.PrensaId, request.OperarioId, request.TurnoId, request.ProductoId, request.TroquelId);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpPost("prensado/{id}/montar-bobina")]

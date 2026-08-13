@@ -709,13 +709,28 @@ export class WizardComponent implements OnInit {
           operarioId = operarios[0].id;
         }
 
-        const hour = new Date().getHours();
-        let turnoId = '654f2948-204d-42dc-946f-2ba1717ca84c'; // Matutino
-        if (hour >= 14 && hour < 22) {
-          turnoId = '15a790d0-bf2c-46db-b1fe-0a3a0359c890'; // Vespertino
-        } else if (hour >= 22 || hour < 6) {
-          turnoId = '4501a99a-c3bf-40de-a079-e9faf85f5f34'; // Nocturno
-        }
+        this.produccionService.getTurnos().subscribe({
+          next: (turnos: any[]) => {
+            const hour = new Date().getHours();
+            let turno: any;
+            if (hour >= 22 || hour < 6) {
+              // Nocturno: buscar turno que contenga "3er" o "nocturno"
+              turno = turnos.find(t => t.nombre?.toLowerCase().includes('3er') || t.nombre?.toLowerCase().includes('nocturno'));
+            } else if (hour >= 14 && hour < 22) {
+              // Vespertino
+              turno = turnos.find(t => t.nombre?.toLowerCase().includes('vespertino'));
+            } else {
+              // Matutino
+              turno = turnos.find(t => t.nombre?.toLowerCase().includes('matutino'));
+            }
+            // Si no matchea ninguno, usar el primero disponible
+            const turnoId = turno?.id || (turnos.length > 0 ? turnos[0].id : null);
+
+            if (!turnoId) {
+              this.isSubmitting = false;
+              alert('No se encontraron turnos configurados en el sistema.');
+              return;
+            }
 
         if (this.selectedProceso === 'extrusion') {
           const request = {
@@ -769,6 +784,13 @@ export class WizardComponent implements OnInit {
             }
           });
         }
+          },
+          error: (errTurnos: any) => {
+            this.isSubmitting = false;
+            console.error('Error obteniendo turnos:', errTurnos);
+            alert('Error al obtener los turnos del sistema.');
+          }
+        });
       },
       error: (err: any) => {
         this.isSubmitting = false;
