@@ -359,7 +359,7 @@ public class ProduccionService : IProduccionService
             .FirstOrDefaultAsync(e => e.Id == extrusionId);
         if (extrusion == null) throw new Exception("Extrusión no encontrada");
 
-        var estado = mermaKg > 0 ? EstadoBobina.Molido : EstadoBobina.EnReposo;
+        var estado = mermaKg > 0 ? EstadoBobina.Molido : EstadoBobina.EnProceso;
         var motivoMolino = mermaKg > 0 ? motivo : MotivoMolino.NoAplica;
 
         // Auto-generación de NoSerie: B-DDMMYY-{ExtrusoraCode}-{BobinaNo}{origen}
@@ -379,7 +379,7 @@ public class ProduccionService : IProduccionService
             MermaKg = mermaKg,
             MotivoMolino = motivoMolino,
             Estado = estado,
-            IniciaReposo = mermaKg > 0 ? null : DateTime.UtcNow,
+            IniciaReposo = null,
             MinutosEnReposo = 20,
             HoraInicio = DateTime.UtcNow.AddMinutes(-20),
             HoraSalida = DateTime.UtcNow,
