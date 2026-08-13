@@ -24,6 +24,7 @@ public class Prensado : TenantEntity
     [Column(TypeName = "decimal(18,2)")]
     public decimal Longitud { get; set; }
     public string? ProductoNombre { get; set; }
+    [NotMapped]
     public int Status { get; set; } = 1;
     public decimal KgVirgen { get; set; }
     public decimal KgMolido { get; set; }

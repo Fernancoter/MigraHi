@@ -435,7 +435,7 @@ public class ProduccionController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(new { message = ex.Message });
+            return BadRequest(new { message = ex.Message, detail = ex.InnerException?.Message });
         }
     }
 
