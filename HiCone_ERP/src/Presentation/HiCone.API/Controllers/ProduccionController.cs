@@ -161,9 +161,9 @@ public class ProduccionController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("extrusion/{id}/finalizar")]
-    public async Task<IActionResult> FinalizarExtrusion(Guid id, [FromBody] string? motivo)
+    public async Task<IActionResult> FinalizarExtrusion(Guid id, [FromBody] FinalizarExtrusionRequest? request)
     {
-        var result = await _produccionService.FinalizarExtrusionAsync(id, motivo);
+        var result = await _produccionService.FinalizarExtrusionAsync(id, request?.Motivo);
         return result ? Ok() : BadRequest("No se pudo finalizar la extrusión");
     }
 
@@ -1913,6 +1913,7 @@ public record GuardarBobinaRequest(
     string? Observaciones
 );
 public record IniciarPrensadoRequest(Guid PrensaId, Guid OperarioId, Guid TurnoId, Guid ProductoId, Guid TroquelId);
+public record FinalizarExtrusionRequest(string? Motivo);
 public record CrearPaletRequest(Guid ProductoId, Guid OperarioId, Guid PrensaId);
 public record RegistrarInterrupcionRequest(Guid EntidadId, Guid CausaId, string? Descripcion);
 public record RegistrarConsumoRequest(Guid? SiloVirgenId, decimal? VirgenKg, Guid? SiloMolidoId, decimal? MolidoKg);

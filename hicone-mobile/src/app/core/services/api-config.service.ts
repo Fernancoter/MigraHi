@@ -49,7 +49,7 @@ export class ApiConfigService {
   }
 
   get catalogosUrl(): string {
-    return `${this._baseUrl()}/api/v1/catalogos`;
+    return `${this._baseUrl()}/api/v1/produccion/catalogos`;
   }
 
   url(path: string): string {
