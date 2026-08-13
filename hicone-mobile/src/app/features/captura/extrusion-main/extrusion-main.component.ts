@@ -233,10 +233,12 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
 
   abrirMenuIntermedio() {
     this.mostrarMenuIntermedio = true;
+    this.cdr.detectChanges();
   }
 
   cerrarMenuIntermedio() {
     this.mostrarMenuIntermedio = false;
+    this.cdr.detectChanges();
   }
 
   opcionIniciarExtrusion() {
@@ -257,6 +259,7 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   opcionVerBobinas() {
     this.cerrarMenuIntermedio();
     this.mostrarListaBobinasModal = true;
+    this.cdr.detectChanges();
   }
 
   opcionCerrarOrden() {
@@ -267,10 +270,12 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   abrirModalBobina() {
     this.nuevaBobina.calibre = this.extrusionActiva?.calibre || 15;
     this.mostrarModalBobina = true;
+    this.cdr.detectChanges();
   }
 
   cerrarModalBobina() {
     this.mostrarModalBobina = false;
+    this.cdr.detectChanges();
   }
 
   guardarBobinaCompleta() {
@@ -330,6 +335,7 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
         };
         this.cierreObservaciones = '';
         this.mostrarModalCierre = true;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.saving = false;
@@ -341,6 +347,7 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
           eficiencia: 85
         };
         this.mostrarModalCierre = true;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -373,10 +380,12 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
 
   abrirModalConsumo() {
     this.mostrarModalConsumo = true;
+    this.cdr.detectChanges();
   }
 
   cerrarModalConsumo() {
     this.mostrarModalConsumo = false;
+    this.cdr.detectChanges();
   }
 
   /** Botón APLICAR: guarda la mezcla sin cerrar el modal */

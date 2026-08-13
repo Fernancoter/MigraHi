@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -508,6 +508,7 @@ export class WizardComponent implements OnInit {
   private authService = inject(AuthService);
   private inventarioService = inject(InventarioService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   currentStep = 1;
   selectedProceso = 'extrusion';
@@ -548,6 +549,7 @@ export class WizardComponent implements OnInit {
         if (this.selectedProceso !== 'extrusion') {
           this.productosFiltrados = prods;
         }
+        this.cdr.detectChanges();
       },
       error: (err: any) => console.error('Error cargando productos:', err)
     });
@@ -557,6 +559,7 @@ export class WizardComponent implements OnInit {
       next: (data: any[]) => {
         this.extrusoraProductos = data;
         this.onMaquinaChange(); // Filtrar inicialmente si ya hay máquina
+        this.cdr.detectChanges();
       },
       error: (err: any) => console.error('Error cargando extrusora-productos:', err)
     });
@@ -569,6 +572,7 @@ export class WizardComponent implements OnInit {
         if (this.silosVirgen.length > 0) {
           this.selectedSiloVirgenId = this.silosVirgen[0].id;
         }
+        this.cdr.detectChanges();
       },
       error: (err: any) => console.error('Error cargando silos:', err)
     });
@@ -580,6 +584,7 @@ export class WizardComponent implements OnInit {
         if (troqs.length > 0) {
           this.selectedTroquelId = troqs[0].id;
         }
+        this.cdr.detectChanges();
       },
       error: (err: any) => console.error('Error cargando troqueles:', err)
     });
@@ -592,12 +597,18 @@ export class WizardComponent implements OnInit {
     this.maquinas = [];
     if (this.selectedProceso === 'extrusion') {
       this.produccionService.getExtrusoras().subscribe({
-        next: (exts: any[]) => this.maquinas = exts,
+        next: (exts: any[]) => {
+          this.maquinas = exts;
+          this.cdr.detectChanges();
+        },
         error: (err: any) => console.error('Error cargando extrusoras:', err)
       });
     } else {
       this.produccionService.getPrensas().subscribe({
-        next: (prensas: any[]) => this.maquinas = prensas,
+        next: (prensas: any[]) => {
+          this.maquinas = prensas;
+          this.cdr.detectChanges();
+        },
         error: (err: any) => console.error('Error cargando prensas:', err)
       });
     }
