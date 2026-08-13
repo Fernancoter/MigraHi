@@ -281,7 +281,20 @@ export interface PrensaProducto {
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
+      <!-- Modal Confirmar Eliminar Prensa Producto -->
+      <div *ngIf="showDeleteConfirmModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000;" (click)="showDeleteConfirmModal = false">
+        <div style="background: white; border-radius: 8px; width: 400px; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; position: relative; text-align: center;" (click)="$event.stopPropagation()">
+          <h2 style="font-size: 1.25rem; font-weight: bold; color: #1e293b; margin: 0 0 1rem 0;">Eliminar Registro</h2>
+          <p style="color: #475569; font-size: 0.95rem; margin-bottom: 1.5rem;">
+            ¿Está seguro que desea eliminar el registro de la prensa <strong>"{{ itemToDelete?.prensa }}"</strong>?
+          </p>
+          <div style="display: flex; justify-content: center; gap: 1rem;">
+            <button (click)="executeDelete()" style="background: #ef4444; color: white; border: none; padding: 0.55rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">Eliminar</button>
+            <button (click)="showDeleteConfirmModal = false" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 0.55rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Cancelar</button>
+          </div>
         </div>
       </div>
     </div>
@@ -306,6 +319,9 @@ export class PrensaProductoComponent implements OnInit {
   currentPage = signal<number>(1);
   pageSize = signal<number>(10);
   isLoading = signal<boolean>(false);
+  showDeleteConfirmModal = false;
+  itemToDelete: PrensaProducto | null = null;
+  isSaving = false;
 
   items = signal<PrensaProducto[]>([]);
   prensas = signal<any[]>([]);
@@ -487,15 +503,28 @@ export class PrensaProductoComponent implements OnInit {
 
   eliminar(item: PrensaProducto) {
     if (!item.id) return;
-    if (confirm(`¿Estás seguro de eliminar el registro de la prensa ${item.prensa}?`)) {
-      this.svc.deletePrensaProducto(item.id).subscribe({
-        next: () => {
-          this.notify.success('Registro eliminado exitosamente.');
-          this.loadData();
-        },
-        error: (err) => { console.error(err); this.notify.error('No se pudo eliminar el registro.'); }
-      });
-    }
+    this.itemToDelete = item;
+    this.showDeleteConfirmModal = true;
+  }
+
+  executeDelete() {
+    const item = this.itemToDelete;
+    if (!item || !item.id) return;
+
+    this.svc.deletePrensaProducto(item.id).subscribe({
+      next: () => {
+        this.notify.success('Registro eliminado exitosamente.');
+        this.loadData();
+        this.showDeleteConfirmModal = false;
+        this.itemToDelete = null;
+      },
+      error: (err) => {
+        console.error(err);
+        this.notify.error('No se pudo eliminar el registro.');
+        this.showDeleteConfirmModal = false;
+        this.itemToDelete = null;
+      }
+    });
   }
 
   /* ── Pagination ───────────────────────────────────── */

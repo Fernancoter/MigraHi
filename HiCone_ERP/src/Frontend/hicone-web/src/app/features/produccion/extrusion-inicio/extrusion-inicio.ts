@@ -383,6 +383,27 @@ import { NotificationService } from '../../../core/services/notification.service
             </div>
           </div>
         </div>
+
+        <!-- Modal Confirmar Eliminar Extrusión -->
+        <div class="modal-backdrop-styled animate-fade-in" *ngIf="showDeleteConfirmModal" (click)="showDeleteConfirmModal = false" style="z-index: 1060;">
+          <div class="modal-card-styled animate-scale-up" (click)="$event.stopPropagation()" style="max-width: 400px; text-align: center;">
+            <div class="modal-header-edit" style="background: #fef2f2; border-bottom: 1px solid #fee2e2; padding: 1.25rem;">
+              <h3 style="color: #b91c1c; margin: 0; font-size: 1.2rem; font-weight: 700;">Eliminar Orden</h3>
+            </div>
+            <div style="padding: 1.5rem;">
+              <p style="color: #334155; font-size: 0.95rem; margin-bottom: 0.5rem;">
+                ¿Está seguro de eliminar de forma permanente la orden de extrusión de la extrusora <strong>"{{ extrusionToDelete?.extrusora?.nombre || '' }}"</strong>?
+              </p>
+              <p style="color: #64748b; font-size: 0.85rem;">
+                Esta action no se puede deshacer.
+              </p>
+            </div>
+            <div style="padding: 1.25rem; display: flex; justify-content: center; gap: 12px; border-top: 1px solid #f1f5f9;">
+              <button class="btn-confirm-edit" style="background: #ef4444;" (click)="executeDelete()">Eliminar</button>
+              <button class="btn-cancel-edit" (click)="showDeleteConfirmModal = false">Cancelar</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   `,
@@ -714,9 +735,10 @@ export class ExtrusionInicioComponent implements OnInit {
   programados: any[] = [];
   operacion: Extrusion[] = [];
 
-  // Modal Properties
   mostrarModalInterrupcion: boolean = false;
   mostrarModalEditar: boolean = false;
+  showDeleteConfirmModal = false;
+  extrusionToDelete: any = null;
   extrusionSeleccionada: Extrusion | null = null;
   causas: CausaInterrupcion[] = [];
   interrupcion = {
@@ -1105,28 +1127,40 @@ export class ExtrusionInicioComponent implements OnInit {
   }
 
   eliminar(ex: any) {
-    if (confirm(`¿Está seguro de eliminar de forma permanente la orden de extrusión de la extrusora ${ex.extrusora?.nombre || ''}?`)) {
-      if (ex.id && String(ex.id).startsWith('mock-')) {
-        this.allExtrusiones = this.allExtrusiones.filter(item => item.id !== ex.id);
-        this.operacion = this.allExtrusiones.filter(e => e.estado === 'EnProceso' || e.estado === 'Detenida' || Number(e.estado) === 2);
-        this.programados = this.allExtrusiones.filter(e => e.estado !== 'EnProceso' && e.estado !== 'Detenida' && Number(e.estado) !== 2);
-        this.cdr.detectChanges();
-        this.notify.success('Orden de extrusión eliminada.');
-        return;
-      }
+    this.extrusionToDelete = ex;
+    this.showDeleteConfirmModal = true;
+  }
 
-      this.prodService.deleteExtrusion(ex.id).subscribe({
-        next: () => {
-          this.notify.success('Orden de extrusión eliminada.');
-          this.cargarExtrusiones();
-        },
-        error: (err) => {
-          console.error('Error al eliminar orden de extrusión:', err);
-          this.notify.error(err.error?.message || 'No se pudo eliminar la orden de extrusión.');
-          this.cdr.detectChanges();
-        }
-      });
+  executeDelete() {
+    const ex = this.extrusionToDelete;
+    if (!ex) return;
+
+    if (ex.id && String(ex.id).startsWith('mock-')) {
+      this.allExtrusiones = this.allExtrusiones.filter(item => item.id !== ex.id);
+      this.operacion = this.allExtrusiones.filter(e => e.estado === 'EnProceso' || e.estado === 'Detenida' || Number(e.estado) === 2);
+      this.programados = this.allExtrusiones.filter(e => e.estado !== 'EnProceso' && e.estado !== 'Detenida' && Number(e.estado) !== 2);
+      this.showDeleteConfirmModal = false;
+      this.extrusionToDelete = null;
+      this.cdr.detectChanges();
+      this.notify.success('Orden de extrusión eliminada.');
+      return;
     }
+
+    this.prodService.deleteExtrusion(ex.id).subscribe({
+      next: () => {
+        this.notify.success('Orden de extrusión eliminada.');
+        this.cargarExtrusiones();
+        this.showDeleteConfirmModal = false;
+        this.extrusionToDelete = null;
+      },
+      error: (err) => {
+        console.error('Error al eliminar orden de extrusión:', err);
+        this.notify.error(err.error?.message || 'No se pudo eliminar la orden de extrusión.');
+        this.showDeleteConfirmModal = false;
+        this.extrusionToDelete = null;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
 

@@ -365,6 +365,30 @@ import { LucideX, LucideTrash2, LucideFolder, LucideSave, LucideFileText, Lucide
           </div>
         </div>
       }
+
+      <!-- Modal Confirmar Eliminar Operario -->
+      @if (showDeleteConfirmModal()) {
+        <div class="modal-overlay" (click)="showDeleteConfirmModal.set(false)">
+          <div class="modal-card" style="max-width: 400px; text-align: center;" (click)="$event.stopPropagation()">
+            <div class="modal-header" style="background: #fef2f2; border-bottom: 1px solid #fee2e2;">
+              <h3 style="color: #b91c1c;">Eliminar Operario</h3>
+              <button class="modal-close" (click)="showDeleteConfirmModal.set(false)"><svg lucideX [size]="14"></svg></button>
+            </div>
+            <div class="modal-body" style="padding: 1.5rem;">
+              <p style="color: #334155; font-size: 0.95rem; margin-bottom: 0.5rem;">
+                ¿Está seguro de que desea eliminar al operario <strong>"{{ operarioToDelete()?.nombre }}"</strong>?
+              </p>
+              <p style="color: #64748b; font-size: 0.85rem;">
+                Esta acción no se puede deshacer.
+              </p>
+            </div>
+            <div class="modal-footer" style="justify-content: center; gap: 12px;">
+              <button class="btn btn-primary" style="background: #ef4444;" (click)="executeDelete()">Eliminar</button>
+              <button class="btn btn-secondary" (click)="showDeleteConfirmModal.set(false)">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      }
     </div>
   `,
   styles: [`
@@ -486,6 +510,8 @@ export class OperariosCatalogoComponent implements OnInit {
   items = signal<Operario[]>([]);
   loading = signal(true);
   showModal = signal(false);
+  showDeleteConfirmModal = signal(false);
+  operarioToDelete = signal<Operario | null>(null);
   modalReadOnly = signal(false);
   form: Partial<Operario> = {};
 
@@ -811,23 +837,33 @@ export class OperariosCatalogoComponent implements OnInit {
   }
 
   del(item: Operario) {
-    if (confirm(`¿Está seguro de que desea eliminar al operario "${item.nombre}"?`)) {
-      this.svc.deleteOperario(item.id).subscribe({
-        next: () => {
-          this.notify.success('Operario eliminado exitosamente.');
-          this.load();
-          if (this.currentPage() > this.totalPages()) {
-            this.currentPage.set(this.totalPages());
-          }
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Error al eliminar operario:', err);
-          this.notify.error(err.error?.message || 'No se pudo eliminar el operario.');
-          this.cdr.detectChanges();
+    this.operarioToDelete.set(item);
+    this.showDeleteConfirmModal.set(true);
+  }
+
+  executeDelete() {
+    const item = this.operarioToDelete();
+    if (!item) return;
+
+    this.svc.deleteOperario(item.id).subscribe({
+      next: () => {
+        this.notify.success('Operario eliminado exitosamente.');
+        this.load();
+        if (this.currentPage() > this.totalPages()) {
+          this.currentPage.set(this.totalPages());
         }
-      });
-    }
+        this.showDeleteConfirmModal.set(false);
+        this.operarioToDelete.set(null);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al eliminar operario:', err);
+        this.notify.error(err.error?.message || 'No se pudo eliminar el operario.');
+        this.showDeleteConfirmModal.set(false);
+        this.operarioToDelete.set(null);
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   // Export options

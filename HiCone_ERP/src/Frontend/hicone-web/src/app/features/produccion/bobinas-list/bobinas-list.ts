@@ -712,8 +712,21 @@ interface ColumnConfig {
             </div>
           </form>
         </div>
-      </ng-container>
+        <!-- Modal Confirmar Eliminar Bobina -->
+        <div class="modal-overlay" *ngIf="showDeleteConfirmModal" (click)="showDeleteConfirmModal = false" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 99999;">
+          <div class="modal-card confirm-modal animate-scale-in" (click)="$event.stopPropagation()" style="background: white; border-radius: 12px; padding: 1.75rem; width: 400px; box-shadow: 0 12px 30px rgba(0,0,0,0.2); text-align: center; border: 1px solid #cbd5e1;">
+            <h3 style="margin-top: 0; color: #1e293b; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">Eliminar Bobina</h3>
+            <p style="font-size: 0.88rem; color: #475569; margin-bottom: 1.5rem;">
+              ¿Está seguro de eliminar la bobina <strong>"{{ bobinaToDelete?.noSerie || bobinaToDelete?.id }}"</strong>?
+            </p>
+            <div style="display: flex; justify-content: center; gap: 12px;">
+              <button style="background: #ef4444; color: white; border: none; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.25);" (click)="executeEliminarBobina()">Eliminar</button>
+              <button style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer;" (click)="showDeleteConfirmModal = false">Cancelar</button>
+            </div>
+          </div>
+        </div>
 
+      </ng-container>
     </div>
   `,
   styles: [`
@@ -997,6 +1010,9 @@ export class BobinasListComponent implements OnInit {
   mostrandoEliminadas = false;
   activeRowId: string | null = null;
 
+  showDeleteConfirmModal = false;
+  bobinaToDelete: any = null;
+
   // Filtros Avanzados (Persistencia Local)
   showSearchFilterDropdown = false;
   savedFilters: any[] = [];
@@ -1256,20 +1272,27 @@ export class BobinasListComponent implements OnInit {
 
   eliminarBobinaRow(b: any) {
     this.activeRowId = null;
-    if (confirm(`¿Está seguro de eliminar la bobina ${b.noSerie || b.id}?`)) {
-      this.prodService.eliminarBobina(b.id).subscribe({
-        next: () => {
-          this.notify.success('Bobina eliminada.');
-          this.irALista();
-          this.cargarDatos();
-        },
-        error: () => {
-          this.bobinas = this.bobinas.filter(item => item.id !== b.id);
-          this.onSearch();
-          this.irALista();
-        }
-      });
-    }
+    this.bobinaToDelete = b;
+    this.showDeleteConfirmModal = true;
+  }
+
+  executeEliminarBobina() {
+    if (!this.bobinaToDelete) return;
+    const b = this.bobinaToDelete;
+    this.prodService.eliminarBobina(b.id).subscribe({
+      next: () => {
+        this.notify.success('Bobina eliminada.');
+        this.irALista();
+        this.cargarDatos();
+      },
+      error: () => {
+        this.bobinas = this.bobinas.filter(item => item.id !== b.id);
+        this.onSearch();
+        this.irALista();
+      }
+    });
+    this.showDeleteConfirmModal = false;
+    this.bobinaToDelete = null;
   }
 
   imprimirEtiqueta(b: any) {

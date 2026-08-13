@@ -188,9 +188,24 @@ import { LucidePencil, LucideX, LucideFileText, LucideSearch } from '@lucide/ang
               <input type="text" class="form-input" [(ngModel)]="formData.product8020">
             </div>
           </div>
+        <div *ngIf="formValidationError" style="color: #dc2626; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem;">{{ formValidationError }}</div>
         <div class="form-actions">
           <button class="btn-wwp-primary" (click)="confirmProduct()">CONFIRMAR</button>
           <button class="btn-cancel" (click)="cancelForm()">CANCELAR</button>
+        </div>
+      </div>
+
+      <!-- Modal Confirmar Eliminar -->
+      <div class="modal-overlay" *ngIf="showDeleteConfirmModal" (click)="showDeleteConfirmModal = false">
+        <div class="modal-card confirm-modal animate-scale-in" (click)="$event.stopPropagation()" style="background: white; border-radius: 12px; padding: 1.75rem; width: 380px; box-shadow: 0 12px 30px rgba(0,0,0,0.2); text-align: center; border: 1px solid #cbd5e1;">
+          <h3 style="margin-top: 0; color: #1e293b; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">Eliminar Producto</h3>
+          <p style="font-size: 0.88rem; color: #475569; margin-bottom: 1.5rem;">
+            ¿Está seguro que desea eliminar el producto <strong>"{{ itemToDelete?.productNumber }} - {{ itemToDelete?.productName }}"</strong>?
+          </p>
+          <div style="display: flex; justify-content: center; gap: 12px;">
+            <button style="background: #ef4444; color: white; border: none; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.25);" (click)="executeDeleteProduct()">Eliminar</button>
+            <button style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer;" (click)="showDeleteConfirmModal = false">Cancelar</button>
+          </div>
         </div>
       </div>
     </div>
@@ -240,6 +255,10 @@ export class ProductComponent implements OnInit {
   showForm = false;
   isEditing = false;
   formData: any = {};
+
+  showDeleteConfirmModal = false;
+  itemToDelete: SaeProducto | null = null;
+  formValidationError = '';
 
   ngOnInit() {
     this.loadProductos();
@@ -367,15 +386,25 @@ export class ProductComponent implements OnInit {
   }
 
   deleteProduct(p: SaeProducto) {
-    if (confirm(`¿Eliminar el producto "${p.productNumber} - ${p.productName}"?`)) {
-      // In a real scenario this would call an API delete endpoint
-      this.productos = this.productos.filter(x => x.productNumber !== p.productNumber);
+    this.itemToDelete = p;
+    this.showDeleteConfirmModal = true;
+  }
+
+  executeDeleteProduct() {
+    if (this.itemToDelete) {
+      this.productos = this.productos.filter(x => x.productNumber !== this.itemToDelete?.productNumber);
       this.applyFilterAndSort();
     }
+    this.showDeleteConfirmModal = false;
+    this.itemToDelete = null;
   }
 
   confirmProduct() {
-    if (!this.formData.productNumber) { alert('El campo Producto es requerido'); return; }
+    if (!this.formData.productNumber) {
+      this.formValidationError = 'El campo Producto es requerido.';
+      return;
+    }
+    this.formValidationError = '';
     if (this.isEditing) {
       const idx = this.productos.findIndex(p => p.productNumber === this.formData.productNumber);
       if (idx >= 0) this.productos[idx] = { ...this.formData };

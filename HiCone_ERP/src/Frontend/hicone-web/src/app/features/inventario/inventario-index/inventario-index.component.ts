@@ -352,12 +352,13 @@ interface InventarioRecord {
     .btn-actualizar-green:hover { background: #43a047; }
 
     /* Filtro Embudo & Buscador (IMAGEN 1 QA EXACTO) */
-    .right-actions { display: flex; gap: 12px; align-items: center; }
+    .right-actions { display: flex; gap: 12px; align-items: center; position: relative; }
+    .right-actions .dropdown { position: relative !important; display: inline-block; }
     .btn-filter-funnel-qa { background: #ffffff; border: 1px solid #dcdde1; border-radius: 4px; padding: 0.4rem 0.6rem; height: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: background 0.2s; }
     .btn-filter-funnel-qa:hover { background: #f8fafc; border-color: #cbd5e1; }
     .chevron-down-dark { font-size: 0.7rem; color: #334155; }
 
-    .filter-popover-qa { position: absolute; top: calc(100% + 4px); right: 0; background: #ffffff !important; border: 1px solid #cbd5e1 !important; border-radius: 6px !important; width: 180px !important; box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important; z-index: 99999 !important; padding: 6px 0 !important; box-sizing: border-box; }
+    .filter-popover-qa { position: absolute !important; top: calc(100% + 4px) !important; right: 0 !important; background: #ffffff !important; border: 1px solid #cbd5e1 !important; border-radius: 6px !important; width: 180px !important; box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important; z-index: 99999 !important; padding: 6px 0 !important; box-sizing: border-box; }
     .filter-item-qa { display: flex; align-items: center; gap: 8px; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: #334155; font-weight: 500; cursor: pointer; transition: background 0.15s; }
     .filter-item-qa:hover { background: #f1f5f9; color: #2e7d32; }
 

@@ -256,6 +256,20 @@ export interface ExtrusoraMezcladora {
           </div>
         </div>
       </div>
+
+      <!-- Modal Confirmar Eliminar Mezcladora -->
+      <div *ngIf="showDeleteConfirmModal()" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000;" (click)="showDeleteConfirmModal.set(false)">
+        <div style="background: white; border-radius: 8px; width: 400px; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; position: relative; text-align: center;" (click)="$event.stopPropagation()">
+          <h2 style="font-size: 1.25rem; font-weight: bold; color: #1e293b; margin: 0 0 1rem 0;">Eliminar Registro</h2>
+          <p style="color: #475569; font-size: 0.95rem; margin-bottom: 1.5rem;">
+            ¿Está seguro que desea eliminar el registro de <strong>"{{ itemToDelete()?.extrusora }}"</strong>?
+          </p>
+          <div style="display: flex; justify-content: center; gap: 1rem;">
+            <button (click)="executeDelete()" style="background: #ef4444; color: white; border: none; padding: 0.55rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">Eliminar</button>
+            <button (click)="showDeleteConfirmModal.set(false)" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 0.55rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Cancelar</button>
+          </div>
+        </div>
+      </div>
     </div>
   `,
   styles: [`
@@ -278,6 +292,8 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
 
   // Datos simulados por ahora
   items = signal<ExtrusoraMezcladora[]>([]);
+  showDeleteConfirmModal = signal(false);
+  itemToDelete = signal<ExtrusoraMezcladora | null>(null);
 
   isFilterMenuOpen = false;
   isColumnsMenuOpen = false;
@@ -492,19 +508,28 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
   }
 
   eliminar(item: ExtrusoraMezcladora) {
-    if (confirm(`¿Estás seguro de eliminar el registro de ${item.extrusora}?`)) {
-      const current = this.items().filter(x => x.id !== item.id);
-      this.items.set(current);
-      localStorage.setItem('hicone_extrusora_mezcladoras_cache', JSON.stringify(current));
-      this.notify.success('Registro eliminado exitosamente.');
+    this.itemToDelete.set(item);
+    this.showDeleteConfirmModal.set(true);
+  }
 
-      if (item.id && !item.id.includes('-') && item.id.length > 10) {
-        this.produccionService.deleteExtrusoraMezcladora(item.id).subscribe({
-          next: () => console.log('ExtrusoraMezcladora eliminada en DB'),
-          error: (err) => console.error('Error eliminando ExtrusoraMezcladora:', err)
-        });
-      }
+  executeDelete() {
+    const item = this.itemToDelete();
+    if (!item) return;
+
+    const current = this.items().filter(x => x.id !== item.id);
+    this.items.set(current);
+    localStorage.setItem('hicone_extrusora_mezcladoras_cache', JSON.stringify(current));
+    this.notify.success('Registro eliminado exitosamente.');
+
+    if (item.id && !item.id.includes('-') && item.id.length > 10) {
+      this.produccionService.deleteExtrusoraMezcladora(item.id).subscribe({
+        next: () => console.log('ExtrusoraMezcladora eliminada en DB'),
+        error: (err) => console.error('Error eliminando ExtrusoraMezcladora:', err)
+      });
     }
+
+    this.showDeleteConfirmModal.set(false);
+    this.itemToDelete.set(null);
   }
 
   /* ── Pagination ───────────────────────────────────── */
