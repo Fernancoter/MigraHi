@@ -12,6 +12,14 @@ import { ProduccionService } from '../../../core/services/produccion';
     <div class="prensado-pwa-container">
       <!-- CARDS LIST CONTAINER -->
       <main class="cards-list">
+        <!-- FLOATING BUTTON FOR NEW PRENSADO WIZARD -->
+        <button class="fab-new-prensado" (click)="irAWizard()" title="Nuevo Prensado">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 20px; height: 20px; margin-right: 6px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Nuevo Prensado
+        </button>
+
         <div *ngIf="cargando" class="loading-state">
           <div class="spinner"></div>
           <p>Cargando información de prensados...</p>
@@ -479,6 +487,26 @@ import { ProduccionService } from '../../../core/services/produccion';
       cursor: not-allowed;
     }
 
+    .fab-new-prensado {
+      background-color: #00897b;
+      color: #ffffff;
+      border: none;
+      border-radius: 24px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 137, 123, 0.4);
+      transition: background-color 0.2s, transform 0.1s;
+    }
+    .fab-new-prensado:hover {
+      background-color: #00796b;
+      transform: translateY(-1px);
+    }
     .btn-cancelar-grey {
       background-color: #424242;
       color: #cccccc;
@@ -494,11 +522,15 @@ import { ProduccionService } from '../../../core/services/produccion';
 })
 export class PrensadoListComponent implements OnInit {
   private prodService = inject(ProduccionService);
-  private router = inject(Router);
+  public router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
   prensados: any[] = [];
   cargando = true;
+
+  irAWizard() {
+    this.router.navigate(['/wizard']);
+  }
 
   // Estado del flujo modal
   prensadoSeleccionado: any = null;

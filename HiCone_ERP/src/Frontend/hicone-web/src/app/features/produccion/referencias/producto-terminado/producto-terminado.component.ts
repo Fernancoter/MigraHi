@@ -226,16 +226,16 @@ export interface ColumnDef {
                 <input type="text" [(ngModel)]="form.codigoSap" [disabled]="viewMode()" class="form-control" />
               </div>
               <div class="form-group">
-                <label>Terminado Palets</label>
-                <input type="number" [(ngModel)]="form.terminadoPalets" [disabled]="viewMode()" class="form-control" />
+                <label>Terminado Palets <span style="font-size: 0.72rem; color: #64748b; font-weight: normal;">(Entero)</span></label>
+                <input type="number" step="1" [(ngModel)]="form.terminadoPalets" [disabled]="viewMode()" class="form-control" />
               </div>
               <div class="form-group">
-                <label>Carrete Millar</label>
-                <input type="number" [(ngModel)]="form.carreteMiliar" [disabled]="viewMode()" class="form-control" />
+                <label>Carrete Millar <span style="font-size: 0.72rem; color: #64748b; font-weight: normal;">(Entero)</span></label>
+                <input type="number" step="1" [(ngModel)]="form.carreteMiliar" [disabled]="viewMode()" class="form-control" />
               </div>
               <div class="form-group">
-                <label>Palet Millar</label>
-                <input type="number" [(ngModel)]="form.paletMiliar" [disabled]="viewMode()" class="form-control" />
+                <label>Palet Millar <span style="font-size: 0.72rem; color: #64748b; font-weight: normal;">(Entero)</span></label>
+                <input type="number" step="1" [(ngModel)]="form.paletMiliar" [disabled]="viewMode()" class="form-control" />
               </div>
               <div class="form-group">
                 <label>Terminado Peso</label>
@@ -250,8 +250,8 @@ export interface ColumnDef {
                 <input type="number" [(ngModel)]="form.pesoPalet" [disabled]="viewMode()" class="form-control" />
               </div>
               <div class="form-group">
-                <label>MRD</label>
-                <input type="number" [(ngModel)]="form.mrd" [disabled]="viewMode()" class="form-control" />
+                <label>MRD <span style="font-size: 0.72rem; color: #64748b; font-weight: normal;">(Entero)</span></label>
+                <input type="number" step="1" [(ngModel)]="form.mrd" [disabled]="viewMode()" class="form-control" />
               </div>
               <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
                 <input type="checkbox" [(ngModel)]="form.conEtiqueta" [disabled]="viewMode()" />
@@ -616,6 +616,23 @@ export class ProductoTerminadoComponent implements OnInit {
   }
 
   saveEdit() {
+    if (this.form.carreteMiliar != null && Number(this.form.carreteMiliar) % 1 !== 0) {
+      this.notify.warning('El campo "Carrete Millar" solo acepta números enteros (sin decimales).');
+      return;
+    }
+    if (this.form.paletMiliar != null && Number(this.form.paletMiliar) % 1 !== 0) {
+      this.notify.warning('El campo "Palet Millar" solo acepta números enteros (sin decimales).');
+      return;
+    }
+    if (this.form.terminadoPalets != null && Number(this.form.terminadoPalets) % 1 !== 0) {
+      this.notify.warning('El campo "Terminado Palets" solo acepta números enteros (sin decimales).');
+      return;
+    }
+    if (this.form.mrd != null && Number(this.form.mrd) % 1 !== 0) {
+      this.notify.warning('El campo "MRD" solo acepta números enteros (sin decimales).');
+      return;
+    }
+
     this.saving.set(true);
     this.saveError.set('');
 
