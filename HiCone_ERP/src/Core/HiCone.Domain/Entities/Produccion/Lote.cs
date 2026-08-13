@@ -20,8 +20,4 @@ public class Lote : TenantEntity, IAuditable
     public decimal LoteKg { get; set; }
     public bool LoteConsumido { get; set; }
     public string? LotePaqueteAditivos { get; set; }
-    
-    public virtual ICollection<Extrusion> Extrusiones { get; set; } = new List<Extrusion>();
-    public virtual ICollection<Bobina> Bobinas { get; set; } = new List<Bobina>();
-    public virtual ICollection<Palet> Palets { get; set; } = new List<Palet>();
 }

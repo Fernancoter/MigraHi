@@ -4,6 +4,7 @@ using HiCone.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HiCone.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260812175311_FixExtrusionAnchoLongitudTypes")]
+    partial class FixExtrusionAnchoLongitudTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1685,6 +1688,10 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
+                    b.Property<int>("BobbinNo")
+                        .HasColumnType("int")
+                        .HasColumnName("bobbin_no");
+
                     b.Property<Guid?>("BobinaInterrupcionesId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("bobina_interrupciones_id");
@@ -1823,6 +1830,15 @@ namespace HiCone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("rest_start");
 
+                    b.Property<decimal>("ScrapKg")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("scrap_kg");
+
+                    b.Property<string>("SerialNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("serial_no");
+
                     b.Property<Guid?>("SiloMolidoId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("silo_molido_id");
@@ -1838,6 +1854,10 @@ namespace HiCone.Persistence.Migrations
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("tenant_id");
+
+                    b.Property<decimal>("Thickness")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("thickness");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")

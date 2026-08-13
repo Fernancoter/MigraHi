@@ -355,6 +355,7 @@ public class ProduccionService : IProduccionService
             HoraInicio = DateTime.UtcNow.AddMinutes(-20),
             HoraSalida = DateTime.UtcNow,
             NoSerie = noSerie,
+            Codigo = noSerie,
             ProductoId = extrusion.ProductoId,
             OperarioId = extrusion.OperarioId,
             SiloVirgenId = extrusion.SiloVirgenId,
@@ -506,7 +507,8 @@ public class ProduccionService : IProduccionService
             TroquelId = troquelId,
             Estado = EstadoPrensado.EnProceso,
             HoraIniciaProceso = DateTime.UtcNow,
-            Fecha = DateTime.UtcNow.Date
+            Fecha = DateTime.UtcNow.Date,
+            Ancho = string.Empty
         };
 
         prensa.Estado = EstadoPrensa.EnProceso;
@@ -1222,6 +1224,7 @@ public class ProduccionService : IProduccionService
                 e.TiempoInterrupcion,
                 e.TiempoInterrupcionMin,
                 e.EnCurso,
+                e.InterrupcionEnCurso,
                 e.ExtrusionIdLegacy,
                 e.ProductoNombre,
                 e.LotePaqueteAditivos,
@@ -1235,6 +1238,8 @@ public class ProduccionService : IProduccionService
                 e.Observaciones,
                 e.LoteSilo,
                 e.MotivoAnticipado,
+                e.SiloVirgenId,
+                e.SiloMolidoId,
                 IniciaProceso = e.FechaInicio,
                 FinProceso = e.FechaFin,
                 Extrusora = e.Extrusora != null ? new { e.Extrusora.Id, e.Extrusora.Nombre, e.Extrusora.Codigo } : null,

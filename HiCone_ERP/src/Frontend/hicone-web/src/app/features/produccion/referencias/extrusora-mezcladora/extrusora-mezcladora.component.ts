@@ -10,6 +10,7 @@ export interface ExtrusoraMezcladora {
   id?: string;
   extrusoraId: string;
   extrusora: string;
+  nombre: string;
   virgenMin: number;
   virgenMax: number;
   molidoMin: number;
@@ -159,12 +160,13 @@ export interface ExtrusoraMezcladora {
                   </td>
 
                   <td *ngIf="columns[0].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.extrusora }}</td>
-                  <td *ngIf="columns[1].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #5cb85c; font-size: 0.85rem;">{{ item.virgenMin | number:'1.2-2' }}</td>
-                  <td *ngIf="columns[2].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.virgenMax | number:'1.2-2' }}</td>
-                  <td *ngIf="columns[3].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.molidoMin | number:'1.2-2' }}</td>
-                  <td *ngIf="columns[4].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.molidoMax | number:'1.2-2' }}</td>
-                  <td *ngIf="columns[5].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.kgVirgen | number:'1.2-2' }}</td>
-                  <td *ngIf="columns[6].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.kgMolido | number:'1.2-2' }}</td>
+                  <td *ngIf="columns[1].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.nombre }}</td>
+                  <td *ngIf="columns[2].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #5cb85c; font-size: 0.85rem;">{{ item.virgenMin | number:'1.2-2' }}</td>
+                  <td *ngIf="columns[3].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.virgenMax | number:'1.2-2' }}</td>
+                  <td *ngIf="columns[4].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.molidoMin | number:'1.2-2' }}</td>
+                  <td *ngIf="columns[5].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.molidoMax | number:'1.2-2' }}</td>
+                  <td *ngIf="columns[6].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.kgVirgen | number:'1.2-2' }}</td>
+                  <td *ngIf="columns[7].visible" style="padding: 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.85rem;">{{ item.kgMolido | number:'1.2-2' }}</td>
                 </tr>
               }
             }
@@ -201,14 +203,18 @@ export interface ExtrusoraMezcladora {
               
               <!-- Fila 1 -->
               <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <label style="font-size: 0.85rem; color: #475569; font-weight: 500;">Extrusora Id</label>
-                <input type="text" [(ngModel)]="form.extrusoraId" [readonly]="isViewing" style="padding: 0.5rem 0; border: none; border-bottom: 1px solid #5cb85c; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box;" [ngStyle]="{'color': isViewing ? '#94a3b8' : '#334155'}">
+                <label style="font-size: 0.85rem; color: #475569; font-weight: 500;">Extrusora</label>
+                <select *ngIf="!isViewing" [(ngModel)]="form.extrusoraId" (ngModelChange)="onExtrusoraChange($event)" style="padding: 0.5rem 0; border: none; border-bottom: 1px solid #5cb85c; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box; background: white; color: #334155;">
+                  <option value="" disabled>-- Seleccionar --</option>
+                  <option *ngFor="let ext of extrusoras" [value]="ext.id">{{ ext.nombre }}</option>
+                </select>
+                <input *ngIf="isViewing" type="text" [value]="form.extrusora" readonly style="padding: 0.5rem 0; border: none; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box; color: #94a3b8;">
               </div>
 
               <!-- Fila 2 -->
               <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <label style="font-size: 0.85rem; color: #475569; font-weight: 500;">Extrusora</label>
-                <input type="text" [(ngModel)]="form.extrusora" [readonly]="isViewing" style="padding: 0.5rem 0; border: none; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box;" [ngStyle]="{'color': isViewing ? '#94a3b8' : '#334155'}">
+                <label style="font-size: 0.85rem; color: #475569; font-weight: 500;">Nombre</label>
+                <input type="text" [(ngModel)]="form.nombre" [readonly]="isViewing" style="padding: 0.5rem 0; border: none; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box;" [ngStyle]="{'color': isViewing ? '#94a3b8' : '#334155'}">
               </div>
 
               <!-- Fila 3 -->
@@ -256,20 +262,6 @@ export interface ExtrusoraMezcladora {
           </div>
         </div>
       </div>
-
-      <!-- Modal Confirmar Eliminar Mezcladora -->
-      <div *ngIf="showDeleteConfirmModal()" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000;" (click)="showDeleteConfirmModal.set(false)">
-        <div style="background: white; border-radius: 8px; width: 400px; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; position: relative; text-align: center;" (click)="$event.stopPropagation()">
-          <h2 style="font-size: 1.25rem; font-weight: bold; color: #1e293b; margin: 0 0 1rem 0;">Eliminar Registro</h2>
-          <p style="color: #475569; font-size: 0.95rem; margin-bottom: 1.5rem;">
-            ¿Está seguro que desea eliminar el registro de <strong>"{{ itemToDelete()?.extrusora }}"</strong>?
-          </p>
-          <div style="display: flex; justify-content: center; gap: 1rem;">
-            <button (click)="executeDelete()" style="background: #ef4444; color: white; border: none; padding: 0.55rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">Eliminar</button>
-            <button (click)="showDeleteConfirmModal.set(false)" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 0.55rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Cancelar</button>
-          </div>
-        </div>
-      </div>
     </div>
   `,
   styles: [`
@@ -292,8 +284,6 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
 
   // Datos simulados por ahora
   items = signal<ExtrusoraMezcladora[]>([]);
-  showDeleteConfirmModal = signal(false);
-  itemToDelete = signal<ExtrusoraMezcladora | null>(null);
 
   isFilterMenuOpen = false;
   isColumnsMenuOpen = false;
@@ -301,6 +291,7 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
 
   columns = [
     { key: 'extrusora', label: 'Extrusora', visible: true },
+    { key: 'nombre', label: 'Nombre', visible: true },
     { key: 'virgenMin', label: 'Virgen Min', visible: true },
     { key: 'virgenMax', label: 'Virgen Max', visible: true },
     { key: 'molidoMin', label: 'Molido Min', visible: true },
@@ -332,6 +323,7 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
   isModalOpen = false;
   isViewing = false;
   form: ExtrusoraMezcladora = this.getEmptyForm();
+  extrusoras: { id: string; nombre: string }[] = [];
 
   private produccionService = inject(ProduccionService);
   private notify = inject(NotificationService);
@@ -353,8 +345,9 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
         if (data && data.length > 0) {
           const mapped: ExtrusoraMezcladora[] = data.map(d => ({
             id: d.id,
-            extrusoraId: d.extrusoraId || '3',
-            extrusora: d.extrusora?.nombre || d.nombre || 'Extrusora 3',
+            extrusoraId: d.extrusoraId,
+            extrusora: d.extrusora?.nombre || '',
+            nombre: d.nombre || '',
             virgenMin: d.virgenMin ?? 50,
             virgenMax: d.virgenMax ?? 100,
             molidoMin: d.molidoMin ?? 0,
@@ -368,12 +361,23 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
       },
       error: (err) => console.error('Error al cargar extrusoras mezcladoras:', err)
     });
+
+    this.produccionService.getExtrusoras().subscribe({
+      next: (data: any[]) => { this.extrusoras = data; },
+      error: (err) => console.error('Error al cargar extrusoras:', err)
+    });
+  }
+
+  onExtrusoraChange(extrusoraId: string) {
+    const ext = this.extrusoras.find(e => e.id === extrusoraId);
+    this.form.extrusora = ext?.nombre || '';
   }
 
   getEmptyForm(): ExtrusoraMezcladora {
     return {
-      extrusoraId: '3',
-      extrusora: 'Extrusora 3',
+      extrusoraId: '',
+      extrusora: '',
+      nombre: '',
       virgenMin: 50.00,
       virgenMax: 100.00,
       molidoMin: 0.00,
@@ -465,27 +469,18 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
   }
 
   saveModal() {
-    let updatedList: ExtrusoraMezcladora[] = [];
-    if (this.form.id) {
-      const current = this.items();
-      const index = current.findIndex(x => x.id === this.form.id);
-      if (index !== -1) {
-        current[index] = { ...this.form };
-        updatedList = [...current];
-      } else {
-        updatedList = [this.form, ...current];
-      }
-    } else {
-      const newItem = { ...this.form, id: Date.now().toString() };
-      updatedList = [newItem, ...this.items()];
+    if (!this.form.extrusoraId) {
+      this.notify.warning('Debe seleccionar una Extrusora.');
+      return;
+    }
+    if (!this.form.nombre) {
+      this.notify.warning('Debe ingresar un Nombre.');
+      return;
     }
 
-    this.items.set(updatedList);
-    localStorage.setItem('hicone_extrusora_mezcladoras_cache', JSON.stringify(updatedList));
-
-    const apiPayload = {
-      id: (this.form.id && !this.form.id.includes('-') && this.form.id.length > 10) ? this.form.id : null,
-      nombre: this.form.extrusora || 'Mezcladora Extrusora 3',
+    const apiPayload: any = {
+      extrusoraId: this.form.extrusoraId,
+      nombre: this.form.nombre,
       virgenMin: this.form.virgenMin,
       virgenMax: this.form.virgenMax,
       molidoMin: this.form.molidoMin,
@@ -493,43 +488,44 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
       kgVirgen: this.form.kgVirgen,
       kgMolido: this.form.kgMolido
     };
+    if (this.form.id) apiPayload.id = this.form.id;
 
     this.produccionService.saveExtrusoraMezcladora(apiPayload).subscribe({
-      next: () => {
+      next: (result: any) => {
+        const saved: ExtrusoraMezcladora = { ...this.form, id: result?.id || this.form.id };
+        const current = this.items();
+        const index = current.findIndex(x => x.id === saved.id);
+        const updatedList = index !== -1
+          ? current.map((x, i) => i === index ? saved : x)
+          : [saved, ...current];
+        this.items.set(updatedList);
+        localStorage.setItem('hicone_extrusora_mezcladoras_cache', JSON.stringify(updatedList));
         this.notify.success('Extrusora mezcladora guardada exitosamente.');
+        this.closeModal();
       },
       error: (err) => {
-        console.warn('Backend API no disponible, guardado en modo local:', err);
-        this.notify.success('Extrusora mezcladora guardada exitosamente.');
+        console.error('Error al guardar extrusora mezcladora:', err);
+        this.notify.error('Error al guardar la extrusora mezcladora. Intente de nuevo.');
       }
     });
-
-    this.closeModal();
   }
 
   eliminar(item: ExtrusoraMezcladora) {
-    this.itemToDelete.set(item);
-    this.showDeleteConfirmModal.set(true);
-  }
-
-  executeDelete() {
-    const item = this.itemToDelete();
-    if (!item) return;
-
-    const current = this.items().filter(x => x.id !== item.id);
-    this.items.set(current);
-    localStorage.setItem('hicone_extrusora_mezcladoras_cache', JSON.stringify(current));
-    this.notify.success('Registro eliminado exitosamente.');
-
-    if (item.id && !item.id.includes('-') && item.id.length > 10) {
+    if (!item.id) return;
+    if (confirm(`¿Estás seguro de eliminar el registro de ${item.extrusora}?`)) {
       this.produccionService.deleteExtrusoraMezcladora(item.id).subscribe({
-        next: () => console.log('ExtrusoraMezcladora eliminada en DB'),
-        error: (err) => console.error('Error eliminando ExtrusoraMezcladora:', err)
+        next: () => {
+          const current = this.items().filter(x => x.id !== item.id);
+          this.items.set(current);
+          localStorage.setItem('hicone_extrusora_mezcladoras_cache', JSON.stringify(current));
+          this.notify.success('Registro eliminado exitosamente.');
+        },
+        error: (err) => {
+          console.error('Error eliminando ExtrusoraMezcladora:', err);
+          this.notify.error('Error al eliminar el registro. Intente de nuevo.');
+        }
       });
     }
-
-    this.showDeleteConfirmModal.set(false);
-    this.itemToDelete.set(null);
   }
 
   /* ── Pagination ───────────────────────────────────── */
@@ -552,12 +548,13 @@ export class ExtrusoraMezcladoraComponent implements OnInit {
     const dataToExport = this.paginatedItems().map(item => {
       const row: any = {};
       if (this.columns[0].visible) row[this.columns[0].label] = item.extrusora;
-      if (this.columns[1].visible) row[this.columns[1].label] = item.virgenMin;
-      if (this.columns[2].visible) row[this.columns[2].label] = item.virgenMax;
-      if (this.columns[3].visible) row[this.columns[3].label] = item.molidoMin;
-      if (this.columns[4].visible) row[this.columns[4].label] = item.molidoMax;
-      if (this.columns[5].visible) row[this.columns[5].label] = item.kgVirgen;
-      if (this.columns[6].visible) row[this.columns[6].label] = item.kgMolido;
+      if (this.columns[1].visible) row[this.columns[1].label] = item.nombre;
+      if (this.columns[2].visible) row[this.columns[2].label] = item.virgenMin;
+      if (this.columns[3].visible) row[this.columns[3].label] = item.virgenMax;
+      if (this.columns[4].visible) row[this.columns[4].label] = item.molidoMin;
+      if (this.columns[5].visible) row[this.columns[5].label] = item.molidoMax;
+      if (this.columns[6].visible) row[this.columns[6].label] = item.kgVirgen;
+      if (this.columns[7].visible) row[this.columns[7].label] = item.kgMolido;
       return row;
     });
 

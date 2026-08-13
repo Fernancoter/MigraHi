@@ -285,6 +285,36 @@ import { NotificationService } from '../../../../core/services/notification.serv
                   <input type="text" class="input-gx" [(ngModel)]="form.modelo" placeholder="" />
                 </div>
 
+                <!-- Estado -->
+                <div class="form-field-group">
+                  <label class="form-label-gx">Estado</label>
+                  <select class="select-gx" [(ngModel)]="form.estado">
+                    <option [ngValue]="1">Disponible</option>
+                    <option [ngValue]="2">En Proceso</option>
+                    <option [ngValue]="3">Detenida</option>
+                    <option [ngValue]="4">Mantenimiento</option>
+                  </select>
+                </div>
+
+                <!-- Número de Serie -->
+                <div class="form-field-group">
+                  <label class="form-label-gx">Número de Serie</label>
+                  <input type="text" class="input-gx" [(ngModel)]="form.numeroSerie" placeholder="" />
+                </div>
+
+                <!-- Activa -->
+                <div class="form-field-group">
+                  <label class="form-label-gx">
+                    <input type="checkbox" [(ngModel)]="form.isActive" style="margin-right: 0.4rem;" /> Activa
+                  </label>
+                </div>
+
+                <!-- Observaciones -->
+                <div class="form-field-group">
+                  <label class="form-label-gx">Observaciones</label>
+                  <textarea class="input-gx" rows="3" [(ngModel)]="form.observaciones" placeholder=""></textarea>
+                </div>
+
               </div>
             </div>
           </div>
@@ -344,6 +374,26 @@ import { NotificationService } from '../../../../core/services/notification.serv
                 <div class="info-row">
                   <span class="info-label">Modelo</span>
                   <span class="info-val">{{ selectedItem()?.modelo || '—' }}</span>
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Estado</span>
+                  <span class="info-val">{{ selectedItem()?.estadoNombre || '—' }}</span>
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Número de Serie</span>
+                  <span class="info-val">{{ selectedItem()?.numeroSerie || '—' }}</span>
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Activa</span>
+                  <span class="info-val">{{ selectedItem()?.isActive ? 'Sí' : 'No' }}</span>
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Observaciones</span>
+                  <span class="info-val">{{ selectedItem()?.observaciones || '—' }}</span>
                 </div>
               </div>
 
@@ -681,7 +731,11 @@ export class PrensasCatalogoComponent implements OnInit {
       nombre: 'Prensa 1',
       imagen: '',
       marca: '',
-      modelo: ''
+      modelo: '',
+      estado: 1,
+      numeroSerie: '',
+      isActive: true,
+      observaciones: ''
     };
     this.viewState.set('edit');
     this.closeAllDropdowns();
@@ -713,6 +767,10 @@ export class PrensasCatalogoComponent implements OnInit {
       imagen: this.form.imagen || '',
       marca: this.form.marca || '',
       modelo: this.form.modelo || '',
+      estado: this.form.estado ?? 1,
+      numeroSerie: this.form.numeroSerie || '',
+      isActive: this.form.isActive ?? true,
+      observaciones: this.form.observaciones || '',
       tenantId: '00000000-0000-0000-0000-000000000001'
     };
 
@@ -724,10 +782,7 @@ export class PrensasCatalogoComponent implements OnInit {
         },
         error: (e) => {
           console.error(e);
-          // Fallback fluido optimista
-          this.items.update(list => [...list, { id: `prn-${Date.now()}`, codigo: `PRE-${list.length+1}`, ...payload } as any]);
-          this.notify.success('Prensa creada exitosamente.');
-          this.goList();
+          this.notify.error('Error al crear la prensa. Intente de nuevo.');
         }
       });
     } else {
@@ -738,10 +793,7 @@ export class PrensasCatalogoComponent implements OnInit {
         },
         error: (e) => {
           console.error(e);
-          // Fallback fluido optimista
-          this.items.update(list => list.map(item => item.id === this.form.id ? { ...item, ...payload } : item));
-          this.notify.success('Prensa actualizada exitosamente.');
-          this.goList();
+          this.notify.error('Error al actualizar la prensa. Intente de nuevo.');
         }
       });
     }
@@ -765,11 +817,9 @@ export class PrensasCatalogoComponent implements OnInit {
       },
       error: (e) => {
         console.error(e);
-        this.items.update(list => list.filter(i => i.id !== item.id));
-        this.notify.success('Prensa eliminada exitosamente.');
+        this.notify.error('Error al eliminar la prensa. Intente de nuevo.');
         this.showDeleteConfirm.set(false);
         this.itemToDelete.set(null);
-        this.goList();
       }
     });
   }

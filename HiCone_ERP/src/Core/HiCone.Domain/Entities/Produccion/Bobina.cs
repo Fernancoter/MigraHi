@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using HiCone.Domain.Common;
 using HiCone.Domain.Enums;
 using HiCone.Domain.Entities.Inventario;
@@ -14,13 +15,13 @@ public class Bobina : TenantEntity
     // Retrocompatibilidad con el módulo de configuración de producción
     public string? Mill { get; set; }
     public string? Station { get; set; }
-    public int BobbinNo { get => BobinaNo; set => BobinaNo = value; }
-    public string SerialNo { get => NoSerie; set => NoSerie = value; }
+    [NotMapped] public int BobbinNo { get => BobinaNo; set => BobinaNo = value; }
+    [NotMapped] public string SerialNo { get => NoSerie; set => NoSerie = value; }
     public string? Codigo { get; set; }
     public DateTime? RestStart { get; set; }
     public int RestMinutes { get; set; }
-    public decimal ScrapKg { get => MermaKg; set => MermaKg = value; }
-    public decimal Thickness { get => Espesor; set => Espesor = value; }
+    [NotMapped] public decimal ScrapKg { get => MermaKg; set => MermaKg = value; }
+    [NotMapped] public decimal Thickness { get => Espesor; set => Espesor = value; }
     public string? Observations { get; set; }
     public string? MillReason { get; set; }
     public string? ProductName { get; set; }

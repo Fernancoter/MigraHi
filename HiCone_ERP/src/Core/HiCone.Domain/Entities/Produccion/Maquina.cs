@@ -11,6 +11,4 @@ public class Maquina : TenantEntity
     public string? NumeroSerie { get; set; }
     public bool IsActive { get; set; } = true;
     public string Estado { get; set; } = "Disponible"; // Disponible, Produciendo, Mantenimiento, Parada
-
-    public virtual ICollection<Extrusion> Extrusiones { get; set; } = new List<Extrusion>();
 }

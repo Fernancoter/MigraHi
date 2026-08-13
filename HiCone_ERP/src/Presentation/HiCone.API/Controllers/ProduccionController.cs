@@ -71,6 +71,10 @@ public class ProduccionController : ControllerBase
             MolidoKg = request.MolidoKg,
             LoteSilo = request.LoteSilo,
             LotePaqueteAditivos = request.LotePaqueteAditivos,
+            Observaciones = request.Observaciones,
+            MotivoAnticipado = request.MotivoAnticipado,
+            SiloVirgenId = request.SiloVirgenId,
+            SiloMolidoId = request.SiloMolidoId,
             TenantId = defaultTenantId
         };
 
@@ -105,6 +109,10 @@ public class ProduccionController : ControllerBase
         entity.MolidoKg = request.MolidoKg;
         entity.LoteSilo = request.LoteSilo;
         entity.LotePaqueteAditivos = request.LotePaqueteAditivos;
+        entity.Observaciones = request.Observaciones;
+        entity.MotivoAnticipado = request.MotivoAnticipado;
+        entity.SiloVirgenId = request.SiloVirgenId;
+        entity.SiloMolidoId = request.SiloMolidoId;
 
         await _context.SaveChangesAsync(default);
         return NoContent();
@@ -231,8 +239,26 @@ public class ProduccionController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("extrusora-mezcladora")]
-    public async Task<ActionResult<ExtrusoraMezcladora>> SaveExtrusoraMezcladora([FromBody] ExtrusoraMezcladora item)
+    public async Task<ActionResult<ExtrusoraMezcladora>> SaveExtrusoraMezcladora([FromBody] ExtrusoraMezcladoraDto dto)
     {
+        if (dto.ExtrusoraId == Guid.Empty)
+            return BadRequest(new { Error = "El campo ExtrusoraId es requerido y no puede estar vacío." });
+        if (string.IsNullOrWhiteSpace(dto.Nombre))
+            return BadRequest(new { Error = "El campo Nombre es requerido." });
+
+        var item = new ExtrusoraMezcladora
+        {
+            Id = dto.Id ?? Guid.Empty,
+            ExtrusoraId = dto.ExtrusoraId,
+            Nombre = dto.Nombre,
+            Codigo = dto.Codigo,
+            VirgenMin = dto.VirgenMin,
+            VirgenMax = dto.VirgenMax,
+            MolidoMin = dto.MolidoMin,
+            MolidoMax = dto.MolidoMax,
+            KgVirgen = dto.KgVirgen,
+            KgMolido = dto.KgMolido
+        };
         var result = await _produccionService.SaveExtrusoraMezcladoraAsync(item);
         return Ok(result);
     }
@@ -773,6 +799,7 @@ public class ProduccionController : ControllerBase
         if (dto.BobinaNo.HasValue) bobina.BobinaNo = dto.BobinaNo.Value;
         if (dto.Carreras.HasValue) bobina.Carreras = dto.Carreras.Value;
         if (dto.LoteVirgen != null) bobina.LoteVirgen = dto.LoteVirgen;
+        if (dto.IniciaReposo.HasValue) bobina.IniciaReposo = dto.IniciaReposo.Value;
 
         await _context.SaveChangesAsync(default);
         return Ok(bobina);
@@ -815,6 +842,7 @@ public class ProduccionController : ControllerBase
             ExtrusionId = extrusion.Id,
             BobinaNo = 26,
             NoSerie = "B-010626-01-026A",
+            Codigo = "B-010626-01-026A",
             BobinaOrigen = "A",
             Kg = 520.00m,
             MermaKg = 0.00m,
@@ -835,6 +863,7 @@ public class ProduccionController : ControllerBase
             ExtrusionId = extrusion.Id,
             BobinaNo = 27,
             NoSerie = "B-010626-01-027A",
+            Codigo = "B-010626-01-027A",
             BobinaOrigen = "B",
             Kg = 510.50m,
             MermaKg = 15.00m,
@@ -843,7 +872,7 @@ public class ProduccionController : ControllerBase
             HoraInicio = DateTime.UtcNow.AddHours(-6),
             HoraSalida = DateTime.UtcNow.AddHours(-4),
             Estado = EstadoBobina.Molido,
-            MotivoMolino = MotivoMolino.DefectoCalibre,
+            MotivoMolino = MotivoMolino.LimpiezaContaminacion,
             ColorEstacion = ColorEstacion.Azul,
             ProductoId = producto.Id,
             OperarioId = operario.Id,
@@ -1114,7 +1143,7 @@ public class ProduccionController : ControllerBase
         entity.HoraFinProceso = request.FinProceso;
         
         entity.Calibre = request.Calibre;
-        entity.Ancho = request.Ancho;
+        entity.Ancho = request.Ancho ?? string.Empty;
         entity.Longitud = request.Longitud;
         entity.KgVirgen = request.VirgenKg;
         entity.KgMolido = request.MolidoKg;
@@ -1947,7 +1976,11 @@ public record CreateExtrusionRequest(
     string? LotePaqueteAditivos,
     int Estado,
     DateTime? ProcessStart,
-    DateTime? ProcessEnd
+    DateTime? ProcessEnd,
+    string? Observaciones,
+    string? MotivoAnticipado,
+    Guid? SiloVirgenId,
+    Guid? SiloMolidoId
 );
 
 public record UpdateExtrusionRequest(
@@ -1966,7 +1999,11 @@ public record UpdateExtrusionRequest(
     string? LotePaqueteAditivos,
     int Estado,
     DateTime? ProcessStart,
-    DateTime? ProcessEnd
+    DateTime? ProcessEnd,
+    string? Observaciones,
+    string? MotivoAnticipado,
+    Guid? SiloVirgenId,
+    Guid? SiloMolidoId
 );
 
 public record UpdatePrensadoRequest(
@@ -2025,6 +2062,7 @@ public class ActualizarBobinaDto
     public int? BobinaNo { get; set; }
     public int? Carreras { get; set; }
     public string? LoteVirgen { get; set; }
+    public DateTime? IniciaReposo { get; set; }
 }
 
 
@@ -2049,3 +2087,4 @@ public class ProductoCreateDto
 }
 
 public record ExtrusionConsumoDto(Guid? SiloVirgenId, decimal? VirgenKg, Guid? SiloMolidoId, decimal? MolidoKg);
+public record ExtrusoraMezcladoraDto(Guid? Id, Guid ExtrusoraId, string Nombre, string? Codigo, decimal VirgenMin, decimal VirgenMax, decimal MolidoMin, decimal MolidoMax, decimal KgVirgen, decimal KgMolido);

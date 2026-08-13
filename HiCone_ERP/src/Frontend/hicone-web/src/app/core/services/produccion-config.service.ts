@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 
 export interface Operario   { id: string; nombre: string; activo: boolean; fotografia?: string; userGuid?: string; }
 export interface Turno      { id: string; nombre: string; clave?: string; horaInicio: string; horaFin: string; }
-export interface Extrusora  { id: string; nombre: string; numeroExtrusora: string; imagen?: string; }
+export interface Extrusora  { id: string; nombre: string; numeroExtrusora: string; imagen?: string; estado?: number; estadoNombre?: string; capacidadKgHora?: number; modelo?: string; numeroSerie?: string; isActive?: boolean; observaciones?: string; numeroEstaciones?: number; }
 export interface ExtrusoraOperarioRow { id?: string; turnoId: string; turno: string; operarioId?: string; operario?: string; }
-export interface Prensa     { id: string; numeroPrensa?: string; nombre: string; imagen?: string; marca?: string; modelo?: string; }
+export interface Prensa     { id: string; numeroPrensa?: string; nombre: string; imagen?: string; marca?: string; modelo?: string; estado?: number; estadoNombre?: string; numeroSerie?: string; isActive?: boolean; observaciones?: string; }
 export interface Troquel    { id: string; secuencialId?: number; codigo: string; nombre: string; enPrensa?: string; estado: number; estadoNombre?: string; isActive: boolean; observaciones?: string; ciclosAcumulados?: number; ciclosVideoMantenimiento?: number; fechaUltimoMantenimiento?: string; productos?: any[]; prensaTroqueles?: any[]; }
 export interface Silo       { id: string; nombre: string; capacidadKg: number; minimoKg: number; maximoKg: number; estadoMaterial?: string; tipoMaterial?: string; siloActivo: boolean; }
 export interface Categoria  { id: string; nombre: string; }
