@@ -163,16 +163,21 @@ public class ProduccionController : ControllerBase
     [HttpPost("extrusion/{id}/finalizar")]
     public async Task<IActionResult> FinalizarExtrusion(Guid id, [FromBody] FinalizarExtrusionRequest? request)
     {
-        var exists = await _context.Extrusiones.AnyAsync(e => e.Id == id);
-        if (!exists)
+        try
         {
-            return NotFound(new { message = "La orden de extrusión no existe en la base de datos (posiblemente fue eliminada o la base de datos fue reiniciada). Por favor, recargue la página." });
+            var exists = await _context.Extrusiones.AnyAsync(e => e.Id == id);
+            if (!exists)
+            {
+                return NotFound(new { message = "La orden de extrusión no existe en la base de datos (posiblemente fue eliminada o la base de datos fue reiniciada). Por favor, recargue la página." });
+            }
+            var result = await _produccionService.FinalizarExtrusionAsync(id, request?.Motivo);
+            return result ? Ok() : BadRequest(new { message = "No se pudo finalizar la extrusión." });
         }
-        var result = await _produccionService.FinalizarExtrusionAsync(id, request?.Motivo);
-        return result ? Ok() : BadRequest(new { message = "No se pudo finalizar la extrusión." });
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message, detail = ex.InnerException?.Message });
+        }
     }
-
-
 
     [AllowAnonymous]
     [HttpPost("extrusion/guardar-bobina")]

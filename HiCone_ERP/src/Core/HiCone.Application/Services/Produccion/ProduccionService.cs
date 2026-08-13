@@ -286,18 +286,33 @@ public class ProduccionService : IProduccionService
         }
 
         // Generar Resultado (KPIs)
-        var resultado = new ExtrusionResultado
-        {
-            ExtrusionId = extrusionId,
-            TotalBobinas = extrusion.Bobinas.Count,
-            TotalBobinasMolidas = extrusion.Bobinas.Count(b => b.Estado == EstadoBobina.Molido),
-            KgProducidos = extrusion.Bobinas.Sum(b => b.Kg),
-            KgMerma = extrusion.Bobinas.Sum(b => b.MermaKg),
-            FechaRegistro = DateTime.UtcNow
-        };
-        _context.ExtrusionResultados.Add(resultado);
+        var existingResultado = await _context.ExtrusionResultados
+            .FirstOrDefaultAsync(r => r.ExtrusionId == extrusionId);
 
-        return await _context.SaveChangesAsync(default) > 0;
+        if (existingResultado == null)
+        {
+            var resultado = new ExtrusionResultado
+            {
+                ExtrusionId = extrusionId,
+                TenantId = extrusion.TenantId != Guid.Empty ? extrusion.TenantId : Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                TotalBobinas = extrusion.Bobinas.Count,
+                TotalBobinasMolidas = extrusion.Bobinas.Count(b => b.Estado == EstadoBobina.Molido),
+                KgProducidos = extrusion.Bobinas.Sum(b => b.Kg),
+                KgMerma = extrusion.Bobinas.Sum(b => b.MermaKg),
+                FechaRegistro = DateTime.UtcNow
+            };
+            _context.ExtrusionResultados.Add(resultado);
+        }
+        else
+        {
+            existingResultado.TotalBobinas = extrusion.Bobinas.Count;
+            existingResultado.TotalBobinasMolidas = extrusion.Bobinas.Count(b => b.Estado == EstadoBobina.Molido);
+            existingResultado.KgProducidos = extrusion.Bobinas.Sum(b => b.Kg);
+            existingResultado.KgMerma = extrusion.Bobinas.Sum(b => b.MermaKg);
+        }
+
+        await _context.SaveChangesAsync(default);
+        return true;
     }
 
     public async Task<bool> RegistrarConsumoExtrusionAsync(Guid extrusionId, Guid siloVirgenId, decimal virgenKg, Guid? siloMolidoId, decimal molidoKg)
