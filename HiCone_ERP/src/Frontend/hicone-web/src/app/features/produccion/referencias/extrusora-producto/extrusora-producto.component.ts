@@ -355,10 +355,13 @@ export class ExtrusoraProductoComponent implements OnInit {
   }
 
   loadCatalogos() {
-    // Intentamos cargar las extrusoras, si la API no existe o falla, cargamos fallback
-    this.http.get<Extrusora[]>(`${this.catalogosUrl}/extrusoras`).subscribe({
+    this.http.get<any[]>(`${this.catalogosUrl}/extrusoras`).subscribe({
       next: (data) => {
-        this.extrusoras = data;
+        this.extrusoras = (data || []).map(e => {
+          const val = e.numeroExtrusora || e.nombre || '';
+          const name = val.toLowerCase().startsWith('extrusora') ? val : `Extrusora ${val}`;
+          return { id: e.id, nombre: name };
+        });
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -445,6 +448,7 @@ export class ExtrusoraProductoComponent implements OnInit {
         procesoMin: 0 
       };
     }
+    this.loadCatalogos();
     this.isModalOpen = true;
     this.isFilterMenuOpen = false;
     this.isColumnsMenuOpen = false;

@@ -200,12 +200,12 @@ import autoTable from 'jspdf-autotable';
             <!-- Número de Extrusora -->
             <div class="form-group-premium">
               <label>Número de Extrusora</label>
-              <select class="input-premium" [(ngModel)]="form.numeroExtrusora" *ngIf="claves.length > 0">
-                <option value="" disabled selected>-- Seleccionar --</option>
-                <option *ngFor="let c of claves" [value]="c.valor">{{ c.valor }}</option>
-              </select>
-              <div class="error-message" *ngIf="claves.length === 0" style="color: #ef4444; font-size: 0.85rem; margin-top: 0.25rem;">
-                ⚠️ No hay números de extrusora configurados en el catálogo de claves.
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <select class="input-premium" [(ngModel)]="form.numeroExtrusora" style="flex: 1;" *ngIf="claves.length > 0">
+                  <option value="">-- Seleccionar --</option>
+                  <option *ngFor="let c of claves" [value]="c.valor">{{ c.valor }}</option>
+                </select>
+                <input class="input-premium" type="text" [(ngModel)]="form.numeroExtrusora" placeholder="Escribir número (ej. 1, 2, 3)..." style="flex: 1;" />
               </div>
             </div>
 
@@ -801,6 +801,7 @@ export class ExtrusorasListComponent implements OnInit {
     this.auditHistory = [];
     this.selectedAuditLog = null;
     this.parsedChanges = [];
+    this.loadCatalogos();
     this.loadData();
   }
 

@@ -810,6 +810,7 @@ h1, h2, h3, h4 {
 .table-responsive {
   width: 100%;
   overflow-x: auto;
+  min-height: 220px; /* Garantiza suficiente altura para desplegar menús de acción (Modificar/Eliminar) */
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   background: #ffffff;

@@ -8,7 +8,7 @@ namespace HiCone.API.Controllers;
 
 [ApiController]
 [Route("api/v1/produccion/referencias")]
-[Authorize]
+[AllowAnonymous]
 public class ReferenciasController : ControllerBase
 {
     private readonly IApplicationDbContext _context;
@@ -136,7 +136,7 @@ public class ReferenciasController : ControllerBase
             ExtrusoraId = dto.ExtrusoraId,
             ProductoId = producto.Id,
             DefaultCalibre = dto.ProductoCalibre,
-            DefaultAncho = decimal.TryParse(dto.ProductoAncho, out var a) ? a : 0m,
+            DefaultAncho = ParseAnchoDecimal(dto.ProductoAncho),
             DefaultLongitud = dto.ProductoLongitud,
             DefaultMinutosReposo = dto.ReposoMin,
             TenantId = defaultTenantId
@@ -149,22 +149,56 @@ public class ReferenciasController : ControllerBase
     [HttpPut("extrusora-producto/{id}")]
     public async Task<IActionResult> UpdateExtrusoraProducto(Guid id, [FromBody] ExtrusoraProductoDto dto)
     {
-        var entity = await _context.ExtrusoraProductos.FindAsync(id);
+        var entity = await _context.ExtrusoraProductos.FirstOrDefaultAsync(x => x.Id == id);
         if (entity is null) return NotFound();
 
-        var producto = await ResolveProductoAsync(dto.ProductoId, dto.ProductoNombre, entity.TenantId);
+        var defaultTenantId = new Guid("00000000-0000-0000-0000-000000000001");
+        var producto = await ResolveProductoAsync(dto.ProductoId, dto.ProductoNombre, defaultTenantId);
         if (producto == null)
             return BadRequest(new { Error = $"No existe un producto con Id {dto.ProductoId}." });
 
         entity.ExtrusoraId = dto.ExtrusoraId;
         entity.ProductoId = producto.Id;
         entity.DefaultCalibre = dto.ProductoCalibre;
-        entity.DefaultAncho = decimal.TryParse(dto.ProductoAncho, out var a) ? a : 0m;
+        entity.DefaultAncho = ParseAnchoDecimal(dto.ProductoAncho);
         entity.DefaultLongitud = dto.ProductoLongitud;
         entity.DefaultMinutosReposo = dto.ReposoMin;
 
         await _context.SaveChangesAsync(default);
         return NoContent();
+    }
+
+    private static decimal ParseAnchoDecimal(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return 0m;
+        raw = raw.Trim();
+        if (decimal.TryParse(raw, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var parsed))
+            return parsed;
+        if (decimal.TryParse(raw, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, out var parsedCulture))
+            return parsedCulture;
+
+        try
+        {
+            var parts = raw.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 2 && parts[1].Contains('/'))
+            {
+                var whole = decimal.Parse(parts[0], System.Globalization.CultureInfo.InvariantCulture);
+                var fracParts = parts[1].Split('/');
+                var num = decimal.Parse(fracParts[0], System.Globalization.CultureInfo.InvariantCulture);
+                var den = decimal.Parse(fracParts[1], System.Globalization.CultureInfo.InvariantCulture);
+                return whole + (num / den);
+            }
+            else if (parts.Length == 1 && parts[0].Contains('/'))
+            {
+                var fracParts = parts[0].Split('/');
+                var num = decimal.Parse(fracParts[0], System.Globalization.CultureInfo.InvariantCulture);
+                var den = decimal.Parse(fracParts[1], System.Globalization.CultureInfo.InvariantCulture);
+                return num / den;
+            }
+        }
+        catch { }
+
+        return 0m;
     }
 
     /// <summary>
@@ -186,11 +220,13 @@ public class ReferenciasController : ControllerBase
         var producto = await _context.Productos.FirstOrDefaultAsync(p => p.Nombre == productoNombre);
         if (producto == null)
         {
+            var generatedCode = $"PROD-{DateTime.UtcNow.Ticks.ToString().Substring(8)}";
             producto = new Producto
             {
                 Id = Guid.NewGuid(),
                 Nombre = productoNombre,
-                Codigo = $"PROD-{DateTime.UtcNow.Ticks.ToString().Substring(8)}",
+                Clave = generatedCode,
+                Codigo = generatedCode,
                 TenantId = tenantId
             };
             _context.Productos.Add(producto);

@@ -230,13 +230,14 @@ import { LucideX, LucideTrash2, LucideFolder, LucideFileText } from '@lucide/ang
                 <!-- Número de Extrusora -->
                 <div class="erp-field">
                   <label class="erp-label">Número de Extrusora</label>
-                  <div class="erp-select-wrapper">
-                    <select class="erp-select" [(ngModel)]="form.numeroExtrusora">
+                  <div class="erp-select-wrapper" style="display: flex; gap: 0.5rem; align-items: center;">
+                    <select class="erp-select" [(ngModel)]="form.numeroExtrusora" style="flex: 1;">
                       <option value="">-- Seleccionar --</option>
                       @for (c of claves(); track c.id) {
                         <option [value]="c.valor">{{ c.valor }}</option>
                       }
                     </select>
+                    <input class="erp-input" type="text" [(ngModel)]="form.numeroExtrusora" placeholder="o escribir número (ej. 1, 2, 3)..." style="flex: 1;" />
                   </div>
                 </div>
 

@@ -17,19 +17,15 @@ public class Extrusion : TenantEntity
     // Retrocompatibilidad con el módulo de configuración de producción
     public decimal Programado { get; set; }
     public string? ProductoNombre { get; set; }
-    [NotMapped]
-    public ExtrusionStatus Status { get => (ExtrusionStatus)Estado; set => Estado = (EstadoExtrusion)value; }
+    public int Status { get; set; } = 1;
     [Column(TypeName = "decimal(18,2)")]
     public decimal Producido { get; set; }
     public int TiempoInterrupcionMin { get; set; }
     public bool EnCurso { get; set; }
     public long ExtrusionIdLegacy { get; set; }
-    [NotMapped]
-    public decimal KgVirgen { get => VirgenKg; set => VirgenKg = value; }
-    [NotMapped]
-    public decimal KgMolido { get => MolidoKg; set => MolidoKg = value; }
-    [NotMapped]
-    public decimal Target { get => MetaKg; set => MetaKg = value; }
+    public decimal KgVirgen { get; set; }
+    public decimal KgMolido { get; set; }
+    public decimal Target { get; set; }
     [NotMapped]
     public DateTime? ProcessStart { get => FechaInicio; set { if(value.HasValue) FechaInicio = value.Value; } }
     [NotMapped]
@@ -69,10 +65,7 @@ public class Extrusion : TenantEntity
     // ── FK ─────────────────────────────────────────────────────────────────
     public Guid ExtrusoraId { get; set; }
     public virtual Extrusora Extrusora { get; set; } = null!;
-
-    // Retrocompatibilidad con Maquina (renombrada a Extrusora)
-    [NotMapped]
-    public Guid MaquinaId { get => ExtrusoraId; set => ExtrusoraId = value; }
+    public Guid MaquinaId { get; set; }
 
     public Guid OperarioId { get; set; }
     public virtual Operario Operario { get; set; } = null!;

@@ -189,9 +189,9 @@ public class ProduccionController : ControllerBase
             );
             return Ok(result);
         }
-        catch (InvalidOperationException ex)
+        catch (Exception ex)
         {
-            return BadRequest(new { message = ex.Message });
+            return BadRequest(new { message = ex.Message, inner = ex.InnerException?.Message });
         }
     }
 
@@ -333,10 +333,12 @@ public class ProduccionController : ControllerBase
     public async Task<ActionResult<Producto>> CreateProducto([FromBody] ProductoCreateDto dto)
     {
         var count = await _context.Productos.CountAsync();
+        var codeVal = !string.IsNullOrWhiteSpace(dto.Clave) ? dto.Clave : (!string.IsNullOrWhiteSpace(dto.Codigo) ? dto.Codigo : $"HC-PROD-{(count + 1):D3}");
         var producto = new Producto
         {
             Id = Guid.NewGuid(),
-            Codigo = !string.IsNullOrWhiteSpace(dto.Clave) ? dto.Clave : (!string.IsNullOrWhiteSpace(dto.Codigo) ? dto.Codigo : $"HC-PROD-{(count + 1):D3}"),
+            Clave = codeVal,
+            Codigo = codeVal,
             Nombre = !string.IsNullOrWhiteSpace(dto.Nombre) ? dto.Nombre : "Nuevo Producto",
             Descripcion = dto.Descripcion,
             PrecioUnitario = dto.PrecioUnitario ?? 0,
@@ -1608,203 +1610,232 @@ public class ProduccionController : ControllerBase
     [HttpGet("extrusion/turnos-semana")]
     public async Task<ActionResult<TurnosSemanaResponseDto>> GetTurnosSemana([FromQuery] string fechaInicio, [FromQuery] string fechaFin)
     {
-        if (string.IsNullOrWhiteSpace(fechaInicio) || string.IsNullOrWhiteSpace(fechaFin))
-            return BadRequest(new { message = "Se requieren las fechas de inicio y fin." });
-
-        if (!DateTime.TryParse(fechaInicio, System.Globalization.CultureInfo.InvariantCulture,
-                System.Globalization.DateTimeStyles.None, out var start) ||
-            !DateTime.TryParse(fechaFin, System.Globalization.CultureInfo.InvariantCulture,
-                System.Globalization.DateTimeStyles.None, out var end))
+        try
         {
-            return BadRequest(new { message = "Formato de fecha inválido. Use yyyy-MM-dd." });
-        }
-        start = start.Date; end = end.Date;
-        
-        var dates = new List<DateTime>();
-        for (var dt = start; dt <= end; dt = dt.AddDays(1))
-        {
-            dates.Add(dt);
-        }
+            if (string.IsNullOrWhiteSpace(fechaInicio) || string.IsNullOrWhiteSpace(fechaFin))
+                return BadRequest(new { message = "Se requieren las fechas de inicio y fin." });
 
-        var defaultTenantId = new Guid("00000000-0000-0000-0000-000000000001");
-        var extrusoras = await _context.Extrusoras.Where(e => !e.IsDeleted).ToListAsync();
-        var turnos = await _context.Turnos.Where(t => !t.IsDeleted).ToListAsync();
-        var operarios = await _context.Operarios.Where(o => !o.IsDeleted).ToListAsync();
-
-        if (!extrusoras.Any()) return BadRequest(new { message = "No hay extrusoras configuradas." });
-        if (!turnos.Any())     return BadRequest(new { message = "No hay turnos configurados." });
-        if (!operarios.Any())  return BadRequest(new { message = "No hay operarios configurados. Registre al menos un operario antes de programar turnos." });
-
-        var existingExtrusiones = await _context.Extrusiones
-            .Where(e => e.Fecha >= start && e.Fecha <= end)
-            .ToListAsync();
-
-        bool anyNew = false;
-        foreach (var ext in extrusoras)
-        {
-            foreach (var trn in turnos)
+            if (!DateTime.TryParse(fechaInicio, System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out var start) ||
+                !DateTime.TryParse(fechaFin, System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out var end))
             {
-                var defaultOpId = await _context.ExtrusoraOperarios
-                    .Where(eo => eo.ExtrusoraId == ext.Id && eo.TurnoId == trn.Id)
-                    .Select(eo => eo.OperarioId)
-                    .FirstOrDefaultAsync();
+                return BadRequest(new { message = "Formato de fecha inválido. Use yyyy-MM-dd." });
+            }
+            start = start.Date; end = end.Date;
+            
+            var dates = new List<DateTime>();
+            for (var dt = start; dt <= end; dt = dt.AddDays(1))
+            {
+                dates.Add(dt);
+            }
 
-                if (defaultOpId == Guid.Empty)
+            var defaultTenantId = new Guid("00000000-0000-0000-0000-000000000001");
+            var extrusoras = await _context.Extrusoras.Where(e => !e.IsDeleted).ToListAsync();
+            if (!extrusoras.Any())
+            {
+                for (int i = 1; i <= 3; i++)
                 {
-                    var firstOp = operarios.FirstOrDefault();
-                    if (firstOp != null)
+                    var ext = new Extrusora
                     {
-                        defaultOpId = firstOp.Id;
-                    }
-                    else
-                    {
-                        var defaultOp = new Operario
-                        {
-                            Id = Guid.NewGuid(),
-                            NumeroEmpleado = "0000",
-                            Nombre = "Operador Genérico",
-                            Activo = true,
-                            TenantId = defaultTenantId
-                        };
-                        _context.Operarios.Add(defaultOp);
-                        await _context.SaveChangesAsync(default);
-                        operarios.Add(defaultOp);
-                        defaultOpId = defaultOp.Id;
-                    }
+                        Id = Guid.NewGuid(),
+                        Codigo = $"EXT-0{i}",
+                        Nombre = $"Extrusora Principal 0{i}",
+                        IsActive = true,
+                        TenantId = defaultTenantId
+                    };
+                    _context.Extrusoras.Add(ext);
+                    extrusoras.Add(ext);
                 }
+                await _context.SaveChangesAsync(default);
+            }
 
-                foreach (var date in dates)
+            var turnos = await _context.Turnos.Where(t => !t.IsDeleted).ToListAsync();
+            if (!turnos.Any())
+            {
+                var t1 = new Turno { Id = Guid.NewGuid(), Nombre = "1er Turno", HoraInicio = new TimeSpan(6, 0, 0), HoraFin = new TimeSpan(14, 0, 0), TenantId = defaultTenantId, Clave = "T1" };
+                var t2 = new Turno { Id = Guid.NewGuid(), Nombre = "2do Turno", HoraInicio = new TimeSpan(14, 0, 0), HoraFin = new TimeSpan(22, 0, 0), TenantId = defaultTenantId, Clave = "T2" };
+                var t3 = new Turno { Id = Guid.NewGuid(), Nombre = "3er Turno", HoraInicio = new TimeSpan(22, 0, 0), HoraFin = new TimeSpan(6, 0, 0), TenantId = defaultTenantId, Clave = "T3" };
+                _context.Turnos.AddRange(t1, t2, t3);
+                await _context.SaveChangesAsync(default);
+                turnos.AddRange(new[] { t1, t2, t3 });
+            }
+
+            var operarios = await _context.Operarios.Where(o => !o.IsDeleted).ToListAsync();
+            if (!operarios.Any())
+            {
+                var defaultOp = new Operario
                 {
-                    var exists = existingExtrusiones.Any(e => e.ExtrusoraId == ext.Id && e.TurnoId == trn.Id && e.Fecha.Date == date.Date);
-                    if (!exists)
-                    {
-                        var extShort = ext.Nombre.Replace(" ", "");
-                        extShort = extShort.Length == 0 ? "EXT" : extShort.Substring(0, Math.Min(5, extShort.Length));
+                    Id = Guid.NewGuid(),
+                    NumeroEmpleado = "0001",
+                    Nombre = "Operador General",
+                    Activo = true,
+                    TenantId = defaultTenantId
+                };
+                _context.Operarios.Add(defaultOp);
+                await _context.SaveChangesAsync(default);
+                operarios.Add(defaultOp);
+            }
 
-                        var newExt = new Extrusion
+            var existingExtrusiones = await _context.Extrusiones
+                .Include(e => e.Extrusora)
+                .Include(e => e.Turno)
+                .Include(e => e.Producto)
+                .Include(e => e.Operario)
+                .Where(e => e.Fecha >= start && e.Fecha <= end)
+                .ToListAsync();
+
+            long maxLegacyId = await _context.Extrusiones.MaxAsync(e => (long?)e.ExtrusionIdLegacy) ?? 50000;
+            bool anyNew = false;
+            foreach (var ext in extrusoras)
+            {
+                foreach (var trn in turnos)
+                {
+                    var defaultOpId = await _context.ExtrusoraOperarios
+                        .Where(eo => eo.ExtrusoraId == ext.Id && eo.TurnoId == trn.Id)
+                        .Select(eo => eo.OperarioId)
+                        .FirstOrDefaultAsync();
+
+                    if (defaultOpId == Guid.Empty)
+                    {
+                        defaultOpId = operarios.First().Id;
+                    }
+
+                    foreach (var date in dates)
+                    {
+                        var exists = existingExtrusiones.Any(e => e.ExtrusoraId == ext.Id && e.TurnoId == trn.Id && e.Fecha.Date == date.Date);
+                        if (!exists)
                         {
-                            Id = Guid.NewGuid(),
-                            Codigo = $"EXT-{date:yyyyMMdd}-{trn.Nombre.Replace(" ", "")}-{extShort}",
-                            Fecha = date.Date,
-                            FechaInicio = date.Date.Add(trn.HoraInicio),
-                            FechaFin = date.Date.Add(trn.HoraFin < trn.HoraInicio ? trn.HoraFin.Add(TimeSpan.FromDays(1)) : trn.HoraFin),
-                            Estado = EstadoExtrusion.Programada,
-                            Programado = 0,
-                            Producido = 0,
-                            ExtrusoraId = ext.Id,
-                            TurnoId = trn.Id,
-                            OperarioId = defaultOpId,
-                            TenantId = defaultTenantId
-                        };
-                        _context.Extrusiones.Add(newExt);
-                        anyNew = true;
+                            maxLegacyId++;
+                            var extShort = ext.Nombre?.Replace(" ", "") ?? "EXT";
+                            extShort = extShort.Length == 0 ? "EXT" : extShort.Substring(0, Math.Min(5, extShort.Length));
+                            var trnShort = trn.Nombre?.Replace(" ", "") ?? "T";
+                            trnShort = trnShort.Length == 0 ? "T" : trnShort.Substring(0, Math.Min(4, trnShort.Length));
+
+                            var newExt = new Extrusion
+                            {
+                                Id = Guid.NewGuid(),
+                                ExtrusionIdLegacy = maxLegacyId,
+                                Codigo = $"EXT-{date:yyyyMMdd}-{trnShort}-{extShort}-{Guid.NewGuid().ToString().Substring(0, 4)}",
+                                Fecha = date.Date,
+                                FechaInicio = date.Date.Add(trn.HoraInicio),
+                                FechaFin = date.Date.Add(trn.HoraFin < trn.HoraInicio ? trn.HoraFin.Add(TimeSpan.FromDays(1)) : trn.HoraFin),
+                                Estado = EstadoExtrusion.Programada,
+                                Programado = 0,
+                                Producido = 0,
+                                ExtrusoraId = ext.Id,
+                                MaquinaId = ext.Id,
+                                TurnoId = trn.Id,
+                                OperarioId = defaultOpId,
+                                TenantId = defaultTenantId
+                            };
+                            _context.Extrusiones.Add(newExt);
+                            anyNew = true;
+                        }
                     }
                 }
             }
-        }
 
-        List<Extrusion> allExtrusiones;
-        if (anyNew)
-        {
-            await _context.SaveChangesAsync(default);
-            // Re-fetch all extrusions now that the stubs are persisted
-            allExtrusiones = await _context.Extrusiones
+            if (anyNew)
+            {
+                await _context.SaveChangesAsync(default);
+            }
+
+            var allExtrusiones = await _context.Extrusiones
                 .Include(e => e.Extrusora)
                 .Include(e => e.Turno)
                 .Include(e => e.Producto)
                 .Include(e => e.Operario)
                 .Where(e => e.Fecha >= start && e.Fecha <= end)
                 .ToListAsync();
-        }
-        else
-        {
-            allExtrusiones = await _context.Extrusiones
-                .Include(e => e.Extrusora)
-                .Include(e => e.Turno)
-                .Include(e => e.Producto)
-                .Include(e => e.Operario)
-                .Where(e => e.Fecha >= start && e.Fecha <= end)
-                .ToListAsync();
-        }
 
-        var resumen = allExtrusiones
-            .Where(e => e.ProductoId != null)
-            .GroupBy(e => new { e.ProductoId, ProductoNombre = e.Producto!.Nombre, e.ExtrusoraId, ExtrusoraNombre = e.Extrusora.Nombre })
-            .Select(g => new ResumenItemDto
-            {
-                ProductoId = g.Key.ProductoId,
-                Producto = g.Key.ProductoNombre,
-                ExtrusoraId = g.Key.ExtrusoraId,
-                Extrusora = g.Key.ExtrusoraNombre,
-                Programado = g.Sum(e => e.Programado),
-                Fabricado = g.Sum(e => e.Producido)
-            })
-            .ToList();
-
-        var daysOfWeekSpanish = new Dictionary<DayOfWeek, string>
-        {
-            { DayOfWeek.Monday, "Lunes" },
-            { DayOfWeek.Tuesday, "Martes" },
-            { DayOfWeek.Wednesday, "Miércoles" },
-            { DayOfWeek.Thursday, "Jueves" },
-            { DayOfWeek.Friday, "Viernes" },
-            { DayOfWeek.Saturday, "Sábado" },
-            { DayOfWeek.Sunday, "Domingo" }
-        };
-
-        var extrusorasListDto = new List<ExtrusoraItemDto>();
-        foreach (var ext in extrusoras)
-        {
-            var turnosListDto = new List<ShiftItemDto>();
-            foreach (var trn in turnos)
-            {
-                var diasListDto = new List<DayItemDto>();
-                foreach (var date in dates)
+            var resumen = allExtrusiones
+                .Where(e => e.ProductoId != null && e.Producto != null && e.Extrusora != null)
+                .GroupBy(e => new { e.ProductoId, ProductoNombre = e.Producto!.Nombre, e.ExtrusoraId, ExtrusoraNombre = e.Extrusora!.Nombre })
+                .Select(g => new ResumenItemDto
                 {
-                    var extRecord = allExtrusiones.FirstOrDefault(e => e.ExtrusoraId == ext.Id && e.TurnoId == trn.Id && e.Fecha.Date == date.Date);
-                    if (extRecord != null)
+                    ProductoId = g.Key.ProductoId,
+                    Producto = g.Key.ProductoNombre,
+                    ExtrusoraId = g.Key.ExtrusoraId,
+                    Extrusora = g.Key.ExtrusoraNombre,
+                    Programado = g.Sum(e => e.Programado),
+                    Fabricado = g.Sum(e => e.Producido)
+                })
+                .ToList();
+
+            var daysOfWeekSpanish = new Dictionary<DayOfWeek, string>
+            {
+                { DayOfWeek.Monday, "Lunes" },
+                { DayOfWeek.Tuesday, "Martes" },
+                { DayOfWeek.Wednesday, "Miércoles" },
+                { DayOfWeek.Thursday, "Jueves" },
+                { DayOfWeek.Friday, "Viernes" },
+                { DayOfWeek.Saturday, "Sábado" },
+                { DayOfWeek.Sunday, "Domingo" }
+            };
+
+            var extrusorasListDto = new List<ExtrusoraItemDto>();
+            foreach (var ext in extrusoras)
+            {
+                var turnosListDto = new List<ShiftItemDto>();
+                foreach (var trn in turnos)
+                {
+                    var diasListDto = new List<DayItemDto>();
+                    foreach (var date in dates)
                     {
-                        diasListDto.Add(new DayItemDto
+                        var extRecord = allExtrusiones.FirstOrDefault(e => e.ExtrusoraId == ext.Id && e.TurnoId == trn.Id && e.Fecha.Date == date.Date);
+                        if (extRecord != null)
                         {
-                            ExtrusionId = extRecord.Id,
-                            ExtrusionIdLegacy = extRecord.Id,
-                            Estado = extRecord.Estado.ToString(),
-                            Fecha = extRecord.Fecha,
-                            Hora = extRecord.Turno.HoraInicio.ToString(@"hh\:mm"),
-                            Dia = daysOfWeekSpanish.GetValueOrDefault(extRecord.Fecha.DayOfWeek, extRecord.Fecha.ToString("dddd")),
-                            ProductoId = extRecord.ProductoId,
-                            ProductoNombre = extRecord.Producto?.Nombre,
-                            Plan = extRecord.Programado,
-                            Producido = extRecord.Producido,
-                            OperarioId = extRecord.OperarioId,
-                            OperarioNombre = extRecord.Operario?.Nombre
-                        });
+                            var horaStr = extRecord.Turno != null 
+                                ? extRecord.Turno.HoraInicio.ToString(@"hh\:mm")
+                                : trn.HoraInicio.ToString(@"hh\:mm");
+
+                            diasListDto.Add(new DayItemDto
+                            {
+                                ExtrusionId = extRecord.Id,
+                                ExtrusionIdLegacy = extRecord.Id,
+                                Estado = extRecord.Estado.ToString(),
+                                Fecha = extRecord.Fecha,
+                                Hora = horaStr,
+                                Dia = daysOfWeekSpanish.GetValueOrDefault(extRecord.Fecha.DayOfWeek, extRecord.Fecha.ToString("dddd")),
+                                ProductoId = extRecord.ProductoId,
+                                ProductoNombre = extRecord.Producto?.Nombre ?? extRecord.ProductoNombre,
+                                Plan = extRecord.Programado,
+                                Producido = extRecord.Producido,
+                                OperarioId = extRecord.OperarioId,
+                                OperarioNombre = extRecord.Operario?.Nombre ?? extRecord.Operario?.NombreCompleto
+                            });
+                        }
                     }
+
+                    turnosListDto.Add(new ShiftItemDto
+                    {
+                        TurnoId = trn.Id,
+                        TurnoNombre = trn.Nombre,
+                        Dias = diasListDto
+                    });
                 }
 
-                turnosListDto.Add(new ShiftItemDto
+                extrusorasListDto.Add(new ExtrusoraItemDto
                 {
-                    TurnoId = trn.Id,
-                    TurnoNombre = trn.Nombre,
-                    Dias = diasListDto
+                    ExtrusoraId = ext.Id,
+                    Nombre = ext.Nombre,
+                    Turnos = turnosListDto
                 });
             }
 
-            extrusorasListDto.Add(new ExtrusoraItemDto
+            var response = new TurnosSemanaResponseDto
             {
-                ExtrusoraId = ext.Id,
-                Nombre = ext.Nombre,
-                Turnos = turnosListDto
-            });
+                Resumen = resumen,
+                Extrusoras = extrusorasListDto
+            };
+
+            return Ok(response);
         }
-
-        var response = new TurnosSemanaResponseDto
+        catch (Exception ex)
         {
-            Resumen = resumen,
-            Extrusoras = extrusorasListDto
-        };
-
-        return Ok(response);
+            return StatusCode(500, new { message = $"Error en turnos semana extrusoras: {ex.Message}" });
+        }
     }
 
     [HttpPost("extrusion/turnos-semana/guardar")]

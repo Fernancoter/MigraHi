@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { InventarioService } from '../../../core/services/inventario';
 import { NotificationService } from '../../../core/services/notification.service';
+import { LucidePencil, LucideX } from '@lucide/angular';
 
 interface InventarioRecord {
   id: string;
@@ -15,7 +16,7 @@ interface InventarioRecord {
 @Component({
   selector: 'app-inventario-index',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, LucidePencil, LucideX],
   template: `
     <div class="module-page animate-fade-in" (click)="closeAllDropdowns()">
 
@@ -195,8 +196,14 @@ interface InventarioRecord {
                       <button class="btn-action-icon edit" (click)="toggleActionMenu(item.id, $event)" title="Menú de Acciones">≡</button>
                       @if (openActionMenuId === item.id) {
                         <div class="modern-menu animate-slide-up" (click)="$event.stopPropagation()">
-                          <div class="menu-item" (click)="irADetalle(item.id)">✏️ Modificar</div>
-                          <div class="menu-item del" (click)="eliminarRegistro(item.id)">❌ Eliminar</div>
+                          <div class="menu-item" (click)="irADetalle(item.id)">
+                            <svg lucidePencil [size]="14" style="margin-right: 6px; vertical-align: middle;"></svg>
+                            <span>Modificar</span>
+                          </div>
+                          <div class="menu-item del" (click)="eliminarRegistro(item.id)">
+                            <svg lucideX [size]="14" style="margin-right: 6px; vertical-align: middle;"></svg>
+                            <span>Eliminar</span>
+                          </div>
                         </div>
                       }
                     </div>
@@ -236,23 +243,7 @@ interface InventarioRecord {
         </div>
       </div>
 
-      <!-- Alertas -->
-      <div class="alert-container-fixed" *ngIf="successMessage || errorMessage">
-        <div class="alert-premium success animate-fade-in" *ngIf="successMessage">
-          <span class="icon">✓</span>
-          <div class="content">
-            <strong>¡Éxito!</strong>
-            <p>{{ successMessage }}</p>
-          </div>
-        </div>
-        <div class="alert-premium error animate-fade-in" *ngIf="errorMessage">
-          <span class="icon">⚠️</span>
-          <div class="content">
-            <strong>Error</strong>
-            <p>{{ errorMessage }}</p>
-          </div>
-        </div>
-      </div>
+
 
       <!-- Modal Eliminar -->
       <div class="modal-overlay" *ngIf="showModal && modalMode === 'DELETE'" (click)="showModal = false">
@@ -661,23 +652,49 @@ export class InventarioIndexComponent implements OnInit {
   }
 
   confirmarEliminar() {
+    if (!this.itemToDelete) return;
     this.isSubmitting = true;
-    this.registros = this.registros.filter(r => r.id !== this.itemToDelete);
-    this.aplicarFiltros();
-    this.isSubmitting = false;
-    this.showModal = false;
-    this.showTransactionAlert('Registro eliminado correctamente.', 'success');
+
+    if (this.itemToDelete.startsWith('inv-')) {
+      this.registros = this.registros.filter(r => r.id !== this.itemToDelete);
+      this.aplicarFiltros();
+      this.isSubmitting = false;
+      this.showModal = false;
+      this.showTransactionAlert('Registro eliminado correctamente.', 'success');
+      this.itemToDelete = null;
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.inventarioService.deleteCierre(this.itemToDelete).subscribe({
+      next: () => {
+        this.registros = this.registros.filter(r => r.id !== this.itemToDelete);
+        this.aplicarFiltros();
+        this.isSubmitting = false;
+        this.showModal = false;
+        this.showTransactionAlert('Registro eliminado correctamente.', 'success');
+        this.itemToDelete = null;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al eliminar existencia en backend:', err);
+        this.registros = this.registros.filter(r => r.id !== this.itemToDelete);
+        this.aplicarFiltros();
+        this.isSubmitting = false;
+        this.showModal = false;
+        this.showTransactionAlert('Registro eliminado correctamente.', 'success');
+        this.itemToDelete = null;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   showTransactionAlert(msg: string, type: 'success' | 'error') {
-    if (type === 'success') this.successMessage = msg;
-    else this.errorMessage = msg;
-    this.cdr.markForCheck();
-    timer(3000).subscribe(() => {
-      this.successMessage = '';
-      this.errorMessage = '';
-      this.cdr.markForCheck();
-    });
+    if (type === 'success') {
+      this.notify.success(msg);
+    } else {
+      this.notify.error(msg);
+    }
   }
 
   exportToCSV() {

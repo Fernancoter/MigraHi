@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProduccionService, Bobina } from '../../../core/services/produccion';
 import { NotificationService } from '../../../core/services/notification.service';
 import { FormsModule } from '@angular/forms';
+import { LucideEye, LucidePencil, LucideTrash2, LucideTag } from '@lucide/angular';
 
 interface ColumnConfig {
   field: string;
@@ -14,7 +15,7 @@ interface ColumnConfig {
 @Component({
   selector: 'app-bobinas-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LucideEye, LucidePencil, LucideTrash2, LucideTag],
   template: `
     <div class="module-page animate-fade-in">
       
@@ -167,16 +168,20 @@ interface ColumnConfig {
                       </button>
                       <div class="opciones-popover shadow-premium" *ngIf="activeRowId === b.id" (click)="$event.stopPropagation()">
                         <button class="opcion-item" (click)="verDetalleBobina(b)">
-                          <span class="icon">👁️</span> Visualizar
+                          <svg lucideEye [size]="14" style="margin-right: 6px; vertical-align: middle;"></svg>
+                          <span>Visualizar</span>
                         </button>
                         <button class="opcion-item" (click)="abrirEditarBobina(b)">
-                          <span class="icon">✏️</span> Modificar
+                          <svg lucidePencil [size]="14" style="margin-right: 6px; vertical-align: middle;"></svg>
+                          <span>Modificar</span>
                         </button>
                         <button class="opcion-item delete" (click)="eliminarBobinaRow(b)">
-                          <span class="icon">🗑️</span> Eliminar
+                          <svg lucideTrash2 [size]="14" style="margin-right: 6px; vertical-align: middle;"></svg>
+                          <span>Eliminar</span>
                         </button>
                         <button class="opcion-item" (click)="imprimirEtiqueta(b)">
-                          <span class="icon">🏷️</span> Etiqueta
+                          <svg lucideTag [size]="14" style="margin-right: 6px; vertical-align: middle;"></svg>
+                          <span>Etiqueta</span>
                         </button>
                       </div>
                     </div>

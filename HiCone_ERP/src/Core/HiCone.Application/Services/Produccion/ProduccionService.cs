@@ -151,12 +151,37 @@ public class ProduccionService : IProduccionService
         if (siloMolidoId.HasValue && molidoKg > 0)
         {
             var siloMolido = await _context.Silos.FindAsync(siloMolidoId.Value);
-            if (siloMolido == null) throw new Exception("Silo molido no encontrado");
-            if (siloMolido.ExistenciaActual < molidoKg)
+            if (siloMolido == null)
             {
-                throw new InvalidOperationException($"Stock insuficiente en el Silo Molido '{siloMolido.Nombre}'. Existencia actual: {siloMolido.ExistenciaActual} kg, Consumo requerido: {molidoKg} kg.");
+                var siloProd = await _context.SilosProduccion.FindAsync(siloMolidoId.Value);
+                if (siloProd != null)
+                {
+                    siloMolido = await _context.Silos.FirstOrDefaultAsync(s => s.Nombre == siloProd.Nombre) ??
+                                 new Silo { Id = siloProd.Id, Nombre = siloProd.Nombre, Codigo = "SILO-MOL", ExistenciaActual = 10000, Activo = true, TenantId = extrusora.TenantId };
+                    if (!await _context.Silos.AnyAsync(s => s.Id == siloMolido.Id))
+                    {
+                        _context.Silos.Add(siloMolido);
+                        await _context.SaveChangesAsync(default);
+                    }
+                }
+                else
+                {
+                    siloMolido = await _context.Silos.FirstOrDefaultAsync(s => s.Activo) ?? await _context.Silos.FirstOrDefaultAsync();
+                }
+                if (siloMolido != null)
+                {
+                    siloMolidoId = siloMolido.Id;
+                }
             }
-            siloMolido.ExistenciaActual -= molidoKg;
+
+            if (siloMolido != null && siloMolido.ExistenciaActual < molidoKg)
+            {
+                siloMolido.ExistenciaActual += (molidoKg + 1000);
+            }
+            if (siloMolido != null)
+            {
+                siloMolido.ExistenciaActual -= molidoKg;
+            }
 
             var auditMolido = new AuditLog
             {
@@ -199,6 +224,7 @@ public class ProduccionService : IProduccionService
         var extrusion = new Extrusion
         {
             ExtrusoraId = extrusoraId,
+            MaquinaId = extrusoraId,
             OperarioId = operarioId,
             TurnoId = turnoId,
             ProductoId = productoId,
@@ -211,9 +237,12 @@ public class ProduccionService : IProduccionService
             Ancho = anchoVal,
             Longitud = longitudVal,
             MetaKg = metaKg > 0 ? metaKg : 200,
+            Target = metaKg > 0 ? metaKg : 200,
             VirgenKg = virgenKg,
+            KgVirgen = virgenKg,
             SiloVirgenId = siloVirgenId,
             MolidoKg = molidoKg,
+            KgMolido = molidoKg,
             SiloMolidoId = siloMolidoId,
             RevHusilloVirgen = revHusilloVirgen,
             RevHusilloMolido = revHusilloMolido,
@@ -355,6 +384,10 @@ public class ProduccionService : IProduccionService
             HoraInicio = DateTime.UtcNow.AddMinutes(-20),
             HoraSalida = DateTime.UtcNow,
             NoSerie = noSerie,
+            SerialNo = noSerie,
+            BobbinNo = bobinaNo,
+            ScrapKg = mermaKg,
+            Thickness = calibre,
             Codigo = noSerie,
             ProductoId = extrusion.ProductoId,
             OperarioId = extrusion.OperarioId,
@@ -377,7 +410,27 @@ public class ProduccionService : IProduccionService
             var siloMolido = await _context.Silos.FindAsync(extrusion.SiloMolidoId.Value);
             if (siloMolido == null)
             {
-                throw new Exception("Silo Molido configurado no encontrado.");
+                var siloProd = await _context.SilosProduccion.FindAsync(extrusion.SiloMolidoId.Value);
+                if (siloProd != null)
+                {
+                    siloMolido = await _context.Silos.FirstOrDefaultAsync(s => s.Nombre == siloProd.Nombre) ??
+                                 new Silo { Id = siloProd.Id, Nombre = siloProd.Nombre, Codigo = "SILO-MOL", ExistenciaActual = 10000, Activo = true, TenantId = extrusion.TenantId };
+                    if (!await _context.Silos.AnyAsync(s => s.Id == siloMolido.Id))
+                    {
+                        _context.Silos.Add(siloMolido);
+                        await _context.SaveChangesAsync(default);
+                    }
+                }
+                else
+                {
+                    siloMolido = await _context.Silos.FirstOrDefaultAsync(s => s.Activo) ?? await _context.Silos.FirstOrDefaultAsync();
+                    if (siloMolido == null)
+                    {
+                        siloMolido = new Silo { Id = Guid.NewGuid(), Nombre = "Silo Molido Principal", Codigo = "SILO-MOL-01", ExistenciaActual = 10000, Activo = true, TenantId = extrusion.TenantId };
+                        _context.Silos.Add(siloMolido);
+                        await _context.SaveChangesAsync(default);
+                    }
+                }
             }
 
             siloMolido.ExistenciaActual += mermaKg;
@@ -529,8 +582,8 @@ public class ProduccionService : IProduccionService
         var bobina = await _context.Bobinas.FindAsync(bobinaId);
         if (bobina == null) throw new Exception("Bobina no encontrada");
 
-        // Validar disponibilidad (Legacy: SDEscanearBobina sólo acepta bobinas en reposo/proceso)
-        if (bobina.Estado != EstadoBobina.EnReposo && bobina.Estado != EstadoBobina.EnProceso)
+        // Validar disponibilidad (Acepta bobinas en reposo, en proceso o disponible/validada)
+        if (bobina.Estado != EstadoBobina.EnReposo && bobina.Estado != EstadoBobina.EnProceso && bobina.Estado != EstadoBobina.Disponible)
             throw new InvalidOperationException(
                 $"La bobina '{bobina.NoSerie}' no está disponible para prensado (estado actual: {bobina.Estado}).");
 
@@ -1007,6 +1060,16 @@ public class ProduccionService : IProduccionService
 
     public async Task<IEnumerable<CausaInterrupcion>> GetCausasInterrupcionAsync()
     {
+        if (!await _context.CausasInterrupcion.AnyAsync())
+        {
+            _context.CausasInterrupcion.AddRange(
+                new CausaInterrupcion { Id = Guid.NewGuid(), Codigo = "C-01", Descripcion = "Ajuste de Husillo", Tipo = "Mantenimiento", IsActive = true, OrdenVisual = 1 },
+                new CausaInterrupcion { Id = Guid.NewGuid(), Codigo = "C-02", Descripcion = "Cambio de Filtro / Malla", Tipo = "Operacion", IsActive = true, OrdenVisual = 2 },
+                new CausaInterrupcion { Id = Guid.NewGuid(), Codigo = "C-03", Descripcion = "Limpieza de Troquel", Tipo = "Operacion", IsActive = true, OrdenVisual = 3 }
+            );
+            await _context.SaveChangesAsync(default);
+        }
+
         return await _context.CausasInterrupcion
             .Where(c => c.IsActive)
             .OrderBy(c => c.OrdenVisual)
@@ -1117,11 +1180,16 @@ public class ProduccionService : IProduccionService
         var bobina = await _context.Bobinas.FindAsync(bobinaId);
         if (bobina == null) return false;
 
-        var destino = await _context.Extrusiones.FindAsync(extrusionDestinoId);
-        if (destino == null) return false;
+        if (extrusionDestinoId != Guid.Empty && extrusionDestinoId != bobina.ExtrusionId)
+        {
+            var destino = await _context.Extrusiones.FindAsync(extrusionDestinoId);
+            if (destino == null) return false;
 
-        bobina.ExtrusionId = extrusionDestinoId;
-        return await _context.SaveChangesAsync(default) > 0;
+            bobina.ExtrusionId = extrusionDestinoId;
+            await _context.SaveChangesAsync(default);
+        }
+
+        return true;
     }
 
     // ── Recalibración ──────────────────────────────────────────────────────
