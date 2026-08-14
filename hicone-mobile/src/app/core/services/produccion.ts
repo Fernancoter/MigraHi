@@ -157,8 +157,10 @@ export class ProduccionService {
     return this.http.post<Bobina>(`${this.apiUrl}/extrusion/guardar-bobina`, request);
   }
 
-  getExtrusionActiva(extrusoraId: string): Observable<Extrusion> {
-    return this.http.get<Extrusion>(`${this.apiUrl}/extrusion/activa/${extrusoraId}`);
+  getExtrusionActiva(extrusoraId: string, turnoId?: string): Observable<Extrusion> {
+    let url = `${this.apiUrl}/extrusion/activa/${extrusoraId}`;
+    if (turnoId) url += `?turnoId=${turnoId}`;
+    return this.http.get<Extrusion>(url);
   }
 
   getSiguienteBobinaNo(extrusoraId: string, productoId: string): Observable<number> {
@@ -350,5 +352,18 @@ export class ProduccionService {
 
   guardarTurnosSemana(batch: any[]): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/extrusion/turnos-semana/guardar`, batch);
+  }
+
+  // ── Asignación y Ejecución de Trabajos Programados ─────────────────────
+  getTrabajosAsignados(operarioId?: string, maquinaId?: string, tipoProceso: string = 'extrusion', turnoId?: string): Observable<any[]> {
+    let params = `tipoProceso=${tipoProceso}`;
+    if (operarioId) params += `&operarioId=${operarioId}`;
+    if (maquinaId) params += `&maquinaId=${maquinaId}`;
+    if (turnoId) params += `&turnoId=${turnoId}`;
+    return this.http.get<any[]>(`${this.apiUrl}/trabajos-asignados?${params}`);
+  }
+
+  iniciarTrabajoProgramado(id: string, tipoProceso: string = 'extrusion'): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/iniciar-trabajo-programado/${id}?tipoProceso=${tipoProceso}`, {});
   }
 }

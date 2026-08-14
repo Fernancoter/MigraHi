@@ -533,7 +533,7 @@ export class WizardComponent implements OnInit {
   revHusilloVirgen = 45;
   revHusilloMolido = 0;
   lotePaqueteAditivos = 'LOT-AD-01';
-  observaciones = 'Iniciado desde el Wizard PWA';
+  observaciones = '';
 
   // Prensado
   selectedTroquelId = '';

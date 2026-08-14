@@ -163,16 +163,21 @@ public class ProduccionController : ControllerBase
     [HttpPost("extrusion/{id}/finalizar")]
     public async Task<IActionResult> FinalizarExtrusion(Guid id, [FromBody] FinalizarExtrusionRequest? request)
     {
-        var exists = await _context.Extrusiones.AnyAsync(e => e.Id == id);
-        if (!exists)
+        try
         {
-            return NotFound(new { message = "La orden de extrusión no existe en la base de datos (posiblemente fue eliminada o la base de datos fue reiniciada). Por favor, recargue la página." });
+            var exists = await _context.Extrusiones.AnyAsync(e => e.Id == id);
+            if (!exists)
+            {
+                return NotFound(new { message = "La orden de extrusión no existe en la base de datos (posiblemente fue eliminada o la base de datos fue reiniciada). Por favor, recargue la página." });
+            }
+            var result = await _produccionService.FinalizarExtrusionAsync(id, request?.Motivo);
+            return result ? Ok() : BadRequest(new { message = "No se pudo finalizar la extrusión." });
         }
-        var result = await _produccionService.FinalizarExtrusionAsync(id, request?.Motivo);
-        return result ? Ok() : BadRequest(new { message = "No se pudo finalizar la extrusión." });
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message, detail = ex.InnerException?.Message });
+        }
     }
-
-
 
     [AllowAnonymous]
     [HttpPost("extrusion/guardar-bobina")]
@@ -202,7 +207,7 @@ public class ProduccionController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("extrusion/activa/{extrusoraId}")]
-    public async Task<ActionResult<Extrusion>> GetExtrusionActiva(string extrusoraId)
+    public async Task<ActionResult<Extrusion>> GetExtrusionActiva(string extrusoraId, [FromQuery] Guid? turnoId = null)
     {
         Guid targetId = Guid.Empty;
         if (Guid.TryParse(extrusoraId, out var g))
@@ -221,7 +226,7 @@ public class ProduccionController : ControllerBase
             if (firstExt != null) targetId = firstExt.Id;
         }
 
-        var result = await _produccionService.GetExtrusionActivaAsync(targetId);
+        var result = await _produccionService.GetExtrusionActivaAsync(targetId, turnoId);
         if (result == null) return NotFound(new { message = "No hay extrusión activa para esta extrusora." });
         return Ok(result);
     }
@@ -430,7 +435,7 @@ public class ProduccionController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(new { message = ex.Message });
+            return BadRequest(new { message = ex.Message, detail = ex.InnerException?.Message });
         }
     }
 
@@ -994,6 +999,40 @@ public class ProduccionController : ControllerBase
         catch (Exception ex)
         {
             return BadRequest(new { message = $"Error al guardar modificaciones: {ex.Message}" });
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpGet("trabajos-asignados")]
+    public async Task<IActionResult> GetTrabajosAsignados([FromQuery] Guid? operarioId, [FromQuery] Guid? maquinaId, [FromQuery] string tipoProceso = "extrusion", [FromQuery] Guid? turnoId = null)
+    {
+        try
+        {
+            var result = await _produccionService.GetTrabajosAsignadosAsync(operarioId, maquinaId, tipoProceso, turnoId);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message, detail = ex.InnerException?.Message });
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpPost("iniciar-trabajo-programado/{id}")]
+    public async Task<IActionResult> IniciarTrabajoProgramado(Guid id, [FromQuery] string tipoProceso = "extrusion")
+    {
+        try
+        {
+            var result = await _produccionService.IniciarTrabajoProgramadoAsync(id, tipoProceso);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return StatusCode(409, new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message, detail = ex.InnerException?.Message });
         }
     }
 
@@ -1856,36 +1895,63 @@ public class ProduccionController : ControllerBase
     {
         if (batch == null || !batch.Any()) return BadRequest("El lote está vacío.");
 
+        var defaultTenantId = new Guid("00000000-0000-0000-0000-000000000001");
+
         foreach (var item in batch)
         {
-            var entity = await _context.Extrusiones.FindAsync(item.ExtrusionId);
-            if (entity != null)
+            Extrusion? entity = null;
+            if (item.ExtrusionId.HasValue && item.ExtrusionId.Value != Guid.Empty)
             {
-                if (entity.Estado == EstadoExtrusion.Programada)
-                {
-                    entity.ProductoId = item.ProductoId;
-                    if (item.OperarioId != null)
-                    {
-                        entity.OperarioId = item.OperarioId.Value;
-                    }
-                    entity.Programado = item.Plan;
+                entity = await _context.Extrusiones.FindAsync(item.ExtrusionId.Value);
+            }
 
-                    if (item.ProductoId != null)
+            if (entity == null && item.MaquinaId.HasValue && item.TurnoId.HasValue && item.Fecha.HasValue)
+            {
+                var dt = item.Fecha.Value.Date;
+                entity = await _context.Extrusiones.FirstOrDefaultAsync(e => 
+                    e.ExtrusoraId == item.MaquinaId.Value && 
+                    e.TurnoId == item.TurnoId.Value && 
+                    e.Fecha.Date == dt && 
+                    !e.IsDeleted);
+            }
+
+            if (entity == null && item.MaquinaId.HasValue && item.TurnoId.HasValue && item.ProductoId.HasValue)
+            {
+                var dt = item.Fecha?.Date ?? DateTime.UtcNow.Date;
+                entity = new Extrusion
+                {
+                    Id = Guid.NewGuid(),
+                    Codigo = $"EXT-{dt:yyyyMMdd}-{Guid.NewGuid().ToString().Substring(0, 4)}",
+                    Fecha = dt,
+                    ExtrusoraId = item.MaquinaId.Value,
+                    TurnoId = item.TurnoId.Value,
+                    Estado = EstadoExtrusion.Programada,
+                    TenantId = defaultTenantId
+                };
+                _context.Extrusiones.Add(entity);
+            }
+
+            if (entity != null && entity.Estado == EstadoExtrusion.Programada)
+            {
+                if (item.ProductoId.HasValue) entity.ProductoId = item.ProductoId.Value;
+                if (item.OperarioId.HasValue) entity.OperarioId = item.OperarioId.Value;
+                entity.Programado = item.Plan;
+                entity.MetaKg = item.Plan > 0 ? item.Plan : 200;
+
+                if (item.ProductoId.HasValue)
+                {
+                    var extProd = await _context.ExtrusoraProductos
+                        .FirstOrDefaultAsync(ep => ep.ExtrusoraId == entity.ExtrusoraId && ep.ProductoId == item.ProductoId.Value);
+                    
+                    if (extProd != null)
                     {
-                        var extProd = await _context.ExtrusoraProductos
-                            .FirstOrDefaultAsync(ep => ep.ExtrusoraId == entity.ExtrusoraId && ep.ProductoId == item.ProductoId);
-                        
-                        if (extProd != null)
-                        {
-                            entity.Calibre = extProd.DefaultCalibre;
-                            entity.Ancho = extProd.DefaultAncho;
-                            entity.Longitud = extProd.DefaultLongitud;
-                            entity.MetaKg = item.Plan;
-                            entity.VirgenKg = extProd.DefaultVirgenKg;
-                            entity.MolidoKg = extProd.DefaultMolidoKg;
-                            entity.RevHusilloVirgen = extProd.DefaultRevHusilloVirgen;
-                            entity.RevHusilloMolido = extProd.DefaultRevHusilloMolido;
-                        }
+                        entity.Calibre = extProd.DefaultCalibre;
+                        entity.Ancho = extProd.DefaultAncho;
+                        entity.Longitud = extProd.DefaultLongitud;
+                        entity.VirgenKg = extProd.DefaultVirgenKg;
+                        entity.MolidoKg = extProd.DefaultMolidoKg;
+                        entity.RevHusilloVirgen = extProd.DefaultRevHusilloVirgen;
+                        entity.RevHusilloMolido = extProd.DefaultRevHusilloMolido;
                     }
                 }
             }
@@ -1999,7 +2065,10 @@ public class DayItemDto
 
 public class GuardarTurnosSemanaRequest
 {
-    public Guid ExtrusionId { get; set; }
+    public Guid? ExtrusionId { get; set; }
+    public Guid? MaquinaId { get; set; }
+    public Guid? TurnoId { get; set; }
+    public DateTime? Fecha { get; set; }
     public Guid? ProductoId { get; set; }
     public Guid? OperarioId { get; set; }
     public decimal Plan { get; set; }

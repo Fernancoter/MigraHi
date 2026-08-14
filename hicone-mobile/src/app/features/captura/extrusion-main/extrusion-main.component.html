@@ -29,29 +29,23 @@
 
   <!-- ================================================================
        CONTENIDO PRINCIPAL: Extrusora seleccionada
-       El cuadro aparece INMEDIATAMENTE — los datos de orden cargan en background
        ================================================================ -->
   <ng-container *ngIf="extrusionState.extrusoraActiva()">
 
-    <!-- ================================================================
-         CUADRO DE INFORMACIÓN DE ORDEN (Imagen 2)
-         Se muestra de inmediato; las celdas muestran skeleton si aún carga
-         ================================================================ -->
-    <div class="orden-info-card" (click)="abrirMenuIntermedio()" role="button" style="cursor: pointer; position: relative;">
-
+    <!-- CASO 1: ORDEN ACTIVA EN PROCESO -->
+    <div class="orden-info-card" *ngIf="extrusionActiva" (click)="abrirMenuIntermedio()" role="button" style="cursor: pointer; position: relative;">
       <div class="orden-row">
         <div class="orden-cell">
           <span class="cell-label">Estado</span>
           <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
           <span class="cell-value" [ngClass]="getEstadoClass(extrusionActiva?.estado)" *ngIf="!cargandoOrden">
-            {{ extrusionActiva ? getEstadoName(extrusionActiva.estado) : '\u2014' }}
+            {{ getEstadoName(extrusionActiva.estado) }}
           </span>
         </div>
         <div class="orden-cell">
           <span class="cell-label">Fecha</span>
-          <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
           <span class="cell-value" *ngIf="!cargandoOrden">
-            {{ extrusionActiva ? (extrusionActiva.fechaInicio | date:'dd/MM/yyyy') : '\u2014' }}
+            {{ (extrusionActiva.fechaInicio | date:'dd/MM/yyyy') || '\u2014' }}
           </span>
         </div>
       </div>
@@ -65,8 +59,7 @@
         </div>
         <div class="orden-cell">
           <span class="cell-label">Producto</span>
-          <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-          <span class="cell-value bold" *ngIf="!cargandoOrden">
+          <span class="cell-value bold">
             {{ extrusionActiva?.productoNombre || extrusionActiva?.producto?.nombre || '\u2014' }}
           </span>
         </div>
@@ -81,35 +74,63 @@
       <div class="orden-row">
         <div class="orden-cell">
           <span class="cell-label">Ancho</span>
-          <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-          <span class="cell-value" *ngIf="!cargandoOrden">
-            {{ (extrusionActiva?.ancho && extrusionActiva.ancho > 0 ? extrusionActiva.ancho : 250) + ' mm' }}
-          </span>
+          <span class="cell-value">{{ (extrusionActiva?.ancho > 0 ? extrusionActiva.ancho : 250) + ' mm' }}</span>
         </div>
         <div class="orden-cell">
           <span class="cell-label">Longitud</span>
-          <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-          <span class="cell-value" *ngIf="!cargandoOrden">
-            {{ (extrusionActiva?.longitud && extrusionActiva.longitud > 0 ? extrusionActiva.longitud : 1000) + ' m' }}
-          </span>
+          <span class="cell-value">{{ (extrusionActiva?.longitud > 0 ? extrusionActiva.longitud : 1000) + ' m' }}</span>
         </div>
         <div class="orden-cell">
           <span class="cell-label">Calibre</span>
-          <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-          <span class="cell-value" *ngIf="!cargandoOrden">
-            {{ (extrusionActiva?.calibre && extrusionActiva.calibre > 0 ? extrusionActiva.calibre : 15) + ' mm' }}
-          </span>
+          <span class="cell-value">{{ (extrusionActiva?.calibre > 0 ? extrusionActiva.calibre : 15) + ' mm' }}</span>
         </div>
       </div>
 
-      <div class="card-hint" *ngIf="!cargandoOrden && extrusionActiva" style="margin-top: 0.75rem; text-align: center; color: #38bdf8; font-weight: 600; font-size: 0.85rem; background: rgba(56, 189, 248, 0.1); padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.2);">
+      <div class="card-hint" style="margin-top: 0.75rem; text-align: center; color: #38bdf8; font-weight: 600; font-size: 0.85rem; background: rgba(56, 189, 248, 0.1); padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.2);">
         <span>⚡ Toca para abrir Menú de Acciones (Bobina, Mezcla, Cierre) ➔</span>
       </div>
+    </div>
 
-      <div class="card-hint" *ngIf="!cargandoOrden && !extrusionActiva">
-        <span>Sin orden activa — toca para configurar mezcla</span>
+    <!-- CASO 2: TRABAJO PROGRAMADO DISPONIBLE DESDE ERP WEB -->
+    <div class="orden-info-card" *ngIf="!extrusionActiva && trabajoProgramado && !cargandoOrden" style="border: 1px solid #14b8a6; background: rgba(20, 184, 166, 0.05);">
+      <div style="background: rgba(20, 184, 166, 0.15); color: #14b8a6; font-weight: 700; font-size: 0.85rem; padding: 6px 12px; border-radius: 6px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+        <span>📋 TRABAJO PROGRAMADO DESDE ERP WEB</span>
+        <span style="font-size: 0.75rem; text-transform: uppercase;">Estado: Programada</span>
       </div>
 
+      <div class="orden-row">
+        <div class="orden-cell">
+          <span class="cell-label">Extrusora</span>
+          <span class="cell-value bold">{{ trabajoProgramado.maquinaNombre }}</span>
+        </div>
+        <div class="orden-cell">
+          <span class="cell-label">Producto Autorizado</span>
+          <span class="cell-value bold" style="color: #38bdf8;">{{ trabajoProgramado.productoNombre }}</span>
+        </div>
+      </div>
+
+      <div class="cell-divider"></div>
+
+      <div class="orden-row">
+        <div class="orden-cell">
+          <span class="cell-label">Operador Asignado</span>
+          <span class="cell-value">{{ trabajoProgramado.operarioNombre }}</span>
+        </div>
+        <div class="orden-cell">
+          <span class="cell-label">Meta (Kg)</span>
+          <span class="cell-value bold">{{ trabajoProgramado.meta || 200 }} Kg</span>
+        </div>
+      </div>
+
+      <button (click)="iniciarTrabajoAsignado()" [disabled]="iniciandoTrabajo" style="width: 100%; margin-top: 16px; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: #ffffff; font-weight: 700; font-size: 1rem; padding: 12px; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);">
+        <span *ngIf="!iniciandoTrabajo">🚀 INICIAR TRABAJO PROGRAMADO</span>
+        <span *ngIf="iniciandoTrabajo">INICIANDO EN BACKEND...</span>
+      </button>
+    </div>
+
+    <!-- CASO 3: SIN PROGRAMACIÓN EN WEB (BLOQUEO DE CREACIÓN AD-HOC) -->
+    <div class="message-banner danger" *ngIf="!extrusionActiva && !trabajoProgramado && !cargandoOrden" style="margin-top: 15px; padding: 16px; border-radius: 10px; font-size: 0.95rem; line-height: 1.5;">
+      <strong>⚠️ Sin trabajo programado:</strong> No existe una programación autorizada en el ERP Web para la extrusora <strong>{{ extrusionState.extrusoraActiva()!.nombre }}</strong> en el turno actual. Por favor solicite a su supervisor la programación correspondiente desde la plataforma Web.
     </div>
 
   </ng-container>

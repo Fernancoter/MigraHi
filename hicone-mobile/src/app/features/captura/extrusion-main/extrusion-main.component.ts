@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { Subscription, switchMap, of, timeout, catchError, EMPTY, timer } from 'rxjs';
+import { Subscription, switchMap, of, timeout, catchError, EMPTY, timer, combineLatest } from 'rxjs';
 import { ProduccionService, Bobina } from '../../../core/services/produccion';
 import { OfflineStoreService } from '../../../core/offline/offline-store.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -93,49 +93,79 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
 
   private cdr = inject(ChangeDetectorRef);
 
+  trabajoProgramado: any = null;
+  iniciandoTrabajo = false;
+
   constructor() {
-    // Reaccionar cuando cambia la extrusora seleccionada en el header Shell.
-    // Se muestra el cuadro INMEDIATAMENTE y la orden se carga en background.
+    // Reaccionar cuando cambia la extrusora o el turno seleccionado en el header Shell.
     const extrusora$ = toObservable(this.extrusionState.extrusoraActiva);
+    const turno$ = toObservable(this.extrusionState.turnoActivo);
 
-    const sub = extrusora$.pipe(
-      switchMap(ext => {
-        if (!ext) {
-          // Sin extrusora: limpiar estado
-          this.extrusionActiva = null;
-          this.bobinasExtrusion = [];
-          this.cargandoOrden = false;
-          this.cdr.detectChanges();
-          return EMPTY;
-        }
-
-        // Mostrar cuadro INMEDIATAMENTE (sin bloquear UI)
+    const sub = combineLatest([extrusora$, turno$]).subscribe(([ext, turno]) => {
+      if (!ext) {
         this.extrusionActiva = null;
+        this.trabajoProgramado = null;
         this.bobinasExtrusion = [];
-        this.cargandoOrden = true;
+        this.cargandoOrden = false;
         this.cdr.detectChanges();
-
-        // Cargar orden en background con timeout de 8s
-        return this.produccionService.getExtrusionActiva(ext.id).pipe(
-          timeout(8000),
-          catchError(() => {
-            // Si falla (404 = sin orden activa, timeout, etc.) → mostrar cuadro vacío
-            this.cargandoOrden = false;
-            this.cdr.detectChanges();
-            return of(null);
-          })
-        );
-      })
-    ).subscribe(orden => {
-      this.extrusionActiva = orden || null;
-      this.cargandoOrden = false;
-      if (orden) {
-        this.actualizarInformacionOrden();
+      } else {
+        this.cargarOrdenYProgramacion(ext.id, turno?.id);
       }
-      this.cdr.detectChanges();
     });
 
     this.subs.add(sub);
+  }
+
+  cargarOrdenYProgramacion(extrusoraId: string, turnoId?: string) {
+    this.cargandoOrden = true;
+    this.extrusionActiva = null;
+    this.trabajoProgramado = null;
+    this.cdr.detectChanges();
+
+    // 1. Intentar obtener orden activa en proceso para este turno especifico
+    this.produccionService.getExtrusionActiva(extrusoraId, turnoId).pipe(
+      catchError(() => of(null))
+    ).subscribe(activa => {
+      if (activa) {
+        this.extrusionActiva = activa;
+        this.cargandoOrden = false;
+        this.actualizarInformacionOrden();
+        this.cdr.detectChanges();
+      } else {
+        // 2. Si no hay orden activa en proceso, consultar la programación proveniente del ERP Web para este turno
+        this.produccionService.getTrabajosAsignados(undefined, extrusoraId, 'extrusion', turnoId).pipe(
+          catchError(() => of([]))
+        ).subscribe(trabajos => {
+          this.cargandoOrden = false;
+          if (trabajos && trabajos.length > 0) {
+            this.trabajoProgramado = trabajos[0];
+          } else {
+            this.trabajoProgramado = null;
+          }
+          this.cdr.detectChanges();
+        });
+      }
+    });
+  }
+
+  iniciarTrabajoAsignado() {
+    if (!this.trabajoProgramado) return;
+    this.iniciandoTrabajo = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.produccionService.iniciarTrabajoProgramado(this.trabajoProgramado.id, 'extrusion').subscribe({
+      next: (res) => {
+        this.iniciandoTrabajo = false;
+        this.successMessage = '¡Trabajo programado iniciado con éxito!';
+        const ext = this.extrusionState.extrusoraActiva();
+        const turno = this.extrusionState.turnoActivo();
+        if (ext) this.cargarOrdenYProgramacion(ext.id, turno?.id);
+      },
+      error: (err) => {
+        this.iniciandoTrabajo = false;
+        this.errorMessage = err.error?.message || 'Error al iniciar el trabajo programado desde Web.';
+      }
+    });
   }
 
   ngOnInit(): void {

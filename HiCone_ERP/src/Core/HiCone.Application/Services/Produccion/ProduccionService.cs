@@ -286,18 +286,33 @@ public class ProduccionService : IProduccionService
         }
 
         // Generar Resultado (KPIs)
-        var resultado = new ExtrusionResultado
-        {
-            ExtrusionId = extrusionId,
-            TotalBobinas = extrusion.Bobinas.Count,
-            TotalBobinasMolidas = extrusion.Bobinas.Count(b => b.Estado == EstadoBobina.Molido),
-            KgProducidos = extrusion.Bobinas.Sum(b => b.Kg),
-            KgMerma = extrusion.Bobinas.Sum(b => b.MermaKg),
-            FechaRegistro = DateTime.UtcNow
-        };
-        _context.ExtrusionResultados.Add(resultado);
+        var existingResultado = await _context.ExtrusionResultados
+            .FirstOrDefaultAsync(r => r.ExtrusionId == extrusionId);
 
-        return await _context.SaveChangesAsync(default) > 0;
+        if (existingResultado == null)
+        {
+            var resultado = new ExtrusionResultado
+            {
+                ExtrusionId = extrusionId,
+                TenantId = extrusion.TenantId != Guid.Empty ? extrusion.TenantId : Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                TotalBobinas = extrusion.Bobinas.Count,
+                TotalBobinasMolidas = extrusion.Bobinas.Count(b => b.Estado == EstadoBobina.Molido),
+                KgProducidos = extrusion.Bobinas.Sum(b => b.Kg),
+                KgMerma = extrusion.Bobinas.Sum(b => b.MermaKg),
+                FechaRegistro = DateTime.UtcNow
+            };
+            _context.ExtrusionResultados.Add(resultado);
+        }
+        else
+        {
+            existingResultado.TotalBobinas = extrusion.Bobinas.Count;
+            existingResultado.TotalBobinasMolidas = extrusion.Bobinas.Count(b => b.Estado == EstadoBobina.Molido);
+            existingResultado.KgProducidos = extrusion.Bobinas.Sum(b => b.Kg);
+            existingResultado.KgMerma = extrusion.Bobinas.Sum(b => b.MermaKg);
+        }
+
+        await _context.SaveChangesAsync(default);
+        return true;
     }
 
     public async Task<bool> RegistrarConsumoExtrusionAsync(Guid extrusionId, Guid siloVirgenId, decimal virgenKg, Guid? siloMolidoId, decimal molidoKg)
@@ -456,16 +471,23 @@ public class ProduccionService : IProduccionService
         return bobina;
     }
 
-    public async Task<Extrusion?> GetExtrusionActivaAsync(Guid extrusoraId)
+    public async Task<Extrusion?> GetExtrusionActivaAsync(Guid extrusoraId, Guid? turnoId = null)
     {
-        return await _context.Extrusiones
+        var query = _context.Extrusiones
             .Include(e => e.Producto)
             .Include(e => e.Operario)
             .Include(e => e.Turno)
             .Include(e => e.SiloVirgen)
             .Include(e => e.SiloMolido)
             .Include(e => e.Bobinas)
-            .FirstOrDefaultAsync(e => e.ExtrusoraId == extrusoraId && e.Estado == EstadoExtrusion.EnProceso);
+            .Where(e => e.ExtrusoraId == extrusoraId && e.Estado == EstadoExtrusion.EnProceso && !e.IsDeleted);
+
+        if (turnoId.HasValue && turnoId.Value != Guid.Empty)
+        {
+            query = query.Where(e => e.TurnoId == turnoId.Value);
+        }
+
+        return await query.FirstOrDefaultAsync();
     }
 
     public async Task<int> ObtenerSiguienteBobinaNoAsync(Guid extrusoraId, Guid productoId)
@@ -1546,6 +1568,149 @@ public class ProduccionService : IProduccionService
 
         await _context.SaveChangesAsync(default);
         return true;
+    }
+
+    public async Task<IEnumerable<object>> GetTrabajosAsignadosAsync(Guid? operarioId, Guid? maquinaId, string tipoProceso, Guid? turnoId = null)
+    {
+        if (tipoProceso?.ToLower() == "prensado")
+        {
+            var query = _context.Prensados
+                .Include(p => p.Prensa)
+                .Include(p => p.Producto)
+                .Include(p => p.Operario)
+                .Include(p => p.Turno)
+                .Include(p => p.Troquel)
+                .Where(p => !p.IsDeleted && p.ProductoId != Guid.Empty && (p.Estado == EstadoPrensado.EnProceso || p.Estado == EstadoPrensado.Programada));
+
+            if (maquinaId.HasValue && maquinaId.Value != Guid.Empty)
+                query = query.Where(p => p.PrensaId == maquinaId.Value);
+
+            if (operarioId.HasValue && operarioId.Value != Guid.Empty)
+                query = query.Where(p => p.OperarioId == operarioId.Value);
+
+            if (turnoId.HasValue && turnoId.Value != Guid.Empty)
+                query = query.Where(p => p.TurnoId == turnoId.Value);
+
+            var dbItems = await query.ToListAsync();
+            var today = DateTime.Today;
+            var items = dbItems
+                .OrderByDescending(p => p.Estado == EstadoPrensado.EnProceso)
+                .ThenBy(p => p.Fecha.Date == today ? 0 : (p.Fecha.Date < today ? 1 : 2))
+                .ThenBy(p => Math.Abs((p.Fecha.Date - today).TotalDays))
+                .ThenBy(p => p.Fecha)
+                .ToList();
+            return items.Select(p => new
+            {
+                Id = p.Id,
+                Tipo = "Prensado",
+                MaquinaId = p.PrensaId,
+                MaquinaNombre = p.Prensa?.Nombre ?? "Prensa",
+                ProductoId = p.ProductoId,
+                ProductoNombre = p.Producto != null ? (!string.IsNullOrWhiteSpace(p.Producto.Nombre) ? p.Producto.Nombre : p.Producto.Clave) : "Sin Producto Autorizado",
+                OperarioId = p.OperarioId,
+                OperarioNombre = p.Operario != null ? (!string.IsNullOrWhiteSpace(p.Operario.NombreCompleto) ? p.Operario.NombreCompleto : p.Operario.Nombre) : "Sin Operador Asignado",
+                TurnoId = p.TurnoId,
+                TroquelId = p.TroquelId,
+                TroquelNombre = p.Troquel?.Nombre ?? "",
+                Estado = (int)p.Estado,
+                EstadoNombre = p.Estado.ToString(),
+                Meta = p.Programado > 0 ? p.Programado : p.Target,
+                Fecha = p.Fecha
+            });
+        }
+        else
+        {
+            var query = _context.Extrusiones
+                .Include(e => e.Extrusora)
+                .Include(e => e.Producto)
+                .Include(e => e.Operario)
+                .Include(e => e.Turno)
+                .Where(e => !e.IsDeleted && e.ProductoId != null && e.ProductoId != Guid.Empty && (e.Estado == EstadoExtrusion.EnProceso || e.Estado == EstadoExtrusion.Programada));
+
+            if (maquinaId.HasValue && maquinaId.Value != Guid.Empty)
+                query = query.Where(e => e.ExtrusoraId == maquinaId.Value);
+
+            if (operarioId.HasValue && operarioId.Value != Guid.Empty)
+                query = query.Where(e => e.OperarioId == operarioId.Value);
+
+            if (turnoId.HasValue && turnoId.Value != Guid.Empty)
+                query = query.Where(e => e.TurnoId == turnoId.Value);
+
+            var dbItems = await query.ToListAsync();
+            var today = DateTime.Today;
+            var items = dbItems
+                .OrderByDescending(e => e.Estado == EstadoExtrusion.EnProceso)
+                .ThenBy(e => e.Fecha.Date == today ? 0 : (e.Fecha.Date < today ? 1 : 2))
+                .ThenBy(e => Math.Abs((e.Fecha.Date - today).TotalDays))
+                .ThenBy(e => e.Fecha)
+                .ToList();
+            return items.Select(e => new
+            {
+                Id = e.Id,
+                Tipo = "Extrusión",
+                MaquinaId = e.ExtrusoraId,
+                MaquinaNombre = e.Extrusora?.Nombre ?? "Extrusora",
+                ProductoId = e.ProductoId,
+                ProductoNombre = e.Producto != null ? (!string.IsNullOrWhiteSpace(e.Producto.Nombre) ? e.Producto.Nombre : e.Producto.Clave) : "Sin Producto Autorizado",
+                OperarioId = e.OperarioId,
+                OperarioNombre = e.Operario != null ? (!string.IsNullOrWhiteSpace(e.Operario.NombreCompleto) ? e.Operario.NombreCompleto : e.Operario.Nombre) : "Sin Operador Asignado",
+                TurnoId = e.TurnoId,
+                Estado = (int)e.Estado,
+                EstadoNombre = e.Estado.ToString(),
+                Meta = e.MetaKg > 0 ? e.MetaKg : (e.Programado > 0 ? e.Programado : 200),
+                Fecha = e.Fecha
+            });
+        }
+    }
+
+    public async Task<object> IniciarTrabajoProgramadoAsync(Guid id, string tipoProceso)
+    {
+        if (tipoProceso?.ToLower() == "prensado")
+        {
+            var prensado = await _context.Prensados
+                .Include(p => p.Prensa)
+                .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
+
+            if (prensado == null)
+                throw new KeyNotFoundException("La orden de prensado programada no existe en el sistema.");
+
+            if (prensado.Estado != EstadoPrensado.Programada)
+                throw new InvalidOperationException($"La orden de prensado ya no está disponible para iniciar (Estado actual: {prensado.Estado}). Fue modificada, iniciada o cancelada desde el ERP Web.");
+
+            prensado.Estado = EstadoPrensado.EnProceso;
+            prensado.HoraIniciaProceso = DateTime.UtcNow;
+
+            if (prensado.Prensa != null)
+            {
+                prensado.Prensa.Estado = EstadoPrensa.EnProceso;
+            }
+
+            await _context.SaveChangesAsync(default);
+            return prensado;
+        }
+        else
+        {
+            var extrusion = await _context.Extrusiones
+                .Include(e => e.Extrusora)
+                .FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
+
+            if (extrusion == null)
+                throw new KeyNotFoundException("La orden de extrusión programada no existe en el sistema.");
+
+            if (extrusion.Estado != EstadoExtrusion.Programada)
+                throw new InvalidOperationException($"La orden de extrusión ya no está disponible para iniciar (Estado actual: {extrusion.Estado}). Fue modificada, iniciada o cancelada desde el ERP Web.");
+
+            extrusion.Estado = EstadoExtrusion.EnProceso;
+            extrusion.FechaInicio = DateTime.UtcNow;
+
+            if (extrusion.Extrusora != null)
+            {
+                extrusion.Extrusora.Estado = EstadoExtrusora.EnProceso;
+            }
+
+            await _context.SaveChangesAsync(default);
+            return extrusion;
+        }
     }
 
 }

@@ -130,7 +130,7 @@ import { ProduccionConfigService, Turno, Extrusora, Prensa, Producto, Operario }
           </div>
           
           <!-- Action button -->
-          <button (click)="showTables.set(true)" style="background: #4caf50; color: white; font-weight: 600; padding: 0.6rem 1.5rem; border: none; border-radius: 2px; margin-bottom: 2rem; cursor: pointer; font-size: 0.75rem; text-transform: uppercase;">PROGRAMAR O CONSULTAR</button>
+          <button (click)="consultarOProgramar()" style="background: #4caf50; color: white; font-weight: 600; padding: 0.6rem 1.5rem; border: none; border-radius: 2px; margin-bottom: 2rem; cursor: pointer; font-size: 0.75rem; text-transform: uppercase;">PROGRAMAR O CONSULTAR</button>
           
           <!-- Inner Tabs -->
           <div class="inner-tabs-container" style="border: 1px solid #cbd5e1; border-radius: 2px;">
@@ -196,10 +196,10 @@ import { ProduccionConfigService, Turno, Extrusora, Prensa, Producto, Operario }
                                 </td>
                                 <td style="padding: 0.6rem 0.5rem;">{{ dia.name }}</td>
                                 <td style="padding: 0.6rem 0.5rem;">
-                                  <select [ngModel]="getCelda(activeInnerTab(), dia.date, turno.id).producto" (ngModelChange)="updateCelda(activeInnerTab(), dia.date, turno.id, 'producto', $event)" style="border: none; outline: none; border-bottom: 1px solid #cbd5e1; width: 100px; background: transparent; font-size: 0.75rem;">
+                                  <select [ngModel]="getCelda(activeInnerTab(), dia.date, turno.id).productoId" (ngModelChange)="updateCelda(activeInnerTab(), dia.date, turno.id, 'productoId', $event)" style="border: none; outline: none; border-bottom: 1px solid #cbd5e1; width: 100px; background: transparent; font-size: 0.75rem;">
                                     <option [value]="undefined"></option>
                                     @for (p of productos(); track p.id) {
-                                      <option [value]="p.nombre">{{ p.nombre }}</option>
+                                      <option [value]="p.id">{{ p.nombre }}</option>
                                     }
                                   </select>
                                 </td>
@@ -395,24 +395,75 @@ export class TurnosSemanaComponent implements OnInit {
 
   guardarProgramacion() {
     const dias = Object.values(this.matriz()).map(c => ({
+      extrusionId: c.id || c.extrusionId,
       maquinaId: c.maquinaId,
-      // Convert DD/MM/YY or DD/MM/YYYY to YYYY-MM-DD
       fecha: this.parseDateString(c.fecha),
       turnoId: c.turnoId,
-      producto: c.producto,
+      productoId: c.productoId || (typeof c.producto === 'string' && c.producto.length > 20 ? c.producto : undefined),
       operarioId: c.operarioId,
+      plan: c.programado || 0,
       programado: c.programado || 0
     }));
 
     if (dias.length === 0) return;
 
     if (this.activeMainTab() === 'extrusoras') {
-      this.svc.saveProgramacionExtrusionBatch({ dias }).subscribe(() => {
-        alert('Programación de extrusoras guardada con éxito');
+      this.svc.saveProgramacionExtrusionBatch(dias).subscribe({
+        next: () => alert('Programación de extrusoras guardada con éxito'),
+        error: (err: any) => alert('Error al guardar la programación: ' + (err.error?.message || err.message || 'Error del servidor'))
       });
     } else {
-      this.svc.saveProgramacionPrensadoBatch({ dias }).subscribe(() => {
-        alert('Programación de prensas guardada con éxito');
+      this.svc.saveProgramacionPrensadoBatch(dias).subscribe({
+        next: () => alert('Programación de prensas guardada con éxito'),
+        error: (err: any) => alert('Error al guardar la programación: ' + (err.error?.message || err.message || 'Error del servidor'))
+      });
+    }
+  }
+
+  consultarOProgramar() {
+    this.showTables.set(true);
+    this.cargarProgramacionSemana();
+  }
+
+  cargarProgramacionSemana() {
+    const inicio = this.parseDateString(this.fechaInicio() || '01/01/2026');
+    const fin = this.parseDateString(this.fechaFin() || '31/12/2026');
+
+    if (this.activeMainTab() === 'extrusoras') {
+      this.svc.getExtrusionTurnosSemana(inicio, fin).subscribe({
+        next: (data: any) => {
+          if (data && data.extrusoras) {
+            const mat: Record<string, any> = { ...this.matriz() };
+            data.extrusoras.forEach((ext: any) => {
+              ext.turnos.forEach((trn: any) => {
+                trn.dias.forEach((d: any) => {
+                  const dDate = new Date(d.fecha);
+                  const dd = dDate.getDate() < 10 ? '0' + dDate.getDate() : dDate.getDate();
+                  const mm = (dDate.getMonth() + 1) < 10 ? '0' + (dDate.getMonth() + 1) : (dDate.getMonth() + 1);
+                  const yy = dDate.getFullYear().toString().substring(2);
+                  const formattedDateKey = `${dd}/${mm}/${yy}`;
+                  
+                  const key = `${ext.extrusoraId}_${formattedDateKey}_${trn.turnoId}`;
+                  mat[key] = {
+                    id: d.extrusionId,
+                    extrusionId: d.extrusionId,
+                    extrusionIdLegacy: d.extrusionIdLegacy || d.extrusionId,
+                    maquinaId: ext.extrusoraId,
+                    fecha: formattedDateKey,
+                    turnoId: trn.turnoId,
+                    status: d.estado,
+                    productoId: d.productoId,
+                    producto: d.productoNombre,
+                    operarioId: d.operarioId,
+                    programado: d.plan || 0,
+                    producido: d.producido || 0
+                  };
+                });
+              });
+            });
+            this.matriz.set(mat);
+          }
+        }
       });
     }
   }

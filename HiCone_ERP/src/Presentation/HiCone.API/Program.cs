@@ -72,6 +72,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGet("/", () => Results.Redirect("/swagger"));
+
 
 // Seed database
 using (var scope = app.Services.CreateScope())
