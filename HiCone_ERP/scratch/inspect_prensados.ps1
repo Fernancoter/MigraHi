@@ -2,34 +2,23 @@ $connectionString = "Server=.;Database=HiCone_ERP_V3;Integrated Security=True;Tr
 try {
     $conn = New-Object System.Data.SqlClient.SqlConnection($connectionString)
     $conn.Open()
-    Write-Output "--- Prensados Columns ---"
+    
+    Write-Output "=== EXTRUSIONES EN BASE DE DATOS ==="
     $cmd = $conn.CreateCommand()
-    $cmd.CommandText = "SELECT c.name AS ColumnName, t.name AS DataType, c.is_nullable FROM sys.columns c JOIN sys.types t ON c.user_type_id = t.user_type_id WHERE object_id = OBJECT_ID('Prensados')"
+    $cmd.CommandText = "SELECT id, extrusora_id, turno_id, producto_id, estado, programado, fecha FROM Extrusiones WHERE is_deleted = 0"
     $reader = $cmd.ExecuteReader()
     while ($reader.Read()) {
-        Write-Output "$($reader['ColumnName']) | $($reader['DataType']) | Nullable: $($reader['is_nullable'])"
+        Write-Output "ID: $($reader['id']) | ExtrusoraId: $($reader['extrusora_id']) | TurnoId: $($reader['turno_id']) | Estado: $($reader['estado']) | Fecha: $($reader['fecha'])"
     }
     $reader.Close()
 
-    Write-Output "`n--- Prensas Count ---"
-    $cmd.CommandText = "SELECT COUNT(*) FROM Prensas"
-    Write-Output "Prensas: $($cmd.ExecuteScalar())"
-
-    Write-Output "`n--- Operarios Count ---"
-    $cmd.CommandText = "SELECT COUNT(*) FROM Operarios"
-    Write-Output "Operarios: $($cmd.ExecuteScalar())"
-
-    Write-Output "`n--- Turnos Count ---"
-    $cmd.CommandText = "SELECT COUNT(*) FROM Turnos"
-    Write-Output "Turnos: $($cmd.ExecuteScalar())"
-
-    Write-Output "`n--- Productos Count ---"
-    $cmd.CommandText = "SELECT COUNT(*) FROM Productos"
-    Write-Output "Productos: $($cmd.ExecuteScalar())"
-
-    Write-Output "`n--- Troqueles Count ---"
-    $cmd.CommandText = "SELECT COUNT(*) FROM Troqueles"
-    Write-Output "Troqueles: $($cmd.ExecuteScalar())"
+    Write-Output "`n=== PRENSADOS EN BASE DE DATOS ==="
+    $cmd.CommandText = "SELECT id, prensa_id, turno_id, producto_id, estado, programado, fecha FROM Prensados WHERE is_deleted = 0"
+    $reader = $cmd.ExecuteReader()
+    while ($reader.Read()) {
+        Write-Output "ID: $($reader['id']) | PrensaId: $($reader['prensa_id']) | TurnoId: $($reader['turno_id']) | Estado: $($reader['estado']) | Fecha: $($reader['fecha'])"
+    }
+    $reader.Close()
 
     $conn.Close()
 } catch {

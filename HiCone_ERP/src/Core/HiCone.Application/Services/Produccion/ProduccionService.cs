@@ -471,16 +471,23 @@ public class ProduccionService : IProduccionService
         return bobina;
     }
 
-    public async Task<Extrusion?> GetExtrusionActivaAsync(Guid extrusoraId)
+    public async Task<Extrusion?> GetExtrusionActivaAsync(Guid extrusoraId, Guid? turnoId = null)
     {
-        return await _context.Extrusiones
+        var query = _context.Extrusiones
             .Include(e => e.Producto)
             .Include(e => e.Operario)
             .Include(e => e.Turno)
             .Include(e => e.SiloVirgen)
             .Include(e => e.SiloMolido)
             .Include(e => e.Bobinas)
-            .FirstOrDefaultAsync(e => e.ExtrusoraId == extrusoraId && e.Estado == EstadoExtrusion.EnProceso);
+            .Where(e => e.ExtrusoraId == extrusoraId && e.Estado == EstadoExtrusion.EnProceso && !e.IsDeleted);
+
+        if (turnoId.HasValue && turnoId.Value != Guid.Empty)
+        {
+            query = query.Where(e => e.TurnoId == turnoId.Value);
+        }
+
+        return await query.FirstOrDefaultAsync();
     }
 
     public async Task<int> ObtenerSiguienteBobinaNoAsync(Guid extrusoraId, Guid productoId)

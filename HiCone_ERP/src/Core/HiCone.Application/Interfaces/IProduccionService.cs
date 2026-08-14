@@ -36,7 +36,7 @@ public interface IProduccionService
         MotivoMolino motivo, 
         string? observaciones);
 
-    Task<Extrusion?> GetExtrusionActivaAsync(Guid extrusoraId);
+    Task<Extrusion?> GetExtrusionActivaAsync(Guid extrusoraId, Guid? turnoId = null);
     Task<int> ObtenerSiguienteBobinaNoAsync(Guid extrusoraId, Guid productoId);
 
     Task<IEnumerable<Operario>> GetOperariosAsync();

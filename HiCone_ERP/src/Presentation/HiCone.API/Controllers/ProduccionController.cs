@@ -207,7 +207,7 @@ public class ProduccionController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("extrusion/activa/{extrusoraId}")]
-    public async Task<ActionResult<Extrusion>> GetExtrusionActiva(string extrusoraId)
+    public async Task<ActionResult<Extrusion>> GetExtrusionActiva(string extrusoraId, [FromQuery] Guid? turnoId = null)
     {
         Guid targetId = Guid.Empty;
         if (Guid.TryParse(extrusoraId, out var g))
@@ -226,7 +226,7 @@ public class ProduccionController : ControllerBase
             if (firstExt != null) targetId = firstExt.Id;
         }
 
-        var result = await _produccionService.GetExtrusionActivaAsync(targetId);
+        var result = await _produccionService.GetExtrusionActivaAsync(targetId, turnoId);
         if (result == null) return NotFound(new { message = "No hay extrusión activa para esta extrusora." });
         return Ok(result);
     }
