@@ -316,7 +316,8 @@ namespace HiCone.Application.Services.Inventario
                 }
             }
 
-            return await _context.SaveChangesAsync(default) > 0;
+            await _context.SaveChangesAsync(default);
+            return true;
         }
 
         public async Task<IEnumerable<AuditLogDto>> GetAuditHistoryAsync(string entityName, string entityId)
@@ -415,7 +416,8 @@ namespace HiCone.Application.Services.Inventario
                 }
             }
 
-            return await _context.SaveChangesAsync(default) > 0;
+            await _context.SaveChangesAsync(default);
+            return true;
         }
 
         public async Task<IEnumerable<ExistenciaListDto>> GetExistenciasAsync()
