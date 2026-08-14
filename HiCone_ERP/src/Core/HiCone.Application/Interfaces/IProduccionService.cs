@@ -99,7 +99,7 @@ public interface IProduccionService
     Task<bool> GuardarTurnosSemanaPrensasAsync(IEnumerable<GuardarTurnoPrensaItemRequest> batch);
 
     // ── Asignación y Ejecución de Trabajos Programados (PWA <-> ERP) ─────
-    Task<IEnumerable<object>> GetTrabajosAsignadosAsync(Guid? operarioId, Guid? maquinaId, string tipoProceso);
+    Task<IEnumerable<object>> GetTrabajosAsignadosAsync(Guid? operarioId, Guid? maquinaId, string tipoProceso, Guid? turnoId = null);
     Task<object> IniciarTrabajoProgramadoAsync(Guid id, string tipoProceso);
 }
 

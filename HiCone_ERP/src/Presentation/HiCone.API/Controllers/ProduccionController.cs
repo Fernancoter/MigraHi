@@ -1004,11 +1004,11 @@ public class ProduccionController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("trabajos-asignados")]
-    public async Task<IActionResult> GetTrabajosAsignados([FromQuery] Guid? operarioId, [FromQuery] Guid? maquinaId, [FromQuery] string tipoProceso = "extrusion")
+    public async Task<IActionResult> GetTrabajosAsignados([FromQuery] Guid? operarioId, [FromQuery] Guid? maquinaId, [FromQuery] string tipoProceso = "extrusion", [FromQuery] Guid? turnoId = null)
     {
         try
         {
-            var result = await _produccionService.GetTrabajosAsignadosAsync(operarioId, maquinaId, tipoProceso);
+            var result = await _produccionService.GetTrabajosAsignadosAsync(operarioId, maquinaId, tipoProceso, turnoId);
             return Ok(result);
         }
         catch (Exception ex)

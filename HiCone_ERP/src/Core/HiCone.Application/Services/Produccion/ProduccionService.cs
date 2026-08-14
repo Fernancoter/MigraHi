@@ -1563,7 +1563,7 @@ public class ProduccionService : IProduccionService
         return true;
     }
 
-    public async Task<IEnumerable<object>> GetTrabajosAsignadosAsync(Guid? operarioId, Guid? maquinaId, string tipoProceso)
+    public async Task<IEnumerable<object>> GetTrabajosAsignadosAsync(Guid? operarioId, Guid? maquinaId, string tipoProceso, Guid? turnoId = null)
     {
         if (tipoProceso?.ToLower() == "prensado")
         {
@@ -1580,6 +1580,9 @@ public class ProduccionService : IProduccionService
 
             if (operarioId.HasValue && operarioId.Value != Guid.Empty)
                 query = query.Where(p => p.OperarioId == operarioId.Value);
+
+            if (turnoId.HasValue && turnoId.Value != Guid.Empty)
+                query = query.Where(p => p.TurnoId == turnoId.Value);
 
             var items = await query.OrderByDescending(p => p.Fecha).ToListAsync();
             return items.Select(p => new
@@ -1615,6 +1618,9 @@ public class ProduccionService : IProduccionService
 
             if (operarioId.HasValue && operarioId.Value != Guid.Empty)
                 query = query.Where(e => e.OperarioId == operarioId.Value);
+
+            if (turnoId.HasValue && turnoId.Value != Guid.Empty)
+                query = query.Where(e => e.TurnoId == turnoId.Value);
 
             var items = await query.OrderByDescending(e => e.Fecha).ToListAsync();
             return items.Select(e => new
