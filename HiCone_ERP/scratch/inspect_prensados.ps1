@@ -3,20 +3,12 @@ try {
     $conn = New-Object System.Data.SqlClient.SqlConnection($connectionString)
     $conn.Open()
     
-    Write-Output "=== EXTRUSIONES EN BASE DE DATOS ==="
+    Write-Output "=== OPERARIOS EN BASE DE DATOS ==="
     $cmd = $conn.CreateCommand()
-    $cmd.CommandText = "SELECT id, extrusora_id, turno_id, producto_id, estado, programado, fecha FROM Extrusiones WHERE is_deleted = 0"
+    $cmd.CommandText = "SELECT id, numero_empleado, nombre_completo, is_active, is_deleted FROM Operarios"
     $reader = $cmd.ExecuteReader()
     while ($reader.Read()) {
-        Write-Output "ID: $($reader['id']) | ExtrusoraId: $($reader['extrusora_id']) | TurnoId: $($reader['turno_id']) | Estado: $($reader['estado']) | Fecha: $($reader['fecha'])"
-    }
-    $reader.Close()
-
-    Write-Output "`n=== PRENSADOS EN BASE DE DATOS ==="
-    $cmd.CommandText = "SELECT id, prensa_id, turno_id, producto_id, estado, programado, fecha FROM Prensados WHERE is_deleted = 0"
-    $reader = $cmd.ExecuteReader()
-    while ($reader.Read()) {
-        Write-Output "ID: $($reader['id']) | PrensaId: $($reader['prensa_id']) | TurnoId: $($reader['turno_id']) | Estado: $($reader['estado']) | Fecha: $($reader['fecha'])"
+        Write-Output "ID: $($reader['id']) | Empleado: $($reader['numero_empleado']) | Nombre: $($reader['nombre_completo']) | Active: $($reader['is_active']) | Deleted: $($reader['is_deleted'])"
     }
     $reader.Close()
 

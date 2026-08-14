@@ -130,7 +130,7 @@ import { ProduccionConfigService, Turno, Extrusora, Prensa, Producto, Operario }
           </div>
           
           <!-- Action button -->
-          <button (click)="showTables.set(true)" style="background: #4caf50; color: white; font-weight: 600; padding: 0.6rem 1.5rem; border: none; border-radius: 2px; margin-bottom: 2rem; cursor: pointer; font-size: 0.75rem; text-transform: uppercase;">PROGRAMAR O CONSULTAR</button>
+          <button (click)="consultarOProgramar()" style="background: #4caf50; color: white; font-weight: 600; padding: 0.6rem 1.5rem; border: none; border-radius: 2px; margin-bottom: 2rem; cursor: pointer; font-size: 0.75rem; text-transform: uppercase;">PROGRAMAR O CONSULTAR</button>
           
           <!-- Inner Tabs -->
           <div class="inner-tabs-container" style="border: 1px solid #cbd5e1; border-radius: 2px;">
@@ -416,6 +416,54 @@ export class TurnosSemanaComponent implements OnInit {
       this.svc.saveProgramacionPrensadoBatch(dias).subscribe({
         next: () => alert('Programación de prensas guardada con éxito'),
         error: (err: any) => alert('Error al guardar la programación: ' + (err.error?.message || err.message || 'Error del servidor'))
+      });
+    }
+  }
+
+  consultarOProgramar() {
+    this.showTables.set(true);
+    this.cargarProgramacionSemana();
+  }
+
+  cargarProgramacionSemana() {
+    const inicio = this.parseDateString(this.fechaInicio() || '01/01/2026');
+    const fin = this.parseDateString(this.fechaFin() || '31/12/2026');
+
+    if (this.activeMainTab() === 'extrusoras') {
+      this.svc.getExtrusionTurnosSemana(inicio, fin).subscribe({
+        next: (data: any) => {
+          if (data && data.extrusoras) {
+            const mat: Record<string, any> = { ...this.matriz() };
+            data.extrusoras.forEach((ext: any) => {
+              ext.turnos.forEach((trn: any) => {
+                trn.dias.forEach((d: any) => {
+                  const dDate = new Date(d.fecha);
+                  const dd = dDate.getDate() < 10 ? '0' + dDate.getDate() : dDate.getDate();
+                  const mm = (dDate.getMonth() + 1) < 10 ? '0' + (dDate.getMonth() + 1) : (dDate.getMonth() + 1);
+                  const yy = dDate.getFullYear().toString().substring(2);
+                  const formattedDateKey = `${dd}/${mm}/${yy}`;
+                  
+                  const key = `${ext.extrusoraId}_${formattedDateKey}_${trn.turnoId}`;
+                  mat[key] = {
+                    id: d.extrusionId,
+                    extrusionId: d.extrusionId,
+                    extrusionIdLegacy: d.extrusionIdLegacy || d.extrusionId,
+                    maquinaId: ext.extrusoraId,
+                    fecha: formattedDateKey,
+                    turnoId: trn.turnoId,
+                    status: d.estado,
+                    productoId: d.productoId,
+                    producto: d.productoNombre,
+                    operarioId: d.operarioId,
+                    programado: d.plan || 0,
+                    producido: d.producido || 0
+                  };
+                });
+              });
+            });
+            this.matriz.set(mat);
+          }
+        }
       });
     }
   }
