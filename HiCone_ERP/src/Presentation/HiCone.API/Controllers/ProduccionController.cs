@@ -2065,7 +2065,10 @@ public class DayItemDto
 
 public class GuardarTurnosSemanaRequest
 {
-    public Guid ExtrusionId { get; set; }
+    public Guid? ExtrusionId { get; set; }
+    public Guid? MaquinaId { get; set; }
+    public Guid? TurnoId { get; set; }
+    public DateTime? Fecha { get; set; }
     public Guid? ProductoId { get; set; }
     public Guid? OperarioId { get; set; }
     public decimal Plan { get; set; }
