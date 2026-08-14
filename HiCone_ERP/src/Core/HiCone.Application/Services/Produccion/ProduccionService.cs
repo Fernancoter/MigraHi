@@ -1580,7 +1580,7 @@ public class ProduccionService : IProduccionService
                 .Include(p => p.Operario)
                 .Include(p => p.Turno)
                 .Include(p => p.Troquel)
-                .Where(p => !p.IsDeleted && (p.Estado == EstadoPrensado.Programada || p.Estado == EstadoPrensado.EnProceso));
+                .Where(p => !p.IsDeleted && (p.Estado == EstadoPrensado.EnProceso || (p.Estado == EstadoPrensado.Programada && p.ProductoId != Guid.Empty)));
 
             if (maquinaId.HasValue && maquinaId.Value != Guid.Empty)
                 query = query.Where(p => p.PrensaId == maquinaId.Value);
@@ -1599,9 +1599,9 @@ public class ProduccionService : IProduccionService
                 MaquinaId = p.PrensaId,
                 MaquinaNombre = p.Prensa?.Nombre ?? "Prensa",
                 ProductoId = p.ProductoId,
-                ProductoNombre = p.Producto?.Nombre ?? p.Producto?.Clave ?? "Producto",
+                ProductoNombre = p.Producto != null ? (!string.IsNullOrWhiteSpace(p.Producto.Nombre) ? p.Producto.Nombre : p.Producto.Clave) : "Sin Producto Autorizado",
                 OperarioId = p.OperarioId,
-                OperarioNombre = p.Operario?.NombreCompleto ?? "Operario",
+                OperarioNombre = p.Operario != null ? (!string.IsNullOrWhiteSpace(p.Operario.NombreCompleto) ? p.Operario.NombreCompleto : p.Operario.Nombre) : "Sin Operador Asignado",
                 TurnoId = p.TurnoId,
                 TroquelId = p.TroquelId,
                 TroquelNombre = p.Troquel?.Nombre ?? "",
@@ -1618,7 +1618,7 @@ public class ProduccionService : IProduccionService
                 .Include(e => e.Producto)
                 .Include(e => e.Operario)
                 .Include(e => e.Turno)
-                .Where(e => !e.IsDeleted && (e.Estado == EstadoExtrusion.Programada || e.Estado == EstadoExtrusion.EnProceso));
+                .Where(e => !e.IsDeleted && (e.Estado == EstadoExtrusion.EnProceso || (e.Estado == EstadoExtrusion.Programada && e.ProductoId != null)));
 
             if (maquinaId.HasValue && maquinaId.Value != Guid.Empty)
                 query = query.Where(e => e.ExtrusoraId == maquinaId.Value);
@@ -1637,13 +1637,13 @@ public class ProduccionService : IProduccionService
                 MaquinaId = e.ExtrusoraId,
                 MaquinaNombre = e.Extrusora?.Nombre ?? "Extrusora",
                 ProductoId = e.ProductoId,
-                ProductoNombre = e.Producto?.Nombre ?? e.Producto?.Clave ?? "Producto",
+                ProductoNombre = e.Producto != null ? (!string.IsNullOrWhiteSpace(e.Producto.Nombre) ? e.Producto.Nombre : e.Producto.Clave) : "Sin Producto Autorizado",
                 OperarioId = e.OperarioId,
-                OperarioNombre = e.Operario?.NombreCompleto ?? "Operario",
+                OperarioNombre = e.Operario != null ? (!string.IsNullOrWhiteSpace(e.Operario.NombreCompleto) ? e.Operario.NombreCompleto : e.Operario.Nombre) : "Sin Operador Asignado",
                 TurnoId = e.TurnoId,
                 Estado = (int)e.Estado,
                 EstadoNombre = e.Estado.ToString(),
-                Meta = e.MetaKg,
+                Meta = e.MetaKg > 0 ? e.MetaKg : (e.Programado > 0 ? e.Programado : 200),
                 Fecha = e.Fecha
             });
         }

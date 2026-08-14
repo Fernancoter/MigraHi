@@ -196,10 +196,10 @@ import { ProduccionConfigService, Turno, Extrusora, Prensa, Producto, Operario }
                                 </td>
                                 <td style="padding: 0.6rem 0.5rem;">{{ dia.name }}</td>
                                 <td style="padding: 0.6rem 0.5rem;">
-                                  <select [ngModel]="getCelda(activeInnerTab(), dia.date, turno.id).producto" (ngModelChange)="updateCelda(activeInnerTab(), dia.date, turno.id, 'producto', $event)" style="border: none; outline: none; border-bottom: 1px solid #cbd5e1; width: 100px; background: transparent; font-size: 0.75rem;">
+                                  <select [ngModel]="getCelda(activeInnerTab(), dia.date, turno.id).productoId" (ngModelChange)="updateCelda(activeInnerTab(), dia.date, turno.id, 'productoId', $event)" style="border: none; outline: none; border-bottom: 1px solid #cbd5e1; width: 100px; background: transparent; font-size: 0.75rem;">
                                     <option [value]="undefined"></option>
                                     @for (p of productos(); track p.id) {
-                                      <option [value]="p.nombre">{{ p.nombre }}</option>
+                                      <option [value]="p.id">{{ p.nombre }}</option>
                                     }
                                   </select>
                                 </td>
@@ -395,24 +395,27 @@ export class TurnosSemanaComponent implements OnInit {
 
   guardarProgramacion() {
     const dias = Object.values(this.matriz()).map(c => ({
+      extrusionId: c.id || c.extrusionId,
       maquinaId: c.maquinaId,
-      // Convert DD/MM/YY or DD/MM/YYYY to YYYY-MM-DD
       fecha: this.parseDateString(c.fecha),
       turnoId: c.turnoId,
-      producto: c.producto,
+      productoId: c.productoId || (typeof c.producto === 'string' && c.producto.length > 20 ? c.producto : undefined),
       operarioId: c.operarioId,
+      plan: c.programado || 0,
       programado: c.programado || 0
     }));
 
     if (dias.length === 0) return;
 
     if (this.activeMainTab() === 'extrusoras') {
-      this.svc.saveProgramacionExtrusionBatch({ dias }).subscribe(() => {
-        alert('Programación de extrusoras guardada con éxito');
+      this.svc.saveProgramacionExtrusionBatch(dias).subscribe({
+        next: () => alert('Programación de extrusoras guardada con éxito'),
+        error: (err: any) => alert('Error al guardar la programación: ' + (err.error?.message || err.message || 'Error del servidor'))
       });
     } else {
-      this.svc.saveProgramacionPrensadoBatch({ dias }).subscribe(() => {
-        alert('Programación de prensas guardada con éxito');
+      this.svc.saveProgramacionPrensadoBatch(dias).subscribe({
+        next: () => alert('Programación de prensas guardada con éxito'),
+        error: (err: any) => alert('Error al guardar la programación: ' + (err.error?.message || err.message || 'Error del servidor'))
       });
     }
   }

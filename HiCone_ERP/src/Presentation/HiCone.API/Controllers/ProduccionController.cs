@@ -1895,36 +1895,63 @@ public class ProduccionController : ControllerBase
     {
         if (batch == null || !batch.Any()) return BadRequest("El lote está vacío.");
 
+        var defaultTenantId = new Guid("00000000-0000-0000-0000-000000000001");
+
         foreach (var item in batch)
         {
-            var entity = await _context.Extrusiones.FindAsync(item.ExtrusionId);
-            if (entity != null)
+            Extrusion? entity = null;
+            if (item.ExtrusionId.HasValue && item.ExtrusionId.Value != Guid.Empty)
             {
-                if (entity.Estado == EstadoExtrusion.Programada)
-                {
-                    entity.ProductoId = item.ProductoId;
-                    if (item.OperarioId != null)
-                    {
-                        entity.OperarioId = item.OperarioId.Value;
-                    }
-                    entity.Programado = item.Plan;
+                entity = await _context.Extrusiones.FindAsync(item.ExtrusionId.Value);
+            }
 
-                    if (item.ProductoId != null)
+            if (entity == null && item.MaquinaId.HasValue && item.TurnoId.HasValue && item.Fecha.HasValue)
+            {
+                var dt = item.Fecha.Value.Date;
+                entity = await _context.Extrusiones.FirstOrDefaultAsync(e => 
+                    e.ExtrusoraId == item.MaquinaId.Value && 
+                    e.TurnoId == item.TurnoId.Value && 
+                    e.Fecha.Date == dt && 
+                    !e.IsDeleted);
+            }
+
+            if (entity == null && item.MaquinaId.HasValue && item.TurnoId.HasValue && item.ProductoId.HasValue)
+            {
+                var dt = item.Fecha?.Date ?? DateTime.UtcNow.Date;
+                entity = new Extrusion
+                {
+                    Id = Guid.NewGuid(),
+                    Codigo = $"EXT-{dt:yyyyMMdd}-{Guid.NewGuid().ToString().Substring(0, 4)}",
+                    Fecha = dt,
+                    ExtrusoraId = item.MaquinaId.Value,
+                    TurnoId = item.TurnoId.Value,
+                    Estado = EstadoExtrusion.Programada,
+                    TenantId = defaultTenantId
+                };
+                _context.Extrusiones.Add(entity);
+            }
+
+            if (entity != null && entity.Estado == EstadoExtrusion.Programada)
+            {
+                if (item.ProductoId.HasValue) entity.ProductoId = item.ProductoId.Value;
+                if (item.OperarioId.HasValue) entity.OperarioId = item.OperarioId.Value;
+                entity.Programado = item.Plan;
+                entity.MetaKg = item.Plan > 0 ? item.Plan : 200;
+
+                if (item.ProductoId.HasValue)
+                {
+                    var extProd = await _context.ExtrusoraProductos
+                        .FirstOrDefaultAsync(ep => ep.ExtrusoraId == entity.ExtrusoraId && ep.ProductoId == item.ProductoId.Value);
+                    
+                    if (extProd != null)
                     {
-                        var extProd = await _context.ExtrusoraProductos
-                            .FirstOrDefaultAsync(ep => ep.ExtrusoraId == entity.ExtrusoraId && ep.ProductoId == item.ProductoId);
-                        
-                        if (extProd != null)
-                        {
-                            entity.Calibre = extProd.DefaultCalibre;
-                            entity.Ancho = extProd.DefaultAncho;
-                            entity.Longitud = extProd.DefaultLongitud;
-                            entity.MetaKg = item.Plan;
-                            entity.VirgenKg = extProd.DefaultVirgenKg;
-                            entity.MolidoKg = extProd.DefaultMolidoKg;
-                            entity.RevHusilloVirgen = extProd.DefaultRevHusilloVirgen;
-                            entity.RevHusilloMolido = extProd.DefaultRevHusilloMolido;
-                        }
+                        entity.Calibre = extProd.DefaultCalibre;
+                        entity.Ancho = extProd.DefaultAncho;
+                        entity.Longitud = extProd.DefaultLongitud;
+                        entity.VirgenKg = extProd.DefaultVirgenKg;
+                        entity.MolidoKg = extProd.DefaultMolidoKg;
+                        entity.RevHusilloVirgen = extProd.DefaultRevHusilloVirgen;
+                        entity.RevHusilloMolido = extProd.DefaultRevHusilloMolido;
                     }
                 }
             }
