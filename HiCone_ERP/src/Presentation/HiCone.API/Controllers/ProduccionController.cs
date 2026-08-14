@@ -1002,6 +1002,40 @@ public class ProduccionController : ControllerBase
         }
     }
 
+    [AllowAnonymous]
+    [HttpGet("trabajos-asignados")]
+    public async Task<IActionResult> GetTrabajosAsignados([FromQuery] Guid? operarioId, [FromQuery] Guid? maquinaId, [FromQuery] string tipoProceso = "extrusion")
+    {
+        try
+        {
+            var result = await _produccionService.GetTrabajosAsignadosAsync(operarioId, maquinaId, tipoProceso);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message, detail = ex.InnerException?.Message });
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpPost("iniciar-trabajo-programado/{id}")]
+    public async Task<IActionResult> IniciarTrabajoProgramado(Guid id, [FromQuery] string tipoProceso = "extrusion")
+    {
+        try
+        {
+            var result = await _produccionService.IniciarTrabajoProgramadoAsync(id, tipoProceso);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return StatusCode(409, new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message, detail = ex.InnerException?.Message });
+        }
+    }
+
 
 
     [HttpGet("extrusion/operacion")]

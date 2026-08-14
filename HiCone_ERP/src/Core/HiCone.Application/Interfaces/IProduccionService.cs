@@ -97,6 +97,10 @@ public interface IProduccionService
     // ── Turnos Por Semana Prensas ──────────────────────────────────────────
     Task<object> GetTurnosSemanaPrensasAsync(DateTime fechaInicio, DateTime fechaFin);
     Task<bool> GuardarTurnosSemanaPrensasAsync(IEnumerable<GuardarTurnoPrensaItemRequest> batch);
+
+    // ── Asignación y Ejecución de Trabajos Programados (PWA <-> ERP) ─────
+    Task<IEnumerable<object>> GetTrabajosAsignadosAsync(Guid? operarioId, Guid? maquinaId, string tipoProceso);
+    Task<object> IniciarTrabajoProgramadoAsync(Guid id, string tipoProceso);
 }
 
 public record GuardarTurnoPrensaItemRequest(Guid PrensadoId, Guid? ProductoId, Guid? OperarioId, decimal Plan);

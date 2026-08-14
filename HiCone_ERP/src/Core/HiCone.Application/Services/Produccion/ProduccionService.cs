@@ -1563,6 +1563,129 @@ public class ProduccionService : IProduccionService
         return true;
     }
 
+    public async Task<IEnumerable<object>> GetTrabajosAsignadosAsync(Guid? operarioId, Guid? maquinaId, string tipoProceso)
+    {
+        if (tipoProceso?.ToLower() == "prensado")
+        {
+            var query = _context.Prensados
+                .Include(p => p.Prensa)
+                .Include(p => p.Producto)
+                .Include(p => p.Operario)
+                .Include(p => p.Turno)
+                .Include(p => p.Troquel)
+                .Where(p => !p.IsDeleted && (p.Estado == EstadoPrensado.Programada || p.Estado == EstadoPrensado.EnProceso));
+
+            if (maquinaId.HasValue && maquinaId.Value != Guid.Empty)
+                query = query.Where(p => p.PrensaId == maquinaId.Value);
+
+            if (operarioId.HasValue && operarioId.Value != Guid.Empty)
+                query = query.Where(p => p.OperarioId == operarioId.Value);
+
+            var items = await query.OrderByDescending(p => p.Fecha).ToListAsync();
+            return items.Select(p => new
+            {
+                Id = p.Id,
+                Tipo = "Prensado",
+                MaquinaId = p.PrensaId,
+                MaquinaNombre = p.Prensa?.Nombre ?? "Prensa",
+                ProductoId = p.ProductoId,
+                ProductoNombre = p.Producto?.Nombre ?? p.Producto?.Clave ?? "Producto",
+                OperarioId = p.OperarioId,
+                OperarioNombre = p.Operario?.NombreCompleto ?? "Operario",
+                TurnoId = p.TurnoId,
+                TroquelId = p.TroquelId,
+                TroquelNombre = p.Troquel?.Nombre ?? "",
+                Estado = (int)p.Estado,
+                EstadoNombre = p.Estado.ToString(),
+                Meta = p.Programado > 0 ? p.Programado : p.Target,
+                Fecha = p.Fecha
+            });
+        }
+        else
+        {
+            var query = _context.Extrusiones
+                .Include(e => e.Extrusora)
+                .Include(e => e.Producto)
+                .Include(e => e.Operario)
+                .Include(e => e.Turno)
+                .Where(e => !e.IsDeleted && (e.Estado == EstadoExtrusion.Programada || e.Estado == EstadoExtrusion.EnProceso));
+
+            if (maquinaId.HasValue && maquinaId.Value != Guid.Empty)
+                query = query.Where(e => e.ExtrusoraId == maquinaId.Value);
+
+            if (operarioId.HasValue && operarioId.Value != Guid.Empty)
+                query = query.Where(e => e.OperarioId == operarioId.Value);
+
+            var items = await query.OrderByDescending(e => e.Fecha).ToListAsync();
+            return items.Select(e => new
+            {
+                Id = e.Id,
+                Tipo = "Extrusión",
+                MaquinaId = e.ExtrusoraId,
+                MaquinaNombre = e.Extrusora?.Nombre ?? "Extrusora",
+                ProductoId = e.ProductoId,
+                ProductoNombre = e.Producto?.Nombre ?? e.Producto?.Clave ?? "Producto",
+                OperarioId = e.OperarioId,
+                OperarioNombre = e.Operario?.NombreCompleto ?? "Operario",
+                TurnoId = e.TurnoId,
+                Estado = (int)e.Estado,
+                EstadoNombre = e.Estado.ToString(),
+                Meta = e.MetaKg,
+                Fecha = e.Fecha
+            });
+        }
+    }
+
+    public async Task<object> IniciarTrabajoProgramadoAsync(Guid id, string tipoProceso)
+    {
+        if (tipoProceso?.ToLower() == "prensado")
+        {
+            var prensado = await _context.Prensados
+                .Include(p => p.Prensa)
+                .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
+
+            if (prensado == null)
+                throw new KeyNotFoundException("La orden de prensado programada no existe en el sistema.");
+
+            if (prensado.Estado != EstadoPrensado.Programada)
+                throw new InvalidOperationException($"La orden de prensado ya no está disponible para iniciar (Estado actual: {prensado.Estado}). Fue modificada, iniciada o cancelada desde el ERP Web.");
+
+            prensado.Estado = EstadoPrensado.EnProceso;
+            prensado.HoraIniciaProceso = DateTime.UtcNow;
+
+            if (prensado.Prensa != null)
+            {
+                prensado.Prensa.Estado = EstadoPrensa.EnProceso;
+            }
+
+            await _context.SaveChangesAsync(default);
+            return prensado;
+        }
+        else
+        {
+            var extrusion = await _context.Extrusiones
+                .Include(e => e.Extrusora)
+                .FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
+
+            if (extrusion == null)
+                throw new KeyNotFoundException("La orden de extrusión programada no existe en el sistema.");
+
+            if (extrusion.Estado != EstadoExtrusion.Programada)
+                throw new InvalidOperationException($"La orden de extrusión ya no está disponible para iniciar (Estado actual: {extrusion.Estado}). Fue modificada, iniciada o cancelada desde el ERP Web.");
+
+            extrusion.Estado = EstadoExtrusion.EnProceso;
+            extrusion.FechaInicio = DateTime.UtcNow;
+
+            if (extrusion.Extrusora != null)
+            {
+                extrusion.Extrusora.Estado = EstadoExtrusora.EnProceso;
+            }
+
+            await _context.SaveChangesAsync(default);
+            return extrusion;
+        }
+    }
+
 }
 
 
