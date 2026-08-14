@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { Subscription, switchMap, of, timeout, catchError, EMPTY, timer } from 'rxjs';
+import { Subscription, switchMap, of, timeout, catchError, EMPTY, timer, combineLatest } from 'rxjs';
 import { ProduccionService, Bobina } from '../../../core/services/produccion';
 import { OfflineStoreService } from '../../../core/offline/offline-store.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -97,10 +97,11 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   iniciandoTrabajo = false;
 
   constructor() {
-    // Reaccionar cuando cambia la extrusora seleccionada en el header Shell.
+    // Reaccionar cuando cambia la extrusora o el turno seleccionado en el header Shell.
     const extrusora$ = toObservable(this.extrusionState.extrusoraActiva);
+    const turno$ = toObservable(this.extrusionState.turnoActivo);
 
-    const sub = extrusora$.subscribe(ext => {
+    const sub = combineLatest([extrusora$, turno$]).subscribe(([ext, turno]) => {
       if (!ext) {
         this.extrusionActiva = null;
         this.trabajoProgramado = null;
@@ -108,21 +109,21 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
         this.cargandoOrden = false;
         this.cdr.detectChanges();
       } else {
-        this.cargarOrdenYProgramacion(ext.id);
+        this.cargarOrdenYProgramacion(ext.id, turno?.id);
       }
     });
 
     this.subs.add(sub);
   }
 
-  cargarOrdenYProgramacion(extrusoraId: string) {
+  cargarOrdenYProgramacion(extrusoraId: string, turnoId?: string) {
     this.cargandoOrden = true;
     this.extrusionActiva = null;
     this.trabajoProgramado = null;
     this.cdr.detectChanges();
 
-    // 1. Intentar obtener orden activa en proceso
-    this.produccionService.getExtrusionActiva(extrusoraId).pipe(
+    // 1. Intentar obtener orden activa en proceso para este turno especifico
+    this.produccionService.getExtrusionActiva(extrusoraId, turnoId).pipe(
       catchError(() => of(null))
     ).subscribe(activa => {
       if (activa) {
@@ -131,8 +132,8 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
         this.actualizarInformacionOrden();
         this.cdr.detectChanges();
       } else {
-        // 2. Si no hay orden activa en proceso, consultar la programación proveniente del ERP Web
-        this.produccionService.getTrabajosAsignados(undefined, extrusoraId, 'extrusion').pipe(
+        // 2. Si no hay orden activa en proceso, consultar la programación proveniente del ERP Web para este turno
+        this.produccionService.getTrabajosAsignados(undefined, extrusoraId, 'extrusion', turnoId).pipe(
           catchError(() => of([]))
         ).subscribe(trabajos => {
           this.cargandoOrden = false;
@@ -157,7 +158,8 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
         this.iniciandoTrabajo = false;
         this.successMessage = '¡Trabajo programado iniciado con éxito!';
         const ext = this.extrusionState.extrusoraActiva();
-        if (ext) this.cargarOrdenYProgramacion(ext.id);
+        const turno = this.extrusionState.turnoActivo();
+        if (ext) this.cargarOrdenYProgramacion(ext.id, turno?.id);
       },
       error: (err) => {
         this.iniciandoTrabajo = false;
