@@ -12,14 +12,6 @@ import { ProduccionService } from '../../../core/services/produccion';
     <div class="prensado-pwa-container">
       <!-- CARDS LIST CONTAINER -->
       <main class="cards-list">
-        <!-- FLOATING BUTTON FOR NEW PRENSADO WIZARD -->
-        <button class="fab-new-prensado" (click)="irAWizard()" title="Nuevo Prensado">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 20px; height: 20px; margin-right: 6px;">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
-          Nuevo Prensado
-        </button>
-
         <div *ngIf="cargando" class="loading-state">
           <div class="spinner"></div>
           <p>Cargando información de prensados...</p>

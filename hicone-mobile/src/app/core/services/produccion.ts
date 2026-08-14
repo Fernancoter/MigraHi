@@ -351,4 +351,16 @@ export class ProduccionService {
   guardarTurnosSemana(batch: any[]): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/extrusion/turnos-semana/guardar`, batch);
   }
+
+  // ── Asignación y Ejecución de Trabajos Programados ─────────────────────
+  getTrabajosAsignados(operarioId?: string, maquinaId?: string, tipoProceso: string = 'extrusion'): Observable<any[]> {
+    let params = `tipoProceso=${tipoProceso}`;
+    if (operarioId) params += `&operarioId=${operarioId}`;
+    if (maquinaId) params += `&maquinaId=${maquinaId}`;
+    return this.http.get<any[]>(`${this.apiUrl}/trabajos-asignados?${params}`);
+  }
+
+  iniciarTrabajoProgramado(id: string, tipoProceso: string = 'extrusion'): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/iniciar-trabajo-programado/${id}?tipoProceso=${tipoProceso}`, {});
+  }
 }
