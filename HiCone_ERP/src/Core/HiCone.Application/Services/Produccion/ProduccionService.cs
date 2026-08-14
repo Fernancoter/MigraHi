@@ -1580,7 +1580,7 @@ public class ProduccionService : IProduccionService
                 .Include(p => p.Operario)
                 .Include(p => p.Turno)
                 .Include(p => p.Troquel)
-                .Where(p => !p.IsDeleted && (p.Estado == EstadoPrensado.EnProceso || (p.Estado == EstadoPrensado.Programada && p.ProductoId != Guid.Empty)));
+                .Where(p => !p.IsDeleted && p.ProductoId != Guid.Empty && (p.Estado == EstadoPrensado.EnProceso || p.Estado == EstadoPrensado.Programada));
 
             if (maquinaId.HasValue && maquinaId.Value != Guid.Empty)
                 query = query.Where(p => p.PrensaId == maquinaId.Value);
@@ -1591,7 +1591,7 @@ public class ProduccionService : IProduccionService
             if (turnoId.HasValue && turnoId.Value != Guid.Empty)
                 query = query.Where(p => p.TurnoId == turnoId.Value);
 
-            var today = DateTime.UtcNow.Date;
+            var today = DateTime.Today;
             var items = await query
                 .OrderByDescending(p => p.Estado == EstadoPrensado.EnProceso)
                 .ThenBy(p => p.Fecha.Date == today ? 0 : (p.Fecha.Date < today ? 1 : 2))
@@ -1624,7 +1624,7 @@ public class ProduccionService : IProduccionService
                 .Include(e => e.Producto)
                 .Include(e => e.Operario)
                 .Include(e => e.Turno)
-                .Where(e => !e.IsDeleted && (e.Estado == EstadoExtrusion.EnProceso || (e.Estado == EstadoExtrusion.Programada && e.ProductoId != null)));
+                .Where(e => !e.IsDeleted && e.ProductoId != null && e.ProductoId != Guid.Empty && (e.Estado == EstadoExtrusion.EnProceso || e.Estado == EstadoExtrusion.Programada));
 
             if (maquinaId.HasValue && maquinaId.Value != Guid.Empty)
                 query = query.Where(e => e.ExtrusoraId == maquinaId.Value);
@@ -1635,7 +1635,7 @@ public class ProduccionService : IProduccionService
             if (turnoId.HasValue && turnoId.Value != Guid.Empty)
                 query = query.Where(e => e.TurnoId == turnoId.Value);
 
-            var today = DateTime.UtcNow.Date;
+            var today = DateTime.Today;
             var items = await query
                 .OrderByDescending(e => e.Estado == EstadoExtrusion.EnProceso)
                 .ThenBy(e => e.Fecha.Date == today ? 0 : (e.Fecha.Date < today ? 1 : 2))
