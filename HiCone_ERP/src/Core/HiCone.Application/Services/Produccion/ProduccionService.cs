@@ -1591,7 +1591,13 @@ public class ProduccionService : IProduccionService
             if (turnoId.HasValue && turnoId.Value != Guid.Empty)
                 query = query.Where(p => p.TurnoId == turnoId.Value);
 
-            var items = await query.OrderByDescending(p => p.Fecha).ToListAsync();
+            var today = DateTime.UtcNow.Date;
+            var items = await query
+                .OrderByDescending(p => p.Estado == EstadoPrensado.EnProceso)
+                .ThenBy(p => p.Fecha.Date == today ? 0 : (p.Fecha.Date < today ? 1 : 2))
+                .ThenBy(p => Math.Abs((p.Fecha.Date - today).TotalDays))
+                .ThenBy(p => p.Fecha)
+                .ToListAsync();
             return items.Select(p => new
             {
                 Id = p.Id,
@@ -1629,7 +1635,13 @@ public class ProduccionService : IProduccionService
             if (turnoId.HasValue && turnoId.Value != Guid.Empty)
                 query = query.Where(e => e.TurnoId == turnoId.Value);
 
-            var items = await query.OrderByDescending(e => e.Fecha).ToListAsync();
+            var today = DateTime.UtcNow.Date;
+            var items = await query
+                .OrderByDescending(e => e.Estado == EstadoExtrusion.EnProceso)
+                .ThenBy(e => e.Fecha.Date == today ? 0 : (e.Fecha.Date < today ? 1 : 2))
+                .ThenBy(e => Math.Abs((e.Fecha.Date - today).TotalDays))
+                .ThenBy(e => e.Fecha)
+                .ToListAsync();
             return items.Select(e => new
             {
                 Id = e.Id,
