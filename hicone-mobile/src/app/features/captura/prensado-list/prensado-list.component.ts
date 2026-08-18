@@ -1,8 +1,13 @@
-import { Component, OnInit, inject, signal, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { ProduccionService } from '../../../core/services/produccion';
+import { OfflineStoreService } from '../../../core/offline/offline-store.service';
+import { ExtrusionStateService } from '../../../core/services/extrusion-state.service';
+import { forkJoin, of, Subscription, combineLatest } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-prensado-list',
@@ -479,26 +484,6 @@ import { ProduccionService } from '../../../core/services/produccion';
       cursor: not-allowed;
     }
 
-    .fab-new-prensado {
-      background-color: #00897b;
-      color: #ffffff;
-      border: none;
-      border-radius: 24px;
-      padding: 10px 18px;
-      font-size: 14px;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 137, 123, 0.4);
-      transition: background-color 0.2s, transform 0.1s;
-    }
-    .fab-new-prensado:hover {
-      background-color: #00796b;
-      transform: translateY(-1px);
-    }
     .btn-cancelar-grey {
       background-color: #424242;
       color: #cccccc;
@@ -512,17 +497,16 @@ import { ProduccionService } from '../../../core/services/produccion';
     }
   `]
 })
-export class PrensadoListComponent implements OnInit {
+export class PrensadoListComponent implements OnInit, OnDestroy {
   private prodService = inject(ProduccionService);
-  public router = inject(Router);
+  private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private offlineStore = inject(OfflineStoreService);
+  private extrusionState = inject(ExtrusionStateService);
+  private subs = new Subscription();
 
   prensados: any[] = [];
   cargando = true;
-
-  irAWizard() {
-    this.router.navigate(['/wizard']);
-  }
 
   // Estado del flujo modal
   prensadoSeleccionado: any = null;
@@ -538,15 +522,51 @@ export class PrensadoListComponent implements OnInit {
   rodillosEntrada = 0.0;
   rodillosSalida = 0.0;
 
+  // Declarar los observables como inicializadores de campos (dentro del contexto de inyección)
+  private prensa$ = toObservable(this.extrusionState.prensaActiva);
+  private turno$ = toObservable(this.extrusionState.turnoActivo);
+
   ngOnInit() {
-    this.cargarPrensados();
+    this.subs.add(
+      combineLatest([this.prensa$, this.turno$]).subscribe(() => {
+        this.cargarPrensados();
+      })
+    );
   }
 
-  cargarPrensados() {
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
+
+  async cargarPrensados() {
     this.cargando = true;
-    this.prodService.getPrensadosOperacion().subscribe({
-      next: (data) => {
-        this.prensados = data || [];
+
+    // Leer prensa y turno seleccionados del shell
+    const prensaId = await this.offlineStore.get<string>('active_press_id') || undefined;
+    const turnoActivo = this.extrusionState.turnoActivo();
+    const turnoId = turnoActivo?.id || undefined;
+
+    forkJoin({
+      operacion: this.prodService.getPrensadosOperacion().pipe(catchError(() => of([]))),
+      programacion: this.prodService.getPrensadosProgramacion(prensaId, turnoId).pipe(catchError(() => of([])))
+    }).subscribe({
+      next: (res) => {
+        let listOperacion = res.operacion.map((p: any) => ({ ...p, fromOperacion: true }));
+        const listProgramacion = res.programacion.map((p: any) => ({ ...p, fromOperacion: false, status: 'Programado', estado: 0 }));
+        
+        // Filtrar también la lista de operación por la prensa y turno seleccionados
+        if (prensaId) {
+          listOperacion = listOperacion.filter((p: any) => (p.prensaId || p.PrensaId) === prensaId);
+        }
+        if (turnoId) {
+          listOperacion = listOperacion.filter((p: any) => (p.turnoId || p.TurnoId) === turnoId);
+        }
+
+        const ids = new Set(listOperacion.map((p: any) => p.id));
+        const filteredProg = listProgramacion.filter((p: any) => !ids.has(p.id));
+        
+        this.prensados = [...listOperacion, ...filteredProg];
+        
         this.cargando = false;
         this.cdr.markForCheck();
       },
@@ -556,6 +576,14 @@ export class PrensadoListComponent implements OnInit {
         this.cdr.markForCheck();
       }
     });
+  }
+
+  getMockPrensados() {
+    return [
+      { id: '1', estado: 'Programado', status: 'Programado', fecha: '2026-08-07T10:00:00', prensa: 'Prensa 3', producto: '747572000', turno: '3er Turno' },
+      { id: '2', estado: 'Programado', status: 'Programado', fecha: '2026-08-07T10:00:00', prensa: 'Prensa 2', producto: '747572000', turno: '3er Turno' },
+      { id: '3', estado: 'Programado', status: 'Programado', fecha: '2026-08-07T10:00:00', prensa: 'Prensa 1', producto: '747572000', turno: '2do Turno' }
+    ];
   }
 
   formatearFecha(fechaStr: any): string {
@@ -575,7 +603,22 @@ export class PrensadoListComponent implements OnInit {
 
   seleccionarPrensado(item: any) {
     this.prensadoSeleccionado = item;
-    this.mostrarModalConfirmacion = true;
+    
+    // Si el prensado está En Proceso, ir directo a la consola activa
+    if (item.estado === 1 || item.status === 'EnProceso') {
+      this.router.navigate(['/prensado-main'], { queryParams: { id: item.id } });
+      return;
+    }
+    
+    // Si el prensado está Programado, preguntar para iniciarlo
+    if (item.estado === 0 || item.status === 'Programado' || item.status === 'Programada') {
+      this.mostrarModalConfirmacion = true;
+      this.cdr.markForCheck();
+      return;
+    }
+    
+    // Si ya está finalizado, no hay acción de captura activa. Mostrar mensaje
+    alert(`La orden de prensado para ${item.prensa} ya ha finalizado.`);
   }
 
   cerrarModalConfirmacion() {
@@ -584,14 +627,28 @@ export class PrensadoListComponent implements OnInit {
 
   confirmarConcluirAnterior() {
     this.mostrarModalConfirmacion = false;
-    // Reset campos
-    this.levasUm = 'Kg';
-    this.rodillosUm = 'Kg';
-    this.levasEntrada = 0.0;
-    this.levasSalida = 0.0;
-    this.rodillosEntrada = 0.0;
-    this.rodillosSalida = 0.0;
-    this.mostrarModalCaptura = true;
+    if (!this.prensadoSeleccionado) return;
+    
+    this.guardando = true;
+    const request = {
+      prensaId: this.prensadoSeleccionado.prensaId || '00000000-0000-0000-0000-000000000001',
+      operarioId: this.prensadoSeleccionado.operadorId || '00000000-0000-0000-0000-000000000001',
+      turnoId: this.prensadoSeleccionado.turnoId || '00000000-0000-0000-0000-000000000001',
+      productoId: this.prensadoSeleccionado.productoId || '00000000-0000-0000-0000-000000000001',
+      troquelId: this.prensadoSeleccionado.troquelId || '00000000-0000-0000-0000-000000000001'
+    };
+    
+    this.prodService.iniciarPrensado(request).subscribe({
+      next: (res: any) => {
+        this.guardando = false;
+        this.router.navigate(['/prensado-main'], { queryParams: { id: res.id } });
+      },
+      error: (err: any) => {
+        this.guardando = false;
+        alert('Error al iniciar prensado: ' + (err.error?.message || err.message));
+        this.cdr.markForCheck();
+      }
+    });
   }
 
   cerrarModalCaptura() {

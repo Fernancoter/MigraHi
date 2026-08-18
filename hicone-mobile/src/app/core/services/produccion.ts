@@ -195,8 +195,11 @@ export class ProduccionService {
     return this.http.get<any[]>(`${this.apiUrl}/prensado/operacion`);
   }
 
-  getPrensadosProgramacion(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/prensado/programacion`);
+  getPrensadosProgramacion(prensaId?: string, turnoId?: string): Observable<any[]> {
+    let params = '';
+    if (prensaId) params += `prensaId=${prensaId}&`;
+    if (turnoId) params += `turnoId=${turnoId}&`;
+    return this.http.get<any[]>(`${this.apiUrl}/prensado/programacion?${params}`);
   }
 
   iniciarPrensado(request: any): Observable<Prensado> {
@@ -273,14 +276,32 @@ export class ProduccionService {
   }
 
   getTroqueles(): Observable<any[]> {
-    return this.http.get<any[]>(`http://localhost:5007/api/v1/catalogos/troqueles`);
+    return this.http.get<any[]>(`${this.apiUrl}/catalogos/troqueles`);
+  }
+
+  updatePrensado(id: string, request: any): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/prensado/${id}`, request);
   }
 
   getPalets(productoCodigo?: string, noSerie?: string): Observable<any[]> {
     let params = '';
     if (productoCodigo) params += `productoCodigo=${encodeURIComponent(productoCodigo)}&`;
     if (noSerie) params += `noSerie=${encodeURIComponent(noSerie)}&`;
-    return this.http.get<any[]>(`${this.apiUrl}/palets?${params}`);
+    return this.http.get<any[]>(`${this.apiUrl}/palets/buscar?${params}`);
+  }
+
+  crearPalet(request: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/palets`, request);
+  }
+
+  agregarCarreteAPalet(paletId: string, carreteId: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/palets/${paletId}/agregar-carrete`, JSON.stringify(carreteId), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  finalizarPalet(paletId: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/palets/${paletId}/finalizar`, {});
   }
 
 
@@ -330,6 +351,10 @@ export class ProduccionService {
 
   getPrensadoCarreras(id: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/prensado/${id}/carreras`);
+  }
+
+  updateCarrete(id: string, request: any): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/carrete/${id}`, request);
   }
 
   createExtrusion(request: any): Observable<any> {

@@ -8,6 +8,7 @@ import { ProduccionService, Bobina, CausaInterrupcion } from '../../../core/serv
 import { OfflineStoreService } from '../../../core/offline/offline-store.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { InventarioService, Silo } from '../../../core/services/inventario.service';
+import { DialogService } from '../../../core/services/dialog.service';
 import { ExtrusionStateService } from '../../../core/services/extrusion-state.service';
 
 @Component({
@@ -24,6 +25,7 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private inventarioService = inject(InventarioService);
   public extrusionState = inject(ExtrusionStateService);
+  private dialog = inject(DialogService);
 
   // Estado de la orden activa
   extrusionActiva: any | null = null;
@@ -912,8 +914,12 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     });
   }
 
-  reanudarProceso() {
-    if (confirm('¿Desea reanudar el proceso de extrusión y terminar la interrupción activa?')) {
+  async reanudarProceso() {
+    const ok = await this.dialog.confirm(
+      '¿Desea reanudar el proceso de extrusión y terminar la interrupción activa?',
+      'Confirmar Reanudación'
+    );
+    if (ok) {
       this.saving = true;
       this.cdr.detectChanges();
       this.produccionService.finalizarInterrupcionExtrusionActiva(this.extrusionActiva.id).subscribe({

@@ -4,6 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { ProduccionService } from '../../../core/services/produccion';
 import { OfflineStoreService } from '../../../core/offline/offline-store.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { ExtrusionStateService } from '../../../core/services/extrusion-state.service';
 
 @Component({
   selector: 'app-captura-home',
@@ -262,6 +263,7 @@ export class CapturaHomeComponent implements OnInit {
   private offlineStore = inject(OfflineStoreService);
   private router = inject(Router);
   private authService = inject(AuthService);
+  private extrusionState = inject(ExtrusionStateService);
 
   // Computa el nombre del operador dinámicamente desde el AuthService
   operatorName = computed(() => {
@@ -365,6 +367,14 @@ export class CapturaHomeComponent implements OnInit {
 
   ngOnInit() {
     this.shiftName = this.getShiftByTime().toUpperCase();
+    
+    // Al regresar al menú de inicio se resetea la selección de máquina, prensa y turno
+    // para obligar al usuario a seleccionar de nuevo en su próxima entrada
+    this.extrusionState.reset();
+    this.offlineStore.remove('active_shift');
+    this.offlineStore.remove('active_press');
+    this.offlineStore.remove('active_press_id');
+    this.offlineStore.remove('active_extrusora_id');
   }
 
   private getShiftByTime(): string {

@@ -1036,15 +1036,28 @@ public class ProduccionController : ControllerBase
     }
 
     [HttpGet("prensado/programacion")]
-    public async Task<ActionResult<IEnumerable<object>>> GetPrensadoProgramacion()
+    public async Task<ActionResult<IEnumerable<object>>> GetPrensadoProgramacion(
+        [FromQuery] DateTime? fecha = null,
+        [FromQuery] Guid? prensaId = null,
+        [FromQuery] Guid? turnoId = null)
     {
-        var items = await _context.Prensados
+        var targetDate = fecha?.Date ?? DateTime.Now.Date;
+
+        var query = _context.Prensados
             .Include(p => p.Prensa)
             .Include(p => p.Turno)
             .Include(p => p.Producto)
             .Include(p => p.Operario)
-            .Where(p => !p.IsDeleted && ((int)p.Estado == 0 || (int)p.Estado == 5))
-            .OrderByDescending(p => p.Fecha)
+            .Where(p => !p.IsDeleted && p.Fecha.Date == targetDate);
+
+        if (prensaId.HasValue && prensaId.Value != Guid.Empty)
+            query = query.Where(p => p.PrensaId == prensaId.Value);
+
+        if (turnoId.HasValue && turnoId.Value != Guid.Empty)
+            query = query.Where(p => p.TurnoId == turnoId.Value);
+
+        var items = await query
+            .OrderBy(p => p.Prensa.Nombre).ThenBy(p => p.Turno.Nombre)
             .Select(p => new
             {
                 p.Id,
@@ -1110,11 +1123,14 @@ public class ProduccionController : ControllerBase
             .Include(p => p.Producto)
             .Include(p => p.Troquel)
             .Include(p => p.Bobinas).ThenInclude(pb => pb.Bobina)
+            .Include(p => p.Interrupciones)
             .FirstOrDefaultAsync(p => p.Id == id);
 
         if (item == null) return NotFound(new { message = "Orden de prensado no encontrada." });
         
-        var activeBobina = item.Bobinas.FirstOrDefault(pb => pb.Activa)?.Bobina;
+        var activePrensadoBobina = item.Bobinas.FirstOrDefault(pb => pb.Activa);
+        var activeBobina = activePrensadoBobina?.Bobina;
+        var activeInterrupcion = item.Interrupciones.FirstOrDefault(i => !i.Concluida);
         
         return Ok(new
         {
@@ -1123,6 +1139,19 @@ public class ProduccionController : ControllerBase
             Fecha = item.Fecha,
             ActiveBobinaNoSerie = activeBobina?.NoSerie,
             ActiveBobinaId = activeBobina?.Id,
+            ActiveBobinaKg = activeBobina?.Kg,
+            ActiveBobinaEspesor = activeBobina?.Espesor,
+            ActiveBobinaCantCarreras = activePrensadoBobina?.CantCarreras ?? 0,
+            Bobinas = item.Bobinas.Select(pb => new {
+                id = pb.BobinaId,
+                noSerie = pb.Bobina.NoSerie,
+                estado = pb.Activa ? "En Prensado" : "Consumida",
+                kg = pb.Bobina.Kg,
+                espesor = pb.Bobina.Espesor,
+                carrerasProcesadas = pb.CantCarreras,
+                acumuladoCarreras = pb.Bobina.Carreras,
+                activa = pb.Activa
+            }).ToList(),
             Prensa = item.Prensa.Nombre,
             PrensaId = item.PrensaId,
             Turno = item.Turno.Nombre,
@@ -1147,6 +1176,10 @@ public class ProduccionController : ControllerBase
             TroquelNombre = item.Troquel != null ? item.Troquel.Nombre : "",
             IniciaProceso = item.HoraIniciaProceso,
             FinProceso = item.HoraFinProceso,
+            InterrupcionEnCurso = item.InterrupcionEnCurso,
+            ActiveInterrupcionId = activeInterrupcion?.Id,
+            ActiveInterrupcionCausaId = activeInterrupcion?.CausaId,
+            ActiveInterrupcionHoraInicio = activeInterrupcion?.HoraInicio,
             ProductoDescripcion = item.Producto.Nombre,
             Calibre = item.Calibre,
             Ancho = item.Ancho,

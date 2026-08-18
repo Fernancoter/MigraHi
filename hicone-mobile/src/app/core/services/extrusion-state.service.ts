@@ -1,10 +1,10 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { Extrusora } from './produccion';
+import { Extrusora, Prensa } from './produccion';
 
 /**
- * Servicio compartido de estado para el módulo de Extrusiones.
- * El Shell lo actualiza cuando el usuario selecciona turno/extrusora.
- * El componente ExtrusionMain lo lee para reaccionar.
+ * Servicio compartido de estado para el módulo de Extrusiones y Prensados.
+ * El Shell lo actualiza cuando el usuario selecciona turno/extrusora/prensa.
+ * Los componentes leen para reaccionar.
  */
 @Injectable({ providedIn: 'root' })
 export class ExtrusionStateService {
@@ -13,6 +13,9 @@ export class ExtrusionStateService {
 
   /** Extrusora activa seleccionada desde el header */
   readonly extrusoraActiva = signal<Extrusora | null>(null);
+
+  /** Prensa activa seleccionada desde el header */
+  readonly prensaActiva = signal<Prensa | null>(null);
 
   /** Indica si ya se hizo al menos una selección de extrusora */
   readonly extrusoraSeleccionada = computed(() => this.extrusoraActiva() !== null);
@@ -35,9 +38,14 @@ export class ExtrusionStateService {
     this.extrusoraActiva.set(ext);
   }
 
+  setPrensa(prensa: Prensa | null) {
+    this.prensaActiva.set(prensa);
+  }
+
   reset() {
     this.turnoActivo.set(null);
     this.extrusoraActiva.set(null);
+    this.prensaActiva.set(null);
     this.interrupcionEnCurso.set(false);
     this.extrusionIniciada.set(false);
     this.onTriggerInterrupcion = undefined;

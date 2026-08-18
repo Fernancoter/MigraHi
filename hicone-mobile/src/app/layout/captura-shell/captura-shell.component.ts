@@ -5,8 +5,9 @@ import { RouterModule, Router } from '@angular/router';
 import { SyncQueueService } from '../../core/offline/sync-queue.service';
 import { OfflineStoreService } from '../../core/offline/offline-store.service';
 import { AuthService } from '../../core/services/auth.service';
-import { ProduccionService, Extrusora, Turno } from '../../core/services/produccion';
+import { ProduccionService, Extrusora, Turno, Prensa } from '../../core/services/produccion';
 import { ExtrusionStateService } from '../../core/services/extrusion-state.service';
+import { DialogService } from '../../core/services/dialog.service';
 
 @Component({
   selector: 'app-captura-shell',
@@ -172,10 +173,12 @@ import { ExtrusionStateService } from '../../core/services/extrusion-state.servi
         </button>
       </div>
 
-      <!-- Dropdown de Prensas -->
+      <!-- Dropdown de Prensas (carga desde API) -->
       <div *ngIf="showPrensasMenu" class="header-dropdown prensas-dropdown">
-        <button class="dropdown-item" *ngFor="let p of prensas" (click)="selectPrensa(p)">
-          {{ p }}
+        <div *ngIf="loadingPrensas" class="dropdown-loading">Cargando...</div>
+        <button class="dropdown-item" *ngFor="let p of prensasApi" (click)="selectPrensa(p)"
+                [class.selected]="prensaActiva?.id === p.id">
+          {{ p.nombre }}
         </button>
       </div>
 
@@ -192,6 +195,26 @@ import { ExtrusionStateService } from '../../core/services/extrusion-state.servi
       <main class="captura-content">
         <router-outlet></router-outlet>
       </main>
+
+      <!-- Custom Dialog Modal Overlay -->
+      <div class="custom-dialog-overlay" *ngIf="dialogService.activeDialog() as dialog">
+        <div class="custom-dialog-box animate-scale-up">
+          <div class="dialog-header-row" *ngIf="dialog.title">
+            <h3>{{ dialog.title }}</h3>
+          </div>
+          <div class="dialog-body-text">
+            {{ dialog.message }}
+          </div>
+          <div class="dialog-footer-actions">
+            <button class="btn-cancel" *ngIf="dialog.type === 'confirm'" (click)="dialog.resolve(false)">
+              {{ dialog.cancelLabel || 'Cancelar' }}
+            </button>
+            <button class="btn-confirm" (click)="dialog.resolve(true)">
+              {{ dialog.acceptLabel || 'Aceptar' }}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   `,
   styles: [`
@@ -549,6 +572,92 @@ import { ExtrusionStateService } from '../../core/services/extrusion-state.servi
       .captura-content { padding: 16px; }
       .notifications-panel { right: 16px; width: calc(100% - 32px); }
     }
+
+    /* Custom Dialog Styles */
+    .custom-dialog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 20px;
+      backdrop-filter: blur(2px);
+    }
+
+    .custom-dialog-box {
+      background-color: #222222;
+      border: 1px solid #333333;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .dialog-header-row h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .dialog-body-text {
+      font-size: 15px;
+      line-height: 1.5;
+      color: #dddddd;
+    }
+
+    .dialog-footer-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .dialog-footer-actions button {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-cancel {
+      background-color: #424242;
+      color: #cccccc;
+    }
+
+    .btn-cancel:hover {
+      background-color: #4f4f4f;
+    }
+
+    .btn-confirm {
+      background-color: #00897b;
+      color: #ffffff;
+    }
+
+    .btn-confirm:hover {
+      background-color: #00796b;
+    }
+
+    .animate-scale-up {
+      animation: scaleUp 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes scaleUp {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
   `]
 })
 export class CapturaShellComponent implements OnInit, OnDestroy {
@@ -558,6 +667,7 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private produccionService = inject(ProduccionService);
   public extrusionState = inject(ExtrusionStateService);
+  public dialogService = inject(DialogService);
   private cdr = inject(ChangeDetectorRef);
 
   isOnline = navigator.onLine;
@@ -576,8 +686,10 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
   loadingTurnos = false;
   loadingExtrusoras = false;
 
-  // Prensas (todavía hardcoded)
-  prensas = ['Prensa #1', 'Prensa #2', 'Prensa #3', 'Prensa #4'];
+  // Prensas (cargadas desde API)
+  prensasApi: Prensa[] = [];
+  loadingPrensas = false;
+  prensaActiva: Prensa | null = null;
 
   private syncSub?: Subscription;
 
@@ -622,6 +734,9 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     this.showShiftsMenu = false;
     this.showExtrusorasMenu = false;
     this.cdr.detectChanges();
+    if (this.showPrensasMenu && this.prensasApi.length === 0) {
+      this.cargarPrensasApi();
+    }
   }
 
   toggleExtrusorasMenu() {
@@ -716,6 +831,22 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     });
   }
 
+  cargarPrensasApi() {
+    this.loadingPrensas = true;
+    this.cdr.detectChanges();
+    this.produccionService.getPrensas().subscribe({
+      next: (data) => {
+        this.prensasApi = data;
+        this.loadingPrensas = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.loadingPrensas = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   selectTurno(turno: Turno) {
     this.extrusionState.setTurno({ id: turno.id, nombre: turno.nombre });
     this.offlineStore.set('active_shift', turno.nombre);
@@ -723,8 +854,10 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  selectPrensa(prensa: string) {
-    this.offlineStore.set('active_press', prensa);
+  selectPrensa(prensa: Prensa) {
+    this.prensaActiva = prensa;
+    this.offlineStore.set('active_press', prensa.nombre);
+    this.offlineStore.set('active_press_id', prensa.id);
     this.closeDropdowns();
     this.cdr.detectChanges();
   }
