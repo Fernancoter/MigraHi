@@ -585,10 +585,12 @@ public class ProduccionService : IProduccionService
 
     // ── Prensado ───────────────────────────────────────────────────────────
 
-    public async Task<Prensado> IniciarPrensadoAsync(Guid prensaId, Guid operarioId, Guid turnoId, Guid productoId, Guid troquelId)
+    public async Task<Prensado> IniciarPrensadoAsync(Guid prensaId, Guid operarioId, Guid turnoId, Guid productoId, Guid? troquelId)
     {
         var prensa = await _context.Prensas.FindAsync(prensaId);
         if (prensa == null) throw new Exception("Prensa no encontrada");
+
+        Guid? finalTroquelId = (troquelId == Guid.Empty || troquelId == new Guid("00000000-0000-0000-0000-000000000001")) ? null : troquelId;
 
         var prensado = new Prensado
         {
@@ -596,7 +598,7 @@ public class ProduccionService : IProduccionService
             OperarioId = operarioId,
             TurnoId = turnoId,
             ProductoId = productoId,
-            TroquelId = troquelId,
+            TroquelId = finalTroquelId,
             Estado = EstadoPrensado.EnProceso,
             HoraIniciaProceso = DateTime.UtcNow,
             Fecha = DateTime.UtcNow.Date

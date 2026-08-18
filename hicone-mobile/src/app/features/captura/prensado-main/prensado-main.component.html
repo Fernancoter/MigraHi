@@ -1,0 +1,442 @@
+<div class="prensado-view" style="padding: 12px; padding-bottom: 80px; display: flex; flex-direction: column; gap: 16px; min-height: 100vh; background-color: #121212; color: #e0e0e0; font-family: sans-serif;">
+  
+
+
+  <!-- Banners de Mensaje -->
+  <div class="message-banner danger" *ngIf="errorMessage" style="background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;">
+    ⚠️ {{ errorMessage }}
+  </div>
+  <div class="message-banner success" *ngIf="successMessage" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;">
+    ✓ {{ successMessage }}
+  </div>
+
+  <!-- Banner de Interrupción Activa (Downtime) -->
+  <div class="message-banner danger animate-fade-in" *ngIf="prensado?.interrupcionEnCurso" style="background-color: rgba(239, 68, 68, 0.15); border: 2px solid #ef4444; color: #f87171; padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; gap: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-top: 6px;">
+    <span>⚠️ PRENSA DETENIDA POR INTERRUPCIÓN</span>
+    <button (click)="reanudarProceso()" [disabled]="saving" style="background-color: #ef4444; color: #fff; border: none; border-radius: 4px; font-size: 11px; font-weight: bold; padding: 6px 12px; cursor: pointer;">
+      REANUDAR PROCESO
+    </button>
+  </div>
+
+  <div *ngIf="cargando" style="text-align: center; padding: 40px; color: #888888;">
+    <div class="spinner" style="width: 32px; height: 32px; border: 3px solid #333; border-top-color: #00bfa5; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px auto;"></div>
+    <span>Cargando consola de prensado...</span>
+  </div>
+
+  <ng-container *ngIf="!cargando && prensado">
+    
+    <!-- 1. Tarjeta Informativa de Prensado -->
+    <div class="orden-info-card" style="background-color: #222222; border: 1px solid #333; border-radius: 8px; padding: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px 10px; margin-bottom: 12px;">
+        <div>
+          <span style="font-size: 11px; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 2px;">Prensa</span>
+          <strong style="font-size: 14px; color: #fff;">{{ prensado.prensa }}</strong>
+        </div>
+        <div>
+          <span style="font-size: 11px; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 2px;">Producto Programado</span>
+          <strong style="font-size: 14px; color: #38bdf8;">{{ prensado.producto }}</strong>
+        </div>
+        <div>
+          <span style="font-size: 11px; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 2px;">Turno</span>
+          <strong style="font-size: 13px; color: #fff;">{{ prensado.turno }}</strong>
+        </div>
+        <div>
+          <span style="font-size: 11px; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 2px;">Operador</span>
+          <strong style="font-size: 13px; color: #fff;">{{ prensado.operador }}</strong>
+        </div>
+      </div>
+      <div style="border-top: 1px solid #333; padding-top: 8px; font-size: 12px; color: #aaa;">
+        Clave Producto: <strong>{{ prensado.producto }}</strong> - {{ prensado.productoDescripcion }}
+      </div>
+    </div>
+
+    <!-- ================================================================
+         VISTA DE LA PESTAÑA: INSUMO
+         ================================================================ -->
+    <ng-container *ngIf="activeTab === 'insumo'">
+      <!-- Selección de Insumo (Bobinas) -->
+      <div style="background-color: #222222; border: 1px solid #333; border-radius: 8px; padding: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 14px; font-size: 13px;">
+        <div style="display: grid; grid-template-columns: 1.2fr 1.5fr auto auto; gap: 12px; align-items: end;">
+          <!-- Columna 1: Producto y Máquina -->
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div>
+              <span style="font-size: 11px; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 2px;">Producto</span>
+              <strong style="font-size: 14px; color: #fff;">{{ prensado.producto }}</strong>
+            </div>
+            <div>
+              <span style="font-size: 11px; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 2px;">Máquina</span>
+              <strong style="font-size: 14px; color: #fff;">{{ prensado.prensa }}</strong>
+            </div>
+          </div>
+
+          <!-- Columna 2: Bobinas Disponibles Dropdown -->
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span style="font-size: 11px; color: #888; text-transform: uppercase; font-weight: 600; display: block;">Bobinas disponibles</span>
+            <select [(ngModel)]="selectedBobinaId" style="background: #151f32; color: #fff; border: 1px solid #334155; border-radius: 6px; padding: 8px 12px; font-size: 13px; outline: none; width: 100%; height: 38px; cursor: pointer;">
+              <option value="">&lt;Seleccione&gt;</option>
+              <option *ngFor="let b of bobinasDisponibles" [value]="b.id">
+                {{ b.noSerie }} ({{ b.kg }} Kg)
+              </option>
+            </select>
+          </div>
+
+          <!-- Columna 3: Utilizar Button -->
+          <button (click)="montarBobinaSeleccionadaById()" [disabled]="saving || !selectedBobinaId" style="background-color: #00897b; color: #fff; border: none; border-radius: 6px; font-weight: 700; height: 38px; padding: 0 16px; font-size: 12px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; min-width: 100px; transition: opacity 0.2s;" [style.opacity]="selectedBobinaId ? 1 : 0.5">
+            UTILIZAR
+          </button>
+
+          <!-- Columna 4: Escanear Button -->
+          <button (click)="escanearBobina()" style="background-color: #b2ebf2; color: #006064; border: none; border-radius: 6px; font-weight: 700; height: 38px; padding: 0 16px; font-size: 12px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; min-width: 100px;">
+            ESCANEAR
+          </button>
+        </div>
+      </div>
+
+      <!-- Listado Histórico de Bobinas Consumidas/Montadas en este Prensado (Imagen 2) -->
+      <div *ngIf="prensado.bobinas && prensado.bobinas.length > 0" style="display: flex; flex-direction: column; gap: 12px; margin-top: 6px;">
+        <div *ngFor="let b of prensado.bobinas" style="background-color: #222222; border: 1px solid #333; border-radius: 8px; padding: 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);" [style.border-color]="b.activa ? '#10b981' : '#333'">
+          <!-- Icono de Bobina (azul si activa, gris si consumida) -->
+          <div style="font-size: 32px; background: rgba(56, 189, 248, 0.1); width: 60px; height: 60px; border-radius: 8px; display: flex; align-items: center; justify-content: center;" [style.color]="b.activa ? '#38bdf8' : '#888'">
+            🌀
+          </div>
+
+          <!-- Datos de la Bobina -->
+          <div style="flex: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+              <span style="font-size: 11px; color: #888; display: block;">No. Serie</span>
+              <strong style="font-size: 14px; color: #fff; font-family: monospace;">{{ b.noSerie }}</strong>
+            </div>
+            <div>
+              <span style="font-size: 11px; color: #888; display: block;">Estado</span>
+              <strong style="font-size: 13px;" [style.color]="b.activa ? '#38bdf8' : '#aaa'">{{ b.estado }}</strong>
+            </div>
+            <div>
+              <span style="font-size: 11px; color: #888; display: block;">Kg Bobina</span>
+              <strong style="font-size: 14px; color: #fff;">{{ b.kg || '0.00' }} Kg</strong>
+            </div>
+            <div>
+              <span style="font-size: 11px; color: #888; display: block;">Calibre</span>
+              <strong style="font-size: 14px; color: #38bdf8;">{{ b.espesor || '0.00' }} mm</strong>
+            </div>
+          </div>
+
+          <!-- Carreras y Acumulados -->
+          <div style="flex: 1.5; display: grid; grid-template-columns: 1fr; gap: 6px; text-align: right; border-left: 1px solid #333; padding-left: 16px;">
+            <div>
+              <span style="font-size: 11px; color: #888; display: block;">Carreras Procesadas</span>
+              <strong style="font-size: 16px; color: #fff;">{{ b.carrerasProcesadas || 0 }}</strong>
+            </div>
+            <div>
+              <span style="font-size: 11px; color: #888; display: block;">Acumulado Carreras</span>
+              <strong style="font-size: 16px; color: #38bdf8;">{{ b.acumuladoCarreras || 0 }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ================================================================
+         VISTA DE LA PESTAÑA: CARRERA
+         ================================================================ -->
+    <ng-container *ngIf="activeTab === 'carrera'">
+      <!-- Duración Prensado en Vivo y botón AGREGAR (Imagen 3 / 4) -->
+      <div style="background-color: #222222; border: 1px solid #333; border-radius: 8px; padding: 14px 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 13px; color: #aaa;">Prensado -:</span>
+          <strong style="font-size: 16px; color: #fff; font-family: monospace;">{{ tiempoTranscurrido }}</strong>
+        </div>
+        <div style="display: flex; gap: 12px;">
+          <!-- AGREGAR button -->
+          <button (click)="iniciarNuevaCarrera()" [disabled]="cargandoCarrera || !prensado.activeBobinaId" style="background-color: #00897b; color: #fff; border: none; border-radius: 6px; font-weight: 700; height: 38px; padding: 0 20px; font-size: 12px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; min-width: 100px; transition: opacity 0.2s;" [style.opacity]="prensado.activeBobinaId ? 1 : 0.5">
+            {{ cargandoCarrera ? 'GENERANDO...' : 'AGREGAR' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Listado de Carreras con Checkboxes (Imagen 4) -->
+      <div *ngIf="carreras && carreras.length > 0" style="display: flex; flex-direction: column; gap: 12px; margin-top: 6px;">
+        <div *ngFor="let c of carreras" style="background-color: #222222; border: 1px solid #333; border-radius: 8px; padding: 14px 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <!-- Badge C1, C2, etc -->
+              <span style="background-color: #334155; color: #f8fafc; font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 4px; font-family: monospace;">C{{ c.carreraNo }}</span>
+              
+              <!-- Badge Estado -->
+              <span *ngIf="c.id === (carreraActiva ? carreraActiva.id : '')" style="background-color: rgba(249, 115, 22, 0.15); color: #f97316; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px;">En Proceso</span>
+              <span *ngIf="c.id !== (carreraActiva ? carreraActiva.id : '')" style="background-color: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px;">Terminada</span>
+            </div>
+
+            <!-- Icons a la derecha -->
+            <div style="display: flex; gap: 14px; align-items: center;">
+              <!-- Printer Icon -->
+              <button style="background: none; border: none; color: #38bdf8; font-size: 18px; cursor: pointer;" title="Imprimir Etiquetas">
+                🖨️
+              </button>
+              <!-- Sync/Arrow Icon -->
+              <button style="background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;" title="Sincronizar">
+                🔄
+              </button>
+            </div>
+          </div>
+
+          <!-- Cuadrícula de checkboxes L6 a L1 -->
+          <div style="display: flex; align-items: center; gap: 18px; border-top: 1px solid #333; padding-top: 10px; justify-content: space-around;">
+            <div *ngFor="let lineNo of [6, 5, 4, 3, 2, 1]" style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <span style="font-size: 11px; color: #888; font-weight: 600;">L{{ lineNo }}</span>
+              <input type="checkbox" 
+                     [checked]="isCarreteDefectuoso(c, lineNo)" 
+                     [disabled]="c.id !== (carreraActiva ? carreraActiva.id : '')" 
+                     (change)="toggleCarreteDefectoByLine(c, lineNo)"
+                     style="accent-color: #f97316; width: 18px; height: 18px; cursor: pointer;" />
+            </div>
+          </div>
+
+          <!-- Botón de Finalizar Carrera si es la activa -->
+          <div *ngIf="c.id === (carreraActiva ? carreraActiva.id : '')" style="margin-top: 6px;">
+            <button (click)="finalizarCarreraActiva()" [disabled]="cargandoCarrera" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; font-weight: bold; border: none; border-radius: 6px; padding: 12px; font-size: 13px; cursor: pointer; width: 100%; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);">
+              🏁 FINALIZAR CARRERA Y EMBALAR
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!carreras || carreras.length === 0" style="text-align: center; padding: 30px; color: #888;">
+        ⚠️ No hay carreras registradas en este prensado. Presione "AGREGAR" para iniciar una.
+      </div>
+    </ng-container>
+
+    <!-- ================================================================
+         VISTA DE LA PESTAÑA: PALETS
+         ================================================================ -->
+    <ng-container *ngIf="activeTab === 'palet'">
+      <div style="background-color: #222222; border: 1px solid #333; border-radius: 8px; padding: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-size: 14px; font-weight: 700; color: #fff;">Palets del Prensado</span>
+          <button (click)="crearPalet()" [disabled]="cargandoPalets" style="background-color: #00897b; color: #fff; border: none; border-radius: 6px; font-weight: 700; height: 36px; padding: 0 16px; font-size: 12px; text-transform: uppercase; cursor: pointer;">
+            ➕ NUEVO PALET
+          </button>
+        </div>
+
+        <div *ngIf="cargandoPalets" style="text-align: center; padding: 15px; color: #888;">
+          Cargando palets...
+        </div>
+
+        <div *ngIf="!cargandoPalets && (!palets || palets.length === 0)" style="text-align: center; padding: 20px; color: #aaa; font-size: 13px;">
+          📦 No se han creado palets para este proceso. Se creará uno automáticamente al finalizar la primera carrera.
+        </div>
+
+        <div *ngIf="!cargandoPalets && palets && palets.length > 0" style="display: flex; flex-direction: column; gap: 10px;">
+          <div *ngFor="let p of palets" style="background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong style="color: #fff; font-size: 13px; font-family: monospace;">{{ p.noSerie }}</strong>
+              <div style="font-size: 11px; color: #888; margin-top: 2px;">
+                Estado: <strong [style.color]="p.estatus === 'Cerrado' ? '#ef4444' : '#10b981'">{{ p.estatus }}</strong> | Carretes: <strong>{{ p.carretes || 0 }}</strong>
+              </div>
+            </div>
+            
+            <button *ngIf="p.estatus === 'Abierto'" (click)="cerrarPalet(p.id)" style="background: #334155; color: #38bdf8; border: 1px solid #475569; border-radius: 4px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer;">
+              🏁 CERRAR
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- 4. Acción de Concluir Turno -->
+    <div style="margin-top: 8px; margin-bottom: 20px;" *ngIf="activeTab === 'carrera'">
+      <button (click)="abrirModalCierre()" [disabled]="carreraActiva" [style.opacity]="carreraActiva ? 0.5 : 1" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; font-weight: 700; border: none; border-radius: 8px; padding: 14px; font-size: 14px; cursor: pointer; width: 100%; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);">
+        🏁 FINALIZAR Y CONCLUIR PRENSADO
+      </button>
+      <div *ngIf="carreraActiva" style="font-size: 11px; color: #ef4444; text-align: center; margin-top: 6px; font-weight: bold;">
+        ⚠️ Debe finalizar la carrera en curso para poder concluir el prensado.
+      </div>
+    </div>
+
+  </ng-container>
+</div>
+
+<!-- Barra de Navegación Inferior -->
+<div class="bottom-nav-bar" style="position: fixed; bottom: 0; left: 0; right: 0; background-color: #1a1a1a; border-top: 1px solid #333; display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.5);">
+  <button (click)="activeTab = 'insumo'" [style.color]="activeTab === 'insumo' ? '#00bfa5' : '#94a3b8'" style="background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; cursor: pointer; outline: none; transition: color 0.2s;">
+    <span style="font-size: 20px;">🌀</span>
+    <span>INSUMO</span>
+  </button>
+  <button (click)="activeTab = 'carrera'" [style.color]="activeTab === 'carrera' ? '#00bfa5' : '#94a3b8'" style="background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; cursor: pointer; outline: none; transition: color 0.2s;">
+    <span style="font-size: 20px;">⚙️</span>
+    <span>CARRERA</span>
+  </button>
+  <button (click)="activeTab = 'palet'" [style.color]="activeTab === 'palet' ? '#00bfa5' : '#94a3b8'" style="background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; cursor: pointer; outline: none; transition: color 0.2s;">
+    <span style="font-size: 20px;">📦</span>
+    <span>PALETS</span>
+  </button>
+</div>
+
+<!-- ================================================================
+     MODAL DE CIERRE / CONCLUIR PRENSADO
+     ================================================================ -->
+<div class="modal-overlay animate-fade-in" *ngIf="mostrarModalCierre" (click)="cerrarModalCierre()">
+  <div class="modal-card" (click)="$event.stopPropagation()" style="max-width: 500px; background: #262626; border-radius: 8px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
+    <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid #3c3c3c; display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="margin: 0; color: #fff; font-size: 16px; font-weight: 700;">🏁 Consolidar Cierre de Prensado</h3>
+      <button class="close-btn-x" (click)="cerrarModalCierre()" style="background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
+    </div>
+    
+    <div class="modal-body" style="padding: 20px; display: flex; flex-direction: column; gap: 20px;">
+      
+      <!-- DOS COLUMNAS: LEVAS Y RODILLOS -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        
+        <!-- SECCIÓN LEVAS -->
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span style="font-size: 13px; color: #ddd; font-weight: 600;">Levas (UM)</span>
+            <div style="display: flex; gap: 14px; margin-top: 4px;">
+              <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #fff; cursor: pointer;">
+                <input type="radio" name="levasUm" value="Kg" [(ngModel)]="levasUm" style="accent-color: #00bfa5; width: 15px; height: 15px;" />
+                <span>Kg</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #fff; cursor: pointer;">
+                <input type="radio" name="levasUm" value="Grados" [(ngModel)]="levasUm" style="accent-color: #00bfa5; width: 15px; height: 15px;" />
+                <span>Grados</span>
+              </label>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <label style="font-size: 12px; color: #aaa;">Entrada ({{ levasUm }})</label>
+            <input type="number" step="0.1" [(ngModel)]="levasEntrada" style="background: transparent; border: none; border-bottom: 1px solid #777; color: #fff; font-size: 15px; padding: 4px 0; text-align: right; outline: none; width: 100%;" />
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <label style="font-size: 12px; color: #aaa;">Salida ({{ levasUm }})</label>
+            <input type="number" step="0.1" [(ngModel)]="levasSalida" style="background: transparent; border: none; border-bottom: 1px solid #777; color: #fff; font-size: 15px; padding: 4px 0; text-align: right; outline: none; width: 100%;" />
+          </div>
+        </div>
+
+        <!-- SECCIÓN RODILLOS -->
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span style="font-size: 13px; color: #ddd; font-weight: 600;">Rodillos (UM)</span>
+            <div style="display: flex; gap: 14px; margin-top: 4px;">
+              <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #fff; cursor: pointer;">
+                <input type="radio" name="rodillosUm" value="Kg" [(ngModel)]="rodillosUm" style="accent-color: #00bfa5; width: 15px; height: 15px;" />
+                <span>Kg</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #fff; cursor: pointer;">
+                <input type="radio" name="rodillosUm" value="Grados" [(ngModel)]="rodillosUm" style="accent-color: #00bfa5; width: 15px; height: 15px;" />
+                <span>Grados</span>
+              </label>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <label style="font-size: 12px; color: #aaa;">Entrada ({{ rodillosUm }})</label>
+            <input type="number" step="0.1" [(ngModel)]="rodillosEntrada" style="background: transparent; border: none; border-bottom: 1px solid #777; color: #fff; font-size: 15px; padding: 4px 0; text-align: right; outline: none; width: 100%;" />
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <label style="font-size: 12px; color: #aaa;">Salida ({{ rodillosUm }})</label>
+            <input type="number" step="0.1" [(ngModel)]="rodillosSalida" style="background: transparent; border: none; border-bottom: 1px solid #777; color: #fff; font-size: 15px; padding: 4px 0; text-align: right; outline: none; width: 100%;" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal-footer" style="padding: 16px 20px; background-color: #1e1e1e; border-top: 1px solid #3c3c3c; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <button (click)="confirmarCierre()" [disabled]="saving" style="background-color: #00897b; color: #fff; border: none; border-radius: 4px; height: 44px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background-color 0.2s;">
+        {{ saving ? 'PROCESANDO...' : 'PROCESAR' }}
+      </button>
+      <button (click)="cerrarModalCierre()" style="background-color: #424242; color: #ccc; border: none; border-radius: 4px; height: 44px; font-size: 13px; font-weight: 500; cursor: pointer;">
+        CANCELAR
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     MODAL DE REGISTRO DE INTERRUPCIÓN (DOWN TIME)
+     ================================================================ -->
+<div class="modal-overlay animate-fade-in" *ngIf="mostrarModalInterrupcion" (click)="cerrarModalInterrupcion()">
+  <div class="modal-card" (click)="$event.stopPropagation()" style="max-width: 450px; background: #262626; border-radius: 8px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.6); position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3000;">
+    <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid #3c3c3c; display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="margin: 0; color: #fff; font-size: 16px; font-weight: 700;">⚠️ Registrar Interrupción de Prensa</h3>
+      <button class="close-btn-x" (click)="cerrarModalInterrupcion()" style="background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
+    </div>
+    
+    <div class="modal-body" style="padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+      <!-- Selector de Causa -->
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label style="font-size: 13px; color: #ddd; font-weight: 600;">Causa / Down Time Code</label>
+        <select [(ngModel)]="interrupcionCausaId" style="background: #151f32; color: #fff; border: 1px solid #334155; border-radius: 6px; padding: 8px 12px; font-size: 13px; outline: none; width: 100%; cursor: pointer;">
+          <option value="">&lt;Seleccione la causa&gt;</option>
+          <option *ngFor="let c of causasInterrupcion" [value]="c.id">
+            {{ c.codigo }} - {{ c.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Descripción / Motivo -->
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label style="font-size: 13px; color: #ddd; font-weight: 600;">Descripción del Motivo</label>
+        <textarea [(ngModel)]="interrupcionMotivo" placeholder="Escriba los detalles de la interrupción..." style="background: #151f32; color: #fff; border: 1px solid #334155; border-radius: 6px; padding: 8px 12px; font-size: 13px; outline: none; width: 100%; height: 80px; resize: none; font-family: sans-serif;"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer" style="padding: 16px 20px; background-color: #1e1e1e; border-top: 1px solid #3c3c3c; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <button (click)="registrarInterrupcion()" [disabled]="saving" style="background-color: #ef4444; color: #fff; border: none; border-radius: 4px; height: 40px; font-size: 13px; font-weight: 700; cursor: pointer;">
+        {{ saving ? 'REGISTRANDO...' : 'REGISTRAR' }}
+      </button>
+      <button (click)="cerrarModalInterrupcion()" style="background-color: #424242; color: #ccc; border: none; border-radius: 4px; height: 40px; font-size: 13px; font-weight: 500; cursor: pointer;">
+        CANCELAR
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     MODAL DE CAMBIAR TROQUEL
+     ================================================================ -->
+<div class="modal-overlay animate-fade-in" *ngIf="mostrarModalCambiarTroquel" (click)="cerrarModalCambiarTroquel()">
+  <div class="modal-card" (click)="$event.stopPropagation()" style="max-width: 450px; background: #262626; border-radius: 8px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.6); position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3000;">
+    <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid #3c3c3c; display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="margin: 0; color: #fff; font-size: 16px; font-weight: 700;">⚙️ Cambiar Troquel Activo</h3>
+      <button class="close-btn-x" (click)="cerrarModalCambiarTroquel()" style="background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
+    </div>
+    
+    <div class="modal-body" style="padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+      <!-- Selector de Troquel -->
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label style="font-size: 13px; color: #ddd; font-weight: 600;">Seleccionar Nuevo Troquel</label>
+        <select [(ngModel)]="selectedTroquelId" style="background: #151f32; color: #fff; border: 1px solid #334155; border-radius: 6px; padding: 8px 12px; font-size: 13px; outline: none; width: 100%; cursor: pointer;">
+          <option value="">&lt;Seleccione troquel&gt;</option>
+          <option *ngFor="let t of troqueles" [value]="t.id">
+            {{ t.nombre }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-footer" style="padding: 16px 20px; background-color: #1e1e1e; border-top: 1px solid #3c3c3c; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <button (click)="cambiarTroquel()" [disabled]="saving" style="background-color: #38bdf8; color: #0f172a; border: none; border-radius: 4px; height: 40px; font-size: 13px; font-weight: 700; cursor: pointer;">
+        {{ saving ? 'CAMBIANDO...' : 'CAMBIAR' }}
+      </button>
+      <button (click)="cerrarModalCambiarTroquel()" style="background-color: #424242; color: #ccc; border: none; border-radius: 4px; height: 40px; font-size: 13px; font-weight: 500; cursor: pointer;">
+        CANCELAR
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>

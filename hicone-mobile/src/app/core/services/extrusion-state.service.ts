@@ -29,6 +29,7 @@ export class ExtrusionStateService {
   /** Callbacks de comunicación desde el Shell al componente principal */
   onTriggerInterrupcion?: () => void;
   onTriggerFinalizar?: () => void;
+  onTriggerCambiarTroquel?: () => void;
 
   setTurno(turno: { id: string; nombre: string } | null) {
     this.turnoActivo.set(turno);
@@ -50,5 +51,6 @@ export class ExtrusionStateService {
     this.extrusionIniciada.set(false);
     this.onTriggerInterrupcion = undefined;
     this.onTriggerFinalizar = undefined;
+    this.onTriggerCambiarTroquel = undefined;
   }
 }

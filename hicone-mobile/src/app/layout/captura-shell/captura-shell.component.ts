@@ -27,8 +27,8 @@ import { DialogService } from '../../core/services/dialog.service';
         <h1 class="captura-title">{{ getTitle() }}</h1>
         
         <div class="header-right">
-          <!-- CASO 1: Extrusión Activa en Consola (Mostrar iconos estilo QA) -->
-          <ng-container *ngIf="router.url === '/extrusion' && extrusionState.extrusionIniciada()">
+          <!-- CASO 1: Extrusión Activa en Consola o Prensado Activo (Mostrar iconos estilo QA) -->
+          <ng-container *ngIf="(router.url === '/extrusion' && extrusionState.extrusionIniciada()) || router.url.includes('/prensado-main')">
             
             <!-- Notificaciones Sync (Campanita) -->
             <button class="header-action-btn notification-btn" (click)="toggleNotifications()" title="Estado de Sincronización">
@@ -62,7 +62,7 @@ import { DialogService } from '../../core/services/dialog.service';
           </ng-container>
 
           <!-- CASO 2: Selección Inicial o Prensado (Mantener botones originales) -->
-          <ng-container *ngIf="!(router.url === '/extrusion' && extrusionState.extrusionIniciada())">
+          <ng-container *ngIf="!((router.url === '/extrusion' && extrusionState.extrusionIniciada()) || router.url.includes('/prensado-main'))">
             <!-- Botones contextuales para Prensado y Extrusión -->
             <ng-container *ngIf="router.url === '/prensado' || router.url === '/extrusion'">
               <!-- Botón del Relojito (Turnos) -->
@@ -161,6 +161,13 @@ import { DialogService } from '../../core/services/dialog.service';
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
           <span style="font-weight: 600;">Finalizar</span>
+        </button>
+        <button *ngIf="router.url.includes('/prensado-main')" class="dropdown-item" (click)="triggerCambiarTroquelOption()" style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="color: #38bdf8; flex-shrink:0;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span style="font-weight: 600;">Cambiar Troquel</span>
         </button>
       </div>
 
@@ -782,6 +789,14 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     }
   }
 
+  triggerCambiarTroquelOption() {
+    this.showOptionsDropdown = false;
+    this.cdr.detectChanges();
+    if (this.extrusionState.onTriggerCambiarTroquel) {
+      this.extrusionState.onTriggerCambiarTroquel();
+    }
+  }
+
   openHelpManual() {
     this.produccionService.getHelpUrl().subscribe({
       next: (configs: any[]) => {
@@ -856,6 +871,7 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
 
   selectPrensa(prensa: Prensa) {
     this.prensaActiva = prensa;
+    this.extrusionState.setPrensa(prensa);
     this.offlineStore.set('active_press', prensa.nombre);
     this.offlineStore.set('active_press_id', prensa.id);
     this.closeDropdowns();
@@ -879,6 +895,7 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
 
   getTitle(): string {
     const url = this.router.url;
+    if (url.includes('/prensado-main')) return 'Proceso de Prensado';
     if (url.includes('/troquel')) return 'Asignar Troquel';
     if (url.includes('/carrera')) return 'Cerrar Carrera';
     if (url.includes('/escanear')) return 'Escanear Código';

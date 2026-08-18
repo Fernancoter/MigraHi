@@ -6,6 +6,7 @@ import { Subscription, timer } from 'rxjs';
 import { ProduccionService, Bobina } from '../../../core/services/produccion';
 import { AuthService } from '../../../core/services/auth.service';
 import { DialogService } from '../../../core/services/dialog.service';
+import { ExtrusionStateService } from '../../../core/services/extrusion-state.service';
 
 @Component({
   selector: 'app-prensado-main',
@@ -21,6 +22,7 @@ export class PrensadoMainComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
   private dialog = inject(DialogService);
+  private extrusionState = inject(ExtrusionStateService);
 
   prensadoId = '';
   prensado: any | null = null;
@@ -76,6 +78,17 @@ export class PrensadoMainComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       this.prensadoId = params['id'] || '';
       if (this.prensadoId) {
+        // Asignar callbacks al servicio global de estado para que el header los invoque
+        this.extrusionState.onTriggerInterrupcion = () => {
+          this.seleccionarInterrupcion();
+        };
+        this.extrusionState.onTriggerFinalizar = () => {
+          this.abrirModalCierre();
+        };
+        this.extrusionState.onTriggerCambiarTroquel = () => {
+          this.seleccionarCambiarTroquel();
+        };
+
         this.cargarDatos();
         this.cargarCausasInterrupcion();
         this.cargarTroqueles();
@@ -87,6 +100,9 @@ export class PrensadoMainComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subs.unsubscribe();
+    this.extrusionState.onTriggerInterrupcion = undefined;
+    this.extrusionState.onTriggerFinalizar = undefined;
+    this.extrusionState.onTriggerCambiarTroquel = undefined;
   }
 
   cargarDatos() {
@@ -95,6 +111,9 @@ export class PrensadoMainComponent implements OnInit, OnDestroy {
       next: (detail) => {
         this.prensado = detail;
         
+        // Sincronizar el estado de interrupción con el servicio global para el header
+        this.extrusionState.interrupcionEnCurso.set(detail.interrupcionEnCurso || false);
+
         // Map active interrupcion if it exists
         if (detail.activeInterrupcionId) {
           this.interrupcionActiva = {

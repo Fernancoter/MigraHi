@@ -47,7 +47,7 @@ public interface IProduccionService
     Task<bool> DeleteExtrusoraMezcladoraAsync(Guid id);
     
     // ── Prensado (Carreras y Carretes) ─────────────────────────────────────
-    Task<Prensado> IniciarPrensadoAsync(Guid prensaId, Guid operarioId, Guid turnoId, Guid productoId, Guid troquelId);
+    Task<Prensado> IniciarPrensadoAsync(Guid prensaId, Guid operarioId, Guid turnoId, Guid productoId, Guid? troquelId);
     Task<bool> MontarBobinaEnPrensadoAsync(Guid prensadoId, Guid bobinaId);
     Task<Carrera> IniciarCarreraAsync(Guid prensadoId);
     Task<bool> FinalizarCarreraAsync(Guid carreraId);

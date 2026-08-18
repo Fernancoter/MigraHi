@@ -153,8 +153,23 @@ public class ProduccionController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("extrusion/{id}/finalizar")]
-    public async Task<IActionResult> FinalizarExtrusion(Guid id, [FromBody] string? motivo)
+    public async Task<IActionResult> FinalizarExtrusion(Guid id, [FromBody] System.Text.Json.JsonElement? body)
     {
+        string? motivo = null;
+        if (body.HasValue)
+        {
+            if (body.Value.ValueKind == System.Text.Json.JsonValueKind.String)
+            {
+                motivo = body.Value.GetString();
+            }
+            else if (body.Value.ValueKind == System.Text.Json.JsonValueKind.Object)
+            {
+                if (body.Value.TryGetProperty("motivo", out var prop))
+                    motivo = prop.GetString();
+                else if (body.Value.TryGetProperty("Motivo", out var propCap))
+                    motivo = propCap.GetString();
+            }
+        }
         var result = await _produccionService.FinalizarExtrusionAsync(id, motivo);
         return result ? Ok() : BadRequest("No se pudo finalizar la extrusión");
     }
@@ -433,8 +448,15 @@ public class ProduccionController : ControllerBase
     [HttpPost("prensado/iniciar")]
     public async Task<ActionResult<Prensado>> IniciarPrensado([FromBody] IniciarPrensadoRequest request)
     {
-        var result = await _produccionService.IniciarPrensadoAsync(request.PrensaId, request.OperarioId, request.TurnoId, request.ProductoId, request.TroquelId);
-        return Ok(result);
+        try
+        {
+            var result = await _produccionService.IniciarPrensadoAsync(request.PrensaId, request.OperarioId, request.TurnoId, request.ProductoId, request.TroquelId);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpPost("prensado/{id}/montar-bobina")]
