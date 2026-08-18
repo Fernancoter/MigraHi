@@ -236,11 +236,20 @@ export class EscanearComponent {
   async confirmarGuardado() {
     if (!this.lastScan) return;
 
+<<<<<<< Updated upstream
     let endpoint = this.apiConfig.url('/api/v1/produccion/captura/registrar');
     let body: any = {};
 
     if (this.lastScan.type === 'bobina') {
       endpoint = this.apiConfig.url('/api/v1/produccion/extrusion/guardar-bobina');
+=======
+    const baseApi = `http://${window.location.hostname}:5007/api/v1/produccion`;
+    let endpoint = `${baseApi}/captura/registrar`;
+    let body: any = {};
+
+    if (this.lastScan.type === 'bobina') {
+      endpoint = `${baseApi}/extrusion/guardar-bobina`;
+>>>>>>> Stashed changes
       body = {
         noSerie: this.lastScan.code,
         fechaProduccion: new Date().toISOString(),
@@ -248,13 +257,21 @@ export class EscanearComponent {
         espesor: 1.2
       };
     } else if (this.lastScan.type === 'carrete') {
+<<<<<<< Updated upstream
       endpoint = this.apiConfig.url('/api/v1/produccion/carrete/registrar');
+=======
+      endpoint = `${baseApi}/carrete/registrar`;
+>>>>>>> Stashed changes
       body = {
         noSerie: this.lastScan.code,
         estado: 'Validado'
       };
     } else {
+<<<<<<< Updated upstream
       endpoint = this.apiConfig.url('/api/v1/produccion/pallet/registrar');
+=======
+      endpoint = `${baseApi}/pallet/registrar`;
+>>>>>>> Stashed changes
       body = {
         noSerie: this.lastScan.code,
         estado: 'Terminado'

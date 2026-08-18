@@ -40,7 +40,7 @@ describe('PrinterService', () => {
     });
     expect(zpl).toContain('^XA');
     expect(zpl).toContain('BOB-2026-001');
-    expect(zpl).toContain('HICONE - PLANTA INDUSTRIAL');
+    expect(zpl).toContain('HiCone - Planta');
     expect(zpl).toContain('^XZ');
   });
 });

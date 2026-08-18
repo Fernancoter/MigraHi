@@ -96,7 +96,11 @@ export class TroquelComponent implements OnInit {
 
     const op: PendingOp = {
       id: `troquel_${this.selectedPrensaId}_${Date.now()}`,
+<<<<<<< Updated upstream
       endpoint: this.apiConfig.url('/api/v1/produccion/prensado/asignar-troquel'),
+=======
+      endpoint: `http://${window.location.hostname}:5007/api/v1/produccion/prensado/asignar-troquel`,
+>>>>>>> Stashed changes
       method: 'POST',
       body: {
         prensaId: this.selectedPrensaId,

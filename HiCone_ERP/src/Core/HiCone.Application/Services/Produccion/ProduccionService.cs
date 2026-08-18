@@ -151,37 +151,12 @@ public class ProduccionService : IProduccionService
         if (siloMolidoId.HasValue && molidoKg > 0)
         {
             var siloMolido = await _context.Silos.FindAsync(siloMolidoId.Value);
-            if (siloMolido == null)
+            if (siloMolido == null) throw new Exception("Silo molido no encontrado");
+            if (siloMolido.ExistenciaActual < molidoKg)
             {
-                var siloProd = await _context.SilosProduccion.FindAsync(siloMolidoId.Value);
-                if (siloProd != null)
-                {
-                    siloMolido = await _context.Silos.FirstOrDefaultAsync(s => s.Nombre == siloProd.Nombre) ??
-                                 new Silo { Id = siloProd.Id, Nombre = siloProd.Nombre, Codigo = "SILO-MOL", ExistenciaActual = 10000, Activo = true, TenantId = extrusora.TenantId };
-                    if (!await _context.Silos.AnyAsync(s => s.Id == siloMolido.Id))
-                    {
-                        _context.Silos.Add(siloMolido);
-                        await _context.SaveChangesAsync(default);
-                    }
-                }
-                else
-                {
-                    siloMolido = await _context.Silos.FirstOrDefaultAsync(s => s.Activo) ?? await _context.Silos.FirstOrDefaultAsync();
-                }
-                if (siloMolido != null)
-                {
-                    siloMolidoId = siloMolido.Id;
-                }
+                throw new InvalidOperationException($"Stock insuficiente en el Silo Molido '{siloMolido.Nombre}'. Existencia actual: {siloMolido.ExistenciaActual} kg, Consumo requerido: {molidoKg} kg.");
             }
-
-            if (siloMolido != null && siloMolido.ExistenciaActual < molidoKg)
-            {
-                siloMolido.ExistenciaActual += (molidoKg + 1000);
-            }
-            if (siloMolido != null)
-            {
-                siloMolido.ExistenciaActual -= molidoKg;
-            }
+            siloMolido.ExistenciaActual -= molidoKg;
 
             var auditMolido = new AuditLog
             {
@@ -224,7 +199,6 @@ public class ProduccionService : IProduccionService
         var extrusion = new Extrusion
         {
             ExtrusoraId = extrusoraId,
-            MaquinaId = extrusoraId,
             OperarioId = operarioId,
             TurnoId = turnoId,
             ProductoId = productoId,
@@ -237,12 +211,9 @@ public class ProduccionService : IProduccionService
             Ancho = anchoVal,
             Longitud = longitudVal,
             MetaKg = metaKg > 0 ? metaKg : 200,
-            Target = metaKg > 0 ? metaKg : 200,
             VirgenKg = virgenKg,
-            KgVirgen = virgenKg,
             SiloVirgenId = siloVirgenId,
             MolidoKg = molidoKg,
-            KgMolido = molidoKg,
             SiloMolidoId = siloMolidoId,
             RevHusilloVirgen = revHusilloVirgen,
             RevHusilloMolido = revHusilloMolido,
@@ -286,33 +257,18 @@ public class ProduccionService : IProduccionService
         }
 
         // Generar Resultado (KPIs)
-        var existingResultado = await _context.ExtrusionResultados
-            .FirstOrDefaultAsync(r => r.ExtrusionId == extrusionId);
-
-        if (existingResultado == null)
+        var resultado = new ExtrusionResultado
         {
-            var resultado = new ExtrusionResultado
-            {
-                ExtrusionId = extrusionId,
-                TenantId = extrusion.TenantId != Guid.Empty ? extrusion.TenantId : Guid.Parse("00000000-0000-0000-0000-000000000001"),
-                TotalBobinas = extrusion.Bobinas.Count,
-                TotalBobinasMolidas = extrusion.Bobinas.Count(b => b.Estado == EstadoBobina.Molido),
-                KgProducidos = extrusion.Bobinas.Sum(b => b.Kg),
-                KgMerma = extrusion.Bobinas.Sum(b => b.MermaKg),
-                FechaRegistro = DateTime.UtcNow
-            };
-            _context.ExtrusionResultados.Add(resultado);
-        }
-        else
-        {
-            existingResultado.TotalBobinas = extrusion.Bobinas.Count;
-            existingResultado.TotalBobinasMolidas = extrusion.Bobinas.Count(b => b.Estado == EstadoBobina.Molido);
-            existingResultado.KgProducidos = extrusion.Bobinas.Sum(b => b.Kg);
-            existingResultado.KgMerma = extrusion.Bobinas.Sum(b => b.MermaKg);
-        }
+            ExtrusionId = extrusionId,
+            TotalBobinas = extrusion.Bobinas.Count,
+            TotalBobinasMolidas = extrusion.Bobinas.Count(b => b.Estado == EstadoBobina.Molido),
+            KgProducidos = extrusion.Bobinas.Sum(b => b.Kg),
+            KgMerma = extrusion.Bobinas.Sum(b => b.MermaKg),
+            FechaRegistro = DateTime.UtcNow
+        };
+        _context.ExtrusionResultados.Add(resultado);
 
-        await _context.SaveChangesAsync(default);
-        return true;
+        return await _context.SaveChangesAsync(default) > 0;
     }
 
     public async Task<bool> RegistrarConsumoExtrusionAsync(Guid extrusionId, Guid siloVirgenId, decimal virgenKg, Guid? siloMolidoId, decimal molidoKg)
@@ -374,7 +330,7 @@ public class ProduccionService : IProduccionService
             .FirstOrDefaultAsync(e => e.Id == extrusionId);
         if (extrusion == null) throw new Exception("Extrusión no encontrada");
 
-        var estado = mermaKg > 0 ? EstadoBobina.Molido : EstadoBobina.EnProceso;
+        var estado = mermaKg > 0 ? EstadoBobina.Molido : EstadoBobina.EnReposo;
         var motivoMolino = mermaKg > 0 ? motivo : MotivoMolino.NoAplica;
 
         // Auto-generación de NoSerie: B-DDMMYY-{ExtrusoraCode}-{BobinaNo}{origen}
@@ -394,16 +350,11 @@ public class ProduccionService : IProduccionService
             MermaKg = mermaKg,
             MotivoMolino = motivoMolino,
             Estado = estado,
-            IniciaReposo = null,
+            IniciaReposo = mermaKg > 0 ? null : DateTime.UtcNow,
             MinutosEnReposo = 20,
             HoraInicio = DateTime.UtcNow.AddMinutes(-20),
             HoraSalida = DateTime.UtcNow,
             NoSerie = noSerie,
-            SerialNo = noSerie,
-            BobbinNo = bobinaNo,
-            ScrapKg = mermaKg,
-            Thickness = calibre,
-            Codigo = noSerie,
             ProductoId = extrusion.ProductoId,
             OperarioId = extrusion.OperarioId,
             SiloVirgenId = extrusion.SiloVirgenId,
@@ -425,27 +376,7 @@ public class ProduccionService : IProduccionService
             var siloMolido = await _context.Silos.FindAsync(extrusion.SiloMolidoId.Value);
             if (siloMolido == null)
             {
-                var siloProd = await _context.SilosProduccion.FindAsync(extrusion.SiloMolidoId.Value);
-                if (siloProd != null)
-                {
-                    siloMolido = await _context.Silos.FirstOrDefaultAsync(s => s.Nombre == siloProd.Nombre) ??
-                                 new Silo { Id = siloProd.Id, Nombre = siloProd.Nombre, Codigo = "SILO-MOL", ExistenciaActual = 10000, Activo = true, TenantId = extrusion.TenantId };
-                    if (!await _context.Silos.AnyAsync(s => s.Id == siloMolido.Id))
-                    {
-                        _context.Silos.Add(siloMolido);
-                        await _context.SaveChangesAsync(default);
-                    }
-                }
-                else
-                {
-                    siloMolido = await _context.Silos.FirstOrDefaultAsync(s => s.Activo) ?? await _context.Silos.FirstOrDefaultAsync();
-                    if (siloMolido == null)
-                    {
-                        siloMolido = new Silo { Id = Guid.NewGuid(), Nombre = "Silo Molido Principal", Codigo = "SILO-MOL-01", ExistenciaActual = 10000, Activo = true, TenantId = extrusion.TenantId };
-                        _context.Silos.Add(siloMolido);
-                        await _context.SaveChangesAsync(default);
-                    }
-                }
+                throw new Exception("Silo Molido configurado no encontrado.");
             }
 
             siloMolido.ExistenciaActual += mermaKg;
@@ -471,23 +402,105 @@ public class ProduccionService : IProduccionService
         return bobina;
     }
 
-    public async Task<Extrusion?> GetExtrusionActivaAsync(Guid extrusoraId, Guid? turnoId = null)
+    public async Task<Extrusion?> GetExtrusionActivaAsync(Guid extrusoraId)
     {
-        var query = _context.Extrusiones
+        return await _context.Extrusiones
             .Include(e => e.Producto)
             .Include(e => e.Operario)
             .Include(e => e.Turno)
             .Include(e => e.SiloVirgen)
             .Include(e => e.SiloMolido)
             .Include(e => e.Bobinas)
-            .Where(e => e.ExtrusoraId == extrusoraId && e.Estado == EstadoExtrusion.EnProceso && !e.IsDeleted);
+            .FirstOrDefaultAsync(e => e.ExtrusoraId == extrusoraId && e.Estado == EstadoExtrusion.EnProceso);
+    }
 
-        if (turnoId.HasValue && turnoId.Value != Guid.Empty)
+    public async Task<Extrusion?> GetExtrusionActivaOProgramadaAsync(Guid extrusoraId)
+    {
+        // 1. Intentar obtener orden ya en proceso
+        var activa = await _context.Extrusiones
+            .Include(e => e.Producto)
+            .Include(e => e.Operario)
+            .Include(e => e.Turno)
+            .Include(e => e.SiloVirgen)
+            .Include(e => e.SiloMolido)
+            .Include(e => e.Bobinas)
+            .FirstOrDefaultAsync(e => e.ExtrusoraId == extrusoraId && e.Estado == EstadoExtrusion.EnProceso);
+
+        if (activa != null) return activa;
+
+        // 2. Si no hay activa, identificar turno actual en base al reloj
+        var localTime = DateTime.Now;
+        var currentHour = localTime.Hour;
+
+        var turnos = await _context.Turnos
+            .Where(t => !t.IsDeleted && t.IsActive)
+            .ToListAsync();
+
+        Turno? currentTurno = null;
+        foreach (var trn in turnos)
         {
-            query = query.Where(e => e.TurnoId == turnoId.Value);
+            var startHour = trn.HoraInicio.Hours;
+            var endHour = trn.HoraFin.Hours;
+            var diff = endHour - startHour;
+
+            if (diff > 0 && currentHour >= startHour && currentHour < endHour)
+            {
+                currentTurno = trn;
+                break;
+            }
+            else if (diff < 0 && (currentHour >= startHour || currentHour < endHour))
+            {
+                currentTurno = trn;
+                break;
+            }
         }
 
-        return await query.FirstOrDefaultAsync();
+        if (currentTurno == null) return null;
+
+        // 3. Buscar si hay una orden programada para hoy y este turno en esta máquina
+        var today = localTime.Date;
+        return await _context.Extrusiones
+            .Include(e => e.Producto)
+            .Include(e => e.Operario)
+            .Include(e => e.Turno)
+            .Include(e => e.SiloVirgen)
+            .Include(e => e.SiloMolido)
+            .Include(e => e.Bobinas)
+            .FirstOrDefaultAsync(e => e.ExtrusoraId == extrusoraId 
+                                   && e.Estado == EstadoExtrusion.Programada 
+                                   && e.Fecha.Date == today 
+                                   && e.TurnoId == currentTurno.Id
+                                   && e.ProductoId != null);
+    }
+
+    public async Task<bool> IniciarExtrusionProgramadaAsync(Guid extrusionId, Guid siloVirgenId, decimal virgenKg, Guid? siloMolidoId, decimal molidoKg)
+    {
+        var entity = await _context.Extrusiones.FindAsync(extrusionId);
+        if (entity == null || entity.Estado != EstadoExtrusion.Programada) return false;
+
+        // Validar silo virgen
+        var siloVirgen = await _context.Silos.FindAsync(siloVirgenId);
+        if (siloVirgen == null) return false;
+        siloVirgen.ExistenciaActual -= virgenKg;
+
+        if (siloMolidoId.HasValue && molidoKg > 0)
+        {
+            var siloMolido = await _context.Silos.FindAsync(siloMolidoId.Value);
+            if (siloMolido != null)
+            {
+                siloMolido.ExistenciaActual -= molidoKg;
+            }
+        }
+
+        entity.SiloVirgenId = siloVirgenId;
+        entity.VirgenKg = virgenKg;
+        entity.SiloMolidoId = siloMolidoId;
+        entity.MolidoKg = molidoKg;
+        entity.Estado = EstadoExtrusion.EnProceso;
+        entity.FechaInicio = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync(default);
+        return true;
     }
 
     public async Task<int> ObtenerSiguienteBobinaNoAsync(Guid extrusoraId, Guid productoId)
@@ -582,8 +595,7 @@ public class ProduccionService : IProduccionService
             TroquelId = troquelId,
             Estado = EstadoPrensado.EnProceso,
             HoraIniciaProceso = DateTime.UtcNow,
-            Fecha = DateTime.UtcNow.Date,
-            Ancho = string.Empty
+            Fecha = DateTime.UtcNow.Date
         };
 
         prensa.Estado = EstadoPrensa.EnProceso;
@@ -604,10 +616,34 @@ public class ProduccionService : IProduccionService
         var bobina = await _context.Bobinas.FindAsync(bobinaId);
         if (bobina == null) throw new Exception("Bobina no encontrada");
 
-        // Validar disponibilidad (Acepta bobinas en reposo, en proceso o disponible/validada)
-        if (bobina.Estado != EstadoBobina.EnReposo && bobina.Estado != EstadoBobina.EnProceso && bobina.Estado != EstadoBobina.Disponible)
+        // Validar disponibilidad (Legacy: SDEscanearBobina sólo acepta bobinas en reposo/disponible/desmontada)
+        if (bobina.Estado != EstadoBobina.EnReposo && bobina.Estado != EstadoBobina.Disponible && bobina.Estado != EstadoBobina.Desmontada)
             throw new InvalidOperationException(
                 $"La bobina '{bobina.NoSerie}' no está disponible para prensado (estado actual: {bobina.Estado}).");
+
+        // Validar compatibilidad usando la tabla PrensaProducto
+        var productoPrensado = await _context.Productos.FindAsync(prensado.ProductoId);
+        var productoBobina = await _context.Productos.FindAsync(bobina.ProductoId);
+
+        if (productoPrensado == null || productoBobina == null)
+            throw new Exception("Productos no encontrados");
+
+        bool esCompatible = await _context.PrensaProductos.AnyAsync(pp =>
+            pp.PrensaId == prensado.PrensaId &&
+            pp.Item == productoPrensado.Codigo &&
+            pp.Carrete == productoBobina.Codigo);
+
+        // Fallback: si no hay configuraciones específicas en la tabla, validar si es el mismo producto
+        if (!esCompatible && productoPrensado.Id == productoBobina.Id)
+        {
+            esCompatible = true;
+        }
+
+        if (!esCompatible)
+        {
+            throw new InvalidOperationException(
+                $"La bobina '{bobina.NoSerie}' (Insumo: {productoBobina.Codigo}) no es compatible con el producto de este prensado ({productoPrensado.Codigo}) en la prensa seleccionada.");
+        }
 
         // Sólo una bobina activa a la vez: desactivar la anterior (Legacy: cambio de bobina en la prensa)
         foreach (var pbActiva in prensado.Bobinas.Where(b => b.Activa))
@@ -1082,16 +1118,6 @@ public class ProduccionService : IProduccionService
 
     public async Task<IEnumerable<CausaInterrupcion>> GetCausasInterrupcionAsync()
     {
-        if (!await _context.CausasInterrupcion.AnyAsync())
-        {
-            _context.CausasInterrupcion.AddRange(
-                new CausaInterrupcion { Id = Guid.NewGuid(), Codigo = "C-01", Descripcion = "Ajuste de Husillo", Tipo = "Mantenimiento", IsActive = true, OrdenVisual = 1 },
-                new CausaInterrupcion { Id = Guid.NewGuid(), Codigo = "C-02", Descripcion = "Cambio de Filtro / Malla", Tipo = "Operacion", IsActive = true, OrdenVisual = 2 },
-                new CausaInterrupcion { Id = Guid.NewGuid(), Codigo = "C-03", Descripcion = "Limpieza de Troquel", Tipo = "Operacion", IsActive = true, OrdenVisual = 3 }
-            );
-            await _context.SaveChangesAsync(default);
-        }
-
         return await _context.CausasInterrupcion
             .Where(c => c.IsActive)
             .OrderBy(c => c.OrdenVisual)
@@ -1202,16 +1228,11 @@ public class ProduccionService : IProduccionService
         var bobina = await _context.Bobinas.FindAsync(bobinaId);
         if (bobina == null) return false;
 
-        if (extrusionDestinoId != Guid.Empty && extrusionDestinoId != bobina.ExtrusionId)
-        {
-            var destino = await _context.Extrusiones.FindAsync(extrusionDestinoId);
-            if (destino == null) return false;
+        var destino = await _context.Extrusiones.FindAsync(extrusionDestinoId);
+        if (destino == null) return false;
 
-            bobina.ExtrusionId = extrusionDestinoId;
-            await _context.SaveChangesAsync(default);
-        }
-
-        return true;
+        bobina.ExtrusionId = extrusionDestinoId;
+        return await _context.SaveChangesAsync(default) > 0;
     }
 
     // ── Recalibración ──────────────────────────────────────────────────────
@@ -1314,7 +1335,6 @@ public class ProduccionService : IProduccionService
                 e.TiempoInterrupcion,
                 e.TiempoInterrupcionMin,
                 e.EnCurso,
-                e.InterrupcionEnCurso,
                 e.ExtrusionIdLegacy,
                 e.ProductoNombre,
                 e.LotePaqueteAditivos,
@@ -1328,8 +1348,6 @@ public class ProduccionService : IProduccionService
                 e.Observaciones,
                 e.LoteSilo,
                 e.MotivoAnticipado,
-                e.SiloVirgenId,
-                e.SiloMolidoId,
                 IniciaProceso = e.FechaInicio,
                 FinProceso = e.FechaFin,
                 Extrusora = e.Extrusora != null ? new { e.Extrusora.Id, e.Extrusora.Nombre, e.Extrusora.Codigo } : null,
@@ -1568,149 +1586,6 @@ public class ProduccionService : IProduccionService
 
         await _context.SaveChangesAsync(default);
         return true;
-    }
-
-    public async Task<IEnumerable<object>> GetTrabajosAsignadosAsync(Guid? operarioId, Guid? maquinaId, string tipoProceso, Guid? turnoId = null)
-    {
-        if (tipoProceso?.ToLower() == "prensado")
-        {
-            var query = _context.Prensados
-                .Include(p => p.Prensa)
-                .Include(p => p.Producto)
-                .Include(p => p.Operario)
-                .Include(p => p.Turno)
-                .Include(p => p.Troquel)
-                .Where(p => !p.IsDeleted && p.ProductoId != Guid.Empty && (p.Estado == EstadoPrensado.EnProceso || p.Estado == EstadoPrensado.Programada));
-
-            if (maquinaId.HasValue && maquinaId.Value != Guid.Empty)
-                query = query.Where(p => p.PrensaId == maquinaId.Value);
-
-            if (operarioId.HasValue && operarioId.Value != Guid.Empty)
-                query = query.Where(p => p.OperarioId == operarioId.Value);
-
-            if (turnoId.HasValue && turnoId.Value != Guid.Empty)
-                query = query.Where(p => p.TurnoId == turnoId.Value);
-
-            var dbItems = await query.ToListAsync();
-            var today = DateTime.Today;
-            var items = dbItems
-                .OrderByDescending(p => p.Estado == EstadoPrensado.EnProceso)
-                .ThenBy(p => p.Fecha.Date == today ? 0 : (p.Fecha.Date < today ? 1 : 2))
-                .ThenBy(p => Math.Abs((p.Fecha.Date - today).TotalDays))
-                .ThenBy(p => p.Fecha)
-                .ToList();
-            return items.Select(p => new
-            {
-                Id = p.Id,
-                Tipo = "Prensado",
-                MaquinaId = p.PrensaId,
-                MaquinaNombre = p.Prensa?.Nombre ?? "Prensa",
-                ProductoId = p.ProductoId,
-                ProductoNombre = p.Producto != null ? (!string.IsNullOrWhiteSpace(p.Producto.Nombre) ? p.Producto.Nombre : p.Producto.Clave) : "Sin Producto Autorizado",
-                OperarioId = p.OperarioId,
-                OperarioNombre = p.Operario != null ? (!string.IsNullOrWhiteSpace(p.Operario.NombreCompleto) ? p.Operario.NombreCompleto : p.Operario.Nombre) : "Sin Operador Asignado",
-                TurnoId = p.TurnoId,
-                TroquelId = p.TroquelId,
-                TroquelNombre = p.Troquel?.Nombre ?? "",
-                Estado = (int)p.Estado,
-                EstadoNombre = p.Estado.ToString(),
-                Meta = p.Programado > 0 ? p.Programado : p.Target,
-                Fecha = p.Fecha
-            });
-        }
-        else
-        {
-            var query = _context.Extrusiones
-                .Include(e => e.Extrusora)
-                .Include(e => e.Producto)
-                .Include(e => e.Operario)
-                .Include(e => e.Turno)
-                .Where(e => !e.IsDeleted && e.ProductoId != null && e.ProductoId != Guid.Empty && (e.Estado == EstadoExtrusion.EnProceso || e.Estado == EstadoExtrusion.Programada));
-
-            if (maquinaId.HasValue && maquinaId.Value != Guid.Empty)
-                query = query.Where(e => e.ExtrusoraId == maquinaId.Value);
-
-            if (operarioId.HasValue && operarioId.Value != Guid.Empty)
-                query = query.Where(e => e.OperarioId == operarioId.Value);
-
-            if (turnoId.HasValue && turnoId.Value != Guid.Empty)
-                query = query.Where(e => e.TurnoId == turnoId.Value);
-
-            var dbItems = await query.ToListAsync();
-            var today = DateTime.Today;
-            var items = dbItems
-                .OrderByDescending(e => e.Estado == EstadoExtrusion.EnProceso)
-                .ThenBy(e => e.Fecha.Date == today ? 0 : (e.Fecha.Date < today ? 1 : 2))
-                .ThenBy(e => Math.Abs((e.Fecha.Date - today).TotalDays))
-                .ThenBy(e => e.Fecha)
-                .ToList();
-            return items.Select(e => new
-            {
-                Id = e.Id,
-                Tipo = "Extrusión",
-                MaquinaId = e.ExtrusoraId,
-                MaquinaNombre = e.Extrusora?.Nombre ?? "Extrusora",
-                ProductoId = e.ProductoId,
-                ProductoNombre = e.Producto != null ? (!string.IsNullOrWhiteSpace(e.Producto.Nombre) ? e.Producto.Nombre : e.Producto.Clave) : "Sin Producto Autorizado",
-                OperarioId = e.OperarioId,
-                OperarioNombre = e.Operario != null ? (!string.IsNullOrWhiteSpace(e.Operario.NombreCompleto) ? e.Operario.NombreCompleto : e.Operario.Nombre) : "Sin Operador Asignado",
-                TurnoId = e.TurnoId,
-                Estado = (int)e.Estado,
-                EstadoNombre = e.Estado.ToString(),
-                Meta = e.MetaKg > 0 ? e.MetaKg : (e.Programado > 0 ? e.Programado : 200),
-                Fecha = e.Fecha
-            });
-        }
-    }
-
-    public async Task<object> IniciarTrabajoProgramadoAsync(Guid id, string tipoProceso)
-    {
-        if (tipoProceso?.ToLower() == "prensado")
-        {
-            var prensado = await _context.Prensados
-                .Include(p => p.Prensa)
-                .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
-
-            if (prensado == null)
-                throw new KeyNotFoundException("La orden de prensado programada no existe en el sistema.");
-
-            if (prensado.Estado != EstadoPrensado.Programada)
-                throw new InvalidOperationException($"La orden de prensado ya no está disponible para iniciar (Estado actual: {prensado.Estado}). Fue modificada, iniciada o cancelada desde el ERP Web.");
-
-            prensado.Estado = EstadoPrensado.EnProceso;
-            prensado.HoraIniciaProceso = DateTime.UtcNow;
-
-            if (prensado.Prensa != null)
-            {
-                prensado.Prensa.Estado = EstadoPrensa.EnProceso;
-            }
-
-            await _context.SaveChangesAsync(default);
-            return prensado;
-        }
-        else
-        {
-            var extrusion = await _context.Extrusiones
-                .Include(e => e.Extrusora)
-                .FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
-
-            if (extrusion == null)
-                throw new KeyNotFoundException("La orden de extrusión programada no existe en el sistema.");
-
-            if (extrusion.Estado != EstadoExtrusion.Programada)
-                throw new InvalidOperationException($"La orden de extrusión ya no está disponible para iniciar (Estado actual: {extrusion.Estado}). Fue modificada, iniciada o cancelada desde el ERP Web.");
-
-            extrusion.Estado = EstadoExtrusion.EnProceso;
-            extrusion.FechaInicio = DateTime.UtcNow;
-
-            if (extrusion.Extrusora != null)
-            {
-                extrusion.Extrusora.Estado = EstadoExtrusora.EnProceso;
-            }
-
-            await _context.SaveChangesAsync(default);
-            return extrusion;
-        }
     }
 
 }

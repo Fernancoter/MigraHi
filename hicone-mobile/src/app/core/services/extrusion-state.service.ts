@@ -17,6 +17,13 @@ export class ExtrusionStateService {
   /** Indica si ya se hizo al menos una selección de extrusora */
   readonly extrusoraSeleccionada = computed(() => this.extrusoraActiva() !== null);
 
+  /** Indica si hay una interrupción activa en curso */
+  readonly interrupcionEnCurso = signal<boolean>(false);
+
+  /** Callbacks de comunicación desde el Shell al componente principal */
+  onTriggerInterrupcion?: () => void;
+  onTriggerFinalizar?: () => void;
+
   setTurno(turno: { id: string; nombre: string } | null) {
     this.turnoActivo.set(turno);
   }
@@ -28,5 +35,8 @@ export class ExtrusionStateService {
   reset() {
     this.turnoActivo.set(null);
     this.extrusoraActiva.set(null);
+    this.interrupcionEnCurso.set(false);
+    this.onTriggerInterrupcion = undefined;
+    this.onTriggerFinalizar = undefined;
   }
 }

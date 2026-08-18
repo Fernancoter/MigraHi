@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { Subscription, switchMap, of, timeout, catchError, EMPTY, timer, combineLatest } from 'rxjs';
-import { ProduccionService, Bobina } from '../../../core/services/produccion';
+import { Subscription, switchMap, of, timeout, catchError, EMPTY, timer } from 'rxjs';
+import { ProduccionService, Bobina, CausaInterrupcion } from '../../../core/services/produccion';
 import { OfflineStoreService } from '../../../core/offline/offline-store.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { InventarioService, Silo } from '../../../core/services/inventario.service';
@@ -28,6 +28,7 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   // Estado de la orden activa
   extrusionActiva: any | null = null;
   bobinasExtrusion: Bobina[] = [];
+  esProgramada = false;
 
   /**
    * cargandoOrden = true solo mientras espera la respuesta del API.
@@ -53,6 +54,9 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   saving = false;
   errorMessage = '';
   successMessage = '';
+  tiempoExtrusionStr = '00:00:00';
+  tiempoBobinaStr = '00:00:00';
+  timerInterval: any;
 
   // Menú Intermedio (HICONE_SDExtrusionIntermedia)
   mostrarMenuIntermedio = false;
@@ -70,6 +74,45 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   silos: Silo[] = [];
   mostrarModalConsumo = false;
   mostrarAlertaMezcladora = false;
+
+  // Tab/Dashboard variables
+  activeTab = 'reposo';
+  bobinaAProcesar: Bobina | null = null;
+  mostrarModalRechazoDirecto = false;
+  motivoRechazoDirecto = 1;
+  observacionesRechazoDirecto = '';
+
+  // Interrupciones (Downtime estilo QA)
+  causasInterrupcion: CausaInterrupcion[] = [];
+  mostrarModalInterrupcion = false;
+  interrupcionMotivo = '';
+  interrupcionCausaId = '';
+  tiempoInterrupcionStr = '00:00:00';
+  interrupcionActiva: any = null;
+
+  get bobinasEnProceso(): any[] {
+    if (this.extrusionActiva) {
+      return [{
+        bobinaNo: this.siguienteBobinaNo,
+        bobinaOrigen: this.nuevaBobina.origen || 'A',
+        estado: 1, // EnProceso
+        noSerie: `B-PENDIENTE-${this.siguienteBobinaNo}`
+      }];
+    }
+    return [];
+  }
+
+  get bobinasEnMedicion(): Bobina[] {
+    return this.bobinasExtrusion.filter(b => b.estado === 2 || String(b.estado) === 'EnReposo' || b.estado === 11 || String(b.estado) === 'EnMedicion');
+  }
+
+  get bobinasEnReposo(): Bobina[] {
+    return this.bobinasExtrusion.filter(b => b.estado === 12 || String(b.estado) === 'Disponible');
+  }
+
+  get bobinasMolido(): Bobina[] {
+    return this.bobinasExtrusion.filter(b => b.estado === 6 || String(b.estado) === 'Molido' || b.estado === 5 || String(b.estado) === 'Rechazada');
+  }
   mensajeAlertaMezcladora = 'Para obtener la combinación de kg molidos y kg virgen debe configurar las referencias en ExtrusoraMezcladora';
 
   consumoForm = {
@@ -93,87 +136,147 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
 
   private cdr = inject(ChangeDetectorRef);
 
-  trabajoProgramado: any = null;
-  iniciandoTrabajo = false;
-
   constructor() {
-    // Reaccionar cuando cambia la extrusora o el turno seleccionado en el header Shell.
+    // Reaccionar cuando cambia la extrusora seleccionada en el header Shell.
+    // Se muestra el cuadro INMEDIATAMENTE y la orden se carga en background.
     const extrusora$ = toObservable(this.extrusionState.extrusoraActiva);
-    const turno$ = toObservable(this.extrusionState.turnoActivo);
 
-    const sub = combineLatest([extrusora$, turno$]).subscribe(([ext, turno]) => {
-      if (!ext) {
+    const sub = extrusora$.pipe(
+      switchMap(ext => {
+        if (!ext) {
+          // Sin extrusora: limpiar estado
+          this.extrusionActiva = null;
+          this.bobinasExtrusion = [];
+          this.esProgramada = false;
+          this.cargandoOrden = false;
+          this.cdr.detectChanges();
+          return EMPTY;
+        }
+
+        // Mostrar cuadro INMEDIATAMENTE (sin bloquear UI)
         this.extrusionActiva = null;
-        this.trabajoProgramado = null;
         this.bobinasExtrusion = [];
-        this.cargandoOrden = false;
+        this.esProgramada = false;
+        this.cargandoOrden = true;
         this.cdr.detectChanges();
+
+        // Cargar orden en background con timeout de 8s
+        return this.produccionService.getExtrusionActivaOProgramada(ext.id).pipe(
+          timeout(8000),
+          catchError(() => {
+            // Si falla (404 = sin orden activa, timeout, etc.) → mostrar cuadro vacío
+            this.cargandoOrden = false;
+            this.esProgramada = false;
+            this.cdr.detectChanges();
+            return of(null);
+          })
+        );
+      })
+    ).subscribe(orden => {
+      this.extrusionActiva = orden || null;
+      this.esProgramada = this.extrusionActiva && (this.extrusionActiva.estado === 1 || String(this.extrusionActiva.estado) === 'Programada');
+      this.cargandoOrden = false;
+      if (orden) {
+        this.actualizarInformacionOrden();
+        this.extrusionState.interrupcionEnCurso.set(orden.interrupcionEnCurso || false);
+        this.interrupcionActiva = orden.interrupciones?.find((i: any) => !i.concluida) || null;
       } else {
-        this.cargarOrdenYProgramacion(ext.id, turno?.id);
+        this.extrusionState.interrupcionEnCurso.set(false);
+        this.interrupcionActiva = null;
       }
+      this.cdr.detectChanges();
     });
 
     this.subs.add(sub);
   }
 
-  cargarOrdenYProgramacion(extrusoraId: string, turnoId?: string) {
-    this.cargandoOrden = true;
-    this.extrusionActiva = null;
-    this.trabajoProgramado = null;
-    this.cdr.detectChanges();
-
-    // 1. Intentar obtener orden activa en proceso para este turno especifico
-    this.produccionService.getExtrusionActiva(extrusoraId, turnoId).pipe(
-      catchError(() => of(null))
-    ).subscribe(activa => {
-      if (activa) {
-        this.extrusionActiva = activa;
-        this.cargandoOrden = false;
-        this.actualizarInformacionOrden();
-        this.cdr.detectChanges();
-      } else {
-        // 2. Si no hay orden activa en proceso, consultar la programación proveniente del ERP Web para este turno
-        this.produccionService.getTrabajosAsignados(undefined, extrusoraId, 'extrusion', turnoId).pipe(
-          catchError(() => of([]))
-        ).subscribe(trabajos => {
-          this.cargandoOrden = false;
-          if (trabajos && trabajos.length > 0) {
-            this.trabajoProgramado = trabajos[0];
-          } else {
-            this.trabajoProgramado = null;
-          }
-          this.cdr.detectChanges();
-        });
-      }
-    });
-  }
-
-  iniciarTrabajoAsignado() {
-    if (!this.trabajoProgramado) return;
-    this.iniciandoTrabajo = true;
-    this.errorMessage = '';
-    this.successMessage = '';
-    this.produccionService.iniciarTrabajoProgramado(this.trabajoProgramado.id, 'extrusion').subscribe({
-      next: (res) => {
-        this.iniciandoTrabajo = false;
-        this.successMessage = '¡Trabajo programado iniciado con éxito!';
-        const ext = this.extrusionState.extrusoraActiva();
-        const turno = this.extrusionState.turnoActivo();
-        if (ext) this.cargarOrdenYProgramacion(ext.id, turno?.id);
-      },
-      error: (err) => {
-        this.iniciandoTrabajo = false;
-        this.errorMessage = err.error?.message || 'Error al iniciar el trabajo programado desde Web.';
-      }
-    });
-  }
-
   ngOnInit(): void {
     this.cargarSilos();
+    this.cargarCausasInterrupcion();
+
+    // Vincular callbacks del Header Shell
+    this.extrusionState.onTriggerInterrupcion = () => {
+      this.abrirModalInterrupcion();
+    };
+    this.extrusionState.onTriggerFinalizar = () => {
+      this.abrirCierre();
+    };
+
+    this.timerInterval = setInterval(() => {
+      this.recalcularTiempos();
+    }, 1000);
   }
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
+  }
+
+  parseDateSafe(dateVal: any): Date {
+    if (!dateVal) return new Date();
+    if (dateVal instanceof Date) return dateVal;
+    let dateStr = String(dateVal);
+    // Si la fecha del backend no tiene zona horaria, pero sabemos que está guardada en UTC (UtcNow)
+    if (!dateStr.endsWith('Z') && !dateStr.includes('+') && !dateStr.includes('-')) {
+      dateStr = dateStr + 'Z';
+    } else if (dateStr.includes('T') && !dateStr.endsWith('Z') && !dateStr.includes('+') && dateStr.lastIndexOf('-') < dateStr.indexOf('T')) {
+      // Tiene un guión pero solo para el formato YYYY-MM-DD, no para zona horaria
+      dateStr = dateStr + 'Z';
+    }
+    const parsed = new Date(dateStr);
+    return isNaN(parsed.getTime()) ? new Date() : parsed;
+  }
+
+  recalcularTiempos() {
+    if (!this.extrusionActiva) {
+      this.tiempoExtrusionStr = '00:00:00';
+      this.tiempoBobinaStr = '00:00:00';
+      return;
+    }
+
+    // 1. Tiempo de Extrusión: desde extrusionActiva.fechaInicio
+    if (this.extrusionActiva.fechaInicio) {
+      const start = this.parseDateSafe(this.extrusionActiva.fechaInicio).getTime();
+      const now = Date.now();
+      const diff = Math.max(0, now - start);
+      this.tiempoExtrusionStr = this.formatDuration(diff);
+    } else {
+      this.tiempoExtrusionStr = '00:00:00';
+    }
+
+    // 2. Tiempo de la bobina en proceso (Enrollándose)
+    let bobinaStart = this.extrusionActiva.fechaInicio ? this.parseDateSafe(this.extrusionActiva.fechaInicio).getTime() : Date.now();
+    if (this.bobinasExtrusion && this.bobinasExtrusion.length > 0) {
+      const completed = [...this.bobinasExtrusion].filter(b => b.fechaProduccion);
+      if (completed.length > 0) {
+        completed.sort((a, b) => this.parseDateSafe(b.fechaProduccion).getTime() - this.parseDateSafe(a.fechaProduccion).getTime());
+        bobinaStart = this.parseDateSafe(completed[0].fechaProduccion).getTime();
+      }
+    }
+    const diffBobina = Math.max(0, Date.now() - bobinaStart);
+    this.tiempoBobinaStr = this.formatDuration(diffBobina);
+
+    // 3. Tiempo de la interrupción activa (si aplica)
+    if (this.extrusionActiva.interrupcionEnCurso && this.interrupcionActiva) {
+      const startInt = this.parseDateSafe(this.interrupcionActiva.horaInicio).getTime();
+      const now = Date.now();
+      const diffInt = Math.max(0, now - startInt);
+      this.tiempoInterrupcionStr = this.formatDuration(diffInt);
+    } else {
+      this.tiempoInterrupcionStr = '00:00:00';
+    }
+
+    this.cdr.detectChanges();
+  }
+
+  formatDuration(ms: number): string {
+    const totalSecs = Math.floor(ms / 1000);
+    const hours = Math.floor(totalSecs / 3600);
+    const minutes = Math.floor((totalSecs % 3600) / 60);
+    const seconds = totalSecs % 60;
+    return [hours, minutes, seconds].map(v => String(v).padStart(2, '0')).join(':');
   }
 
   cargarSilos() {
@@ -261,14 +364,21 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     });
   }
 
+  abrirAccionCard() {
+    if (this.esProgramada) {
+      this.mostrarModalConsumo = true;
+      this.cdr.detectChanges();
+    } else {
+      this.abrirMenuIntermedio();
+    }
+  }
+
   abrirMenuIntermedio() {
     this.mostrarMenuIntermedio = true;
-    this.cdr.detectChanges();
   }
 
   cerrarMenuIntermedio() {
     this.mostrarMenuIntermedio = false;
-    this.cdr.detectChanges();
   }
 
   opcionIniciarExtrusion() {
@@ -289,7 +399,6 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   opcionVerBobinas() {
     this.cerrarMenuIntermedio();
     this.mostrarListaBobinasModal = true;
-    this.cdr.detectChanges();
   }
 
   opcionCerrarOrden() {
@@ -300,12 +409,10 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   abrirModalBobina() {
     this.nuevaBobina.calibre = this.extrusionActiva?.calibre || 15;
     this.mostrarModalBobina = true;
-    this.cdr.detectChanges();
   }
 
   cerrarModalBobina() {
     this.mostrarModalBobina = false;
-    this.cdr.detectChanges();
   }
 
   guardarBobinaCompleta() {
@@ -352,6 +459,13 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
 
   abrirCierre() {
     if (!this.extrusionActiva) return;
+
+    // VALIDACIÓN: No permitir finalizar si hay bobinas en medición (pendiente de aprobación/rechazo)
+    if (this.bobinasEnMedicion.length > 0) {
+      this.mostrarMensaje('Debe validar las bobinas que se encuentran En Medición antes de finalizar.', true);
+      return;
+    }
+
     this.saving = true;
     this.produccionService.getExtrusionResultado(this.extrusionActiva.id).subscribe({
       next: (kpiResult: any) => {
@@ -365,7 +479,6 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
         };
         this.cierreObservaciones = '';
         this.mostrarModalCierre = true;
-        this.cdr.detectChanges();
       },
       error: () => {
         this.saving = false;
@@ -377,7 +490,6 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
           eficiencia: 85
         };
         this.mostrarModalCierre = true;
-        this.cdr.detectChanges();
       }
     });
   }
@@ -410,12 +522,10 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
 
   abrirModalConsumo() {
     this.mostrarModalConsumo = true;
-    this.cdr.detectChanges();
   }
 
   cerrarModalConsumo() {
     this.mostrarModalConsumo = false;
-    this.cdr.detectChanges();
   }
 
   /** Botón APLICAR: guarda la mezcla sin cerrar el modal */
@@ -437,8 +547,55 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
 
     this.saving = true;
 
+    // Si es una orden programada, la iniciamos
+    if (this.esProgramada && this.extrusionActiva) {
+      if (!this.consumoForm.siloVirgenId) {
+        this.saving = false;
+        this.mostrarMensaje('Debe seleccionar un silo de material virgen.', true);
+        return;
+      }
+
+      const payload = {
+        siloVirgenId: this.consumoForm.siloVirgenId,
+        virgenKg: this.consumoForm.virgenKg || 160,
+        siloMolidoId: this.consumoForm.siloMolidoId || null,
+        molidoKg: this.consumoForm.molidoKg || 40
+      };
+
+      this.produccionService.iniciarExtrusionProgramada(this.extrusionActiva.id, payload).subscribe({
+        next: () => {
+          this.saving = false;
+          this.esProgramada = false;
+          if (cerrarModal) this.cerrarModalConsumo();
+          this.mostrarMensaje('¡Orden programada iniciada con éxito!');
+          
+          // Recargar orden para que ahora cargue como activa (En Proceso)
+          this.cargandoOrden = true;
+          this.produccionService.getExtrusionActivaOProgramada(ext.id).subscribe({
+            next: (orden) => {
+              this.extrusionActiva = orden;
+              this.esProgramada = false;
+              this.cargandoOrden = false;
+              this.actualizarInformacionOrden();
+              this.cdr.detectChanges();
+            },
+            error: () => {
+              this.cargandoOrden = false;
+              this.cdr.detectChanges();
+            }
+          });
+        },
+        error: (err) => {
+          this.saving = false;
+          this.mostrarMensaje('Error al iniciar orden programada: ' + (err.error?.message || err.message), true);
+          this.cdr.detectChanges();
+        }
+      });
+      return;
+    }
+
     // Si ya existe una orden activa en esta extrusora
-    if (this.extrusionActiva) {
+    if (this.extrusionActiva && !this.esProgramada) {
       const defaultSiloId = this.silos.length > 0 ? this.silos[0].id : null;
       const req = {
         siloVirgenId: (this.consumoForm.siloVirgenId && this.consumoForm.siloVirgenId !== '') ? this.consumoForm.siloVirgenId : defaultSiloId,
@@ -530,6 +687,224 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
       timer(5000).subscribe(() => {
         this.successMessage = '';
         this.cdr.markForCheck();
+      });
+    }
+  }
+
+  setActiveTab(tab: string) {
+    this.activeTab = tab;
+    this.cdr.detectChanges();
+  }
+
+  terminarEnrollamiento(b: any) {
+    this.opcionRegistrarBobina();
+  }
+
+  validarBobinaDirecta(b: Bobina) {
+    this.produccionService.validarBobina(b.id).subscribe({
+      next: () => {
+        this.mostrarMensaje('¡Bobina validada y aprobada para prensado!');
+        this.actualizarInformacionOrden();
+      },
+      error: (err) => {
+        this.mostrarMensaje('Error al validar bobina: ' + (err.error?.message || err.message), true);
+      }
+    });
+  }
+
+  abrirModalRechazoDirecto(b: Bobina) {
+    this.bobinaAProcesar = b;
+    this.motivoRechazoDirecto = 1;
+    this.observacionesRechazoDirecto = '';
+    this.mostrarModalRechazoDirecto = true;
+    this.cdr.detectChanges();
+  }
+
+  confirmarRechazoDirecto() {
+    if (!this.bobinaAProcesar) return;
+    this.produccionService.rechazarBobina(
+      this.bobinaAProcesar.id,
+      Number(this.motivoRechazoDirecto),
+      this.observacionesRechazoDirecto || undefined
+    ).subscribe({
+      next: () => {
+        this.mostrarMensaje('Bobina enviada a trituración/molino.');
+        this.mostrarModalRechazoDirecto = false;
+        this.bobinaAProcesar = null;
+        this.actualizarInformacionOrden();
+      },
+      error: (err) => {
+        this.mostrarMensaje('Error al rechazar bobina: ' + (err.error?.message || err.message), true);
+      }
+    });
+  }
+
+  getMotivoName(motivo: any): string {
+    const code = Number(motivo);
+    switch(code) {
+      case 1: return 'Defecto Calibre';
+      case 2: return 'Defecto Bobina';
+      case 3: return 'Defecto Carrete';
+      case 4: return 'Fuera de Peso';
+      case 5: return 'Daño Físico';
+      default: return 'No Aplica';
+    }
+  }
+
+  iniciarOrdenProgramada() {
+    if (!this.extrusionActiva) return;
+    if (!this.consumoForm.siloVirgenId) {
+      this.mostrarMensaje('Debe seleccionar un silo de material virgen.', true);
+      return;
+    }
+    if (this.consumoForm.virgenKg <= 0) {
+      this.mostrarMensaje('Los kg de material virgen deben ser mayores a 0.', true);
+      return;
+    }
+
+    this.saving = true;
+    this.cdr.detectChanges();
+
+    const payload = {
+      siloVirgenId: this.consumoForm.siloVirgenId,
+      virgenKg: this.consumoForm.virgenKg,
+      siloMolidoId: this.consumoForm.siloMolidoId || null,
+      molidoKg: this.consumoForm.molidoKg || 0
+    };
+
+    this.produccionService.iniciarExtrusionProgramada(this.extrusionActiva.id, payload).subscribe({
+      next: (res) => {
+        this.saving = false;
+        this.esProgramada = false;
+        this.mostrarMensaje('¡Orden programada iniciada con éxito!');
+        
+        // Volver a cargar la orden activa
+        const ext = this.extrusionState.extrusoraActiva();
+        if (ext) {
+          this.cargandoOrden = true;
+          this.produccionService.getExtrusionActivaOProgramada(ext.id).subscribe({
+            next: (orden) => {
+              this.extrusionActiva = orden;
+              this.esProgramada = false;
+              this.cargandoOrden = false;
+              this.actualizarInformacionOrden();
+              this.cdr.detectChanges();
+            },
+            error: () => {
+              this.cargandoOrden = false;
+              this.cdr.detectChanges();
+            }
+          });
+        }
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.saving = false;
+        this.mostrarMensaje(err.error?.message || 'Error al iniciar orden programada.', true);
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // ── MÉTODOS DE INTERRUPCIONES (QA) ──────────────────────────────────
+  cargarCausasInterrupcion() {
+    this.produccionService.getCausasInterrupcion().subscribe({
+      next: (causas) => {
+        this.causasInterrupcion = causas;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  abrirModalInterrupcion() {
+    if (!this.extrusionActiva) return;
+    if (this.extrusionActiva.interrupcionEnCurso) {
+      this.reanudarProceso();
+      return;
+    }
+    this.interrupcionMotivo = '';
+    this.interrupcionCausaId = '';
+    this.mostrarModalInterrupcion = true;
+    this.cdr.detectChanges();
+  }
+
+  registrarInterrupcion() {
+    if (!this.interrupcionMotivo.trim()) {
+      this.mostrarMensaje('Debe especificar el motivo de la interrupción.', true);
+      return;
+    }
+    if (!this.interrupcionCausaId) {
+      this.mostrarMensaje('Debe seleccionar una causa (Down Time Code).', true);
+      return;
+    }
+
+    this.saving = true;
+    this.cdr.detectChanges();
+
+    const request = {
+      entidadId: this.extrusionActiva.id,
+      causaId: this.interrupcionCausaId,
+      descripcion: this.interrupcionMotivo
+    };
+
+    this.produccionService.registrarInterrupcionExtrusion(request).subscribe({
+      next: () => {
+        this.saving = false;
+        this.mostrarModalInterrupcion = false;
+        this.mostrarMensaje('¡Interrupción registrada con éxito!');
+        this.recargarOrdenActual();
+      },
+      error: (err) => {
+        this.saving = false;
+        this.mostrarMensaje(err.error?.message || 'Error al registrar interrupción.', true);
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  reanudarProceso() {
+    if (confirm('¿Desea reanudar el proceso de extrusión y terminar la interrupción activa?')) {
+      this.saving = true;
+      this.cdr.detectChanges();
+      this.produccionService.finalizarInterrupcionExtrusionActiva(this.extrusionActiva.id).subscribe({
+        next: () => {
+          this.saving = false;
+          this.mostrarMensaje('¡Proceso reanudado con éxito!');
+          this.recargarOrdenActual();
+        },
+        error: (err) => {
+          this.saving = false;
+          this.mostrarMensaje(err.error?.message || 'Error al reanudar proceso.', true);
+          this.cdr.detectChanges();
+        }
+      });
+    }
+  }
+
+  recargarOrdenActual() {
+    const ext = this.extrusionState.extrusoraActiva();
+    if (ext) {
+      this.cargandoOrden = true;
+      this.cdr.detectChanges();
+      this.produccionService.getExtrusionActivaOProgramada(ext.id).subscribe({
+        next: (orden) => {
+          this.extrusionActiva = orden;
+          this.esProgramada = false;
+          this.cargandoOrden = false;
+          if (orden) {
+            this.actualizarInformacionOrden();
+            this.extrusionState.interrupcionEnCurso.set(orden.interrupcionEnCurso || false);
+            this.interrupcionActiva = orden.interrupciones?.find((i: any) => !i.concluida) || null;
+          } else {
+            this.extrusionState.interrupcionEnCurso.set(false);
+            this.interrupcionActiva = null;
+          }
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.cargandoOrden = false;
+          this.cdr.detectChanges();
+        }
       });
     }
   }

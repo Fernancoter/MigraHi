@@ -26,51 +26,88 @@ import { ExtrusionStateService } from '../../core/services/extrusion-state.servi
         <h1 class="captura-title">{{ getTitle() }}</h1>
         
         <div class="header-right">
-          <!-- Botones contextuales para Prensado y Extrusión -->
-          <ng-container *ngIf="router.url === '/prensado' || router.url === '/extrusion'">
-            <!-- Botón del Relojito (Turnos) -->
-            <button class="header-action-btn clock-btn" (click)="toggleShiftsMenu()" title="Turnos"
-                    [class.active-btn]="extrusionState.turnoActivo() !== null && router.url === '/extrusion'">
+          <!-- CASO 1: Extrusión Activa en Consola (Mostrar iconos estilo QA) -->
+          <ng-container *ngIf="router.url === '/extrusion' && extrusionState.extrusoraActiva() && extrusionState.turnoActivo()">
+            
+            <!-- Notificaciones Sync (Campanita) -->
+            <button class="header-action-btn notification-btn" (click)="toggleNotifications()" title="Estado de Sincronización">
               <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
-              <span *ngIf="extrusionState.turnoActivo() && router.url === '/extrusion'"
-                    class="selection-indicator">{{ extrusionState.turnoActivo()!.nombre | slice:0:3 }}</span>
+              <span *ngIf="pendingCount > 0" class="badge-count">{{ pendingCount }}</span>
             </button>
 
-            <!-- Botón Sandwich (Solo Prensado) -->
-            <button *ngIf="router.url === '/prensado'" class="header-action-btn layers-btn" (click)="togglePrensasMenu()" title="Prensas">
+            <!-- Botón de Inicio (Casita) -->
+            <button class="header-action-btn home-btn" (click)="goToHome()" title="Inicio">
               <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
             </button>
 
-            <!-- Botón Engrane (Solo Extrusión) -->
-            <button *ngIf="router.url === '/extrusion'" class="header-action-btn layers-btn" (click)="toggleExtrusorasMenu()" title="Extrusoras"
-                    [class.active-btn]="extrusionState.extrusoraActiva() !== null">
+            <!-- Botón de Opciones (Tres Puntos) -->
+            <button class="header-action-btn options-btn" (click)="toggleOptionsDropdown($event)" title="Opciones" [class.active-btn]="showOptionsDropdown">
               <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+              </svg>
+            </button>
+
+            <!-- Botón de Ayuda (Libro) -->
+            <button class="header-action-btn help-btn" (click)="openHelpManual()" title="Manual de Ayuda">
+              <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </button>
+
+          </ng-container>
+
+          <!-- CASO 2: Selección Inicial o Prensado (Mantener botones originales) -->
+          <ng-container *ngIf="!(router.url === '/extrusion' && extrusionState.extrusoraActiva() && extrusionState.turnoActivo())">
+            <!-- Botones contextuales para Prensado y Extrusión -->
+            <ng-container *ngIf="router.url === '/prensado' || router.url === '/extrusion'">
+              <!-- Botón del Relojito (Turnos) -->
+              <button class="header-action-btn clock-btn" (click)="toggleShiftsMenu()" title="Turnos"
+                      [class.active-btn]="extrusionState.turnoActivo() !== null">
+                <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span *ngIf="extrusionState.turnoActivo()"
+                      class="selection-indicator">{{ extrusionState.turnoActivo()!.nombre | slice:0:3 }}</span>
+              </button>
+
+              <!-- Botón Sandwich (Solo Prensado) -->
+              <button *ngIf="router.url === '/prensado'" class="header-action-btn layers-btn" (click)="togglePrensasMenu()" title="Prensas">
+                <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </button>
+
+              <!-- Botón Engrane (Solo Extrusión) -->
+              <button *ngIf="router.url === '/extrusion'" class="header-action-btn layers-btn" (click)="toggleExtrusorasMenu()" title="Extrusoras"
+                      [class.active-btn]="extrusionState.extrusoraActiva() !== null">
+                <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+              </button>
+            </ng-container>
+
+            <div class="network-badge-mini" [class.offline]="!isOnline" [title]="isOnline ? 'Online' : 'Offline'">
+              <span class="status-dot"></span>
+            </div>
+            
+            <button class="header-action-btn notification-btn" (click)="toggleNotifications()" title="Estado de Sincronización">
+              <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span *ngIf="pendingCount > 0" class="badge-count">{{ pendingCount }}</span>
+            </button>
+            
+            <button class="header-action-btn logout-btn" (click)="logout()" title="Cerrar Sesión">
+              <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
             </button>
           </ng-container>
-
-          <div class="network-badge-mini" [class.offline]="!isOnline" [title]="isOnline ? 'Online' : 'Offline'">
-            <span class="status-dot"></span>
-          </div>
-          
-          <button class="header-action-btn notification-btn" (click)="toggleNotifications()" title="Estado de Sincronización">
-            <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-            </svg>
-            <span *ngIf="pendingCount > 0" class="badge-count">{{ pendingCount }}</span>
-          </button>
-          
-          <button class="header-action-btn logout-btn" (click)="logout()" title="Cerrar Sesión">
-            <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-          </button>
         </div>
       </header>
 
@@ -107,7 +144,24 @@ import { ExtrusionStateService } from '../../core/services/extrusion-state.servi
       </div>
 
       <!-- Overlay para cerrar dropdowns -->
-      <div *ngIf="showShiftsMenu || showPrensasMenu || showExtrusorasMenu" class="dropdown-overlay" (click)="closeDropdowns()"></div>
+      <div *ngIf="showShiftsMenu || showPrensasMenu || showExtrusorasMenu || showOptionsDropdown" class="dropdown-overlay" (click)="closeDropdowns()"></div>
+
+      <!-- Dropdown de Opciones (Tres Puntos estilo QA) -->
+      <div *ngIf="showOptionsDropdown" class="header-dropdown options-dropdown" style="right: 76px; min-width: 170px;">
+        <button class="dropdown-item" (click)="triggerInterrupcionOption()" style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="color: #fbbf24; flex-shrink:0;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <rect x="9" y="9" width="6" height="6" fill="currentColor"></rect>
+          </svg>
+          <span style="font-weight: 600;">{{ extrusionState.interrupcionEnCurso() ? 'Reanudar' : 'Interrupción' }}</span>
+        </button>
+        <button class="dropdown-item" (click)="triggerFinalizarOption()" style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="color: #ef4444; flex-shrink:0;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+          <span style="font-weight: 600;">Finalizar</span>
+        </button>
+      </div>
 
       <!-- Dropdown de Turnos -->
       <div *ngIf="showShiftsMenu" class="header-dropdown shifts-dropdown">
@@ -514,6 +568,7 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
   showShiftsMenu = false;
   showPrensasMenu = false;
   showExtrusorasMenu = false;
+  showOptionsDropdown = false;
 
   // Datos desde API
   turnos: Turno[] = [];
@@ -583,7 +638,50 @@ export class CapturaShellComponent implements OnInit, OnDestroy {
     this.showShiftsMenu = false;
     this.showPrensasMenu = false;
     this.showExtrusorasMenu = false;
+    this.showOptionsDropdown = false;
     this.cdr.detectChanges();
+  }
+
+  toggleOptionsDropdown(event: Event) {
+    event.stopPropagation();
+    this.showOptionsDropdown = !this.showOptionsDropdown;
+    this.showShiftsMenu = false;
+    this.showPrensasMenu = false;
+    this.showExtrusorasMenu = false;
+    this.cdr.detectChanges();
+  }
+
+  triggerInterrupcionOption() {
+    this.showOptionsDropdown = false;
+    this.cdr.detectChanges();
+    if (this.extrusionState.onTriggerInterrupcion) {
+      this.extrusionState.onTriggerInterrupcion();
+    }
+  }
+
+  triggerFinalizarOption() {
+    this.showOptionsDropdown = false;
+    this.cdr.detectChanges();
+    if (this.extrusionState.onTriggerFinalizar) {
+      this.extrusionState.onTriggerFinalizar();
+    }
+  }
+
+  openHelpManual() {
+    this.produccionService.getHelpUrl().subscribe({
+      next: (configs: any[]) => {
+        const helpItem = configs.find(c => c.key === 'ExtrusionAyudaURL');
+        const url = helpItem ? helpItem.valor : 'https://nedi.mx/knowledge/article/941';
+        window.open(url, '_blank');
+      },
+      error: () => {
+        window.open('https://nedi.mx/knowledge/article/941', '_blank');
+      }
+    });
+  }
+
+  goToHome() {
+    this.router.navigate(['/']);
   }
 
   cargarTurnos() {

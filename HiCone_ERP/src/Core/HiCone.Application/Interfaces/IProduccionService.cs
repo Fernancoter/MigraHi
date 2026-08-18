@@ -36,7 +36,7 @@ public interface IProduccionService
         MotivoMolino motivo, 
         string? observaciones);
 
-    Task<Extrusion?> GetExtrusionActivaAsync(Guid extrusoraId, Guid? turnoId = null);
+    Task<Extrusion?> GetExtrusionActivaAsync(Guid extrusoraId);
     Task<int> ObtenerSiguienteBobinaNoAsync(Guid extrusoraId, Guid productoId);
 
     Task<IEnumerable<Operario>> GetOperariosAsync();
@@ -98,9 +98,9 @@ public interface IProduccionService
     Task<object> GetTurnosSemanaPrensasAsync(DateTime fechaInicio, DateTime fechaFin);
     Task<bool> GuardarTurnosSemanaPrensasAsync(IEnumerable<GuardarTurnoPrensaItemRequest> batch);
 
-    // ── Asignación y Ejecución de Trabajos Programados (PWA <-> ERP) ─────
-    Task<IEnumerable<object>> GetTrabajosAsignadosAsync(Guid? operarioId, Guid? maquinaId, string tipoProceso, Guid? turnoId = null);
-    Task<object> IniciarTrabajoProgramadoAsync(Guid id, string tipoProceso);
+    // ── Turnos Programados / Consola PWA ────────────────────────────────────
+    Task<Extrusion?> GetExtrusionActivaOProgramadaAsync(Guid extrusoraId);
+    Task<bool> IniciarExtrusionProgramadaAsync(Guid extrusionId, Guid siloVirgenId, decimal virgenKg, Guid? siloMolidoId, decimal molidoKg);
 }
 
 public record GuardarTurnoPrensaItemRequest(Guid PrensadoId, Guid? ProductoId, Guid? OperarioId, decimal Plan);
