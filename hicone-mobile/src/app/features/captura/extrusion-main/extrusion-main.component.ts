@@ -90,6 +90,28 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   tiempoInterrupcionStr = '00:00:00';
   interrupcionActiva: any = null;
 
+  // Formulario de Medición (QA)
+  medicionForm = {
+    tipoDestino: 'reposo', // 'reposo' | 'molino'
+    espesor: 0.00,
+    kg: 0.00,
+    desviacionEstandar: 0.000,
+    colorEstacion: 0, // SinAsignar
+    motivoMolino: 0,  // NoAplica
+    observaciones: ''
+  };
+
+  // Reasignación / Transferencia (QA)
+  ordenesProgramadas: any[] = [];
+  mostrarModalTransferencia = false;
+  bobinaATransferir: Bobina | null = null;
+  destinoTransferenciaId = '';
+
+  get bobinaEnTurnoMedicion(): Bobina | null {
+    const list = this.bobinasEnMedicion;
+    return list.length > 0 ? list[0] : null;
+  }
+
   get bobinasEnProceso(): any[] {
     if (this.extrusionActiva) {
       return [{
@@ -103,11 +125,11 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   }
 
   get bobinasEnMedicion(): Bobina[] {
-    return this.bobinasExtrusion.filter(b => b.estado === 2 || String(b.estado) === 'EnReposo' || b.estado === 11 || String(b.estado) === 'EnMedicion');
+    return this.bobinasExtrusion.filter(b => b.estado === 11 || String(b.estado) === 'EnMedicion');
   }
 
   get bobinasEnReposo(): Bobina[] {
-    return this.bobinasExtrusion.filter(b => b.estado === 12 || String(b.estado) === 'Disponible');
+    return this.bobinasExtrusion.filter(b => b.estado === 2 || String(b.estado) === 'EnReposo' || b.estado === 12 || String(b.estado) === 'Disponible');
   }
 
   get bobinasMolido(): Bobina[] {
@@ -178,10 +200,22 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
       this.cargandoOrden = false;
       if (orden) {
         this.actualizarInformacionOrden();
-        this.extrusionState.interrupcionEnCurso.set(orden.interrupcionEnCurso || false);
-        this.interrupcionActiva = orden.interrupciones?.find((i: any) => !i.concluida) || null;
+        const interrupcionEnCursoVal = orden.interrupcionEnCurso || orden.InterrupcionEnCurso || false;
+        this.extrusionState.interrupcionEnCurso.set(interrupcionEnCursoVal);
+        this.extrusionState.extrusionIniciada.set(!this.esProgramada);
+        
+        const list = orden.interrupciones || orden.Interrupciones || [];
+        const activeInt = list.find((i: any) => i.concluida === false || i.Concluida === false || !i.concluida || !i.Concluida) || null;
+        if (activeInt) {
+          this.interrupcionActiva = activeInt;
+        } else if (interrupcionEnCursoVal && this.interrupcionActiva) {
+          // Mantener si ya existe
+        } else {
+          this.interrupcionActiva = null;
+        }
       } else {
         this.extrusionState.interrupcionEnCurso.set(false);
+        this.extrusionState.extrusionIniciada.set(false);
         this.interrupcionActiva = null;
       }
       this.cdr.detectChanges();
@@ -236,9 +270,12 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const activeExt = this.extrusionActiva as any;
+    const fechaInicioVal = activeExt.fechaInicio || activeExt.FechaInicio;
+
     // 1. Tiempo de Extrusión: desde extrusionActiva.fechaInicio
-    if (this.extrusionActiva.fechaInicio) {
-      const start = this.parseDateSafe(this.extrusionActiva.fechaInicio).getTime();
+    if (fechaInicioVal) {
+      const start = this.parseDateSafe(fechaInicioVal).getTime();
       const now = Date.now();
       const diff = Math.max(0, now - start);
       this.tiempoExtrusionStr = this.formatDuration(diff);
@@ -247,20 +284,25 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     }
 
     // 2. Tiempo de la bobina en proceso (Enrollándose)
-    let bobinaStart = this.extrusionActiva.fechaInicio ? this.parseDateSafe(this.extrusionActiva.fechaInicio).getTime() : Date.now();
+    let bobinaStart = fechaInicioVal ? this.parseDateSafe(fechaInicioVal).getTime() : Date.now();
     if (this.bobinasExtrusion && this.bobinasExtrusion.length > 0) {
-      const completed = [...this.bobinasExtrusion].filter(b => b.fechaProduccion);
+      const completed = [...this.bobinasExtrusion].filter(b => (b as any).fechaProduccion || (b as any).FechaProduccion);
       if (completed.length > 0) {
-        completed.sort((a, b) => this.parseDateSafe(b.fechaProduccion).getTime() - this.parseDateSafe(a.fechaProduccion).getTime());
-        bobinaStart = this.parseDateSafe(completed[0].fechaProduccion).getTime();
+        completed.sort((a, b) => 
+          this.parseDateSafe((b as any).fechaProduccion || (b as any).FechaProduccion).getTime() - 
+          this.parseDateSafe((a as any).fechaProduccion || (a as any).FechaProduccion).getTime()
+        );
+        bobinaStart = this.parseDateSafe((completed[0] as any).fechaProduccion || (completed[0] as any).FechaProduccion).getTime();
       }
     }
     const diffBobina = Math.max(0, Date.now() - bobinaStart);
     this.tiempoBobinaStr = this.formatDuration(diffBobina);
 
     // 3. Tiempo de la interrupción activa (si aplica)
-    if (this.extrusionActiva.interrupcionEnCurso && this.interrupcionActiva) {
-      const startInt = this.parseDateSafe(this.interrupcionActiva.horaInicio).getTime();
+    const interrupcionEnCursoVal = activeExt.interrupcionEnCurso || activeExt.InterrupcionEnCurso;
+    if (interrupcionEnCursoVal && this.interrupcionActiva) {
+      const horaInicioVal = this.interrupcionActiva.horaInicio || this.interrupcionActiva.HoraInicio;
+      const startInt = this.parseDateSafe(horaInicioVal).getTime();
       const now = Date.now();
       const diffInt = Math.max(0, now - startInt);
       this.tiempoInterrupcionStr = this.formatDuration(diffInt);
@@ -502,6 +544,7 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
         this.mostrarModalCierre = false;
         alert('¡Orden finalizada y consolidada!');
         this.extrusionActiva = null;
+        this.extrusionState.extrusionIniciada.set(false);
         const ext = this.extrusionState.extrusoraActiva();
         if (ext) {
           this.cargandoOrden = true;
@@ -693,6 +736,9 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
+    if (tab === 'medicion') {
+      this.inicializarFormMedicion();
+    }
     this.cdr.detectChanges();
   }
 
@@ -787,7 +833,10 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
               this.extrusionActiva = orden;
               this.esProgramada = false;
               this.cargandoOrden = false;
-              this.actualizarInformacionOrden();
+              if (orden) {
+                this.extrusionState.extrusionIniciada.set(true);
+                this.actualizarInformacionOrden();
+              }
               this.cdr.detectChanges();
             },
             error: () => {
@@ -848,8 +897,9 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     };
 
     this.produccionService.registrarInterrupcionExtrusion(request).subscribe({
-      next: () => {
+      next: (res) => {
         this.saving = false;
+        this.interrupcionActiva = res;
         this.mostrarModalInterrupcion = false;
         this.mostrarMensaje('¡Interrupción registrada con éxito!');
         this.recargarOrdenActual();
@@ -893,10 +943,25 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
           this.cargandoOrden = false;
           if (orden) {
             this.actualizarInformacionOrden();
-            this.extrusionState.interrupcionEnCurso.set(orden.interrupcionEnCurso || false);
-            this.interrupcionActiva = orden.interrupciones?.find((i: any) => !i.concluida) || null;
+            const interrupcionEnCursoVal = orden.interrupcionEnCurso || orden.InterrupcionEnCurso || false;
+            this.extrusionState.interrupcionEnCurso.set(interrupcionEnCursoVal);
+            this.extrusionState.extrusionIniciada.set(true);
+            
+            const list = orden.interrupciones || orden.Interrupciones || [];
+            const activeInt = list.find((i: any) => i.concluida === false || i.Concluida === false || !i.concluida || !i.Concluida) || null;
+            if (activeInt) {
+              this.interrupcionActiva = activeInt;
+            } else if (interrupcionEnCursoVal && this.interrupcionActiva) {
+              // Mantener si ya existe
+            } else {
+              this.interrupcionActiva = null;
+            }
+            
+            // Inicializar el formulario con la bobina activa en medición
+            this.inicializarFormMedicion();
           } else {
             this.extrusionState.interrupcionEnCurso.set(false);
+            this.extrusionState.extrusionIniciada.set(false);
             this.interrupcionActiva = null;
           }
           this.cdr.detectChanges();
@@ -907,6 +972,137 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
         }
       });
     }
+  }
+
+  // ── MÉTODOS DE FORMULARIO DE MEDICIÓN (QA) ──────────────────────────
+  inicializarFormMedicion() {
+    const bobina = this.bobinaEnTurnoMedicion;
+    if (bobina) {
+      this.medicionForm.espesor = bobina.espesor || 0.00;
+      this.medicionForm.kg = bobina.kg || 0.00;
+      this.medicionForm.desviacionEstandar = bobina.desviacionEstandar || 0.000;
+      this.medicionForm.colorEstacion = bobina.colorEstacion || 0;
+      this.medicionForm.motivoMolino = bobina.motivoMolino || 0;
+      this.medicionForm.observaciones = bobina.observaciones || '';
+      this.medicionForm.tipoDestino = bobina.estado === 'Molido' || bobina.estado === 6 ? 'molino' : 'reposo';
+    } else {
+      this.medicionForm.espesor = 0.00;
+      this.medicionForm.kg = 0.00;
+      this.medicionForm.desviacionEstandar = 0.000;
+      this.medicionForm.colorEstacion = 0;
+      this.medicionForm.motivoMolino = 0;
+      this.medicionForm.observaciones = '';
+      this.medicionForm.tipoDestino = 'reposo';
+    }
+    this.cdr.detectChanges();
+  }
+
+  onTipoDestinoChange() {
+    if (this.medicionForm.tipoDestino === 'molino') {
+      this.medicionForm.motivoMolino = 1; // Defecto Calibre por defecto
+    } else {
+      this.medicionForm.motivoMolino = 0; // N/A
+    }
+    this.cdr.detectChanges();
+  }
+
+  validarBobinaMedicion() {
+    const bobina = this.bobinaEnTurnoMedicion;
+    if (!bobina) {
+      this.mostrarMensaje('No hay ninguna bobina en la cola de medición.', true);
+      return;
+    }
+
+    if (this.medicionForm.espesor <= 0) {
+      this.mostrarMensaje('El espesor de la bobina debe ser mayor a 0.', true);
+      return;
+    }
+
+    if (this.medicionForm.kg <= 0) {
+      this.mostrarMensaje('El peso en Kg de la bobina debe ser mayor a 0.', true);
+      return;
+    }
+
+    this.saving = true;
+    this.cdr.detectChanges();
+
+    const payload = {
+      espesor: this.medicionForm.espesor,
+      kg: this.medicionForm.kg,
+      desviacionEstandar: this.medicionForm.desviacionEstandar,
+      colorEstacion: Number(this.medicionForm.colorEstacion),
+      observaciones: this.medicionForm.observaciones,
+      estado: this.medicionForm.tipoDestino === 'molino' ? 6 : 2, // 6 = Molido, 2 = EnReposo
+      motivoMolino: this.medicionForm.tipoDestino === 'molino' ? Number(this.medicionForm.motivoMolino) : 0
+    };
+
+    this.produccionService.actualizarBobina(bobina.id, payload).subscribe({
+      next: () => {
+        this.saving = false;
+        this.mostrarMensaje(
+          this.medicionForm.tipoDestino === 'molino' 
+            ? '¡Bobina descartada y enviada a molino!' 
+            : '¡Bobina validada con éxito (En Reposo)!'
+        );
+        this.recargarOrdenActual();
+      },
+      error: (err) => {
+        this.saving = false;
+        this.mostrarMensaje(err.error?.message || 'Error al validar la bobina.', true);
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // ── MÉTODOS DE TAB VALIDADO (QA) ──────────────────────────────────
+  imprimirEtiquetaBobina(b: Bobina) {
+    this.mostrarMensaje('Imprimiendo etiqueta para la bobina ' + b.noSerie);
+  }
+
+  abrirTransferenciaBobina(b: Bobina) {
+    this.bobinaATransferir = b;
+    const ext = this.extrusionState.extrusoraActiva();
+    if (ext) {
+      this.produccionService.getExtrusiones().subscribe({
+        next: (res) => {
+          // Filtrar órdenes programadas en la misma extrusora
+          this.ordenesProgramadas = res.filter(o => 
+            o.extrusoraId === ext.id && 
+            o.id !== this.extrusionActiva.id && 
+            (String(o.estado) === '1' || String(o.estado) === 'Programada')
+          );
+          if (this.ordenesProgramadas.length === 0) {
+            alert('No hay otras órdenes programadas en esta extrusora para transferir.');
+            return;
+          }
+          this.destinoTransferenciaId = this.ordenesProgramadas[0].id;
+          this.mostrarModalTransferencia = true;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.mostrarMensaje('Error al obtener la lista de órdenes.', true);
+        }
+      });
+    }
+  }
+
+  confirmarTransferencia() {
+    if (!this.bobinaATransferir || !this.destinoTransferenciaId) return;
+    this.saving = true;
+    this.cdr.detectChanges();
+    this.produccionService.transferirBobina(this.bobinaATransferir.id, this.destinoTransferenciaId).subscribe({
+      next: () => {
+        this.saving = false;
+        this.mostrarModalTransferencia = false;
+        this.mostrarMensaje('¡Bobina transferida con éxito!');
+        this.recargarOrdenActual();
+      },
+      error: (err) => {
+        this.saving = false;
+        this.mostrarMensaje(err.error?.message || 'Error al transferir bobina.', true);
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   goBack() {

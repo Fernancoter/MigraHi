@@ -184,31 +184,116 @@
           </div>
         </div>
 
-        <!-- Tab 2: En Medición (Esperando Validación) -->
-        <div *ngIf="activeTab === 'medicion'" class="animate-fade-in">
-          <div *ngIf="bobinasEnMedicion.length === 0" style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 15px 0;">
-            No hay bobinas esperando medición.
+        <!-- Tab 2: En Medición (Formulario de Medición estilo QA / Imágenes 1 y 2) -->
+        <div *ngIf="activeTab === 'medicion'" class="animate-fade-in" style="display: flex; flex-direction: column;">
+          
+          <div *ngIf="bobinasEnMedicion.length === 0" style="text-align: center; color: var(--text-muted); font-size: 14px; padding: 30px 10px; background: #0f172a; border-radius: 8px; border: 1px dashed #334155;">
+            No hay bobinas en medición (pendiente de aprobación/rechazo).
           </div>
-          <div *ngFor="let b of bobinasEnMedicion" style="display: flex; align-items: center; gap: 15px; background: #0f172a; padding: 14px; border-radius: 8px; border: 1px solid #1e293b; margin-bottom: 8px;">
-            <div style="flex-shrink: 0; color: #fbbf24; display: flex; align-items: center;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" width="36" height="36">
-                <circle cx="12" cy="12" r="9"></circle>
-                <path d="M12 6v6l4 2" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
+
+          <div *ngIf="bobinasEnMedicion.length > 0" style="display: flex; flex-direction: column;">
+            
+            <!-- Selector Reposo / Molino -->
+            <div style="display: flex; justify-content: center; gap: 40px; padding: 12px; background: #1e293b; border-radius: 8px 8px 0 0; border: 1px solid #334155; border-bottom: none;">
+              <label style="display: flex; align-items: center; gap: 8px; color: #f8fafc; font-size: 14px; font-weight: 700; cursor: pointer; text-transform: uppercase;">
+                <input type="radio" name="tipoDestino" value="reposo" [(ngModel)]="medicionForm.tipoDestino" (change)="onTipoDestinoChange()" style="accent-color: #00bcbc; width: 18px; height: 18px;" />
+                Reposo
+              </label>
+              <label style="display: flex; align-items: center; gap: 8px; color: #f8fafc; font-size: 14px; font-weight: 700; cursor: pointer; text-transform: uppercase;">
+                <input type="radio" name="tipoDestino" value="molino" [(ngModel)]="medicionForm.tipoDestino" (change)="onTipoDestinoChange()" style="accent-color: #00bcbc; width: 18px; height: 18px;" />
+                Molino
+              </label>
             </div>
-            <div style="flex: 1;">
-              <strong style="color: #f8fafc; font-size: 13px; font-family: monospace;">{{ b.noSerie }}</strong>
-              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
-                Peso: <strong style="color: #fbbf24;">{{ b.kg }} Kg</strong> | Calibre: {{ b.espesor }} mm
+
+            <!-- Contenedor del Formulario -->
+            <div style="background: #0f172a; border-radius: 0 0 8px 8px; border: 1px solid #334155; padding: 20px; display: flex; flex-direction: column; gap: 18px; position: relative;">
+              
+              <!-- Tag Estado "En Medición" -->
+              <span style="position: absolute; top: 20px; right: 20px; background: #2563eb; color: #ffffff; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.15);">
+                En Medición
+              </span>
+
+              <!-- Fila 1: Bobina, Producto y Checkbox Molino -->
+              <div style="display: grid; grid-template-columns: 1.2fr 1.5fr 1fr; gap: 15px; margin-right: 120px;">
+                <div>
+                  <span style="font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Bobina</span>
+                  <div style="color: #f8fafc; font-size: 15px; font-weight: 700; font-family: monospace; margin-top: 4px;">
+                    {{ bobinaEnTurnoMedicion?.noSerie || 'N/A' }}
+                  </div>
+                </div>
+                <div>
+                  <span style="font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Producto</span>
+                  <div style="color: #cbd5e1; font-size: 14px; font-weight: 700; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" [title]="extrusionActiva?.producto?.nombre">
+                    {{ extrusionActiva?.producto?.nombre || 'N/A' }}
+                  </div>
+                </div>
+                <div>
+                  <span style="font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Molino</span>
+                  <div style="margin-top: 4px; display: flex; align-items: center;">
+                    <input type="checkbox" [checked]="medicionForm.tipoDestino === 'molino'" disabled style="width: 20px; height: 20px; accent-color: #ef4444; cursor: not-allowed;" />
+                  </div>
+                </div>
               </div>
-            </div>
-            <div style="display: flex; gap: 6px; flex-shrink: 0;">
-              <button (click)="validarBobinaDirecta(b)" style="background: #10b981; color: white; font-weight: 700; border: none; border-radius: 6px; padding: 7px 12px; font-size: 11px; cursor: pointer;">
-                Aprobar
+
+              <!-- Separador sutil -->
+              <div style="height: 1px; background: rgba(51, 65, 85, 0.5); width: 100%;"></div>
+
+              <!-- Fila 2: Espesor y Kg -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <label style="color: #94a3b8; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Espesor</label>
+                  <input type="number" step="0.01" [(ngModel)]="medicionForm.espesor" style="background: none; border: none; border-bottom: 2px solid #334155; color: #f8fafc; padding: 6px 0; font-size: 18px; font-weight: 700; font-family: monospace; text-align: right; outline: none; width: 100%; transition: border-color 0.2s;" onfocus="this.style.borderColor='#00bcbc'" onblur="this.style.borderColor='#334155'" />
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <label style="color: #94a3b8; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Kg</label>
+                  <input type="number" step="0.01" [(ngModel)]="medicionForm.kg" style="background: none; border: none; border-bottom: 2px solid #334155; color: #f8fafc; padding: 6px 0; font-size: 18px; font-weight: 700; font-family: monospace; text-align: right; outline: none; width: 100%; transition: border-color 0.2s;" onfocus="this.style.borderColor='#00bcbc'" onblur="this.style.borderColor='#334155'" />
+                </div>
+              </div>
+
+              <!-- Fila 3: Desviación Estándar y Color Estación -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <label style="color: #94a3b8; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Desviación Estándar</label>
+                  <input type="number" step="0.001" [(ngModel)]="medicionForm.desviacionEstandar" style="background: none; border: none; border-bottom: 2px solid #334155; color: #f8fafc; padding: 6px 0; font-size: 18px; font-weight: 700; font-family: monospace; text-align: right; outline: none; width: 100%; transition: border-color 0.2s;" onfocus="this.style.borderColor='#00bcbc'" onblur="this.style.borderColor='#334155'" />
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <label style="color: #94a3b8; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Color Estación</label>
+                  <select [(ngModel)]="medicionForm.colorEstacion" style="background: #1e293b; color: #f8fafc; border: 1px solid #334155; padding: 10px; border-radius: 8px; font-size: 14px; outline: none; font-weight: 600; cursor: pointer;">
+                    <option [value]="0">(Ninguno)</option>
+                    <option [value]="1">Rojo</option>
+                    <option [value]="2">Azul</option>
+                    <option [value]="3">Verde</option>
+                    <option [value]="4">Amarillo</option>
+                    <option [value]="5">Naranja</option>
+                    <option [value]="6">Blanco</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Fila 4: Motivo Molino y Observaciones -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <label style="color: #94a3b8; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Motivo Molino</label>
+                  <select [(ngModel)]="medicionForm.motivoMolino" [disabled]="medicionForm.tipoDestino !== 'molino'" style="background: #1e293b; color: #f8fafc; border: 1px solid #334155; padding: 10px; border-radius: 8px; font-size: 14px; outline: none; font-weight: 600; cursor: pointer; transition: opacity 0.2s;" [style.opacity]="medicionForm.tipoDestino !== 'molino' ? 0.5 : 1">
+                    <option [value]="0">N/A</option>
+                    <option [value]="1">Defecto Calibre</option>
+                    <option [value]="2">Defecto Bobina</option>
+                    <option [value]="3">Defecto Carrete</option>
+                    <option [value]="4">Fuera de Peso</option>
+                    <option [value]="5">Daño Físico</option>
+                  </select>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <label style="color: #94a3b8; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Observaciones</label>
+                  <input type="text" [(ngModel)]="medicionForm.observaciones" placeholder="Observaciones" style="background: none; border: none; border-bottom: 2px solid #334155; color: #f8fafc; padding: 8px 0; font-size: 14px; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#00bcbc'" onblur="this.style.borderColor='#334155'" />
+                </div>
+              </div>
+
+              <!-- Botón Validar -->
+              <button (click)="validarBobinaMedicion()" [disabled]="saving" style="margin-top: 15px; width: 100%; background: #008080; color: white; border: none; border-radius: 8px; padding: 16px; font-size: 15px; font-weight: 800; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0, 128, 128, 0.2); transition: all 0.2s;" onmouseover="this.style.background='#006666'" onmouseout="this.style.background='#008080'">
+                {{ saving ? 'Procesando...' : 'Validar' }}
               </button>
-              <button (click)="abrirModalRechazoDirecto(b)" style="background: #ef4444; color: white; font-weight: 700; border: none; border-radius: 6px; padding: 7px 12px; font-size: 11px; cursor: pointer;">
-                Rechazar
-              </button>
+
             </div>
           </div>
         </div>

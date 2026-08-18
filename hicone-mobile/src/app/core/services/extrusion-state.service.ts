@@ -20,6 +20,9 @@ export class ExtrusionStateService {
   /** Indica si hay una interrupción activa en curso */
   readonly interrupcionEnCurso = signal<boolean>(false);
 
+  /** Indica si la extrusión ya fue iniciada y está activa (En Proceso) */
+  readonly extrusionIniciada = signal<boolean>(false);
+
   /** Callbacks de comunicación desde el Shell al componente principal */
   onTriggerInterrupcion?: () => void;
   onTriggerFinalizar?: () => void;
@@ -36,6 +39,7 @@ export class ExtrusionStateService {
     this.turnoActivo.set(null);
     this.extrusoraActiva.set(null);
     this.interrupcionEnCurso.set(false);
+    this.extrusionIniciada.set(false);
     this.onTriggerInterrupcion = undefined;
     this.onTriggerFinalizar = undefined;
   }

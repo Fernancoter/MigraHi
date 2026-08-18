@@ -103,6 +103,9 @@ export interface Bobina {
   motivoMolino?: any;
   bobinaOrigen?: string;
   mermaKg?: number;
+  desviacionEstandar?: number;
+  observaciones?: string;
+  iniciaReposo?: any;
 }
 
 export interface Prensado {
@@ -301,6 +304,10 @@ export class ProduccionService {
 
   transferirBobina(id: string, extrusionDestinoId: string): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/bobina/${id}/transferir`, { extrusionDestinoId });
+  }
+
+  actualizarBobina(id: string, request: any): Observable<Bobina> {
+    return this.http.put<Bobina>(`${this.apiUrl}/bobina/${id}`, request);
   }
 
   // ── Recalibración ───────────────────────────────────────────────────

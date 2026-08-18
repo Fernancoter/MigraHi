@@ -218,7 +218,7 @@ import { timer } from 'rxjs';
                           </thead>
                           <tbody>
                             <tr *ngFor="let dia of shift.dias" [ngClass]="{'row-disabled': dia.estado !== 'Programada'}">
-                              <td>{{ dia.prensadoIdLegacy || dia.extrusionIdLegacy }}</td>
+                               <td>{{ dia.prensadoIdLegacy || dia.extrusionIdLegacy || '' }}</td>
                               <td>
                                 <span class="badge-status" [ngClass]="getStatusClass(dia.estado)">
                                   {{ getEstadoLabel(dia.estado) }}

@@ -820,6 +820,7 @@ public class ProduccionController : ControllerBase
             }
         }
         if (dto.MotivoMolino.HasValue) bobina.MotivoMolino = dto.MotivoMolino.Value;
+        if (dto.ColorEstacion.HasValue) bobina.ColorEstacion = dto.ColorEstacion.Value;
         if (dto.Observaciones != null) bobina.Observaciones = dto.Observaciones;
         if (dto.BobinaNo.HasValue) bobina.BobinaNo = dto.BobinaNo.Value;
         if (dto.Carreras.HasValue) bobina.Carreras = dto.Carreras.Value;
@@ -2101,6 +2102,7 @@ public class ActualizarBobinaDto
     public DateTime? HoraSalida { get; set; }
     public EstadoBobina? Estado { get; set; }
     public MotivoMolino? MotivoMolino { get; set; }
+    public ColorEstacion? ColorEstacion { get; set; }
     public string? Observaciones { get; set; }
     public int? BobinaNo { get; set; }
     public int? Carreras { get; set; }

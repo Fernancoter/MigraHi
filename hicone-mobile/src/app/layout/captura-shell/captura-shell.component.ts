@@ -27,7 +27,7 @@ import { ExtrusionStateService } from '../../core/services/extrusion-state.servi
         
         <div class="header-right">
           <!-- CASO 1: Extrusión Activa en Consola (Mostrar iconos estilo QA) -->
-          <ng-container *ngIf="router.url === '/extrusion' && extrusionState.extrusoraActiva() && extrusionState.turnoActivo()">
+          <ng-container *ngIf="router.url === '/extrusion' && extrusionState.extrusionIniciada()">
             
             <!-- Notificaciones Sync (Campanita) -->
             <button class="header-action-btn notification-btn" (click)="toggleNotifications()" title="Estado de Sincronización">
@@ -61,7 +61,7 @@ import { ExtrusionStateService } from '../../core/services/extrusion-state.servi
           </ng-container>
 
           <!-- CASO 2: Selección Inicial o Prensado (Mantener botones originales) -->
-          <ng-container *ngIf="!(router.url === '/extrusion' && extrusionState.extrusoraActiva() && extrusionState.turnoActivo())">
+          <ng-container *ngIf="!(router.url === '/extrusion' && extrusionState.extrusionIniciada())">
             <!-- Botones contextuales para Prensado y Extrusión -->
             <ng-container *ngIf="router.url === '/prensado' || router.url === '/extrusion'">
               <!-- Botón del Relojito (Turnos) -->

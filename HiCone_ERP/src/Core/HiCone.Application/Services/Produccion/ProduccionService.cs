@@ -405,12 +405,14 @@ public class ProduccionService : IProduccionService
     public async Task<Extrusion?> GetExtrusionActivaAsync(Guid extrusoraId)
     {
         return await _context.Extrusiones
+            .AsNoTracking()
             .Include(e => e.Producto)
             .Include(e => e.Operario)
             .Include(e => e.Turno)
             .Include(e => e.SiloVirgen)
             .Include(e => e.SiloMolido)
             .Include(e => e.Bobinas)
+            .Include(e => e.Interrupciones)
             .FirstOrDefaultAsync(e => e.ExtrusoraId == extrusoraId && e.Estado == EstadoExtrusion.EnProceso);
     }
 
@@ -418,12 +420,14 @@ public class ProduccionService : IProduccionService
     {
         // 1. Intentar obtener orden ya en proceso
         var activa = await _context.Extrusiones
+            .AsNoTracking()
             .Include(e => e.Producto)
             .Include(e => e.Operario)
             .Include(e => e.Turno)
             .Include(e => e.SiloVirgen)
             .Include(e => e.SiloMolido)
             .Include(e => e.Bobinas)
+            .Include(e => e.Interrupciones)
             .FirstOrDefaultAsync(e => e.ExtrusoraId == extrusoraId && e.Estado == EstadoExtrusion.EnProceso);
 
         if (activa != null) return activa;
