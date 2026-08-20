@@ -277,75 +277,19 @@
 <div class="modal-overlay animate-fade-in" *ngIf="mostrarModalCierre" (click)="cerrarModalCierre()">
   <div class="modal-card" (click)="$event.stopPropagation()" style="max-width: 500px; background: #262626; border-radius: 8px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
     <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid #3c3c3c; display: flex; justify-content: space-between; align-items: center;">
-      <h3 style="margin: 0; color: #fff; font-size: 16px; font-weight: 700;">🏁 Consolidar Cierre de Prensado</h3>
+      <h3 style="margin: 0; color: #fff; font-size: 16px; font-weight: 700;">🏁 Finalizar Prensado</h3>
       <button class="close-btn-x" (click)="cerrarModalCierre()" style="background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
     </div>
     
-    <div class="modal-body" style="padding: 20px; display: flex; flex-direction: column; gap: 20px;">
-      
-      <!-- DOS COLUMNAS: LEVAS Y RODILLOS -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-        
-        <!-- SECCIÓN LEVAS -->
-        <div style="display: flex; flex-direction: column; gap: 14px;">
-          <div style="display: flex; flex-direction: column; gap: 4px;">
-            <span style="font-size: 13px; color: #ddd; font-weight: 600;">Levas (UM)</span>
-            <div style="display: flex; gap: 14px; margin-top: 4px;">
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #fff; cursor: pointer;">
-                <input type="radio" name="levasUm" value="Kg" [(ngModel)]="levasUm" style="accent-color: #00bfa5; width: 15px; height: 15px;" />
-                <span>Kg</span>
-              </label>
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #fff; cursor: pointer;">
-                <input type="radio" name="levasUm" value="Grados" [(ngModel)]="levasUm" style="accent-color: #00bfa5; width: 15px; height: 15px;" />
-                <span>Grados</span>
-              </label>
-            </div>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 4px;">
-            <label style="font-size: 12px; color: #aaa;">Entrada ({{ levasUm }})</label>
-            <input type="number" step="0.1" [(ngModel)]="levasEntrada" style="background: transparent; border: none; border-bottom: 1px solid #777; color: #fff; font-size: 15px; padding: 4px 0; text-align: right; outline: none; width: 100%;" />
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 4px;">
-            <label style="font-size: 12px; color: #aaa;">Salida ({{ levasUm }})</label>
-            <input type="number" step="0.1" [(ngModel)]="levasSalida" style="background: transparent; border: none; border-bottom: 1px solid #777; color: #fff; font-size: 15px; padding: 4px 0; text-align: right; outline: none; width: 100%;" />
-          </div>
-        </div>
-
-        <!-- SECCIÓN RODILLOS -->
-        <div style="display: flex; flex-direction: column; gap: 14px;">
-          <div style="display: flex; flex-direction: column; gap: 4px;">
-            <span style="font-size: 13px; color: #ddd; font-weight: 600;">Rodillos (UM)</span>
-            <div style="display: flex; gap: 14px; margin-top: 4px;">
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #fff; cursor: pointer;">
-                <input type="radio" name="rodillosUm" value="Kg" [(ngModel)]="rodillosUm" style="accent-color: #00bfa5; width: 15px; height: 15px;" />
-                <span>Kg</span>
-              </label>
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #fff; cursor: pointer;">
-                <input type="radio" name="rodillosUm" value="Grados" [(ngModel)]="rodillosUm" style="accent-color: #00bfa5; width: 15px; height: 15px;" />
-                <span>Grados</span>
-              </label>
-            </div>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 4px;">
-            <label style="font-size: 12px; color: #aaa;">Entrada ({{ rodillosUm }})</label>
-            <input type="number" step="0.1" [(ngModel)]="rodillosEntrada" style="background: transparent; border: none; border-bottom: 1px solid #777; color: #fff; font-size: 15px; padding: 4px 0; text-align: right; outline: none; width: 100%;" />
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 4px;">
-            <label style="font-size: 12px; color: #aaa;">Salida ({{ rodillosUm }})</label>
-            <input type="number" step="0.1" [(ngModel)]="rodillosSalida" style="background: transparent; border: none; border-bottom: 1px solid #777; color: #fff; font-size: 15px; padding: 4px 0; text-align: right; outline: none; width: 100%;" />
-          </div>
-        </div>
-
-      </div>
+    <div class="modal-body" style="padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center;">
+      <span style="font-size: 32px; filter: drop-shadow(0 2px 8px rgba(0,191,165,0.4));">🏁</span>
+      <h4 style="color: #fff; font-size: 16px; margin: 0; font-weight: 600;">¿Confirmas que deseas finalizar este proceso de prensado?</h4>
+      <p style="color: #94a3b8; font-size: 13px; margin: 0; line-height: 1.4;">Esta acción registrará la hora de fin de la orden de prensado activa y la marcará como finalizada.</p>
     </div>
 
     <div class="modal-footer" style="padding: 16px 20px; background-color: #1e1e1e; border-top: 1px solid #3c3c3c; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-      <button (click)="confirmarCierre()" [disabled]="saving" style="background-color: #00897b; color: #fff; border: none; border-radius: 4px; height: 44px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background-color 0.2s;">
-        {{ saving ? 'PROCESANDO...' : 'PROCESAR' }}
+      <button (click)="confirmarCierre()" [disabled]="saving" style="background-color: #00bfa5; color: #fff; border: none; border-radius: 4px; height: 44px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background-color 0.2s;">
+        {{ saving ? 'PROCESANDO...' : 'SÍ, FINALIZAR' }}
       </button>
       <button (click)="cerrarModalCierre()" style="background-color: #424242; color: #ccc; border: none; border-radius: 4px; height: 44px; font-size: 13px; font-weight: 500; cursor: pointer;">
         CANCELAR

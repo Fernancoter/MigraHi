@@ -237,10 +237,7 @@ public class ProduccionService : IProduccionService
 
         if (extrusion == null) return false;
 
-        extrusion.Estado = string.IsNullOrEmpty(motivoAnticipado) 
-            ? EstadoExtrusion.Finalizada 
-            : EstadoExtrusion.Anticipada;
-        
+        extrusion.Estado = EstadoExtrusion.Finalizada;
         extrusion.FechaFin = DateTime.UtcNow;
         extrusion.MotivoAnticipado = motivoAnticipado;
 
@@ -330,7 +327,7 @@ public class ProduccionService : IProduccionService
             .FirstOrDefaultAsync(e => e.Id == extrusionId);
         if (extrusion == null) throw new Exception("Extrusión no encontrada");
 
-        var estado = mermaKg > 0 ? EstadoBobina.Molido : EstadoBobina.EnReposo;
+        var estado = mermaKg > 0 ? EstadoBobina.Molido : EstadoBobina.EnMedicion;
         var motivoMolino = mermaKg > 0 ? motivo : MotivoMolino.NoAplica;
 
         // Auto-generación de NoSerie: B-DDMMYY-{ExtrusoraCode}-{BobinaNo}{origen}
@@ -350,7 +347,7 @@ public class ProduccionService : IProduccionService
             MermaKg = mermaKg,
             MotivoMolino = motivoMolino,
             Estado = estado,
-            IniciaReposo = mermaKg > 0 ? null : DateTime.UtcNow,
+            IniciaReposo = estado == EstadoBobina.EnReposo ? DateTime.UtcNow : null,
             MinutosEnReposo = 20,
             HoraInicio = DateTime.UtcNow.AddMinutes(-20),
             HoraSalida = DateTime.UtcNow,
@@ -634,12 +631,25 @@ public class ProduccionService : IProduccionService
         if (productoPrensado == null || productoBobina == null)
             throw new Exception("Productos no encontrados");
 
-        bool esCompatible = await _context.PrensaProductos.AnyAsync(pp =>
-            pp.PrensaId == prensado.PrensaId &&
-            pp.Item == productoPrensado.Codigo &&
-            pp.Carrete == productoBobina.Codigo);
+        // Verificar si la prensa tiene alguna configuración registrada
+        bool tieneConfiguracionPrensa = await _context.PrensaProductos.AnyAsync(pp => pp.PrensaId == prensado.PrensaId);
 
-        // Fallback: si no hay configuraciones específicas en la tabla, validar si es el mismo producto
+        bool esCompatible = false;
+        if (!tieneConfiguracionPrensa)
+        {
+            // Si la prensa no tiene reglas registradas, permitimos el montaje por defecto
+            esCompatible = true;
+        }
+        else
+        {
+            // Si tiene reglas, validamos cruzando códigos, nombres y claves
+            esCompatible = await _context.PrensaProductos.AnyAsync(pp =>
+                pp.PrensaId == prensado.PrensaId &&
+                (pp.Item == productoBobina.Codigo || pp.Item == productoBobina.Nombre || pp.Item == productoBobina.Clave) &&
+                (pp.Carrete == productoPrensado.Codigo || pp.Carrete == productoPrensado.Nombre || pp.Carrete == productoPrensado.Clave));
+        }
+
+        // Fallback: si no es compatible pero los IDs son exactamente iguales
         if (!esCompatible && productoPrensado.Id == productoBobina.Id)
         {
             esCompatible = true;
