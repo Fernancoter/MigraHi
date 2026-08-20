@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionService, Prensa } from '../../../core/services/produccion';
 import { SyncQueueService, PendingOp } from '../../../core/offline/sync-queue.service';
-import { ApiConfigService } from '../../../core/services/api-config.service';
 
 @Component({
   selector: 'app-troquel-captura',
@@ -19,7 +18,7 @@ import { ApiConfigService } from '../../../core/services/api-config.service';
 
       <div class="card form-card">
         <div class="form-group">
-          <label for="prensa">Prensa:</label>
+          <label for="prensa">Seleccionar Prensa:</label>
           <select id="prensa" [(ngModel)]="selectedPrensaId" class="form-control">
             <option value="" disabled>-- Seleccione --</option>
             <option *ngFor="let p of prensas" [value]="p.id">{{ p.nombre }} ({{ p.codigo }})</option>
@@ -27,38 +26,114 @@ import { ApiConfigService } from '../../../core/services/api-config.service';
         </div>
 
         <div class="form-group">
-          <label for="troquel">Troquel / Matriz:</label>
+          <label for="troquel">Seleccionar Troquel:</label>
           <select id="troquel" [(ngModel)]="selectedTroquelId" class="form-control">
             <option value="" disabled>-- Seleccione --</option>
-            <option *ngFor="let t of troqueles" [value]="t.id">{{ t.nombre }} ({{ t.id }})</option>
+            <option *ngFor="let t of troqueles" [value]="t.id">{{ t.nombre }}</option>
           </select>
         </div>
 
-        <button class="btn btn-primary" (click)="asignarTroquel()" [disabled]="!selectedPrensaId || !selectedTroquelId">
-          Confirmar e Instalar Troquel
+        <button class="action-btn" [disabled]="!selectedPrensaId || !selectedTroquelId" (click)="asignarTroquel()">
+          🔧 Asignar Troquel a Prensa
         </button>
+      </div>
 
-        <div *ngIf="message" class="status-msg" [class.success]="isSuccess" [class.error]="!isSuccess">
-          {{ message }}
-        </div>
+      <div *ngIf="message" class="status-banner" [class.success]="isSuccess">
+        {{ message }}
       </div>
     </div>
   `,
   styles: [`
-    .troquel-view { padding: 1rem; }
-    .card { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    .card-hero { margin-bottom: 1.5rem; padding: 1rem; background: linear-gradient(135deg, #107C41 0%, #16a34a 100%); color: white; border-radius: 8px; }
-    .card-hero h2 { margin: 0 0 0.5rem 0; font-size: 1.25rem; font-weight: 700; color: white; }
-    .card-hero p { margin: 0; color: rgba(255,255,255,0.9); font-size: 0.875rem; }
-    .form-card { padding: 1.5rem; }
-    .form-group { margin-bottom: 1.25rem; }
-    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem; color: #334155; }
-    .form-control { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
-    .btn-primary { width: 100%; padding: 0.875rem; background: #107C41; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; }
-    .btn-primary:disabled { background: #94a3b8; cursor: not-allowed; }
-    .status-msg { margin-top: 1rem; padding: 0.75rem; border-radius: 8px; font-size: 0.875rem; animation: fadeIn 0.3s ease; }
-    .status-msg.success { background: #dcfce7; color: #166534; }
-    .status-msg.error { background: #fee2e2; color: #991b1b; }
+    .troquel-view {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: 100%;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .card-hero {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+      text-align: center;
+    }
+
+    .card-hero h2 {
+      margin: 0 0 8px 0;
+      font-size: 20px;
+    }
+
+    .card-hero p {
+      margin: 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .form-card {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .form-control {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      background-color: #fafafa;
+    }
+
+    .action-btn {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .action-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .status-banner {
+      background-color: #f44336;
+      color: white;
+      padding: 12px;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 600;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .status-banner.success {
+      background-color: #4caf50;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -68,7 +143,6 @@ import { ApiConfigService } from '../../../core/services/api-config.service';
 export class TroquelComponent implements OnInit {
   private prodService = inject(ProduccionService);
   private syncQueue = inject(SyncQueueService);
-  private apiConfig = inject(ApiConfigService);
   private cdr = inject(ChangeDetectorRef);
 
   prensas: Prensa[] = [];
@@ -96,11 +170,7 @@ export class TroquelComponent implements OnInit {
 
     const op: PendingOp = {
       id: `troquel_${this.selectedPrensaId}_${Date.now()}`,
-<<<<<<< Updated upstream
-      endpoint: this.apiConfig.url('/api/v1/produccion/prensado/asignar-troquel'),
-=======
-      endpoint: `http://${window.location.hostname}:5007/api/v1/produccion/prensado/asignar-troquel`,
->>>>>>> Stashed changes
+      endpoint: 'http://localhost:5007/api/v1/produccion/prensado/asignar-troquel',
       method: 'POST',
       body: {
         prensaId: this.selectedPrensaId,

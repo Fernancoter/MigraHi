@@ -40,14 +40,14 @@ public enum ColorEstacion
 }
 
 /// <summary>Motivo por el cual una bobina fue enviada al molino</summary>
-// Valores confirmados contra el sistema legado (GeneXus), ver docs/hallazgo_motivomolino_bobina.md.
-// Regla real: si se captura Kg (bobina buena) se fuerza NoAplica y el campo se deshabilita;
-// si se captura MermaKg (bobina rechazada) se habilita para elegir entre las otras dos.
 public enum MotivoMolino
 {
     NoAplica = 0,
-    FallaMecanica = 1,
-    LimpiezaContaminacion = 2
+    DefectoCalibre = 1,
+    DefectoBobina = 2,
+    DefectoCarrete = 3,
+    FueraDePeso = 4,
+    DanioFisico = 5
 }
 
 /// <summary>Estados de una carrera de prensado</summary>

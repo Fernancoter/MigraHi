@@ -43,20 +43,6 @@ public class CatalogosController : ControllerBase
             .Select(c => new { c.Id, c.Nombre })
             .ToListAsync();
 
-        if (!items.Any())
-        {
-            var defaultCategorias = new List<ProductoCategoria>
-            {
-                new() { Id = Guid.NewGuid(), Nombre = "Películas Agrícolas", IsActive = true },
-                new() { Id = Guid.NewGuid(), Nombre = "Rollos Industriales", IsActive = true },
-                new() { Id = Guid.NewGuid(), Nombre = "Empaques Especiales", IsActive = true },
-                new() { Id = Guid.NewGuid(), Nombre = "General", IsActive = true }
-            };
-            _context.ProductoCategorias.AddRange(defaultCategorias);
-            await _context.SaveChangesAsync(default);
-            items = defaultCategorias.Select(c => new { c.Id, c.Nombre }).ToList();
-        }
-
         return Ok(items);
     }
 
@@ -102,50 +88,11 @@ public class CatalogosController : ControllerBase
     [HttpGet("claves")]
     public async Task<ActionResult<IEnumerable<object>>> GetClaves()
     {
-        var dbClaves = await _context.CatalogoClaves.Select(c => c.Valor).ToListAsync();
-        var extrusoraClaves = await _context.Extrusoras
-            .Where(e => !string.IsNullOrWhiteSpace(e.NumeroExtrusora))
-            .Select(e => e.NumeroExtrusora!)
+        var items = await _context.CatalogoClaves
+            .OrderBy(c => c.Orden)
+            .Select(c => new { c.Id, c.Valor })
             .ToListAsync();
-        var turnoClaves = await _context.Turnos
-            .Where(t => !string.IsNullOrWhiteSpace(t.Clave))
-            .Select(t => t.Clave!)
-            .ToListAsync();
-
-        var allClaves = dbClaves
-            .Concat(extrusoraClaves)
-            .Concat(turnoClaves)
-            .Where(v => !string.IsNullOrWhiteSpace(v))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .Select(v => new { Id = v, Valor = v })
-            .ToList();
-
-        return Ok(allClaves);
-    }
-
-    [HttpPost("claves")]
-    public async Task<ActionResult<Guid>> CreateClave([FromBody] CatalogoClaveDto dto)
-    {
-        await EnsureCatalogoClaveAsync(dto.Valor);
-        var entity = await _context.CatalogoClaves.FirstOrDefaultAsync(c => c.Valor == dto.Valor.Trim());
-        return Ok(entity?.Id ?? Guid.NewGuid());
-    }
-
-    private async Task EnsureCatalogoClaveAsync(string? valor)
-    {
-        if (string.IsNullOrWhiteSpace(valor)) return;
-        var trimmed = valor.Trim();
-        var exists = await _context.CatalogoClaves.AnyAsync(c => c.Valor.ToLower() == trimmed.ToLower());
-        if (!exists)
-        {
-            _context.CatalogoClaves.Add(new CatalogoClave
-            {
-                Id = Guid.NewGuid(),
-                Valor = trimmed,
-                Orden = 999
-            });
-            await _context.SaveChangesAsync(default);
-        }
+        return Ok(items);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -173,7 +120,6 @@ public class CatalogosController : ControllerBase
     [HttpPost("turnos")]
     public async Task<ActionResult<Guid>> CreateTurno([FromBody] TurnoDto dto)
     {
-        await EnsureCatalogoClaveAsync(dto.Clave);
         var entity = new Turno
         {
             Id = Guid.NewGuid(),
@@ -215,7 +161,6 @@ public class CatalogosController : ControllerBase
     // EXTRUSORAS
     // ─────────────────────────────────────────────────────────────────────────
 
-    [AllowAnonymous]
     [HttpGet("extrusoras")]
     public async Task<ActionResult<IEnumerable<object>>> GetExtrusoras([FromQuery] string? search = null)
     {
@@ -225,17 +170,7 @@ public class CatalogosController : ControllerBase
 
         var items = await query
             .OrderBy(e => e.Nombre)
-            .Select(e => new {
-                e.Id, e.Nombre, e.NumeroExtrusora, e.Imagen,
-                Estado = (int)e.Estado,
-                EstadoNombre = e.Estado.ToString(),
-                e.CapacidadKgHora,
-                e.Modelo,
-                e.NumeroSerie,
-                e.IsActive,
-                e.Observaciones,
-                e.NumeroEstaciones
-            })
+            .Select(e => new { e.Id, e.Nombre, e.NumeroExtrusora, e.Imagen })
             .ToListAsync();
         return Ok(items);
     }
@@ -253,14 +188,6 @@ public class CatalogosController : ControllerBase
         return Ok(new
         {
             item.Id, item.Nombre, item.NumeroExtrusora, item.Imagen,
-            Estado = (int)item.Estado,
-            EstadoNombre = item.Estado.ToString(),
-            item.CapacidadKgHora,
-            item.Modelo,
-            item.NumeroSerie,
-            item.IsActive,
-            item.Observaciones,
-            item.NumeroEstaciones,
             Operarios = item.ExtrusoraOperarios.Select(eo => new
             {
                 eo.Id, TurnoId = eo.TurnoId, Turno = eo.Turno?.Nombre,
@@ -272,38 +199,15 @@ public class CatalogosController : ControllerBase
     [HttpPost("extrusoras")]
     public async Task<ActionResult<Guid>> CreateExtrusora([FromBody] ExtrusoraDto dto)
     {
-        await EnsureCatalogoClaveAsync(dto.NumeroExtrusora);
         var entity = new Extrusora
         {
             Id = Guid.NewGuid(),
             Nombre = dto.Nombre,
             NumeroExtrusora = dto.NumeroExtrusora,
             Imagen = dto.Imagen,
-            TenantId = dto.TenantId,
-            Estado = dto.Estado.HasValue ? (EstadoExtrusora)dto.Estado.Value : EstadoExtrusora.Disponible,
-            CapacidadKgHora = dto.CapacidadKgHora ?? 0,
-            Modelo = dto.Modelo,
-            NumeroSerie = dto.NumeroSerie,
-            IsActive = dto.IsActive ?? true,
-            Observaciones = dto.Observaciones,
-            NumeroEstaciones = dto.NumeroEstaciones ?? 1
+            TenantId = dto.TenantId
         };
         _context.Extrusoras.Add(entity);
-
-        var maquina = await _context.Maquinas.FindAsync(entity.Id);
-        if (maquina == null)
-        {
-            _context.Maquinas.Add(new Maquina
-            {
-                Id = entity.Id,
-                Nombre = entity.Nombre,
-                Codigo = $"EXT-{entity.NumeroExtrusora}",
-                Tipo = "Extrusora",
-                Estado = "Disponible",
-                IsActive = true,
-                TenantId = entity.TenantId != Guid.Empty ? entity.TenantId : Guid.Parse("00000000-0000-0000-0000-000000000001")
-            });
-        }
 
         var username = User.Identity?.Name ?? "Sistema";
         _context.AuditLogs.Add(new AuditLog
@@ -339,13 +243,6 @@ public class CatalogosController : ControllerBase
         entity.Nombre = dto.Nombre;
         entity.NumeroExtrusora = dto.NumeroExtrusora;
         entity.Imagen = dto.Imagen;
-        if (dto.Estado.HasValue) entity.Estado = (EstadoExtrusora)dto.Estado.Value;
-        if (dto.CapacidadKgHora.HasValue) entity.CapacidadKgHora = dto.CapacidadKgHora.Value;
-        entity.Modelo = dto.Modelo;
-        entity.NumeroSerie = dto.NumeroSerie;
-        if (dto.IsActive.HasValue) entity.IsActive = dto.IsActive.Value;
-        entity.Observaciones = dto.Observaciones;
-        if (dto.NumeroEstaciones.HasValue) entity.NumeroEstaciones = dto.NumeroEstaciones.Value;
 
         var username = User.Identity?.Name ?? "Sistema";
         _context.AuditLogs.Add(new AuditLog
@@ -591,20 +488,7 @@ public class CatalogosController : ControllerBase
 
         var items = await query
             .OrderBy(p => p.Nombre)
-            .Select(p => new
-            {
-                p.Id,
-                p.NumeroPrensa,
-                p.Nombre,
-                p.Imagen,
-                p.Marca,
-                p.Modelo,
-                Estado = (int)p.Estado,
-                EstadoNombre = p.Estado.ToString(),
-                p.NumeroSerie,
-                p.IsActive,
-                p.Observaciones
-            })
+            .Select(p => new { p.Id, p.NumeroPrensa, p.Nombre, p.Imagen, p.Marca, p.Modelo })
             .ToListAsync();
         return Ok(items);
     }
@@ -621,20 +505,15 @@ public class CatalogosController : ControllerBase
     [HttpPost("prensas")]
     public async Task<ActionResult<Guid>> CreatePrensa([FromBody] PrensaDto dto)
     {
-        var codePrensa = !string.IsNullOrWhiteSpace(dto.NumeroPrensa) ? dto.NumeroPrensa : (!string.IsNullOrWhiteSpace(dto.Nombre) ? dto.Nombre : $"PRE-{Guid.NewGuid().ToString()[..4]}");
         var entity = new Prensa
         {
             Id = Guid.NewGuid(),
-            Codigo = codePrensa,
-            NumeroPrensa = codePrensa,
+            Codigo = string.IsNullOrEmpty(dto.Nombre) ? $"PRE-{Guid.NewGuid().ToString()[..4]}" : dto.Nombre,
+            NumeroPrensa = dto.NumeroPrensa ?? "",
             Nombre = dto.Nombre ?? "Prensa",
             Imagen = dto.Imagen,
             Marca = dto.Marca,
             Modelo = dto.Modelo,
-            Estado = dto.Estado.HasValue ? (EstadoPrensa)dto.Estado.Value : EstadoPrensa.Disponible,
-            NumeroSerie = dto.NumeroSerie,
-            IsActive = dto.IsActive ?? true,
-            Observaciones = dto.Observaciones,
             TenantId = dto.TenantId == Guid.Empty ? new Guid("00000000-0000-0000-0000-000000000001") : dto.TenantId
         };
         _context.Prensas.Add(entity);
@@ -658,10 +537,6 @@ public class CatalogosController : ControllerBase
                 Imagen = dto.Imagen,
                 Marca = dto.Marca,
                 Modelo = dto.Modelo,
-                Estado = dto.Estado.HasValue ? (EstadoPrensa)dto.Estado.Value : EstadoPrensa.Disponible,
-                NumeroSerie = dto.NumeroSerie,
-                IsActive = dto.IsActive ?? true,
-                Observaciones = dto.Observaciones,
                 TenantId = dto.TenantId == Guid.Empty ? new Guid("00000000-0000-0000-0000-000000000001") : dto.TenantId
             };
             _context.Prensas.Add(entity);
@@ -673,10 +548,6 @@ public class CatalogosController : ControllerBase
             entity.Imagen = dto.Imagen;
             entity.Marca = dto.Marca;
             entity.Modelo = dto.Modelo;
-            if (dto.Estado.HasValue) entity.Estado = (EstadoPrensa)dto.Estado.Value;
-            if (dto.NumeroSerie != null) entity.NumeroSerie = dto.NumeroSerie;
-            if (dto.IsActive.HasValue) entity.IsActive = dto.IsActive.Value;
-            if (dto.Observaciones != null) entity.Observaciones = dto.Observaciones;
         }
         await _context.SaveChangesAsync(default);
         return NoContent();
@@ -699,12 +570,9 @@ public class CatalogosController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("silos")]
-    public async Task<ActionResult<IEnumerable<object>>> GetSilos([FromQuery] bool? activo = null, [FromQuery] bool incluirArchivados = false)
+    public async Task<ActionResult<IEnumerable<object>>> GetSilos([FromQuery] bool? activo = null)
     {
-        var query = _context.SilosProduccion.AsQueryable();
-        if (!incluirArchivados)
-            query = query.Where(s => !s.IsArchived);
-
+        var query = _context.SilosProduccion.Where(s => !s.IsArchived);
         if (activo.HasValue)
             query = query.Where(s => s.SiloActivo == activo.Value);
 
@@ -713,7 +581,7 @@ public class CatalogosController : ControllerBase
             .Select(s => new
             {
                 s.Id, s.Nombre, s.CapacidadKg, s.MinimoKg, s.MaximoKg,
-                s.EstadoMaterial, s.TipoMaterial, s.SiloActivo, s.IsArchived
+                s.EstadoMaterial, s.TipoMaterial, s.SiloActivo
             })
             .ToListAsync();
         return Ok(items);
@@ -760,16 +628,6 @@ public class CatalogosController : ControllerBase
         var item = await _context.SilosProduccion.FindAsync(id);
         if (item is null) return NotFound();
         item.IsArchived = true;
-        await _context.SaveChangesAsync(default);
-        return NoContent();
-    }
-
-    [HttpPut("silos/{id}/desarchivar")]
-    public async Task<IActionResult> DesarchivarSilo(Guid id)
-    {
-        var item = await _context.SilosProduccion.FindAsync(id);
-        if (item is null) return NotFound();
-        item.IsArchived = false;
         await _context.SaveChangesAsync(default);
         return NoContent();
     }
@@ -1124,18 +982,9 @@ public class CatalogosController : ControllerBase
             .FirstOrDefaultAsync();
         if (producto is null) return NotFound(new { message = "Producto no encontrado." });
 
-        var yaExiste = await _context.TroquelProductos.FirstOrDefaultAsync(tp => tp.TroquelId == id && tp.ProductoId == dto.ProductoId);
-        if (yaExiste != null)
-        {
-            return Ok(new {
-                id = yaExiste.Id,
-                productoId = producto.Id,
-                productoNombre = producto.Nombre,
-                productoClave = producto.Clave,
-                productoDescripcion = producto.Descripcion,
-                nombre = producto.Nombre
-            });
-        }
+        var yaExiste = await _context.TroquelProductos.AnyAsync(tp => tp.TroquelId == id && tp.ProductoId == dto.ProductoId);
+        if (yaExiste)
+            return BadRequest(new { message = "Este producto ya está registrado como compatible con el troquel." });
 
         var entity = new TroquelProducto
         {
@@ -1224,41 +1073,13 @@ public class CatalogosController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult<Guid>> CreatePrensaProducto([FromBody] PrensaProductoDto dto)
     {
-        var tenantId = dto.TenantId != Guid.Empty ? dto.TenantId : Guid.Parse("00000000-0000-0000-0000-000000000001");
-        Guid targetProductoId;
-        if (dto.ProductoId.HasValue && dto.ProductoId.Value != Guid.Empty && await _context.Productos.AnyAsync(p => p.Id == dto.ProductoId.Value))
-        {
-            targetProductoId = dto.ProductoId.Value;
-        }
-        else
-        {
-            var searchName = !string.IsNullOrWhiteSpace(dto.Item) ? dto.Item : (!string.IsNullOrWhiteSpace(dto.Carrete) ? dto.Carrete : "Prensa Producto");
-            var prod = await _context.Productos.FirstOrDefaultAsync(p => p.Nombre == searchName);
-            if (prod == null)
-            {
-                var code = $"PROD-{DateTime.UtcNow.Ticks.ToString().Substring(8)}";
-                prod = new Producto
-                {
-                    Id = Guid.NewGuid(),
-                    Nombre = searchName,
-                    Clave = code,
-                    Codigo = code,
-                    TenantId = tenantId
-                };
-                _context.Productos.Add(prod);
-                await _context.SaveChangesAsync(default);
-            }
-            targetProductoId = prod.Id;
-        }
-
         var entity = new PrensaProducto
         {
             Id = Guid.NewGuid(),
             PrensaId = dto.PrensaId,
-            ProductoId = targetProductoId,
             Item = dto.Item,
             Carrete = dto.Carrete,
-            TenantId = tenantId
+            TenantId = dto.TenantId != Guid.Empty ? dto.TenantId : Guid.Parse("00000000-0000-0000-0000-000000000001")
         };
         _context.PrensaProductos.Add(entity);
         await _context.SaveChangesAsync(default);
@@ -1271,11 +1092,6 @@ public class CatalogosController : ControllerBase
     {
         var entity = await _context.PrensaProductos.FindAsync(id);
         if (entity is null) return NotFound(new { message = "Relación Prensa-Producto no encontrada." });
-
-        if (dto.ProductoId.HasValue && dto.ProductoId.Value != Guid.Empty && await _context.Productos.AnyAsync(p => p.Id == dto.ProductoId.Value))
-        {
-            entity.ProductoId = dto.ProductoId.Value;
-        }
 
         entity.PrensaId = dto.PrensaId;
         entity.Item = dto.Item;
@@ -1367,7 +1183,6 @@ public class CatalogosController : ControllerBase
         var entity = new ProductoTerminado
         {
             Id = Guid.NewGuid(),
-            Nombre = dto.Producto ?? "Producto Terminado",
             Producto = dto.Producto,
             TerminadoPalets = dto.TerminadoPalets,
             CarreteMiliar = dto.CarreteMiliar,
@@ -1427,23 +1242,11 @@ public class CatalogosController : ControllerBase
 // DTOs
 // ─────────────────────────────────────────────────────────────────────────────
 public record TurnoDto(string Nombre, string? Clave, string HoraInicio, string HoraFin, Guid TenantId);
-public record ExtrusoraDto(
-    string Nombre,
-    string NumeroExtrusora,
-    string? Imagen,
-    Guid TenantId,
-    int? Estado,
-    decimal? CapacidadKgHora,
-    string? Modelo,
-    string? NumeroSerie,
-    bool? IsActive,
-    string? Observaciones,
-    int? NumeroEstaciones
-);
+public record ExtrusoraDto(string Nombre, string NumeroExtrusora, string? Imagen, Guid TenantId);
 public record ExtrusoraOperarioDto(Guid? OperarioId, Guid TenantId);
 public record ExtrusoraOperarioBatchItemDto(Guid? TurnoId, Guid? OperarioId, Guid? TenantId);
 public record OperarioCreateCatalogDto(string? Nombre, string? NombreCompleto, string? NumeroEmpleado, bool? Activo, bool? IsActive);
-public record PrensaDto(string? NumeroPrensa, string Nombre, string? Imagen, string? Marca, string? Modelo, Guid TenantId, int? Estado, string? NumeroSerie, bool? IsActive, string? Observaciones);
+public record PrensaDto(string? NumeroPrensa, string Nombre, string? Imagen, string? Marca, string? Modelo, Guid TenantId);
 public record TroquelDto(string Codigo, string Nombre, string? Observaciones, int Estado, Guid TenantId);
 public record AsignarPrensaTroquelDto(Guid PrensaId, string? Observaciones);
 public record TroquelProductoDto(Guid ProductoId);
@@ -1454,8 +1257,7 @@ public record PrensaProductoDto(
     Guid PrensaId,
     string Item,
     string Carrete,
-    Guid TenantId,
-    Guid? ProductoId = null
+    Guid TenantId
 );
 public record ProductoTerminadoDto(
     string? Producto,
@@ -1471,4 +1273,3 @@ public record ProductoTerminadoDto(
     int Mrd,
     Guid TenantId
 );
-public record CatalogoClaveDto(string Valor, int? Orden);

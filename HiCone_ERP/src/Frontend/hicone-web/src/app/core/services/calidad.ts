@@ -29,14 +29,12 @@ export interface ReclamoDetalle {
   fechaRegistro: Date;
 }
 
-import { environment } from '../../../environments/environment';
-
 @Injectable({
   providedIn: 'root'
 })
 export class CalidadService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/api/v1/calidad`;
+  private apiUrl = 'http://localhost:5007/api/v1/calidad';
 
   getReclamosActivos(): Observable<Reclamo[]> {
     return this.http.get<Reclamo[]>(`${this.apiUrl}/reclamos/activos`);

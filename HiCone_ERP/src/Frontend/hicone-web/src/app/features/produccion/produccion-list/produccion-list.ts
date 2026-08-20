@@ -43,8 +43,8 @@ import { FormsModule } from '@angular/forms';
               <tbody>
                 <tr *ngFor="let o of extrusionesActivas">
                   <td>
-                    <span class="badge-premium" [class.badge-success]="!o.interrupcionEnCurso" [class.badge-warning]="o.interrupcionEnCurso">
-                      {{ o.interrupcionEnCurso ? '🚫 DETENIDA' : '⚡ OPERANDO' }}
+                    <span class="badge-premium" [class.badge-success]="o.estado === 'EnProceso'" [class.badge-warning]="o.estado === 'Detenida'">
+                      {{ o.estado === 'EnProceso' ? '⚡ OPERANDO' : '🚫 DETENIDA' }}
                     </span>
                   </td>
                   <td><strong>{{ o.extrusora?.nombre || o.extrusoraId }}</strong></td>
@@ -52,8 +52,8 @@ import { FormsModule } from '@angular/forms';
                   <td>{{ o.operario?.nombreCompleto || 'Sin asignar' }}</td>
                   <td class="text-right font-mono" style="font-weight: 700;">{{ o.totalBobinas || 0 }} Bobinas</td>
                   <td class="text-right">
-                    <button *ngIf="!o.interrupcionEnCurso" (click)="abrirModalInterrupcion(o, 'extrusion')" class="btn-premium-danger" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Detener</button>
-                    <button *ngIf="o.interrupcionEnCurso" (click)="reanudarProceso(o, 'extrusion')" class="btn-premium" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Retomar</button>
+                    <button *ngIf="o.estado === 'EnProceso'" (click)="abrirModalInterrupcion(o, 'extrusion')" class="btn-premium-danger" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Detener</button>
+                    <button *ngIf="o.estado === 'Detenida'" (click)="reanudarProceso(o, 'extrusion')" class="btn-premium" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Retomar</button>
                   </td>
                 </tr>
               </tbody>
@@ -82,8 +82,8 @@ import { FormsModule } from '@angular/forms';
               <tbody>
                 <tr *ngFor="let p of prensadosActivos">
                   <td>
-                    <span class="badge-premium" [class.badge-success]="!p.interrupcionEnCurso" [class.badge-warning]="p.interrupcionEnCurso">
-                      {{ p.interrupcionEnCurso ? '🚫 DETENIDA' : '⚡ OPERANDO' }}
+                    <span class="badge-premium" [class.badge-success]="p.estado === 'EnProceso'" [class.badge-warning]="p.estado === 'Detenida'">
+                      {{ p.estado === 'EnProceso' ? '⚡ OPERANDO' : '🚫 DETENIDA' }}
                     </span>
                   </td>
                   <td><strong>{{ p.prensa?.nombre || 'Prensa' }}</strong></td>
@@ -91,8 +91,8 @@ import { FormsModule } from '@angular/forms';
                   <td>{{ p.operario?.nombreCompleto || 'Sin asignar' }}</td>
                   <td class="text-right" style="font-weight: 700;">En Línea</td>
                   <td class="text-right">
-                    <button *ngIf="!p.interrupcionEnCurso" (click)="abrirModalInterrupcion(p, 'prensado')" class="btn-premium-danger" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Detener</button>
-                    <button *ngIf="p.interrupcionEnCurso" (click)="reanudarProceso(p, 'prensado')" class="btn-premium" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Retomar</button>
+                    <button *ngIf="p.estado === 'EnProceso'" (click)="abrirModalInterrupcion(p, 'prensado')" class="btn-premium-danger" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Detener</button>
+                    <button *ngIf="p.estado === 'Detenida'" (click)="reanudarProceso(p, 'prensado')" class="btn-premium" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Retomar</button>
                   </td>
                 </tr>
                 <tr *ngIf="prensadosActivos.length === 0">
@@ -169,16 +169,12 @@ export class ProduccionListComponent implements OnInit {
   }
 
   refreshData() {
-    // "Detenida" no es un valor de EstadoExtrusion/EstadoPrensado: una interrupción activa
-    // no cambia el Estado de la entidad (se queda en EnProceso), solo pone
-    // InterrupcionEnCurso=true. El filtro se queda en EnProceso; el badge/botones usan
-    // interrupcionEnCurso para distinguir Operando vs Detenida.
     this.produccionService.getExtrusiones().subscribe(data => {
-      this.extrusionesActivas = data.filter(e => e.estado === 'EnProceso');
+      this.extrusionesActivas = data.filter(e => e.estado === 'EnProceso' || e.estado === 'Detenida');
       this.cdr.detectChanges();
     });
     this.produccionService.getPrensados().subscribe(data => {
-      this.prensadosActivos = data.filter(p => p.estado === 1);
+      this.prensadosActivos = data.filter(p => p.estado === 'EnProceso' || p.estado === 'Detenida');
       this.cdr.detectChanges();
     });
   }

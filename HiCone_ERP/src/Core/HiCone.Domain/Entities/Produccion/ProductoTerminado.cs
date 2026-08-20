@@ -14,7 +14,6 @@ namespace HiCone.Domain.Entities.Produccion;
 /// </summary>
 public class ProductoTerminado : TenantEntity
 {
-    public string? Nombre { get; set; }
     public int TerminadoPalets { get; set; }
     public int CarreteMiliar { get; set; }
     public int PaletMiliar { get; set; }
@@ -26,7 +25,6 @@ public class ProductoTerminado : TenantEntity
     public string? Producto { get; set; }
     public string? CodigoSap { get; set; }
     public int Mrd { get; set; }
-    public bool IsActive { get; set; } = true;
 
     public virtual ICollection<Palet> Palets { get; set; } = new List<Palet>();
 }

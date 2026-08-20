@@ -19,13 +19,11 @@ export interface ExistenciaSilo {
   loteVirgen: string;
 }
 
-import { environment } from '../../../environments/environment';
-
 @Injectable({
   providedIn: 'root'
 })
 export class InventarioService {
-  private apiUrl = `${environment.apiUrl}/api/v1/inventario`;
+  private apiUrl = 'http://localhost:5007/api/v1/inventario';
 
   constructor(private http: HttpClient) { }
 

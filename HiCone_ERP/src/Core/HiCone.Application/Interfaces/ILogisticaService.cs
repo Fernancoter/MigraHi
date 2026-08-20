@@ -12,7 +12,7 @@ public interface ILogisticaService
     
     // ── Validación de Carga ───────────────────────────────────────────────
     Task<(bool Success, string Message)> ValidarPaletParaEmbarqueAsync(Guid embarqueId, string noSeriePalet);
-    Task<(bool Success, string Message)> FinalizarEmbarqueAsync(Guid embarqueId, string elaboradoPor);
+    Task<bool> FinalizarEmbarqueAsync(Guid embarqueId, string elaboradoPor);
 
     // ── Consultas ──────────────────────────────────────────────────────────
     Task<IEnumerable<Embarque>> GetEmbarquesActivosAsync();

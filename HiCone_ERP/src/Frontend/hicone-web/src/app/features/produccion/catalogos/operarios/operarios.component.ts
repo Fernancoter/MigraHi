@@ -4,12 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { ProduccionConfigService, Operario } from '../../../../core/services/produccion-config.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 
-import { LucideX, LucideTrash2, LucideFolder, LucideSave, LucideFileText, LucideRefreshCw, LucideSearch } from '@lucide/angular';
-
 @Component({
   selector: 'app-operarios-catalogo',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideX, LucideTrash2, LucideFolder, LucideSave, LucideFileText, LucideRefreshCw, LucideSearch],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="module-page animate-move-up">
       <div class="page-header-premium">
@@ -41,7 +39,7 @@ import { LucideX, LucideTrash2, LucideFolder, LucideSave, LucideFileText, Lucide
                     <span class="export-icon">📊</span> Excel (CSV)
                   </button>
                   <button class="export-item-qa" (click)="exportPDF()">
-                    <span class="export-icon"><svg lucideFileText [size]="14"></svg></span> PDF
+                    <span class="export-icon">📕</span> PDF
                   </button>
                 </div>
               }
@@ -140,48 +138,19 @@ import { LucideX, LucideTrash2, LucideFolder, LucideSave, LucideFileText, Lucide
               title="Filtrar por estado activo"
               style="display: flex; align-items: center; gap: 0.4rem;"
             >
-              <span><svg lucideRefreshCw [size]="14"></svg></span> Filter: {{ activeFilterState() === 'all' ? 'Todos' : activeFilterState() === 'active' ? 'Activos' : 'Inactivos' }}
+              <span>🔄</span> Filter: {{ activeFilterState() === 'all' ? 'Todos' : activeFilterState() === 'active' ? 'Activos' : 'Inactivos' }}
             </button>
 
-            <!-- Filtro Embudo y Búsqueda -->
-            <div class="filter-search-group-qa">
-              <div class="dropdown-wrapper">
-                <button class="btn-filter-funnel-qa" (click)="toggleSearchFilterDropdown($event)" title="Filtros avanzados">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                  </svg>
-                  <span class="chevron-down-funnel">▾</span>
-                </button>
-                
-                <div class="filter-popover-qa shadow-premium" *ngIf="showSearchFilterDropdown()" (click)="$event.stopPropagation()">
-                  <div class="filter-item-qa" (click)="clearAllFilters()">
-                    <span class="icon-circle-cross-dark"><svg lucideX [size]="12"></svg></span> Limpiar filtros
-                  </div>
-                  <div class="filter-item-qa" (click)="saveActiveFilters()">
-                    <span class="icon-floppy-dark"><svg lucideSave [size]="14"></svg></span> Guardar filtro como...
-                  </div>
-                  
-                  <ng-container *ngIf="savedFilters().length > 0">
-                    <div class="dropdown-divider"></div>
-                    <div class="dropdown-header-saved">Filtros Guardados</div>
-                    <div class="filter-item-qa saved-filter-item" *ngFor="let f of savedFilters()" (click)="loadSavedFilter(f)">
-                      <span><svg lucideFolder [size]="14"></svg> {{ f.name }}</span>
-                      <span class="btn-delete-saved-filter" (click)="deleteSavedFilter(f, $event)"><svg lucideTrash2 [size]="14"></svg></span>
-                    </div>
-                  </ng-container>
-                </div>
-              </div>
-
-              <div class="search-box">
-                <span class="search-icon"><svg lucideSearch [size]="14"></svg></span>
-                <input 
-                  class="field-input" 
-                  type="text" 
-                  placeholder="Buscar operario..." 
-                  [ngModel]="searchText()" 
-                  (ngModelChange)="searchText.set($event); currentPage.set(1)"
-                />
-              </div>
+            <!-- Filtro de Búsqueda -->
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input 
+                class="field-input" 
+                type="text" 
+                placeholder="Buscar operario..." 
+                [ngModel]="searchText()" 
+                (ngModelChange)="searchText.set($event); currentPage.set(1)"
+              />
             </div>
           </div>
         </div>
@@ -228,7 +197,7 @@ import { LucideX, LucideTrash2, LucideFolder, LucideSave, LucideFileText, Lucide
                         <span class="icon">🟥</span> Unchecked (Solo Inactivos)
                       </div>
                       <div class="popover-item" (click)="filterActiveState('all')">
-                        <span class="icon"><svg lucideRefreshCw [size]="14"></svg></span> Mostrar Todos
+                        <span class="icon">🔄</span> Mostrar Todos
                       </div>
                     </div>
                   }
@@ -309,7 +278,7 @@ import { LucideX, LucideTrash2, LucideFolder, LucideSave, LucideFileText, Lucide
           <div class="modal-card" (click)="$event.stopPropagation()">
             <div class="modal-header">
               <h3>Operador</h3>
-              <button class="modal-close" (click)="closeModal()"><svg lucideX [size]="14"></svg></button>
+              <button class="modal-close" (click)="closeModal()">✕</button>
             </div>
             
             <div class="modal-body">
@@ -365,30 +334,6 @@ import { LucideX, LucideTrash2, LucideFolder, LucideSave, LucideFileText, Lucide
           </div>
         </div>
       }
-
-      <!-- Modal Confirmar Eliminar Operario -->
-      @if (showDeleteConfirmModal()) {
-        <div class="modal-overlay" (click)="showDeleteConfirmModal.set(false)">
-          <div class="modal-card" style="max-width: 400px; text-align: center;" (click)="$event.stopPropagation()">
-            <div class="modal-header" style="background: #fef2f2; border-bottom: 1px solid #fee2e2;">
-              <h3 style="color: #b91c1c;">Eliminar Operario</h3>
-              <button class="modal-close" (click)="showDeleteConfirmModal.set(false)"><svg lucideX [size]="14"></svg></button>
-            </div>
-            <div class="modal-body" style="padding: 1.5rem;">
-              <p style="color: #334155; font-size: 0.95rem; margin-bottom: 0.5rem;">
-                ¿Está seguro de que desea eliminar al operario <strong>"{{ operarioToDelete()?.nombre }}"</strong>?
-              </p>
-              <p style="color: #64748b; font-size: 0.85rem;">
-                Esta acción no se puede deshacer.
-              </p>
-            </div>
-            <div class="modal-footer" style="justify-content: center; gap: 12px;">
-              <button class="btn btn-primary" style="background: #ef4444;" (click)="executeDelete()">Eliminar</button>
-              <button class="btn btn-secondary" (click)="showDeleteConfirmModal.set(false)">Cancelar</button>
-            </div>
-          </div>
-        </div>
-      }
     </div>
   `,
   styles: [`
@@ -402,23 +347,6 @@ import { LucideX, LucideTrash2, LucideFolder, LucideSave, LucideFileText, Lucide
     .btn-secondary { background: white; color: #475569; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
     .btn-secondary:hover { background: #f8fafc; border-color: #cbd5e1; }
     .active-filter { background: rgba(16, 185, 129, 0.1) !important; color: #10b981 !important; border-color: rgba(16, 185, 129, 0.25) !important; }
-    .filter-search-group-qa { display: flex; gap: 0.6rem; align-items: center; }
-    .btn-filter-funnel-qa { background: #ffffff; border: 1px solid #dcdde1; border-radius: 4px; padding: 0.4rem 0.6rem; height: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: background 0.2s; }
-    .btn-filter-funnel-qa:hover { background: #f8fafc; border-color: #cbd5e1; }
-    .chevron-down-funnel { font-size: 0.65rem; color: #334155; }
-    .filter-popover-qa { position: absolute; top: calc(100% + 4px); right: 0; background: #ffffff !important; border: 1px solid #cbd5e1 !important; border-radius: 6px !important; width: 185px !important; box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important; z-index: 99999 !important; padding: 6px 0 !important; box-sizing: border-box; }
-    .filter-item-qa { display: flex; align-items: center; gap: 8px; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: #334155; font-weight: 500; cursor: pointer; transition: background 0.15s; }
-    .filter-item-qa:hover { background: #f1f5f9; color: #2e7d32; }
-    .icon-circle-cross-dark { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; background: #475569; color: white; border-radius: 50%; font-size: 8px; font-weight: bold; }
-    .filter-item-qa:hover .icon-circle-cross-dark { background: #2e7d32; }
-    .icon-floppy-dark { font-size: 0.9rem; color: #475569; }
-    .filter-item-qa:hover .icon-floppy-dark { color: #2e7d32; }
-    .dropdown-divider { height: 1px; background: #e2e8f0; margin: 4px 0; }
-    .dropdown-header-saved { font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; padding: 4px 12px; }
-    .saved-filter-item { justify-content: space-between; }
-    .btn-delete-saved-filter { cursor: pointer; opacity: 0.7; font-size: 0.8rem; }
-    .btn-delete-saved-filter:hover { opacity: 1; }
-
     .search-box { position: relative; }
     .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.9rem; }
     .search-box .field-input { padding-left: 2.2rem; width: 240px; }
@@ -510,8 +438,6 @@ export class OperariosCatalogoComponent implements OnInit {
   items = signal<Operario[]>([]);
   loading = signal(true);
   showModal = signal(false);
-  showDeleteConfirmModal = signal(false);
-  operarioToDelete = signal<Operario | null>(null);
   modalReadOnly = signal(false);
   form: Partial<Operario> = {};
 
@@ -609,50 +535,11 @@ export class OperariosCatalogoComponent implements OnInit {
     this.currentPage.set(1);
   }
 
-  showSearchFilterDropdown = signal<boolean>(false);
-  savedFilters = signal<any[]>([]);
-
-  toggleSearchFilterDropdown(e: Event) {
-    e.stopPropagation();
-    this.showSearchFilterDropdown.update(v => !v);
-    this.showColumnSelector.set(false);
-    this.showExportOptions.set(false);
-    this.showActiveHeaderDropdown.set(false);
-  }
-
-  clearAllFilters() {
-    this.searchText.set('');
-    this.activeFilterState.set('all');
-    this.currentPage.set(1);
-    this.showSearchFilterDropdown.set(false);
-  }
-
-  saveActiveFilters() {
-    const name = prompt('Nombre para este filtro guardado:');
-    if (name) {
-      this.savedFilters.update(list => [...list, { id: Date.now(), name, term: this.searchText() }]);
-      this.notify.success('Filtro guardado correctamente');
-    }
-    this.showSearchFilterDropdown.set(false);
-  }
-
-  loadSavedFilter(f: any) {
-    this.searchText.set(f.term || '');
-    this.currentPage.set(1);
-    this.showSearchFilterDropdown.set(false);
-  }
-
-  deleteSavedFilter(f: any, e: Event) {
-    e.stopPropagation();
-    this.savedFilters.update(list => list.filter(item => item.id !== f.id));
-  }
-
   toggleColumnDropdown(event: Event) {
     event.stopPropagation();
     this.showColumnSelector.update(v => !v);
     this.showExportOptions.set(false);
     this.showActiveHeaderDropdown.set(false);
-    this.showSearchFilterDropdown.set(false);
   }
 
   toggleExportDropdown(event: Event) {
@@ -660,7 +547,6 @@ export class OperariosCatalogoComponent implements OnInit {
     this.showExportOptions.update(v => !v);
     this.showColumnSelector.set(false);
     this.showActiveHeaderDropdown.set(false);
-    this.showSearchFilterDropdown.set(false);
   }
 
   toggleActiveHeaderDropdown(event: Event) {
@@ -668,7 +554,6 @@ export class OperariosCatalogoComponent implements OnInit {
     this.showActiveHeaderDropdown.update(v => !v);
     this.showColumnSelector.set(false);
     this.showExportOptions.set(false);
-    this.showSearchFilterDropdown.set(false);
   }
 
   isColVisible(colName: string): boolean {
@@ -837,33 +722,23 @@ export class OperariosCatalogoComponent implements OnInit {
   }
 
   del(item: Operario) {
-    this.operarioToDelete.set(item);
-    this.showDeleteConfirmModal.set(true);
-  }
-
-  executeDelete() {
-    const item = this.operarioToDelete();
-    if (!item) return;
-
-    this.svc.deleteOperario(item.id).subscribe({
-      next: () => {
-        this.notify.success('Operario eliminado exitosamente.');
-        this.load();
-        if (this.currentPage() > this.totalPages()) {
-          this.currentPage.set(this.totalPages());
+    if (confirm(`¿Está seguro de que desea eliminar al operario "${item.nombre}"?`)) {
+      this.svc.deleteOperario(item.id).subscribe({
+        next: () => {
+          this.notify.success('Operario eliminado exitosamente.');
+          this.load();
+          if (this.currentPage() > this.totalPages()) {
+            this.currentPage.set(this.totalPages());
+          }
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error al eliminar operario:', err);
+          this.notify.error(err.error?.message || 'No se pudo eliminar el operario.');
+          this.cdr.detectChanges();
         }
-        this.showDeleteConfirmModal.set(false);
-        this.operarioToDelete.set(null);
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error al eliminar operario:', err);
-        this.notify.error(err.error?.message || 'No se pudo eliminar el operario.');
-        this.showDeleteConfirmModal.set(false);
-        this.operarioToDelete.set(null);
-        this.cdr.detectChanges();
-      }
-    });
+      });
+    }
   }
 
   // Export options

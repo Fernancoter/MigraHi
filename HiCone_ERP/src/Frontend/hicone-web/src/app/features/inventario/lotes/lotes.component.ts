@@ -42,7 +42,7 @@ import { NotificationService } from '../../../core/services/notification.service
             
             <!-- Selector de Columnas (Imagen 3 y 4) -->
             <div class="dropdown-wrapper">
-              <button class="btn-primary-green btn-cols" (click)="showColumnSelector = !showColumnSelector; $event.stopPropagation()">Selecciona columnas <span class="chevron-down">▾</span></button>
+              <button class="btn-primary-green btn-cols" (click)="toggleColumnSelector($event)">Selecciona columnas <span class="chevron-down">▾</span></button>
               <div class="column-selector-popover shadow-premium" *ngIf="showColumnSelector" style="position: absolute; top: calc(100% + 4px); left: 0; z-index: 99999;">
                 <div class="popover-search">
                   <input type="text" placeholder="" class="search-mini">
@@ -453,23 +453,6 @@ import { NotificationService } from '../../../core/services/notification.service
               {{ page }}
             </button>
             <button class="btn-page" [disabled]="currentPage === totalPages || totalPages === 0" (click)="goToPage(currentPage + 1)">Sig</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal Confirmar Archivar Lote -->
-      <div class="modal-overlay" *ngIf="showArchiveConfirmModal" (click)="showArchiveConfirmModal = false" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 99999;">
-        <div class="modal-card animate-scale-in" (click)="$event.stopPropagation()" style="background: white; border-radius: 12px; padding: 1.75rem; width: 400px; box-shadow: 0 12px 30px rgba(0,0,0,0.2); text-align: center; border: 1px solid #cbd5e1;">
-          <h3 style="margin-top: 0; color: #1e293b; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">Archivar Lote</h3>
-          <p style="font-size: 0.88rem; color: #475569; margin-bottom: 0.5rem;">
-            ¿Desea archivar el lote <strong>"{{ loteToArchive?.loteEmbarque }}"</strong>?
-          </p>
-          <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 1.5rem;">
-            El registro permanecerá en el sistema pero no se verá en la lista activa.
-          </p>
-          <div style="display: flex; justify-content: center; gap: 12px;">
-            <button style="background: #ef4444; color: white; border: none; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.25);" (click)="executeArchiveLote()">Archivar</button>
-            <button style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer;" (click)="showArchiveConfirmModal = false">Cancelar</button>
           </div>
         </div>
       </div>
@@ -1297,6 +1280,7 @@ export class LotesComponent implements OnInit {
   }
 
   loadSavedFilter(f: { name: string, state: any }) {
+
     const s = f.state;
     this.filterSiloId = s.siloId || '';
     this.filterDateStart = s.dateStart || '';
@@ -1332,6 +1316,23 @@ export class LotesComponent implements OnInit {
     this.filterDateStart = '';
     this.filterDateEnd = '';
     this.filterConsumido = 'all';
+    this.searchQuery = '';
+    this.currentPage = 1;
+    this.cdr.detectChanges();
+  }
+
+  archiveLote(lote: Lote) {
+    if (confirm(`¿Desea archivar el lote ${lote.loteEmbarque}? El registro permanecerá en el sistema pero no se verá en la lista activa.`)) {
+      if (lote.id) {
+        this.inventarioService.deleteLote(lote.id).subscribe(() => this.loadData());
+      }
+    }
+  }
+
+  toggleColumnSelector(event?: Event) {
+    event?.stopPropagation();
+    this.showColumnSelector = !this.showColumnSelector;
+    this.showSearchFilterDropdown = false;
     this.showExportSelector = false;
   }
 
@@ -1339,22 +1340,6 @@ export class LotesComponent implements OnInit {
   allColsVisible(): boolean { return this.columns.every(c => c.visible); }
   toggleAllCols() { const target = !this.allColsVisible(); this.columns.forEach(c => c.visible = target); }
   resetColumns() { this.columns.forEach(c => c.visible = true); }
-
-  showArchiveConfirmModal = false;
-  loteToArchive: Lote | null = null;
-
-  archiveLote(lote: Lote) {
-    this.loteToArchive = lote;
-    this.showArchiveConfirmModal = true;
-  }
-
-  executeArchiveLote() {
-    if (this.loteToArchive?.id) {
-      this.inventarioService.deleteLote(this.loteToArchive.id).subscribe(() => this.loadData());
-    }
-    this.showArchiveConfirmModal = false;
-    this.loteToArchive = null;
-  }
 
   exportToCSV() {
     if (this.lotes.length === 0) return;

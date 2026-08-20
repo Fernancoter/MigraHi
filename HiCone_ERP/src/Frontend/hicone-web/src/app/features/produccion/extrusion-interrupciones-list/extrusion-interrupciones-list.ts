@@ -287,19 +287,6 @@ import { NotificationService } from '../../../core/services/notification.service
         </div>
       </div>
 
-      <!-- Modal Confirmar Eliminar Interrupción -->
-      <div class="modal-overlay" *ngIf="showDeleteConfirmModal()" (click)="showDeleteConfirmModal.set(false)" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 99999;">
-        <div class="modal-card confirm-modal animate-scale-in" (click)="$event.stopPropagation()" style="background: white; border-radius: 12px; padding: 1.75rem; width: 400px; box-shadow: 0 12px 30px rgba(0,0,0,0.2); text-align: center; border: 1px solid #cbd5e1;">
-          <h3 style="margin-top: 0; color: #1e293b; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">Eliminar Interrupción</h3>
-          <p style="font-size: 0.88rem; color: #475569; margin-bottom: 1.5rem;">
-            ¿Está seguro de eliminar la interrupción <strong>"{{ getShortId(interrupcionToDelete()?.id) }}"</strong> asociada a la Extrusión <strong>"{{ interrupcionToDelete() ? (interrupcionToDelete()?.extrusionIdLegacy || getShortId(interrupcionToDelete()?.extrusionId)) : '' }}"</strong>?
-          </p>
-          <div style="display: flex; justify-content: center; gap: 12px;">
-            <button style="background: #ef4444; color: white; border: none; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.25);" (click)="executeDelete()">Eliminar</button>
-            <button style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer;" (click)="showDeleteConfirmModal.set(false)">Cancelar</button>
-          </div>
-        </div>
-      </div>
     </div>
   `,
   styles: [`
@@ -481,8 +468,6 @@ export class ExtrusionInterrupcionesListComponent implements OnInit {
   items = signal<any[]>([]);
   activeExtrusiones: Extrusion[] = [];
   causas: CausaInterrupcion[] = [];
-  showDeleteConfirmModal = signal(false);
-  interrupcionToDelete = signal<any | null>(null);
 
   searchText = signal('');
   currentPage = signal(1);
@@ -738,28 +723,19 @@ export class ExtrusionInterrupcionesListComponent implements OnInit {
   }
 
   eliminar(item: any) {
-    this.interrupcionToDelete.set(item);
-    this.showDeleteConfirmModal.set(true);
-  }
-
-  executeDelete() {
-    const item = this.interrupcionToDelete();
-    if (!item) return;
-
-    this.svc.deleteInterrupcionExtrusion(item.id).subscribe({
-      next: () => {
-        this.notify.success('Interrupción eliminada exitosamente.');
-        this.load();
-        this.showDeleteConfirmModal.set(false);
-        this.interrupcionToDelete.set(null);
-      },
-      error: (err) => {
-        console.error(err);
-        this.notify.error('Error al eliminar la interrupción.');
-        this.showDeleteConfirmModal.set(false);
-        this.interrupcionToDelete.set(null);
-      }
-    });
+    const idLegacy = item.extrusionIdLegacy || this.getShortId(item.extrusionId);
+    if (confirm(`¿Estás seguro de eliminar la interrupción ID ${this.getShortId(item.id)} asociada a la Extrusión ${idLegacy}?`)) {
+      this.svc.deleteInterrupcionExtrusion(item.id).subscribe({
+        next: () => {
+          this.notify.success('Interrupción eliminada exitosamente.');
+          this.load();
+        },
+        error: (err) => {
+          console.error(err);
+          this.notify.error('Error al eliminar la interrupción.');
+        }
+      });
+    }
   }
 
   volverAListado() {

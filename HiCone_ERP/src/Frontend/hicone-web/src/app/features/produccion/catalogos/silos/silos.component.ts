@@ -297,51 +297,6 @@ import * as XLSX from 'xlsx';
           </div>
         </div>
       }
-
-      <!-- Modal Confirmar Eliminar Silo (Catalogos) -->
-      @if (showDeleteConfirmModal()) {
-        <div class="modal-overlay" (click)="showDeleteConfirmModal.set(false)">
-          <div class="modal-card" style="max-width: 400px; text-align: center;" (click)="$event.stopPropagation()">
-            <div class="modal-header" style="background: #fef2f2; border-bottom: 1px solid #fee2e2;">
-              <h3 style="color: #b91c1c;">Eliminar Silo</h3>
-              <button class="modal-close" (click)="showDeleteConfirmModal.set(false)">✕</button>
-            </div>
-            <div class="modal-body" style="padding: 1.5rem;">
-              <p style="color: #334155; font-size: 0.95rem; margin-bottom: 0.5rem;">
-                ¿Está seguro de que desea eliminar el silo <strong>"{{ siloToDelete()?.nombre }}"</strong> permanentemente?
-              </p>
-            </div>
-            <div class="modal-footer" style="justify-content: center; gap: 12px;">
-              <button class="btn btn-primary" style="background: #ef4444;" (click)="executeDelete()">Eliminar</button>
-              <button class="btn btn-secondary" (click)="showDeleteConfirmModal.set(false)">Cancelar</button>
-            </div>
-          </div>
-        </div>
-      }
-
-      <!-- Modal Confirmar Archivar Silo (Catalogos) -->
-      @if (showArchiveConfirmModal()) {
-        <div class="modal-overlay" (click)="showArchiveConfirmModal.set(false)">
-          <div class="modal-card" style="max-width: 400px; text-align: center;" (click)="$event.stopPropagation()">
-            <div class="modal-header" style="background: #fcfcfc;">
-              <h3 style="color: #1e293b;">Archivar Silo</h3>
-              <button class="modal-close" (click)="showArchiveConfirmModal.set(false)">✕</button>
-            </div>
-            <div class="modal-body" style="padding: 1.5rem;">
-              <p style="color: #334155; font-size: 0.95rem; margin-bottom: 0.5rem;">
-                ¿Está seguro de archivar el silo <strong>"{{ siloToArchive()?.nombre }}"</strong>?
-              </p>
-              <p style="color: #64748b; font-size: 0.85rem;">
-                Dejará de verse en este listado.
-              </p>
-            </div>
-            <div class="modal-footer" style="justify-content: center; gap: 12px;">
-              <button class="btn btn-primary" style="background: #5cb85c;" (click)="executeArchive()">Archivar</button>
-              <button class="btn btn-secondary" (click)="showArchiveConfirmModal.set(false)">Cancelar</button>
-            </div>
-          </div>
-        </div>
-      }
     </div>
   `,
   styles: [`
@@ -416,10 +371,6 @@ export class SilosCatalogoComponent implements OnInit {
   items = signal<Silo[]>([]);
   loading = signal(true);
   showModal = signal(false);
-  showDeleteConfirmModal = signal(false);
-  showArchiveConfirmModal = signal(false);
-  siloToDelete = signal<Silo | null>(null);
-  siloToArchive = signal<Silo | null>(null);
   modalReadOnly = signal(false);
   form: Partial<Silo> = {};
 
@@ -679,44 +630,24 @@ export class SilosCatalogoComponent implements OnInit {
   }
 
   del(item: Silo) {
-    this.siloToDelete.set(item);
-    this.showDeleteConfirmModal.set(true);
-  }
-
-  executeDelete() {
-    const item = this.siloToDelete();
-    if (!item) return;
-
-    this.svc.deleteSilo(item.id).subscribe({
-      next: () => {
-        this.notify.success('Silo eliminado exitosamente.');
-        this.load();
-        if (this.currentPage() > this.totalPages()) this.currentPage.set(this.totalPages());
-        this.showDeleteConfirmModal.set(false);
-        this.siloToDelete.set(null);
-      },
-      error: () => {
-        this.notify.error('Error al eliminar el silo.');
-        this.showDeleteConfirmModal.set(false);
-        this.siloToDelete.set(null);
-      }
-    });
+    if (confirm(`¿Está seguro de que desea eliminar el silo "${item.nombre}" permanentemente?`)) {
+      this.svc.deleteSilo(item.id).subscribe({
+        next: () => {
+          this.notify.success('Silo eliminado exitosamente.');
+          this.load();
+          if (this.currentPage() > this.totalPages()) this.currentPage.set(this.totalPages());
+        },
+        error: () => this.notify.error('Error al eliminar el silo.')
+      });
+    }
   }
 
   archivar(item: Silo) {
-    this.siloToArchive.set(item);
-    this.showArchiveConfirmModal.set(true);
-  }
-
-  executeArchive() {
-    const item = this.siloToArchive();
-    if (!item) return;
-
-    this.svc.archivarSilo(item.id).subscribe(() => {
-      this.load();
-      this.showArchiveConfirmModal.set(false);
-      this.siloToArchive.set(null);
-    });
+    if (confirm(`¿Está seguro de archivar el silo "${item.nombre}"? Dejará de verse en este listado.`)) {
+      this.svc.archivarSilo(item.id).subscribe(() => {
+        this.load();
+      });
+    }
   }
 
   exportCSV() {

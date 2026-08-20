@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionService, Prensa } from '../../../core/services/produccion';
 import { SyncQueueService, PendingOp } from '../../../core/offline/sync-queue.service';
-import { ApiConfigService } from '../../../core/services/api-config.service';
 
 @Component({
   selector: 'app-carrera-captura',
@@ -151,7 +150,6 @@ import { ApiConfigService } from '../../../core/services/api-config.service';
 export class CarreraComponent implements OnInit {
   private prodService = inject(ProduccionService);
   private syncQueue = inject(SyncQueueService);
-  private apiConfig = inject(ApiConfigService);
   private cdr = inject(ChangeDetectorRef);
 
   prensas: Prensa[] = [];
@@ -175,11 +173,7 @@ export class CarreraComponent implements OnInit {
 
     const op: PendingOp = {
       id: `carrera_${this.selectedPrensaId}_${this.carreraNo}_${Date.now()}`,
-<<<<<<< Updated upstream
-      endpoint: this.apiConfig.url('/api/v1/produccion/prensado/carrera/cerrar'),
-=======
-      endpoint: `http://${window.location.hostname}:5007/api/v1/produccion/prensado/carrera/cerrar`,
->>>>>>> Stashed changes
+      endpoint: 'http://localhost:5007/api/v1/produccion/prensado/carrera/cerrar',
       method: 'POST',
       body: {
         prensaId: this.selectedPrensaId,

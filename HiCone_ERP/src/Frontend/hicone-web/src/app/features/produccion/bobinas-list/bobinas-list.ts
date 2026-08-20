@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ProduccionService, Bobina } from '../../../core/services/produccion';
 import { NotificationService } from '../../../core/services/notification.service';
 import { FormsModule } from '@angular/forms';
-import { LucideEye, LucidePencil, LucideTrash2, LucideTag } from '@lucide/angular';
 
 interface ColumnConfig {
   field: string;
@@ -15,7 +14,7 @@ interface ColumnConfig {
 @Component({
   selector: 'app-bobinas-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideEye, LucidePencil, LucideTrash2, LucideTag],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="module-page animate-fade-in">
       
@@ -168,20 +167,16 @@ interface ColumnConfig {
                       </button>
                       <div class="opciones-popover shadow-premium" *ngIf="activeRowId === b.id" (click)="$event.stopPropagation()">
                         <button class="opcion-item" (click)="verDetalleBobina(b)">
-                          <svg lucideEye [size]="14" style="margin-right: 6px; vertical-align: middle;"></svg>
-                          <span>Visualizar</span>
+                          <span class="icon">👁️</span> Visualizar
                         </button>
                         <button class="opcion-item" (click)="abrirEditarBobina(b)">
-                          <svg lucidePencil [size]="14" style="margin-right: 6px; vertical-align: middle;"></svg>
-                          <span>Modificar</span>
+                          <span class="icon">✏️</span> Modificar
                         </button>
                         <button class="opcion-item delete" (click)="eliminarBobinaRow(b)">
-                          <svg lucideTrash2 [size]="14" style="margin-right: 6px; vertical-align: middle;"></svg>
-                          <span>Eliminar</span>
+                          <span class="icon">🗑️</span> Eliminar
                         </button>
                         <button class="opcion-item" (click)="imprimirEtiqueta(b)">
-                          <svg lucideTag [size]="14" style="margin-right: 6px; vertical-align: middle;"></svg>
-                          <span>Etiqueta</span>
+                          <span class="icon">🏷️</span> Etiqueta
                         </button>
                       </div>
                     </div>
@@ -585,12 +580,12 @@ interface ColumnConfig {
 
               <div class="form-field-group">
                 <label>Kg</label>
-                <input type="number" step="0.01" class="input-form-qa" [(ngModel)]="selectedBobina.kg" name="kg" (ngModelChange)="onKgChange()">
+                <input type="number" step="0.01" class="input-form-qa" [(ngModel)]="selectedBobina.kg" name="kg">
               </div>
 
               <div class="form-field-group">
                 <label>Merma Kg</label>
-                <input type="number" step="0.01" class="input-form-qa" [(ngModel)]="selectedBobina.mermaKg" name="mermaKg" (ngModelChange)="onMermaKgChange()">
+                <input type="number" step="0.01" class="input-form-qa" [(ngModel)]="selectedBobina.mermaKg" name="mermaKg">
               </div>
 
               <div class="form-field-group">
@@ -641,15 +636,22 @@ interface ColumnConfig {
                 <input type="number" step="0.01" class="input-form-qa" [value]="getReposoHr(selectedBobina)" disabled>
               </div>
 
-              <!-- Motivo Molino: valores reales confirmados contra el sistema legado
-                   (ver docs/hallazgo_motivomolino_bobina.md). Se deshabilita cuando hay Kg
-                   capturado (bobina buena, no aplica motivo); se habilita cuando hay Merma Kg. -->
+              <!-- Motivo Molino (Dropdown Opciones exactas Imagen 2) -->
               <div class="form-field-group">
                 <label>Motivo Molino</label>
-                <select class="select-form-qa" [(ngModel)]="selectedBobina.motivoMolino" name="motivoMolino" [disabled]="!motivoMolinoHabilitado()">
-                  <option [ngValue]="0">No Aplica</option>
-                  <option [ngValue]="1">Falla Mecánica</option>
-                  <option [ngValue]="2">Limpieza / Contaminación</option>
+                <select class="select-form-qa" [(ngModel)]="selectedBobina.motivoMolinoStr" name="motivoMolino">
+                  <option value="N/A">N/A</option>
+                  <option value="Carbón">Carbón</option>
+                  <option value="Contaminación Carbonización (piojo limpieza)">Contaminación Carbonización (piojo limpieza)</option>
+                  <option value="Contaminación Carbonización Suelta (piojo)">Contaminación Carbonización Suelta (piojo)</option>
+                  <option value="Calibre Alto (mancha con textura)">Calibre Alto (mancha con textura)</option>
+                  <option value="Calibre Bajo (mancha falta de material)">Calibre Bajo (mancha falta de material)</option>
+                  <option value="Raya Por Obstrucción En Labio">Raya Por Obstrucción En Labio</option>
+                  <option value="Marca De Rodillo Por Suciedad De Cera/Polvo">Marca De Rodillo Por Suciedad De Cera/Polvo</option>
+                  <option value="Hoyos Bobina Y Falta De Material">Hoyos Bobina Y Falta De Material</option>
+                  <option value="Mezcla De Resina (Contaminación)">Mezcla De Resina (Contaminación)</option>
+                  <option value="Hoyo Por Carbón O Grumo">Hoyo Por Carbón O Grumo</option>
+                  <option value="Pruebas">Pruebas</option>
                 </select>
               </div>
 
@@ -710,21 +712,8 @@ interface ColumnConfig {
             </div>
           </form>
         </div>
-        <!-- Modal Confirmar Eliminar Bobina -->
-        <div class="modal-overlay" *ngIf="showDeleteConfirmModal" (click)="showDeleteConfirmModal = false" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 99999;">
-          <div class="modal-card confirm-modal animate-scale-in" (click)="$event.stopPropagation()" style="background: white; border-radius: 12px; padding: 1.75rem; width: 400px; box-shadow: 0 12px 30px rgba(0,0,0,0.2); text-align: center; border: 1px solid #cbd5e1;">
-            <h3 style="margin-top: 0; color: #1e293b; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">Eliminar Bobina</h3>
-            <p style="font-size: 0.88rem; color: #475569; margin-bottom: 1.5rem;">
-              ¿Está seguro de eliminar la bobina <strong>"{{ bobinaToDelete?.noSerie || bobinaToDelete?.id }}"</strong>?
-            </p>
-            <div style="display: flex; justify-content: center; gap: 12px;">
-              <button style="background: #ef4444; color: white; border: none; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.25);" (click)="executeEliminarBobina()">Eliminar</button>
-              <button style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer;" (click)="showDeleteConfirmModal = false">Cancelar</button>
-            </div>
-          </div>
-        </div>
-
       </ng-container>
+
     </div>
   `,
   styles: [`
@@ -999,7 +988,7 @@ export class BobinasListComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private notify = inject(NotificationService);
   
-  bobinas: (Bobina & { selected?: boolean; estadoStr?: string })[] = [];
+  bobinas: (Bobina & { selected?: boolean })[] = [];
   filteredBobinas: (Bobina & { selected?: boolean })[] = [];
   searchTerm: string = '';
   
@@ -1007,9 +996,6 @@ export class BobinasListComponent implements OnInit {
   columnMenuOpen = false;
   mostrandoEliminadas = false;
   activeRowId: string | null = null;
-
-  showDeleteConfirmModal = false;
-  bobinaToDelete: any = null;
 
   // Filtros Avanzados (Persistencia Local)
   showSearchFilterDropdown = false;
@@ -1073,9 +1059,9 @@ export class BobinasListComponent implements OnInit {
     if (this.mostrandoEliminadas) {
       this.prodService.getBobinasEliminadas().subscribe({
         next: (data) => {
-          this.bobinas = data.map(d => ({
-            id: d.id, noSerie: 'ELIMINADA', bobinaNo: 0, kg: 0,
-            espesor: 0, fechaProduccion: d.timestamp, estado: 0, estadoStr: 'Eliminada', selected: false
+          this.bobinas = data.map(d => ({ 
+            id: d.id, noSerie: 'ELIMINADA', bobinaNo: 0, kg: 0, 
+            espesor: 0, fechaProduccion: d.timestamp, estado: 'Eliminada', selected: false 
           }));
           this.onSearch();
         },
@@ -1202,46 +1188,13 @@ export class BobinasListComponent implements OnInit {
 
   abrirEditarBobina(b: any) {
     this.activeRowId = null;
-    this.selectedBobina = {
-      ...b,
+    this.selectedBobina = { 
+      ...b, 
       estadoStr: this.getEstadoTexto(b),
-      motivoMolino: b.motivoMolino ?? 0,
-      bobinaOrigen: b.bobinaOrigen || 'A',
-      horaInicioStr: this.formatDateTimeLocal(b.horaInicio),
-      horaSalidaStr: this.formatDateTimeLocal(b.horaSalida),
-      iniciaReposoStr: this.formatDateTimeLocal(b.iniciaReposo)
+      motivoMolinoStr: this.getMotivoMolinoTexto(b),
+      bobinaOrigen: b.bobinaOrigen || 'A'
     };
     this.currentView = 'EDIT';
-  }
-
-  // Regla real del legado (ver docs/hallazgo_motivomolino_bobina.md): capturar Kg (bobina
-  // buena) fuerza Motivo Molino a "No Aplica" y deshabilita el campo; capturar Merma Kg
-  // (bobina rechazada) lo habilita para elegir el motivo real.
-  motivoMolinoHabilitado(): boolean {
-    return Number(this.selectedBobina?.mermaKg) > 0;
-  }
-
-  onKgChange() {
-    if (Number(this.selectedBobina.kg) > 0) {
-      this.selectedBobina.mermaKg = 0;
-      this.selectedBobina.motivoMolino = 0;
-    }
-  }
-
-  onMermaKgChange() {
-    if (Number(this.selectedBobina.mermaKg) > 0) {
-      this.selectedBobina.kg = 0;
-    } else {
-      this.selectedBobina.motivoMolino = 0;
-    }
-  }
-
-  // Date formatting utility
-  private formatDateTimeLocal(d: Date | string | undefined | null): string {
-    if (!d) return '';
-    const date = new Date(d);
-    const tzoffset = date.getTimezoneOffset() * 60000;
-    return (new Date(date.getTime() - tzoffset)).toISOString().slice(0, 16);
   }
 
   irALista() {
@@ -1261,13 +1214,10 @@ export class BobinasListComponent implements OnInit {
       espesor: this.selectedBobina.espesor,
       observaciones: this.selectedBobina.observaciones,
       estado: estadoNum,
-      motivoMolino: this.motivoMolinoHabilitado() ? Number(this.selectedBobina.motivoMolino) : 0,
+      motivoMolino: 0,
       bobinaNo: this.selectedBobina.bobinaNo,
       carreras: this.selectedBobina.carreras,
-      loteVirgen: this.selectedBobina.loteVirgen,
-      horaInicio: this.selectedBobina.horaInicioStr ? new Date(this.selectedBobina.horaInicioStr).toISOString() : null,
-      horaSalida: this.selectedBobina.horaSalidaStr ? new Date(this.selectedBobina.horaSalidaStr).toISOString() : null,
-      iniciaReposo: this.selectedBobina.iniciaReposoStr ? new Date(this.selectedBobina.iniciaReposoStr).toISOString() : null
+      loteVirgen: this.selectedBobina.loteVirgen
     };
 
     this.prodService.actualizarBobina(this.selectedBobina.id, payload).subscribe({
@@ -1306,27 +1256,20 @@ export class BobinasListComponent implements OnInit {
 
   eliminarBobinaRow(b: any) {
     this.activeRowId = null;
-    this.bobinaToDelete = b;
-    this.showDeleteConfirmModal = true;
-  }
-
-  executeEliminarBobina() {
-    if (!this.bobinaToDelete) return;
-    const b = this.bobinaToDelete;
-    this.prodService.eliminarBobina(b.id).subscribe({
-      next: () => {
-        this.notify.success('Bobina eliminada.');
-        this.irALista();
-        this.cargarDatos();
-      },
-      error: () => {
-        this.bobinas = this.bobinas.filter(item => item.id !== b.id);
-        this.onSearch();
-        this.irALista();
-      }
-    });
-    this.showDeleteConfirmModal = false;
-    this.bobinaToDelete = null;
+    if (confirm(`¿Está seguro de eliminar la bobina ${b.noSerie || b.id}?`)) {
+      this.prodService.eliminarBobina(b.id).subscribe({
+        next: () => {
+          this.notify.success('Bobina eliminada.');
+          this.irALista();
+          this.cargarDatos();
+        },
+        error: () => {
+          this.bobinas = this.bobinas.filter(item => item.id !== b.id);
+          this.onSearch();
+          this.irALista();
+        }
+      });
+    }
   }
 
   imprimirEtiqueta(b: any) {
@@ -1418,7 +1361,7 @@ export class BobinasListComponent implements OnInit {
   getColorEstacionTexto(b: any): string {
     if (b.colorEstacionStr) return b.colorEstacionStr;
     const colors: { [key: number]: string } = {
-      0: 'Sin Asignar', 1: 'Estación Roja', 2: 'Estación Azul',
+      0: 'Sin Asignar', 1: 'Estación Negra', 2: 'Estación Azul',
       3: 'Estación Verde', 4: 'Estación Amarilla', 5: 'Estación Naranja', 6: 'Estación Blanca'
     };
     if (typeof b.colorEstacion === 'number') return colors[b.colorEstacion] || 'Sin Asignar';
@@ -1434,11 +1377,8 @@ export class BobinasListComponent implements OnInit {
   }
 
   getMotivoMolinoTexto(b: any): string {
-    switch (Number(b?.motivoMolino)) {
-      case 1: return 'Falla Mecánica';
-      case 2: return 'Limpieza / Contaminación';
-      default: return 'No Aplica';
-    }
+    if (b.motivoMolinoStr) return b.motivoMolinoStr;
+    return 'N/A';
   }
 
   getOperadorNombre(b: any): string {

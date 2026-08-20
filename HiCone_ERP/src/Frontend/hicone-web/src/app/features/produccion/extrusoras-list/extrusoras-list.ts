@@ -200,12 +200,12 @@ import autoTable from 'jspdf-autotable';
             <!-- Número de Extrusora -->
             <div class="form-group-premium">
               <label>Número de Extrusora</label>
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <select class="input-premium" [(ngModel)]="form.numeroExtrusora" style="flex: 1;" *ngIf="claves.length > 0">
-                  <option value="">-- Seleccionar --</option>
-                  <option *ngFor="let c of claves" [value]="c.valor">{{ c.valor }}</option>
-                </select>
-                <input class="input-premium" type="text" [(ngModel)]="form.numeroExtrusora" placeholder="Escribir número (ej. 1, 2, 3)..." style="flex: 1;" />
+              <select class="input-premium" [(ngModel)]="form.numeroExtrusora" *ngIf="claves.length > 0">
+                <option value="" disabled selected>-- Seleccionar --</option>
+                <option *ngFor="let c of claves" [value]="c.valor">{{ c.valor }}</option>
+              </select>
+              <div class="error-message" *ngIf="claves.length === 0" style="color: #ef4444; font-size: 0.85rem; margin-top: 0.25rem;">
+                ⚠️ No hay números de extrusora configurados en el catálogo de claves.
               </div>
             </div>
 
@@ -219,56 +219,6 @@ import autoTable from 'jspdf-autotable';
             <div class="form-group-premium">
               <label>Imagen</label>
               <input class="input-premium" type="text" [(ngModel)]="form.imagen" placeholder="Nombre de imagen o URL" />
-            </div>
-
-            <!-- Estado -->
-            <div class="form-group-premium">
-              <label>Estado</label>
-              <select class="input-premium" [(ngModel)]="form.estado">
-                <option [value]="1">Disponible</option>
-                <option [value]="2">En Proceso</option>
-                <option [value]="3">Detenida</option>
-                <option [value]="4">Mantenimiento</option>
-              </select>
-            </div>
-
-            <!-- Activa -->
-            <div class="form-field-group">
-              <label class="form-label-gx">Activa</label>
-              <div class="checkbox-wrapper">
-                <input type="checkbox" [(ngModel)]="form.isActive" id="chk-extrusora-activa" />
-                <label for="chk-extrusora-activa" style="font-size: 0.85rem; color: #475569; cursor: pointer; margin-left: 6px;">Extrusora activa en planta</label>
-              </div>
-            </div>
-
-            <!-- Modelo -->
-            <div class="form-group-premium">
-              <label>Modelo</label>
-              <input class="input-premium" type="text" [(ngModel)]="form.modelo" />
-            </div>
-
-            <!-- Número de Serie -->
-            <div class="form-group-premium">
-              <label>Número de Serie</label>
-              <input class="input-premium" type="text" [(ngModel)]="form.numeroSerie" />
-            </div>
-
-            <!-- Capacidad Kg/Hora -->
-            <div class="form-group-premium">
-              <label>Capacidad (Kg/Hora)</label>
-              <input class="input-premium" type="number" [(ngModel)]="form.capacidadKgHora" />
-            </div>
-
-            <!-- Número de Estaciones -->
-            <div class="form-group-premium">
-              <label>Número de Estaciones</label>
-              <input class="input-premium" type="number" [(ngModel)]="form.numeroEstaciones" />
-            </div>
-
-            <!-- Observaciones -->
-            <div class="form-group-premium">
-              <label>Observaciones</label>
-              <textarea class="input-premium" rows="2" [(ngModel)]="form.observaciones"></textarea>
             </div>
           </div>
         </div>
@@ -345,34 +295,6 @@ import autoTable from 'jspdf-autotable';
             <div class="form-group-premium">
               <label>Imagen</label>
               <div class="readonly-text" style="padding: 0.6rem 0.85rem; background: #f1f5f9; border-radius: 8px; font-weight: 600;">{{ form.imagen || '—' }}</div>
-            </div>
-            <div class="form-group-premium">
-              <label>Estado</label>
-              <div class="readonly-text" style="padding: 0.6rem 0.85rem; background: #f1f5f9; border-radius: 8px; font-weight: 600;">{{ form.estadoNombre || '—' }}</div>
-            </div>
-            <div class="form-group-premium">
-              <label>Activa</label>
-              <div class="readonly-text" style="padding: 0.6rem 0.85rem; background: #f1f5f9; border-radius: 8px; font-weight: 600;">{{ form.isActive ? 'Sí' : 'No' }}</div>
-            </div>
-            <div class="form-group-premium">
-              <label>Modelo</label>
-              <div class="readonly-text" style="padding: 0.6rem 0.85rem; background: #f1f5f9; border-radius: 8px; font-weight: 600;">{{ form.modelo || '—' }}</div>
-            </div>
-            <div class="form-group-premium">
-              <label>Número de Serie</label>
-              <div class="readonly-text" style="padding: 0.6rem 0.85rem; background: #f1f5f9; border-radius: 8px; font-weight: 600;">{{ form.numeroSerie || '—' }}</div>
-            </div>
-            <div class="form-group-premium">
-              <label>Capacidad (Kg/Hora)</label>
-              <div class="readonly-text" style="padding: 0.6rem 0.85rem; background: #f1f5f9; border-radius: 8px; font-weight: 600;">{{ form.capacidadKgHora || '—' }}</div>
-            </div>
-            <div class="form-group-premium">
-              <label>Número de Estaciones</label>
-              <div class="readonly-text" style="padding: 0.6rem 0.85rem; background: #f1f5f9; border-radius: 8px; font-weight: 600;">{{ form.numeroEstaciones || '—' }}</div>
-            </div>
-            <div class="form-group-premium">
-              <label>Observaciones</label>
-              <div class="readonly-text" style="padding: 0.6rem 0.85rem; background: #f1f5f9; border-radius: 8px; font-weight: 600;">{{ form.observaciones || '—' }}</div>
             </div>
           </div>
         </div>
@@ -801,14 +723,13 @@ export class ExtrusorasListComponent implements OnInit {
     this.auditHistory = [];
     this.selectedAuditLog = null;
     this.parsedChanges = [];
-    this.loadCatalogos();
     this.loadData();
   }
 
   // CRUD — Insert / Update (Gestionar Extrusora)
   openCreate() {
     this.closeAllDropdowns();
-    this.form = { nombre: '', numeroExtrusora: '', imagen: '', estado: 1, isActive: true, numeroEstaciones: 1 };
+    this.form = { nombre: '', numeroExtrusora: '', imagen: '' };
     this.operariosRows = [];
     this.viewState = 'add';
   }
@@ -920,14 +841,7 @@ export class ExtrusorasListComponent implements OnInit {
       nombre: this.form.nombre.trim(),
       numeroExtrusora: this.form.numeroExtrusora.trim(),
       imagen: this.form.imagen || '',
-      tenantId: '00000000-0000-0000-0000-000000000001',
-      estado: this.form.estado != null ? Number(this.form.estado) : null,
-      capacidadKgHora: this.form.capacidadKgHora != null ? Number(this.form.capacidadKgHora) : null,
-      modelo: this.form.modelo || null,
-      numeroSerie: this.form.numeroSerie || null,
-      isActive: this.form.isActive ?? null,
-      observaciones: this.form.observaciones || null,
-      numeroEstaciones: this.form.numeroEstaciones != null ? Number(this.form.numeroEstaciones) : null
+      tenantId: '00000000-0000-0000-0000-000000000001'
     };
 
     if (this.viewState === 'add') {

@@ -79,40 +79,9 @@ import { NotificationService } from '../../../core/services/notification.service
           <div style="flex:1"></div>
 
           <div class="toolbar-right">
-            <div class="filter-search-group-qa">
-              <!-- Botón Filtro Avanzado (Embudo) -->
-              <div class="dropdown-wrapper">
-                <button class="btn-filter-funnel-qa" (click)="toggleSearchFilterDropdown($event)" title="Filtros avanzados">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                  </svg>
-                  <span class="chevron-down-funnel">▾</span>
-                </button>
-                
-                <div class="filter-popover-qa shadow-premium" *ngIf="showSearchFilterDropdown()" (click)="$event.stopPropagation()">
-                  <div class="filter-item-qa" (click)="clearAllFilters()">
-                    <span class="icon-circle-cross-dark">✖</span> Limpiar filtros
-                  </div>
-                  <div class="filter-item-qa" (click)="saveActiveFilters()">
-                    <span class="icon-floppy-dark">💾</span> Guardar filtro como...
-                  </div>
-                  
-                  <ng-container *ngIf="savedFilters().length > 0">
-                    <div class="dropdown-divider"></div>
-                    <div class="dropdown-header-saved">Filtros Guardados</div>
-                    <div class="filter-item-qa saved-filter-item" *ngFor="let f of savedFilters()" (click)="loadSavedFilter(f)">
-                      <span>📁 {{ f.name }}</span>
-                      <span class="btn-delete-saved-filter" (click)="deleteSavedFilter(f, $event)">🗑️</span>
-                    </div>
-                  </ng-container>
-                </div>
-              </div>
-
-              <!-- Buscador -->
-              <div class="search-box">
-                <span class="search-icon"><svg class="search-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
-                <input class="search-input" type="text" placeholder="Buscar..." [ngModel]="searchText()" (ngModelChange)="onSearchChange($event)" />
-              </div>
+            <div class="search-box">
+              <span class="search-icon"><svg class="search-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+              <input class="search-input" type="text" placeholder="Buscar..." [ngModel]="searchText()" (ngModelChange)="onSearchChange($event)" />
             </div>
           </div>
       </div>
@@ -298,23 +267,6 @@ import { NotificationService } from '../../../core/services/notification.service
     .btn-secondary:hover { background:#f8fafc; border-color:#cbd5e1; }
     .btn-cols { font-size:.78rem; padding:.48rem .9rem; }
 
-    .filter-search-group-qa { display: flex; gap: 0.6rem; align-items: center; }
-    .btn-filter-funnel-qa { background: #ffffff; border: 1px solid #dcdde1; border-radius: 4px; padding: 0.4rem 0.6rem; height: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: background 0.2s; }
-    .btn-filter-funnel-qa:hover { background: #f8fafc; border-color: #cbd5e1; }
-    .chevron-down-funnel { font-size: 0.65rem; color: #334155; }
-    .filter-popover-qa { position: absolute; top: calc(100% + 4px); right: 0; background: #ffffff !important; border: 1px solid #cbd5e1 !important; border-radius: 6px !important; width: 185px !important; box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important; z-index: 99999 !important; padding: 6px 0 !important; box-sizing: border-box; }
-    .filter-item-qa { display: flex; align-items: center; gap: 8px; padding: 0.55rem 0.9rem; font-size: 0.85rem; color: #334155; font-weight: 500; cursor: pointer; transition: background 0.15s; }
-    .filter-item-qa:hover { background: #f1f5f9; color: #2e7d32; }
-    .icon-circle-cross-dark { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; background: #475569; color: white; border-radius: 50%; font-size: 8px; font-weight: bold; }
-    .filter-item-qa:hover .icon-circle-cross-dark { background: #2e7d32; }
-    .icon-floppy-dark { font-size: 0.9rem; color: #475569; }
-    .filter-item-qa:hover .icon-floppy-dark { color: #2e7d32; }
-    .dropdown-divider { height: 1px; background: #e2e8f0; margin: 4px 0; }
-    .dropdown-header-saved { font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; padding: 4px 12px; }
-    .saved-filter-item { justify-content: space-between; }
-    .btn-delete-saved-filter { cursor: pointer; opacity: 0.7; font-size: 0.8rem; }
-    .btn-delete-saved-filter:hover { opacity: 1; }
-
     .search-box   { position:relative; }
     .search-icon  { position:absolute; left:.7rem; top:50%; transform:translateY(-50%); color:#94a3b8; }
     .search-input { padding:.48rem .75rem .48rem 2rem; border:1px solid #e2e8f0; border-radius:7px; font-size:.82rem; outline:none; width:200px; color:#334155; }
@@ -470,45 +422,9 @@ export class InterrupcionesListComponent implements OnInit {
     return pages;
   }
 
-  showSearchFilterDropdown = signal(false);
-  savedFilters = signal<any[]>([]);
-
-  toggleSearchFilterDropdown(e: Event) {
-    e.stopPropagation();
-    this.showSearchFilterDropdown.update(v => !v);
-    this.showColumnSelector.set(false);
-    this.showExportOptions.set(false);
-  }
-
-  clearAllFilters() {
-    this.searchText.set('');
-    this.currentPage.set(1);
-    this.showSearchFilterDropdown.set(false);
-  }
-
-  saveActiveFilters() {
-    const name = prompt('Nombre para este filtro guardado:');
-    if (name) {
-      this.savedFilters.update(list => [...list, { id: Date.now(), name, term: this.searchText() }]);
-      this.notify.success('Filtro guardado correctamente');
-    }
-    this.showSearchFilterDropdown.set(false);
-  }
-
-  loadSavedFilter(f: any) {
-    this.searchText.set(f.term || '');
-    this.currentPage.set(1);
-    this.showSearchFilterDropdown.set(false);
-  }
-
-  deleteSavedFilter(f: any, e: Event) {
-    e.stopPropagation();
-    this.savedFilters.update(list => list.filter(item => item.id !== f.id));
-  }
-
-  toggleColumnDropdown(e: Event) { e.stopPropagation(); this.showColumnSelector.update(v => !v); this.showExportOptions.set(false); this.showSearchFilterDropdown.set(false); }
-  toggleExportDropdown(e: Event) { e.stopPropagation(); this.showExportOptions.update(v => !v); this.showColumnSelector.set(false); this.showSearchFilterDropdown.set(false); }
-  closeAllDropdowns()             { this.showColumnSelector.set(false); this.showExportOptions.set(false); this.showSearchFilterDropdown.set(false); }
+  toggleColumnDropdown(e: Event) { e.stopPropagation(); this.showColumnSelector.update(v => !v); this.showExportOptions.set(false); }
+  toggleExportDropdown(e: Event) { e.stopPropagation(); this.showExportOptions.update(v => !v); this.showColumnSelector.set(false); }
+  closeAllDropdowns()             { this.showColumnSelector.set(false); this.showExportOptions.set(false); }
 
   private toLocalInput(value: string | null | undefined): string {
     if (!value) return '';

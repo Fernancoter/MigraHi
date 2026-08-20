@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service';
-import { environment } from '../../../../environments/environment';
 import { timer } from 'rxjs';
 
 interface UserDto {
@@ -50,17 +49,15 @@ interface ColumnDef {
   visible: boolean;
 }
 
-import { LucidePencil, LucideX, LucideSearch, LucideSettings, LucideLock, LucideKey } from '@lucide/angular';
-
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucidePencil, LucideX, LucideSearch, LucideSettings, LucideLock, LucideKey],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.css']
 })
 export class UsuariosComponent implements OnInit {
-  private apiUrl = `${environment.apiUrl}/api`;
+  private apiUrl = 'http://localhost:5007/api';
 
   users = signal<UserDto[]>([]);
   filteredUsers = signal<UserDto[]>([]);

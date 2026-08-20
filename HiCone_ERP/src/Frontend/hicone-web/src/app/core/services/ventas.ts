@@ -24,14 +24,12 @@ export interface Venta {
   detalles: VentaDetalle[];
 }
 
-import { environment } from '../../../environments/environment';
-
 @Injectable({
   providedIn: 'root'
 })
 export class VentasService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/api/v1/ventas`;
+  private apiUrl = 'http://localhost:5007/api/v1/ventas';
 
   getVentas(): Observable<Venta[]> {
     return this.http.get<Venta[]>(this.apiUrl);

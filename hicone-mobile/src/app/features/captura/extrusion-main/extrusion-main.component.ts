@@ -127,7 +127,7 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   }
 
   get bobinasEnMedicion(): Bobina[] {
-    return this.bobinasExtrusion.filter(b => b.estado === 11 || String(b.estado) === 'EnMedicion');
+    return this.bobinasExtrusion.filter(b => b.estado === 11 || String(b.estado) === 'EnMedicion' || b.estado === 1 || String(b.estado) === 'EnProceso');
   }
 
   get bobinasEnReposo(): Bobina[] {
@@ -540,7 +540,7 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
 
   confirmarCierre() {
     this.saving = true;
-    this.produccionService.finalizarExtrusion(this.extrusionActiva.id, this.cierreObservaciones || 'Cerrado desde PWA').subscribe({
+    this.produccionService.finalizarExtrusion(this.extrusionActiva.id, this.cierreObservaciones || undefined).subscribe({
       next: () => {
         this.saving = false;
         this.mostrarModalCierre = false;

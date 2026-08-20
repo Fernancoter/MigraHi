@@ -254,28 +254,6 @@ import { NotificationService } from '../../../core/services/notification.service
         </div>
       </div>
 
-      <!-- Modal Confirmar Archivar Silo -->
-      <div class="modal-overlay-premium" *ngIf="showArchiveConfirmModal" (click)="showArchiveConfirmModal = false">
-        <div class="modal-card-premium animate-scale-in" style="max-width: 400px; text-align: center;" (click)="$event.stopPropagation()">
-          <div class="modal-header-premium" style="background: #fef2f2;">
-            <h3 style="color: #b91c1c;">Archivar Silo</h3>
-            <button class="btn-icon-premium" (click)="showArchiveConfirmModal = false">✖️</button>
-          </div>
-          <div style="padding: 1.5rem;">
-            <p style="color: #334155; font-size: 0.95rem; margin-bottom: 0.5rem;">
-              ¿Desea archivar el silo <strong>"{{ siloToArchive?.nombre }}"</strong>?
-            </p>
-            <p style="color: #64748b; font-size: 0.85rem;">
-              El registro no se borrará pero dejará de ser visible en el listado activo.
-            </p>
-          </div>
-          <div class="modal-footer-premium" style="justify-content: center; gap: 12px;">
-            <button class="btn-premium btn-premium-danger" style="background: #ef4444;" (click)="executeArchiveSilo()">Archivar</button>
-            <button class="btn-premium-secondary" (click)="showArchiveConfirmModal = false">Cancelar</button>
-          </div>
-        </div>
-      </div>
-
       <div class="card-premium" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none; position: relative; z-index: 1;">
         <div class="table-modern-container">
           <table class="table-modern">
@@ -1042,8 +1020,6 @@ export class SilosComponent implements OnInit {
   searchQuery = '';
   silos: Silo[] = [];
   showModal = false;
-  showArchiveConfirmModal = false;
-  siloToArchive: Silo | null = null;
   showColumnSelector = false;
   showExportSelector = false;
   modalMode: 'ADD' | 'VIEW' | 'EDIT' | 'DELETE' | 'CONSUMO' = 'ADD';
@@ -1467,16 +1443,11 @@ export class SilosComponent implements OnInit {
   }
 
   archiveSilo(silo: Silo) {
-    this.siloToArchive = silo;
-    this.showArchiveConfirmModal = true;
-  }
-
-  executeArchiveSilo() {
-    if (this.siloToArchive?.id) {
-      this.inventarioService.deleteSilo(this.siloToArchive.id).subscribe(() => this.loadSilos());
+    if (confirm(`¿Desea archivar el silo ${silo.nombre}? El registro no se borrará pero dejará de ser visible en el listado activo.`)) {
+      if (silo.id) {
+        this.inventarioService.deleteSilo(silo.id).subscribe(() => this.loadSilos());
+      }
     }
-    this.showArchiveConfirmModal = false;
-    this.siloToArchive = null;
   }
 
   toggleColumnSelector(event?: Event) {

@@ -294,17 +294,16 @@ import { NotificationService } from '../../../../core/services/notification.serv
               </div>
               <div class="erp-panel-body">
 
-                <!-- Clave (opciones desde BD o entrada manual) -->
+                <!-- Clave (opciones desde la BD) -->
                 <div class="erp-field">
                   <label class="erp-label">Clave</label>
-                  <div class="erp-select-wrapper" style="display: flex; gap: 0.5rem; align-items: center;">
-                    <select class="erp-select" [(ngModel)]="form.clave" style="flex: 1;">
-                      <option value="">-- Seleccionar de lista --</option>
+                  <div class="erp-select-wrapper">
+                    <select class="erp-select" [(ngModel)]="form.clave">
+                      <option value="">-- Seleccionar --</option>
                       @for (c of claves(); track c.id) {
                         <option [value]="c.valor">{{ c.valor }}</option>
                       }
                     </select>
-                    <input class="erp-input" type="text" [(ngModel)]="form.clave" placeholder="o escribir clave manual..." style="flex: 1;" />
                   </div>
                 </div>
 

@@ -4,7 +4,6 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { OperadoresService, OperadorDto } from '../../../core/services/operadores.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service';
-import { environment } from '../../../../environments/environment';
 import { timer } from 'rxjs';
 
 @Component({
@@ -168,7 +167,7 @@ export class OperadoresComponent implements OnInit {
 
   loadUsers() {
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` });
-    this.http.get<any[]>(`${environment.apiUrl}/api/users`, { headers }).subscribe({
+    this.http.get<any[]>('http://localhost:5007/api/users', { headers }).subscribe({
       next: (data) => this.availableUsers = data,
       error: () => console.error('Error al cargar usuarios para vinculación')
     });

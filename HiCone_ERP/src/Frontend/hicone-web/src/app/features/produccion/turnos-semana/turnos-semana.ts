@@ -215,7 +215,7 @@ import autoTable from 'jspdf-autotable';
                           </thead>
                           <tbody>
                             <tr *ngFor="let dia of shift.dias" [ngClass]="{'row-disabled': dia.estado !== 'Programada'}">
-                              <td>{{ dia.extrusionIdLegacy }}</td>
+                               <td>{{ dia.extrusionIdLegacy ? (dia.extrusionIdLegacy | slice:0:8) : '' }}</td>
                               <td>
                                 <span class="badge-status" [ngClass]="getStatusClass(dia.estado)">
                                   {{ getEstadoLabel(dia.estado) }}

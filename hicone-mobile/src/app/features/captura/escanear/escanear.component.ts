@@ -3,7 +3,6 @@ import { timer } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ScannerService } from '../../../core/hardware/scanner.service';
 import { SyncQueueService, PendingOp } from '../../../core/offline/sync-queue.service';
-import { ApiConfigService } from '../../../core/services/api-config.service';
 
 @Component({
   selector: 'app-escanear-captura',
@@ -212,7 +211,6 @@ import { ApiConfigService } from '../../../core/services/api-config.service';
 export class EscanearComponent {
   private scanner = inject(ScannerService);
   private syncQueue = inject(SyncQueueService);
-  private apiConfig = inject(ApiConfigService);
   private cdr = inject(ChangeDetectorRef);
 
   lastScan: { type: 'bobina' | 'carrete' | 'pallet'; code: string; format: string } | null = null;
@@ -236,20 +234,11 @@ export class EscanearComponent {
   async confirmarGuardado() {
     if (!this.lastScan) return;
 
-<<<<<<< Updated upstream
-    let endpoint = this.apiConfig.url('/api/v1/produccion/captura/registrar');
+    let endpoint = 'http://localhost:5007/api/v1/produccion/captura/registrar';
     let body: any = {};
 
     if (this.lastScan.type === 'bobina') {
-      endpoint = this.apiConfig.url('/api/v1/produccion/extrusion/guardar-bobina');
-=======
-    const baseApi = `http://${window.location.hostname}:5007/api/v1/produccion`;
-    let endpoint = `${baseApi}/captura/registrar`;
-    let body: any = {};
-
-    if (this.lastScan.type === 'bobina') {
-      endpoint = `${baseApi}/extrusion/guardar-bobina`;
->>>>>>> Stashed changes
+      endpoint = 'http://localhost:5007/api/v1/produccion/extrusion/guardar-bobina';
       body = {
         noSerie: this.lastScan.code,
         fechaProduccion: new Date().toISOString(),
@@ -257,21 +246,13 @@ export class EscanearComponent {
         espesor: 1.2
       };
     } else if (this.lastScan.type === 'carrete') {
-<<<<<<< Updated upstream
-      endpoint = this.apiConfig.url('/api/v1/produccion/carrete/registrar');
-=======
-      endpoint = `${baseApi}/carrete/registrar`;
->>>>>>> Stashed changes
+      endpoint = 'http://localhost:5007/api/v1/produccion/carrete/registrar';
       body = {
         noSerie: this.lastScan.code,
         estado: 'Validado'
       };
     } else {
-<<<<<<< Updated upstream
-      endpoint = this.apiConfig.url('/api/v1/produccion/pallet/registrar');
-=======
-      endpoint = `${baseApi}/pallet/registrar`;
->>>>>>> Stashed changes
+      endpoint = 'http://localhost:5007/api/v1/produccion/pallet/registrar';
       body = {
         noSerie: this.lastScan.code,
         estado: 'Terminado'

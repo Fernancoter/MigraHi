@@ -8,7 +8,7 @@ namespace HiCone.API.Controllers;
 
 [ApiController]
 [Route("api/v1/produccion/referencias")]
-[AllowAnonymous]
+[Authorize]
 public class ReferenciasController : ControllerBase
 {
     private readonly IApplicationDbContext _context;
@@ -118,17 +118,27 @@ public class ReferenciasController : ControllerBase
     {
         if (dto.ExtrusoraId == Guid.Empty)
             return BadRequest(new { Error = "El campo ExtrusoraId es requerido y no puede estar vacío." });
-        if ((dto.ProductoId is null || dto.ProductoId == Guid.Empty) && string.IsNullOrWhiteSpace(dto.ProductoNombre))
-            return BadRequest(new { Error = "Debe indicar ProductoId o ProductoNombre." });
+        if (string.IsNullOrWhiteSpace(dto.ProductoNombre))
+            return BadRequest(new { Error = "El campo ProductoNombre es requerido." });
 
         var extrusoraExiste = await _context.Extrusoras.AnyAsync(e => e.Id == dto.ExtrusoraId);
         if (!extrusoraExiste)
             return BadRequest(new { Error = $"No existe una extrusora con Id {dto.ExtrusoraId}." });
 
         var defaultTenantId = new Guid("00000000-0000-0000-0000-000000000001");
-        var producto = await ResolveProductoAsync(dto.ProductoId, dto.ProductoNombre, defaultTenantId);
+        var producto = await _context.Productos.FirstOrDefaultAsync(p => p.Nombre == dto.ProductoNombre);
         if (producto == null)
-            return BadRequest(new { Error = $"No existe un producto con Id {dto.ProductoId}." });
+        {
+            producto = new Producto
+            {
+                Id = Guid.NewGuid(),
+                Nombre = dto.ProductoNombre,
+                Codigo = $"PROD-{DateTime.UtcNow.Ticks.ToString().Substring(8)}",
+                TenantId = defaultTenantId
+            };
+            _context.Productos.Add(producto);
+            await _context.SaveChangesAsync(default);
+        }
 
         var entity = new ExtrusoraProducto
         {
@@ -136,7 +146,7 @@ public class ReferenciasController : ControllerBase
             ExtrusoraId = dto.ExtrusoraId,
             ProductoId = producto.Id,
             DefaultCalibre = dto.ProductoCalibre,
-            DefaultAncho = ParseAnchoDecimal(dto.ProductoAncho),
+            DefaultAncho = decimal.TryParse(dto.ProductoAncho, out var a) ? a : 0m,
             DefaultLongitud = dto.ProductoLongitud,
             DefaultMinutosReposo = dto.ReposoMin,
             TenantId = defaultTenantId
@@ -149,90 +159,33 @@ public class ReferenciasController : ControllerBase
     [HttpPut("extrusora-producto/{id}")]
     public async Task<IActionResult> UpdateExtrusoraProducto(Guid id, [FromBody] ExtrusoraProductoDto dto)
     {
-        var entity = await _context.ExtrusoraProductos.FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _context.ExtrusoraProductos.FindAsync(id);
         if (entity is null) return NotFound();
-
-        var defaultTenantId = new Guid("00000000-0000-0000-0000-000000000001");
-        var producto = await ResolveProductoAsync(dto.ProductoId, dto.ProductoNombre, defaultTenantId);
-        if (producto == null)
-            return BadRequest(new { Error = $"No existe un producto con Id {dto.ProductoId}." });
-
-        entity.ExtrusoraId = dto.ExtrusoraId;
-        entity.ProductoId = producto.Id;
-        entity.DefaultCalibre = dto.ProductoCalibre;
-        entity.DefaultAncho = ParseAnchoDecimal(dto.ProductoAncho);
-        entity.DefaultLongitud = dto.ProductoLongitud;
-        entity.DefaultMinutosReposo = dto.ReposoMin;
-
-        await _context.SaveChangesAsync(default);
-        return NoContent();
-    }
-
-    private static decimal ParseAnchoDecimal(string? raw)
-    {
-        if (string.IsNullOrWhiteSpace(raw)) return 0m;
-        raw = raw.Trim();
-        if (decimal.TryParse(raw, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var parsed))
-            return parsed;
-        if (decimal.TryParse(raw, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, out var parsedCulture))
-            return parsedCulture;
-
-        try
+        
+        var producto = await _context.Productos.FirstOrDefaultAsync(p => p.Nombre == dto.ProductoNombre);
+        if (producto == null && !string.IsNullOrWhiteSpace(dto.ProductoNombre))
         {
-            var parts = raw.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length == 2 && parts[1].Contains('/'))
-            {
-                var whole = decimal.Parse(parts[0], System.Globalization.CultureInfo.InvariantCulture);
-                var fracParts = parts[1].Split('/');
-                var num = decimal.Parse(fracParts[0], System.Globalization.CultureInfo.InvariantCulture);
-                var den = decimal.Parse(fracParts[1], System.Globalization.CultureInfo.InvariantCulture);
-                return whole + (num / den);
-            }
-            else if (parts.Length == 1 && parts[0].Contains('/'))
-            {
-                var fracParts = parts[0].Split('/');
-                var num = decimal.Parse(fracParts[0], System.Globalization.CultureInfo.InvariantCulture);
-                var den = decimal.Parse(fracParts[1], System.Globalization.CultureInfo.InvariantCulture);
-                return num / den;
-            }
-        }
-        catch { }
-
-        return 0m;
-    }
-
-    /// <summary>
-    /// Resuelve el Producto real a asociar: prioriza ProductoId (FK real, usado por la
-    /// pantalla de Extrusión que ya presenta un selector de catálogo). Si no viene
-    /// ProductoId, cae al flujo legado por nombre (usado por la pantalla de Referencias
-    /// con campo de texto libre), buscando o creando el Producto por nombre.
-    /// </summary>
-    private async Task<Producto?> ResolveProductoAsync(Guid? productoId, string? productoNombre, Guid tenantId)
-    {
-        if (productoId.HasValue && productoId.Value != Guid.Empty)
-        {
-            return await _context.Productos.FirstOrDefaultAsync(p => p.Id == productoId.Value);
-        }
-
-        if (string.IsNullOrWhiteSpace(productoNombre))
-            return null;
-
-        var producto = await _context.Productos.FirstOrDefaultAsync(p => p.Nombre == productoNombre);
-        if (producto == null)
-        {
-            var generatedCode = $"PROD-{DateTime.UtcNow.Ticks.ToString().Substring(8)}";
             producto = new Producto
             {
                 Id = Guid.NewGuid(),
-                Nombre = productoNombre,
-                Clave = generatedCode,
-                Codigo = generatedCode,
-                TenantId = tenantId
+                Nombre = dto.ProductoNombre,
+                Codigo = $"PROD-{DateTime.UtcNow.Ticks.ToString().Substring(8)}",
+                TenantId = new Guid("00000000-0000-0000-0000-000000000001")
             };
             _context.Productos.Add(producto);
             await _context.SaveChangesAsync(default);
         }
-        return producto;
+        var prodId = producto?.Id ?? Guid.Empty;
+
+        entity.ExtrusoraId = dto.ExtrusoraId;
+        entity.ProductoId = prodId;
+        entity.DefaultCalibre = dto.ProductoCalibre;
+        entity.DefaultAncho = decimal.TryParse(dto.ProductoAncho, out var a) ? a : 0m;
+        entity.DefaultLongitud = dto.ProductoLongitud;
+        entity.DefaultMinutosReposo = dto.ReposoMin;
+        
+        await _context.SaveChangesAsync(default);
+        return NoContent();
     }
 
 
@@ -248,4 +201,4 @@ public class ReferenciasController : ControllerBase
 }
 
 public record ConfiguracionDto(string Key, string Valor);
-public record ExtrusoraProductoDto(Guid ExtrusoraId, string? ProductoNombre, decimal ProductoCalibre, string ProductoAncho, int ProductoLongitud, int ReposoMin, int ProcesoMin, Guid? ProductoId = null);
+public record ExtrusoraProductoDto(Guid ExtrusoraId, string ProductoNombre, decimal ProductoCalibre, string ProductoAncho, int ProductoLongitud, int ReposoMin, int ProcesoMin);

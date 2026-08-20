@@ -9,12 +9,10 @@ interface ColumnDef {
   visible: boolean;
 }
 
-import { LucidePencil, LucideX, LucideFileText, LucideSearch } from '@lucide/angular';
-
 @Component({
   selector: 'app-sae-customer',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucidePencil, LucideX, LucideFileText, LucideSearch],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="wwp-container" (click)="onDocClick($event)">
       <div class="wwp-header">
@@ -33,7 +31,7 @@ import { LucidePencil, LucideX, LucideFileText, LucideSearch } from '@lucide/ang
                 <span class="icon">📥</span> Exportar <span class="caret">▼</span>
               </button>
               <div class="export-dropdown" *ngIf="showExportMenu">
-                <button class="export-option" (click)="exportPDF()"><svg lucideFileText [size]="14"></svg> Exportar a PDF</button>
+                <button class="export-option" (click)="exportPDF()">📄 Exportar a PDF</button>
                 <button class="export-option" (click)="exportXLS()">📊 Exportar a Excel (XLS)</button>
               </div>
             </div>
@@ -76,7 +74,7 @@ import { LucidePencil, LucideX, LucideFileText, LucideSearch } from '@lucide/ang
             </div>
           </div>
           <div class="wwp-toolbar-right">
-            <span class="filter-icon"><svg lucideSearch [size]="14"></svg></span>
+            <span class="filter-icon">🔍</span>
             <input type="text" class="wwp-search-input" placeholder="Buscar" [(ngModel)]="searchCli" (input)="filterData()">
           </div>
         </div>
@@ -97,8 +95,8 @@ import { LucidePencil, LucideX, LucideFileText, LucideSearch } from '@lucide/ang
             </thead>
             <tbody>
               <tr *ngFor="let c of pagedData">
-                <td class="action-cell"><button class="btn-icon" (click)="editRecord(c)"><svg lucidePencil [size]="14"></svg></button></td>
-                <td class="action-cell"><button class="btn-icon" (click)="deleteRecord(c)"><svg lucideX [size]="14"></svg></button></td>
+                <td class="action-cell"><button class="btn-icon" (click)="editRecord(c)">✏️</button></td>
+                <td class="action-cell"><button class="btn-icon" (click)="deleteRecord(c)">✖️</button></td>
                 <td *ngIf="isVis('customerCode')">{{ c.customerCode }}</td>
                 <td *ngIf="isVis('customerName')">{{ c.customerName }}</td>
                 <td *ngIf="isVis('rfc')">{{ c.rfc || 'XXX' }}</td>
@@ -165,24 +163,10 @@ import { LucidePencil, LucideX, LucideFileText, LucideSearch } from '@lucide/ang
               <input type="checkbox" [(ngModel)]="formData.isActive" style="width: 18px; height: 18px;">
             </div>
           </div>
-        <div *ngIf="formValidationError" style="color: #dc2626; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem;">{{ formValidationError }}</div>
+        </div>
         <div class="form-actions">
           <button class="btn-wwp-primary" (click)="confirmRecord()">CONFIRMAR</button>
           <button class="btn-cancel" (click)="cancelForm()">CANCELAR</button>
-        </div>
-      </div>
-
-      <!-- Modal Confirmar Eliminar -->
-      <div class="modal-overlay" *ngIf="showDeleteConfirmModal" (click)="showDeleteConfirmModal = false">
-        <div class="modal-card confirm-modal animate-scale-in" (click)="$event.stopPropagation()" style="background: white; border-radius: 12px; padding: 1.75rem; width: 380px; box-shadow: 0 12px 30px rgba(0,0,0,0.2); text-align: center; border: 1px solid #cbd5e1;">
-          <h3 style="margin-top: 0; color: #1e293b; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">Eliminar Cliente</h3>
-          <p style="font-size: 0.88rem; color: #475569; margin-bottom: 1.5rem;">
-            ¿Está seguro que desea eliminar al cliente <strong>"{{ itemToDelete?.customerName }}"</strong>?
-          </p>
-          <div style="display: flex; justify-content: center; gap: 12px;">
-            <button style="background: #ef4444; color: white; border: none; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.25);" (click)="executeDeleteRecord()">Eliminar</button>
-            <button style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer;" (click)="showDeleteConfirmModal = false">Cancelar</button>
-          </div>
         </div>
       </div>
     </div>
@@ -228,10 +212,6 @@ export class CustomerComponent implements OnInit {
   showForm = false;
   isEditing = false;
   formData: Partial<SaeCliente> = {};
-
-  showDeleteConfirmModal = false;
-  itemToDelete: SaeCliente | null = null;
-  formValidationError = '';
 
   ngOnInit() {
     this.loadData();
@@ -359,25 +339,14 @@ export class CustomerComponent implements OnInit {
   }
 
   deleteRecord(c: SaeCliente) {
-    this.itemToDelete = c;
-    this.showDeleteConfirmModal = true;
-  }
-
-  executeDeleteRecord() {
-    if (this.itemToDelete) {
-      this.data = this.data.filter(x => x.customerCode !== this.itemToDelete?.customerCode);
+    if (confirm(`¿Eliminar al cliente "${c.customerName}"?`)) {
+      this.data = this.data.filter(x => x.customerCode !== c.customerCode);
       this.applyFilterAndSort();
     }
-    this.showDeleteConfirmModal = false;
-    this.itemToDelete = null;
   }
 
   confirmRecord() {
-    if (!this.formData.customerCode) {
-      this.formValidationError = 'El campo Clave SAE es requerido.';
-      return;
-    }
-    this.formValidationError = '';
+    if (!this.formData.customerCode) { alert('El campo Clave SAE es requerido'); return; }
     if (this.isEditing) {
       const idx = this.data.findIndex(c => c.customerCode === this.formData.customerCode);
       if (idx >= 0) this.data[idx] = this.formData as SaeCliente;

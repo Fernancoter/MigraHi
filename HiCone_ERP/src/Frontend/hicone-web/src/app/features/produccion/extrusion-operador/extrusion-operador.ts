@@ -63,7 +63,7 @@ export class ExtrusionOperadorComponent implements OnInit {
     color: 1, // Rojo por defecto
     enviarMolino: false,
     mermaKg: 0,
-    motivo: 1, // FallaMecanica por defecto
+    motivo: 1, // DefectoCalibre por defecto
     observaciones: ''
   };
 
@@ -468,9 +468,12 @@ export class ExtrusionOperadorComponent implements OnInit {
   getMotivoName(motivoVal: any): string {
     const val = Number(motivoVal);
     switch (val) {
-      case 1: return 'Falla Mecánica';
-      case 2: return 'Limpieza / Contaminación';
-      default: return 'No Aplica';
+      case 1: return 'Defecto Calibre';
+      case 2: return 'Defecto Bobina';
+      case 3: return 'Defecto Carrete';
+      case 4: return 'Fuera de Peso';
+      case 5: return 'Daño Físico';
+      default: return 'N/A';
     }
   }
 

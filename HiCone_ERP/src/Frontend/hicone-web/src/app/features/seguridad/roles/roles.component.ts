@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service';
-import { environment } from '../../../../environments/environment';
 import { timer } from 'rxjs';
 
 // ─── Interfaces ──────────────────────────────────────────────────────────────
@@ -45,17 +44,15 @@ interface PaginatedResult<T> {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-import { LucidePencil, LucideX, LucideSettings, LucideLock, LucideCopy, LucideRadio } from '@lucide/angular';
-
 @Component({
   selector: 'app-roles',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucidePencil, LucideX, LucideSettings, LucideLock, LucideCopy, LucideRadio],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './roles.component.html',
   styleUrls: ['./roles.component.css']
 })
 export class RolesComponent implements OnInit {
-  private apiUrl = `${environment.apiUrl}/api`;
+  private apiUrl = 'http://localhost:5007/api';
 
   // ── View State ──────────────────────────────────────────────────────────
   viewState = signal<'main' | 'hijos' | 'permisos' | 'suscripciones' | 'add-permisos'>('main');
@@ -426,30 +423,11 @@ export class RolesComponent implements OnInit {
     });
   }
 
-  showDeleteModal = signal(false);
-  roleToDelete = signal<RoleDto | null>(null);
-
-  confirmDeleteRole(role: RoleDto) {
-    this.roleToDelete.set(role);
-    this.showDeleteModal.set(true);
-  }
-
-  doDeleteRole() {
-    const role = this.roleToDelete();
-    if (!role) return;
-
-    this.http.delete(`${this.apiUrl}/roles/${role.id}`, { headers: this.headers() }).subscribe({
-      next: () => {
-        this.showDeleteModal.set(false);
-        this.roleToDelete.set(null);
-        this.successMsg.set('Rol eliminado.');
-        this.loadRoles();
-      },
-      error: (err) => {
-        this.showDeleteModal.set(false);
-        this.roleToDelete.set(null);
-        this.errorMsg.set(err.error?.message || 'Error al eliminar.');
-      }
+  deleteRole(id: string) {
+    if (!confirm('¿Eliminar este rol? Los usuarios que lo tengan asignado perderán sus permisos.')) return;
+    this.http.delete(`${this.apiUrl}/roles/${id}`, { headers: this.headers() }).subscribe({
+      next: () => { this.successMsg.set('Rol eliminado.'); this.loadRoles(); },
+      error: (err) => { this.errorMsg.set(err.error?.message || 'Error al eliminar.'); }
     });
   }
 

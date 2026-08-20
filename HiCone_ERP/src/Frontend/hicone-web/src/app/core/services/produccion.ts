@@ -27,7 +27,7 @@ export interface Extrusora {
   id: string;
   codigo: string;
   nombre: string;
-  estado: number;
+  estado: string;
   capacidadKgHora?: number;
 }
 
@@ -78,7 +78,6 @@ export interface Extrusion {
   turno?: Turno;
   producto?: Producto;
   productoNombre?: string;
-  interrupcionEnCurso?: boolean;
   totalBobinas?: number;
   metaKg?: number;
   tiempoInterrupcion?: number;
@@ -88,11 +87,7 @@ export interface Extrusion {
   extrusionIdLegacy?: number;
   programado?: number;
   producido?: number;
-  interrupciones?: Interrupcion[];
-  observaciones?: string;
-  motivoAnticipado?: string;
-  siloVirgenId?: string;
-  siloMolidoId?: string;
+  interrupciones?: any[];
 }
 
 export interface Bobina {
@@ -102,10 +97,10 @@ export interface Bobina {
   kg: number;
   espesor: number;
   fechaProduccion: Date;
-  estado: number;
+  estado: any;
   extrusionId?: string;
-  colorEstacion?: number;
-  motivoMolino?: number;
+  colorEstacion?: any;
+  motivoMolino?: any;
   bobinaOrigen?: string;
   mermaKg?: number;
   extrusoraNombre?: string;
@@ -114,8 +109,6 @@ export interface Bobina {
   mezclaMolidoPct?: number;
   horaInicio?: string | Date;
   horaSalida?: string | Date;
-  iniciaReposo?: string | Date;
-  minutosEnReposo?: number;
   desviacionEstandar?: number;
   reposoHr?: number;
   operadorNombre?: string;
@@ -124,7 +117,7 @@ export interface Bobina {
   siloVirgenNombre?: string;
   loteVirgen?: string;
   paqueteAditivos?: string;
-  productoId?: string;
+  productoId?: any;
   productoNombre?: string;
   tipoMaterial?: string;
   prensaNombre?: string;
@@ -132,17 +125,16 @@ export interface Bobina {
   timeCode?: string;
   timeDescription?: string;
   timeType?: string;
-  extrusion?: Extrusion;
-  siloVirgen?: { id: string; nombre: string };
-  siloMolido?: { id: string; nombre: string };
-  operario?: Operario;
+  extrusion?: any;
+  siloVirgen?: any;
+  siloMolido?: any;
+  operario?: any;
 }
 
 export interface Prensado {
   id: string;
   fecha: Date;
-  estado: number;
-  interrupcionEnCurso?: boolean;
+  estado: string;
   prensa?: Prensa;
   producto?: Producto;
   operario?: Operario;
@@ -157,25 +149,20 @@ export interface CausaInterrupcion {
 
 export interface Interrupcion {
   id: string;
-  extrusionId?: string;
-  causaId?: string;
-  causa?: CausaInterrupcion;
   horaInicio: Date;
   horaFin?: Date;
-  concluida: boolean;
+  motivo?: string;
   descripcion?: string;
-  observaciones?: string;
+  concluida: boolean;
   duracionMinutos?: number;
 }
-
-import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProduccionService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/api/v1/produccion`;
+  private apiUrl = 'http://localhost:5007/api/v1/produccion';
 
   // ── Extrusión ─────────────────────────────────────────────────────────
   getExtrusiones(): Observable<Extrusion[]> {
@@ -187,7 +174,7 @@ export class ProduccionService {
   }
 
   finalizarExtrusion(id: string, motivo?: string): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/extrusion/${id}/finalizar`, { motivo: motivo || null });
+    return this.http.post<void>(`${this.apiUrl}/extrusion/${id}/finalizar`, { motivo: motivo || '' });
   }
 
   guardarBobina(request: any): Observable<Bobina> {

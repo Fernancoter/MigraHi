@@ -170,8 +170,15 @@ public class ProduccionController : ControllerBase
                     motivo = propCap.GetString();
             }
         }
-        var result = await _produccionService.FinalizarExtrusionAsync(id, motivo);
-        return result ? Ok() : BadRequest("No se pudo finalizar la extrusión");
+        try
+        {
+            var result = await _produccionService.FinalizarExtrusionAsync(id, motivo);
+            return result ? Ok() : BadRequest("No se pudo finalizar la extrusión");
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
 

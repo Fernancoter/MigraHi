@@ -203,6 +203,7 @@ namespace HiCone.Application.Services.Inventario
         public async Task<IEnumerable<LoteDto>> GetLotesAsync()
         {
             return await _context.Lotes
+                .Include(l => l.Extrusiones) // Example link, might not need it for basic list
                 .OrderByDescending(l => l.LoteFechaRegistro)
                 .Select(l => new LoteDto
                 {
@@ -316,8 +317,7 @@ namespace HiCone.Application.Services.Inventario
                 }
             }
 
-            await _context.SaveChangesAsync(default);
-            return true;
+            return await _context.SaveChangesAsync(default) > 0;
         }
 
         public async Task<IEnumerable<AuditLogDto>> GetAuditHistoryAsync(string entityName, string entityId)
@@ -416,8 +416,7 @@ namespace HiCone.Application.Services.Inventario
                 }
             }
 
-            await _context.SaveChangesAsync(default);
-            return true;
+            return await _context.SaveChangesAsync(default) > 0;
         }
 
         public async Task<IEnumerable<ExistenciaListDto>> GetExistenciasAsync()

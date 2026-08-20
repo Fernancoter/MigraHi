@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -508,7 +508,6 @@ export class WizardComponent implements OnInit {
   private authService = inject(AuthService);
   private inventarioService = inject(InventarioService);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
 
   currentStep = 1;
   selectedProceso = 'extrusion';
@@ -533,7 +532,7 @@ export class WizardComponent implements OnInit {
   revHusilloVirgen = 45;
   revHusilloMolido = 0;
   lotePaqueteAditivos = 'LOT-AD-01';
-  observaciones = '';
+  observaciones = 'Iniciado desde el Wizard PWA';
 
   // Prensado
   selectedTroquelId = '';
@@ -549,7 +548,6 @@ export class WizardComponent implements OnInit {
         if (this.selectedProceso !== 'extrusion') {
           this.productosFiltrados = prods;
         }
-        this.cdr.detectChanges();
       },
       error: (err: any) => console.error('Error cargando productos:', err)
     });
@@ -559,7 +557,6 @@ export class WizardComponent implements OnInit {
       next: (data: any[]) => {
         this.extrusoraProductos = data;
         this.onMaquinaChange(); // Filtrar inicialmente si ya hay máquina
-        this.cdr.detectChanges();
       },
       error: (err: any) => console.error('Error cargando extrusora-productos:', err)
     });
@@ -572,7 +569,6 @@ export class WizardComponent implements OnInit {
         if (this.silosVirgen.length > 0) {
           this.selectedSiloVirgenId = this.silosVirgen[0].id;
         }
-        this.cdr.detectChanges();
       },
       error: (err: any) => console.error('Error cargando silos:', err)
     });
@@ -584,7 +580,6 @@ export class WizardComponent implements OnInit {
         if (troqs.length > 0) {
           this.selectedTroquelId = troqs[0].id;
         }
-        this.cdr.detectChanges();
       },
       error: (err: any) => console.error('Error cargando troqueles:', err)
     });
@@ -597,18 +592,12 @@ export class WizardComponent implements OnInit {
     this.maquinas = [];
     if (this.selectedProceso === 'extrusion') {
       this.produccionService.getExtrusoras().subscribe({
-        next: (exts: any[]) => {
-          this.maquinas = exts;
-          this.cdr.detectChanges();
-        },
+        next: (exts: any[]) => this.maquinas = exts,
         error: (err: any) => console.error('Error cargando extrusoras:', err)
       });
     } else {
       this.produccionService.getPrensas().subscribe({
-        next: (prensas: any[]) => {
-          this.maquinas = prensas;
-          this.cdr.detectChanges();
-        },
+        next: (prensas: any[]) => this.maquinas = prensas,
         error: (err: any) => console.error('Error cargando prensas:', err)
       });
     }
@@ -720,28 +709,13 @@ export class WizardComponent implements OnInit {
           operarioId = operarios[0].id;
         }
 
-        this.produccionService.getTurnos().subscribe({
-          next: (turnos: any[]) => {
-            const hour = new Date().getHours();
-            let turno: any;
-            if (hour >= 22 || hour < 6) {
-              // Nocturno: buscar turno que contenga "3er" o "nocturno"
-              turno = turnos.find(t => t.nombre?.toLowerCase().includes('3er') || t.nombre?.toLowerCase().includes('nocturno'));
-            } else if (hour >= 14 && hour < 22) {
-              // Vespertino
-              turno = turnos.find(t => t.nombre?.toLowerCase().includes('vespertino'));
-            } else {
-              // Matutino
-              turno = turnos.find(t => t.nombre?.toLowerCase().includes('matutino'));
-            }
-            // Si no matchea ninguno, usar el primero disponible
-            const turnoId = turno?.id || (turnos.length > 0 ? turnos[0].id : null);
-
-            if (!turnoId) {
-              this.isSubmitting = false;
-              alert('No se encontraron turnos configurados en el sistema.');
-              return;
-            }
+        const hour = new Date().getHours();
+        let turnoId = '654f2948-204d-42dc-946f-2ba1717ca84c'; // Matutino
+        if (hour >= 14 && hour < 22) {
+          turnoId = '15a790d0-bf2c-46db-b1fe-0a3a0359c890'; // Vespertino
+        } else if (hour >= 22 || hour < 6) {
+          turnoId = '4501a99a-c3bf-40de-a079-e9faf85f5f34'; // Nocturno
+        }
 
         if (this.selectedProceso === 'extrusion') {
           const request = {
@@ -795,13 +769,6 @@ export class WizardComponent implements OnInit {
             }
           });
         }
-          },
-          error: (errTurnos: any) => {
-            this.isSubmitting = false;
-            console.error('Error obteniendo turnos:', errTurnos);
-            alert('Error al obtener los turnos del sistema.');
-          }
-        });
       },
       error: (err: any) => {
         this.isSubmitting = false;

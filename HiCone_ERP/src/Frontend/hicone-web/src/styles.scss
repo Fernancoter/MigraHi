@@ -810,7 +810,6 @@ h1, h2, h3, h4 {
 .table-responsive {
   width: 100%;
   overflow-x: auto;
-  min-height: 220px; /* Garantiza suficiente altura para desplegar menús de acción (Modificar/Eliminar) */
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   background: #ffffff;
@@ -1077,25 +1076,3 @@ h1, h2, h3, h4 {
     box-shadow: 0 2px 4px rgba(46, 125, 50, 0.25) !important;
   }
 }
-
-/* --- Filter Funnel Dropdown Positioning Fix --- */
-.dropdown,
-.dropdown-wrapper,
-.export-dropdown-wrapper,
-.right-actions .dropdown,
-.dropdown-container,
-.filter-dropdown-wrapper,
-.filter-search-group-qa {
-  position: relative !important;
-  display: inline-block;
-}
-
-.filter-popover-qa,
-.filter-popover-menu,
-.column-selector-popover {
-  position: absolute !important;
-  top: calc(100% + 4px) !important;
-  right: 0 !important;
-  z-index: 999999 !important;
-}
-

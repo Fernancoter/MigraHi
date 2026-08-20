@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using HiCone.Domain.Common;
 using HiCone.Domain.Enums;
 
@@ -10,7 +9,6 @@ namespace HiCone.Domain.Entities.Produccion;
 public class Prensa : TenantEntity
 {
     public string Codigo { get; set; } = null!;
-    public string NumeroPrensa { get; set; } = null!;
     public string Nombre { get; set; } = null!;
     public string? Modelo { get; set; }
     public string? NumeroSerie { get; set; }
@@ -19,6 +17,9 @@ public class Prensa : TenantEntity
     public EstadoPrensa Estado { get; set; } = EstadoPrensa.Disponible;
 
     public string? Observaciones { get; set; }
+
+    // Retrocompatibilidad
+    public string NumeroPrensa { get => Codigo; set => Codigo = value; }
     public string? Imagen { get; set; }
 
     // ── Colecciones ───────────────────────────────────────────────────────

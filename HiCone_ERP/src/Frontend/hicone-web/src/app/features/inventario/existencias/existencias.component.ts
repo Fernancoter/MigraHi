@@ -136,19 +136,6 @@ export class ExistenciasComponent implements OnInit {
   }
 
   cargarExistencias() {
-    // Obtener metadatos (fechaHora y turno)
-    this.inventarioService.getExistencias().subscribe({
-      next: (data) => {
-        const matching = data.find(item => item.id === this.existenciaId);
-        if (matching) {
-          this.fechaHora = new Date(matching.fechaHora).toLocaleString('es-MX', { hour12: false });
-          this.turno = matching.observaciones || '1er Turno';
-        }
-        this.cdr.detectChanges();
-      },
-      error: (err) => console.error('Error al cargar metadatos de la existencia:', err)
-    });
-
     // Silos
     this.inventarioService.getExistenciaSilo(this.existenciaId).subscribe({
       next: (data) => {

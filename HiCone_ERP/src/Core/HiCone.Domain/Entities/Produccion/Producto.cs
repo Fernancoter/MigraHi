@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using HiCone.Domain.Common;
 using HiCone.Domain.Enums;
 
@@ -10,10 +9,12 @@ namespace HiCone.Domain.Entities.Produccion;
 /// </summary>
 public class Producto : TenantEntity
 {
-    public string Clave { get; set; } = null!;
-    public string Codigo { get; set; } = null!;
+    public string Codigo { get; set; } = null!;              // Clave SAE / interna
     public string Nombre { get; set; } = null!;
     public string? Descripcion { get; set; }
+
+    // Retrocompatibilidad con el módulo de configuración de producción
+    public string Clave { get => Codigo; set => Codigo = value; }
     public string? ProductoBase { get; set; }
     public decimal PrecioUnitario { get; set; }
     public string? ProductoSAE { get; set; }

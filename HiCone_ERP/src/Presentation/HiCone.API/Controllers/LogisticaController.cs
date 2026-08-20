@@ -49,9 +49,8 @@ public class LogisticaController : ControllerBase
     [HttpPost("embarques/{id}/finalizar")]
     public async Task<IActionResult> Finalizar(Guid id, [FromBody] string elaboradoPor)
     {
-        var (success, message) = await _logisticaService.FinalizarEmbarqueAsync(id, elaboradoPor);
-        if (!success) return BadRequest(new { message });
-        return Ok(new { message });
+        var result = await _logisticaService.FinalizarEmbarqueAsync(id, elaboradoPor);
+        return result ? Ok() : BadRequest();
     }
 
     [HttpGet("embarques/activos")]

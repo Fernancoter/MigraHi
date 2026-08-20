@@ -235,7 +235,13 @@ public class ProduccionService : IProduccionService
             .Include(e => e.Bobinas)
             .FirstOrDefaultAsync(e => e.Id == extrusionId);
 
-        if (extrusion == null) return false;
+        var bobinasPendientes = extrusion.Bobinas
+            .Any(b => b.Estado == EstadoBobina.EnMedicion || b.Estado == EstadoBobina.EnProceso);
+
+        if (bobinasPendientes)
+        {
+            throw new InvalidOperationException("Debe validar todas las bobinas pendientes en medición antes de finalizar la extrusión.");
+        }
 
         extrusion.Estado = EstadoExtrusion.Finalizada;
         extrusion.FechaFin = DateTime.UtcNow;
@@ -347,7 +353,7 @@ public class ProduccionService : IProduccionService
             MermaKg = mermaKg,
             MotivoMolino = motivoMolino,
             Estado = estado,
-            IniciaReposo = estado == EstadoBobina.EnReposo ? DateTime.UtcNow : null,
+            IniciaReposo = mermaKg > 0 ? null : DateTime.UtcNow,
             MinutosEnReposo = 20,
             HoraInicio = DateTime.UtcNow.AddMinutes(-20),
             HoraSalida = DateTime.UtcNow,

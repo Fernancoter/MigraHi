@@ -8,42 +8,22 @@ export interface Embarque {
   orderDoc: string;
   remissionDoc: string;
   fecha: Date;
-  estatus: number;
+  estatus: string;
   cliente: string;
   transporte?: string;
   placas?: string;
   conductor?: string;
 }
 
-export interface ResumenCarga {
-  codigo: string;
-  orderDoc: string;
-  remissionDoc: string;
-  totalDetalles: number;
-  completados: number;
-  detalles: {
-    productoSAE: string | null;
-    cantidadPalletsRequerida: number;
-    cantidadPalletsEscaneados: number;
-    porcentaje: number;
-  }[];
-}
-
-import { environment } from '../../../environments/environment';
-
 @Injectable({
   providedIn: 'root'
 })
 export class LogisticaService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/api/v1/logistica`;
+  private apiUrl = 'http://localhost:5007/api/v1/logistica';
 
   getEmbarquesActivos(): Observable<Embarque[]> {
     return this.http.get<Embarque[]>(`${this.apiUrl}/embarques/activos`);
-  }
-
-  getResumenCarga(id: string): Observable<ResumenCarga> {
-    return this.http.get<ResumenCarga>(`${this.apiUrl}/embarques/${id}/resumen`);
   }
 
   crearEmbarqueDesdeSae(request: { orderDoc: string, remissionDoc: string }): Observable<Embarque> {

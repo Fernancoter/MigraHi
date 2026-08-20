@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
-import { environment } from '../../../../../environments/environment';
 import { NotificationService } from '../../../../core/services/notification.service';
 import * as XLSX from 'xlsx';
 
@@ -236,20 +235,6 @@ export interface Producto {
           </div>
         </div>
       </div>
-
-      <!-- Modal Confirmar Eliminar Producto Extrusora -->
-      <div *ngIf="showDeleteConfirmModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000;" (click)="showDeleteConfirmModal = false">
-        <div style="background: white; border-radius: 8px; width: 400px; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; position: relative; text-align: center;" (click)="$event.stopPropagation()">
-          <h2 style="font-size: 1.25rem; font-weight: bold; color: #1e293b; margin: 0 0 1rem 0;">Eliminar Registro</h2>
-          <p style="color: #475569; font-size: 0.95rem; margin-bottom: 1.5rem;">
-            ¿Está seguro que desea eliminar el producto <strong>"{{ itemToDelete?.productoNombre }}"</strong>?
-          </p>
-          <div style="display: flex; justify-content: center; gap: 1rem;">
-            <button (click)="executeDelete()" style="background: #ef4444; color: white; border: none; padding: 0.55rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">Eliminar</button>
-            <button (click)="showDeleteConfirmModal = false" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 0.55rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Cancelar</button>
-          </div>
-        </div>
-      </div>
     </div>
   `,
   styles: [`
@@ -268,16 +253,14 @@ export class ExtrusoraProductoComponent implements OnInit {
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
   private notify = inject(NotificationService);
-  private apiUrl = `${environment.apiUrl}/api/v1/produccion/referencias/extrusora-producto`;
-  private catalogosUrl = `${environment.apiUrl}/api/v1/produccion/catalogos`; // URL genérica para extrusoras
+  private apiUrl = 'http://localhost:5007/api/v1/produccion/referencias/extrusora-producto';
+  private catalogosUrl = 'http://localhost:5007/api/v1/produccion/catalogos'; // URL genérica para extrusoras
 
   searchText = signal<string>('');
   currentPage = signal<number>(1);
   pageSize = signal<number>(8);
   isLoading = signal<boolean>(false);
   isSaving = false;
-  showDeleteConfirmModal = false;
-  itemToDelete: ExtrusoraProducto | null = null;
   savedFilters: any[] = [];
 
   items = signal<ExtrusoraProducto[]>([]);
@@ -355,13 +338,10 @@ export class ExtrusoraProductoComponent implements OnInit {
   }
 
   loadCatalogos() {
-    this.http.get<any[]>(`${this.catalogosUrl}/extrusoras`).subscribe({
+    // Intentamos cargar las extrusoras, si la API no existe o falla, cargamos fallback
+    this.http.get<Extrusora[]>(`${this.catalogosUrl}/extrusoras`).subscribe({
       next: (data) => {
-        this.extrusoras = (data || []).map(e => {
-          const val = e.numeroExtrusora || e.nombre || '';
-          const name = val.toLowerCase().startsWith('extrusora') ? val : `Extrusora ${val}`;
-          return { id: e.id, nombre: name };
-        });
+        this.extrusoras = data;
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -448,7 +428,6 @@ export class ExtrusoraProductoComponent implements OnInit {
         procesoMin: 0 
       };
     }
-    this.loadCatalogos();
     this.isModalOpen = true;
     this.isFilterMenuOpen = false;
     this.isColumnsMenuOpen = false;
@@ -498,28 +477,18 @@ export class ExtrusoraProductoComponent implements OnInit {
 
   eliminar(item: ExtrusoraProducto) {
     if (!item.id) return;
-    this.itemToDelete = item;
-    this.showDeleteConfirmModal = true;
-  }
-
-  executeDelete() {
-    const item = this.itemToDelete;
-    if (!item || !item.id) return;
-
-    this.http.delete(`${this.apiUrl}/${item.id}`).subscribe({
-      next: () => {
-        this.notify.success('Registro eliminado con éxito.');
-        this.loadData();
-        this.showDeleteConfirmModal = false;
-        this.itemToDelete = null;
-      },
-      error: (err) => {
-        console.error('Error eliminando:', err);
-        this.notify.error('Error al eliminar el registro.');
-        this.showDeleteConfirmModal = false;
-        this.itemToDelete = null;
-      }
-    });
+    if (confirm(`¿Estás seguro de eliminar el producto '${item.productoNombre}'?`)) {
+      this.http.delete(`${this.apiUrl}/${item.id}`).subscribe({
+        next: () => {
+          this.notify.success('Registro eliminado con éxito.');
+          this.loadData();
+        },
+        error: (err) => {
+          console.error('Error eliminando:', err);
+          this.notify.error('Error al eliminar el registro.');
+        }
+      });
+    }
   }
 
   /* ── Pagination ───────────────────────────────────── */

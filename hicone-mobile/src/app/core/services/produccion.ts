@@ -155,7 +155,7 @@ export class ProduccionService {
   }
 
   finalizarExtrusion(id: string, motivo?: string): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/extrusion/${id}/finalizar`, motivo ? `"${motivo}"` : null);
+    return this.http.post<void>(`${this.apiUrl}/extrusion/${id}/finalizar`, { motivo: motivo || '' });
   }
 
   guardarBobina(request: any): Observable<Bobina> {

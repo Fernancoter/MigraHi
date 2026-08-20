@@ -2,7 +2,6 @@ import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../../environments/environment';
 
 export interface ConfiguracionSistema {
   id?: string;
@@ -109,20 +108,6 @@ export interface ConfiguracionSistema {
           </div>
         </div>
       </div>
-
-      <!-- Modal Confirmar Eliminar Configuración -->
-      <div *ngIf="showDeleteConfirmModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000;" (click)="showDeleteConfirmModal = false">
-        <div style="background: white; border-radius: 8px; width: 400px; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; position: relative;" (click)="$event.stopPropagation()">
-          <h2 style="font-size: 1.25rem; font-weight: bold; color: #1e293b; margin: 0 0 1rem 0;">Eliminar Configuración</h2>
-          <p style="color: #475569; font-size: 0.9rem; margin-bottom: 1.5rem;">
-            ¿Está seguro que desea eliminar la configuración <strong>"{{ itemToDelete?.key }}"</strong>?
-          </p>
-          <div style="display: flex; justify-content: flex-end; gap: 1rem;">
-            <button (click)="showDeleteConfirmModal = false" style="background: white; color: #64748b; border: 1px solid #cbd5e1; padding: 0.5rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Cancelar</button>
-            <button (click)="executeDelete()" style="background: #ef4444; color: white; border: none; padding: 0.55rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">Eliminar</button>
-          </div>
-        </div>
-      </div>
     </div>
   `,
   styles: [`
@@ -143,15 +128,13 @@ export interface ConfiguracionSistema {
 })
 export class ProduccionConfiguracionComponent implements OnInit {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/api/v1/produccion/referencias/configuracion`;
+  private apiUrl = 'http://localhost:5007/api/v1/produccion/referencias/configuracion';
 
   searchText = signal<string>('');
   currentPage = signal<number>(1);
   pageSize = signal<number>(8);
   isLoading = signal<boolean>(false);
   isSaving = false;
-  showDeleteConfirmModal = false;
-  itemToDelete: ConfiguracionSistema | null = null;
 
   items = signal<ConfiguracionSistema[]>([]);
 
@@ -245,26 +228,12 @@ export class ProduccionConfiguracionComponent implements OnInit {
 
   eliminar(item: ConfiguracionSistema) {
     if (!item.id) return;
-    this.itemToDelete = item;
-    this.showDeleteConfirmModal = true;
-  }
-
-  executeDelete() {
-    const item = this.itemToDelete;
-    if (!item || !item.id) return;
-
-    this.http.delete(`${this.apiUrl}/${item.id}`).subscribe({
-      next: () => {
-        this.loadData();
-        this.showDeleteConfirmModal = false;
-        this.itemToDelete = null;
-      },
-      error: (err) => {
-        console.error('Error eliminando:', err);
-        this.showDeleteConfirmModal = false;
-        this.itemToDelete = null;
-      }
-    });
+    if (confirm(`¿Estás seguro de eliminar la configuración '${item.key}'?`)) {
+      this.http.delete(`${this.apiUrl}/${item.id}`).subscribe({
+        next: () => this.loadData(),
+        error: (err) => console.error('Error eliminando:', err)
+      });
+    }
   }
 
   /* ── Pagination ───────────────────────────────────── */

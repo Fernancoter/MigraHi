@@ -2,12 +2,11 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SaeService, SaeProducto, SaePedido, SaeCliente, SaeRemision } from '../../core/services/sae';
-import { LucideRefreshCw, LucideX } from '@lucide/angular';
 
 @Component({
   selector: 'app-catalogos-sae',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideRefreshCw, LucideX],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="module-container">
       <header class="page-header">
@@ -17,8 +16,7 @@ import { LucideRefreshCw, LucideX } from '@lucide/angular';
         </div>
         <div class="header-right">
           <button class="btn-legacy" (click)="onSync()" [disabled]="syncing">
-            {{ syncing ? 'Sincronizando...' : '' }}
-            <ng-container *ngIf="!syncing"><svg lucideRefreshCw [size]="14"></svg> Sincronizar con SAE</ng-container>
+            {{ syncing ? 'Sincronizando...' : '🔄 Sincronizar con SAE' }}
           </button>
         </div>
       </header>
@@ -167,7 +165,7 @@ import { LucideRefreshCw, LucideX } from '@lucide/angular';
         <div class="modal-content" (click)="$event.stopPropagation()">
           <div class="modal-header">
             <h2>Detalle del Pedido {{ detalleOrder?.orderDoc }}</h2>
-            <button class="modal-close" (click)="showDetalle = false"><svg lucideX [size]="14"></svg></button>
+            <button class="modal-close" (click)="showDetalle = false">✕</button>
           </div>
           <div class="modal-body" *ngIf="detalleOrder">
             <div class="detail-grid">

@@ -5,8 +5,6 @@ using HiCone.Persistence;
 using HiCone.Persistence.Seeds;
 using Microsoft.EntityFrameworkCore;
 
-using HiCone.API.Middlewares;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Serilog
@@ -28,6 +26,7 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.Converters.Add(new UtcDateTimeJsonConverter());
     });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -45,10 +44,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? ["http://localhost:4200", "http://localhost:4201"])
+        policy.WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? ["http://localhost:4200"])
             .AllowAnyMethod()
             .AllowAnyHeader()
-            .WithExposedHeaders("X-Idempotency-Hit", "Content-Disposition")
             .AllowCredentials();
     });
 });
@@ -67,13 +65,10 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
-app.UseMiddleware<IdempotencyMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapGet("/", () => Results.Redirect("/swagger"));
-
 
 // Seed database
 using (var scope = app.Services.CreateScope())
@@ -90,3 +85,24 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+public class UtcDateTimeJsonConverter : System.Text.Json.Serialization.JsonConverter<DateTime>
+{
+    public override DateTime Read(ref System.Text.Json.Utf8JsonReader reader, Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
+    {
+        if (DateTime.TryParse(reader.GetString(), out var date))
+        {
+            return date.ToUniversalTime();
+        }
+        return DateTime.UtcNow;
+    }
+
+    public override void Write(System.Text.Json.Utf8JsonWriter writer, DateTime value, System.Text.Json.JsonSerializerOptions options)
+    {
+        var utcDate = value.Kind == DateTimeKind.Unspecified 
+            ? DateTime.SpecifyKind(value, DateTimeKind.Utc) 
+            : value.ToUniversalTime();
+        
+        writer.WriteStringValue(utcDate.ToString("yyyy-MM-ddTHH:mm:ss.FFFZ"));
+    }
+}

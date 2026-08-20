@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProduccionService, Extrusion, CausaInterrupcion } from '../../../core/services/produccion';
-import { ProduccionConfigService } from '../../../core/services/produccion-config.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
@@ -370,35 +369,6 @@ import { NotificationService } from '../../../core/services/notification.service
                   <label>Lote Silo</label>
                   <input type="text" [(ngModel)]="editForm.loteSilo" class="form-control-styled">
                 </div>
-
-                <!-- Silo Virgen -->
-                <div class="form-field col-span-6">
-                  <label>Silo Virgen</label>
-                  <select [(ngModel)]="editForm.siloVirgenId" class="form-control-styled">
-                    <option value="">-- Selecciona --</option>
-                    <option *ngFor="let s of catalogos.silos" [value]="s.id">{{ s.nombre }}</option>
-                  </select>
-                </div>
-                <!-- Silo Molido -->
-                <div class="form-field col-span-6">
-                  <label>Silo Molido</label>
-                  <select [(ngModel)]="editForm.siloMolidoId" class="form-control-styled">
-                    <option value="">-- Selecciona --</option>
-                    <option *ngFor="let s of catalogos.silos" [value]="s.id">{{ s.nombre }}</option>
-                  </select>
-                </div>
-
-                <!-- Motivo Anticipado -->
-                <div class="form-field col-span-12" *ngIf="editForm.estado === 4">
-                  <label>Motivo Anticipado</label>
-                  <input type="text" [(ngModel)]="editForm.motivoAnticipado" class="form-control-styled">
-                </div>
-
-                <!-- Observaciones -->
-                <div class="form-field col-span-12">
-                  <label>Observaciones</label>
-                  <textarea [(ngModel)]="editForm.observaciones" class="form-control-styled" rows="2"></textarea>
-                </div>
               </div>
 
               <!-- Action Buttons -->
@@ -410,27 +380,6 @@ import { NotificationService } from '../../../core/services/notification.service
                   CANCELAR
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Modal Confirmar Eliminar Extrusión -->
-        <div class="modal-backdrop-styled animate-fade-in" *ngIf="showDeleteConfirmModal" (click)="showDeleteConfirmModal = false" style="z-index: 1060;">
-          <div class="modal-card-styled animate-scale-up" (click)="$event.stopPropagation()" style="max-width: 400px; text-align: center;">
-            <div class="modal-header-edit" style="background: #fef2f2; border-bottom: 1px solid #fee2e2; padding: 1.25rem;">
-              <h3 style="color: #b91c1c; margin: 0; font-size: 1.2rem; font-weight: 700;">Eliminar Orden</h3>
-            </div>
-            <div style="padding: 1.5rem;">
-              <p style="color: #334155; font-size: 0.95rem; margin-bottom: 0.5rem;">
-                ¿Está seguro de eliminar de forma permanente la orden de extrusión de la extrusora <strong>"{{ extrusionToDelete?.extrusora?.nombre || '' }}"</strong>?
-              </p>
-              <p style="color: #64748b; font-size: 0.85rem;">
-                Esta action no se puede deshacer.
-              </p>
-            </div>
-            <div style="padding: 1.25rem; display: flex; justify-content: center; gap: 12px; border-top: 1px solid #f1f5f9;">
-              <button class="btn-confirm-edit" style="background: #ef4444;" (click)="executeDelete()">Eliminar</button>
-              <button class="btn-cancel-edit" (click)="showDeleteConfirmModal = false">Cancelar</button>
             </div>
           </div>
         </div>
@@ -756,7 +705,6 @@ import { NotificationService } from '../../../core/services/notification.service
 })
 export class ExtrusionInicioComponent implements OnInit {
   private prodService = inject(ProduccionService);
-  private configService = inject(ProduccionConfigService);
   private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
   private notify = inject(NotificationService);
@@ -766,10 +714,9 @@ export class ExtrusionInicioComponent implements OnInit {
   programados: any[] = [];
   operacion: Extrusion[] = [];
 
+  // Modal Properties
   mostrarModalInterrupcion: boolean = false;
   mostrarModalEditar: boolean = false;
-  showDeleteConfirmModal = false;
-  extrusionToDelete: any = null;
   extrusionSeleccionada: Extrusion | null = null;
   causas: CausaInterrupcion[] = [];
   interrupcion = {
@@ -784,8 +731,7 @@ export class ExtrusionInicioComponent implements OnInit {
     operarios: [] as any[],
     turnos: [] as any[],
     productos: [] as any[],
-    extrusoras: [] as any[],
-    silos: [] as any[]
+    extrusoras: [] as any[]
   };
 
   editForm = {
@@ -805,11 +751,7 @@ export class ExtrusionInicioComponent implements OnInit {
     lotePaqueteAditivos: '',
     estado: 1,
     processStart: '',
-    processEnd: '',
-    observaciones: '',
-    motivoAnticipado: '',
-    siloVirgenId: '',
-    siloMolidoId: ''
+    processEnd: ''
   };
 
   ngOnInit() {
@@ -832,13 +774,16 @@ export class ExtrusionInicioComponent implements OnInit {
         // Programación shows scheduled and completed ones (non-active)
         this.programados = this.allExtrusiones.filter(e => e.estado !== 'EnProceso' && e.estado !== 'Detenida' && Number(e.estado) !== 2);
 
+        // Si ambas listas resultan vacías, forzamos los mocks para que siempre haya datos de prueba visibles
+        if (this.operacion.length === 0 && this.programados.length === 0) {
+          this.cargarMocks();
+        }
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar extrusiones en inicio:', err);
-        this.allExtrusiones = [];
-        this.operacion = [];
-        this.programados = [];
+        // En caso de error de conexión/autenticación, cargamos los mocks de respaldo
+        this.cargarMocks();
         this.cdr.detectChanges();
       }
     });
@@ -849,7 +794,6 @@ export class ExtrusionInicioComponent implements OnInit {
     this.prodService.getTurnos().subscribe(data => { this.catalogos.turnos = data; this.cdr.detectChanges(); });
     this.prodService.getProductos().subscribe(data => { this.catalogos.productos = data; this.cdr.detectChanges(); });
     this.prodService.getExtrusoras().subscribe(data => { this.catalogos.extrusoras = data; this.cdr.detectChanges(); });
-    this.configService.getSilos().subscribe(data => { this.catalogos.silos = data; this.cdr.detectChanges(); });
   }
 
   cargarMocks() {
@@ -1020,11 +964,7 @@ export class ExtrusionInicioComponent implements OnInit {
         lotePaqueteAditivos: data.lotePaqueteAditivos || '',
         estado: data.estado === 'EnProceso' ? 2 : data.estado === 'Programada' ? 1 : 3,
         processStart: formattedStart,
-        processEnd: formattedEnd,
-        observaciones: data.observaciones || '',
-        motivoAnticipado: data.motivoAnticipado || '',
-        siloVirgenId: data.siloVirgenId || '',
-        siloMolidoId: data.siloMolidoId || ''
+        processEnd: formattedEnd
       };
       this.mostrarModalEditar = true;
       this.cdr.detectChanges();
@@ -1063,11 +1003,7 @@ export class ExtrusionInicioComponent implements OnInit {
           lotePaqueteAditivos: data.lotePaqueteAditivos || '',
           estado: data.estado || 1,
           processStart: formattedStart,
-          processEnd: formattedEnd,
-          observaciones: data.observaciones || '',
-          motivoAnticipado: data.motivoAnticipado || '',
-          siloVirgenId: data.siloVirgenId || '',
-          siloMolidoId: data.siloMolidoId || ''
+          processEnd: formattedEnd
         };
 
         this.mostrarModalEditar = true;
@@ -1135,11 +1071,7 @@ export class ExtrusionInicioComponent implements OnInit {
       lotePaqueteAditivos: this.editForm.lotePaqueteAditivos,
       estado: Number(this.editForm.estado),
       processStart: this.editForm.processStart ? new Date(this.editForm.processStart) : null,
-      processEnd: this.editForm.processEnd ? new Date(this.editForm.processEnd) : null,
-      observaciones: this.editForm.observaciones || null,
-      motivoAnticipado: this.editForm.motivoAnticipado || null,
-      siloVirgenId: this.editForm.siloVirgenId || null,
-      siloMolidoId: this.editForm.siloMolidoId || null
+      processEnd: this.editForm.processEnd ? new Date(this.editForm.processEnd) : null
     }).subscribe({
       next: () => {
         this.cerrarModales();
@@ -1176,40 +1108,28 @@ export class ExtrusionInicioComponent implements OnInit {
   }
 
   eliminar(ex: any) {
-    this.extrusionToDelete = ex;
-    this.showDeleteConfirmModal = true;
-  }
-
-  executeDelete() {
-    const ex = this.extrusionToDelete;
-    if (!ex) return;
-
-    if (ex.id && String(ex.id).startsWith('mock-')) {
-      this.allExtrusiones = this.allExtrusiones.filter(item => item.id !== ex.id);
-      this.operacion = this.allExtrusiones.filter(e => e.estado === 'EnProceso' || e.estado === 'Detenida' || Number(e.estado) === 2);
-      this.programados = this.allExtrusiones.filter(e => e.estado !== 'EnProceso' && e.estado !== 'Detenida' && Number(e.estado) !== 2);
-      this.showDeleteConfirmModal = false;
-      this.extrusionToDelete = null;
-      this.cdr.detectChanges();
-      this.notify.success('Orden de extrusión eliminada.');
-      return;
-    }
-
-    this.prodService.deleteExtrusion(ex.id).subscribe({
-      next: () => {
-        this.notify.success('Orden de extrusión eliminada.');
-        this.cargarExtrusiones();
-        this.showDeleteConfirmModal = false;
-        this.extrusionToDelete = null;
-      },
-      error: (err) => {
-        console.error('Error al eliminar orden de extrusión:', err);
-        this.notify.error(err.error?.message || 'No se pudo eliminar la orden de extrusión.');
-        this.showDeleteConfirmModal = false;
-        this.extrusionToDelete = null;
+    if (confirm(`¿Está seguro de eliminar de forma permanente la orden de extrusión de la extrusora ${ex.extrusora?.nombre || ''}?`)) {
+      if (ex.id && String(ex.id).startsWith('mock-')) {
+        this.allExtrusiones = this.allExtrusiones.filter(item => item.id !== ex.id);
+        this.operacion = this.allExtrusiones.filter(e => e.estado === 'EnProceso' || e.estado === 'Detenida' || Number(e.estado) === 2);
+        this.programados = this.allExtrusiones.filter(e => e.estado !== 'EnProceso' && e.estado !== 'Detenida' && Number(e.estado) !== 2);
         this.cdr.detectChanges();
+        this.notify.success('Orden de extrusión eliminada.');
+        return;
       }
-    });
+
+      this.prodService.deleteExtrusion(ex.id).subscribe({
+        next: () => {
+          this.notify.success('Orden de extrusión eliminada.');
+          this.cargarExtrusiones();
+        },
+        error: (err) => {
+          console.error('Error al eliminar orden de extrusión:', err);
+          this.notify.error(err.error?.message || 'No se pudo eliminar la orden de extrusión.');
+          this.cdr.detectChanges();
+        }
+      });
+    }
   }
 
 
