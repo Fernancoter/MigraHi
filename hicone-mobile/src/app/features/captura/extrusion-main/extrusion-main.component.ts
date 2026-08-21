@@ -204,7 +204,8 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
         this.actualizarInformacionOrden();
         const interrupcionEnCursoVal = orden.interrupcionEnCurso || orden.InterrupcionEnCurso || false;
         this.extrusionState.interrupcionEnCurso.set(interrupcionEnCursoVal);
-        this.extrusionState.extrusionIniciada.set(!this.esProgramada);
+        // NO iniciar automáticamente al seleccionar extrusora; permitir vista previa y selección de turno previa
+        this.extrusionState.extrusionIniciada.set(false);
         
         const list = orden.interrupciones || orden.Interrupciones || [];
         const activeInt = list.find((i: any) => i.concluida === false || i.Concluida === false || !i.concluida || !i.Concluida) || null;
@@ -226,9 +227,12 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     this.subs.add(sub);
   }
 
+  turnosDisponibles: any[] = [];
+
   ngOnInit(): void {
     this.cargarSilos();
     this.cargarCausasInterrupcion();
+    this.cargarTurnos();
 
     // Vincular callbacks del Header Shell
     this.extrusionState.onTriggerInterrupcion = () => {
@@ -241,6 +245,48 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     this.timerInterval = setInterval(() => {
       this.recalcularTiempos();
     }, 1000);
+  }
+
+  cargarTurnos() {
+    this.produccionService.getTurnos().pipe(
+      catchError(() => of([]))
+    ).subscribe(list => {
+      this.turnosDisponibles = list || [];
+      if (!this.extrusionState.turnoActivo() && this.turnosDisponibles.length > 0) {
+        this.extrusionState.setTurno({ id: this.turnosDisponibles[0].id, nombre: this.turnosDisponibles[0].nombre });
+      }
+      this.cdr.detectChanges();
+    });
+  }
+
+  seleccionarTurnoRapido(t: any) {
+    this.extrusionState.setTurno({ id: t.id, nombre: t.nombre });
+    this.cdr.detectChanges();
+  }
+
+  iniciarOContinuarTrabajo() {
+    const ext = this.extrusionState.extrusoraActiva();
+    if (!ext) return;
+
+    if (!this.extrusionState.turnoActivo()) {
+      if (this.turnosDisponibles.length > 0) {
+        this.extrusionState.setTurno({ id: this.turnosDisponibles[0].id, nombre: this.turnosDisponibles[0].nombre });
+      } else {
+        this.errorMessage = 'Por favor selecciona un Turno antes de iniciar.';
+        this.cdr.detectChanges();
+        return;
+      }
+    }
+
+    this.errorMessage = '';
+
+    if (this.esProgramada || !this.extrusionActiva) {
+      this.mostrarModalConsumo = true;
+      this.cdr.detectChanges();
+    } else {
+      this.extrusionState.extrusionIniciada.set(true);
+      this.cdr.detectChanges();
+    }
   }
 
   ngOnDestroy(): void {

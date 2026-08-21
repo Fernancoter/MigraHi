@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProduccionService, Prensa } from '../../../core/services/produccion';
 import { SyncQueueService, PendingOp } from '../../../core/offline/sync-queue.service';
+import { ApiConfigService } from '../../../core/services/api-config.service';
 
 @Component({
   selector: 'app-troquel-captura',
@@ -143,6 +144,7 @@ import { SyncQueueService, PendingOp } from '../../../core/offline/sync-queue.se
 export class TroquelComponent implements OnInit {
   private prodService = inject(ProduccionService);
   private syncQueue = inject(SyncQueueService);
+  private apiConfig = inject(ApiConfigService);
   private cdr = inject(ChangeDetectorRef);
 
   prensas: Prensa[] = [];
@@ -170,7 +172,7 @@ export class TroquelComponent implements OnInit {
 
     const op: PendingOp = {
       id: `troquel_${this.selectedPrensaId}_${Date.now()}`,
-      endpoint: 'http://localhost:5007/api/v1/produccion/prensado/asignar-troquel',
+      endpoint: this.apiConfig.url('/api/v1/produccion/prensado/asignar-troquel'),
       method: 'POST',
       body: {
         prensaId: this.selectedPrensaId,

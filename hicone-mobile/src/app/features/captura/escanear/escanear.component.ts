@@ -3,6 +3,7 @@ import { timer } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ScannerService } from '../../../core/hardware/scanner.service';
 import { SyncQueueService, PendingOp } from '../../../core/offline/sync-queue.service';
+import { ApiConfigService } from '../../../core/services/api-config.service';
 
 @Component({
   selector: 'app-escanear-captura',
@@ -211,6 +212,7 @@ import { SyncQueueService, PendingOp } from '../../../core/offline/sync-queue.se
 export class EscanearComponent {
   private scanner = inject(ScannerService);
   private syncQueue = inject(SyncQueueService);
+  private apiConfig = inject(ApiConfigService);
   private cdr = inject(ChangeDetectorRef);
 
   lastScan: { type: 'bobina' | 'carrete' | 'pallet'; code: string; format: string } | null = null;
@@ -234,11 +236,11 @@ export class EscanearComponent {
   async confirmarGuardado() {
     if (!this.lastScan) return;
 
-    let endpoint = 'http://localhost:5007/api/v1/produccion/captura/registrar';
+    let endpoint = this.apiConfig.url('/api/v1/produccion/captura/registrar');
     let body: any = {};
 
     if (this.lastScan.type === 'bobina') {
-      endpoint = 'http://localhost:5007/api/v1/produccion/extrusion/guardar-bobina';
+      endpoint = this.apiConfig.url('/api/v1/produccion/extrusion/guardar-bobina');
       body = {
         noSerie: this.lastScan.code,
         fechaProduccion: new Date().toISOString(),
@@ -246,13 +248,13 @@ export class EscanearComponent {
         espesor: 1.2
       };
     } else if (this.lastScan.type === 'carrete') {
-      endpoint = 'http://localhost:5007/api/v1/produccion/carrete/registrar';
+      endpoint = this.apiConfig.url('/api/v1/produccion/carrete/registrar');
       body = {
         noSerie: this.lastScan.code,
         estado: 'Validado'
       };
     } else {
-      endpoint = 'http://localhost:5007/api/v1/produccion/pallet/registrar';
+      endpoint = this.apiConfig.url('/api/v1/produccion/pallet/registrar');
       body = {
         noSerie: this.lastScan.code,
         estado: 'Terminado'

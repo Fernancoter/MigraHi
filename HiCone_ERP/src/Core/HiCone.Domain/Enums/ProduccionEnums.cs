@@ -47,7 +47,8 @@ public enum MotivoMolino
     DefectoBobina = 2,
     DefectoCarrete = 3,
     FueraDePeso = 4,
-    DanioFisico = 5
+    DanioFisico = 5,
+    LimpiezaContaminacion = 6
 }
 
 /// <summary>Estados de una carrera de prensado</summary>

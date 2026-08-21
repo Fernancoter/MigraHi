@@ -924,7 +924,7 @@ public class ProduccionController : ControllerBase
             HoraInicio = DateTime.UtcNow.AddHours(-6),
             HoraSalida = DateTime.UtcNow.AddHours(-4),
             Estado = EstadoBobina.Molido,
-            MotivoMolino = MotivoMolino.DefectoCalibre,
+            MotivoMolino = MotivoMolino.LimpiezaContaminacion,
             ColorEstacion = ColorEstacion.Azul,
             ProductoId = producto.Id,
             OperarioId = operario.Id,

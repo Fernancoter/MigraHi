@@ -34,106 +34,121 @@
   <ng-container *ngIf="extrusionState.extrusoraActiva()">
 
     <!-- ================================================================
-         CUADRO DE INFORMACIÓN DE ORDEN (Imagen 3)
-         Se muestra de inmediato con el icono de engrane a la izquierda
+         VISTA PREVIA Y CONFIRMACIÓN PREVIA (ANTES DE INICIAR TRABAJO)
+         Muestra la Extrusora, el Turno y el Producto antes de arrancar
          ================================================================ -->
-    <div class="orden-info-card" *ngIf="!extrusionActiva || esProgramada" (click)="abrirAccionCard()" role="button" style="cursor: pointer; position: relative; display: flex; align-items: stretch;">
+    <div class="pre-start-container" *ngIf="!extrusionState.extrusionIniciada()" style="margin-top: 10px; display: flex; flex-direction: column; gap: 16px;">
+      
+      <!-- Card de Detalle de Orden y Turno -->
+      <div class="orden-info-card" style="position: relative; display: flex; align-items: stretch;">
 
-      <!-- Icono de Engrane Izquierda (Imagen 3) -->
-      <div class="card-left-icon animate-spin-slow" style="width: 80px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.02); border-right: 1px solid var(--border-color); flex-shrink: 0;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" width="44" height="44" style="color: #64748b; opacity: 0.8;">
-          <circle cx="12" cy="12" r="3"></circle>
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        <!-- Icono Izquierda -->
+        <div class="card-left-icon" style="width: 80px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.02); border-right: 1px solid var(--border-color); flex-shrink: 0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" width="44" height="44" style="color: #38bdf8; opacity: 0.9;">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </div>
+
+        <!-- Contenido Celdas -->
+        <div style="flex: 1; display: flex; flex-direction: column;">
+          <!-- Row 1: Extrusora y Estado -->
+          <div class="orden-row" style="padding: 14px 20px;">
+            <div class="orden-cell">
+              <span class="cell-label">Extrusora</span>
+              <span class="cell-value bold" style="color: #38bdf8; font-size: 16px;">{{ extrusionState.extrusoraActiva()!.nombre }}</span>
+            </div>
+            <div class="orden-cell">
+              <span class="cell-label">Estado Orden</span>
+              <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
+              <span class="cell-value" [ngClass]="getEstadoClass(extrusionActiva?.estado)" *ngIf="!cargandoOrden">
+                {{ esProgramada ? 'Programada' : (extrusionActiva ? getEstadoName(extrusionActiva.estado) : 'Sin Orden Activa') }}
+              </span>
+            </div>
+          </div>
+
+          <div class="cell-divider"></div>
+
+          <!-- Row 2: Turno y Producto -->
+          <div class="orden-row" style="padding: 14px 20px;">
+            <div class="orden-cell">
+              <span class="cell-label">Turno Seleccionado</span>
+              <span class="cell-value bold" style="color: #f59e0b;" *ngIf="extrusionState.turnoActivo()">
+                {{ extrusionState.turnoActivo()!.nombre }}
+              </span>
+              <span class="cell-value" style="color: #ef4444; font-weight: 600;" *ngIf="!extrusionState.turnoActivo()">
+                ⚠️ Sin Turno
+              </span>
+            </div>
+            <div class="orden-cell" style="flex: 2;">
+              <span class="cell-label">Producto Asignado</span>
+              <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
+              <span class="cell-value bold" *ngIf="!cargandoOrden" style="font-size: 15px;">
+                {{ extrusionActiva?.productoNombre || extrusionActiva?.producto?.nombre || 'Producto Estándar' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="cell-divider"></div>
+
+          <!-- Row 3: Parámetros Técnicos -->
+          <div class="orden-row" style="padding: 14px 20px;">
+            <div class="orden-cell">
+              <span class="cell-label">Ancho</span>
+              <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
+              <span class="cell-value" *ngIf="!cargandoOrden">
+                {{ (extrusionActiva?.ancho && extrusionActiva.ancho > 0 ? extrusionActiva.ancho : 250) + ' mm' }}
+              </span>
+            </div>
+            <div class="orden-cell">
+              <span class="cell-label">Longitud</span>
+              <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
+              <span class="cell-value" *ngIf="!cargandoOrden">
+                {{ (extrusionActiva?.longitud && extrusionActiva.longitud > 0 ? extrusionActiva.longitud : 1000) + ' m' }}
+              </span>
+            </div>
+            <div class="orden-cell">
+              <span class="cell-label">Calibre</span>
+              <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
+              <span class="cell-value" *ngIf="!cargandoOrden">
+                {{ (extrusionActiva?.calibre && extrusionActiva.calibre > 0 ? extrusionActiva.calibre : 15) + ' mm' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selector Rápido de Turno si no hay Turno Seleccionado -->
+      <div class="turno-selection-card" style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 10px; padding: 14px 20px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-size: 14px; font-weight: 600; color: #fbbf24;">Turno de Trabajo:</span>
+          <span style="font-size: 12px; color: #94a3b8;" *ngIf="extrusionState.turnoActivo()">✓ {{ extrusionState.turnoActivo()!.nombre }}</span>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button *ngFor="let t of turnosDisponibles" (click)="seleccionarTurnoRapido(t)"
+                  [style.background]="extrusionState.turnoActivo()?.id === t.id ? '#f59e0b' : 'rgba(255,255,255,0.06)'"
+                  [style.color]="extrusionState.turnoActivo()?.id === t.id ? '#0f172a' : '#f8fafc'"
+                  style="border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 8px 16px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+            {{ t.nombre }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Botón de Inicio Prominente -->
+      <button class="start-work-btn" (click)="iniciarOContinuarTrabajo()" [disabled]="cargandoOrden"
+              style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 10px; padding: 18px; font-size: 17px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+          <path d="M8 5v14l11-7z"/>
         </svg>
-      </div>
-
-      <!-- Contenido de Celdas Derecha -->
-      <div style="flex: 1; display: flex; flex-direction: column;">
-        <div class="orden-row" style="padding: 14px 20px;">
-          <div class="orden-cell">
-            <span class="cell-label">Estado</span>
-            <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-            <span class="cell-value" [ngClass]="getEstadoClass(extrusionActiva?.estado)" *ngIf="!cargandoOrden">
-              {{ esProgramada ? 'Programada' : (extrusionActiva ? getEstadoName(extrusionActiva.estado) : '\u2014') }}
-            </span>
-          </div>
-          <div class="orden-cell">
-            <span class="cell-label">Fecha</span>
-            <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-            <span class="cell-value" *ngIf="!cargandoOrden">
-              {{ extrusionActiva ? (extrusionActiva.fechaInicio | date:'dd/MM/yy hh:mm a') : '\u2014' }}
-            </span>
-          </div>
-        </div>
-
-        <div class="cell-divider"></div>
-
-        <div class="orden-row" style="padding: 14px 20px;">
-          <div class="orden-cell">
-            <span class="cell-label">Extrusora</span>
-            <span class="cell-value bold">{{ extrusionState.extrusoraActiva()!.nombre }}</span>
-          </div>
-          <div class="orden-cell">
-            <span class="cell-label">Producto</span>
-            <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-            <span class="cell-value bold" *ngIf="!cargandoOrden">
-              {{ extrusionActiva?.productoNombre || extrusionActiva?.producto?.nombre || '\u2014' }}
-            </span>
-          </div>
-          <div class="orden-cell">
-            <span class="cell-label">Turno</span>
-            <span class="cell-value bold">{{ extrusionState.turnoActivo()?.nombre || '\u2014' }}</span>
-          </div>
-        </div>
-
-        <div class="cell-divider"></div>
-
-        <div class="orden-row" style="padding: 14px 20px;">
-          <div class="orden-cell">
-            <span class="cell-label">Ancho</span>
-            <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-            <span class="cell-value" *ngIf="!cargandoOrden">
-              {{ (extrusionActiva?.ancho && extrusionActiva.ancho > 0 ? extrusionActiva.ancho : 250) + ' mm' }}
-            </span>
-          </div>
-          <div class="orden-cell">
-            <span class="cell-label">Longitud</span>
-            <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-            <span class="cell-value" *ngIf="!cargandoOrden">
-              {{ (extrusionActiva?.longitud && extrusionActiva.longitud > 0 ? extrusionActiva.longitud : 1000) + ' m' }}
-            </span>
-          </div>
-          <div class="orden-cell">
-            <span class="cell-label">Calibre</span>
-            <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-            <span class="cell-value" *ngIf="!cargandoOrden">
-              {{ (extrusionActiva?.calibre && extrusionActiva.calibre > 0 ? extrusionActiva.calibre : 15) + ' mm' }}
-            </span>
-          </div>
-        </div>
-
-        <div class="card-hint" *ngIf="!cargandoOrden && extrusionActiva && !esProgramada" style="padding: 8px 20px;">
-          <span>⚡ Toca para abrir Menú de Acciones (Bobina, Mezcla, Cierre) ➔</span>
-        </div>
-
-        <div class="card-hint" *ngIf="!cargandoOrden && extrusionActiva && esProgramada" style="padding: 8px 20px; color: #fbbf24; background: rgba(251, 191, 36, 0.05);">
-          <span>📋 Orden programada — Toca la tarjeta para configurar silos e iniciar turno ➔</span>
-        </div>
-
-        <div class="card-hint" *ngIf="!cargandoOrden && !extrusionActiva" style="padding: 8px 20px;">
-          <span>Sin orden activa — toca para configurar mezcla</span>
-        </div>
-      </div>
+        <span>{{ (extrusionActiva && !esProgramada) ? '▶ CONTINUAR TRABAJO EN EXTRUSORA' : '▶ INICIAR TRABAJO EN EXTRUSORA' }}</span>
+      </button>
 
     </div>
 
     <!-- ================================================================
-         CONSOLA DE OPERACIÓN DE EXTRUSIÓN ACTIVA (Imagen 1)
+         CONSOLA DE OPERACIÓN DE EXTRUSIÓN ACTIVA
          ================================================================ -->
-    <!-- ================================================================
-         CONSOLA DE OPERACIÓN DE EXTRUSIÓN ACTIVA (Imagen 1)
-         ================================================================ -->
-    <div class="active-extrusion-console animate-fade-in" *ngIf="!cargandoOrden && extrusionActiva && !esProgramada && !extrusionActiva.interrupcionEnCurso" style="margin-top: 20px; display: flex; flex-direction: column; gap: 15px;">
+    <div class="active-extrusion-console animate-fade-in" *ngIf="extrusionState.extrusionIniciada() && !cargandoOrden && extrusionActiva && !extrusionActiva.interrupcionEnCurso" style="margin-top: 20px; display: flex; flex-direction: column; gap: 15px;">
       
       <!-- Card 1: Tiempo Total de Extrusión -->
       <div class="console-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 22px; text-align: center; display: flex; flex-direction: column; gap: 8px;">
