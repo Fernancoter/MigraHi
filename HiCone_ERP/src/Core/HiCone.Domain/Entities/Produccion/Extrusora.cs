@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using HiCone.Domain.Common;
 using HiCone.Domain.Enums;
 
@@ -17,6 +18,7 @@ public class Extrusora : TenantEntity
     public EstadoExtrusora Estado { get; set; } = EstadoExtrusora.Disponible;
 
     // Retrocompatibilidad con el módulo de configuración de producción
+    [NotMapped]
     public string NumeroExtrusora { get => Codigo; set => Codigo = value; }
     public string? Imagen { get; set; }
 
