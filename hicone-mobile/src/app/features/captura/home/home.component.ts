@@ -6,6 +6,17 @@ import { OfflineStoreService } from '../../../core/offline/offline-store.service
 import { AuthService } from '../../../core/services/auth.service';
 import { ExtrusionStateService } from '../../../core/services/extrusion-state.service';
 
+interface ModuleItem {
+  id: string;
+  title: string;
+  description: string;
+  route?: string;
+  action?: () => void;
+  iconClass: string;
+  svg: string;
+  allowedRoles: string[];
+}
+
 @Component({
   selector: 'app-captura-home',
   standalone: true,
@@ -287,7 +298,7 @@ export class CapturaHomeComponent implements OnInit {
   });
 
   // Módulos definidos con sus respectivos roles permitidos
-  modules = [
+  modules: ModuleItem[] = [
     {
       id: 'extrusiones',
       title: 'Extrusiones',
@@ -320,7 +331,7 @@ export class CapturaHomeComponent implements OnInit {
       id: 'manual',
       title: 'Manual de Ayuda',
       description: 'Documentación técnica y procedimientos de planta.',
-      action: () => this.openHelpUrl(),
+      route: 'manual',
       iconClass: 'icon-blue',
       svg: 'manual',
       allowedRoles: ['SuperAdmin', 'Administrator', 'Supervisor', 'Operador', 'Mantenimiento']

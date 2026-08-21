@@ -12,6 +12,7 @@ import { authGuard } from './core/guards/auth.guard';
 import { ExtrusionMainComponent } from './features/captura/extrusion-main/extrusion-main.component';
 import { ReportesComponent } from './features/captura/reportes/reportes.component';
 import { EtiquetadoPalletsComponent } from './features/captura/etiquetado-pallets/etiquetado-pallets.component';
+import { ManualAyudaComponent } from './features/captura/manual-ayuda/manual-ayuda.component';
 
 export const routes: Routes = [
   {
@@ -28,7 +29,8 @@ export const routes: Routes = [
       { path: 'wizard', component: WizardComponent },
       { path: 'extrusion', component: ExtrusionMainComponent },
       { path: 'reportes', component: ReportesComponent },
-      { path: 'etiquetado-pallets', component: EtiquetadoPalletsComponent }
+      { path: 'etiquetado-pallets', component: EtiquetadoPalletsComponent },
+      { path: 'manual', component: ManualAyudaComponent }
     ]
   },
 
