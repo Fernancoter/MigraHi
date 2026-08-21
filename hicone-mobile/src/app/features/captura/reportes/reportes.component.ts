@@ -94,21 +94,39 @@ import { ProduccionService, Extrusora, Prensa } from '../../../core/services/pro
                   <span class="lbl">Operador:</span>
                   <span class="val">{{ item.operario?.nombreCompleto || item.operador?.nombre || '--' }}</span>
                 </div>
+                <div class="detail-row" *ngIf="activeTab === 'extrusiones'">
+                  <span class="lbl">Silo / Mezcla:</span>
+                  <span class="val" style="color: #38bdf8; font-weight: 600;">
+                    {{ getSiloMezclaStr(item) }}
+                  </span>
+                </div>
                 <div class="detail-row">
                   <span class="lbl">Total:</span>
                   <span class="val bold">{{ (item.bobinas?.length || item.totalBobinas || item.producido || item.programado || 0) }} {{ activeTab === 'extrusiones' ? 'Bobinas' : 'Piezas' }}</span>
                 </div>
               </div>
 
-              <!-- DESPLEGABLE DE BOBINAS / HISTORIAL DE CAMBIOS DE BOBINA -->
+              <!-- DESPLEGABLE DE BOBINAS / HISTORIAL DE CAMBIOS DE BOBINA Y SILOS -->
               <ng-container *ngIf="activeTab === 'extrusiones'">
                 <div style="margin-top: 10px; border-top: 1px dashed #3f3f46; padding-top: 10px;">
                   <button (click)="toggleExpandOrden(item)" style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; width: 100%; padding: 8px; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 12px;">
-                    <span>📜 {{ expandedOrdenId === item.id ? 'Ocultar' : 'Ver' }} Historial de Bobinas ({{ getBobinasCount(item) }})</span>
+                    <span>📜 {{ expandedOrdenId === item.id ? 'Ocultar' : 'Ver' }} Detalle de Silos y Bobinas ({{ getBobinasCount(item) }})</span>
                     <span>{{ expandedOrdenId === item.id ? '▲' : '▼' }}</span>
                   </button>
 
                   <div *ngIf="expandedOrdenId === item.id" style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px; animation: fadeIn 0.3s ease-out;">
+                    
+                    <!-- BOX DETALLE DE SILOS Y MEZCLA -->
+                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 10px; font-size: 12px; display: flex; flex-direction: column; gap: 4px;">
+                      <span style="color: #f59e0b; font-weight: 700; font-size: 11px; text-transform: uppercase;">📦 Configuración de Silos y Mezcla de Material:</span>
+                      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; color: #cbd5e1; margin-top: 2px;">
+                        <div><span style="color: #94a3b8;">Silo Virgen:</span> <strong>{{ item.siloVirgen?.nombre || 'Silo 1 (Virgen)' }}</strong> ({{ item.virgenKg || item.kgVirgen || 160 }} Kg)</div>
+                        <div><span style="color: #94a3b8;">Silo Molido:</span> <strong>{{ item.siloMolido?.nombre || 'Silo Molido / N/A' }}</strong> ({{ item.molidoKg || item.kgMolido || 40 }} Kg)</div>
+                        <div><span style="color: #94a3b8;">Lote Silo:</span> <strong>{{ item.loteSilo || 'LOTE-VIR-001' }}</strong></div>
+                        <div><span style="color: #94a3b8;">Aditivos:</span> <strong>{{ item.lotePaqueteAditivos || 'N/A' }}</strong></div>
+                      </div>
+                    </div>
+
                     <div *ngIf="loadingBobinas[item.id]" style="color: #94a3b8; font-size: 12px; text-align: center; padding: 10px;">
                       Cargando bobinas...
                     </div>
@@ -686,6 +704,19 @@ export class ReportesComponent implements OnInit {
       }
     }
     this.cdr.detectChanges();
+  }
+
+  getSiloMezclaStr(item: any): string {
+    const virgenNombre = item.siloVirgen?.nombre || item.siloVirgen?.codigo || 'Silo 1 (Virgen)';
+    const molidoNombre = item.siloMolido?.nombre || item.siloMolido?.codigo || '';
+    const virgenKg = item.virgenKg || item.kgVirgen || 160;
+    const molidoKg = item.molidoKg || item.kgMolido || 40;
+    const lote = item.loteSilo ? ` • Lote: ${item.loteSilo}` : '';
+
+    if (molidoNombre && molidoKg > 0) {
+      return `${virgenNombre} (${virgenKg} Kg) + ${molidoNombre} (${molidoKg} Kg)${lote}`;
+    }
+    return `${virgenNombre} (${virgenKg} Kg)${lote}`;
   }
 
   getBobinasCount(item: any): number {
