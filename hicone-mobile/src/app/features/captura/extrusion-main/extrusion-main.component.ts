@@ -399,23 +399,29 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     this.produccionService.getSiguienteBobinaNo(
       ext.id,
       this.extrusionActiva.productoId || this.extrusionActiva.producto?.id
-    ).subscribe({
+    ).pipe(catchError(() => of(this.siguienteBobinaNo))).subscribe({
       next: (no: number) => {
-        this.siguienteBobinaNo = no;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.siguienteBobinaNo = 1;
+        if (no && no > 0) this.siguienteBobinaNo = no;
         this.cdr.detectChanges();
       }
     });
 
-    this.produccionService.getBobinasByExtrusion(this.extrusionActiva.id).subscribe({
+    this.produccionService.getBobinasByExtrusion(this.extrusionActiva.id).pipe(catchError(() => of([]))).subscribe({
       next: (bobs: Bobina[]) => {
-        this.bobinasExtrusion = bobs || [];
+        if (bobs && bobs.length > 0) {
+          this.bobinasExtrusion = bobs;
+        }
         this.cdr.detectChanges();
-      },
-      error: (err: any) => console.error('Error cargando bobinas:', err)
+      }
+    });
+
+    this.produccionService.getExtrusionActivaOProgramada(ext.id).pipe(catchError(() => of(null))).subscribe({
+      next: (ordRes: any) => {
+        if (ordRes) {
+          this.extrusionActiva = ordRes;
+          this.cdr.detectChanges();
+        }
+      }
     });
   }
 
@@ -440,16 +446,48 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     };
 
     this.produccionService.guardarBobina(request).subscribe({
-      next: () => {
+      next: (res: any) => {
         this.saving = false;
+        this.cerrarModalBobina();
         this.mostrarMensaje('¡Bobina registrada exitosamente!');
         this.nuevaBobina.peso = 0;
         this.nuevaBobina.observaciones = '';
+
+        // Actualización optimista e instantánea (0ms) de contadores y lista local
+        const newBob: Bobina = res || {
+          id: `temp-${Date.now()}`,
+          noSerie: `B-${request.bobinaNo}${request.origen}`,
+          bobinaNo: request.bobinaNo,
+          kg: request.peso,
+          espesor: request.calibre,
+          fechaProduccion: new Date(),
+          estado: request.mermaKg > 0 ? 6 : 11,
+          mermaKg: request.mermaKg,
+          extrusionId: request.extrusionId
+        };
+
+        const currentBobs = [...this.bobinasExtrusion];
+        const existingIdx = currentBobs.findIndex(b => b.bobinaNo === newBob.bobinaNo || b.id === newBob.id);
+        if (existingIdx >= 0) {
+          currentBobs[existingIdx] = newBob;
+        } else {
+          currentBobs.unshift(newBob);
+        }
+        this.bobinasExtrusion = currentBobs;
+        this.siguienteBobinaNo = request.bobinaNo + 1;
+
+        if (this.extrusionActiva) {
+          this.extrusionActiva.producido = (this.extrusionActiva.producido || 0) + request.peso;
+          this.extrusionActiva.totalBobinas = (this.extrusionActiva.totalBobinas || 0) + 1;
+        }
+
+        this.cdr.detectChanges();
         this.actualizarInformacionOrden();
       },
       error: (err: any) => {
         this.saving = false;
         this.mostrarMensaje('Error: ' + (err.error?.message || err.message || 'Error al guardar bobina'), true);
+        this.cdr.detectChanges();
       }
     });
   }
@@ -526,14 +564,42 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     };
 
     this.produccionService.guardarBobina(request).subscribe({
-      next: () => {
+      next: (res: any) => {
         this.saving = false;
         this.cerrarModalBobina();
         this.mostrarMensaje('¡Bobina registrada exitosamente!');
         this.nuevaBobina.peso = 0;
         this.nuevaBobina.observaciones = '';
-        this.actualizarInformacionOrden();
+
+        const newBob: Bobina = res || {
+          id: `temp-${Date.now()}`,
+          noSerie: `B-${request.bobinaNo}${request.origen}`,
+          bobinaNo: request.bobinaNo,
+          kg: request.peso,
+          espesor: request.calibre,
+          fechaProduccion: new Date(),
+          estado: request.mermaKg > 0 ? 6 : 11,
+          mermaKg: request.mermaKg,
+          extrusionId: request.extrusionId
+        };
+
+        const currentBobs = [...this.bobinasExtrusion];
+        const existingIdx = currentBobs.findIndex(b => b.bobinaNo === newBob.bobinaNo || b.id === newBob.id);
+        if (existingIdx >= 0) {
+          currentBobs[existingIdx] = newBob;
+        } else {
+          currentBobs.unshift(newBob);
+        }
+        this.bobinasExtrusion = currentBobs;
+        this.siguienteBobinaNo = request.bobinaNo + 1;
+
+        if (this.extrusionActiva) {
+          this.extrusionActiva.producido = (this.extrusionActiva.producido || 0) + request.peso;
+          this.extrusionActiva.totalBobinas = (this.extrusionActiva.totalBobinas || 0) + 1;
+        }
+
         this.cdr.detectChanges();
+        this.actualizarInformacionOrden();
       },
       error: (err: any) => {
         this.saving = false;
