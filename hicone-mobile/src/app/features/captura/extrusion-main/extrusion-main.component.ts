@@ -1172,9 +1172,161 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ── MÉTODOS DE TAB VALIDADO (QA) ──────────────────────────────────
+  // ── MÉTODOS DE IMPRESIÓN Y ETIQUETADO CON QR ─────────────────────
+  bobinaAImprimir: Bobina | null = null;
+  mostrarModalImpresion = false;
+
+  getQrUrl(noSerie: string): string {
+    const text = encodeURIComponent(noSerie || 'B-001');
+    return `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${text}`;
+  }
+
   imprimirEtiquetaBobina(b: Bobina) {
-    this.mostrarMensaje('Imprimiendo etiqueta para la bobina ' + b.noSerie);
+    this.bobinaAImprimir = b;
+    this.mostrarModalImpresion = true;
+    this.cdr.detectChanges();
+  }
+
+  cerrarModalImpresion() {
+    this.mostrarModalImpresion = false;
+    this.bobinaAImprimir = null;
+    this.cdr.detectChanges();
+  }
+
+  ejecutarImpresionBobina() {
+    if (!this.bobinaAImprimir) return;
+    const b = this.bobinaAImprimir;
+    const extNombre = this.extrusionState.extrusoraActiva()?.nombre || 'Extrusora 1';
+    const turnoNombre = this.extrusionState.turnoActivo()?.nombre || 'Matutino';
+    const prodNombre = this.extrusionActiva?.productoNombre || this.extrusionActiva?.producto?.nombre || 'Producto Estándar';
+    const fechaStr = new Date(b.fechaProduccion || Date.now()).toLocaleString('es-MX');
+    const qrUrl = this.getQrUrl(b.noSerie);
+
+    const printWindow = window.open('', '_blank', 'width=600,height=700');
+    if (!printWindow) {
+      alert('Por favor permita las ventanas emergentes (popups) para imprimir la etiqueta.');
+      return;
+    }
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Etiqueta_${b.noSerie}</title>
+        <style>
+          @page { size: 4in 3in; margin: 0; }
+          body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            background: #ffffff;
+            color: #000000;
+            box-sizing: border-box;
+          }
+          .ticket-card {
+            border: 2px solid #000;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+          }
+          .header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 6px;
+          }
+          .header h2 { margin: 0; font-size: 18px; font-weight: 800; }
+          .header p { margin: 2px 0 0 0; font-size: 11px; text-transform: uppercase; font-weight: 600; }
+          .body-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+          }
+          .qr-box {
+            width: 140px;
+            height: 140px;
+            flex-shrink: 0;
+          }
+          .qr-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+          .details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 12px;
+          }
+          .field {
+            display: flex;
+            flex-direction: column;
+          }
+          .field-label { font-size: 10px; font-weight: 700; color: #555; text-transform: uppercase; }
+          .field-value { font-size: 14px; font-weight: 800; }
+          .footer {
+            border-top: 1px dashed #000;
+            padding-top: 6px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            font-weight: 600;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="ticket-card">
+          <div class="header">
+            <h2>HI-CONE MÉXICO</h2>
+            <p>ETIQUETA DE CONTROL DE BOBINA DE EXTRUSIÓN</p>
+          </div>
+          <div class="body-row">
+            <div class="qr-box">
+              <img src="${qrUrl}" alt="QR ${b.noSerie}" />
+            </div>
+            <div class="details">
+              <div class="field">
+                <span class="field-label">Folio QR / Serie:</span>
+                <span class="field-value" style="font-family: monospace; font-size: 15px; color: #000;">${b.noSerie}</span>
+              </div>
+              <div class="field">
+                <span class="field-label">Bobina #:</span>
+                <span class="field-value">#${b.bobinaNo} (Origen: ${b.bobinaOrigen || 'A'})</span>
+              </div>
+              <div class="field">
+                <span class="field-label">Peso / Calibre:</span>
+                <span class="field-value">${b.kg} Kg • ${b.espesor} mm</span>
+              </div>
+              <div class="field">
+                <span class="field-label">Producto:</span>
+                <span class="field-value">${prodNombre}</span>
+              </div>
+            </div>
+          </div>
+          <div class="footer">
+            <span>Máquina: ${extNombre}</span>
+            <span>Turno: ${turnoNombre}</span>
+            <span>Fecha: ${fechaStr}</span>
+          </div>
+        </div>
+        <script>
+          window.onload = function() {
+            setTimeout(function() {
+              window.print();
+            }, 500);
+          };
+        </script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.open();
+    printWindow.document.write(html);
+    printWindow.document.close();
   }
 
   abrirTransferenciaBobina(b: Bobina) {

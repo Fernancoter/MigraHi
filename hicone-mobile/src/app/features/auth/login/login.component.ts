@@ -532,7 +532,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = '/';
     
     // Auto-completar usuario recordado
     const remembered = this.authService.getRememberedEmail();
