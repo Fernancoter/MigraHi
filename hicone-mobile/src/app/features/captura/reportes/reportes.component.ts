@@ -63,22 +63,21 @@ import { ProduccionService, Extrusora, Prensa } from '../../../core/services/pro
 
         <!-- REPORT DATA LIST / SUMMARY SECTION -->
         <div class="data-section">
-          <div class="empty-state" *ngIf="selectedMachineId && reportes.length === 0 && !loading">
+          <div class="empty-state" *ngIf="reportes.length === 0 && !loading">
             <span class="empty-icon">📋</span>
-            <p>No hay reportes para la fecha y máquina seleccionadas.</p>
+            <p>No hay reportes registrados para la fecha y filtros seleccionados.</p>
           </div>
 
-          <div class="loading-state" *ngIf="selectedMachineId && loading">
+          <div class="loading-state" *ngIf="loading">
             <div class="spinner"></div>
             <p>Cargando información...</p>
           </div>
-
 
           <div class="report-cards-grid" *ngIf="reportes.length > 0 && !loading">
             <div class="report-card" *ngFor="let item of reportes">
               <div class="card-top">
                 <span class="card-code">{{ item.codigo || item.id }}</span>
-                <span class="card-badge" [class.success]="item.estado === 'Terminada' || item.estado === 'EnProceso'">
+                <span class="card-badge" [class.success]="item.estado === 'Terminada' || item.estado === 'EnProceso' || item.estado === '1'">
                   {{ item.estado || 'Programado' }}
                 </span>
               </div>
@@ -97,9 +96,41 @@ import { ProduccionService, Extrusora, Prensa } from '../../../core/services/pro
                 </div>
                 <div class="detail-row">
                   <span class="lbl">Total:</span>
-                  <span class="val bold">{{ item.totalBobinas || item.programado || 0 }} {{ activeTab === 'extrusiones' ? 'Bobinas' : 'Piezas' }}</span>
+                  <span class="val bold">{{ (item.bobinas?.length || item.totalBobinas || item.producido || item.programado || 0) }} {{ activeTab === 'extrusiones' ? 'Bobinas' : 'Piezas' }}</span>
                 </div>
               </div>
+
+              <!-- DESPLEGABLE DE BOBINAS / HISTORIAL DE CAMBIOS DE BOBINA -->
+              <ng-container *ngIf="activeTab === 'extrusiones'">
+                <div style="margin-top: 10px; border-top: 1px dashed #3f3f46; padding-top: 10px;">
+                  <button (click)="toggleExpandOrden(item)" style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; width: 100%; padding: 8px; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 12px;">
+                    <span>📜 {{ expandedOrdenId === item.id ? 'Ocultar' : 'Ver' }} Historial de Bobinas ({{ getBobinasCount(item) }})</span>
+                    <span>{{ expandedOrdenId === item.id ? '▲' : '▼' }}</span>
+                  </button>
+
+                  <div *ngIf="expandedOrdenId === item.id" style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px; animation: fadeIn 0.3s ease-out;">
+                    <div *ngIf="loadingBobinas[item.id]" style="color: #94a3b8; font-size: 12px; text-align: center; padding: 10px;">
+                      Cargando bobinas...
+                    </div>
+
+                    <div *ngIf="!loadingBobinas[item.id] && getBobinasList(item).length === 0" style="color: #94a3b8; font-size: 12px; text-align: center; padding: 10px; background: #1e293b; border-radius: 6px;">
+                      No se registraron bobinas en esta orden.
+                    </div>
+
+                    <div *ngFor="let b of getBobinasList(item)" style="background: #18181b; border: 1px solid #3f3f46; border-radius: 6px; padding: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+                      <div style="display: flex; flex-direction: column; gap: 2px;">
+                        <span style="font-family: monospace; font-weight: 700; color: #38bdf8;">{{ b.noSerie }}</span>
+                        <span style="color: #a1a1aa;">Bobina #{{ b.bobinaNo }} • {{ b.kg }} Kg • {{ b.espesor }} mm</span>
+                        <span style="font-size: 11px; color: #10b981;" *ngIf="b.estado === 2 || b.estado === 'EnReposo'">✓ En Reposo</span>
+                        <span style="font-size: 11px; color: #ef4444;" *ngIf="b.estado === 6 || b.estado === 'Molido'">⚠️ Descartado / Molino</span>
+                      </div>
+                      <button (click)="imprimirEtiquetaBobina(b, item)" style="background: #334155; color: #f8fafc; border: none; border-radius: 4px; padding: 6px 10px; font-size: 11px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                        <span>🖨️ QR</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
             </div>
           </div>
         </div>
@@ -598,6 +629,11 @@ export class ReportesComponent implements OnInit {
   reportes: any[] = [];
   loading: boolean = false;
 
+  // Estado de desglose de bobinas por orden
+  expandedOrdenId: string | null = null;
+  bobinasPorOrden: { [ordenId: string]: any[] } = {};
+  loadingBobinas: { [ordenId: string]: boolean } = {};
+
   // DatePicker Modal State
   showDatePicker: boolean = false;
   tempDate: Date = new Date();
@@ -626,6 +662,124 @@ export class ReportesComponent implements OnInit {
     this.showMachineDropdown = false;
     this.cargarReportes();
     this.cdr.detectChanges();
+  }
+
+  toggleExpandOrden(item: any) {
+    if (this.expandedOrdenId === item.id) {
+      this.expandedOrdenId = null;
+    } else {
+      this.expandedOrdenId = item.id;
+      if (!this.bobinasPorOrden[item.id]) {
+        this.loadingBobinas[item.id] = true;
+        this.prodService.getBobinasByExtrusion(item.id).subscribe({
+          next: (bobinas) => {
+            this.loadingBobinas[item.id] = false;
+            this.bobinasPorOrden[item.id] = bobinas || [];
+            this.cdr.detectChanges();
+          },
+          error: () => {
+            this.loadingBobinas[item.id] = false;
+            this.bobinasPorOrden[item.id] = item.bobinas || [];
+            this.cdr.detectChanges();
+          }
+        });
+      }
+    }
+    this.cdr.detectChanges();
+  }
+
+  getBobinasCount(item: any): number {
+    if (this.bobinasPorOrden[item.id]) return this.bobinasPorOrden[item.id].length;
+    if (item.bobinas && Array.isArray(item.bobinas)) return item.bobinas.length;
+    return item.totalBobinas || item.producido || 0;
+  }
+
+  getBobinasList(item: any): any[] {
+    return this.bobinasPorOrden[item.id] || item.bobinas || [];
+  }
+
+  imprimirEtiquetaBobina(b: any, item: any) {
+    const text = encodeURIComponent(b.noSerie || 'B-001');
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${text}`;
+    const extNombre = item.extrusora?.nombre || 'Extrusora 1';
+    const prodNombre = item.productoNombre || item.producto?.nombre || 'Producto Estándar';
+    const fechaStr = new Date(b.fechaProduccion || Date.now()).toLocaleString('es-MX');
+
+    const printWindow = window.open('', '_blank', 'width=600,height=700');
+    if (!printWindow) {
+      alert('Por favor permita las ventanas emergentes (popups) para imprimir la etiqueta.');
+      return;
+    }
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Etiqueta_${b.noSerie}</title>
+        <style>
+          @page { size: 4in 3in; margin: 0; }
+          body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 15px; background: #fff; color: #000; }
+          .ticket-card { border: 2px solid #000; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+          .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 6px; }
+          .header h2 { margin: 0; font-size: 18px; font-weight: 800; }
+          .header p { margin: 2px 0 0 0; font-size: 11px; text-transform: uppercase; font-weight: 600; }
+          .body-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+          .qr-box { width: 140px; height: 140px; flex-shrink: 0; }
+          .qr-box img { width: 100%; height: 100%; object-fit: contain; }
+          .details { flex: 1; display: flex; flex-direction: column; gap: 5px; font-size: 12px; }
+          .field { display: flex; flex-direction: column; }
+          .field-label { font-size: 10px; font-weight: 700; color: #555; text-transform: uppercase; }
+          .field-value { font-size: 14px; font-weight: 800; }
+          .footer { border-top: 1px dashed #000; padding-top: 6px; display: flex; justify-content: space-between; font-size: 10px; font-weight: 600; }
+        </style>
+      </head>
+      <body>
+        <div class="ticket-card">
+          <div class="header">
+            <h2>HI-CONE MÉXICO</h2>
+            <p>ETIQUETA DE CONTROL DE BOBINA DE EXTRUSIÓN</p>
+          </div>
+          <div class="body-row">
+            <div class="qr-box">
+              <img src="${qrUrl}" alt="QR ${b.noSerie}" />
+            </div>
+            <div class="details">
+              <div class="field">
+                <span class="field-label">Folio QR / Serie:</span>
+                <span class="field-value" style="font-family: monospace; font-size: 15px; color: #000;">${b.noSerie}</span>
+              </div>
+              <div class="field">
+                <span class="field-label">Bobina #:</span>
+                <span class="field-value">#${b.bobinaNo} (Origen: ${b.bobinaOrigen || 'A'})</span>
+              </div>
+              <div class="field">
+                <span class="field-label">Peso / Calibre:</span>
+                <span class="field-value">${b.kg} Kg • ${b.espesor} mm</span>
+              </div>
+              <div class="field">
+                <span class="field-label">Producto:</span>
+                <span class="field-value">${prodNombre}</span>
+              </div>
+            </div>
+          </div>
+          <div class="footer">
+            <span>Máquina: ${extNombre}</span>
+            <span>Fecha: ${fechaStr}</span>
+          </div>
+        </div>
+        <script>
+          window.onload = function() {
+            setTimeout(function() { window.print(); }, 500);
+          };
+        </script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.open();
+    printWindow.document.write(html);
+    printWindow.document.close();
   }
 
   cargarMaquinas() {
@@ -692,27 +846,19 @@ export class ReportesComponent implements OnInit {
   }
 
   getSelectedMachineName(): string {
-    if (!this.selectedMachineId) return '--Seleccione--';
+    if (!this.selectedMachineId) return '--Todas--';
     if (this.activeTab === 'extrusiones') {
       const match = this.extrusoras.find(m => m.id === this.selectedMachineId);
-      return match ? match.nombre : '--Seleccione--';
+      return match ? match.nombre : '--Todas--';
     } else {
       const match = this.prensas.find(m => m.id === this.selectedMachineId);
-      return match ? match.nombre : '--Seleccione--';
+      return match ? match.nombre : '--Todas--';
     }
   }
 
   cargarReportes() {
-    if (!this.selectedMachineId) {
-      this.loading = false;
-      this.reportes = [];
-      this.cdr.detectChanges();
-      return;
-    }
-
     this.loading = true;
     this.cdr.detectChanges();
-    const dateStr = this.getFormattedIsoDate(this.selectedDate);
 
     if (this.activeTab === 'extrusiones') {
       this.prodService.getExtrusiones().subscribe({
