@@ -72,9 +72,12 @@
           <!-- Row 2: Turno y Producto -->
           <div class="orden-row" style="padding: 14px 20px;">
             <div class="orden-cell">
-              <span class="cell-label">Turno Seleccionado</span>
+              <span class="cell-label">Turno Activo {{ horarioTurnoStr ? '(' + horarioTurnoStr + ')' : '' }}</span>
               <span class="cell-value bold" style="color: #f59e0b;" *ngIf="extrusionState.turnoActivo()">
                 {{ extrusionState.turnoActivo()!.nombre }}
+              </span>
+              <span style="font-size: 11px; color: #10b981; font-weight: 700; margin-top: 2px;" *ngIf="extrusionState.turnoActivo() && tiempoRestanteTurnoStr">
+                ⏱️ {{ tiempoRestanteTurnoStr }} restantes
               </span>
               <span class="cell-value" style="color: #ef4444; font-weight: 600;" *ngIf="!extrusionState.turnoActivo()">
                 ⚠️ Sin Turno

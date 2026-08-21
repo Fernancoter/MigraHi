@@ -58,6 +58,8 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   successMessage = '';
   tiempoExtrusionStr = '00:00:00';
   tiempoBobinaStr = '00:00:00';
+  tiempoRestanteTurnoStr = '00:00:00';
+  horarioTurnoStr = '';
   timerInterval: any;
 
   // Menú Intermedio (HICONE_SDExtrusionIntermedia)
@@ -358,7 +360,41 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
       this.tiempoInterrupcionStr = '00:00:00';
     }
 
+    // 4. Tiempo Restante del Turno Seleccionado
+    const turnoActivo = this.extrusionState.turnoActivo();
+    if (turnoActivo) {
+      const t = (this.turnosDisponibles || []).find(x => x.id === turnoActivo.id) || turnoActivo;
+      if (t.horaInicio && t.horaFin) {
+        this.horarioTurnoStr = `${String(t.horaInicio).substring(0, 5)} - ${String(t.horaFin).substring(0, 5)}`;
+        this.tiempoRestanteTurnoStr = this.calcularTiempoRestanteTurno(String(t.horaFin));
+      } else {
+        this.horarioTurnoStr = '';
+        this.tiempoRestanteTurnoStr = '--:--:--';
+      }
+    } else {
+      this.horarioTurnoStr = '';
+      this.tiempoRestanteTurnoStr = '00:00:00';
+    }
+
     this.cdr.detectChanges();
+  }
+
+  calcularTiempoRestanteTurno(horaFinStr: string): string {
+    if (!horaFinStr) return '00:00:00';
+    const now = new Date();
+    const parts = horaFinStr.split(':');
+    const endHours = parseInt(parts[0], 10) || 0;
+    const endMinutes = parseInt(parts[1], 10) || 0;
+
+    const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHours, endMinutes, 0);
+
+    // Si la hora de fin es menor o igual a la hora actual, asumimos turno nocturno que concluye al día siguiente
+    if (endDate.getTime() <= now.getTime()) {
+      endDate.setDate(endDate.getDate() + 1);
+    }
+
+    const diff = endDate.getTime() - now.getTime();
+    return this.formatDuration(Math.max(0, diff));
   }
 
   formatDuration(ms: number): string {
