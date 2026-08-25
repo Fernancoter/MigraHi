@@ -16,19 +16,19 @@ public class Bobina : TenantEntity
     public string? Mill { get; set; }
     public string? Station { get; set; }
     
-    [NotMapped]
+    [Column("bobbin_no")]
     public int BobbinNo { get => BobinaNo; set => BobinaNo = value; }
     
-    [NotMapped]
+    [Column("serial_no")]
     public string SerialNo { get => NoSerie; set => NoSerie = value; }
     public string? Codigo { get; set; }
     public DateTime? RestStart { get; set; }
     public int RestMinutes { get; set; }
     
-    [NotMapped]
+    [Column("scrap_kg")]
     public decimal ScrapKg { get => MermaKg; set => MermaKg = value; }
     
-    [NotMapped]
+    [Column("thickness")]
     public decimal Thickness { get => Espesor; set => Espesor = value; }
     public string? Observations { get; set; }
     public string? MillReason { get; set; }

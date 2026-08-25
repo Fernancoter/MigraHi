@@ -18,20 +18,20 @@ public class Extrusion : TenantEntity
     public decimal Programado { get; set; }
     public string? ProductoNombre { get; set; }
     
-    [NotMapped]
+    [Column("status")]
     public ExtrusionStatus Status { get => (ExtrusionStatus)Estado; set => Estado = (EstadoExtrusion)value; }
     public decimal Producido { get; set; }
     public int TiempoInterrupcionMin { get; set; }
     public bool EnCurso { get; set; }
     public long ExtrusionIdLegacy { get; set; }
     
-    [NotMapped]
+    [Column("kg_virgen")]
     public decimal KgVirgen { get => VirgenKg; set => VirgenKg = value; }
     
-    [NotMapped]
+    [Column("kg_molido")]
     public decimal KgMolido { get => MolidoKg; set => MolidoKg = value; }
     
-    [NotMapped]
+    [Column("target")]
     public decimal Target { get => MetaKg; set => MetaKg = value; }
     
     [NotMapped]
@@ -74,7 +74,7 @@ public class Extrusion : TenantEntity
     public virtual Extrusora Extrusora { get; set; } = null!;
 
     // Retrocompatibilidad con Maquina (renombrada a Extrusora)
-    [NotMapped]
+    [Column("maquina_id")]
     public Guid MaquinaId { get => ExtrusoraId; set => ExtrusoraId = value; }
 
     public Guid OperarioId { get; set; }

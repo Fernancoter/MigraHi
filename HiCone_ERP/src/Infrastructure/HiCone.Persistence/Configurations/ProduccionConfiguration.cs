@@ -11,6 +11,13 @@ public class ExtrusionConfiguration : IEntityTypeConfiguration<Extrusion>
         builder.HasKey(e => e.Id);
         builder.Property(e => e.Codigo).IsRequired().HasMaxLength(50);
         
+        builder.Ignore("MaquinaId1");
+
+        builder.HasOne(e => e.Extrusora)
+            .WithMany(ex => ex.Extrusiones)
+            .HasForeignKey(e => e.ExtrusoraId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.HasMany(e => e.Bobinas)
             .WithOne(b => b.Extrusion)
             .HasForeignKey(b => b.ExtrusionId)

@@ -1909,8 +1909,8 @@ export class ExtrusionesListComponent implements OnInit {
 
   getEstadoLabel(estado: any): string {
     const st = String(estado || '').toLowerCase();
+    if (st.includes('anticipada') || st === '4') return 'Anticipada';
     if (st.includes('terminada') || st.includes('finalizada') || st === '3') return 'Terminada';
-    if (st.includes('anticipada') || st === '4') return 'Finalizada';
     if (st.includes('programada') || st.includes('creada') || st === '1') return 'Programada';
     if (st.includes('proceso') || st === '2') return 'En Proceso';
     if (st.includes('detenida') || st.includes('paro')) return 'Detenida';
@@ -2284,10 +2284,16 @@ export class ExtrusionesListComponent implements OnInit {
       this.prodService.deleteExtrusion(this.itemAEliminar.id).subscribe({
         next: () => {
           this.notify.success('Orden de extrusión eliminada con éxito.');
+          const idBorrado = this.itemAEliminar?.id;
           this.mostrarConfirmarEliminar = false;
           this.itemAEliminar = null;
           this.viewState = 'list';
+          if (idBorrado) {
+            this.items = this.items.filter(x => x.id !== idBorrado);
+            this.applyFilters();
+          }
           this.cargarExtrusiones();
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error al eliminar extrusión:', err);

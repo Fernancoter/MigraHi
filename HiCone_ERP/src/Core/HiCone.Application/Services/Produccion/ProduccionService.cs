@@ -100,7 +100,7 @@ public class ProduccionService : IProduccionService
         var operario = await _context.Operarios.FindAsync(operarioId);
         if (operario == null)
         {
-            operario = await _context.Operarios.FirstOrDefaultAsync(o => o.Activo) ?? await _context.Operarios.FirstOrDefaultAsync();
+            operario = await _context.Operarios.FirstOrDefaultAsync(o => o.IsActive) ?? await _context.Operarios.FirstOrDefaultAsync();
             if (operario != null) operarioId = operario.Id;
         }
 
@@ -243,7 +243,10 @@ public class ProduccionService : IProduccionService
             throw new InvalidOperationException("Debe validar todas las bobinas pendientes en medición antes de finalizar la extrusión.");
         }
 
-        extrusion.Estado = EstadoExtrusion.Finalizada;
+        var kgProducidos = extrusion.Bobinas.Where(b => !b.IsDeleted).Sum(b => b.Kg);
+        bool esAnticipada = !string.IsNullOrWhiteSpace(motivoAnticipado) || (extrusion.MetaKg > 0 && kgProducidos < extrusion.MetaKg);
+
+        extrusion.Estado = esAnticipada ? EstadoExtrusion.Anticipada : EstadoExtrusion.Finalizada;
         extrusion.FechaFin = DateTime.UtcNow;
         extrusion.MotivoAnticipado = motivoAnticipado;
 
@@ -1275,8 +1278,32 @@ public class ProduccionService : IProduccionService
     // Legacy: ObtenerExtrusionResultado
     public async Task<ExtrusionResultado?> GetExtrusionResultadoAsync(Guid extrusionId)
     {
-        return await _context.ExtrusionResultados
+        var res = await _context.ExtrusionResultados
             .FirstOrDefaultAsync(r => r.ExtrusionId == extrusionId);
+        
+        if (res != null) return res;
+
+        var ext = await _context.Extrusiones
+            .Include(e => e.Bobinas)
+            .FirstOrDefaultAsync(e => e.Id == extrusionId);
+
+        if (ext == null) return null;
+
+        var bobinas = ext.Bobinas.Where(b => !b.IsDeleted).ToList();
+        var kgProducidos = bobinas.Sum(b => b.Kg);
+        var kgMerma = bobinas.Sum(b => b.MermaKg);
+        var totalKg = kgProducidos + kgMerma;
+        var eficiencia = totalKg > 0 ? Math.Min(100, (int)Math.Round((kgProducidos / totalKg) * 100)) : 100;
+
+        return new ExtrusionResultado
+        {
+            ExtrusionId = extrusionId,
+            TotalBobinas = bobinas.Count,
+            TotalBobinasMolidas = bobinas.Count(b => b.MermaKg > 0 || b.Estado == EstadoBobina.Molido),
+            KgProducidos = kgProducidos,
+            KgMerma = kgMerma,
+            EficienciaPorc = eficiencia
+        };
     }
 
     // ── Consultas adicionales ──────────────────────────────────────────────
@@ -1353,7 +1380,7 @@ public class ProduccionService : IProduccionService
                 e.FechaFin,
                 Estado = e.Estado.ToString(),
                 e.MetaKg,
-                e.Producido,
+                Producido = e.Bobinas.Where(b => !b.IsDeleted).Sum(b => (decimal?)b.Kg) ?? 0,
                 e.TiempoInterrupcion,
                 e.TiempoInterrupcionMin,
                 e.EnCurso,

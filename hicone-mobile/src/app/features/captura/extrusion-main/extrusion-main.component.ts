@@ -58,8 +58,6 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   successMessage = '';
   tiempoExtrusionStr = '00:00:00';
   tiempoBobinaStr = '00:00:00';
-  tiempoRestanteTurnoStr = '00:00:00';
-  horarioTurnoStr = '';
   timerInterval: any;
 
   // Menú Intermedio (HICONE_SDExtrusionIntermedia)
@@ -139,6 +137,32 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
   get bobinasMolido(): Bobina[] {
     return this.bobinasExtrusion.filter(b => b.estado === 6 || String(b.estado) === 'Molido' || b.estado === 5 || String(b.estado) === 'Rechazada');
   }
+
+  get horarioTurnoStr(): string {
+    const turno = this.extrusionState.turnoActivo();
+    if (!turno) return '';
+    const inicio = turno.horaInicio || '';
+    const fin = turno.horaFin || '';
+    return (inicio && fin) ? `${inicio} - ${fin}` : (inicio || fin || '');
+  }
+
+  isEnProceso(b: any): boolean {
+    if (!b) return false;
+    const st = String(b.estado || '');
+    return b.estado === 11 || b.estado === 1 || st === '11' || st === '1' || st.toLowerCase().includes('medicion') || st.toLowerCase().includes('proceso');
+  }
+
+  isValidada(b: any): boolean {
+    if (!b) return false;
+    const st = String(b.estado || '');
+    return b.estado === 2 || b.estado === 12 || st === '2' || st === '12' || st.toLowerCase().includes('reposo') || st.toLowerCase().includes('disponible') || st.toLowerCase().includes('consumida');
+  }
+
+  isMolido(b: any): boolean {
+    if (!b) return false;
+    const st = String(b.estado || '');
+    return b.estado === 5 || b.estado === 6 || st === '5' || st === '6' || st.toLowerCase().includes('molido') || st.toLowerCase().includes('rechazada');
+  }
   mensajeAlertaMezcladora = 'Para obtener la combinación de kg molidos y kg virgen debe configurar las referencias en ExtrusoraMezcladora';
 
   consumoForm = {
@@ -206,8 +230,7 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
         this.actualizarInformacionOrden();
         const interrupcionEnCursoVal = orden.interrupcionEnCurso || orden.InterrupcionEnCurso || false;
         this.extrusionState.interrupcionEnCurso.set(interrupcionEnCursoVal);
-        // NO iniciar automáticamente al seleccionar extrusora; permitir vista previa y selección de turno previa
-        this.extrusionState.extrusionIniciada.set(false);
+        this.extrusionState.extrusionIniciada.set(!this.esProgramada);
         
         const list = orden.interrupciones || orden.Interrupciones || [];
         const activeInt = list.find((i: any) => i.concluida === false || i.Concluida === false || !i.concluida || !i.Concluida) || null;
@@ -229,12 +252,9 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     this.subs.add(sub);
   }
 
-  turnosDisponibles: any[] = [];
-
   ngOnInit(): void {
     this.cargarSilos();
     this.cargarCausasInterrupcion();
-    this.cargarTurnos();
 
     // Vincular callbacks del Header Shell
     this.extrusionState.onTriggerInterrupcion = () => {
@@ -247,48 +267,6 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     this.timerInterval = setInterval(() => {
       this.recalcularTiempos();
     }, 1000);
-  }
-
-  cargarTurnos() {
-    this.produccionService.getTurnos().pipe(
-      catchError(() => of([]))
-    ).subscribe(list => {
-      this.turnosDisponibles = list || [];
-      if (!this.extrusionState.turnoActivo() && this.turnosDisponibles.length > 0) {
-        this.extrusionState.setTurno({ id: this.turnosDisponibles[0].id, nombre: this.turnosDisponibles[0].nombre });
-      }
-      this.cdr.detectChanges();
-    });
-  }
-
-  seleccionarTurnoRapido(t: any) {
-    this.extrusionState.setTurno({ id: t.id, nombre: t.nombre });
-    this.cdr.detectChanges();
-  }
-
-  iniciarOContinuarTrabajo() {
-    const ext = this.extrusionState.extrusoraActiva();
-    if (!ext) return;
-
-    if (!this.extrusionState.turnoActivo()) {
-      if (this.turnosDisponibles.length > 0) {
-        this.extrusionState.setTurno({ id: this.turnosDisponibles[0].id, nombre: this.turnosDisponibles[0].nombre });
-      } else {
-        this.errorMessage = 'Por favor selecciona un Turno antes de iniciar.';
-        this.cdr.detectChanges();
-        return;
-      }
-    }
-
-    this.errorMessage = '';
-
-    if (this.esProgramada || !this.extrusionActiva) {
-      this.mostrarModalConsumo = true;
-      this.cdr.detectChanges();
-    } else {
-      this.extrusionState.extrusionIniciada.set(true);
-      this.cdr.detectChanges();
-    }
   }
 
   ngOnDestroy(): void {
@@ -360,41 +338,7 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
       this.tiempoInterrupcionStr = '00:00:00';
     }
 
-    // 4. Tiempo Restante del Turno Seleccionado
-    const turnoActivo = this.extrusionState.turnoActivo();
-    if (turnoActivo) {
-      const t = (this.turnosDisponibles || []).find(x => x.id === turnoActivo.id) || turnoActivo;
-      if (t.horaInicio && t.horaFin) {
-        this.horarioTurnoStr = `${String(t.horaInicio).substring(0, 5)} - ${String(t.horaFin).substring(0, 5)}`;
-        this.tiempoRestanteTurnoStr = this.calcularTiempoRestanteTurno(String(t.horaFin));
-      } else {
-        this.horarioTurnoStr = '';
-        this.tiempoRestanteTurnoStr = '--:--:--';
-      }
-    } else {
-      this.horarioTurnoStr = '';
-      this.tiempoRestanteTurnoStr = '00:00:00';
-    }
-
     this.cdr.detectChanges();
-  }
-
-  calcularTiempoRestanteTurno(horaFinStr: string): string {
-    if (!horaFinStr) return '00:00:00';
-    const now = new Date();
-    const parts = horaFinStr.split(':');
-    const endHours = parseInt(parts[0], 10) || 0;
-    const endMinutes = parseInt(parts[1], 10) || 0;
-
-    const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHours, endMinutes, 0);
-
-    // Si la hora de fin es menor o igual a la hora actual, asumimos turno nocturno que concluye al día siguiente
-    if (endDate.getTime() <= now.getTime()) {
-      endDate.setDate(endDate.getDate() + 1);
-    }
-
-    const diff = endDate.getTime() - now.getTime();
-    return this.formatDuration(Math.max(0, diff));
   }
 
   formatDuration(ms: number): string {
@@ -435,29 +379,23 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     this.produccionService.getSiguienteBobinaNo(
       ext.id,
       this.extrusionActiva.productoId || this.extrusionActiva.producto?.id
-    ).pipe(catchError(() => of(this.siguienteBobinaNo))).subscribe({
+    ).subscribe({
       next: (no: number) => {
-        if (no && no > 0) this.siguienteBobinaNo = no;
+        this.siguienteBobinaNo = no;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.siguienteBobinaNo = 1;
         this.cdr.detectChanges();
       }
     });
 
-    this.produccionService.getBobinasByExtrusion(this.extrusionActiva.id).pipe(catchError(() => of([]))).subscribe({
+    this.produccionService.getBobinasByExtrusion(this.extrusionActiva.id).subscribe({
       next: (bobs: Bobina[]) => {
-        if (bobs && bobs.length > 0) {
-          this.bobinasExtrusion = bobs;
-        }
+        this.bobinasExtrusion = bobs || [];
         this.cdr.detectChanges();
-      }
-    });
-
-    this.produccionService.getExtrusionActivaOProgramada(ext.id).pipe(catchError(() => of(null))).subscribe({
-      next: (ordRes: any) => {
-        if (ordRes) {
-          this.extrusionActiva = ordRes;
-          this.cdr.detectChanges();
-        }
-      }
+      },
+      error: (err: any) => console.error('Error cargando bobinas:', err)
     });
   }
 
@@ -482,48 +420,16 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     };
 
     this.produccionService.guardarBobina(request).subscribe({
-      next: (res: any) => {
+      next: () => {
         this.saving = false;
-        this.cerrarModalBobina();
         this.mostrarMensaje('¡Bobina registrada exitosamente!');
         this.nuevaBobina.peso = 0;
         this.nuevaBobina.observaciones = '';
-
-        // Actualización optimista e instantánea (0ms) de contadores y lista local
-        const newBob: Bobina = res || {
-          id: `temp-${Date.now()}`,
-          noSerie: `B-${request.bobinaNo}${request.origen}`,
-          bobinaNo: request.bobinaNo,
-          kg: request.peso,
-          espesor: request.calibre,
-          fechaProduccion: new Date(),
-          estado: request.mermaKg > 0 ? 6 : 11,
-          mermaKg: request.mermaKg,
-          extrusionId: request.extrusionId
-        };
-
-        const currentBobs = [...this.bobinasExtrusion];
-        const existingIdx = currentBobs.findIndex(b => b.bobinaNo === newBob.bobinaNo || b.id === newBob.id);
-        if (existingIdx >= 0) {
-          currentBobs[existingIdx] = newBob;
-        } else {
-          currentBobs.unshift(newBob);
-        }
-        this.bobinasExtrusion = currentBobs;
-        this.siguienteBobinaNo = request.bobinaNo + 1;
-
-        if (this.extrusionActiva) {
-          this.extrusionActiva.producido = (this.extrusionActiva.producido || 0) + request.peso;
-          this.extrusionActiva.totalBobinas = (this.extrusionActiva.totalBobinas || 0) + 1;
-        }
-
-        this.cdr.detectChanges();
         this.actualizarInformacionOrden();
       },
       error: (err: any) => {
         this.saving = false;
         this.mostrarMensaje('Error: ' + (err.error?.message || err.message || 'Error al guardar bobina'), true);
-        this.cdr.detectChanges();
       }
     });
   }
@@ -600,42 +506,14 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     };
 
     this.produccionService.guardarBobina(request).subscribe({
-      next: (res: any) => {
+      next: () => {
         this.saving = false;
         this.cerrarModalBobina();
         this.mostrarMensaje('¡Bobina registrada exitosamente!');
         this.nuevaBobina.peso = 0;
         this.nuevaBobina.observaciones = '';
-
-        const newBob: Bobina = res || {
-          id: `temp-${Date.now()}`,
-          noSerie: `B-${request.bobinaNo}${request.origen}`,
-          bobinaNo: request.bobinaNo,
-          kg: request.peso,
-          espesor: request.calibre,
-          fechaProduccion: new Date(),
-          estado: request.mermaKg > 0 ? 6 : 11,
-          mermaKg: request.mermaKg,
-          extrusionId: request.extrusionId
-        };
-
-        const currentBobs = [...this.bobinasExtrusion];
-        const existingIdx = currentBobs.findIndex(b => b.bobinaNo === newBob.bobinaNo || b.id === newBob.id);
-        if (existingIdx >= 0) {
-          currentBobs[existingIdx] = newBob;
-        } else {
-          currentBobs.unshift(newBob);
-        }
-        this.bobinasExtrusion = currentBobs;
-        this.siguienteBobinaNo = request.bobinaNo + 1;
-
-        if (this.extrusionActiva) {
-          this.extrusionActiva.producido = (this.extrusionActiva.producido || 0) + request.peso;
-          this.extrusionActiva.totalBobinas = (this.extrusionActiva.totalBobinas || 0) + 1;
-        }
-
-        this.cdr.detectChanges();
         this.actualizarInformacionOrden();
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.saving = false;
@@ -662,24 +540,34 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     this.produccionService.getExtrusionResultado(this.extrusionActiva.id).subscribe({
       next: (kpiResult: any) => {
         this.saving = false;
+        const kgProd = kpiResult.kgProducidos ?? this.bobinasExtrusion.reduce((a, c) => a + (c.kg || 0), 0);
+        const kgMer = kpiResult.kgMerma ?? this.bobinasExtrusion.reduce((a, c) => a + (c.mermaKg || 0), 0);
+        const totalKg = kgProd + kgMer;
+        const efCalc = kpiResult.eficiencia ?? (totalKg > 0 ? Math.min(100, Math.round((kgProd / totalKg) * 100)) : 100);
+
         this.kpis = {
-          totalBobinas: kpiResult.totalBobinas || this.bobinasExtrusion.length,
-          totalBobinasMolidas: kpiResult.totalBobinasMolidas || this.bobinasExtrusion.filter(b => b.estado === 'Molido' || b.estado === 6).length,
-          kgProducidos: kpiResult.kgProducidos || this.bobinasExtrusion.reduce((a, c) => a + c.kg, 0),
-          kgMerma: kpiResult.kgMerma || this.bobinasExtrusion.reduce((a, c) => a + (c.mermaKg || 0), 0),
-          eficiencia: kpiResult.eficiencia || 90
+          totalBobinas: kpiResult.totalBobinas ?? this.bobinasExtrusion.length,
+          totalBobinasMolidas: kpiResult.totalBobinasMolidas ?? this.bobinasExtrusion.filter(b => b.estado === 'Molido' || b.estado === 6).length,
+          kgProducidos: kgProd,
+          kgMerma: kgMer,
+          eficiencia: efCalc
         };
         this.cierreObservaciones = '';
         this.mostrarModalCierre = true;
       },
       error: () => {
         this.saving = false;
+        const kgProd = this.bobinasExtrusion.reduce((a, c) => a + (c.kg || 0), 0);
+        const kgMer = this.bobinasExtrusion.reduce((a, c) => a + (c.mermaKg || 0), 0);
+        const totalKg = kgProd + kgMer;
+        const efCalc = totalKg > 0 ? Math.min(100, Math.round((kgProd / totalKg) * 100)) : 100;
+
         this.kpis = {
           totalBobinas: this.bobinasExtrusion.length,
           totalBobinasMolidas: this.bobinasExtrusion.filter(b => b.estado === 'Molido' || b.estado === 6).length,
-          kgProducidos: this.bobinasExtrusion.reduce((a, c) => a + c.kg, 0),
-          kgMerma: this.bobinasExtrusion.reduce((a, c) => a + (c.mermaKg || 0), 0),
-          eficiencia: 85
+          kgProducidos: kgProd,
+          kgMerma: kgMer,
+          eficiencia: efCalc
         };
         this.mostrarModalCierre = true;
       }
@@ -1208,161 +1096,9 @@ export class ExtrusionMainComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ── MÉTODOS DE IMPRESIÓN Y ETIQUETADO CON QR ─────────────────────
-  bobinaAImprimir: Bobina | null = null;
-  mostrarModalImpresion = false;
-
-  getQrUrl(noSerie: string): string {
-    const text = encodeURIComponent(noSerie || 'B-001');
-    return `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${text}`;
-  }
-
+  // ── MÉTODOS DE TAB VALIDADO (QA) ──────────────────────────────────
   imprimirEtiquetaBobina(b: Bobina) {
-    this.bobinaAImprimir = b;
-    this.mostrarModalImpresion = true;
-    this.cdr.detectChanges();
-  }
-
-  cerrarModalImpresion() {
-    this.mostrarModalImpresion = false;
-    this.bobinaAImprimir = null;
-    this.cdr.detectChanges();
-  }
-
-  ejecutarImpresionBobina() {
-    if (!this.bobinaAImprimir) return;
-    const b = this.bobinaAImprimir;
-    const extNombre = this.extrusionState.extrusoraActiva()?.nombre || 'Extrusora 1';
-    const turnoNombre = this.extrusionState.turnoActivo()?.nombre || 'Matutino';
-    const prodNombre = this.extrusionActiva?.productoNombre || this.extrusionActiva?.producto?.nombre || 'Producto Estándar';
-    const fechaStr = new Date(b.fechaProduccion || Date.now()).toLocaleString('es-MX');
-    const qrUrl = this.getQrUrl(b.noSerie);
-
-    const printWindow = window.open('', '_blank', 'width=600,height=700');
-    if (!printWindow) {
-      alert('Por favor permita las ventanas emergentes (popups) para imprimir la etiqueta.');
-      return;
-    }
-
-    const html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <title>Etiqueta_${b.noSerie}</title>
-        <style>
-          @page { size: 4in 3in; margin: 0; }
-          body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            padding: 15px;
-            background: #ffffff;
-            color: #000000;
-            box-sizing: border-box;
-          }
-          .ticket-card {
-            border: 2px solid #000;
-            border-radius: 8px;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-          }
-          .header {
-            text-align: center;
-            border-bottom: 2px solid #000;
-            padding-bottom: 6px;
-          }
-          .header h2 { margin: 0; font-size: 18px; font-weight: 800; }
-          .header p { margin: 2px 0 0 0; font-size: 11px; text-transform: uppercase; font-weight: 600; }
-          .body-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-          }
-          .qr-box {
-            width: 140px;
-            height: 140px;
-            flex-shrink: 0;
-          }
-          .qr-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-          }
-          .details {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            font-size: 12px;
-          }
-          .field {
-            display: flex;
-            flex-direction: column;
-          }
-          .field-label { font-size: 10px; font-weight: 700; color: #555; text-transform: uppercase; }
-          .field-value { font-size: 14px; font-weight: 800; }
-          .footer {
-            border-top: 1px dashed #000;
-            padding-top: 6px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 10px;
-            font-weight: 600;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="ticket-card">
-          <div class="header">
-            <h2>HI-CONE MÉXICO</h2>
-            <p>ETIQUETA DE CONTROL DE BOBINA DE EXTRUSIÓN</p>
-          </div>
-          <div class="body-row">
-            <div class="qr-box">
-              <img src="${qrUrl}" alt="QR ${b.noSerie}" />
-            </div>
-            <div class="details">
-              <div class="field">
-                <span class="field-label">Folio QR / Serie:</span>
-                <span class="field-value" style="font-family: monospace; font-size: 15px; color: #000;">${b.noSerie}</span>
-              </div>
-              <div class="field">
-                <span class="field-label">Bobina #:</span>
-                <span class="field-value">#${b.bobinaNo} (Origen: ${b.bobinaOrigen || 'A'})</span>
-              </div>
-              <div class="field">
-                <span class="field-label">Peso / Calibre:</span>
-                <span class="field-value">${b.kg} Kg • ${b.espesor} mm</span>
-              </div>
-              <div class="field">
-                <span class="field-label">Producto:</span>
-                <span class="field-value">${prodNombre}</span>
-              </div>
-            </div>
-          </div>
-          <div class="footer">
-            <span>Máquina: ${extNombre}</span>
-            <span>Turno: ${turnoNombre}</span>
-            <span>Fecha: ${fechaStr}</span>
-          </div>
-        </div>
-        <script>
-          window.onload = function() {
-            setTimeout(function() {
-              window.print();
-            }, 500);
-          };
-        </script>
-      </body>
-      </html>
-    `;
-
-    printWindow.document.open();
-    printWindow.document.write(html);
-    printWindow.document.close();
+    this.mostrarMensaje('Imprimiendo etiqueta para la bobina ' + b.noSerie);
   }
 
   abrirTransferenciaBobina(b: Bobina) {

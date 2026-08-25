@@ -34,108 +34,106 @@
   <ng-container *ngIf="extrusionState.extrusoraActiva()">
 
     <!-- ================================================================
-         VISTA PREVIA Y CONFIRMACIÓN PREVIA (ANTES DE INICIAR TRABAJO)
-         Muestra la Extrusora, el Turno y el Producto antes de arrancar
+         CUADRO DE INFORMACIÓN DE ORDEN (Imagen 3)
+         Se muestra de inmediato con el icono de engrane a la izquierda
          ================================================================ -->
-    <div class="pre-start-container" *ngIf="!extrusionState.extrusionIniciada()" style="margin-top: 10px; display: flex; flex-direction: column; gap: 16px;">
-      
-      <!-- Card de Detalle de Orden y Turno -->
-      <div class="orden-info-card" style="position: relative; display: flex; align-items: stretch;">
+    <div class="orden-info-card" *ngIf="!extrusionActiva || esProgramada" (click)="abrirAccionCard()" role="button" style="cursor: pointer; position: relative; display: flex; align-items: stretch;">
 
-        <!-- Icono Izquierda -->
-        <div class="card-left-icon" style="width: 80px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.02); border-right: 1px solid var(--border-color); flex-shrink: 0;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" width="44" height="44" style="color: #38bdf8; opacity: 0.9;">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-          </svg>
-        </div>
-
-        <!-- Contenido Celdas -->
-        <div style="flex: 1; display: flex; flex-direction: column;">
-          <!-- Row 1: Extrusora y Estado -->
-          <div class="orden-row" style="padding: 14px 20px;">
-            <div class="orden-cell">
-              <span class="cell-label">Extrusora</span>
-              <span class="cell-value bold" style="color: #38bdf8; font-size: 16px;">{{ extrusionState.extrusoraActiva()!.nombre }}</span>
-            </div>
-            <div class="orden-cell">
-              <span class="cell-label">Estado Orden</span>
-              <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-              <span class="cell-value" [ngClass]="getEstadoClass(extrusionActiva?.estado)" *ngIf="!cargandoOrden">
-                {{ esProgramada ? 'Programada' : (extrusionActiva ? getEstadoName(extrusionActiva.estado) : 'Sin Orden Activa') }}
-              </span>
-            </div>
-          </div>
-
-          <div class="cell-divider"></div>
-
-          <!-- Row 2: Turno y Producto -->
-          <div class="orden-row" style="padding: 14px 20px;">
-            <div class="orden-cell">
-              <span class="cell-label">Turno Activo {{ horarioTurnoStr ? '(' + horarioTurnoStr + ')' : '' }}</span>
-              <span class="cell-value bold" style="color: #f59e0b;" *ngIf="extrusionState.turnoActivo()">
-                {{ extrusionState.turnoActivo()!.nombre }}
-              </span>
-              <span style="font-size: 11px; color: #10b981; font-weight: 700; margin-top: 2px;" *ngIf="extrusionState.turnoActivo() && tiempoRestanteTurnoStr">
-                ⏱️ {{ tiempoRestanteTurnoStr }} restantes
-              </span>
-              <span class="cell-value" style="color: #ef4444; font-weight: 600;" *ngIf="!extrusionState.turnoActivo()">
-                ⚠️ Sin Turno
-              </span>
-            </div>
-            <div class="orden-cell" style="flex: 2;">
-              <span class="cell-label">Producto Asignado</span>
-              <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-              <span class="cell-value bold" *ngIf="!cargandoOrden" style="font-size: 15px;">
-                {{ extrusionActiva?.productoNombre || extrusionActiva?.producto?.nombre || 'Producto Estándar' }}
-              </span>
-            </div>
-          </div>
-
-          <div class="cell-divider"></div>
-
-          <!-- Row 3: Parámetros Técnicos -->
-          <div class="orden-row" style="padding: 14px 20px;">
-            <div class="orden-cell">
-              <span class="cell-label">Ancho</span>
-              <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-              <span class="cell-value" *ngIf="!cargandoOrden">
-                {{ (extrusionActiva?.ancho && extrusionActiva.ancho > 0 ? extrusionActiva.ancho : 250) + ' mm' }}
-              </span>
-            </div>
-            <div class="orden-cell">
-              <span class="cell-label">Longitud</span>
-              <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-              <span class="cell-value" *ngIf="!cargandoOrden">
-                {{ (extrusionActiva?.longitud && extrusionActiva.longitud > 0 ? extrusionActiva.longitud : 1000) + ' m' }}
-              </span>
-            </div>
-            <div class="orden-cell">
-              <span class="cell-label">Calibre</span>
-              <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
-              <span class="cell-value" *ngIf="!cargandoOrden">
-                {{ (extrusionActiva?.calibre && extrusionActiva.calibre > 0 ? extrusionActiva.calibre : 15) + ' mm' }}
-              </span>
-            </div>
-          </div>
-        </div>
+      <!-- Icono de Engrane Izquierda (Imagen 3) -->
+      <div class="card-left-icon animate-spin-slow" style="width: 80px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.02); border-right: 1px solid var(--border-color); flex-shrink: 0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" width="44" height="44" style="color: #64748b; opacity: 0.8;">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
       </div>
 
-      <!-- Botón de Inicio Prominente -->
-      <button class="start-work-btn" (click)="iniciarOContinuarTrabajo()" [disabled]="cargandoOrden"
-              style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 10px; padding: 18px; font-size: 17px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); display: flex; align-items: center; justify-content: center; gap: 10px;">
-        <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
-          <path d="M8 5v14l11-7z"/>
-        </svg>
-        <span>{{ (extrusionActiva && !esProgramada) ? '▶ CONTINUAR TRABAJO EN EXTRUSORA' : '▶ INICIAR TRABAJO EN EXTRUSORA' }}</span>
-      </button>
+      <!-- Contenido de Celdas Derecha -->
+      <div style="flex: 1; display: flex; flex-direction: column;">
+        <div class="orden-row" style="padding: 14px 20px;">
+          <div class="orden-cell">
+            <span class="cell-label">Estado</span>
+            <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
+            <span class="cell-value" [ngClass]="getEstadoClass(extrusionActiva?.estado)" *ngIf="!cargandoOrden">
+              {{ esProgramada ? 'Programada' : (extrusionActiva ? getEstadoName(extrusionActiva.estado) : '\u2014') }}
+            </span>
+          </div>
+          <div class="orden-cell">
+            <span class="cell-label">Fecha</span>
+            <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
+            <span class="cell-value" *ngIf="!cargandoOrden">
+              {{ extrusionActiva ? (extrusionActiva.fechaInicio | date:'dd/MM/yy hh:mm a') : '\u2014' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="cell-divider"></div>
+
+        <div class="orden-row" style="padding: 14px 20px;">
+          <div class="orden-cell">
+            <span class="cell-label">Extrusora</span>
+            <span class="cell-value bold">{{ extrusionState.extrusoraActiva()!.nombre }}</span>
+          </div>
+          <div class="orden-cell">
+            <span class="cell-label">Producto</span>
+            <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
+            <span class="cell-value bold" *ngIf="!cargandoOrden">
+              {{ extrusionActiva?.productoNombre || extrusionActiva?.producto?.nombre || '\u2014' }}
+            </span>
+          </div>
+          <div class="orden-cell">
+            <span class="cell-label">Turno</span>
+            <span class="cell-value bold">{{ extrusionState.turnoActivo()?.nombre || '\u2014' }}</span>
+          </div>
+        </div>
+
+        <div class="cell-divider"></div>
+
+        <div class="orden-row" style="padding: 14px 20px;">
+          <div class="orden-cell">
+            <span class="cell-label">Ancho</span>
+            <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
+            <span class="cell-value" *ngIf="!cargandoOrden">
+              {{ (extrusionActiva?.ancho && extrusionActiva.ancho > 0 ? extrusionActiva.ancho : 250) + ' mm' }}
+            </span>
+          </div>
+          <div class="orden-cell">
+            <span class="cell-label">Longitud</span>
+            <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
+            <span class="cell-value" *ngIf="!cargandoOrden">
+              {{ (extrusionActiva?.longitud && extrusionActiva.longitud > 0 ? extrusionActiva.longitud : 1000) + ' m' }}
+            </span>
+          </div>
+          <div class="orden-cell">
+            <span class="cell-label">Calibre</span>
+            <span class="cell-value skeleton-text" *ngIf="cargandoOrden">...</span>
+            <span class="cell-value" *ngIf="!cargandoOrden">
+              {{ (extrusionActiva?.calibre && extrusionActiva.calibre > 0 ? extrusionActiva.calibre : 15) + ' mm' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="card-hint" *ngIf="!cargandoOrden && extrusionActiva && !esProgramada" style="padding: 8px 20px;">
+          <span>⚡ Toca para abrir Menú de Acciones (Bobina, Mezcla, Cierre) ➔</span>
+        </div>
+
+        <div class="card-hint" *ngIf="!cargandoOrden && extrusionActiva && esProgramada" style="padding: 8px 20px; color: #fbbf24; background: rgba(251, 191, 36, 0.05);">
+          <span>📋 Orden programada — Toca la tarjeta para configurar silos e iniciar turno ➔</span>
+        </div>
+
+        <div class="card-hint" *ngIf="!cargandoOrden && !extrusionActiva" style="padding: 8px 20px;">
+          <span>Sin orden activa — toca para configurar mezcla</span>
+        </div>
+      </div>
 
     </div>
 
     <!-- ================================================================
-         CONSOLA DE OPERACIÓN DE EXTRUSIÓN ACTIVA
+         CONSOLA DE OPERACIÓN DE EXTRUSIÓN ACTIVA (Imagen 1)
          ================================================================ -->
-    <div class="active-extrusion-console animate-fade-in" *ngIf="extrusionState.extrusionIniciada() && !cargandoOrden && extrusionActiva && !extrusionActiva.interrupcionEnCurso" style="margin-top: 20px; display: flex; flex-direction: column; gap: 15px;">
+    <!-- ================================================================
+         CONSOLA DE OPERACIÓN DE EXTRUSIÓN ACTIVA (Imagen 1)
+         ================================================================ -->
+    <div class="active-extrusion-console animate-fade-in" *ngIf="!cargandoOrden && extrusionActiva && !esProgramada && !extrusionActiva.interrupcionEnCurso" style="margin-top: 20px; display: flex; flex-direction: column; gap: 15px;">
       
       <!-- Card 1: Tiempo Total de Extrusión -->
       <div class="console-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 22px; text-align: center; display: flex; flex-direction: column; gap: 8px;">
@@ -164,14 +162,14 @@
       <!-- Card 3: Lista de Bobinas según Tab Seleccionado -->
       <div class="console-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px;">
         
-        <!-- Tab 1: En Proceso -->
-        <div *ngIf="activeTab === 'proceso'" class="animate-fade-in">
-          <div *ngIf="bobinasEnProceso.length === 0" style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 15px 0;">
-            Ninguna bobina en proceso de enrollamiento.
+        <!-- Tab 1: En Proceso / Historial del Turno -->
+        <div *ngIf="activeTab === 'proceso'" class="animate-fade-in" style="display: flex; flex-direction: column; gap: 10px;">
+          <div *ngIf="bobinasExtrusion.length === 0" style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 15px 0;">
+            Ninguna bobina generada en este turno.
           </div>
-          <div *ngFor="let b of bobinasEnProceso" style="display: flex; align-items: center; gap: 15px; background: #0f172a; padding: 14px; border-radius: 8px; border: 1px solid #1e293b;">
+          <div *ngFor="let b of bobinasExtrusion" style="display: flex; align-items: center; gap: 15px; background: #0f172a; padding: 14px; border-radius: 8px; border: 1px solid #1e293b;">
             <div style="flex-shrink: 0; color: #94a3b8; display: flex; align-items: center;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" width="36" height="36" class="animate-spin-slow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" width="36" height="36" [class.animate-spin-slow]="isEnProceso(b)">
                 <circle cx="12" cy="12" r="9"></circle>
                 <circle cx="12" cy="12" r="3"></circle>
               </svg>
@@ -180,8 +178,18 @@
               <strong style="color: #f8fafc; font-size: 13px; font-family: monospace;">{{ b.noSerie }}</strong>
               <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Bobina #{{ b.bobinaNo }} • Origen: {{ b.bobinaOrigen }}</div>
             </div>
-            <span style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; border: 1px solid rgba(245, 158, 11, 0.2);">
+            <!-- Badge dinámico de Estado -->
+            <span *ngIf="isEnProceso(b)" 
+                  style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; border: 1px solid rgba(245, 158, 11, 0.2);">
               En Proceso
+            </span>
+            <span *ngIf="isValidada(b)" 
+                  style="background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; border: 1px solid rgba(16, 185, 129, 0.2);">
+              Validada
+            </span>
+            <span *ngIf="isMolido(b)" 
+                  style="background: rgba(239, 68, 68, 0.1); color: #ef4444; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; border: 1px solid rgba(239, 68, 68, 0.2);">
+              Molido
             </span>
           </div>
         </div>
@@ -872,62 +880,3 @@
 
   </div>
 </div>
-
-<!-- ================================================================
-     MODAL DE IMPRESIÓN Y ETIQUETA QR DE BOBINA
-     ================================================================ -->
-<div class="modal-overlay animate-fade-in" *ngIf="mostrarModalImpresion && bobinaAImprimir" (click)="cerrarModalImpresion()">
-  <div class="modal-card card-global" (click)="$event.stopPropagation()" style="max-width: 440px; background: #0f172a; border: 1px solid #334155; border-radius: 14px; padding: 24px; color: #f8fafc;">
-    
-    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; padding-bottom: 12px; margin-bottom: 18px;">
-      <h3 style="margin: 0; font-size: 17px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 8px;">
-        <span>🖨️ Etiqueta de Bobina con Código QR</span>
-      </h3>
-      <button (click)="cerrarModalImpresion()" style="background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer;">✕</button>
-    </div>
-
-    <div style="background: #ffffff; border-radius: 10px; padding: 18px; color: #000000; display: flex; flex-direction: column; align-items: center; gap: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
-      <!-- Imagen QR -->
-      <div style="width: 180px; height: 180px; border: 2px solid #000; padding: 6px; border-radius: 8px; background: #fff;">
-        <img [src]="getQrUrl(bobinaAImprimir.noSerie)" alt="Código QR" style="width: 100%; height: 100%; object-fit: contain;" />
-      </div>
-
-      <div style="text-align: center; display: flex; flex-direction: column; gap: 4px;">
-        <span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Folio de Serie QR</span>
-        <strong style="font-size: 18px; font-family: monospace; color: #0f172a;">{{ bobinaAImprimir.noSerie }}</strong>
-      </div>
-
-      <div style="width: 100%; height: 1px; background: #e2e8f0;"></div>
-
-      <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px;">
-        <div>
-          <span style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase;">Bobina #:</span>
-          <div style="font-weight: 700;">#{{ bobinaAImprimir.bobinaNo }} ({{ bobinaAImprimir.bobinaOrigen || 'A' }})</div>
-        </div>
-        <div>
-          <span style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase;">Peso (Kg):</span>
-          <div style="font-weight: 700; color: #059669;">{{ bobinaAImprimir.kg }} Kg</div>
-        </div>
-        <div>
-          <span style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase;">Calibre / Espesor:</span>
-          <div style="font-weight: 700;">{{ bobinaAImprimir.espesor }} mm</div>
-        </div>
-        <div>
-          <span style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase;">Extrusora:</span>
-          <div style="font-weight: 700;">{{ extrusionState.extrusoraActiva()?.nombre || 'Extrusora' }}</div>
-        </div>
-      </div>
-    </div>
-
-    <div style="display: flex; gap: 12px; margin-top: 20px;">
-      <button (click)="cerrarModalImpresion()" style="flex: 1; background: #334155; color: #f8fafc; border: none; border-radius: 8px; padding: 12px; font-weight: 600; cursor: pointer;">
-        Cerrar
-      </button>
-      <button (click)="ejecutarImpresionBobina()" style="flex: 2; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #ffffff; border: none; border-radius: 8px; padding: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(3, 105, 161, 0.3);">
-        <span>🖨️ IMPRIMIR ETIQUETA QR</span>
-      </button>
-    </div>
-
-  </div>
-</div>
-

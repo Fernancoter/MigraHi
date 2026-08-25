@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using HiCone.Domain.Common;
 
 namespace HiCone.Domain.Entities.Produccion;
@@ -12,5 +13,6 @@ public class Maquina : TenantEntity
     public bool IsActive { get; set; } = true;
     public string Estado { get; set; } = "Disponible"; // Disponible, Produciendo, Mantenimiento, Parada
 
+    [NotMapped]
     public virtual ICollection<Extrusion> Extrusiones { get; set; } = new List<Extrusion>();
 }
